@@ -14,6 +14,12 @@ managed:
     - module: buf.build/kratos/apis
     - module: buf.build/gnostic/gnostic
     - module: buf.build/gogo/protobuf
+  override:
+    - file_option: go_package_prefix
+      value: github.com/feymanlee/redkit-protos/gen/go
+    - file_option: go_package
+      path: user/internal/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/user/interservice/v1;userinternalpb
 
 inputs:
   - directory: .
@@ -133,3 +139,19 @@ plugins:
       - enum_type=string
       - output_mode=merged
       - fq_schema_naming=true
+
+  # 权限目录初始化用的合并投影；corevia publish-artifacts 会拷入 app/admin assets。
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: admin-assets
+    strategy: all
+    opt:
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+      - filename=api_catalog.yaml

@@ -2,3 +2,4 @@
 *.tmp
 .cache/
 buf.lock.bak
+dist/

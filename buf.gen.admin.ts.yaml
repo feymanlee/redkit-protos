@@ -1,0 +1,29 @@
+version: v2
+
+# Admin TypeScript — 插件脚本在 corevia 前端仓。
+# 运行: bash scripts/generate-admin-ts.sh（由 make ts 调用）
+clean: false
+
+managed:
+  enabled: true
+  disable:
+    - module: buf.build/googleapis/googleapis
+    - module: buf.build/envoyproxy/protoc-gen-validate
+    - module: buf.build/kratos/apis
+    - module: buf.build/gnostic/gnostic
+    - module: buf.build/gogo/protobuf
+  override:
+    - file_option: go_package_prefix
+      value: github.com/feymanlee/redkit-protos/gen/go
+
+inputs:
+  - directory: .
+    paths:
+      - admin
+
+plugins:
+  - local:
+      - node
+      - PLUGIN_PATH_PLACEHOLDER
+    out: ../dist/admin-ts
+    strategy: all
