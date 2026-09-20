@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package admin.user.v1;
+
+import "gift/v1/user_summary.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "payment/v1/payment_administration.proto";
+import "user/administration/v1/types.proto";
+import "validate/validate.proto";
+import "wallet/v1/user_summary.proto";
+
+// UserOverviewService assembles a transient, App-scoped view without owning downstream facts.
+service UserOverviewService {
+  // 查询 UserOverview。
+  rpc GetUserOverview(GetUserOverviewRequest) returns (UserOverview) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/overview"};
+  }
+  // 查询 UserOverviewSection。
+  rpc GetUserOverviewSection(GetUserOverviewSectionRequest)
+      returns (UserOverviewSectionResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/users/{user_id}/overview/sections/{section}"
+    };
+  }
+}
+
+// GetUserOverviewRequest 标识待查询的 UserOverview。
+message GetUserOverviewRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// GetUserOverviewSectionRequest 标识待查询的 UserOverviewSection。
+message GetUserOverviewSectionRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // section 承载 GetUserOverviewSection 关联的 UserOverviewSection。
+  UserOverviewSection section = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// UserOverviewSection 定义对应业务维度允许使用的离散取值。
+enum UserOverviewSection {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  USER_OVERVIEW_SECTION_UNSPECIFIED = 0;
+  // USER_OVERVIEW_SECTION_WALLET 选择 User Overview 中的 WALLET Section。
+  USER_OVERVIEW_SECTION_WALLET = 1;
+  // USER_OVERVIEW_SECTION_PAYMENT 选择 User Overview 中的 PAYMENT Section。
+  USER_OVERVIEW_SECTION_PAYMENT = 2;
+  // USER_OVERVIEW_SECTION_GIFT 选择 User Overview 中的 GIFT Section。
+  USER_OVERVIEW_SECTION_GIFT = 3;
+}
+
+// UserOverviewSectionAvailability 定义对应业务维度允许使用的离散取值。
+enum UserOverviewSectionAvailability {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  USER_OVERVIEW_SECTION_AVAILABILITY_UNSPECIFIED = 0;
+  // 当前可供业务流程选择或使用。
+  USER_OVERVIEW_SECTION_AVAILABILITY_AVAILABLE = 1;
+  // 当前没有可展示或可处理的数据。
+  USER_OVERVIEW_SECTION_AVAILABILITY_EMPTY = 2;
+  // 当前不可供业务流程选择或使用。
+  USER_OVERVIEW_SECTION_AVAILABILITY_UNAVAILABLE = 3;
+  // USER_OVERVIEW_SECTION_AVAILABILITY_ERROR 表示对应视图 Section 处于 ERROR 可用性状态。
+  USER_OVERVIEW_SECTION_AVAILABILITY_ERROR = 4;
+  // USER_OVERVIEW_SECTION_AVAILABILITY_PERMISSION_DENIED 表示对应视图 Section 处于 PERMISSION_DENIED 可用性状态。
+  USER_OVERVIEW_SECTION_AVAILABILITY_PERMISSION_DENIED = 5;
+}
+
+// UserOverviewDestination 定义对应业务维度允许使用的离散取值。
+enum UserOverviewDestination {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  USER_OVERVIEW_DESTINATION_UNSPECIFIED = 0;
+  // USER_OVERVIEW_DESTINATION_WALLET 将后续操作指向 WALLET 目标。
+  USER_OVERVIEW_DESTINATION_WALLET = 1;
+  // USER_OVERVIEW_DESTINATION_PAYMENT 将后续操作指向 PAYMENT 目标。
+  USER_OVERVIEW_DESTINATION_PAYMENT = 2;
+  // USER_OVERVIEW_DESTINATION_GIFT 将后续操作指向 GIFT 目标。
+  USER_OVERVIEW_DESTINATION_GIFT = 3;
+  // USER_OVERVIEW_DESTINATION_CUSTOMER_CARE 将后续操作指向 CUSTOMER_CARE 目标。
+  USER_OVERVIEW_DESTINATION_CUSTOMER_CARE = 4;
+}
+
+// UserOverviewDrilldown 提供从 User Overview 跳转到明细资源的目标。
+message UserOverviewDrilldown {
+  // destination 承载 UserOverviewDrilldown 关联的 UserOverviewDestination。
+  UserOverviewDestination destination = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+}
+
+// UserOverviewIdentity 汇总 User Overview 使用的稳定身份与资料摘要。
+message UserOverviewIdentity {
+  // account 承载 UserOverviewIdentity 关联的 Account。
+  .user.administration.v1.Account account = 1;
+  // profile 承载 UserOverviewIdentity 关联的 Profile。
+  .user.administration.v1.Profile profile = 2;
+  // security_state 表示 UserOverviewIdentity 当前可观察的生命周期状态。
+  .user.administration.v1.SecurityState security_state = 3;
+}
+
+// UserWalletOverviewSection 表示 User Overview 中 Wallet 数据的只读 Section。
+message UserWalletOverviewSection {
+  // availability 承载 UserWalletOverviewSection 关联的 UserOverviewSectionAvailability。
+  UserOverviewSectionAvailability availability = 1;
+  // summary 承载 UserWalletOverviewSection 关联的 UserWalletSummary。
+  .wallet.v1.UserWalletSummary summary = 2;
+  // drilldown 承载 UserWalletOverviewSection 关联的 UserOverviewDrilldown。
+  UserOverviewDrilldown drilldown = 3;
+}
+
+// UserPaymentOverviewSection 表示 User Overview 中 Payment 数据的只读 Section。
+message UserPaymentOverviewSection {
+  // availability 承载 UserPaymentOverviewSection 关联的 UserOverviewSectionAvailability。
+  UserOverviewSectionAvailability availability = 1;
+  // summary 承载 UserPaymentOverviewSection 关联的 UserPaymentSummary。
+  .payment.v1.UserPaymentSummary summary = 2;
+  // drilldown 承载 UserPaymentOverviewSection 关联的 UserOverviewDrilldown。
+  UserOverviewDrilldown drilldown = 3;
+}
+
+// UserGiftOverviewSection 表示 User Overview 中 Gift 数据的只读 Section。
+message UserGiftOverviewSection {
+  // availability 承载 UserGiftOverviewSection 关联的 UserOverviewSectionAvailability。
+  UserOverviewSectionAvailability availability = 1;
+  // summary 承载 UserGiftOverviewSection 关联的 UserGiftSummary。
+  .gift.v1.UserGiftSummary summary = 2;
+  // drilldown 承载 UserGiftOverviewSection 关联的 UserOverviewDrilldown。
+  UserOverviewDrilldown drilldown = 3;
+}
+
+// UserCustomerCareOverviewSection 表示 User Overview 中客户关怀数据的只读 Section。
+message UserCustomerCareOverviewSection {
+  // availability 承载 UserCustomerCareOverviewSection 关联的 UserOverviewSectionAvailability。
+  UserOverviewSectionAvailability availability = 1;
+  // drilldown 承载 UserCustomerCareOverviewSection 关联的 UserOverviewDrilldown。
+  UserOverviewDrilldown drilldown = 2;
+}
+
+// UserOverview 承载 GetUserOverview 调用的返回结果。
+message UserOverview {
+  // identity 承载 UserOverview 关联的 UserOverviewIdentity。
+  UserOverviewIdentity identity = 1;
+  // wallet 承载 UserOverview 关联的 UserWalletOverviewSection。
+  UserWalletOverviewSection wallet = 2;
+  // payment 承载 UserOverview 关联的 UserPaymentOverviewSection。
+  UserPaymentOverviewSection payment = 3;
+  // gift 承载 UserOverview 关联的 UserGiftOverviewSection。
+  UserGiftOverviewSection gift = 4;
+  // customer_care 承载 UserOverview 关联的 UserCustomerCareOverviewSection。
+  UserCustomerCareOverviewSection customer_care = 5;
+}
+
+// UserOverviewSectionResponse 承载 UserOverviewSection 的返回结果。
+message UserOverviewSectionResponse {
+  // section 承载 UserOverviewSection 关联的 UserOverviewSection。
+  UserOverviewSection section = 1;
+  // wallet 承载 UserOverviewSection 关联的 UserWalletOverviewSection。
+  UserWalletOverviewSection wallet = 2;
+  // payment 承载 UserOverviewSection 关联的 UserPaymentOverviewSection。
+  UserPaymentOverviewSection payment = 3;
+  // gift 承载 UserOverviewSection 关联的 UserGiftOverviewSection。
+  UserGiftOverviewSection gift = 4;
+}

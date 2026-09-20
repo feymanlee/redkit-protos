@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "payment/v1/callback.proto";
+import "payment/v1/channel.proto";
+import "payment/v1/consumer_purchase.proto";
+import "payment/v1/payment_administration.proto";
+import "payment/v1/payment_contract.proto";
+import "payment/v1/operations.proto";
+import "payment/v1/risk.proto";
+
+// 支付服务。
+service PaymentService {
+  // 查询当前 App 与客户端平台可购买的固定期限订阅 Offer。
+  rpc ListSubscriptionOffers(ListSubscriptionOffersRequest) returns (ListSubscriptionOffersResponse) {}
+  // 以 Payment 权威 Plan Revision 创建或恢复固定期限订阅 Provider Checkout。
+  rpc StartFixedTermSubscriptionCheckout(StartFixedTermSubscriptionCheckoutRequest) returns (PurchaseView) {}
+  // 以 Wallet 权威 Recharge Order 创建或恢复首笔 Provider Checkout。
+  rpc StartRechargeCheckout(StartRechargeCheckoutRequest) returns (PurchaseView) {}
+  // 经 Payment 跨类型身份校验后创建或恢复 Wallet 冻结的 Store Recharge 商品动作。
+  rpc PrepareStoreRechargePurchase(PrepareStoreRechargePurchaseRequest) returns (StoreRechargePurchaseAction) {}
+  // 验证 Store 凭证并创建或恢复一次性 Recharge Payment 与履约事实。
+  rpc VerifyStoreRechargePurchase(VerifyStoreRechargePurchaseRequest) returns (PurchaseView) {}
+  // 确认客户端已完成 StoreKit Transaction.finish；仅适用于要求客户端完成的 Store 交易。
+  rpc ConfirmStoreRechargePurchaseCompletion(ConfirmStoreRechargePurchaseCompletionRequest) returns (PurchaseView) {}
+  // 创建或恢复 iOS 自动续订订阅的冻结 StoreKit 商品动作。
+  rpc PrepareAppleSubscriptionPurchase(PrepareAppleSubscriptionPurchaseRequest) returns (AppleSubscriptionPurchaseAction) {}
+  // 验证 iOS 自动续订签名交易并应用 Provider Subscription 生命周期。
+  rpc VerifyAppleSubscriptionPurchase(VerifyAppleSubscriptionPurchaseRequest) returns (PurchaseView) {}
+  // 返回当前 User 的 Apple Store 订阅管理入口，不执行后台取消。
+  rpc GetAppleSubscriptionManagementAction(GetAppleSubscriptionManagementActionRequest) returns (AppleSubscriptionManagementAction) {}
+  // 创建或恢复 Google Play 自动续订订阅的冻结 Billing 商品动作。
+  rpc PrepareGoogleSubscriptionPurchase(PrepareGoogleSubscriptionPurchaseRequest) returns (GoogleSubscriptionPurchaseAction) {}
+  // 验证 Google Play 自动续订 Purchase Token 并应用 Provider Subscription 生命周期。
+  rpc VerifyGoogleSubscriptionPurchase(VerifyGoogleSubscriptionPurchaseRequest) returns (PurchaseView) {}
+  // 返回当前 User 的 Google Play 订阅管理入口，不执行后台取消。
+  rpc GetGoogleSubscriptionManagementAction(GetGoogleSubscriptionManagementActionRequest) returns (GoogleSubscriptionManagementAction) {}
+  // 重新验证既有 Apple 或 Google Store 购买，并按交易所有权修复本地投影。
+  rpc RestoreStorePurchases(RestoreStorePurchasesRequest) returns (RestoreStorePurchasesResponse) {}
+  // 返回当前 User 与永久合并别名拥有的一笔安全购买视图。
+  rpc GetMyPurchase(GetMyPurchaseRequest) returns (PurchaseView) {}
+  // 返回当前 User 与永久合并别名拥有的安全购买历史。
+  rpc ListMyPurchases(ListMyPurchasesRequest) returns (ListMyPurchasesResponse) {}
+  // 返回当前 User 的订阅权益及安全的 Store 管理动作，不从购买历史推断。
+  rpc GetMySubscription(GetMySubscriptionRequest) returns (GetMySubscriptionResponse) {}
+  // 在公开 Attempt 栅栏仍为当前值时创建或恢复下一笔串行 Payment Attempt。
+  rpc RetryMyPurchase(RetryMyPurchaseRequest) returns (PurchaseView) {}
+  // 查询当前已认证 User 在当前 App 与购买上下文下可见的公开 Payment Option。
+  rpc ListPurchaseOptions(ListPurchaseOptionsRequest) returns (ListPurchaseOptionsResponse) {}
+  // 创建支付单。
+  rpc CreatePayment(CreatePaymentRequest) returns (Payment) {}
+  // 查询支付单。
+  rpc GetPayment(GetPaymentRequest) returns (Payment) {}
+  // 关闭支付单。
+  rpc ClosePayment(ClosePaymentRequest) returns (Payment) {}
+  // 只读查询 Provider 权威状态并经状态机推进 Payment。
+  rpc RefreshPaymentProviderState(RefreshPaymentProviderStateRequest) returns (RefreshPaymentProviderStateResponse) {}
+  // 模拟支付成功。
+  rpc SimulatePaymentSuccess(SimulatePaymentSuccessRequest) returns (Payment) {}
+  // 查询支付列表。
+  rpc ListPayments(ListPaymentsRequest) returns (ListPaymentResponse) {}
+  // 查询 Payment 自有详情投影。
+  rpc GetPaymentDetail(GetPaymentDetailRequest) returns (PaymentDetail) {}
+  // 查询用户支付摘要，供 User Administration 临时聚合。
+  rpc GetUserPaymentSummary(GetUserPaymentSummaryRequest) returns (UserPaymentSummary) {}
+  // 查询当前 App 的 Payment 运营总览。
+  rpc GetPaymentOperationsSummary(GetPaymentOperationsSummaryRequest) returns (PaymentOperationsSummary) {}
+  // 查询跨工作流待办投影。
+  rpc ListPaymentWorkQueue(ListPaymentWorkQueueRequest) returns (ListPaymentWorkQueueResponse) {}
+  // 条件领取待办项。
+  rpc ClaimPaymentWorkQueueItem(MutatePaymentWorkQueueItemRequest) returns (PaymentWorkQueueItem) {}
+  // 条件转派待办项。
+  rpc ReassignPaymentWorkQueueItem(MutatePaymentWorkQueueItemRequest) returns (PaymentWorkQueueItem) {}
+  // 在来源事实收敛后完成待办协调记录。
+  rpc CompletePaymentWorkQueueItem(MutatePaymentWorkQueueItemRequest) returns (PaymentWorkQueueItem) {}
+  // 创建不可变 Payment Risk Policy 草稿版本。
+  rpc CreatePaymentRiskPolicyRevision(CreatePaymentRiskPolicyRevisionRequest) returns (PaymentRiskPolicyRevision) {}
+  // 发布指定 Payment Risk Policy 版本并退役上一版本。
+  rpc PublishPaymentRiskPolicyRevision(PublishPaymentRiskPolicyRevisionRequest) returns (PaymentRiskPolicyRevision) {}
+  // 查询 Payment Risk Policy 历史版本。
+  rpc ListPaymentRiskPolicyRevisions(ListPaymentRiskPolicyRevisionsRequest) returns (ListPaymentRiskPolicyRevisionsResponse) {}
+  // 查询 Payment 创建时冻结的风险决策。
+  rpc GetPaymentRiskDecision(GetPaymentRiskDecisionRequest) returns (PaymentRiskDecision) {}
+  // 查询待复核及历史 Payment Risk Review。
+  rpc ListPaymentRiskReviews(ListPaymentRiskReviewsRequest) returns (ListPaymentRiskReviewsResponse) {}
+  // 幂等批准或拒绝 Payment Risk Review。
+  rpc DecidePaymentRiskReview(DecidePaymentRiskReviewRequest) returns (PaymentRiskDecision) {}
+  // 查询 Payment 自有、严格按币种隔离的支付分析。
+  rpc GetPaymentAnalytics(GetPaymentAnalyticsRequest) returns (GetPaymentAnalyticsResponse) {}
+  // 查询支付事件列表。
+  rpc ListPaymentEvents(common.pagination.v1.PagingRequest) returns (ListPaymentEventResponse) {}
+  // 查询支付回调列表。
+  rpc ListPaymentCallbacks(common.pagination.v1.PagingRequest) returns (ListPaymentCallbackResponse) {}
+  // 使用原始回调和自动候选 Revision 重新验签及幂等处理。
+  rpc ReprocessPaymentCallback(ReprocessPaymentCallbackRequest) returns (ReprocessPaymentCallbackResponse) {}
+  // 处理渠道回调。
+  rpc HandleProviderCallback(HandleProviderCallbackRequest) returns (HandleProviderCallbackResponse) {}
+}

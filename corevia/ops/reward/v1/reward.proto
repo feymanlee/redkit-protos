@@ -1,0 +1,530 @@
+syntax = "proto3";
+
+package ops.reward.v1;
+
+import "common/v1/common.proto";
+import "common/pagination/v1/pagination.proto";
+import "ops/reward/v1/reward_package.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// RewardService accepts and observes immutable programmatic and manual Reward Grants.
+service RewardService {
+  // GrantReward reliably accepts one Reward for one User by stable Package Code.
+  rpc GrantReward(GrantRewardRequest) returns (GrantRewardResponse) {}
+  // GetRewardGrant looks up the original accepted Grant by either supported identity.
+  rpc GetRewardGrant(GetRewardGrantRequest) returns (RewardGrant) {}
+  // ListRewardGrants provides an App-scoped operational observation view.
+  rpc ListRewardGrants(ListRewardGrantsRequest) returns (ListRewardGrantsResponse) {}
+  // GetRewardGrantObservation returns immutable intent and fulfillment history.
+  rpc GetRewardGrantObservation(GetRewardGrantObservationRequest) returns (RewardGrantObservation) {}
+  // ListActionRequiredRewardItems returns the App-scoped manual recovery queue.
+  rpc ListActionRequiredRewardItems(ListActionRequiredRewardItemsRequest) returns (ListActionRequiredRewardItemsResponse) {}
+  // ReplayRewardItem safely redelivers the frozen command for one original Item.
+  rpc ReplayRewardItem(ReplayRewardItemRequest) returns (ReplayRewardItemResponse) {}
+  // CreateManualRewardGrant records an Operator request without accepting it.
+  rpc CreateManualRewardGrant(CreateManualRewardGrantRequest) returns (CreateManualRewardGrantResponse) {}
+  // ListPendingManualRewardGrants returns Pending and Stale entries for the App-scoped review work view.
+  rpc ListPendingManualRewardGrants(ListPendingManualRewardGrantsRequest) returns (ListPendingManualRewardGrantsResponse) {}
+  // ApproveManualRewardGrant accepts a request reviewed by another Operator.
+  rpc ApproveManualRewardGrant(ApproveManualRewardGrantRequest) returns (ManualRewardGrant) {}
+  // RejectManualRewardGrant closes a request without Reward Acceptance.
+  rpc RejectManualRewardGrant(RejectManualRewardGrantRequest) returns (ManualRewardGrant) {}
+  // WithdrawManualRewardGrant lets the requester close an unaccepted request.
+  rpc WithdrawManualRewardGrant(WithdrawManualRewardGrantRequest) returns (ManualRewardGrant) {}
+}
+
+// RewardGrantStatus 刻画对应资源的生命周期状态。
+enum RewardGrantStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_GRANT_STATUS_UNSPECIFIED = 0;
+  // REWARD_GRANT_STATUS_ACCEPTED 表示资源处于对应业务阶段。
+  REWARD_GRANT_STATUS_ACCEPTED = 1;
+  // 正在处理中，尚未形成终态。
+  REWARD_GRANT_STATUS_PROCESSING = 2;
+  // 履约已经完成。
+  REWARD_GRANT_STATUS_FULFILLED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  REWARD_GRANT_STATUS_FAILED = 4;
+  // 履约已经完成。
+  REWARD_GRANT_STATUS_PARTIALLY_FULFILLED = 5;
+}
+
+// RewardGrantItemStatus 刻画对应资源的生命周期状态。
+enum RewardGrantItemStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_GRANT_ITEM_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  REWARD_GRANT_ITEM_STATUS_PENDING = 1;
+  // 正在处理中，尚未形成终态。
+  REWARD_GRANT_ITEM_STATUS_PROCESSING = 2;
+  // 履约已经完成。
+  REWARD_GRANT_ITEM_STATUS_FULFILLED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  REWARD_GRANT_ITEM_STATUS_FAILED = 4;
+  // 需要人工审核、补充材料或执行明确处置后才能继续。
+  REWARD_GRANT_ITEM_STATUS_ACTION_REQUIRED = 5;
+}
+
+// RewardGrantAttemptStatus 刻画对应资源的生命周期状态。
+enum RewardGrantAttemptStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_GRANT_ATTEMPT_STATUS_UNSPECIFIED = 0;
+  // REWARD_GRANT_ATTEMPT_STATUS_IN_PROGRESS 表示资源处于对应业务阶段。
+  REWARD_GRANT_ATTEMPT_STATUS_IN_PROGRESS = 1;
+  // 处理已成功完成。
+  REWARD_GRANT_ATTEMPT_STATUS_SUCCEEDED = 2;
+  // 审核已拒绝，不再按原请求继续。
+  REWARD_GRANT_ATTEMPT_STATUS_REJECTED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  REWARD_GRANT_ATTEMPT_STATUS_RETRYABLE_FAILURE = 4;
+}
+
+// RewardGrantFailureClassification 定义对应业务维度允许使用的离散取值。
+enum RewardGrantFailureClassification {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_GRANT_FAILURE_CLASSIFICATION_UNSPECIFIED = 0;
+  // REWARD_GRANT_FAILURE_CLASSIFICATION_NONE 选择 NONE 作为对应业务维度的有效取值。
+  REWARD_GRANT_FAILURE_CLASSIFICATION_NONE = 1;
+  // 审核已拒绝，不再按原请求继续。
+  REWARD_GRANT_FAILURE_CLASSIFICATION_OWNER_REJECTED = 2;
+  // REWARD_GRANT_FAILURE_CLASSIFICATION_INFRASTRUCTURE 选择 INFRASTRUCTURE 作为对应业务维度的有效取值。
+  REWARD_GRANT_FAILURE_CLASSIFICATION_INFRASTRUCTURE = 3;
+  // REWARD_GRANT_FAILURE_CLASSIFICATION_INVALID_RESPONSE 选择 INVALID_RESPONSE 作为对应业务维度的有效取值。
+  REWARD_GRANT_FAILURE_CLASSIFICATION_INVALID_RESPONSE = 4;
+}
+
+// ManualRewardGrantStatus 刻画对应资源的生命周期状态。
+enum ManualRewardGrantStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  MANUAL_REWARD_GRANT_STATUS_UNSPECIFIED = 0;
+  // MANUAL_REWARD_GRANT_STATUS_PENDING_REVIEW 表示资源处于对应业务阶段。
+  MANUAL_REWARD_GRANT_STATUS_PENDING_REVIEW = 1;
+  // 审核已通过，可以继续后续流程。
+  MANUAL_REWARD_GRANT_STATUS_APPROVED = 2;
+  // 审核已拒绝，不再按原请求继续。
+  MANUAL_REWARD_GRANT_STATUS_REJECTED = 3;
+  // 请求已由发起方撤回，不再继续处理。
+  MANUAL_REWARD_GRANT_STATUS_WITHDRAWN = 4;
+  // MANUAL_REWARD_GRANT_STATUS_STALE 表示资源处于对应业务阶段。
+  MANUAL_REWARD_GRANT_STATUS_STALE = 5;
+}
+
+// RewardBusinessIdentity 稳定标识 Reward 的上游业务来源与引用。
+message RewardBusinessIdentity {
+  // source 标识业务事实或请求的稳定来源。
+  string source = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
+  // reward_business_reference 记录外部系统或关联流程提供的引用标识。
+  string reward_business_reference = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// GrantRewardRequest 定义执行 GrantReward 的命令参数。
+message GrantRewardRequest {
+  // app_id 限定 GrantReward 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // source 标识业务事实或请求的稳定来源。
+  string source = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
+  // reward_business_reference 记录外部系统或关联流程提供的引用标识。
+  string reward_business_reference = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // package_code 提供 GrantReward 对外稳定使用的业务编码。
+  string package_code = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
+  // requested_user_id 标识当前 App 内关联的 User。
+  uint64 requested_user_id = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// GrantRewardResponse 承载 GrantReward 的返回结果。
+message GrantRewardResponse {
+  // grant 承载 GrantReward 关联的 RewardGrant。
+  RewardGrant grant = 1;
+  // True only for the first successful acceptance; false for an idempotent replay.
+  bool newly_accepted = 2;
+}
+
+// GetRewardGrantRequest 标识待查询的 RewardGrant。
+message GetRewardGrantRequest {
+  // app_id 限定 GetRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // GetRewardGrantRequest 使用以下一种查询表达式。
+  oneof query {
+    option (validate.required) = true;
+    // grant_id 标识关联的 Grant。
+    uint64 grant_id = 2 [(validate.rules).uint64.gt = 0];
+    // business_identity 记录外部或上游系统用于稳定关联 GetRewardGrant 的身份。
+    RewardBusinessIdentity business_identity = 3;
+  }
+}
+
+// RewardGrantFilter 定义可组合的查询筛选条件。
+message RewardGrantFilter {
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 1 [(validate.rules).uint64.gt = 0];
+  // package_code 提供 RewardGrantFilter 对外稳定使用的业务编码。
+  optional string package_code = 2 [(validate.rules).string = {min_len: 3, max_len: 64}];
+  // reward_business_reference 记录外部系统或关联流程提供的引用标识。
+  optional string reward_business_reference = 3 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // source 标识业务事实或请求的稳定来源。
+  optional string source = 4 [(validate.rules).string = {min_len: 3, max_len: 64}];
+  // statuses 列出 RewardGrantFilter 关联的 RewardGrantStatus。
+  repeated RewardGrantStatus statuses = 5 [(validate.rules).repeated.items.enum.defined_only = true];
+  // accepted_from 指定 RewardGrantFilter 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp accepted_from = 6;
+  // accepted_to 指定 RewardGrantFilter 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp accepted_to = 7;
+}
+
+// ListRewardGrantsRequest 定义 RewardGrants 的筛选与分页参数。
+message ListRewardGrantsRequest {
+  // app_id 限定 ListRewardGrants 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // filter 限定本次查询采用的筛选条件。
+  RewardGrantFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListRewardGrantsResponse 返回 RewardGrants 结果集合及分页信息。
+message ListRewardGrantsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated RewardGrant items = 1;
+  // meta 承载 ListRewardGrants 关联的 PaginationResponseMeta。
+  common.pagination.v1.PaginationResponseMeta meta = 2;
+}
+
+// GetRewardGrantObservationRequest 标识待查询的 RewardGrantObservation。
+message GetRewardGrantObservationRequest {
+  // app_id 限定 GetRewardGrantObservation 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // grant_id 标识关联的 Grant。
+  uint64 grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// RewardGrantAttempt 描述一次异步处理的生命周期与结果。
+message RewardGrantAttempt {
+  // id 标识关联的 RewardGrantAttempt。
+  uint64 id = 1;
+  // attempt_no 是 RewardGrantAttempt 对外关联与审计使用的业务编号。
+  uint32 attempt_no = 2;
+  // status 表示 RewardGrantAttempt 当前可观察的生命周期状态。
+  RewardGrantAttemptStatus status = 3;
+  // failure_classification 对失败进行稳定分类，供调用方决定重试或终止。
+  RewardGrantFailureClassification failure_classification = 4;
+  // failure_code 提供机器可判断的处理结果或失败分类。
+  optional string failure_code = 5;
+  // wallet_transaction_id 标识关联的 WalletTransaction。
+  optional uint64 wallet_transaction_id = 6;
+  // gift_backpack_batch_id 标识关联的 GiftBackpackBatch。
+  optional uint64 gift_backpack_batch_id = 7;
+  // gift_backpack_transaction_id 标识关联的 GiftBackpackTransaction。
+  optional uint64 gift_backpack_transaction_id = 8;
+  // started_at 指定 RewardGrantAttempt 生效或查询区间的起始时间。
+  google.protobuf.Timestamp started_at = 9;
+  // completed_at 记录 RewardGrantAttempt 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp completed_at = 10;
+}
+
+// RewardGovernanceEvent 记录已经发生且可审计的领域事件。
+message RewardGovernanceEvent {
+  // event_id 标识关联的 Event。
+  string event_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // operation 标识审计事实对应的业务操作类型。
+  string operation = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // business_identity 记录外部或上游系统用于稳定关联 RewardGovernanceEvent 的身份。
+  string business_identity = 5;
+  // before_identity 记录治理操作前用于关联资源的稳定身份。
+  string before_identity = 6;
+  // after_identity 记录治理操作后用于关联资源的稳定身份。
+  string after_identity = 7;
+  // result 记录操作或治理事件的可观察执行结果。
+  string result = 8;
+  // occurred_at 记录 RewardGovernanceEvent 对应业务阶段的时间点。
+  google.protobuf.Timestamp occurred_at = 9;
+}
+
+// RewardGrantObservation 承载 GetRewardGrantObservation 调用的返回结果。
+message RewardGrantObservation {
+  // grant 承载 RewardGrantObservation 关联的 RewardGrant。
+  RewardGrant grant = 1;
+  // governance_events 列出 RewardGrantObservation 关联的 RewardGovernanceEvent。
+  repeated RewardGovernanceEvent governance_events = 2;
+}
+
+// ListActionRequiredRewardItemsRequest 定义 ActionRequiredRewardItems 的筛选与分页参数。
+message ListActionRequiredRewardItemsRequest {
+  // app_id 限定 ListActionRequiredRewardItems 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+}
+
+// ListActionRequiredRewardItemsResponse 返回 ActionRequiredRewardItems 结果集合及分页信息。
+message ListActionRequiredRewardItemsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ActionRequiredRewardItem items = 1;
+  // meta 承载 ListActionRequiredRewardItems 关联的 PaginationResponseMeta。
+  common.pagination.v1.PaginationResponseMeta meta = 2;
+}
+
+// ActionRequiredRewardItem 表示所属集合中的一个业务条目。
+message ActionRequiredRewardItem {
+  // item_id 标识关联的 Item。
+  uint64 item_id = 1;
+  // grant_id 标识关联的 Grant。
+  uint64 grant_id = 2;
+  // item_no 是 ActionRequiredRewardItem 对外关联与审计使用的业务编号。
+  uint32 item_no = 3;
+  // item_type 区分 ActionRequiredRewardItem 的业务类型。
+  string item_type = 4;
+  // package_code 提供 ActionRequiredRewardItem 对外稳定使用的业务编码。
+  string package_code = 5;
+  // business_identity 记录外部或上游系统用于稳定关联 ActionRequiredRewardItem 的身份。
+  RewardBusinessIdentity business_identity = 6;
+  // canonical_user_id 标识当前 App 内关联的 User。
+  uint64 canonical_user_id = 7;
+  // failure_classification 对失败进行稳定分类，供调用方决定重试或终止。
+  RewardGrantFailureClassification failure_classification = 8;
+  // failure_code 提供机器可判断的处理结果或失败分类。
+  string failure_code = 9;
+  // attempt_count 记录 ActionRequiredRewardItem 中符合对应条件的数量。
+  uint32 attempt_count = 10;
+  // last_error_at 记录 ActionRequiredRewardItem 对应业务阶段的时间点。
+  google.protobuf.Timestamp last_error_at = 11;
+  // downstream_idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string downstream_idempotency_key = 12;
+  // wallet_transaction_id 标识关联的 WalletTransaction。
+  optional uint64 wallet_transaction_id = 13;
+  // gift_backpack_batch_id 标识关联的 GiftBackpackBatch。
+  optional uint64 gift_backpack_batch_id = 14;
+  // gift_backpack_transaction_id 标识关联的 GiftBackpackTransaction。
+  optional uint64 gift_backpack_transaction_id = 15;
+}
+
+// ReplayRewardItemRequest 定义重放 RewardItem 的幂等管理命令参数。
+message ReplayRewardItemRequest {
+  // app_id 限定 ReplayRewardItem 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // item_id 标识关联的 Item。
+  uint64 item_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ReplayRewardItemResponse 承载 ReplayRewardItem 的返回结果。
+message ReplayRewardItemResponse {
+  // item_id 标识关联的 Item。
+  uint64 item_id = 1;
+  // grant_id 标识关联的 Grant。
+  uint64 grant_id = 2;
+  // status 表示 ReplayRewardItem 当前可观察的生命周期状态。
+  RewardGrantItemStatus status = 3;
+  // newly_enqueued 显式表示 ReplayRewardItem 是否满足该条件。
+  bool newly_enqueued = 4;
+}
+
+// RewardGrantItem 表示所属集合中的一个业务条目。
+message RewardGrantItem {
+  // id 标识关联的 RewardGrantItem。
+  uint64 id = 1;
+  // item_no 是 RewardGrantItem 对外关联与审计使用的业务编号。
+  uint32 item_no = 2;
+  // status 表示 RewardGrantItem 当前可观察的生命周期状态。
+  RewardGrantItemStatus status = 3;
+  // coin 承载 RewardGrantItem 关联的 CoinRewardItem。
+  CoinRewardItem coin = 4;
+  // wallet_transaction_id 标识关联的 WalletTransaction。
+  optional uint64 wallet_transaction_id = 5;
+  // failure_code 提供机器可判断的处理结果或失败分类。
+  optional string failure_code = 6;
+  // created_at 记录 RewardGrantItem 的创建时间。
+  google.protobuf.Timestamp created_at = 7;
+  // updated_at 记录 RewardGrantItem 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 8;
+  // fulfilled_at 记录 RewardGrantItem 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp fulfilled_at = 9;
+  // gift 承载 RewardGrantItem 关联的 GiftRewardSnapshotItem。
+  GiftRewardSnapshotItem gift = 10;
+  // gift_backpack_batch_id 标识关联的 GiftBackpackBatch。
+  optional uint64 gift_backpack_batch_id = 11;
+  // gift_backpack_transaction_id 标识关联的 GiftBackpackTransaction。
+  optional uint64 gift_backpack_transaction_id = 12;
+  // attempts 列出 RewardGrantItem 关联的 RewardGrantAttempt。
+  repeated RewardGrantAttempt attempts = 13;
+}
+
+// GiftRewardSnapshotItem 表示所属集合中的一个业务条目。
+message GiftRewardSnapshotItem {
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 1;
+  // quantity 表示 GiftRewardSnapshotItem 涉及的业务对象数量。
+  uint64 quantity = 2;
+  // Absolute expiration frozen at Reward Acceptance; omitted means permanent.
+  optional google.protobuf.Timestamp expire_at = 3;
+}
+
+// RewardGrantSnapshot 表示对应资源的不可变版本快照。
+message RewardGrantSnapshot {
+  // id 标识关联的 RewardGrantSnapshot。
+  uint64 id = 1;
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 3;
+  // revision_no 是 RewardGrantSnapshot 对外关联与审计使用的业务编号。
+  uint32 revision_no = 4;
+  // package_code 提供 RewardGrantSnapshot 对外稳定使用的业务编码。
+  string package_code = 5;
+  // display_name 提供 RewardGrantSnapshot 面向展示或识别的名称。
+  string display_name = 6;
+  // daily_grant_limit 限定 RewardGrantSnapshot 对应操作允许使用的数量或阈值。
+  uint32 daily_grant_limit = 7;
+  // items 包含本次返回或处理的业务条目。
+  repeated RewardGrantItem items = 8;
+  // created_at 记录 RewardGrantSnapshot 的创建时间。
+  google.protobuf.Timestamp created_at = 9;
+}
+
+// RewardGrant 承载 GetRewardGrant 调用的返回结果。
+message RewardGrant {
+  // id 标识关联的 RewardGrant。
+  uint64 id = 1;
+  // app_id 限定 RewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // business_identity 记录外部或上游系统用于稳定关联 RewardGrant 的身份。
+  RewardBusinessIdentity business_identity = 3;
+  // package_code 提供 RewardGrant 对外稳定使用的业务编码。
+  string package_code = 4;
+  // requested_user_id 标识当前 App 内关联的 User。
+  uint64 requested_user_id = 5;
+  // canonical_user_id 标识当前 App 内关联的 User。
+  uint64 canonical_user_id = 6;
+  // business_date 记录 RewardGrant 对应业务阶段的时间点。
+  string business_date = 7;
+  // status 表示 RewardGrant 当前可观察的生命周期状态。
+  RewardGrantStatus status = 8;
+  // snapshot 承载 RewardGrant 关联的 RewardGrantSnapshot。
+  RewardGrantSnapshot snapshot = 9;
+  // accepted_at 记录 RewardGrant 对应业务阶段的时间点。
+  google.protobuf.Timestamp accepted_at = 10;
+  // updated_at 记录 RewardGrant 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 11;
+  // fulfilled_at 记录 RewardGrant 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp fulfilled_at = 12;
+}
+
+// CreateManualRewardGrantRequest 定义创建 ManualRewardGrant 的幂等命令参数。
+message CreateManualRewardGrantRequest {
+  // app_id 限定 CreateManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // requested_user_id 标识当前 App 内关联的 User。
+  uint64 requested_user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// CreateManualRewardGrantResponse 承载 CreateManualRewardGrant 的返回结果。
+message CreateManualRewardGrantResponse {
+  // manual_grant 承载 CreateManualRewardGrant 关联的 ManualRewardGrant。
+  ManualRewardGrant manual_grant = 1;
+  // newly_created 显式表示 CreateManualRewardGrant 是否满足该条件。
+  bool newly_created = 2;
+}
+
+// ListPendingManualRewardGrantsRequest 定义 PendingManualRewardGrants 的筛选与分页参数。
+message ListPendingManualRewardGrantsRequest {
+  // app_id 限定 ListPendingManualRewardGrants 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+}
+
+// ListPendingManualRewardGrantsResponse 返回 PendingManualRewardGrants 结果集合及分页信息。
+message ListPendingManualRewardGrantsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ManualRewardGrant items = 1;
+}
+
+// ApproveManualRewardGrantRequest 定义批准 ManualRewardGrant 的命令参数。
+message ApproveManualRewardGrantRequest {
+  // app_id 限定 ApproveManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // manual_grant_id 标识关联的 ManualGrant。
+  uint64 manual_grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+}
+
+// RejectManualRewardGrantRequest 定义拒绝 ManualRewardGrant 的命令参数。
+message RejectManualRewardGrantRequest {
+  // app_id 限定 RejectManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // manual_grant_id 标识关联的 ManualGrant。
+  uint64 manual_grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+}
+
+// WithdrawManualRewardGrantRequest 定义撤回 ManualRewardGrant 的命令参数。
+message WithdrawManualRewardGrantRequest {
+  // app_id 限定 WithdrawManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // manual_grant_id 标识关联的 ManualGrant。
+  uint64 manual_grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+}
+
+// ManualRewardGrant 表示人工 Reward Grant 的申请、审核与发放状态。
+message ManualRewardGrant {
+  // id 标识关联的 ManualRewardGrant。
+  uint64 id = 1;
+  // app_id 限定 ManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // package_id 标识关联的 Package。
+  uint64 package_id = 3;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 4;
+  // package_code 提供 ManualRewardGrant 对外稳定使用的业务编码。
+  string package_code = 5;
+  // requested_user_id 标识当前 App 内关联的 User。
+  uint64 requested_user_id = 6;
+  // requester_operator_id 标识关联的后台 Operator。
+  uint32 requester_operator_id = 7;
+  // request_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string request_reason = 8;
+  // request_operation_no 关联原始管理操作的审计编号，用于追踪与幂等收敛。
+  string request_operation_no = 9;
+  // status 表示 ManualRewardGrant 当前可观察的生命周期状态。
+  ManualRewardGrantStatus status = 10;
+  // bound_revision 标识 ManualRewardGrant 所采用的契约或资源版本。
+  RewardPackageRevision bound_revision = 11;
+  // created_at 记录 ManualRewardGrant 的创建时间。
+  google.protobuf.Timestamp created_at = 12;
+  // updated_at 记录 ManualRewardGrant 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 13;
+  // reviewer_operator_id 标识关联的后台 Operator。
+  optional uint32 reviewer_operator_id = 14;
+  // review_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string review_reason = 15;
+  // reviewed_at 记录 ManualRewardGrant 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp reviewed_at = 16;
+  // accepted_grant 承载 ManualRewardGrant 关联的 RewardGrant。
+  RewardGrant accepted_grant = 17;
+}

@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package common.file.v1;
+
+// FilePurpose 表示平台允许的强类型文件用途。
+enum FilePurpose {
+  // 未指定用途。
+  FILE_PURPOSE_UNSPECIFIED = 0;
+  // C 端用户头像。
+  FILE_PURPOSE_USER_AVATAR = 1;
+  // 后台操作员头像。
+  FILE_PURPOSE_OPERATOR_AVATAR = 2;
+  // 礼物静态图标。
+  FILE_PURPOSE_GIFT_ICON = 3;
+  // 礼物动画资源。
+  FILE_PURPOSE_GIFT_ANIMATION = 4;
+  // 支付渠道图标。
+  FILE_PURPOSE_PAYMENT_CHANNEL_ICON = 5;
+  // App 独立发布的公共资源。
+  FILE_PURPOSE_APP_PUBLIC_ASSET = 6;
+  // Payment 管理面生成的脱敏异步导出文件。
+  FILE_PURPOSE_PAYMENT_EXPORT = 7;
+  // Payment 对账导入的 Provider 原始账单。
+  FILE_PURPOSE_PAYMENT_PROVIDER_BILL = 8;
+  // Payment Dispute 提交给 Provider 的受保护举证文件。
+  FILE_PURPOSE_PAYMENT_DISPUTE_EVIDENCE = 9;
+  // Wallet 管理端生成的受保护审计导出。
+  FILE_PURPOSE_WALLET_EXPORT = 10;
+  // User 管理端生成的脱敏异步导出文件。
+  FILE_PURPOSE_USER_EXPORT = 11;
+}
+
+// FileStatus 表示文件内容当前是否可用。
+enum FileStatus {
+  // 未指定状态。
+  FILE_STATUS_UNSPECIFIED = 0;
+  // 等待内容审核。
+  FILE_STATUS_PENDING_REVIEW = 1;
+  // 已通过校验并可被业务引用。
+  FILE_STATUS_READY = 2;
+  // 已被审核或校验拒绝。
+  FILE_STATUS_REJECTED = 3;
+  // 已被人工永久阻断访问。
+  FILE_STATUS_REVOKED = 4;
+  // 未发布内容已按孤儿策略回收。
+  FILE_STATUS_ORPHANED = 5;
+}
+
+// FileVisibility 表示文件的分发等级。
+enum FileVisibility {
+  // 未指定等级。
+  FILE_VISIBILITY_UNSPECIFIED = 0;
+  // 可以通过公共 CDN 访问。
+  FILE_VISIBILITY_PUBLIC = 1;
+  // 需要短期访问授权。
+  FILE_VISIBILITY_PROTECTED = 2;
+}
+
+// FilePublicationMode 表示文件获得永久公开承诺的原因。
+enum FilePublicationMode {
+  // 文件尚未发布。
+  FILE_PUBLICATION_MODE_NONE = 0;
+  // 文件因业务字段引用而发布。
+  FILE_PUBLICATION_MODE_BUSINESS_REFERENCE = 1;
+  // 文件由后台显式独立发布。
+  FILE_PUBLICATION_MODE_STANDALONE = 2;
+}
+
+// FileOwnerType 表示文件生命周期归属主体类型。
+enum FileOwnerType {
+  // 未指定归属主体。
+  FILE_OWNER_TYPE_UNSPECIFIED = 0;
+  // 文件归具体 App 所有。
+  FILE_OWNER_TYPE_APP = 1;
+  // 文件归具体 C 端用户所有。
+  FILE_OWNER_TYPE_USER = 2;
+}
+
+// FileCreatorType 表示创建文件的审计主体类型。
+enum FileCreatorType {
+  // 未指定创建主体。
+  FILE_CREATOR_TYPE_UNSPECIFIED = 0;
+  // 由 C 端用户创建。
+  FILE_CREATOR_TYPE_USER = 1;
+  // 由后台操作员创建。
+  FILE_CREATOR_TYPE_OPERATOR = 2;
+  // 由内部服务创建。
+  FILE_CREATOR_TYPE_SERVICE = 3;
+}
+
+// ImageVariantPreset 表示公共图片的标准展示规格。
+enum ImageVariantPreset {
+  // 未指定规格。
+  IMAGE_VARIANT_PRESET_UNSPECIFIED = 0;
+  // 64 像素展示规格。
+  IMAGE_VARIANT_PRESET_SMALL_64 = 1;
+  // 256 像素展示规格。
+  IMAGE_VARIANT_PRESET_MEDIUM_256 = 2;
+  // 1024 像素展示规格。
+  IMAGE_VARIANT_PRESET_LARGE_1024 = 3;
+}
+
+// ImageVariant 是同一文件经云图片处理形成的临时展示地址。
+message ImageVariant {
+  // 展示规格。
+  ImageVariantPreset preset = 1;
+  // 当前云服务生成的展示地址。
+  string url = 2;
+}
+
+// FileView 是可以安全返回给终端客户端的最小文件展示对象。
+message FileView {
+  // 文件 ID。
+  uint64 file_id = 1;
+  // 强类型业务用途。
+  FilePurpose purpose = 2;
+  // 文件可用状态。
+  FileStatus status = 3;
+  // 文件分发等级。
+  FileVisibility visibility = 4;
+  // 可信检测后的内容类型。
+  string content_type = 5;
+  // 文件字节数。
+  uint64 size_bytes = 6;
+  // 已发布公共地址；文件不可公开访问时为空。
+  string public_url = 7;
+  // 当前云服务可提供的标准图片展示地址。
+  repeated ImageVariant image_variants = 8;
+}

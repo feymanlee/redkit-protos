@@ -1,0 +1,261 @@
+syntax = "proto3";
+
+package user.consumer.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "user/types/v1/types.proto";
+
+// C 端账号恢复服务，通过短期 continuation、恢复证据和一次性 grant 推进账号恢复。
+service ConsumerRecoveryService {
+  // 使用账号定位信息、新手机号验证票据和幂等键发起 AccountRecovery，返回不透明 continuation。
+  rpc StartAccountRecovery(StartAccountRecoveryRequest) returns (StartAccountRecoveryResponse);
+  // 使用 recovery_continuation 查询恢复状态和所需证据，不暴露账号敏感详情。
+  rpc GetAccountRecovery(GetAccountRecoveryRequest) returns (AccountRecovery);
+  // 使用 recovery_continuation 幂等取消仍可取消的 AccountRecovery。
+  rpc CancelAccountRecovery(CancelAccountRecoveryRequest) returns (AccountRecovery);
+  // 为当前恢复流程中的受信设备幂等创建短期签名挑战。
+  rpc CreateTrustedDeviceRecoveryChallenge(CreateTrustedDeviceRecoveryChallengeRequest) returns (TrustedDeviceRecoveryChallenge);
+  // 验证受信设备对指定 challenge 的签名，并记录恢复证据结果。
+  rpc VerifyTrustedDeviceRecoveryChallenge(VerifyTrustedDeviceRecoveryChallengeRequest) returns (RecoveryEvidence);
+  // 提交 Provider 收据作为 Payment 恢复证据；成功受理不等同于证据已验证。
+  rpc SubmitPaymentRecoveryEvidence(SubmitPaymentRecoveryEvidenceRequest) returns (RecoveryEvidence);
+  // 在恢复流程已满足证据要求时幂等领取短期一次性 RecoveryGrant。
+  rpc ClaimRecoveryGrant(ClaimRecoveryGrantRequest) returns (RecoveryGrant);
+  // 使用 RecoveryGrant 和新手机号验证票据幂等完成账号恢复。
+  rpc CompleteAccountRecovery(CompleteAccountRecoveryRequest) returns (CompleteAccountRecoveryResponse);
+}
+
+// AccountRecoveryStatus 刻画对应资源的生命周期状态。
+enum AccountRecoveryStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ACCOUNT_RECOVERY_STATUS_UNSPECIFIED = 0;
+  // 已提交处理，等待后续审核或执行。
+  ACCOUNT_RECOVERY_STATUS_SUBMITTED = 1;
+  // ACCOUNT_RECOVERY_STATUS_UNDER_REVIEW 表示资源处于对应业务阶段。
+  ACCOUNT_RECOVERY_STATUS_UNDER_REVIEW = 2;
+  // 审核已通过，可以继续后续流程。
+  ACCOUNT_RECOVERY_STATUS_APPROVED = 3;
+  // 处理已成功完成。
+  ACCOUNT_RECOVERY_STATUS_COMPLETED = 4;
+  // 审核已拒绝，不再按原请求继续。
+  ACCOUNT_RECOVERY_STATUS_REJECTED = 5;
+  // 处理已取消，不再继续推进。
+  ACCOUNT_RECOVERY_STATUS_CANCELED = 6;
+  // 有效期已结束，不再接受后续使用。
+  ACCOUNT_RECOVERY_STATUS_EXPIRED = 7;
+}
+
+// RecoveryEvidenceType 区分对应资源的业务类型。
+enum RecoveryEvidenceType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECOVERY_EVIDENCE_TYPE_UNSPECIFIED = 0;
+  // RECOVERY_EVIDENCE_TYPE_TRUSTED_DEVICE 选择 TRUSTED_DEVICE 业务类型。
+  RECOVERY_EVIDENCE_TYPE_TRUSTED_DEVICE = 1;
+  // RECOVERY_EVIDENCE_TYPE_PAYMENT 选择 PAYMENT 业务类型。
+  RECOVERY_EVIDENCE_TYPE_PAYMENT = 2;
+}
+
+// RecoveryEvidenceStatus 刻画对应资源的生命周期状态。
+enum RecoveryEvidenceStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECOVERY_EVIDENCE_STATUS_UNSPECIFIED = 0;
+  // RECOVERY_EVIDENCE_STATUS_REQUIRED 表示该业务条件为必需。
+  RECOVERY_EVIDENCE_STATUS_REQUIRED = 1;
+  // 已受理并等待后续处理。
+  RECOVERY_EVIDENCE_STATUS_PENDING = 2;
+  // 校验已经通过。
+  RECOVERY_EVIDENCE_STATUS_VERIFIED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  RECOVERY_EVIDENCE_STATUS_FAILED = 4;
+}
+
+// RecoveryPaymentProvider 标识能力所使用的外部 Provider。
+enum RecoveryPaymentProvider {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECOVERY_PAYMENT_PROVIDER_UNSPECIFIED = 0;
+  // RECOVERY_PAYMENT_PROVIDER_SIMULATED 选择对应的外部 Provider。
+  RECOVERY_PAYMENT_PROVIDER_SIMULATED = 1;
+  // RECOVERY_PAYMENT_PROVIDER_WECHAT_PAY 选择对应的外部 Provider。
+  RECOVERY_PAYMENT_PROVIDER_WECHAT_PAY = 2;
+  // RECOVERY_PAYMENT_PROVIDER_ALIPAY 选择对应的外部 Provider。
+  RECOVERY_PAYMENT_PROVIDER_ALIPAY = 3;
+  // RECOVERY_PAYMENT_PROVIDER_APPLE_IAP 选择对应的外部 Provider。
+  RECOVERY_PAYMENT_PROVIDER_APPLE_IAP = 4;
+  // RECOVERY_PAYMENT_PROVIDER_GOOGLE_PLAY 选择对应的外部 Provider。
+  RECOVERY_PAYMENT_PROVIDER_GOOGLE_PLAY = 5;
+}
+
+// RecoveryEvidence 表示 Account Recovery 使用的一份证据及校验状态。
+message RecoveryEvidence {
+  // type 区分 RecoveryEvidence 的业务类型。
+  RecoveryEvidenceType type = 1;
+  // status 表示 RecoveryEvidence 当前可观察的生命周期状态。
+  RecoveryEvidenceStatus status = 2;
+  // device_id 标识关联的 Device。
+  uint64 device_id = 3;
+  // payment_proof_reference 记录外部系统或关联流程提供的引用标识。
+  string payment_proof_reference = 4;
+  // verified_at 记录 RecoveryEvidence 对应业务阶段的时间点。
+  google.protobuf.Timestamp verified_at = 5;
+}
+
+// AccountRecovery 表示一次 Account Recovery 流程的状态与安全上下文。
+message AccountRecovery {
+  // status 表示 AccountRecovery 当前可观察的生命周期状态。
+  AccountRecoveryStatus status = 1;
+  // evidences 列出 AccountRecovery 关联的 RecoveryEvidence。
+  repeated RecoveryEvidence evidences = 2;
+  // cancelable 显式表示 AccountRecovery 是否满足该条件。
+  bool cancelable = 3;
+  // grant_available 显式表示 AccountRecovery 是否满足该条件。
+  bool grant_available = 4;
+  // submitted_at 记录 AccountRecovery 对应业务阶段的时间点。
+  google.protobuf.Timestamp submitted_at = 5;
+  // expires_at 指定 AccountRecovery 失效的时间点。
+  google.protobuf.Timestamp expires_at = 6;
+  // completed_at 记录 AccountRecovery 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 7;
+}
+
+// StartAccountRecoveryRequest 定义启动 AccountRecovery 的幂等管理命令参数。
+message StartAccountRecoveryRequest {
+  // app_id 限定 StartAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // StartAccountRecoveryRequest 使用以下一种方式定位目标资源。
+  oneof account_locator {
+    option (validate.required) = true;
+    // user_code 提供 StartAccountRecovery 对外稳定使用的业务编码。
+    string user_code = 2 [(validate.rules).string = {min_len: 3, max_len: 20}];
+    // current_phone 承载按约定地区规则规范化的手机号码。
+    string current_phone = 3 [(validate.rules).string = {pattern: "^\\+[1-9][0-9]{7,14}$", max_len: 16}];
+  }
+  // new_phone 承载按约定地区规则规范化的手机号码。
+  string new_phone = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {pattern: "^\\+[1-9][0-9]{7,14}$"}];
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 16, max_len: 2048}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// StartAccountRecoveryResponse 承载 StartAccountRecovery 的返回结果。
+message StartAccountRecoveryResponse {
+  // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string recovery_continuation = 1;
+  // expires_at 指定 StartAccountRecovery 失效的时间点。
+  google.protobuf.Timestamp expires_at = 2;
+}
+
+// GetAccountRecoveryRequest 标识待查询的 AccountRecovery。
+message GetAccountRecoveryRequest {
+  // app_id 限定 GetAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+}
+
+// CancelAccountRecoveryRequest 定义取消 AccountRecovery 的幂等管理命令参数。
+message CancelAccountRecoveryRequest {
+  // app_id 限定 CancelAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// CreateTrustedDeviceRecoveryChallengeRequest 定义创建 TrustedDeviceRecoveryChallenge 的幂等命令参数。
+message CreateTrustedDeviceRecoveryChallengeRequest {
+  // app_id 限定 CreateTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // device_id 标识关联的 Device。
+  uint64 device_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64 = {gt: 0}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// TrustedDeviceRecoveryChallenge 承载 CreateTrustedDeviceRecoveryChallenge 调用的返回结果。
+message TrustedDeviceRecoveryChallenge {
+  // challenge_no 是 TrustedDeviceRecoveryChallenge 对外关联与审计使用的业务编号。
+  string challenge_no = 1;
+  // challenge 承载设备恢复校验使用的 Challenge，不得写入普通日志。
+  string challenge = 2;
+  // expires_at 指定 TrustedDeviceRecoveryChallenge 失效的时间点。
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+// VerifyTrustedDeviceRecoveryChallengeRequest 定义校验 TrustedDeviceRecoveryChallenge 的幂等管理命令参数。
+message VerifyTrustedDeviceRecoveryChallengeRequest {
+  // app_id 限定 VerifyTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // device_id 标识关联的 Device。
+  uint64 device_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64 = {gt: 0}];
+  // challenge_no 是 VerifyTrustedDeviceRecoveryChallenge 对外关联与审计使用的业务编号。
+  string challenge_no = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
+  // challenge 承载设备恢复校验使用的 Challenge，不得写入普通日志。
+  string challenge = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 2048}];
+  // signature 承载敏感凭据或校验材料，不得写入普通日志。
+  bytes signature = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).bytes = {min_len: 64, max_len: 64}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 7 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// SubmitPaymentRecoveryEvidenceRequest 定义提交 PaymentRecoveryEvidence 的幂等管理命令参数。
+message SubmitPaymentRecoveryEvidenceRequest {
+  // app_id 限定 SubmitPaymentRecoveryEvidence 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // provider 标识本次能力使用的外部 Provider。
+  RecoveryPaymentProvider provider = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // receipt 承载敏感凭据或校验材料，不得写入普通日志。
+  string receipt = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 131072}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ClaimRecoveryGrantRequest 定义执行 ClaimRecoveryGrant 的幂等管理命令参数。
+message ClaimRecoveryGrantRequest {
+  // app_id 限定 ClaimRecoveryGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// RecoveryGrant 承载 ClaimRecoveryGrant 调用的返回结果。
+message RecoveryGrant {
+  // grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+  string grant = 1;
+  // expires_at 指定 RecoveryGrant 失效的时间点。
+  google.protobuf.Timestamp expires_at = 2;
+}
+
+// CompleteAccountRecoveryRequest 定义完成 AccountRecovery 的幂等管理命令参数。
+message CompleteAccountRecoveryRequest {
+  // app_id 限定 CompleteAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+  string grant = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // new_phone 承载按约定地区规则规范化的手机号码。
+  string new_phone = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {pattern: "^\\+[1-9][0-9]{7,14}$", max_len: 16}];
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 16, max_len: 2048}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// CompleteAccountRecoveryResponse 承载 CompleteAccountRecovery 的返回结果。
+message CompleteAccountRecoveryResponse {
+  // status 表示 CompleteAccountRecovery 当前可观察的生命周期状态。
+  AccountRecoveryStatus status = 1;
+  // completed_at 记录 CompleteAccountRecovery 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 2;
+}

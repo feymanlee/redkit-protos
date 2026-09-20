@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "payment/v1/payment_contract.proto";
+
+// 充值履约服务。
+service PaymentRechargeFulfillmentService {
+	// 查询类型化 Delivery Failure。
+	rpc ListDeliveryFailures(common.pagination.v1.PagingRequest) returns (ListDeliveryFailureResponse) {}
+	// 按 Recharge 工作流规则重放。
+	rpc ReplayRechargeDeliveryFailure(ReplayDeliveryFailureRequest) returns (DeliveryFailure) {}
+	// 按 Refund fulfillment 工作流规则重放。
+	rpc ReplayRefundDeliveryFailure(ReplayDeliveryFailureRequest) returns (DeliveryFailure) {}
+	// 按 File reference 工作流规则重放。
+	rpc ReplayFileReferenceDeliveryFailure(ReplayDeliveryFailureRequest) returns (DeliveryFailure) {}
+	// 按 Provider Bill task 工作流规则重放。
+	rpc ReplayProviderBillDeliveryFailure(ReplayDeliveryFailureRequest) returns (DeliveryFailure) {}
+	// 按 Payment Attempt expiration 工作流规则重放。
+	rpc ReplayPaymentAttemptExpirationDeliveryFailure(ReplayDeliveryFailureRequest) returns (DeliveryFailure) {}
+  // 查询充值入账死信列表。
+  rpc ListRechargeDeadLetters(common.pagination.v1.PagingRequest) returns (ListPaymentOutboxEventResponse) {}
+  // 重放充值入账死信。
+  rpc ReplayRechargeDeadLetter(ReplayPaymentOutboxEventRequest) returns (PaymentOutboxEvent) {}
+}

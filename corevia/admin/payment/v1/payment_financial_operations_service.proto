@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/financial_operations.proto";
+import "payment/v1/payment_types.proto";
+import "validate/validate.proto";
+
+// 支付资金运营服务。
+service PaymentFinancialOperationsService {
+  // 导入 SettlementStatement。
+  rpc ImportSettlementStatement(AdminImportSettlementStatementRequest) returns (.payment.v1.SettlementStatementDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/settlements:import" body: "*" };
+  }
+  // 查询 SettlementStatement 列表。
+  rpc ListSettlementStatements(AdminListSettlementStatementsRequest) returns (.payment.v1.ListSettlementStatementsResponse) {
+    option (google.api.http) = { get: "/admin/v1/payment/settlements" };
+  }
+  // 查询 SettlementStatement。
+  rpc GetSettlementStatement(AdminGetSettlementStatementRequest) returns (.payment.v1.SettlementStatementDetail) {
+    option (google.api.http) = { get: "/admin/v1/payment/settlements/{statement_id}" };
+  }
+  // 变更 SettlementDiscrepancy。
+  rpc MutateSettlementDiscrepancy(AdminMutateSettlementDiscrepancyRequest) returns (.payment.v1.SettlementStatementDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/settlement-discrepancies/{discrepancy_id}:mutate" body: "*" };
+  }
+  // 查询 Dispute 列表。
+  rpc ListDisputes(AdminListDisputesRequest) returns (.payment.v1.ListDisputesResponse) {
+    option (google.api.http) = { get: "/admin/v1/payment/disputes" };
+  }
+  // 查询 Dispute。
+  rpc GetDispute(AdminGetDisputeRequest) returns (.payment.v1.DisputeDetail) {
+    option (google.api.http) = { get: "/admin/v1/payment/disputes/{dispute_id}" };
+  }
+  // 刷新 Dispute。
+  rpc RefreshDispute(AdminRefreshDisputeRequest) returns (.payment.v1.DisputeDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/disputes/{dispute_id}:refresh" body: "*" };
+  }
+  // 添加 DisputeEvidence。
+  rpc AddDisputeEvidence(AdminAddDisputeEvidenceRequest) returns (.payment.v1.DisputeDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/disputes/{dispute_id}/evidences" body: "*" };
+  }
+  // 移除 DisputeEvidence。
+  rpc RemoveDisputeEvidence(AdminRemoveDisputeEvidenceRequest) returns (.payment.v1.DisputeDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/disputes/{dispute_id}/evidences/{evidence_id}:remove" body: "*" };
+  }
+  // 提交 DisputeEvidence。
+  rpc SubmitDisputeEvidence(AdminSubmitDisputeEvidenceRequest) returns (.payment.v1.DisputeDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/disputes/{dispute_id}:submit-evidence" body: "*" };
+  }
+  // 应用 Chargeback。
+  rpc ApplyChargeback(AdminApplyChargebackRequest) returns (.payment.v1.DisputeDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/disputes/{dispute_id}:apply-chargeback" body: "*" };
+  }
+}
+
+// AdminSettlementReference 标识管理端结算操作关联的业务流水。
+message AdminSettlementReference {
+  // entry_type 区分 SettlementReference 的业务类型。
+  .payment.v1.SettlementEntry.EntryType entry_type = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // reference_no 是 SettlementReference 对外关联与审计使用的业务编号。
+  string reference_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 3 [(validate.rules).int64 = {gte: 0}];
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 4 [(validate.rules).string = {min_len: 3, max_len: 16}];
+}
+
+// AdminImportSettlementStatementRequest 定义导入 SettlementStatement 的幂等管理命令参数。
+message AdminImportSettlementStatementRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // provider_bill_id 标识关联的 ProviderBill。
+  optional uint64 provider_bill_id = 2 [(validate.rules).uint64.gt = 0];
+  // period_start 指定 ImportSettlementStatement 统计或结算周期的起点。
+  string period_start = 3 [(validate.rules).string.len = 10];
+  // period_end 指定 ImportSettlementStatement 统计或结算周期的终点。
+  string period_end = 4 [(validate.rules).string.len = 10];
+  // source_identity 记录外部或上游系统用于稳定关联 ImportSettlementStatement 的身份。
+  string source_identity = 5 [(validate.rules).string = {min_len: 1, max_len: 256}];
+  // checksum 用于校验 ImportSettlementStatement 对应内容或版本的一致性。
+  string checksum = 6 [(validate.rules).string = {min_len: 32, max_len: 128}];
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 7 [(validate.rules).string = {min_len: 3, max_len: 16}];
+  // gross_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 gross_amount = 8 [(validate.rules).int64.gte = 0];
+  // refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 refund_amount = 9 [(validate.rules).int64.gte = 0];
+  // fee_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 fee_amount = 10 [(validate.rules).int64.gte = 0];
+  // adjustment_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 adjustment_amount = 11;
+  // net_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 net_amount = 12;
+  // payout_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 payout_amount = 13 [(validate.rules).int64.gte = 0];
+  // payout_reference 记录外部系统或关联流程提供的引用标识。
+  optional string payout_reference = 14 [(validate.rules).string.max_len = 256];
+  // payout_at 记录 ImportSettlementStatement 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp payout_at = 15;
+  // references 列出 ImportSettlementStatement 关联的 AdminSettlementReference。
+  repeated AdminSettlementReference references = 16 [(validate.rules).repeated.max_items = 10000];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 17 [(validate.rules).string.max_len = 128];
+}
+
+// AdminListSettlementStatementsRequest 定义 SettlementStatements 的筛选与分页参数。
+message AdminListSettlementStatementsRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  optional .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum.defined_only = true];
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 2 [(validate.rules).string.max_len = 16];
+  // status 表示 ListSettlementStatements 当前可观察的生命周期状态。
+  optional .payment.v1.SettlementStatement.Status status = 3 [(validate.rules).enum.defined_only = true];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 4;
+}
+
+// AdminGetSettlementStatementRequest 标识待查询的 SettlementStatement。
+message AdminGetSettlementStatementRequest {
+  // statement_id 标识关联的 Statement。
+  uint64 statement_id = 1 [(validate.rules).uint64.gt = 0];
+}
+
+// AdminMutateSettlementDiscrepancyRequest 定义变更 SettlementDiscrepancy 的幂等管理命令参数。
+message AdminMutateSettlementDiscrepancyRequest {
+  // discrepancy_id 标识关联的 Discrepancy。
+  uint64 discrepancy_id = 1 [(validate.rules).uint64.gt = 0];
+  // action 指定本次状态推进采用的业务动作。
+  .payment.v1.MutateSettlementDiscrepancyRequest.Action action = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 3;
+  // evidence 提供支撑 MutateSettlementDiscrepancy 判断或处置的证明材料。
+  optional string evidence = 4 [(validate.rules).string.max_len = 4096];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 5 [(validate.rules).string.max_len = 1024];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 6 [(validate.rules).string.max_len = 128];
+}
+
+// AdminListDisputesRequest 定义 Disputes 的筛选与分页参数。
+message AdminListDisputesRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  optional .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum.defined_only = true];
+  // status 表示 ListDisputes 当前可观察的生命周期状态。
+  optional .payment.v1.Dispute.Status status = 2 [(validate.rules).enum.defined_only = true];
+  // payment_no 是 ListDisputes 对外关联与审计使用的业务编号。
+  optional string payment_no = 3 [(validate.rules).string.max_len = 128];
+  // evidence_due 显式表示 ListDisputes 是否满足该条件。
+  optional bool evidence_due = 4;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 5;
+}
+
+// AdminGetDisputeRequest 标识待查询的 Dispute。
+message AdminGetDisputeRequest {
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 1 [(validate.rules).uint64.gt = 0];
+}
+
+// AdminRefreshDisputeRequest 定义执行 RefreshDispute 的幂等管理命令参数。
+message AdminRefreshDisputeRequest {
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 1 [(validate.rules).uint64.gt = 0];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 2 [(validate.rules).string.max_len = 128];
+}
+
+// AdminAddDisputeEvidenceRequest 定义执行 AddDisputeEvidence 的幂等管理命令参数。
+message AdminAddDisputeEvidenceRequest {
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 1 [(validate.rules).uint64.gt = 0];
+  // file_id 标识关联的 File。
+  uint64 file_id = 2 [(validate.rules).uint64.gt = 0];
+  // evidence_type 区分 AddDisputeEvidence 的业务类型。
+  string evidence_type = 3 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  // description 提供 AddDisputeEvidence 的补充说明。
+  optional string description = 4 [(validate.rules).string.max_len = 1024];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 5 [(validate.rules).string.max_len = 128];
+}
+
+// AdminRemoveDisputeEvidenceRequest 定义删除 DisputeEvidence 的命令参数。
+message AdminRemoveDisputeEvidenceRequest {
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 1 [(validate.rules).uint64.gt = 0];
+  // evidence_id 标识关联的 Evidence。
+  uint64 evidence_id = 2 [(validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(validate.rules).string = {min_len: 1, max_len: 1024}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 4 [(validate.rules).string.max_len = 128];
+}
+
+// AdminSubmitDisputeEvidenceRequest 定义提交 DisputeEvidence 的幂等管理命令参数。
+message AdminSubmitDisputeEvidenceRequest {
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 1 [(validate.rules).uint64.gt = 0];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 2 [(validate.rules).string.max_len = 128];
+}
+
+// AdminApplyChargebackRequest 定义应用 Chargeback 的幂等管理命令参数。
+message AdminApplyChargebackRequest {
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 1 [(validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(validate.rules).string = {min_len: 1, max_len: 1024}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3 [(validate.rules).string.max_len = 128];
+}

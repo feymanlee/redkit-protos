@@ -1,0 +1,266 @@
+syntax = "proto3";
+
+package admin.user.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "user/administration/v1/device.proto";
+import "user/administration/v1/security.proto";
+import "user/administration/v1/session.proto";
+import "user/administration/v1/types.proto";
+import "validate/validate.proto";
+
+// C 端用户安全管理服务。
+// App 与 Operator 只从已认证上下文派生；请求中的 user_id 始终表示被处置的 C 端 User。
+service UserSecurityAdminService {
+  // 查询 Session 列表。
+  rpc ListSessions(AdminListUserSessionsRequest) returns (.user.administration.v1.ListSessionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/sessions"};
+  }
+  // 撤销 Session。
+  rpc RevokeSession(AdminRevokeSessionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/sessions/{session_id}:revoke"
+      body: "*"
+    };
+  }
+  // 撤销 AllSessions。
+  rpc RevokeAllSessions(AdminRevokeAllSessionsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/sessions:revoke-all"
+      body: "*"
+    };
+  }
+  // 查询 Device 列表。
+  rpc ListDevices(AdminListUserDevicesRequest) returns (.user.administration.v1.ListDevicesResponse) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/devices"};
+  }
+  // 撤销 DeviceSessions。
+  rpc RevokeDeviceSessions(AdminRevokeDeviceSessionsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/devices/{device_id}:revoke-sessions"
+      body: "*"
+    };
+  }
+  // 查询 SecurityEvent 列表。
+  rpc ListSecurityEvents(AdminListSecurityEventsRequest) returns (.user.administration.v1.ListSecurityEventsResponse) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/security-events"};
+  }
+  // 解锁 User。
+  rpc UnlockUser(AdminUnlockUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:unlock"
+      body: "*"
+    };
+  }
+  // 查询 SecurityState。
+  rpc GetSecurityState(AdminGetUserSecurityStateRequest) returns (.user.administration.v1.SecurityState) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/security-state"};
+  }
+  // RequirePasswordReset 受 user:security:remediate 控制，不能从通用用户管理权限隐式获得。
+  rpc RequirePasswordReset(AdminRequirePasswordResetRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:require-password-reset"
+      body: "*"
+    };
+  }
+  // RevokeCredential 受 user:security:remediate 控制，不能从通用用户管理权限隐式获得。
+  rpc RevokeCredential(AdminRevokeCredentialRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/credentials/{credential_id}:revoke"
+      body: "*"
+    };
+  }
+  // ResetMFA 受 user:security:remediate 控制，不能从通用用户管理权限隐式获得。
+  rpc ResetMFA(AdminResetMFARequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/mfa:reset"
+      body: "*"
+    };
+  }
+  // RevokeDeviceTrust 受 user:security:remediate 控制，不能从通用用户管理权限隐式获得。
+  rpc RevokeDeviceTrust(AdminRevokeDeviceTrustRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/devices/{device_id}:revoke-trust"
+      body: "*"
+    };
+  }
+}
+
+// AdminListUserSessionsRequest 定义 UserSessions 的筛选与分页参数。
+message AdminListUserSessionsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+// AdminListUserDevicesRequest 定义 UserDevices 的筛选与分页参数。
+message AdminListUserDevicesRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+// AdminRevokeSessionRequest 定义撤销 Session 的幂等管理命令参数。
+message AdminRevokeSessionRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // session_id 标识关联的 Session。
+  string session_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}
+// AdminRevokeAllSessionsRequest 定义撤销 AllSessions 的幂等管理命令参数。
+message AdminRevokeAllSessionsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3;
+}
+// AdminRevokeDeviceSessionsRequest 定义撤销 DeviceSessions 的幂等管理命令参数。
+message AdminRevokeDeviceSessionsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // device_id 标识关联的 Device。
+  uint64 device_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}
+// AdminListSecurityEventsRequest 定义 SecurityEvents 的筛选与分页参数。
+message AdminListSecurityEventsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+// AdminUnlockUserRequest 定义执行 UnlockUser 的幂等管理命令参数。
+message AdminUnlockUserRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3;
+}
+// AdminGetUserSecurityStateRequest 标识待查询的 UserSecurityState。
+message AdminGetUserSecurityStateRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+}
+// AdminRequirePasswordResetRequest 定义执行 RequirePasswordReset 的幂等管理命令参数。
+message AdminRequirePasswordResetRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// AdminRevokeCredentialRequest 定义撤销 Credential 的幂等管理命令参数。
+message AdminRevokeCredentialRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // credential_id 标识关联的 Credential。
+  uint64 credential_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// AdminResetMFARequest 定义重置 MFA 的幂等管理命令参数。
+message AdminResetMFARequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// AdminRevokeDeviceTrustRequest 定义撤销 DeviceTrust 的幂等管理命令参数。
+message AdminRevokeDeviceTrustRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // device_id 标识关联的 Device。
+  uint64 device_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}

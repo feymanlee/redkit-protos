@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_administration.proto";
+
+// PaymentExportJobStatus 刻画对应资源的生命周期状态。
+enum PaymentExportJobStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PAYMENT_EXPORT_JOB_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  PENDING = 1;
+  // 正在处理中，尚未形成终态。
+  PROCESSING = 2;
+  // 处理已成功完成。
+  SUCCEEDED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  FAILED = 4;
+}
+
+// PaymentExportField 定义对应业务维度允许使用的离散取值。
+enum PaymentExportField {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PAYMENT_EXPORT_FIELD_UNSPECIFIED = 0;
+  // 显式表示否定选择。
+  PAYMENT_NO = 1;
+  // 显式表示否定选择。
+  ORDER_NO = 2;
+  // USER_ID 选择导出或查询投影中的 USER_ID 字段。
+  USER_ID = 3;
+  // AMOUNT 选择导出或查询投影中的 AMOUNT 字段。
+  AMOUNT = 4;
+  // CURRENCY 选择导出或查询投影中的 CURRENCY 字段。
+  CURRENCY = 5;
+  // PROVIDER 选择导出或查询投影中的 PROVIDER 字段。
+  PROVIDER = 6;
+  // METHOD 选择导出或查询投影中的 METHOD 字段。
+  METHOD = 7;
+  // STATUS 选择导出或查询投影中的 STATUS 字段。
+  STATUS = 8;
+  // FULFILLMENT_STATUS 选择导出或查询投影中的 FULFILLMENT_STATUS 字段。
+  FULFILLMENT_STATUS = 9;
+  // 显式表示否定选择。
+  PROVIDER_TRADE_NO = 10;
+  // BIZ_TYPE 选择导出或查询投影中的 BIZ_TYPE 字段。
+  BIZ_TYPE = 11;
+  // BIZ_ID 选择导出或查询投影中的 BIZ_ID 字段。
+  BIZ_ID = 12;
+  // CREATED_AT 选择导出或查询投影中的 CREATED_AT 字段。
+  CREATED_AT = 13;
+}
+
+// PaymentExportJob 描述一次异步处理的生命周期与结果。
+message PaymentExportJob {
+  // job_no 是 PaymentExportJob 对外关联与审计使用的业务编号。
+  string job_no = 1;
+  // app_id 限定 PaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3;
+  // status 表示 PaymentExportJob 当前可观察的生命周期状态。
+  PaymentExportJobStatus status = 4;
+  // filter 限定本次查询采用的筛选条件。
+  PaymentSearchFilter filter = 5;
+  // fields 列出 PaymentExportJob 关联的 PaymentExportField。
+  repeated PaymentExportField fields = 6;
+  // file_id 标识关联的 File。
+  uint64 file_id = 7;
+  // row_count 记录 PaymentExportJob 中符合对应条件的数量。
+  uint64 row_count = 8;
+  // failure_code 提供机器可判断的处理结果或失败分类。
+  optional string failure_code = 9;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 10;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 11;
+  // created_at 记录 PaymentExportJob 的创建时间。
+  google.protobuf.Timestamp created_at = 12;
+  // started_at 指定 PaymentExportJob 生效或查询区间的起始时间。
+  optional google.protobuf.Timestamp started_at = 13;
+  // completed_at 记录 PaymentExportJob 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp completed_at = 14;
+}
+
+// CreatePaymentExportJobRequest 定义创建 PaymentExportJob 的幂等命令参数。
+message CreatePaymentExportJobRequest {
+  // app_id 限定 CreatePaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 2;
+  // filter 限定本次查询采用的筛选条件。
+  PaymentSearchFilter filter = 3;
+  // fields 列出 CreatePaymentExportJob 关联的 PaymentExportField。
+  repeated PaymentExportField fields = 4;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+}
+
+// GetPaymentExportJobRequest 标识待查询的 PaymentExportJob。
+message GetPaymentExportJobRequest {
+  // app_id 限定 GetPaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // job_no 是 GetPaymentExportJob 对外关联与审计使用的业务编号。
+  string job_no = 2;
+}
+
+// ListPaymentExportJobsRequest 定义 PaymentExportJobs 的筛选与分页参数。
+message ListPaymentExportJobsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+}
+
+// ListPaymentExportJobsResponse 返回 PaymentExportJobs 结果集合及分页信息。
+message ListPaymentExportJobsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PaymentExportJob items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CreatePaymentExportDownloadRequest 定义创建 PaymentExportDownload 的命令参数。
+message CreatePaymentExportDownloadRequest {
+  // app_id 限定 CreatePaymentExportDownload 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 2;
+  // job_no 是 CreatePaymentExportDownload 对外关联与审计使用的业务编号。
+  string job_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4;
+}
+
+// PaymentExportDownload 提供一次性 Payment Export 下载授权及失效时间。
+message PaymentExportDownload {
+  // job_no 是 PaymentExportDownload 对外关联与审计使用的业务编号。
+  string job_no = 1;
+  // url 指定 PaymentExportDownload 访问或跳转使用的目标地址。
+  string url = 2;
+  // expires_at 指定 PaymentExportDownload 失效的时间点。
+  google.protobuf.Timestamp expires_at = 3;
+}

@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package admin.gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/send.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+// 礼物发送管理服务。
+service GiftSendService {
+  // 查询送礼记录详情。
+  rpc GetGiftSendRecord(AdminGetGiftSendRecordRequest) returns (.gift.v1.GiftSendWorkbenchDetail) {
+    option (google.api.http) = {get: "/admin/v1/gift-send-records/{id}"};
+  }
+  // 查询礼物发送记录列表。
+  rpc ListGiftSendRecords(AdminListGiftSendRecordsRequest) returns (.gift.v1.ListGiftSendRecordResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-send-records"};
+  }
+  // 对账一笔失败或处理中 Send。
+  rpc ReconcileGiftSend(AdminReconcileGiftSendRequest) returns (.gift.v1.ReconcileGiftSendResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-send-records/{send_id}:reconcile"
+      body: "*"
+    };
+  }
+}
+
+// AdminGetGiftSendRecordRequest 标识待查询的 GiftSendRecord。
+message AdminGetGiftSendRecordRequest {
+  // id 标识关联的 GetGiftSendRecord。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminListGiftSendRecordsRequest 定义 GiftSendRecords 的筛选与分页参数。
+message AdminListGiftSendRecordsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.GiftSendFilter filter = 1 [(google.api.field_behavior) = REQUIRED];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminReconcileGiftSendRequest 定义核对 GiftSend 的幂等管理命令参数。
+message AdminReconcileGiftSendRequest {
+  // send_id 标识关联的 Send。
+  uint64 send_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}

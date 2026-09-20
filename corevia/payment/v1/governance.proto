@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// 诊断资源类型。Raw 数据只能按一个具体资源读取。
+enum DiagnosticResourceType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  DIAGNOSTIC_RESOURCE_TYPE_UNSPECIFIED = 0;
+  // CALLBACK 选择 CALLBACK 业务类型。
+  CALLBACK = 1;
+  // EVENT 选择 EVENT 业务类型。
+  EVENT = 2;
+  // 处理失败；是否可重试由具体失败原因决定。
+  DELIVERY_FAILURE = 3;
+}
+
+// 普通观察接口可见的安全诊断摘要。
+message MaskedDiagnosticData {
+  // summary 提供面向查询的聚合摘要。
+  string summary = 1;
+  // redacted_fields 列出诊断数据中已经移除或脱敏的字段路径。
+  repeated string redacted_fields = 2;
+  // erased 显式表示 MaskedDiagnosticData 是否满足该条件。
+  bool erased = 3;
+}
+
+// 单资源 Raw 诊断响应。内容按 Payment 持久化的原文返回，仅供具备独立权限的 Operator 查看。
+message RawDiagnosticData {
+  // resource_type 区分 RawDiagnosticData 的业务类型。
+  DiagnosticResourceType resource_type = 1;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 2;
+  // raw_body 保留并返回外部响应原文，仅供受控诊断访问，不得写入普通日志。
+  optional string raw_body = 3;
+  // headers 保留并返回回调请求头原文，仅供受控诊断访问，不得写入普通日志。
+  optional string headers = 4;
+  // payload 保留并返回外部交互的原始载荷，仅供受控诊断访问。
+  optional string payload = 5;
+  // redacted_fields 保留兼容字段；原文读取不会主动移除字段，通常为空。
+  repeated string redacted_fields = 6;
+  // erased_at 记录 RawDiagnosticData 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp erased_at = 7;
+}
+
+// Payment 对后台敏感观察和处置保存的不可变领域审计事实。
+message PaymentGovernanceEvent {
+  // id 标识关联的 PaymentGovernanceEvent。
+  uint64 id = 1;
+  // app_id 限定 PaymentGovernanceEvent 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // action 指定本次状态推进采用的业务动作。
+  string action = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // target_type 区分 PaymentGovernanceEvent 的业务类型。
+  string target_type = 6;
+  // target_id 标识关联的 Target。
+  string target_id = 7;
+  // reason_code 提供机器可判断的业务原因分类。
+  optional string reason_code = 8;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 9;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 10;
+  // result 记录操作或治理事件的可观察执行结果。
+  string result = 11;
+  // before_summary 保留管理操作执行前的资源摘要快照。
+  optional string before_summary = 12;
+  // after_summary 保留管理操作执行后的资源摘要快照。
+  optional string after_summary = 13;
+  // created_at 记录 PaymentGovernanceEvent 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// ListPaymentGovernanceEventResponse 返回 PaymentGovernanceEvent 结果集合及分页信息。
+message ListPaymentGovernanceEventResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PaymentGovernanceEvent items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetRawDiagnosticDataRequest 标识待查询的 RawDiagnosticData。
+message GetRawDiagnosticDataRequest {
+  // app_id 限定 GetRawDiagnosticData 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // resource_type 区分 GetRawDiagnosticData 的业务类型。
+  DiagnosticResourceType resource_type = 2;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+}
+
+// EraseDiagnosticDataRequest 定义执行 EraseDiagnosticData 的幂等管理命令参数。
+message EraseDiagnosticDataRequest {
+  // app_id 限定 EraseDiagnosticData 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // resource_type 区分 EraseDiagnosticData 的业务类型。
+  DiagnosticResourceType resource_type = 2;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7;
+}

@@ -1,0 +1,330 @@
+syntax = "proto3";
+
+package admin.wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/send.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/operations_query.proto";
+import "payment/v1/payment_contract.proto";
+import "payment/v1/refund.proto";
+import "user/internal/v1/identity.proto";
+import "validate/validate.proto";
+import "wallet/v1/adjustment.proto";
+import "wallet/v1/export.proto";
+import "wallet/v1/ledger.proto";
+import "wallet/v1/operations_query.proto";
+import "wallet/v1/recharge.proto";
+import "wallet/v1/reconciliation.proto";
+import "wallet/v1/refund.proto";
+import "wallet/v1/wallet_types.proto";
+
+// WalletOperationsService is a read-only, non-persistent Admin BFF aggregate.
+service WalletOperationsService {
+  // 查询 Overview。
+  rpc GetOverview(GetWalletOperationsOverviewRequest) returns (WalletOperationsOverview) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/overview"};
+  }
+  // 查询 UserWorkbench。
+  rpc GetUserWorkbench(GetWalletUserWorkbenchRequest) returns (WalletUserWorkbench) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}"};
+  }
+  // 查询 RechargeOrderDetail。
+  rpc GetRechargeOrderDetail(GetWalletRechargeOrderDetailRequest) returns (WalletRechargeOrderDetail) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/recharge-orders/{order_no}"};
+  }
+  // 查询 UserWalletTransaction 列表。
+  rpc ListUserWalletTransactions(ListWalletUserFactsRequest) returns (.wallet.v1.ListWalletTransactionResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/wallet-transactions"};
+  }
+  // 查询 UserWalletEvent 列表。
+  rpc ListUserWalletEvents(ListWalletUserFactsRequest) returns (.wallet.v1.ListWalletEventResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/wallet-events"};
+  }
+  // 查询 UserFreeze 列表。
+  rpc ListUserFreezes(ListWalletUserFactsRequest) returns (.wallet.v1.ListWalletFreezeResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/freezes"};
+  }
+  // 查询 UserDebt 列表。
+  rpc ListUserDebts(ListWalletUserFactsRequest) returns (.wallet.v1.ListWalletUserDebtResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/debts"};
+  }
+  // 查询 UserAdjustment 列表。
+  rpc ListUserAdjustments(ListWalletUserFactsRequest) returns (.wallet.v1.ListWalletAdjustmentResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/adjustments"};
+  }
+  // 查询 UserRechargeOrder 列表。
+  rpc ListUserRechargeOrders(ListWalletUserFactsRequest) returns (.wallet.v1.ListRechargeOrderResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/recharge-orders"};
+  }
+  // 查询 UserPayment 列表。
+  rpc ListUserPayments(ListWalletUserFactsRequest) returns (.payment.v1.ListPaymentResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/payments"};
+  }
+  // 查询 UserRefund 列表。
+  rpc ListUserRefunds(ListWalletUserFactsRequest) returns (.payment.v1.ListRefundResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/refunds"};
+  }
+  // 查询 UserGiftSend 列表。
+  rpc ListUserGiftSends(ListWalletUserGiftFactsRequest) returns (.gift.v1.ListGiftSendRecordResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/users/{user_id}/gift-sends"};
+  }
+  // 创建 Export。
+  rpc CreateExport(AdminCreateWalletExportRequest) returns (.wallet.v1.WalletExportJob) {
+    option (google.api.http) = {post: "/admin/v1/wallet-operations/exports" body: "*"};
+  }
+  // 查询 Export 列表。
+  rpc ListExports(AdminListWalletExportsRequest) returns (.wallet.v1.ListWalletExportsResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-operations/exports"};
+  }
+  // 重试 Export。
+  rpc RetryExport(AdminRetryWalletExportRequest) returns (.wallet.v1.WalletExportJob) {
+    option (google.api.http) = {post: "/admin/v1/wallet-operations/exports/{export_id}:retry" body: "*"};
+  }
+  // 查询 ExportDownload。
+  rpc GetExportDownload(AdminGetWalletExportDownloadRequest) returns (.wallet.v1.WalletExportDownload) {
+    option (google.api.http) = {post: "/admin/v1/wallet-operations/exports/{export_id}:download" body: "*"};
+  }
+}
+
+// AdminCreateWalletExportRequest 定义创建 WalletExport 的幂等命令参数。
+message AdminCreateWalletExportRequest {
+  // query 承载 CreateWalletExport 关联的 WalletExportQuery。
+  .wallet.v1.WalletExportQuery query = 1 [(google.api.field_behavior) = REQUIRED];
+  // purpose 指定 CreateWalletExport 数据或能力的预期用途。
+  string purpose = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 500}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3 [(validate.rules).string.max_len = 128];
+}
+
+// AdminListWalletExportsRequest 定义 WalletExports 的筛选与分页参数。
+message AdminListWalletExportsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // resource 指定本次查询、导出或操作面向的资源类型。
+  optional .wallet.v1.WalletExportResource resource = 2 [(validate.rules).enum.defined_only = true];
+  // status 表示 ListWalletExports 当前可观察的生命周期状态。
+  optional .wallet.v1.WalletExportStatus status = 3 [(validate.rules).enum.defined_only = true];
+}
+
+// AdminRetryWalletExportRequest 定义重试 WalletExport 的幂等管理命令参数。
+message AdminRetryWalletExportRequest {
+  // export_id 标识关联的 Export。
+  uint64 export_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // purpose 指定 RetryWalletExport 数据或能力的预期用途。
+  string purpose = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 500}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3 [(validate.rules).string.max_len = 128];
+}
+
+// AdminGetWalletExportDownloadRequest 标识待查询的 WalletExportDownload。
+message AdminGetWalletExportDownloadRequest {
+  // export_id 标识关联的 Export。
+  uint64 export_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// GetWalletOperationsOverviewRequest 标识待查询的 WalletOperationsOverview。
+message GetWalletOperationsOverviewRequest {
+  // long_running_freeze_hours 以小时为单位定义 Wallet Freeze 被视为长时间未处理的阈值。
+  optional uint32 long_running_freeze_hours = 1 [(validate.rules).uint32 = {gte: 1, lte: 720}];
+}
+
+// WalletOperationsMetric 表示 Wallet 运营指标的当前值、对比值与变化量。
+message WalletOperationsMetric {
+  // count 记录 WalletOperationsMetric 中符合对应条件的数量。
+  uint64 count = 1;
+  // amounts 列出 WalletOperationsMetric 关联的 WalletOperationsAmount。
+  repeated WalletOperationsAmount amounts = 2;
+  // oldest_at 记录 WalletOperationsMetric 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp oldest_at = 3;
+  // authority 标识认证或授权决策采用的权威来源。
+  string authority = 4;
+  // resource_path 记录 Storage Provider 内对象的稳定资源路径。
+  string resource_path = 5;
+}
+
+// WalletOperationsAmount 表示 Wallet 运营指标中的金额与 WalletCurrency。
+message WalletOperationsAmount {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1;
+  // amount 以对应 WalletCurrency 的最小计量单位表示，不使用浮点数。
+  int64 amount = 2;
+}
+
+// WalletOperationsOverview 承载 GetOverview 调用的返回结果。
+message WalletOperationsOverview {
+  // pending_approvals 承载 WalletOperationsOverview 关联的 WalletOperationsMetric。
+  WalletOperationsMetric pending_approvals = 1;
+  // recharge_dead_letters 承载 WalletOperationsOverview 关联的 WalletOperationsMetric。
+  WalletOperationsMetric recharge_dead_letters = 2;
+  // open_debts 承载 WalletOperationsOverview 关联的 WalletOperationsMetric。
+  WalletOperationsMetric open_debts = 3;
+  // reconciliation_differences 承载 WalletOperationsOverview 关联的 WalletOperationsMetric。
+  WalletOperationsMetric reconciliation_differences = 4;
+  // long_running_freezes 承载 WalletOperationsOverview 关联的 WalletOperationsMetric。
+  WalletOperationsMetric long_running_freezes = 5;
+  // high_risk_events 承载 WalletOperationsOverview 关联的 WalletOperationsMetric。
+  WalletOperationsMetric high_risk_events = 6;
+  // generated_at 记录 WalletOperationsOverview 对应业务阶段的时间点。
+  google.protobuf.Timestamp generated_at = 7;
+}
+
+// GetWalletUserWorkbenchRequest 标识待查询的 WalletUserWorkbench。
+message GetWalletUserWorkbenchRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// WalletUserWorkbench 承载 GetUserWorkbench 调用的返回结果。
+message WalletUserWorkbench {
+  // canonical_user 承载 WalletUserWorkbench 关联的 UserReference。
+  .user.internal.v1.UserReference canonical_user = 1;
+  // wallet 承载 WalletUserWorkbench 关联的 Wallet。
+  optional .wallet.v1.Wallet wallet = 3;
+}
+
+// GetWalletRechargeOrderDetailRequest 标识待查询的 WalletRechargeOrderDetail。
+message GetWalletRechargeOrderDetailRequest {
+  // order_no 是 GetWalletRechargeOrderDetail 对外关联与审计使用的业务编号。
+  string order_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// WalletRechargeOrderDetail aggregates authoritative Wallet and Payment facts without persistence.
+message WalletRechargeOrderDetail {
+  // recharge_order 承载 WalletRechargeOrderDetail 关联的 RechargeOrder。
+  .wallet.v1.RechargeOrder recharge_order = 1;
+  // payment 承载 WalletRechargeOrderDetail 关联的 Payment。
+  optional .payment.v1.Payment payment = 2;
+  // recharge_dead_letter 承载 WalletRechargeOrderDetail 关联的 PaymentOutboxEvent。
+  optional .payment.v1.PaymentOutboxEvent recharge_dead_letter = 3;
+  // wallet_transactions 列出 WalletRechargeOrderDetail 关联的 WalletTransaction。
+  repeated .wallet.v1.WalletTransaction wallet_transactions = 4;
+  // refunds 列出 WalletRechargeOrderDetail 关联的 Refund。
+  repeated .payment.v1.Refund refunds = 5;
+  // debts 列出 WalletRechargeOrderDetail 关联的 WalletUserDebt。
+  repeated .wallet.v1.WalletUserDebt debts = 6;
+}
+
+// ListWalletUserFactsRequest 定义 WalletUserFacts 的筛选与分页参数。
+message ListWalletUserFactsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+  // status 表示 ListWalletUserFacts 当前可观察的生命周期状态。
+  optional WalletUserFactStatus status = 3 [(validate.rules).enum.defined_only = true];
+  // created_from 指定 ListWalletUserFacts 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp created_from = 4;
+  // created_to 指定 ListWalletUserFacts 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp created_to = 5;
+}
+
+// WalletUserFactStatus keeps source-specific wire statuses out of free-text filters.
+enum WalletUserFactStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  WALLET_USER_FACT_STATUS_UNSPECIFIED = 0;
+  // 处理已成功完成。
+  WALLET_TRANSACTION_STATUS_SUCCEEDED = 1;
+  // WALLET_TRANSACTION_STATUS_REVERSED 表示资源处于对应业务阶段。
+  WALLET_TRANSACTION_STATUS_REVERSED = 2;
+  // WALLET_FREEZE_STATUS_FROZEN 表示资源处于对应业务阶段。
+  WALLET_FREEZE_STATUS_FROZEN = 10;
+  // WALLET_FREEZE_STATUS_RELEASED 表示资源处于对应业务阶段。
+  WALLET_FREEZE_STATUS_RELEASED = 11;
+  // WALLET_FREEZE_STATUS_CONSUMED 表示资源处于对应业务阶段。
+  WALLET_FREEZE_STATUS_CONSUMED = 12;
+  // 当前处于开放状态，可继续处理。
+  WALLET_DEBT_STATUS_OPEN = 20;
+  // WALLET_DEBT_STATUS_PARTIAL_REPAID 表示资源处于对应业务阶段。
+  WALLET_DEBT_STATUS_PARTIAL_REPAID = 21;
+  // WALLET_DEBT_STATUS_REPAID 表示资源处于对应业务阶段。
+  WALLET_DEBT_STATUS_REPAID = 22;
+  // WALLET_DEBT_STATUS_WRITTEN_OFF 表示资源处于对应业务阶段。
+  WALLET_DEBT_STATUS_WRITTEN_OFF = 23;
+  // 已受理并等待后续处理。
+  WALLET_ADJUSTMENT_STATUS_PENDING = 30;
+  // 请求已由发起方撤回，不再继续处理。
+  WALLET_ADJUSTMENT_STATUS_WITHDRAWN = 31;
+  // 审核已拒绝，不再按原请求继续。
+  WALLET_ADJUSTMENT_STATUS_REJECTED = 32;
+  // 变更已经应用并形成可查询结果。
+  WALLET_ADJUSTMENT_STATUS_APPLIED = 33;
+  // 有效期已结束，不再接受后续使用。
+  WALLET_ADJUSTMENT_STATUS_EXPIRED = 34;
+  // 资源已创建，尚未进入后续处理阶段。
+  WALLET_RECHARGE_STATUS_CREATED = 40;
+  // 正在入账，尚未形成最终余额事实。
+  WALLET_RECHARGE_STATUS_CREDITING = 41;
+  // 入账已经完成，余额与账本事实已经更新。
+  WALLET_RECHARGE_STATUS_CREDITED = 42;
+  // 处理失败；是否可重试由具体失败原因决定。
+  WALLET_RECHARGE_STATUS_CREDIT_FAILED = 43;
+  // 当前流程已关闭，不再接受新的处理动作。
+  WALLET_RECHARGE_STATUS_CLOSED = 44;
+  // 处理已取消，不再继续推进。
+  WALLET_RECHARGE_STATUS_CANCELED = 45;
+  // 资源已创建，尚未进入后续处理阶段。
+  WALLET_PAYMENT_STATUS_CREATED = 50;
+  // 已受理并等待后续处理。
+  WALLET_PAYMENT_STATUS_PENDING = 51;
+  // 正在处理中，尚未形成终态。
+  WALLET_PAYMENT_STATUS_PROCESSING = 52;
+  // 处理已成功完成。
+  WALLET_PAYMENT_STATUS_SUCCEEDED = 53;
+  // 处理失败；是否可重试由具体失败原因决定。
+  WALLET_PAYMENT_STATUS_FAILED = 54;
+  // 当前流程已关闭，不再接受新的处理动作。
+  WALLET_PAYMENT_STATUS_CLOSED = 55;
+  // 有效期已结束，不再接受后续使用。
+  WALLET_PAYMENT_STATUS_EXPIRED = 56;
+  // WALLET_PAYMENT_STATUS_REFUNDING 表示资源处于对应业务阶段。
+  WALLET_PAYMENT_STATUS_REFUNDING = 57;
+  // 相关金额已经全部退款。
+  WALLET_PAYMENT_STATUS_PARTIAL_REFUNDED = 58;
+  // 相关金额已经全部退款。
+  WALLET_PAYMENT_STATUS_REFUNDED = 59;
+  // 资源已创建，尚未进入后续处理阶段。
+  WALLET_REFUND_STATUS_CREATED = 60;
+  // 正在处理中，尚未形成终态。
+  WALLET_REFUND_STATUS_PROCESSING = 61;
+  // 处理已成功完成。
+  WALLET_REFUND_STATUS_SUCCEEDED = 62;
+  // 处理失败；是否可重试由具体失败原因决定。
+  WALLET_REFUND_STATUS_FAILED = 63;
+  // 当前流程已关闭，不再接受新的处理动作。
+  WALLET_REFUND_STATUS_CLOSED = 64;
+  // 已受理并等待后续处理。
+  WALLET_GIFT_STATUS_PENDING = 70;
+  // 正在处理中，尚未形成终态。
+  WALLET_GIFT_STATUS_PROCESSING = 71;
+  // 处理已成功完成。
+  WALLET_GIFT_STATUS_SUCCEEDED = 72;
+  // 处理失败；是否可重试由具体失败原因决定。
+  WALLET_GIFT_STATUS_FAILED = 73;
+}
+
+// WalletUserGiftRelation 定义对应业务维度允许使用的离散取值。
+enum WalletUserGiftRelation {
+  // 内容或资产已经发送至目标。
+  WALLET_USER_GIFT_RELATION_SENT = 0;
+  // 内容或资产已经由目标接收。
+  WALLET_USER_GIFT_RELATION_RECEIVED = 1;
+}
+
+// ListWalletUserGiftFactsRequest 定义 WalletUserGiftFacts 的筛选与分页参数。
+message ListWalletUserGiftFactsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+  // status 表示 ListWalletUserGiftFacts 当前可观察的生命周期状态。
+  optional WalletUserFactStatus status = 3 [(validate.rules).enum.defined_only = true];
+  // created_from 指定 ListWalletUserGiftFacts 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp created_from = 4;
+  // created_to 指定 ListWalletUserGiftFacts 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp created_to = 5;
+  // relation 承载 ListWalletUserGiftFacts 关联的 WalletUserGiftRelation。
+  WalletUserGiftRelation relation = 6 [(validate.rules).enum.defined_only = true];
+}

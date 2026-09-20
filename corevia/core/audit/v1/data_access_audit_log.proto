@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package core.audit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/empty.proto";
+
+import "validate/validate.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+import "core/audit/v1/common.proto";
+
+// 数据访问审计日志服务
+service DataAccessAuditLogService {
+  // 查询数据访问审计日志列表
+  rpc List (common.pagination.v1.PagingRequest) returns (ListDataAccessAuditLogResponse) {}
+
+  // 查询数据访问审计日志详情
+  rpc Get (GetDataAccessAuditLogRequest) returns (DataAccessAuditLog) {}
+
+  // 创建数据访问审计日志
+  rpc Create (CreateDataAccessAuditLogRequest) returns (google.protobuf.Empty) {}
+}
+
+// 数据访问审计日志
+message DataAccessAuditLog {
+  // 数据访问类型
+  enum AccessType {
+    // 未指定。
+    ACCESS_TYPE_UNSPECIFIED = 0;
+
+    // 读取数据。
+    SELECT = 1;   // 读取数据
+    // 插入数据。
+    INSERT = 2;   // 插入数据
+    // 更新数据。
+    UPDATE = 3;   // 更新数据
+    // 删除数据。
+    DELETE = 4;   // 删除数据
+    // 查看数据。
+    VIEW = 5;     // 查看数据
+    // 批量读取数据。
+    BULK_READ = 6; // 批量读取数据
+
+    // 导出数据。
+    EXPORT = 7;   // 导出数据
+    // 导入数据。
+    IMPORT = 8;   // 导入数据
+
+    // 创建表/索引等结构性变更。
+    DDL_CREATE = 9; // 创建表/索引等结构性变更
+    // 修改表/索引等。
+    DDL_ALTER = 10; // 修改表/索引等
+    // 删除表/索引等。
+    DDL_DROP = 11;  // 删除表/索引等
+
+    // 元数据 / 描述类操作（DESCRIBE/SHOW 等）
+    METADATA_READ = 12;
+
+    // 扫描/流式读取（例如 Redis SCAN、Elasticsearch scroll/scan）
+    SCAN = 13;
+
+    // 管理类操作（权限/角色/审计设置变更等）
+    ADMIN_OPERATION = 14;
+
+    // 其他。
+    OTHER = 100;    // 其他
+  }
+
+  // 数据访问审计日志ID。
+  optional uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "API审计日志ID"}]; // 数据访问审计日志ID
+
+  // AppID。
+  optional uint32 app_id = 2 [ (gnostic.openapi.v3.property) = {description: "AppID"}];  // AppID
+
+  // App名称。
+  optional string app_name = 3 [ (gnostic.openapi.v3.property) = {description: "App名称"}]; // App名称
+
+  // 后台人员 ID。
+  optional uint32 operator_id = 4 [ (gnostic.openapi.v3.property) = {description: "后台人员 ID"}];
+
+  // 账号名。
+  optional string username = 5 [ (gnostic.openapi.v3.property) = {description: "账号名"}]; // 账号名
+
+  // 操作IP地址（IPv4/IPv6）。
+  optional string ip_address = 10 [ (gnostic.openapi.v3.property) = {description: "操作IP地址（IPv4/IPv6）"}]; // 操作IP地址（IPv4/IPv6）
+
+  // 请求ID。
+  optional string request_id = 11 [ (gnostic.openapi.v3.property) = {description: "全局请求ID（关联网关日志）"}]; // 请求ID
+
+  // 数据源类型（mysql/redis/mongodb/es）。
+  optional string data_source = 12 [ (gnostic.openapi.v3.property) = {description: "数据源类型（mysql/redis/mongodb/es）"}]; // 数据源类型（mysql/redis/mongodb/es）
+
+  // 数据表名（如 sys_operators/order_info，Redis 为 key 前缀）。
+  optional string table_name = 13 [ (gnostic.openapi.v3.property) = {description: "数据表名（如 sys_operators/order_info，Redis 为 key 前缀）"}];
+
+  // 数据主键ID（如用户ID/订单ID，兼容不同表主键类型）。
+  optional string data_id = 14 [ (gnostic.openapi.v3.property) = {description: "数据主键ID（如用户ID/订单ID，兼容不同表主键类型）"}]; // 数据主键ID（如用户ID/订单ID，兼容不同表主键类型）
+
+  // 数据访问类型（SELECT/INSERT/UPDATE/DELETE）。
+  optional AccessType access_type = 20 [ (gnostic.openapi.v3.property) = {description: "数据访问类型（SELECT/INSERT/UPDATE/DELETE）"}]; // 数据访问类型（SELECT/INSERT/UPDATE/DELETE）
+
+  // 执行的SQL语句摘要。
+  optional string sql_digest = 21 [ (gnostic.openapi.v3.property) = {description: "执行的SQL语句摘要（MD5）"}]; // 执行的SQL语句摘要
+
+  // 执行的SQL语句（脱敏后，Redis为命令）。
+  optional string sql_text = 22 [ (gnostic.openapi.v3.property) = {description: "执行的SQL语句（脱敏后，Redis为命令）"}]; // 执行的SQL语句（脱敏后，Redis为命令）
+
+  // 影响行数（Redis为影响key数量）。
+  optional uint32 affected_rows = 23 [ (gnostic.openapi.v3.property) = {description: "影响行数（Redis为影响key数量）"}]; // 影响行数（Redis为影响key数量）
+
+  // 延迟时间（毫秒）。
+  optional uint32 latency_ms = 24 [
+    (gnostic.openapi.v3.property) = {description: "延迟时间（毫秒）"},
+    (validate.rules).uint32.lte = 3600000 // 1小时
+  ]; // 延迟时间
+
+  // 操作结果。
+  optional bool success = 25 [ (gnostic.openapi.v3.property) = {description: "操作是否成功"}]; // 操作结果
+
+  // 数据敏感级别。
+  optional SensitiveLevel sensitive_level = 26 [ (gnostic.openapi.v3.property) = {description: "数据敏感级别"}]; // 数据敏感级别
+
+  // 是否已脱敏。
+  optional bool data_masked = 30 [ (gnostic.openapi.v3.property).description = "是否已脱敏"]; // 是否已脱敏
+
+  // 脱敏规则。
+  optional string masking_rules = 31 [ (gnostic.openapi.v3.property).description = "脱敏规则（JSON：{\"phone\":\"mask_last_4\"}）"]; // 脱敏规则
+
+  // 业务处理目的。
+  optional string business_purpose = 32 [ (gnostic.openapi.v3.property).description = "业务处理目的",
+    (validate.rules).string = {
+      min_len: 5,
+      pattern: "^\\w+:[a-z0-9_-]+$" // 标准化格式：hr:annual_review
+    }]; // 业务处理目的
+
+  // 数据分类标签。
+  optional string data_category = 34 [ (gnostic.openapi.v3.property).description = "数据分类标签"];
+
+  // 数据库用户。
+  optional string db_user = 35 [ (gnostic.openapi.v3.property).description = "数据库用户"];
+
+  // ========== 合规校验 ==========
+
+  // log_hash 用于校验 DataAccessAuditLog 对应内容或版本的一致性。
+  optional string log_hash = 40 [ (gnostic.openapi.v3.property).description = "日志内容哈希（SHA256，十六进制字符串）"]; // 日志哈希
+
+  // 日志数字签名。
+  optional bytes signature = 41 [ (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）"]; // 日志数字签名
+
+  // ========== 时间字段 ==========
+
+  // created_at 记录 DataAccessAuditLog 的创建时间。
+  optional google.protobuf.Timestamp created_at = 50 [ (gnostic.openapi.v3.property) = {description: "日志创建时间"}];// 日志创建时间
+}
+
+// 查询数据访问审计日志列表 - 回应
+message ListDataAccessAuditLogResponse {
+  // 列表项。
+  repeated DataAccessAuditLog items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 查询数据访问审计日志详情 - 请求
+message GetDataAccessAuditLogRequest {
+  // GetDataAccessAuditLogRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // ID。
+    uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "ID", read_only: true}]; // ID
+  }
+
+  // 视图字段过滤器，用于控制返回的字段。
+  optional google.protobuf.FieldMask view_mask = 100 [ (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 创建数据访问审计日志 - 请求
+message CreateDataAccessAuditLogRequest {
+  // 数据。
+  DataAccessAuditLog data = 1;
+}

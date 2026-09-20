@@ -1,0 +1,267 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/v1/common.proto";
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/backpack.proto";
+import "gift/v1/settlement.proto";
+import "google/protobuf/timestamp.proto";
+
+// 礼物发送记录。
+message GiftSendRecord {
+  // 送礼状态。
+  enum Status {
+    // 未识别或未指定的状态。
+    STATUS_UNSPECIFIED = 0;
+    // 已创建，等待扣款。
+    PENDING = 1;
+    // 送礼成功。
+    SUCCEEDED = 2;
+    // 送礼失败。
+    FAILED = 3;
+    // 钱包扣款或本地完成状态待确认。
+    PROCESSING = 4;
+  }
+
+  // 记录 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 礼物 ID。
+  optional uint32 gift_id = 3;
+  // 发送用户 ID。
+  optional uint64 sender_user_id = 4;
+  // 接收方类型。
+  optional string recipient_type = 5;
+  // 接收方 ID。
+  optional string recipient_id = 6;
+  // 数量。
+  optional uint32 quantity = 7;
+  // 单价。
+  optional int64 unit_price = 8;
+  // 总价。
+  optional int64 total_price = 9;
+  // 钱包业务 ID。
+  optional string wallet_biz_id = 10;
+  // 送礼状态。
+  optional Status status = 11;
+  // 错误信息。
+  optional string error_message = 12;
+  // 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+  optional string scene_type = 13;
+  // 通用场景 ID。
+  optional string scene_id = 14;
+  // 接收用户 ID，非用户接收方可为 0。
+  optional uint64 recipient_user_id = 15;
+  // 幂等键。
+  optional string idempotency_key = 16;
+  // 请求 ID。
+  optional string request_id = 17;
+  // 元数据 JSON。
+  optional string metadata = 18;
+  // 钱包用户扣款流水 ID。
+  optional uint64 wallet_user_transaction_id = 19;
+  // 钱包平台收入流水 ID。
+  optional uint64 wallet_platform_transaction_id = 20;
+  // 本次消费的充值币数量，出账为负数。
+  optional int64 diamond = 21;
+  // 本次消费的赠币数量，出账为负数。
+  optional int64 coin = 22;
+  // 平台收入金额。
+  optional int64 platform_amount = 23;
+  // 收礼人待结算收益金额。
+  optional int64 recipient_amount = 24;
+  // 支付来源，WALLET 表示钱包扣款，BACKPACK 表示背包库存。
+  optional string payment_source = 25;
+  // 背包库存流水 ID。
+  optional uint64 backpack_transaction_id = 26;
+  // 背包消耗数量。
+  optional uint32 backpack_quantity = 27;
+  // 价格快照。
+  optional int64 price_snapshot = 28;
+  // Wallet Send 开始时冻结的 Gift Revision ID；背包送礼可为空。
+  optional uint64 gift_revision_id = 29;
+  // 送礼开始时冻结的平台分成万分比。
+  optional uint32 platform_rate = 30;
+  // 送礼开始时冻结的收礼人分成万分比。
+  optional uint32 recipient_rate = 31;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+// 礼物发送记录列表响应。
+message ListGiftSendRecordResponse {
+  // 列表项。
+  repeated GiftSendRecord items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// GiftSendFilter contains bounded, typed Gift Send workbench criteria.
+message GiftSendFilter {
+  // Exact Send identity.
+  optional uint64 send_id = 1;
+  // Exact sender User identity.
+  optional uint64 sender_user_id = 2;
+  // Exact recipient User identity.
+  optional uint64 recipient_user_id = 3;
+  // Exact Gift identity.
+  optional uint32 gift_id = 4;
+  // Exact scene type.
+  optional string scene_type = 5;
+  // Exact scene identity.
+  optional string scene_id = 6;
+  // Payment sources, currently WALLET or BACKPACK.
+  repeated string payment_sources = 7;
+  // Send states.
+  repeated GiftSendRecord.Status statuses = 8;
+  // Inclusive occurrence lower bound.
+  optional google.protobuf.Timestamp occurred_from = 9;
+  // Exclusive occurrence upper bound.
+  optional google.protobuf.Timestamp occurred_to = 10;
+}
+
+// ListGiftSendRecordsRequest carries trusted App scope, typed filters and stable paging.
+message ListGiftSendRecordsRequest {
+  // app_id 限定 ListGiftSendRecords 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  GiftSendFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// 查询送礼记录详情请求。
+message GetGiftSendRecordRequest {
+  // 应用 ID。
+  optional common.v1.AppId app_id = 1;
+  // 送礼记录 ID。
+  uint64 id = 2;
+}
+
+// GiftSendWorkbenchDetail aggregates only Gift-owned facts for one Send.
+message GiftSendWorkbenchDetail {
+  // send 承载 GiftSendWorkbenchDetail 关联的 GiftSendRecord。
+  GiftSendRecord send = 1;
+  // settlement 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional GiftSettlementRecord settlement = 2;
+  // backpack_items 列出 GiftSendWorkbenchDetail 关联的 GiftBackpackTransactionItem。
+  repeated GiftBackpackTransactionItem backpack_items = 3;
+  // last_reconciliation 承载 GiftSendWorkbenchDetail 关联的 GiftSendReconciliation。
+  optional GiftSendReconciliation last_reconciliation = 4;
+}
+
+// GiftSendReconciliation is the latest authoritative downstream check for one Send.
+message GiftSendReconciliation {
+  // Result 定义对应业务维度允许使用的离散取值。
+  enum Result {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    RESULT_UNSPECIFIED = 0;
+    // 处理已成功完成。
+    SUCCEEDED = 1;
+    // 处理失败；是否可重试由具体失败原因决定。
+    FAILED = 2;
+    // 当前取值无法确定；调用方不得推断成功或失败。
+    UNKNOWN = 3;
+  }
+  // NextAction 区分可执行的状态推进动作。
+  enum NextAction {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    NEXT_ACTION_UNSPECIFIED = 0;
+    // NONE 执行 NONE 业务动作。
+    NONE = 1;
+    // USER_RETRY_REQUIRED 表示该业务条件为必需。
+    USER_RETRY_REQUIRED = 2;
+    // WAIT_FOR_DOWNSTREAM 执行 WAIT_FOR_DOWNSTREAM 业务动作。
+    WAIT_FOR_DOWNSTREAM = 3;
+    // INVESTIGATE_FACTS 执行 INVESTIGATE_FACTS 业务动作。
+    INVESTIGATE_FACTS = 4;
+  }
+  // checked_at 记录 GiftSendReconciliation 对应业务阶段的时间点。
+  google.protobuf.Timestamp checked_at = 1;
+  // result 承载 GiftSendReconciliation 关联的 Result。
+  Result result = 2;
+  // next_action 指定本次状态推进采用的业务动作。
+  NextAction next_action = 3;
+}
+
+// ReconcileGiftSendRequest checks one existing Send without replaying user intent.
+message ReconcileGiftSendRequest {
+  // app_id 限定 ReconcileGiftSend 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // send_id 标识关联的 Send。
+  uint64 send_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+}
+
+// ReconcileGiftSendResponse returns the refreshed Gift-owned workbench projection.
+message ReconcileGiftSendResponse {
+  // detail 承载 ReconcileGiftSend 对应阶段的结构化业务内容。
+  GiftSendWorkbenchDetail detail = 1;
+  // replayed 显式表示 ReconcileGiftSend 是否满足该条件。
+  bool replayed = 2;
+}
+// 发送礼物请求。
+message SendGiftRequest {
+  // 应用 ID。
+  optional common.v1.AppId app_id = 1;
+  // 礼物 ID。
+  uint32 gift_id = 2;
+  // 发送用户 ID。
+  uint64 sender_user_id = 3;
+  // 接收方类型。
+  string recipient_type = 4;
+  // 接收方 ID。
+  string recipient_id = 5;
+  // 数量。
+  optional uint32 quantity = 6;
+  // 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+  optional string scene_type = 7;
+  // 通用场景 ID。
+  optional string scene_id = 8;
+  // 接收用户 ID。
+  optional uint64 recipient_user_id = 9;
+  // 幂等键。
+  optional string idempotency_key = 10;
+  // 请求 ID。
+  optional string request_id = 11;
+  // 元数据 JSON。
+  optional string metadata = 12;
+}
+
+// 使用背包礼物发送礼物请求。
+message SendBackpackGiftRequest {
+  // 应用 ID。
+  optional common.v1.AppId app_id = 1;
+  // 礼物 ID。
+  uint32 gift_id = 2;
+  // 发送用户 ID。
+  uint64 sender_user_id = 3;
+  // 接收方类型。
+  string recipient_type = 4;
+  // 接收方 ID。
+  string recipient_id = 5;
+  // 数量。
+  optional uint32 quantity = 6;
+  // 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+  optional string scene_type = 7;
+  // 通用场景 ID。
+  optional string scene_id = 8;
+  // 接收用户 ID。
+  optional uint64 recipient_user_id = 9;
+  // 幂等键。
+  optional string idempotency_key = 10;
+  // 请求 ID。
+  optional string request_id = 11;
+  // 元数据 JSON。
+  optional string metadata = 12;
+}

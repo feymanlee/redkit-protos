@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/governance.proto";
+import "payment/v1/payment_types.proto";
+
+// 支付回调。
+message PaymentCallback {
+  // 回调 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 支付渠道。
+  optional PaymentProvider provider = 3;
+  // 支付单号。
+  optional string payment_no = 4;
+  // 渠道交易号。
+  optional string provider_trade_no = 5;
+  // 回调事件类型。
+  optional string event_type = 6;
+  // 验签是否通过。
+  optional bool verified = 7;
+  // 处理状态。
+  optional string process_status = 8;
+  // 错误信息。
+  optional string error_message = 9;
+  // 不包含原文或凭据的脱敏诊断摘要。
+  optional MaskedDiagnosticData masked_diagnostic = 10;
+  // 按回调接收时间自动选择的验签候选，不包含凭据。
+  repeated CallbackVerificationCandidate candidate_revisions = 11;
+  // 验签成功后绑定的唯一候选身份。
+  optional string matched_revision_key = 12;
+  // Operator 发起的不可变重处理记录。
+  repeated CallbackReprocessAttempt reprocess_attempts = 13;
+  // 当前事实是否仍允许重处理。
+  bool reprocess_eligible = 14;
+  // 当前建议的下一步。
+  optional string next_action = 15;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 回调验签候选 Revision 的非敏感投影。
+message CallbackVerificationCandidate {
+  // id 标识关联的 CallbackVerificationCandidate。
+  uint64 id = 1;
+  // revision_key 在约定作用域内稳定定位 CallbackVerificationCandidate。
+  string revision_key = 2;
+  // app_id 限定 CallbackVerificationCandidate 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 3;
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 4;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 5;
+  // effective_from 指定 CallbackVerificationCandidate 查询或生效区间的起始边界。
+  google.protobuf.Timestamp effective_from = 6;
+  // effective_until 指定 CallbackVerificationCandidate 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp effective_until = 7;
+  // captured_at 记录 CallbackVerificationCandidate 对应业务阶段的时间点。
+  google.protobuf.Timestamp captured_at = 8;
+  // matched 显式表示 CallbackVerificationCandidate 是否满足该条件。
+  bool matched = 9;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  uint64 channel_revision_id = 10;
+}
+
+// 一次不可变 Callback Reprocess 记录。
+message CallbackReprocessAttempt {
+  // id 标识关联的 CallbackReprocessAttempt。
+  uint64 id = 1;
+  // callback_id 标识关联的 Callback。
+  uint64 callback_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // status 表示 CallbackReprocessAttempt 当前可观察的生命周期状态。
+  string status = 5;
+  // error_class 对失败进行稳定分类，供调用方决定重试或终止。
+  optional string error_class = 6;
+  // message 提供面向调用方或操作员的可读说明，不作为程序分支依据。
+  optional string message = 7;
+  // candidate_revision_keys 列出 Callback 重处理时可能匹配的 Channel Revision Key。
+  repeated string candidate_revision_keys = 8;
+  // matched_revision_key 在约定作用域内稳定定位 CallbackReprocessAttempt。
+  optional string matched_revision_key = 9;
+  // created_at 记录 CallbackReprocessAttempt 的创建时间。
+  google.protobuf.Timestamp created_at = 10;
+}
+
+// Payment 内部的 App-scoped Callback Reprocess 命令。
+message ReprocessPaymentCallbackRequest {
+  // callback_id 标识关联的 Callback。
+  uint64 callback_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // app_id 限定 ReprocessPaymentCallback 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 6;
+}
+
+// ReprocessPaymentCallbackResponse 承载 ReprocessPaymentCallback 的返回结果。
+message ReprocessPaymentCallbackResponse {
+  // callback 承载 ReprocessPaymentCallback 关联的 PaymentCallback。
+  PaymentCallback callback = 1;
+  // attempt 承载 ReprocessPaymentCallback 关联的 CallbackReprocessAttempt。
+  CallbackReprocessAttempt attempt = 2;
+}
+
+// 支付回调列表响应。
+message ListPaymentCallbackResponse {
+  // 列表项。
+  repeated PaymentCallback items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+// 处理渠道回调请求。
+message HandleProviderCallbackRequest {
+  // 支付渠道。
+  PaymentProvider provider = 1;
+  // 原始请求体。
+  string raw_body = 2;
+  // 请求头 JSON。
+  optional string headers = 3;
+}
+
+// 处理渠道回调响应。
+message HandleProviderCallbackResponse {
+  // 是否处理成功。
+  bool success = 1;
+  // 支付单号。
+  optional string payment_no = 2;
+  // 处理消息。
+  optional string message = 3;
+}

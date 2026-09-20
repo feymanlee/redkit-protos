@@ -1,0 +1,251 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// WorkQueueSourceType 区分对应资源的业务类型。
+enum WorkQueueSourceType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  WORK_QUEUE_SOURCE_TYPE_UNSPECIFIED = 0;
+  // WORK_QUEUE_SOURCE_TYPE_REFUND_REQUEST 选择 REFUND_REQUEST 业务类型。
+  WORK_QUEUE_SOURCE_TYPE_REFUND_REQUEST = 1;
+  // WORK_QUEUE_SOURCE_TYPE_CHANNEL_PUBLICATION 选择 CHANNEL_PUBLICATION 业务类型。
+  WORK_QUEUE_SOURCE_TYPE_CHANNEL_PUBLICATION = 2;
+  // WORK_QUEUE_SOURCE_TYPE_SUBSCRIPTION_REVIEW 选择 SUBSCRIPTION_REVIEW 业务类型。
+  WORK_QUEUE_SOURCE_TYPE_SUBSCRIPTION_REVIEW = 3;
+  // WORK_QUEUE_SOURCE_TYPE_RISK_REVIEW 选择 RISK_REVIEW 业务类型。
+  WORK_QUEUE_SOURCE_TYPE_RISK_REVIEW = 4;
+  // WORK_QUEUE_SOURCE_TYPE_RECONCILIATION_FINDING 选择 RECONCILIATION_FINDING 业务类型。
+  WORK_QUEUE_SOURCE_TYPE_RECONCILIATION_FINDING = 5;
+  // WORK_QUEUE_SOURCE_TYPE_DISPUTE 选择 DISPUTE 业务类型。
+  WORK_QUEUE_SOURCE_TYPE_DISPUTE = 6;
+  // 处理失败；是否可重试由具体失败原因决定。
+  WORK_QUEUE_SOURCE_TYPE_DELIVERY_FAILURE = 7;
+  // WORK_QUEUE_SOURCE_TYPE_SETTLEMENT_DISCREPANCY 选择 SETTLEMENT_DISCREPANCY 业务类型。
+  WORK_QUEUE_SOURCE_TYPE_SETTLEMENT_DISCREPANCY = 8;
+}
+
+// WorkQueuePriority 定义对应业务维度允许使用的离散取值。
+enum WorkQueuePriority {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  WORK_QUEUE_PRIORITY_UNSPECIFIED = 0;
+  // WORK_QUEUE_PRIORITY_LOW 表示队列条目采用 LOW 处理优先级。
+  WORK_QUEUE_PRIORITY_LOW = 1;
+  // WORK_QUEUE_PRIORITY_NORMAL 表示队列条目采用 NORMAL 处理优先级。
+  WORK_QUEUE_PRIORITY_NORMAL = 2;
+  // WORK_QUEUE_PRIORITY_HIGH 表示队列条目采用 HIGH 处理优先级。
+  WORK_QUEUE_PRIORITY_HIGH = 3;
+  // WORK_QUEUE_PRIORITY_CRITICAL 表示队列条目采用 CRITICAL 处理优先级。
+  WORK_QUEUE_PRIORITY_CRITICAL = 4;
+}
+
+// WorkQueueCoordinationStatus 刻画对应资源的生命周期状态。
+enum WorkQueueCoordinationStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  WORK_QUEUE_COORDINATION_STATUS_UNSPECIFIED = 0;
+  // 当前处于开放状态，可继续处理。
+  WORK_QUEUE_COORDINATION_STATUS_OPEN = 1;
+  // WORK_QUEUE_COORDINATION_STATUS_CLAIMED 表示资源处于对应业务阶段。
+  WORK_QUEUE_COORDINATION_STATUS_CLAIMED = 2;
+  // 处理已成功完成。
+  WORK_QUEUE_COORDINATION_STATUS_COMPLETED = 3;
+}
+
+// OperationsSectionAvailability 定义对应业务维度允许使用的离散取值。
+enum OperationsSectionAvailability {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  OPERATIONS_SECTION_AVAILABILITY_UNSPECIFIED = 0;
+  // 当前可供业务流程选择或使用。
+  OPERATIONS_SECTION_AVAILABILITY_AVAILABLE = 1;
+  // 当前没有可展示或可处理的数据。
+  OPERATIONS_SECTION_AVAILABILITY_EMPTY = 2;
+  // 当前不可供业务流程选择或使用。
+  OPERATIONS_SECTION_AVAILABILITY_UNAVAILABLE = 3;
+  // OPERATIONS_SECTION_AVAILABILITY_NOT_IMPLEMENTED 表示对应视图 Section 处于 NOT_IMPLEMENTED 可用性状态。
+  OPERATIONS_SECTION_AVAILABILITY_NOT_IMPLEMENTED = 4;
+}
+
+// OperationsSectionState 表示运营聚合视图中一个 Section 的可用性状态。
+message OperationsSectionState {
+  // availability 承载 OperationsSectionState 关联的 OperationsSectionAvailability。
+  OperationsSectionAvailability availability = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 2;
+  // item_count 记录 OperationsSectionState 中符合对应条件的数量。
+  uint64 item_count = 3;
+}
+
+// WorkQueueSourceState 表示一个 Work Queue 来源的待处理状态。
+message WorkQueueSourceState {
+  // source_type 区分 WorkQueueSourceState 的业务类型。
+  WorkQueueSourceType source_type = 1;
+  // state 表示 WorkQueueSourceState 当前可观察的生命周期状态。
+  OperationsSectionState state = 2;
+}
+
+// ProviderOperationsSummary 表示面向查询的汇总投影。
+message ProviderOperationsSummary {
+  // provider 标识本次能力使用的外部 Provider。
+  string provider = 1;
+  // payment_total 统计观察窗口内的 Payment 总数。
+  uint64 payment_total = 2;
+  // payment_succeeded 统计观察窗口内成功完成的 Payment 数量。
+  uint64 payment_succeeded = 3;
+  // provider_errors 汇总 Provider 返回的失败数量。
+  uint64 provider_errors = 4;
+  // success_rate_basis_points 以基点表示 ProviderOperationsSummary 对应比例，一万基点等于 100%。
+  uint32 success_rate_basis_points = 5;
+}
+
+// PaymentOperationsSummary 表示面向查询的汇总投影。
+message PaymentOperationsSummary {
+  // window_from 指定 PaymentOperationsSummary 查询或生效区间的起始边界。
+  google.protobuf.Timestamp window_from = 1;
+  // window_to 指定 PaymentOperationsSummary 查询或生效区间的结束边界。
+  google.protobuf.Timestamp window_to = 2;
+  // payment_total 统计观察窗口内的 Payment 总数。
+  uint64 payment_total = 3;
+  // payment_succeeded 统计观察窗口内成功完成的 Payment 数量。
+  uint64 payment_succeeded = 4;
+  // success_rate_basis_points 以基点表示 PaymentOperationsSummary 对应比例，一万基点等于 100%。
+  uint32 success_rate_basis_points = 5;
+  // provider_errors 汇总 Provider 返回的失败数量。
+  uint64 provider_errors = 6;
+  // callback_failures 统计 Provider Callback 处理失败的数量。
+  uint64 callback_failures = 7;
+  // stuck_processing 统计超过正常处理窗口仍未结束的 Payment 数量。
+  uint64 stuck_processing = 8;
+  // refund_pending_review 统计等待人工审核的 Refund 数量。
+  uint64 refund_pending_review = 9;
+  // refund_processing 统计仍在处理中的 Refund 数量。
+  uint64 refund_processing = 10;
+  // fulfillment_delayed 统计超过预期窗口仍未完成履约的 Payment 数量。
+  uint64 fulfillment_delayed = 11;
+  // delivery_failures 统计消息或履约投递失败的数量。
+  uint64 delivery_failures = 12;
+  // queue_open 统计尚未领取处理的队列条目数。
+  uint64 queue_open = 13;
+  // queue_claimed 统计已经领取但尚未完成的队列条目数。
+  uint64 queue_claimed = 14;
+  // queue_sla_breached 统计处理时间已经超过 SLA 的队列条目数。
+  uint64 queue_sla_breached = 15;
+  // providers 列出 PaymentOperationsSummary 关联的 ProviderOperationsSummary。
+  repeated ProviderOperationsSummary providers = 16;
+  // queue_sources 列出 PaymentOperationsSummary 关联的 WorkQueueSourceState。
+  repeated WorkQueueSourceState queue_sources = 17;
+  // generated_at 记录 PaymentOperationsSummary 对应业务阶段的时间点。
+  google.protobuf.Timestamp generated_at = 200;
+}
+
+// GetPaymentOperationsSummaryRequest 标识待查询的 PaymentOperationsSummary。
+message GetPaymentOperationsSummaryRequest {
+  // app_id 限定 GetPaymentOperationsSummary 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // window_from 指定 GetPaymentOperationsSummary 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp window_from = 2;
+  // window_to 指定 GetPaymentOperationsSummary 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp window_to = 3;
+}
+
+// WorkQueueFilter 定义可组合的查询筛选条件。
+message WorkQueueFilter {
+  // source_types 列出 WorkQueueFilter 关联的 WorkQueueSourceType。
+  repeated WorkQueueSourceType source_types = 1;
+  // priorities 列出 WorkQueueFilter 关联的 WorkQueuePriority。
+  repeated WorkQueuePriority priorities = 2;
+  // statuses 列出 WorkQueueFilter 关联的 WorkQueueCoordinationStatus。
+  repeated WorkQueueCoordinationStatus statuses = 3;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 4;
+  // sla_breached 显式表示 WorkQueueFilter 是否满足该条件。
+  optional bool sla_breached = 5;
+}
+
+// ListPaymentWorkQueueRequest 定义 PaymentWorkQueue 的筛选与分页参数。
+message ListPaymentWorkQueueRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  WorkQueueFilter filter = 2;
+  // app_id 限定 ListPaymentWorkQueue 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 3;
+}
+
+// WorkQueueResourceLink 提供 Work Queue 条目关联资源的稳定定位信息。
+message WorkQueueResourceLink {
+  // resource_type 区分 WorkQueueResourceLink 的业务类型。
+  string resource_type = 1;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 2;
+  // payment_no 是 WorkQueueResourceLink 对外关联与审计使用的业务编号。
+  optional string payment_no = 3;
+}
+
+// PaymentWorkQueueItem 表示所属集合中的一个业务条目。
+message PaymentWorkQueueItem {
+  // source_type 区分 PaymentWorkQueueItem 的业务类型。
+  WorkQueueSourceType source_type = 1;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 2;
+  // source_status 表示 PaymentWorkQueueItem 当前可观察的生命周期状态。
+  string source_status = 3;
+  // actionable 显式表示 PaymentWorkQueueItem 是否满足该条件。
+  bool actionable = 4;
+  // priority 决定 PaymentWorkQueueItem 在待处理队列中的相对顺序。
+  WorkQueuePriority priority = 5;
+  // due_at 记录 PaymentWorkQueueItem 对应业务阶段的时间点。
+  google.protobuf.Timestamp due_at = 6;
+  // sla_breached 显式表示 PaymentWorkQueueItem 是否满足该条件。
+  bool sla_breached = 7;
+  // coordination_status 表示 PaymentWorkQueueItem 当前可观察的生命周期状态。
+  WorkQueueCoordinationStatus coordination_status = 8;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 9;
+  // version 标识 PaymentWorkQueueItem 所采用的契约或资源版本。
+  uint64 version = 10;
+  // completion_eligible 显式表示 PaymentWorkQueueItem 是否满足该条件。
+  bool completion_eligible = 11;
+  // required_permission 标识调用该能力必须具备的 Permission。
+  string required_permission = 12;
+  // resource_link 承载 PaymentWorkQueueItem 关联的 WorkQueueResourceLink。
+  WorkQueueResourceLink resource_link = 13;
+  // created_at 记录 PaymentWorkQueueItem 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 PaymentWorkQueueItem 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// ListPaymentWorkQueueResponse 返回 PaymentWorkQueue 结果集合及分页信息。
+message ListPaymentWorkQueueResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PaymentWorkQueueItem items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+  // source_states 列出 ListPaymentWorkQueue 关联的 WorkQueueSourceState。
+  repeated WorkQueueSourceState source_states = 3;
+}
+
+// MutatePaymentWorkQueueItemRequest 定义变更 PaymentWorkQueueItem 的幂等管理命令参数。
+message MutatePaymentWorkQueueItemRequest {
+  // app_id 限定 MutatePaymentWorkQueueItem 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // source_type 区分 MutatePaymentWorkQueueItem 的业务类型。
+  WorkQueueSourceType source_type = 2;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 5;
+  // expected_version 标识 MutatePaymentWorkQueueItem 所采用的契约或资源版本。
+  uint64 expected_version = 6;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 7;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+}

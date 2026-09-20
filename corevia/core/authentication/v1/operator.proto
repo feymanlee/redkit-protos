@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package core.authentication.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "core/operator/v1/types.proto";
+
+// 操作者元数据
+message OperatorMetadata {
+  // operator 类型枚举。
+  enum OperatorType {
+    // 普通后台人员。
+    OPERATOR = 0;   // 普通后台人员
+    // 系统/后台任务。
+    SYSTEM = 1; // 系统/后台任务
+    // 微服务间的自动调用。
+    SERVICE = 2; // 微服务间的自动调用
+  }
+
+  // 操作者类型。
+  OperatorType type = 1 [ (gnostic.openapi.v3.property) = {description: "操作者类型"}]; // 操作者类型
+
+  // 后台人员ID。
+  uint64 operator_id = 2 [ (gnostic.openapi.v3.property) = {description: "后台人员ID"}]; // 后台人员ID
+
+  // AppID。
+  uint64 app_id = 3 [ (gnostic.openapi.v3.property) = {description: "AppID"}]; // AppID
+
+  // 数据权限范围策略。
+  core.operator.v1.DataScope data_scope = 4 [ (gnostic.openapi.v3.property) = {description: "数据权限范围策略"}]; // 数据权限范围策略
+
+  // 用于存放少量的核心角色 ID 或标记位。
+  repeated uint64 role_ids = 5 [ (gnostic.openapi.v3.property) = {description: "用于存放少量的核心角色 ID 或标记位"}]; // 用于存放少量的核心角色 ID 或标记位
+
+  // 发起操作的服务名称。
+  optional string service_name = 6 [ (gnostic.openapi.v3.property) = {description: "发起操作的服务名称"}];// 发起操作的服务名称
+
+  // 发起操作的主机名称。
+  optional string host_name = 7 [ (gnostic.openapi.v3.property) = {description: "发起操作的主机名称"}]; // 发起操作的主机名称
+
+  // 当前后台请求来源 IP 的不可逆摘要，不传递明文 IP。
+  optional string request_ip_hash = 8 [ (gnostic.openapi.v3.property) = {description: "请求来源 IP 摘要"}];
+}
+
+// 签名的元数据
+message SignedOperatorPayload {
+  // 序列化后的二进制。
+  bytes payload = 1;   // 序列化后的二进制
+  // HMAC 签名。
+  bytes signature = 2; // HMAC 签名
+}

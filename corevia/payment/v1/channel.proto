@@ -1,0 +1,750 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/file/v1/file.proto";
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_types.proto";
+
+// ChannelRevisionStatus 刻画对应资源的生命周期状态。
+enum ChannelRevisionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CHANNEL_REVISION_STATUS_UNSPECIFIED = 0;
+  // 仍处于草稿阶段，尚未对业务生效。
+  CHANNEL_REVISION_DRAFT = 1;
+  // 已经发布并对约定作用域生效。
+  CHANNEL_REVISION_PUBLISHED = 2;
+  // 已退出使用，仅保留历史查询能力。
+  CHANNEL_REVISION_RETIRED = 3;
+}
+
+// ChannelCapability 定义对应业务维度允许使用的离散取值。
+enum ChannelCapability {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CHANNEL_CAPABILITY_UNSPECIFIED = 0;
+  reserved 1 to 10;
+  reserved "CHANNEL_CAPABILITY_PAYMENT", "CHANNEL_CAPABILITY_REFUND", "CHANNEL_CAPABILITY_CLOSE",
+    "CHANNEL_CAPABILITY_CALLBACK_VERIFY", "CHANNEL_CAPABILITY_BILL", "CHANNEL_CAPABILITY_SUBSCRIPTION";
+  // 创建 Provider Payment intent。
+  CHANNEL_CAPABILITY_PAYMENT_CREATE = 11;
+  // 查询 Provider Payment 状态。
+  CHANNEL_CAPABILITY_PAYMENT_QUERY = 12;
+  // 关闭 Provider Payment intent。
+  CHANNEL_CAPABILITY_PAYMENT_CLOSE = 13;
+  // 验签并解析 Payment 或 Refund callback。
+  CHANNEL_CAPABILITY_PAYMENT_CALLBACK_HANDLE = 14;
+  // 创建 Provider Refund。
+  CHANNEL_CAPABILITY_REFUND_CREATE = 15;
+  // 查询 Provider Refund 状态。
+  CHANNEL_CAPABILITY_REFUND_QUERY = 16;
+  // 拉取完整 Provider Bill。
+  CHANNEL_CAPABILITY_PROVIDER_BILL_FETCH = 17;
+  // 验证一次性 Store Purchase。
+  CHANNEL_CAPABILITY_STORE_PURCHASE_VERIFY = 18;
+  // 完成一次性 Store Purchase。
+  CHANNEL_CAPABILITY_STORE_PURCHASE_COMPLETE = 19;
+  // 管理 Provider Subscription 生命周期。
+  CHANNEL_CAPABILITY_SUBSCRIPTION_MANAGE = 20;
+  // 查询 Provider Dispute。
+  CHANNEL_CAPABILITY_DISPUTE_QUERY = 21;
+  // 向 Provider 提交 Dispute evidence。
+  CHANNEL_CAPABILITY_DISPUTE_EVIDENCE_SUBMIT = 22;
+}
+
+// ChannelProbeStatus 刻画对应资源的生命周期状态。
+enum ChannelProbeStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CHANNEL_PROBE_STATUS_UNSPECIFIED = 0;
+  // CHANNEL_PROBE_PASSED 表示资源处于对应业务阶段。
+  CHANNEL_PROBE_PASSED = 1;
+  // 处理失败；是否可重试由具体失败原因决定。
+  CHANNEL_PROBE_FAILED = 2;
+  // CHANNEL_PROBE_STALE 表示资源处于对应业务阶段。
+  CHANNEL_PROBE_STALE = 3;
+}
+
+// ChannelPublicationTargetType 区分对应资源的业务类型。
+enum ChannelPublicationTargetType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CHANNEL_PUBLICATION_TARGET_TYPE_UNSPECIFIED = 0;
+  // CHANNEL_PUBLICATION_TARGET_CHANNEL_REVISION 选择 CHANNEL_PUBLICATION_TARGET_CHANNEL_REVISION 业务类型。
+  CHANNEL_PUBLICATION_TARGET_CHANNEL_REVISION = 1;
+  // CHANNEL_PUBLICATION_TARGET_ROUTING_POLICY 选择 CHANNEL_PUBLICATION_TARGET_ROUTING_POLICY 业务类型。
+  CHANNEL_PUBLICATION_TARGET_ROUTING_POLICY = 2;
+  // CHANNEL_PUBLICATION_TARGET_PAYMENT_OPTION 选择 CHANNEL_PUBLICATION_TARGET_PAYMENT_OPTION 业务类型。
+  CHANNEL_PUBLICATION_TARGET_PAYMENT_OPTION = 3;
+}
+
+// ChannelPublicationAction 区分可执行的状态推进动作。
+enum ChannelPublicationAction {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CHANNEL_PUBLICATION_ACTION_UNSPECIFIED = 0;
+  // CHANNEL_PUBLICATION_PUBLISH 执行 CHANNEL_PUBLICATION_PUBLISH 业务动作。
+  CHANNEL_PUBLICATION_PUBLISH = 1;
+  // CHANNEL_PUBLICATION_ROLLBACK 执行 CHANNEL_PUBLICATION_ROLLBACK 业务动作。
+  CHANNEL_PUBLICATION_ROLLBACK = 2;
+}
+
+// ChannelPublicationStatus 刻画对应资源的生命周期状态。
+enum ChannelPublicationStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CHANNEL_PUBLICATION_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  CHANNEL_PUBLICATION_PENDING = 1;
+  // 审核已通过，可以继续后续流程。
+  CHANNEL_PUBLICATION_APPROVED = 2;
+  // 审核已拒绝，不再按原请求继续。
+  CHANNEL_PUBLICATION_REJECTED = 3;
+}
+
+// ChannelPublicationDecision 定义对应业务维度允许使用的离散取值。
+enum ChannelPublicationDecision {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CHANNEL_PUBLICATION_DECISION_UNSPECIFIED = 0;
+  // CHANNEL_PUBLICATION_APPROVE 选择 CHANNEL_PUBLICATION_APPROVE 作为对应业务维度的有效取值。
+  CHANNEL_PUBLICATION_APPROVE = 1;
+  // CHANNEL_PUBLICATION_REJECT 选择 CHANNEL_PUBLICATION_REJECT 作为对应业务维度的有效取值。
+  CHANNEL_PUBLICATION_REJECT = 2;
+}
+
+// RoutingPolicyRevisionStatus 刻画对应资源的生命周期状态。
+enum RoutingPolicyRevisionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ROUTING_POLICY_REVISION_STATUS_UNSPECIFIED = 0;
+  // 仍处于草稿阶段，尚未对业务生效。
+  ROUTING_POLICY_REVISION_DRAFT = 1;
+  // 已经发布并对约定作用域生效。
+  ROUTING_POLICY_REVISION_PUBLISHED = 2;
+  // 已退出使用，仅保留历史查询能力。
+  ROUTING_POLICY_REVISION_RETIRED = 3;
+}
+
+// RoutingClientPlatform 定义对应业务维度允许使用的离散取值。
+enum RoutingClientPlatform {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ROUTING_CLIENT_PLATFORM_UNSPECIFIED = 0;
+  // ROUTING_CLIENT_PLATFORM_IOS 表示请求来自 IOS 客户端平台。
+  ROUTING_CLIENT_PLATFORM_IOS = 1;
+  // ROUTING_CLIENT_PLATFORM_ANDROID 表示请求来自 ANDROID 客户端平台。
+  ROUTING_CLIENT_PLATFORM_ANDROID = 2;
+  // ROUTING_CLIENT_PLATFORM_WEB 表示请求来自 WEB 客户端平台。
+  ROUTING_CLIENT_PLATFORM_WEB = 3;
+  // 使用 Google Play Billing 的 Android；中国 Android 继续使用 ANDROID。
+  ROUTING_CLIENT_PLATFORM_GOOGLE_PLAY = 4;
+}
+
+// PurchaseType 区分对应资源的业务类型。
+enum PurchaseType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PURCHASE_TYPE_UNSPECIFIED = 0;
+  // PURCHASE_TYPE_RECHARGE 选择 RECHARGE 业务类型。
+  PURCHASE_TYPE_RECHARGE = 1;
+  // PURCHASE_TYPE_SUBSCRIPTION 选择 SUBSCRIPTION 业务类型。
+  PURCHASE_TYPE_SUBSCRIPTION = 2;
+}
+
+// PaymentOptionRevisionStatus 刻画对应资源的生命周期状态。
+enum PaymentOptionRevisionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PAYMENT_OPTION_REVISION_STATUS_UNSPECIFIED = 0;
+  // 仍处于草稿阶段，尚未对业务生效。
+  PAYMENT_OPTION_REVISION_DRAFT = 1;
+  // 已经发布并对约定作用域生效。
+  PAYMENT_OPTION_REVISION_PUBLISHED = 2;
+  // 已退出使用，仅保留历史查询能力。
+  PAYMENT_OPTION_REVISION_RETIRED = 3;
+}
+
+// PaymentOptionUnavailableReason 区分调用方可判断的业务原因。
+enum PaymentOptionUnavailableReason {
+  // PAYMENT_OPTION_UNAVAILABLE_REASON_NONE 表示因 NONE 条件导致流程无法按原路径继续。
+  PAYMENT_OPTION_UNAVAILABLE_REASON_NONE = 0;
+  // PAYMENT_OPTION_OUTSIDE_PUBLICATION_WINDOW 表示因 PAYMENT_OPTION_OUTSIDE_PUBLICATION_WINDOW 条件导致流程无法按原路径继续。
+  PAYMENT_OPTION_OUTSIDE_PUBLICATION_WINDOW = 1;
+  // 当前不可供业务流程选择或使用。
+  PAYMENT_OPTION_CHANNEL_UNAVAILABLE = 2;
+  // 当前值未通过校验，调用方应修正后重试。
+  PAYMENT_OPTION_PROBE_INVALID = 3;
+  // 有效期已结束，不再接受后续使用。
+  PAYMENT_OPTION_PROBE_EXPIRED = 4;
+  // 当前不可供业务流程选择或使用。
+  PAYMENT_OPTION_CAPABILITY_UNAVAILABLE = 5;
+  // 当前不可供业务流程选择或使用。
+  PAYMENT_OPTION_ROUTING_UNAVAILABLE = 6;
+}
+
+// PaymentChannel 表示 Payment Channel 的稳定身份与当前生效 Revision。
+message PaymentChannel {
+  // id 标识关联的 PaymentChannel。
+  uint32 id = 1;
+  // app_id 限定 PaymentChannel 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 3;
+  // method 指定 PaymentChannel 使用的 PaymentMethod。
+  PaymentMethod method = 4;
+  // active_revision_id 标识关联的 ActiveRevision。
+  optional uint64 active_revision_id = 5;
+  // latest_revision 标识 PaymentChannel 所采用的契约或资源版本。
+  PaymentChannelRevision latest_revision = 6;
+  // created_at 记录 PaymentChannel 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 PaymentChannel 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// PaymentChannelRevision 表示对应资源的不可变版本快照。
+message PaymentChannelRevision {
+  // id 标识关联的 PaymentChannelRevision。
+  uint64 id = 1;
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 2;
+  // revision_no 是 PaymentChannelRevision 对外关联与审计使用的业务编号。
+  uint64 revision_no = 3;
+  // status 表示 PaymentChannelRevision 当前可观察的生命周期状态。
+  ChannelRevisionStatus status = 4;
+  // merchant_id 标识关联的 Merchant。
+  string merchant_id = 5;
+  // channel_app_id 标识支付 Provider 为当前 Channel 分配的应用身份。
+  string channel_app_id = 6;
+  // sandbox 显式表示 PaymentChannelRevision 是否满足该条件。
+  bool sandbox = 7;
+  // secret_reference 仅引用外部 Secret，不在契约中承载明文密钥。
+  optional string secret_reference = 8;
+  // public_config 承载可公开给运行时使用的 Channel 配置，不得包含密钥。
+  optional string public_config = 9;
+  // capabilities 列出 PaymentChannelRevision 关联的 ChannelCapability。
+  repeated ChannelCapability capabilities = 10;
+  // valid_from 指定 PaymentChannelRevision 查询或生效区间的起始边界。
+  google.protobuf.Timestamp valid_from = 11;
+  // valid_until 指定 PaymentChannelRevision 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp valid_until = 12;
+  // config_fingerprint 用于校验 PaymentChannelRevision 对应内容或版本的一致性。
+  string config_fingerprint = 13;
+  // icon_file_id 标识关联的 IconFile。
+  optional uint64 icon_file_id = 14;
+  // icon 承载 PaymentChannelRevision 关联的 FileView。
+  common.file.v1.FileView icon = 15;
+  // icon_reference_version 标识 PaymentChannelRevision 所采用的契约或资源版本。
+  uint64 icon_reference_version = 16;
+  // remark 提供 PaymentChannelRevision 的补充说明。
+  optional string remark = 17;
+  // created_by_operator_id 标识关联的后台 Operator。
+  uint32 created_by_operator_id = 18;
+  // probe_status 表示 PaymentChannelRevision 当前可观察的生命周期状态。
+  ChannelProbeStatus probe_status = 19;
+  // latest_probe 承载 PaymentChannelRevision 关联的 ChannelProbe。
+  ChannelProbe latest_probe = 20;
+  // created_at 记录 PaymentChannelRevision 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// ChannelProbeCheck 记录 Channel Probe 中一个检查项的结果与耗时。
+message ChannelProbeCheck {
+  // code 提供机器可判断的 Channel Probe 检查项编码。
+  string code = 1;
+  // succeeded 显式表示 ChannelProbeCheck 是否满足该条件。
+  bool succeeded = 2;
+  // message 提供面向调用方或操作员的可读说明，不作为程序分支依据。
+  optional string message = 3;
+}
+
+// ChannelProbe 表示一次 Channel 连通性探测及其逐项结果。
+message ChannelProbe {
+  // id 标识关联的 ChannelProbe。
+  uint64 id = 1;
+  // app_id 限定 ChannelProbe 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 3;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 4;
+  // config_fingerprint 用于校验 ChannelProbe 对应内容或版本的一致性。
+  string config_fingerprint = 5;
+  // status 表示 ChannelProbe 当前可观察的生命周期状态。
+  ChannelProbeStatus status = 6;
+  // checks 列出 ChannelProbe 关联的 ChannelProbeCheck。
+  repeated ChannelProbeCheck checks = 7;
+  // error_class 对失败进行稳定分类，供调用方决定重试或终止。
+  optional string error_class = 8;
+  // message 提供面向调用方或操作员的可读说明，不作为程序分支依据。
+  optional string message = 9;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 10;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 11;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 12;
+  // provider_capability_fingerprint 绑定执行本次 Probe 的 Provider 能力契约版本。
+  string provider_capability_fingerprint = 13;
+  // created_at 记录 ChannelProbe 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// PaymentRoutingRule 描述对应能力的配置与约束。
+message PaymentRoutingRule {
+  // rule_id 标识关联的 Rule。
+  string rule_id = 1;
+  // biz_types 限定路由或分析规则适用的业务类型。
+  repeated string biz_types = 2;
+  // currencies 限定规则、渠道或查询支持的币种集合。
+  repeated string currencies = 3;
+  // method 指定 PaymentRoutingRule 使用的 PaymentMethod。
+  PaymentMethod method = 4;
+  // client_platforms 列出 PaymentRoutingRule 关联的 RoutingClientPlatform。
+  repeated RoutingClientPlatform client_platforms = 5;
+  // priority 决定 PaymentRoutingRule 在待处理队列中的相对顺序。
+  int32 priority = 6;
+  // weight 指定路由规则参与加权选择时使用的相对权重。
+  uint32 weight = 7;
+  // fallback 显式表示 PaymentRoutingRule 是否满足该条件。
+  bool fallback = 8;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  uint64 channel_revision_id = 9;
+}
+
+// RoutingPolicyRevision 表示对应资源的不可变版本快照。
+message RoutingPolicyRevision {
+  // id 标识关联的 RoutingPolicyRevision。
+  uint64 id = 1;
+  // app_id 限定 RoutingPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // revision_no 是 RoutingPolicyRevision 对外关联与审计使用的业务编号。
+  uint64 revision_no = 3;
+  // status 表示 RoutingPolicyRevision 当前可观察的生命周期状态。
+  RoutingPolicyRevisionStatus status = 4;
+  // policy_fingerprint 用于校验 RoutingPolicyRevision 对应内容或版本的一致性。
+  string policy_fingerprint = 5;
+  // rules 列出 RoutingPolicyRevision 关联的 PaymentRoutingRule。
+  repeated PaymentRoutingRule rules = 6;
+  // created_by_operator_id 标识关联的后台 Operator。
+  uint32 created_by_operator_id = 7;
+  // created_at 记录 RoutingPolicyRevision 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// ChannelPublication 表示 Channel Revision 的审核、发布或回滚流程。
+message ChannelPublication {
+  // id 标识关联的 ChannelPublication。
+  uint64 id = 1;
+  // app_id 限定 ChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // target_type 区分 ChannelPublication 的业务类型。
+  ChannelPublicationTargetType target_type = 3;
+  // action 指定本次状态推进采用的业务动作。
+  ChannelPublicationAction action = 4;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  optional uint64 channel_revision_id = 5;
+  // routing_policy_revision_id 标识关联的 RoutingPolicyRevision。
+  optional uint64 routing_policy_revision_id = 6;
+  // draft_fingerprint 用于校验 ChannelPublication 对应内容或版本的一致性。
+  string draft_fingerprint = 7;
+  // probe_id 标识关联的 Probe。
+  optional uint64 probe_id = 8;
+  // maker_operator_id 标识关联的后台 Operator。
+  uint32 maker_operator_id = 9;
+  // reviewer_operator_id 标识关联的后台 Operator。
+  optional uint32 reviewer_operator_id = 10;
+  // status 表示 ChannelPublication 当前可观察的生命周期状态。
+  ChannelPublicationStatus status = 11;
+  // decision 记录 ChannelPublication 对应审核或执行流程的结论。
+  optional ChannelPublicationDecision decision = 12;
+  // maker_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string maker_reason = 13;
+  // reviewer_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reviewer_reason = 14;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 15;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 16;
+  // expected_active_revision_id 标识关联的 ExpectedActiveRevision。
+  optional uint64 expected_active_revision_id = 17;
+  // expected_active_policy_revision_id 标识关联的 ExpectedActivePolicyRevision。
+  optional uint64 expected_active_policy_revision_id = 18;
+  // payment_option_revision_id 标识关联的 PaymentOptionRevision。
+  optional uint64 payment_option_revision_id = 19;
+  // expected_active_option_revision_id 标识关联的 ExpectedActiveOptionRevision。
+  optional uint64 expected_active_option_revision_id = 20;
+  // created_at 记录 ChannelPublication 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // decided_at 记录 ChannelPublication 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp decided_at = 201;
+}
+
+// PaymentOptionRevision 表示对应资源的不可变版本快照。
+message PaymentOptionRevision {
+  // id 标识关联的 PaymentOptionRevision。
+  uint64 id = 1;
+  // option_code 提供 PaymentOptionRevision 对外稳定使用的业务编码。
+  string option_code = 2;
+  // revision_no 是 PaymentOptionRevision 对外关联与审计使用的业务编号。
+  uint64 revision_no = 3;
+  // status 表示 PaymentOptionRevision 当前可观察的生命周期状态。
+  PaymentOptionRevisionStatus status = 4;
+  // display_name 提供 PaymentOptionRevision 面向展示或识别的名称。
+  string display_name = 5;
+  // purchase_types 列出 PaymentOptionRevision 关联的 PurchaseType。
+  repeated PurchaseType purchase_types = 6;
+  // product_codes 列出 Payment Option 支持的产品编码。
+  repeated string product_codes = 7;
+  // currencies 限定规则、渠道或查询支持的币种集合。
+  repeated string currencies = 8;
+  // client_platforms 列出 PaymentOptionRevision 关联的 RoutingClientPlatform。
+  repeated RoutingClientPlatform client_platforms = 9;
+  // required_capability 承载 PaymentOptionRevision 关联的 ChannelCapability。
+  ChannelCapability required_capability = 10;
+  // channel_revision_ids 列出本次请求关联的 ChannelRevision 标识。
+  repeated uint64 channel_revision_ids = 11;
+  // valid_from 指定 PaymentOptionRevision 查询或生效区间的起始边界。
+  google.protobuf.Timestamp valid_from = 12;
+  // valid_until 指定 PaymentOptionRevision 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp valid_until = 13;
+  // created_by_operator_id 标识关联的后台 Operator。
+  uint32 created_by_operator_id = 14;
+  // created_at 记录 PaymentOptionRevision 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// ConsumerPaymentOption 表示消费端当前可选择的支付方式投影。
+message ConsumerPaymentOption {
+  // option_code 提供 ConsumerPaymentOption 对外稳定使用的业务编码。
+  string option_code = 1;
+  // display_name 提供 ConsumerPaymentOption 面向展示或识别的名称。
+  string display_name = 2;
+  // available 显式表示 ConsumerPaymentOption 是否满足该条件。
+  bool available = 3;
+  // unavailable_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  PaymentOptionUnavailableReason unavailable_reason = 4;
+  // selection_required 显式表示 ConsumerPaymentOption 是否满足该条件。
+  bool selection_required = 5;
+}
+
+// Consumer 请求只包含公开购买上下文；App 与 User 只能来自可信 metadata。
+message ListPurchaseOptionsRequest {
+  // purchase_type 区分 ListPurchaseOptions 的业务类型。
+  PurchaseType purchase_type = 1;
+  // product_code 提供 ListPurchaseOptions 对外稳定使用的业务编码。
+  string product_code = 2;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 3;
+  // client_platform 承载 ListPurchaseOptions 关联的 RoutingClientPlatform。
+  RoutingClientPlatform client_platform = 4;
+}
+
+// ListPurchaseOptionsResponse 返回 PurchaseOptions 结果集合及分页信息。
+message ListPurchaseOptionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ConsumerPaymentOption items = 1;
+}
+
+// CreatePaymentOptionRevisionRequest 定义创建 PaymentOptionRevision 的幂等命令参数。
+message CreatePaymentOptionRevisionRequest {
+  // app_id 限定 CreatePaymentOptionRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // option_code 提供 CreatePaymentOptionRevision 对外稳定使用的业务编码。
+  string option_code = 2;
+  // display_name 提供 CreatePaymentOptionRevision 面向展示或识别的名称。
+  string display_name = 3;
+  // purchase_types 列出 CreatePaymentOptionRevision 关联的 PurchaseType。
+  repeated PurchaseType purchase_types = 4;
+  // product_codes 列出 Payment Option 支持的产品编码。
+  repeated string product_codes = 5;
+  // currencies 限定规则、渠道或查询支持的币种集合。
+  repeated string currencies = 6;
+  // client_platforms 列出 CreatePaymentOptionRevision 关联的 RoutingClientPlatform。
+  repeated RoutingClientPlatform client_platforms = 7;
+  // required_capability 承载 CreatePaymentOptionRevision 关联的 ChannelCapability。
+  ChannelCapability required_capability = 8;
+  // channel_revision_ids 列出本次请求关联的 ChannelRevision 标识。
+  repeated uint64 channel_revision_ids = 9;
+  // valid_from 指定 CreatePaymentOptionRevision 查询或生效区间的起始边界。
+  google.protobuf.Timestamp valid_from = 10;
+  // valid_until 指定 CreatePaymentOptionRevision 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp valid_until = 11;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 12;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 13;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 14;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 15;
+}
+
+// PaymentRoutingDecision 记录路由规则为 Payment 选择的 Channel Revision。
+message PaymentRoutingDecision {
+  // routing_policy_revision_id 标识关联的 RoutingPolicyRevision。
+  uint64 routing_policy_revision_id = 1;
+  // routing_policy_revision_no 是 PaymentRoutingDecision 对外关联与审计使用的业务编号。
+  uint64 routing_policy_revision_no = 2;
+  // policy_fingerprint 用于校验 PaymentRoutingDecision 对应内容或版本的一致性。
+  string policy_fingerprint = 3;
+  // matched_rule_id 标识关联的 MatchedRule。
+  string matched_rule_id = 4;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  uint64 channel_revision_id = 5;
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 6;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 7;
+  // method 指定 PaymentRoutingDecision 使用的 PaymentMethod。
+  PaymentMethod method = 8;
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 9;
+  // fallback_revision_ids 列出本次请求关联的 FallbackRevision 标识。
+  repeated uint64 fallback_revision_ids = 10;
+  // payment_option_revision_id 标识关联的 PaymentOptionRevision。
+  optional uint64 payment_option_revision_id = 11;
+}
+
+// ChannelRevisionDraft 表示尚未发布的 Channel Revision 可编辑草稿。
+message ChannelRevisionDraft {
+  // merchant_id 标识关联的 Merchant。
+  string merchant_id = 1;
+  // channel_app_id 标识支付 Provider 为当前 Channel 分配的应用身份。
+  string channel_app_id = 2;
+  // sandbox 显式表示 ChannelRevisionDraft 是否满足该条件。
+  bool sandbox = 3;
+  // secret_reference 仅引用外部 Secret，不在契约中承载明文密钥。
+  optional string secret_reference = 4;
+  // public_config 承载可公开给运行时使用的 Channel 配置，不得包含密钥。
+  optional string public_config = 5;
+  // capabilities 列出 ChannelRevisionDraft 关联的 ChannelCapability。
+  repeated ChannelCapability capabilities = 6;
+  // valid_from 指定 ChannelRevisionDraft 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp valid_from = 7;
+  // valid_until 指定 ChannelRevisionDraft 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp valid_until = 8;
+  // icon_file_id 标识关联的 IconFile。
+  optional uint64 icon_file_id = 9;
+  // remark 提供 ChannelRevisionDraft 的补充说明。
+  optional string remark = 10;
+}
+
+// ProviderCapabilitySupport 是 Provider 实现的版本化代码能力上限，不代表任何 Revision 已发布。
+message ProviderCapabilitySupport {
+  // provider 标识能力实现所属 Provider。
+  PaymentProvider provider = 1;
+  // capabilities 列出当前实现明确注册的 operational capabilities。
+  repeated ChannelCapability capabilities = 2;
+  // contract_version 是 ProviderBundle 显式维护的能力契约版本。
+  string contract_version = 3;
+  // capability_fingerprint 标识 capability roles、verifier 与 router contract 的组合版本。
+  string capability_fingerprint = 4;
+}
+
+// ListProviderCapabilitySupportRequest 查询当前 App 可管理的 Provider 能力事实。
+message ListProviderCapabilitySupportRequest {
+  // app_id 限定管理权限作用域；UNSPECIFIED 不表示全平台。
+  common.v1.AppId app_id = 1;
+}
+
+// ListProviderCapabilitySupportResponse 返回当前进程注册的 Provider 能力事实。
+message ListProviderCapabilitySupportResponse {
+  // items 列出所有已注册 ProviderBundle 的稳定能力声明。
+  repeated ProviderCapabilitySupport items = 1;
+}
+
+// CreatePaymentChannelRequest 定义创建 PaymentChannel 的幂等命令参数。
+message CreatePaymentChannelRequest {
+  // app_id 限定 CreatePaymentChannel 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 2;
+  // method 指定 CreatePaymentChannel 使用的 PaymentMethod。
+  PaymentMethod method = 3;
+  // initial_revision 标识 CreatePaymentChannel 所采用的契约或资源版本。
+  ChannelRevisionDraft initial_revision = 4;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 7;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8;
+}
+
+// CreateChannelRevisionRequest 定义创建 ChannelRevision 的幂等命令参数。
+message CreateChannelRevisionRequest {
+  // app_id 限定 CreateChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 2;
+  // draft 承载 CreateChannelRevision 关联的 ChannelRevisionDraft。
+  ChannelRevisionDraft draft = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7;
+}
+
+// ProbeChannelRevisionRequest 定义执行 ProbeChannelRevision 的幂等管理命令参数。
+message ProbeChannelRevisionRequest {
+  // app_id 限定 ProbeChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+}
+
+// ListPaymentChannelsRequest 定义 PaymentChannels 的筛选与分页参数。
+message ListPaymentChannelsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // app_id 限定 ListPaymentChannels 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+}
+
+// ListPaymentChannelResponse 返回 PaymentChannel 结果集合及分页信息。
+message ListPaymentChannelResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PaymentChannel items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// ListChannelRevisionsRequest 定义 ChannelRevisions 的筛选与分页参数。
+message ListChannelRevisionsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // app_id 限定 ListChannelRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 3;
+}
+
+// ListChannelRevisionResponse 返回 ChannelRevision 结果集合及分页信息。
+message ListChannelRevisionResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PaymentChannelRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CreateRoutingPolicyRevisionRequest 定义创建 RoutingPolicyRevision 的幂等命令参数。
+message CreateRoutingPolicyRevisionRequest {
+  // app_id 限定 CreateRoutingPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // rules 列出 CreateRoutingPolicyRevision 关联的 PaymentRoutingRule。
+  repeated PaymentRoutingRule rules = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+}
+
+// SubmitChannelPublicationRequest 定义提交 ChannelPublication 的幂等管理命令参数。
+message SubmitChannelPublicationRequest {
+  // app_id 限定 SubmitChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // target_type 区分 SubmitChannelPublication 的业务类型。
+  ChannelPublicationTargetType target_type = 2;
+  // action 指定本次状态推进采用的业务动作。
+  ChannelPublicationAction action = 3;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  optional uint64 channel_revision_id = 4;
+  // routing_policy_revision_id 标识关联的 RoutingPolicyRevision。
+  optional uint64 routing_policy_revision_id = 5;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 6;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 7;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+  // payment_option_revision_id 标识关联的 PaymentOptionRevision。
+  optional uint64 payment_option_revision_id = 10;
+}
+
+// ReviewChannelPublicationRequest 定义审核 ChannelPublication 的幂等管理命令参数。
+message ReviewChannelPublicationRequest {
+  // app_id 限定 ReviewChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // publication_id 标识关联的 Publication。
+  uint64 publication_id = 2;
+  // decision 记录 ReviewChannelPublication 对应审核或执行流程的结论。
+  ChannelPublicationDecision decision = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7;
+  // allow_simulated 显式表示 ReviewChannelPublication 是否满足该条件。
+  bool allow_simulated = 8;
+}
+
+// ListChannelPublicationsRequest 定义 ChannelPublications 的筛选与分页参数。
+message ListChannelPublicationsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // app_id 限定 ListChannelPublications 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // status 表示 ListChannelPublications 当前可观察的生命周期状态。
+  optional ChannelPublicationStatus status = 3;
+}
+
+// ListChannelPublicationResponse 返回 ChannelPublication 结果集合及分页信息。
+message ListChannelPublicationResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ChannelPublication items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// ListRoutingPolicyRevisionsRequest 定义 RoutingPolicyRevisions 的筛选与分页参数。
+message ListRoutingPolicyRevisionsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // app_id 限定 ListRoutingPolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+}
+
+// ListRoutingPolicyRevisionResponse 返回 RoutingPolicyRevision 结果集合及分页信息。
+message ListRoutingPolicyRevisionResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated RoutingPolicyRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// PreviewPaymentRoutingRequest 定义执行 PreviewPaymentRouting 的命令参数。
+message PreviewPaymentRoutingRequest {
+  // app_id 限定 PreviewPaymentRouting 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // biz_type 区分 PreviewPaymentRouting 的业务类型。
+  string biz_type = 2;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 3;
+  // method 指定 PreviewPaymentRouting 使用的 PaymentMethod。
+  PaymentMethod method = 4;
+  // client_platform 承载 PreviewPaymentRouting 关联的 RoutingClientPlatform。
+  RoutingClientPlatform client_platform = 5;
+  // stable_key 在约定作用域内稳定定位 PreviewPaymentRouting。
+  string stable_key = 6;
+  // payment_option_code 提供 PreviewPaymentRouting 对外稳定使用的业务编码。
+  optional string payment_option_code = 7;
+  // product_code 提供 PreviewPaymentRouting 对外稳定使用的业务编码。
+  optional string product_code = 8;
+}

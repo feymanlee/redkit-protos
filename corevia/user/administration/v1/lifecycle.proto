@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// UserLifecycleService 暴露 User 拥有的 Recovery、Closure 和 Merge 只读强类型投影，
+// 不引入通用任务状态机。
+service UserLifecycleService {
+  // 查询 LifecycleOperation 列表。
+  rpc ListLifecycleOperations(ListLifecycleOperationsRequest) returns (ListLifecycleOperationsResponse);
+}
+
+// LifecycleOperationType 区分对应资源的业务类型。
+enum LifecycleOperationType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  LIFECYCLE_OPERATION_TYPE_UNSPECIFIED = 0;
+  // LIFECYCLE_OPERATION_TYPE_RECOVERY 选择 RECOVERY 业务类型。
+  LIFECYCLE_OPERATION_TYPE_RECOVERY = 1;
+  // LIFECYCLE_OPERATION_TYPE_CLOSURE 选择 CLOSURE 业务类型。
+  LIFECYCLE_OPERATION_TYPE_CLOSURE = 2;
+  // LIFECYCLE_OPERATION_TYPE_MERGE 选择 MERGE 业务类型。
+  LIFECYCLE_OPERATION_TYPE_MERGE = 3;
+}
+
+// LifecycleSlaFilter 定义对应业务维度允许使用的离散取值。
+enum LifecycleSlaFilter {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  LIFECYCLE_SLA_FILTER_UNSPECIFIED = 0;
+  // LIFECYCLE_SLA_FILTER_ON_TRACK 选择 ON_TRACK 作为对应业务维度的有效取值。
+  LIFECYCLE_SLA_FILTER_ON_TRACK = 1;
+  // LIFECYCLE_SLA_FILTER_DUE 选择 DUE 作为对应业务维度的有效取值。
+  LIFECYCLE_SLA_FILTER_DUE = 2;
+  // 已检测到安全泄露风险，必须按风险流程处置。
+  LIFECYCLE_SLA_FILTER_BREACHED = 3;
+  // 有效期已结束，不再接受后续使用。
+  LIFECYCLE_SLA_FILTER_EXPIRED = 4;
+  // 处理被阻塞，需要外部处置后才能继续。
+  LIFECYCLE_SLA_FILTER_STALLED = 5;
+}
+
+// LifecycleSlaState 刻画对应资源的生命周期状态。
+enum LifecycleSlaState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  LIFECYCLE_SLA_STATE_UNSPECIFIED = 0;
+  // LIFECYCLE_SLA_STATE_ON_TRACK 表示资源处于对应业务阶段。
+  LIFECYCLE_SLA_STATE_ON_TRACK = 1;
+  // LIFECYCLE_SLA_STATE_DUE 表示资源处于对应业务阶段。
+  LIFECYCLE_SLA_STATE_DUE = 2;
+  // 已检测到安全泄露风险，必须按风险流程处置。
+  LIFECYCLE_SLA_STATE_BREACHED = 3;
+  // 有效期已结束，不再接受后续使用。
+  LIFECYCLE_SLA_STATE_EXPIRED = 4;
+  // 处理被阻塞，需要外部处置后才能继续。
+  LIFECYCLE_SLA_STATE_STALLED = 5;
+}
+
+// LifecycleOperationFilter 定义可组合的查询筛选条件。
+message LifecycleOperationFilter {
+  // operation_type 区分 LifecycleOperationFilter 的业务类型。
+  optional LifecycleOperationType operation_type = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // status 表示 LifecycleOperationFilter 当前可观察的生命周期状态。
+  optional string status = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 3 [(validate.rules).uint64.gt = 0];
+  // created_from 指定 LifecycleOperationFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 4;
+  // created_to 指定 LifecycleOperationFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 5;
+  // updated_from 指定 LifecycleOperationFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp updated_from = 6;
+  // updated_to 指定 LifecycleOperationFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp updated_to = 7;
+  // sla 承载 LifecycleOperationFilter 关联的 LifecycleSlaFilter。
+  LifecycleSlaFilter sla = 8 [(validate.rules).enum = {defined_only: true}];
+  // stalled 显式表示 LifecycleOperationFilter 是否满足该条件。
+  bool stalled = 9;
+}
+
+// ListLifecycleOperationsRequest 定义 LifecycleOperations 的筛选与分页参数。
+message ListLifecycleOperationsRequest {
+  // app_id 限定 ListLifecycleOperations 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+  // filter 限定本次查询采用的筛选条件。
+  LifecycleOperationFilter filter = 3;
+}
+
+// LifecycleOperationLink 记录 User Lifecycle Operation 与下游资源的关联。
+message LifecycleOperationLink {
+  // relation 说明当前资源与目标资源之间的业务关系。
+  string relation = 1;
+  // path 记录 Provider 或资源边界内使用的相对路径。
+  string path = 2;
+}
+
+// LifecycleOperation 表示一个跨 bounded context 的 User 生命周期操作。
+message LifecycleOperation {
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 1;
+  // app_id 限定 LifecycleOperation 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // operation_type 区分 LifecycleOperation 的业务类型。
+  LifecycleOperationType operation_type = 3;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 4;
+  // related_user_id 标识当前 App 内关联的 User。
+  uint64 related_user_id = 5;
+  // status 表示 LifecycleOperation 当前可观察的生命周期状态。
+  string status = 6;
+  // current_step 标识 LifecycleOperation 当前或下一处理阶段。
+  string current_step = 7;
+  // blocker_count 记录 LifecycleOperation 中符合对应条件的数量。
+  uint32 blocker_count = 8;
+  // safe_error 记录 LifecycleOperation 最近一次可诊断的失败信息。
+  string safe_error = 9;
+  // owning_destination 标识负责拥有和处理当前资源的目标边界。
+  string owning_destination = 10;
+  // created_at 记录 LifecycleOperation 的创建时间。
+  google.protobuf.Timestamp created_at = 11;
+  // updated_at 记录 LifecycleOperation 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 12;
+  // sla_due_at 记录 LifecycleOperation 对应业务阶段的时间点。
+  google.protobuf.Timestamp sla_due_at = 13;
+  // sla_state 表示 LifecycleOperation 当前可观察的生命周期状态。
+  LifecycleSlaState sla_state = 14;
+  // links 列出 LifecycleOperation 关联的 LifecycleOperationLink。
+  repeated LifecycleOperationLink links = 15;
+}
+
+// LifecycleOperationSummary 表示面向查询的汇总投影。
+message LifecycleOperationSummary {
+  // operation_type 区分 LifecycleOperationSummary 的业务类型。
+  LifecycleOperationType operation_type = 1;
+  // pending_count 记录 LifecycleOperationSummary 中符合对应条件的数量。
+  uint64 pending_count = 2;
+  // stalled_count 记录 LifecycleOperationSummary 中符合对应条件的数量。
+  uint64 stalled_count = 3;
+  // expired_count 记录 LifecycleOperationSummary 中符合对应条件的数量。
+  uint64 expired_count = 4;
+  // oldest_age_seconds 以秒表示对应流程的持续时间或上限。
+  uint64 oldest_age_seconds = 5;
+}
+
+// ListLifecycleOperationsResponse 返回 LifecycleOperations 结果集合及分页信息。
+message ListLifecycleOperationsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated LifecycleOperation items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+  // summary 列出 ListLifecycleOperations 关联的 LifecycleOperationSummary。
+  repeated LifecycleOperationSummary summary = 3;
+}

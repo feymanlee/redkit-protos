@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "google/protobuf/duration.proto";
+import "validate/validate.proto";
+
+// UserExportOptions 定义 User Export 可选择的资源、字段与排序。
+message UserExportOptions {
+  // row_limit 限定 UserExportOptions 对应操作允许使用的数量或阈值。
+  uint32 row_limit = 1 [(validate.rules).uint32.gt = 0];
+  // max_attempts 记录 UserExportOptions 中符合对应条件的数量。
+  uint32 max_attempts = 2 [(validate.rules).uint32.gt = 0];
+  // lease_duration 以契约字段约定的单位表示对应流程的持续时间或上限。
+  google.protobuf.Duration lease_duration = 3 [(validate.rules).duration.required = true, (validate.rules).duration.gt = {}];
+  // result_ttl 以契约字段约定的单位表示对应流程的持续时间或上限。
+  google.protobuf.Duration result_ttl = 4 [(validate.rules).duration.required = true, (validate.rules).duration.gt = {}];
+}
+
+// UserExportOptionsWrapper 包装 User Export Options 以保留字段 presence。
+message UserExportOptionsWrapper {
+  // user_export 承载 UserExportOptionsWrapper 关联的 UserExportOptions。
+  UserExportOptions user_export = 1 [(validate.rules).message.required = true];
+}

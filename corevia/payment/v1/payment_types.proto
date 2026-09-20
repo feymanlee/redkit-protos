@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package payment.v1;
+
+// 支付渠道提供方。
+enum PaymentProvider {
+  // 模拟渠道。
+  SIMULATED = 0;
+  // 微信支付。
+  WECHAT_PAY = 1;
+  // 支付宝。
+  ALIPAY = 2;
+  // Apple App Store 内购。
+  APPLE_IAP = 3;
+  // Google Play Billing。
+  GOOGLE_PLAY = 4;
+}
+
+// 支付方式。
+enum PaymentMethod {
+  // 未指定。
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  // App 支付。
+  APP = 1;
+  // H5 支付。
+  H5 = 2;
+  // 小程序支付。
+  MINI_PROGRAM = 3;
+  // 扫码支付。
+  QR_CODE = 4;
+  // App Store 内购。
+  IAP = 5;
+}

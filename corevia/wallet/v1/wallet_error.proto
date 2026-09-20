@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "errors/errors.proto";
+
+// 钱包错误原因。
+enum WalletErrorReason {
+  option (errors.default_code) = 500;
+
+  // bad 请求。
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // unauthorized。
+  UNAUTHORIZED = 100 [(errors.code) = 401];
+  // 支付 required。
+  PAYMENT_REQUIRED = 200 [(errors.code) = 402];
+  // forbidden。
+  FORBIDDEN = 300 [(errors.code) = 403];
+  // not found。
+  NOT_FOUND = 400 [(errors.code) = 404];
+  // 钱包 not found。
+  WALLET_NOT_FOUND = 401 [(errors.code) = 404];
+  // insufficient balance。
+  INSUFFICIENT_BALANCE = 402 [(errors.code) = 409];
+  // 风控限额冲突。
+  RISK_LIMIT_EXCEEDED = 403 [(errors.code) = 409];
+  // 幂等冲突。
+  IDEMPOTENCY_CONFLICT = 404 [(errors.code) = 409];
+  // 调账审批冲突。
+  ADJUSTMENT_CONFLICT = 405 [(errors.code) = 409];
+  // 操作正在处理，可使用相同幂等键重试。
+  OPERATION_PROCESSING = 406 [(errors.code) = 409];
+  // 流水必须由其事实服务的补偿流程处置，不能使用通用冲正。
+  TRANSACTION_NOT_REVERSIBLE = 407 [(errors.code) = 409];
+  // 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+  RECHARGE_OFFER_UNAVAILABLE = 408 [(errors.code) = 404];
+  // Store App、Provider、SKU 与发布时间窗解析到了多个 Revision，必须失败关闭。
+  RECHARGE_STORE_MAPPING_AMBIGUOUS = 409 [(errors.code) = 409];
+  // conflict。
+  CONFLICT = 900 [(errors.code) = 409];
+  // 站内 server 错误。
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+  // service unavailable。
+  SERVICE_UNAVAILABLE = 2300 [(errors.code) = 503];
+}

@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package admin.wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "wallet/v1/ledger.proto";
+import "wallet/v1/reconciliation.proto";
+import "wallet/v1/refund.proto";
+import "wallet/v1/wallet_types.proto";
+
+// 钱包管理服务。
+service WalletService {
+  // 查询钱包列表。
+  rpc ListWallets(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListWalletResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallets"};
+  }
+  // 查询钱包详情。
+  rpc GetWallet(AdminGetWalletRequest) returns (.wallet.v1.Wallet) {
+    option (google.api.http) = {get: "/admin/v1/wallets/{user_id}"};
+  }
+  // 查询钱包交易列表。
+  rpc ListTransactions(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListWalletTransactionResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-transactions"};
+  }
+  // 冻结余额。
+  rpc Freeze(AdminFreezeWalletRequest) returns (.wallet.v1.WalletFreeze) {
+    option (google.api.http) = {
+      post: "/admin/v1/wallet-freezes"
+      body: "*"
+    };
+  }
+  // 查询冻结记录。
+  rpc ListFreezes(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListWalletFreezeResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-freezes"};
+  }
+  // 查询钱包审计事件。
+  rpc ListWalletEvents(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListWalletEventResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-events"};
+  }
+  // 查询用户欠款列表。
+  rpc ListWalletUserDebts(AdminListWalletUserDebtsRequest) returns (.wallet.v1.ListWalletUserDebtResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-user-debts"};
+  }
+}
+
+// AdminGetWalletRequest 标识待查询的 Wallet。
+message AdminGetWalletRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // currency 指定相关金额使用的币种或计量单位。
+  optional .wallet.v1.WalletCurrency currency = 2 [(validate.rules).enum.defined_only = true];
+}
+// AdminFreezeWalletRequest 定义执行 FreezeWallet 的幂等管理命令参数。
+message AdminFreezeWalletRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // amount 以对应 WalletCurrency 的最小计量单位表示，不使用浮点数。
+  int64 amount = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64 = {not_in: [0]}
+  ];
+  // currency 指定相关金额使用的币种或计量单位。
+  optional .wallet.v1.WalletCurrency currency = 3 [(validate.rules).enum.defined_only = true];
+  // biz_type 区分 FreezeWallet 的业务类型。
+  optional string biz_type = 4 [(validate.rules).string.max_len = 64];
+  // biz_id 标识关联的 Biz。
+  optional string biz_id = 5 [(validate.rules).string.max_len = 128];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 6 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+  // remark 提供 FreezeWallet 的补充说明。
+  optional string remark = 7 [(validate.rules).string.max_len = 1000];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 8 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 500
+    }
+  ];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 9 [(validate.rules).string.max_len = 128];
+  // release_policy 承载 FreezeWallet 关联的 WalletFreezeReleasePolicy。
+  .wallet.v1.WalletFreezeReleasePolicy release_policy = 10 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [0]
+    }
+  ];
+  // expires_at 指定 FreezeWallet 失效的时间点。
+  optional google.protobuf.Timestamp expires_at = 11;
+  // review_due_at 记录 FreezeWallet 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp review_due_at = 12;
+}
+
+// AdminListWalletUserDebtsRequest 定义 WalletUserDebts 的筛选与分页参数。
+message AdminListWalletUserDebtsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  optional AdminWalletUserDebtFilter filter = 2;
+}
+
+// AdminWalletUserDebtFilter 定义可组合的查询筛选条件。
+message AdminWalletUserDebtFilter {
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 1 [(validate.rules).uint64.gt = 0];
+  // status 表示 WalletUserDebtFilter 当前可观察的生命周期状态。
+  optional string status = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  // source_type 区分 WalletUserDebtFilter 的业务类型。
+  optional string source_type = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  // created_from 指定 WalletUserDebtFilter 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp created_from = 4;
+  // created_to 指定 WalletUserDebtFilter 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp created_to = 5;
+}

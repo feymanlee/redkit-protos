@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package gift.v1;
+
+// GiftRewardOptionsWrapper 通过 bootstrap custom-config loader 提供 Reward 配置。
+message GiftRewardOptionsWrapper {
+  // gift_reward 承载 GiftRewardOptionsWrapper 关联的 GiftRewardOptions。
+  GiftRewardOptions gift_reward = 1;
+}
+
+// GiftRewardOptions 包含 Gift Reward 的部署安全基线。
+message GiftRewardOptions {
+  // 单个背包 Gift Reward 允许发放的最大数量；零值表示能力未启用。
+  uint64 backpack_maximum_quantity = 1;
+}

@@ -1,0 +1,326 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "user/administration/v1/types.proto";
+import "validate/validate.proto";
+
+// UserSecurityService 管理 MFA、安全锁和安全事件。
+service UserSecurityService {
+  // 登记 MFA。
+  rpc EnrollMFA(EnrollMFARequest) returns (EnrollMFAResponse);
+  // 确认 MFA。
+  rpc ConfirmMFA(ConfirmMFARequest) returns (google.protobuf.Empty);
+  // 停用 MFA。
+  rpc DisableMFA(DisableMFARequest) returns (google.protobuf.Empty);
+  // 生成 RecoveryCodes。
+  rpc GenerateRecoveryCodes(GenerateRecoveryCodesRequest) returns (GenerateRecoveryCodesResponse);
+  // 查询 SecurityEvent 列表。
+  rpc ListSecurityEvents(ListSecurityEventsRequest) returns (ListSecurityEventsResponse);
+  // 解锁 Account。
+  rpc UnlockAccount(UnlockAccountRequest) returns (google.protobuf.Empty);
+  // 查询 AdminAction 列表。
+  rpc ListAdminActions(ListAdminActionsRequest) returns (ListAdminActionsResponse);
+  // ListSecurityNotices 返回 User 拥有的通知意图与 Support Message 引用，不复制投递尝试。
+  rpc ListSecurityNotices(ListSecurityNoticesRequest) returns (ListSecurityNoticesResponse);
+  // ResendSecurityNotice 为最新 FAILED 通知创建新的有界 attempt，历史 attempt 保持不变。
+  rpc ResendSecurityNotice(ResendSecurityNoticeRequest) returns (SecurityNotice);
+  // 查询 SecurityState。
+  rpc GetSecurityState(GetSecurityStateRequest) returns (SecurityState);
+}
+// EnrollMFARequest 定义执行 EnrollMFA 的幂等管理命令参数。
+message EnrollMFARequest {
+  // app_id 限定 EnrollMFA 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3;
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 4;
+}
+// EnrollMFAResponse 承载 EnrollMFA 的返回结果。
+message EnrollMFAResponse {
+  // factor_id 标识关联的 Factor。
+  string factor_id = 1;
+  // secret 承载敏感凭据或校验材料，不得写入普通日志。
+  string secret = 2;
+  // provisioning_uri 承载认证器开户材料，属于敏感凭据。
+  string provisioning_uri = 3;
+}
+// ConfirmMFARequest 定义执行 ConfirmMFA 的幂等管理命令参数。
+message ConfirmMFARequest {
+  // app_id 限定 ConfirmMFA 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // factor_id 标识关联的 Factor。
+  string factor_id = 3;
+  // code 承载调用方输入的一次性验证码，不得写入普通日志。
+  string code = 4;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5;
+}
+// DisableMFARequest 定义停用 MFA 的幂等管理命令参数。
+message DisableMFARequest {
+  // app_id 限定 DisableMFA 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}
+// GenerateRecoveryCodesRequest 定义执行 GenerateRecoveryCodes 的幂等管理命令参数。
+message GenerateRecoveryCodesRequest {
+  // app_id 限定 GenerateRecoveryCodes 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3;
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 4;
+}
+// GenerateRecoveryCodesResponse 承载 GenerateRecoveryCodes 的返回结果。
+message GenerateRecoveryCodesResponse {
+  // codes 返回新生成的一次性 Recovery Code；调用方仅可在本次响应中展示。
+  repeated string codes = 1;
+}
+// ListSecurityEventsRequest 定义 SecurityEvents 的筛选与分页参数。
+message ListSecurityEventsRequest {
+  // app_id 限定 ListSecurityEvents 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+// ListSecurityEventsResponse 返回 SecurityEvents 结果集合及分页信息。
+message ListSecurityEventsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated SecurityEvent items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+// UnlockAccountRequest 定义执行 UnlockAccount 的幂等管理命令参数。
+message UnlockAccountRequest {
+  // app_id 限定 UnlockAccount 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}
+// ListAdminActionsRequest 定义 AdminActions 的筛选与分页参数。
+message ListAdminActionsRequest {
+  // app_id 限定 ListAdminActions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+// ListAdminActionsResponse 返回 AdminActions 结果集合及分页信息。
+message ListAdminActionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated AdminAction items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// SecurityNoticeType 标识一个白名单内的 User 安全通知类型。
+enum SecurityNoticeType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SECURITY_NOTICE_TYPE_UNSPECIFIED = 0;
+  // 当前已暂停，恢复前不接受新的业务动作。
+  SECURITY_NOTICE_TYPE_ACCOUNT_SUSPENDED = 1;
+  // SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED 选择 ACCOUNT_REACTIVATED 业务类型。
+  SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED = 2;
+  // SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED 表示该业务条件为必需。
+  SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED = 3;
+  // 相关授权或凭据已撤销，不能继续使用。
+  SECURITY_NOTICE_TYPE_CREDENTIAL_REVOKED = 4;
+  // SECURITY_NOTICE_TYPE_MFA_RESET 选择 MFA_RESET 业务类型。
+  SECURITY_NOTICE_TYPE_MFA_RESET = 5;
+  // 相关授权或凭据已撤销，不能继续使用。
+  SECURITY_NOTICE_TYPE_DEVICE_TRUST_REVOKED = 6;
+  // SECURITY_NOTICE_TYPE_PROFILE_MODERATED 选择 PROFILE_MODERATED 业务类型。
+  SECURITY_NOTICE_TYPE_PROFILE_MODERATED = 7;
+  // SECURITY_NOTICE_TYPE_USER_CODE_RESET 选择 USER_CODE_RESET 业务类型。
+  SECURITY_NOTICE_TYPE_USER_CODE_RESET = 8;
+  // SECURITY_NOTICE_TYPE_RECOVERY_ACCEPTED 选择 RECOVERY_ACCEPTED 业务类型。
+  SECURITY_NOTICE_TYPE_RECOVERY_ACCEPTED = 9;
+  // 审核已通过，可以继续后续流程。
+  SECURITY_NOTICE_TYPE_RECOVERY_APPROVED = 10;
+  // 审核已拒绝，不再按原请求继续。
+  SECURITY_NOTICE_TYPE_RECOVERY_REJECTED = 11;
+  // 处理已成功完成。
+  SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED = 12;
+  // SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED 选择 CLOSURE_REQUESTED 业务类型。
+  SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED = 13;
+  // SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED 选择 CLOSURE_IRREVERSIBLE_STARTED 业务类型。
+  SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED = 14;
+  // 处理已取消，不再继续推进。
+  SECURITY_NOTICE_TYPE_CLOSURE_CANCELED = 15;
+  // 处理被阻塞，需要外部处置后才能继续。
+  SECURITY_NOTICE_TYPE_CLOSURE_STALLED = 16;
+  // 当前流程已关闭，不再接受新的处理动作。
+  SECURITY_NOTICE_TYPE_CLOSURE_CLOSED = 17;
+  // SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD 选择 PHONE_CHANGED_OLD 业务类型。
+  SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD = 18;
+  // SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW 选择 PHONE_CHANGED_NEW 业务类型。
+  SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW = 19;
+}
+
+// SecurityNoticeRecipientRole 标识接收角色，不暴露完整接收目标。
+enum SecurityNoticeRecipientRole {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SECURITY_NOTICE_RECIPIENT_ROLE_UNSPECIFIED = 0;
+  // SECURITY_NOTICE_RECIPIENT_ROLE_PRIMARY_PHONE 选择 PRIMARY_PHONE 作为通知或授权主体角色。
+  SECURITY_NOTICE_RECIPIENT_ROLE_PRIMARY_PHONE = 1;
+  // SECURITY_NOTICE_RECIPIENT_ROLE_PREVIOUS_PHONE 选择 PREVIOUS_PHONE 作为通知或授权主体角色。
+  SECURITY_NOTICE_RECIPIENT_ROLE_PREVIOUS_PHONE = 2;
+}
+
+// SecurityNoticeStatus 是 User 侧的 Support 投递状态投影。
+enum SecurityNoticeStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SECURITY_NOTICE_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  SECURITY_NOTICE_STATUS_PENDING = 1;
+  // 内容或资产已经发送至目标。
+  SECURITY_NOTICE_STATUS_SENT = 2;
+  // 处理失败；是否可重试由具体失败原因决定。
+  SECURITY_NOTICE_STATUS_FAILED = 3;
+}
+
+// SecurityNotice 暴露通知意图和所属 Support 引用，不暴露模板参数或完整 Recipient Phone。
+message SecurityNotice {
+  // notice_no 是 SecurityNotice 对外关联与审计使用的业务编号。
+  string notice_no = 1;
+  // app_id 限定 SecurityNotice 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 3;
+  // type 区分 SecurityNotice 的业务类型。
+  SecurityNoticeType type = 4;
+  // recipient_role 承载 SecurityNotice 关联的 SecurityNoticeRecipientRole。
+  SecurityNoticeRecipientRole recipient_role = 5;
+  // masked_target 承载用户资料或其脱敏展示值，按个人信息保护。
+  string masked_target = 6;
+  // locale 指定内容展示或消息投递采用的语言区域。
+  string locale = 7;
+  // template_code 提供 SecurityNotice 对外稳定使用的业务编码。
+  string template_code = 8;
+  // status 表示 SecurityNotice 当前可观察的生命周期状态。
+  SecurityNoticeStatus status = 9;
+  // support_message_no 是 SecurityNotice 对外关联与审计使用的业务编号。
+  string support_message_no = 10;
+  // failure_category 对失败进行稳定分类，供调用方决定重试或终止。
+  string failure_category = 11;
+  // created_at 记录 SecurityNotice 的创建时间。
+  google.protobuf.Timestamp created_at = 12;
+  // updated_at 记录 SecurityNotice 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 13;
+  // completed_at 记录 SecurityNotice 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 14;
+  // operation_no 将同一安全处置产生的全部不可变 attempt 关联起来。
+  string operation_no = 15;
+  // attempt_no 是 SecurityNotice 对外关联与审计使用的业务编号。
+  uint32 attempt_no = 16;
+  // resendable 仅表示此行当前可创建下一个 attempt，不代表 Support 投递成功。
+  bool resendable = 17;
+}
+
+// ListSecurityNoticesRequest 定义 SecurityNotices 的筛选与分页参数。
+message ListSecurityNoticesRequest {
+  // app_id 限定 ListSecurityNotices 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [0]
+    }
+  ];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListSecurityNoticesResponse 返回 SecurityNotices 结果集合及分页信息。
+message ListSecurityNoticesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated SecurityNotice items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// ResendSecurityNoticeRequest 定义执行 ResendSecurityNotice 的幂等管理命令参数。
+message ResendSecurityNoticeRequest {
+  // app_id 限定 ResendSecurityNotice 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [0]
+    }
+  ];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // notice_no 是 ResendSecurityNotice 对外关联与审计使用的业务编号。
+  string notice_no = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 64
+    }
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// GetSecurityStateRequest 标识待查询的 SecurityState。
+message GetSecurityStateRequest {
+  // app_id 限定 GetSecurityState 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [0]
+    }
+  ];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+}

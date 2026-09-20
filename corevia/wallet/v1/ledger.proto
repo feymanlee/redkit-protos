@@ -1,0 +1,276 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "wallet/v1/wallet_types.proto";
+
+// 钱包交易记录。
+message WalletTransaction {
+  // 交易类型。
+  enum Type {
+    // 未指定。
+    TYPE_UNSPECIFIED = 0;
+    // 充值。
+    RECHARGE = 1;
+    // 礼物 发送。
+    GIFT_SEND = 2;
+    // 礼物 receive。
+    GIFT_RECEIVE = 3;
+    // refund。
+    REFUND = 4;
+    // 人工调账。
+    ADJUSTMENT = 5;
+    // 冻结。
+    FREEZE = 6;
+    // 解冻。
+    UNFREEZE = 7;
+    // 平台收入。
+    PLATFORM_INCOME = 8;
+    // 冲正。
+    REVERSAL = 9;
+    // 退款扣回。
+    REFUND_DEBIT = 10;
+    // 欠款偿还。
+    DEBT_REPAY = 11;
+    // 账号合并资产迁移。
+    ACCOUNT_MERGE = 12;
+    // Ops Reward 发放。
+    REWARD = 13;
+  }
+
+  // 流水方向。
+  enum Direction {
+    // 未指定。
+    DIRECTION_UNSPECIFIED = 0;
+    // 入账。
+    IN = 1;
+    // 出账。
+    OUT = 2;
+  }
+
+  // 流水状态。
+  enum Status {
+    // 未指定。
+    STATUS_UNSPECIFIED = 0;
+    // 成功。
+    SUCCEEDED = 1;
+    // 已冲正。
+    REVERSED = 2;
+  }
+
+  // 记录 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 用户余额 ID。
+  optional uint64 wallet_id = 4;
+  // 交易类型。
+  optional Type type = 5;
+  // 业务类型。
+  optional string biz_type = 6;
+  // 业务关联 ID。
+  optional string biz_id = 7;
+  // 总变动金额。
+  optional int64 amount = 8;
+  // 总变动后余额。
+  optional int64 balance_after = 9;
+  // 币种；MIXED 表示同一笔流水同时包含充值币和赠币。
+  optional WalletCurrency currency = 10;
+  // 备注。
+  optional string remark = 11;
+  // 流水方向。
+  optional Direction direction = 12;
+  // 流水状态。
+  optional Status status = 13;
+  // 操作单号。
+  optional string operation_no = 14;
+  // 幂等键。
+  optional string idempotency_key = 15;
+  // 来源服务。
+  optional string source_service = 16;
+  // 对手方用户 ID。
+  optional uint64 counterparty_user_id = 17;
+  // 请求 ID。
+  optional string request_id = 18;
+  // 操作人 ID。
+  optional uint32 operator_id = 19;
+  // 审计备注。
+  optional string audit_note = 20;
+  // 扩展元数据。
+  optional string metadata = 21;
+  // 关联原始流水 ID。
+  optional uint64 original_transaction_id = 22;
+  // 充值币变动金额。
+  optional int64 diamond = 23;
+  // 赠币变动金额。
+  optional int64 coin = 24;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// 钱包列表响应。
+message ListWalletResponse {
+  // 列表项。
+  repeated Wallet items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 钱包交易列表响应。
+message ListWalletTransactionResponse {
+  // 列表项。
+  repeated WalletTransaction items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 获取钱包请求。
+message GetWalletRequest {
+  // 应用 ID。
+  common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // 币种。
+  optional WalletCurrency currency = 3;
+}
+
+// 余额变更请求。
+message ChangeBalanceRequest {
+  // 应用 ID。
+  common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // 变动金额。
+  int64 amount = 3;
+  // 币种。
+  optional WalletCurrency currency = 4;
+  // 业务类型。
+  string biz_type = 5;
+  // 业务关联 ID。
+  string biz_id = 6;
+  // 交易类型。
+  optional WalletTransaction.Type transaction_type = 7;
+  // 备注。
+  optional string remark = 8;
+  // 幂等键。
+  optional string idempotency_key = 9;
+  // 来源服务。
+  optional string source_service = 10;
+  // 请求 ID。
+  optional string request_id = 11;
+  // 操作人 ID。
+  optional uint32 operator_id = 12;
+  // 审计备注。
+  optional string audit_note = 13;
+  // 扩展元数据。
+  optional string metadata = 14;
+  // 对手方用户 ID。
+  optional uint64 counterparty_user_id = 15;
+  // 关联原始流水 ID。
+  optional uint64 original_transaction_id = 16;
+}
+
+// 余额变更响应。
+message ChangeBalanceResponse {
+  // 钱包。
+  Wallet wallet = 1;
+  // 交易。
+  WalletTransaction transaction = 2;
+}
+// 用户转账到平台请求。
+message TransferToPlatformRequest {
+  // 应用 ID。
+  common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // 金额。
+  int64 amount = 3;
+  // 币种。
+  optional WalletCurrency currency = 4;
+  // 业务类型。
+  string biz_type = 5;
+  // 业务关联 ID。
+  string biz_id = 6;
+  // 幂等键。
+  string idempotency_key = 7;
+  // 来源服务。
+  optional string source_service = 8;
+  // 对手方用户 ID。
+  optional uint64 counterparty_user_id = 9;
+  // 备注。
+  optional string remark = 10;
+}
+
+// 按稳定业务键查询用户到平台转账请求。
+message GetPlatformTransferByBusinessKeyRequest {
+  // 应用 ID。
+  common.v1.AppId app_id = 1;
+  // 调用方稳定业务键。
+  string business_key = 2;
+}
+
+// 用户转账到平台响应。
+message TransferToPlatformResponse {
+  // 权威操作结果。
+  enum Outcome {
+    // 未指定。
+    OUTCOME_UNSPECIFIED = 0;
+    // 转账及配对流水已成功提交。
+    SUCCEEDED = 1;
+    // 请求已被明确拒绝，不得再次扣款。
+    REJECTED = 2;
+    // 操作已保留，结果尚未确定。
+    PROCESSING = 3;
+    // 未找到该稳定业务键。
+    NOT_FOUND = 4;
+  }
+
+  // 用户扣款流水；同一笔消费同时包含 DIAMOND 和 COIN 时仍只返回一条。
+  WalletTransaction user_transaction = 1;
+  // 平台收入流水；与用户扣款流水一一对应。
+  WalletTransaction platform_transaction = 2;
+  // 权威操作结果。
+  Outcome outcome = 3;
+  // 应用 ID。
+  common.v1.AppId app_id = 4;
+  // 扣款用户 ID。
+  uint64 user_id = 5;
+  // 请求总金额。
+  int64 amount = 6;
+  // 请求币种。
+  WalletCurrency currency = 7;
+  // 业务类型。
+  string biz_type = 8;
+  // 稳定业务键。
+  string business_key = 9;
+  // 幂等键。
+  string idempotency_key = 10;
+  // 来源服务。
+  string source_service = 11;
+  // 业务对手方用户 ID。
+  uint64 counterparty_user_id = 12;
+  // 稳定拒绝错误码。
+  string rejection_code = 13;
+  // 稳定拒绝错误信息。
+  string rejection_message = 14;
+}
+
+// 冲正请求。
+message ReverseTransactionRequest {
+  // 原始流水 ID。
+  uint64 transaction_id = 1;
+  // 幂等键。
+  string idempotency_key = 2;
+  // 操作人 ID。
+  optional uint32 operator_id = 3;
+  // 审计备注。
+  optional string audit_note = 4;
+  // 应用 ID。
+  optional common.v1.AppId app_id = 5;
+  // Trusted governance identity for Admin-initiated reversals.
+  optional WalletGovernanceIdentity governance = 6;
+}

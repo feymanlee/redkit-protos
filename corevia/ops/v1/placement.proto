@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package ops.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// PlacementKind 刻画投放位的 UI/业务形态，用于默认容量与客户端渲染提示。
+enum PlacementKind {
+  // PLACEMENT_KIND_UNSPECIFIED 只表示未提供形态。
+  PLACEMENT_KIND_UNSPECIFIED = 0;
+  // PLACEMENT_KIND_CAROUSEL 轮播位。
+  PLACEMENT_KIND_CAROUSEL = 1;
+  // PLACEMENT_KIND_POPUP 弹窗或开屏位，通常同时仅一条生效内容。
+  PLACEMENT_KIND_POPUP = 2;
+  // PLACEMENT_KIND_ICON 图标/金刚区入口位。
+  PLACEMENT_KIND_ICON = 3;
+  // PLACEMENT_KIND_ACTIVITY_ENTRY 活动入口位。
+  PLACEMENT_KIND_ACTIVITY_ENTRY = 4;
+  // PLACEMENT_KIND_OTHER 其他或未归类形态。
+  PLACEMENT_KIND_OTHER = 5;
+}
+
+// Placement 是 App 内由稳定 code 标识的运营投放位注册事实。
+message Placement {
+  // placement_id 是当前 App 内投放位的数字标识。
+  uint64 placement_id = 1;
+  // app_id 归属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // code 是 App 内稳定投放位代码，创建后不可修改。
+  string code = 3;
+  // kind 是投放位形态。
+  PlacementKind kind = 4;
+  // display_name 是后台展示名称，不下发 C 端。
+  string display_name = 5;
+  // max_active_items 是该投放位同时生效内容上限。
+  uint32 max_active_items = 6;
+  // enabled 表示是否允许新内容发布到该位；停用不影响历史事实。
+  bool enabled = 7;
+  // created_at 是注册时间。
+  google.protobuf.Timestamp created_at = 8;
+  // updated_at 是最近一次属性变更时间。
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// ListPlacementResponse 返回当前 App 的投放位列表。
+message ListPlacementResponse {
+  // items 是按 code 排序的投放位列表。
+  repeated Placement items = 1;
+}

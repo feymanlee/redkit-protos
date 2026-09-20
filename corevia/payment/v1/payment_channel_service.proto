@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "payment/v1/channel.proto";
+
+// 支付渠道服务，管理 Channel 稳定身份、不可变配置 Revision、路由策略和独立发布审核。
+service PaymentChannelService {
+  // 创建 PaymentChannel 稳定身份及其首个 DRAFT ChannelRevision。
+  rpc CreatePaymentChannel(CreatePaymentChannelRequest) returns (PaymentChannel) {}
+  // 在既有 PaymentChannel 下追加不可变的 DRAFT ChannelRevision。
+  rpc CreateChannelRevision(CreateChannelRevisionRequest) returns (PaymentChannelRevision) {}
+  // 安全探测指定 ChannelRevision 的配置有效性，不创建 Payment。
+  rpc ProbeChannelRevision(ProbeChannelRevisionRequest) returns (ChannelProbe) {}
+  // 查询 PaymentChannel 列表。
+  rpc ListPaymentChannels(ListPaymentChannelsRequest) returns (ListPaymentChannelResponse) {}
+  // 查询 ChannelRevision 列表。
+  rpc ListChannelRevisions(ListChannelRevisionsRequest) returns (ListChannelRevisionResponse) {}
+  // 为当前 App 创建不可变的 RoutingPolicyRevision 草稿。
+  rpc CreateRoutingPolicyRevision(CreateRoutingPolicyRevisionRequest) returns (RoutingPolicyRevision) {}
+  // 校验候选渠道后创建不可变的公开 PaymentOptionRevision 草稿。
+  rpc CreatePaymentOptionRevision(CreatePaymentOptionRevisionRequest) returns (PaymentOptionRevision) {}
+  // 提交已验证的 ChannelRevision，进入独立审核流程。
+  rpc SubmitChannelPublication(SubmitChannelPublicationRequest) returns (ChannelPublication) {}
+  // 由独立 Reviewer 批准或拒绝待审核的 ChannelPublication。
+  rpc ReviewChannelPublication(ReviewChannelPublicationRequest) returns (ChannelPublication) {}
+  // 查询 ChannelPublication 列表。
+  rpc ListChannelPublications(ListChannelPublicationsRequest) returns (ListChannelPublicationResponse) {}
+  // 查询 RoutingPolicyRevision 列表。
+  rpc ListRoutingPolicyRevisions(ListRoutingPolicyRevisionsRequest) returns (ListRoutingPolicyRevisionResponse) {}
+  // 使用候选路由策略预览 PaymentRouting，不改变已发布配置。
+  rpc PreviewPaymentRouting(PreviewPaymentRoutingRequest) returns (PaymentRoutingDecision) {}
+  // 查询当前代码版本对各 Provider 实现的能力上限；结果仅用于治理和管理观察。
+  rpc ListProviderCapabilitySupport(ListProviderCapabilitySupportRequest) returns (ListProviderCapabilitySupportResponse) {}
+}

@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package ops.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "ops/v1/ops_content.proto";
+import "ops/v1/placement.proto";
+import "validate/validate.proto";
+
+// OpsPlacementAdminService 在 App Scope 下管理投放位注册；由 Admin BFF 聚合调用。
+service OpsPlacementAdminService {
+  // 查询当前 App 投放位列表。
+  rpc ListPlacements(.common.pagination.v1.PagingRequest) returns (ListPlacementResponse) {}
+  // 创建投放位。
+  rpc CreatePlacement(CreatePlacementRequest) returns (Placement) {}
+  // 更新投放位可变属性。
+  rpc UpdatePlacement(UpdatePlacementRequest) returns (Placement) {}
+}
+
+// OpsContentAdminService 在 App Scope 下管理运营投放内容生命周期。
+service OpsContentAdminService {
+  // 查询运营内容列表。
+  rpc ListOpsContentItems(ListOpsContentItemsRequest) returns (ListOpsContentItemResponse) {}
+  // 获取运营内容详情。
+  rpc GetOpsContentItem(GetOpsContentItemRequest) returns (OpsContentItem) {}
+  // 创建草稿内容。
+  rpc CreateOpsContentItem(CreateOpsContentItemRequest) returns (OpsContentItem) {}
+  // 更新内容可变字段。
+  rpc UpdateOpsContentItem(UpdateOpsContentItemRequest) returns (OpsContentItem) {}
+  // 发布内容项。
+  rpc PublishOpsContentItem(PublishOpsContentItemRequest) returns (OpsContentItem) {}
+  // 人工下线内容项。
+  rpc OfflineOpsContentItem(OfflineOpsContentItemRequest) returns (OpsContentItem) {}
+}
+
+// CreatePlacementRequest 创建投放位。
+message CreatePlacementRequest {
+  // code 是 App 内稳定投放位代码。
+  string code = 1 [(validate.rules).string.min_len = 1];
+  // kind 是投放位形态。
+  PlacementKind kind = 2;
+  // display_name 是后台展示名称。
+  string display_name = 3;
+  // max_active_items 为 0 时使用形态默认容量。
+  uint32 max_active_items = 4;
+}
+
+// UpdatePlacementRequest 更新投放位。
+message UpdatePlacementRequest {
+  // placement_id 标识投放位。
+  uint64 placement_id = 1 [(validate.rules).uint64.gt = 0];
+  // display_name 更新展示名。
+  string display_name = 2;
+  // max_active_items 更新容量。
+  uint32 max_active_items = 3;
+  // enabled 更新启用状态。
+  bool enabled = 4;
+}
+
+// ListOpsContentItemsRequest 列表过滤。
+message ListOpsContentItemsRequest {
+  // placement_id 可选过滤投放位。
+  uint64 placement_id = 1;
+  // status 可选过滤状态。
+  OpsContentStatus status = 2;
+}
+
+// GetOpsContentItemRequest 详情查询。
+message GetOpsContentItemRequest {
+  // content_id 标识内容。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+}
+
+// CreateOpsContentItemRequest 创建草稿。
+message CreateOpsContentItemRequest {
+  // placement_id 必填。
+  uint64 placement_id = 1 [(validate.rules).uint64.gt = 0];
+  // title 后台标题。
+  string title = 2;
+  // media_file_id Support File 引用。
+  string media_file_id = 3 [(validate.rules).string.min_len = 1];
+  // sort_order 排序。
+  int32 sort_order = 4;
+  // start_at 生效开始。
+  google.protobuf.Timestamp start_at = 5;
+  // end_at 生效结束。
+  google.protobuf.Timestamp end_at = 6;
+  // jump 跳转行为。
+  JumpTarget jump = 7;
+  // remark 运营备注。
+  string remark = 8;
+}
+
+// UpdateOpsContentItemRequest 更新内容。
+message UpdateOpsContentItemRequest {
+  // content_id 标识内容。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+  // title 后台标题。
+  string title = 2;
+  // media_file_id 新素材引用。
+  string media_file_id = 3;
+  // sort_order 排序。
+  int32 sort_order = 4;
+  // start_at 生效开始。
+  google.protobuf.Timestamp start_at = 5;
+  // end_at 生效结束。
+  google.protobuf.Timestamp end_at = 6;
+  // jump 跳转行为。
+  JumpTarget jump = 7;
+  // remark 运营备注。
+  string remark = 8;
+}
+
+// PublishOpsContentItemRequest 发布命令。
+message PublishOpsContentItemRequest {
+  // content_id 标识内容。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+  // reason 治理原因。
+  string reason = 2 [(validate.rules).string.min_len = 1];
+}
+
+// OfflineOpsContentItemRequest 下线命令。
+message OfflineOpsContentItemRequest {
+  // content_id 标识内容。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+  // reason 治理原因。
+  string reason = 2 [(validate.rules).string.min_len = 1];
+}

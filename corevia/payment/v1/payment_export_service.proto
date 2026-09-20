@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "payment/v1/export.proto";
+
+// 支付导出服务。
+service PaymentExportService {
+  // 创建 PaymentExportJob。
+  rpc CreatePaymentExportJob(CreatePaymentExportJobRequest) returns (PaymentExportJob) {}
+  // 查询 PaymentExportJob。
+  rpc GetPaymentExportJob(GetPaymentExportJobRequest) returns (PaymentExportJob) {}
+  // 查询 PaymentExportJob 列表。
+  rpc ListPaymentExportJobs(ListPaymentExportJobsRequest) returns (ListPaymentExportJobsResponse) {}
+  // 创建 PaymentExportDownload。
+  rpc CreatePaymentExportDownload(CreatePaymentExportDownloadRequest) returns (PaymentExportDownload) {}
+}

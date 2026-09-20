@@ -1,0 +1,398 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_types.proto";
+
+// PaymentRiskRule 描述对应能力的配置与约束。
+message PaymentRiskRule {
+  // Type 区分对应资源的业务类型。
+  enum Type {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    TYPE_UNSPECIFIED = 0;
+    // AMOUNT_THRESHOLD 选择 AMOUNT_THRESHOLD 业务类型。
+    AMOUNT_THRESHOLD = 1;
+    // PAYMENT_FREQUENCY 选择 PAYMENT_FREQUENCY 业务类型。
+    PAYMENT_FREQUENCY = 2;
+    // DUPLICATE_PAYMENT_IDENTITY 选择 DUPLICATE_PAYMENT_IDENTITY 业务类型。
+    DUPLICATE_PAYMENT_IDENTITY = 3;
+    // PROVIDER_ERROR_ANOMALY 选择 PROVIDER_ERROR_ANOMALY 业务类型。
+    PROVIDER_ERROR_ANOMALY = 4;
+    // LOCAL_BLACKLIST 选择 LOCAL_BLACKLIST 业务类型。
+    LOCAL_BLACKLIST = 5;
+  }
+  // Action 区分可执行的状态推进动作。
+  enum Action {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    ACTION_UNSPECIFIED = 0;
+    // BLOCK 执行 BLOCK 业务动作。
+    BLOCK = 1;
+    // 需要人工审核、补充材料或执行明确处置后才能继续。
+    REVIEW_REQUIRED = 2;
+  }
+  // BlacklistSubjectType 区分对应资源的业务类型。
+  enum BlacklistSubjectType {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    BLACKLIST_SUBJECT_TYPE_UNSPECIFIED = 0;
+    // USER_ID 选择 USER_ID 业务类型。
+    USER_ID = 1;
+    // 显式表示否定选择。
+    ORDER_NO = 2;
+  }
+
+  // rule_id 标识关联的 Rule。
+  string rule_id = 1;
+  // name 提供 PaymentRiskRule 面向展示或识别的名称。
+  string name = 2;
+  // type 区分 PaymentRiskRule 的业务类型。
+  Type type = 3;
+  // action 指定本次状态推进采用的业务动作。
+  Action action = 4;
+  // enabled 显式表示 PaymentRiskRule 是否满足该条件。
+  bool enabled = 5;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 6;
+  // amount_threshold 以对应 currency 的最小货币单位定义规则触发阈值。
+  optional int64 amount_threshold = 7;
+  // window_seconds 以秒表示对应流程的持续时间或上限。
+  optional uint32 window_seconds = 8;
+  // max_count 记录 PaymentRiskRule 中符合对应条件的数量。
+  optional uint32 max_count = 9;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 10;
+  // error_rate_basis_points 以基点表示 PaymentRiskRule 对应比例，一万基点等于 100%。
+  optional uint32 error_rate_basis_points = 11;
+  // minimum_sample_count 记录 PaymentRiskRule 中符合对应条件的数量。
+  optional uint32 minimum_sample_count = 12;
+  // blacklist_subject_type 区分 PaymentRiskRule 的业务类型。
+  optional BlacklistSubjectType blacklist_subject_type = 13;
+  // match_values 列出风险规则用于匹配观察值的候选集合。
+  repeated string match_values = 14;
+}
+
+// PaymentRiskPolicyRevision 表示对应资源的不可变版本快照。
+message PaymentRiskPolicyRevision {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    STATUS_UNSPECIFIED = 0;
+    // 仍处于草稿阶段，尚未对业务生效。
+    DRAFT = 1;
+    // 已经发布并对约定作用域生效。
+    PUBLISHED = 2;
+    // 已退出使用，仅保留历史查询能力。
+    RETIRED = 3;
+  }
+
+  // id 标识关联的 PaymentRiskPolicyRevision。
+  uint64 id = 1;
+  // app_id 限定 PaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // revision_no 是 PaymentRiskPolicyRevision 对外关联与审计使用的业务编号。
+  uint64 revision_no = 3;
+  // name 提供 PaymentRiskPolicyRevision 面向展示或识别的名称。
+  string name = 4;
+  // status 表示 PaymentRiskPolicyRevision 当前可观察的生命周期状态。
+  Status status = 5;
+  // review_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 review_ttl_seconds = 6;
+  // rules 列出 PaymentRiskPolicyRevision 关联的 PaymentRiskRule。
+  repeated PaymentRiskRule rules = 7;
+  // fingerprint 用于校验 PaymentRiskPolicyRevision 对应内容或版本的一致性。
+  string fingerprint = 8;
+  // created_by_operator_id 标识关联的后台 Operator。
+  uint32 created_by_operator_id = 9;
+  // published_by_operator_id 标识关联的后台 Operator。
+  optional uint32 published_by_operator_id = 10;
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 11;
+  // created_at 记录 PaymentRiskPolicyRevision 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // published_at 记录 PaymentRiskPolicyRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp published_at = 201;
+}
+
+// PaymentRiskSignalSnapshot 表示对应资源的不可变版本快照。
+message PaymentRiskSignalSnapshot {
+  // signal_type 区分 PaymentRiskSignalSnapshot 的业务类型。
+  string signal_type = 1;
+  // observed_value 记录风险规则实际观察到的值。
+  string observed_value = 2;
+  // threshold 记录触发风险信号或规则判断的比较阈值。
+  string threshold = 3;
+  // matched 显式表示 PaymentRiskSignalSnapshot 是否满足该条件。
+  bool matched = 4;
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 5;
+}
+
+// PaymentRiskReview 表示一次 Payment 风险审核及其当前状态。
+message PaymentRiskReview {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    STATUS_UNSPECIFIED = 0;
+    // 已受理并等待后续处理。
+    PENDING = 1;
+    // 审核已通过，可以继续后续流程。
+    APPROVED = 2;
+    // 审核已拒绝，不再按原请求继续。
+    REJECTED = 3;
+    // 有效期已结束，不再接受后续使用。
+    EXPIRED = 4;
+  }
+
+  // id 标识关联的 PaymentRiskReview。
+  uint64 id = 1;
+  // app_id 限定 PaymentRiskReview 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // decision_id 标识关联的 Decision。
+  uint64 decision_id = 3;
+  // payment_no 是 PaymentRiskReview 对外关联与审计使用的业务编号。
+  string payment_no = 4;
+  // status 表示 PaymentRiskReview 当前可观察的生命周期状态。
+  Status status = 5;
+  // expires_at 指定 PaymentRiskReview 失效的时间点。
+  google.protobuf.Timestamp expires_at = 6;
+  // reviewer_operator_id 标识关联的后台 Operator。
+  optional uint32 reviewer_operator_id = 7;
+  // review_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string review_reason = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 9;
+  // version 标识 PaymentRiskReview 所采用的契约或资源版本。
+  uint64 version = 10;
+  // created_at 记录 PaymentRiskReview 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 PaymentRiskReview 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+  // reviewed_at 记录 PaymentRiskReview 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp reviewed_at = 202;
+}
+
+// PaymentRiskDecision 记录 Payment Risk Review 形成的处置决定。
+message PaymentRiskDecision {
+  // Outcome 定义对应业务维度允许使用的离散取值。
+  enum Outcome {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    OUTCOME_UNSPECIFIED = 0;
+    // ALLOW 表示处理结果为 ALLOW。
+    ALLOW = 1;
+    // BLOCK 表示处理结果为 BLOCK。
+    BLOCK = 2;
+    // 需要人工审核、补充材料或执行明确处置后才能继续。
+    REVIEW_REQUIRED = 3;
+  }
+
+  // id 标识关联的 PaymentRiskDecision。
+  uint64 id = 1;
+  // app_id 限定 PaymentRiskDecision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // payment_no 是 PaymentRiskDecision 对外关联与审计使用的业务编号。
+  string payment_no = 3;
+  // business_identity 记录外部或上游系统用于稳定关联 PaymentRiskDecision 的身份。
+  string business_identity = 4;
+  // policy_revision_id 标识关联的 PolicyRevision。
+  optional uint64 policy_revision_id = 5;
+  // policy_revision_no 是 PaymentRiskDecision 对外关联与审计使用的业务编号。
+  optional uint64 policy_revision_no = 6;
+  // outcome 记录 PaymentRiskDecision 对应审核或执行流程的结论。
+  Outcome outcome = 7;
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 8;
+  // signals 列出 PaymentRiskDecision 关联的 PaymentRiskSignalSnapshot。
+  repeated PaymentRiskSignalSnapshot signals = 9;
+  // review 承载 PaymentRiskDecision 关联的 PaymentRiskReview。
+  optional PaymentRiskReview review = 10;
+  // created_at 记录 PaymentRiskDecision 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// CreatePaymentRiskPolicyRevisionRequest 定义创建 PaymentRiskPolicyRevision 的幂等命令参数。
+message CreatePaymentRiskPolicyRevisionRequest {
+  // app_id 限定 CreatePaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // name 提供 CreatePaymentRiskPolicyRevision 面向展示或识别的名称。
+  string name = 2;
+  // review_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 review_ttl_seconds = 3;
+  // rules 列出 CreatePaymentRiskPolicyRevision 关联的 PaymentRiskRule。
+  repeated PaymentRiskRule rules = 4;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 5;
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 7;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8;
+}
+
+// PublishPaymentRiskPolicyRevisionRequest 定义发布 PaymentRiskPolicyRevision 的幂等管理命令参数。
+message PublishPaymentRiskPolicyRevisionRequest {
+  // app_id 限定 PublishPaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+}
+
+// ListPaymentRiskPolicyRevisionsRequest 定义 PaymentRiskPolicyRevisions 的筛选与分页参数。
+message ListPaymentRiskPolicyRevisionsRequest {
+  // app_id 限定 ListPaymentRiskPolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+}
+
+// ListPaymentRiskPolicyRevisionsResponse 返回 PaymentRiskPolicyRevisions 结果集合及分页信息。
+message ListPaymentRiskPolicyRevisionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PaymentRiskPolicyRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetPaymentRiskDecisionRequest 标识待查询的 PaymentRiskDecision。
+message GetPaymentRiskDecisionRequest {
+  // app_id 限定 GetPaymentRiskDecision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // payment_no 是 GetPaymentRiskDecision 对外关联与审计使用的业务编号。
+  string payment_no = 2;
+}
+
+// PaymentRiskReviewFilter 定义可组合的查询筛选条件。
+message PaymentRiskReviewFilter {
+  // statuses 列出 PaymentRiskReviewFilter 关联的 Status。
+  repeated PaymentRiskReview.Status statuses = 1;
+  // payment_no 是 PaymentRiskReviewFilter 对外关联与审计使用的业务编号。
+  optional string payment_no = 2;
+}
+
+// ListPaymentRiskReviewsRequest 定义 PaymentRiskReviews 的筛选与分页参数。
+message ListPaymentRiskReviewsRequest {
+  // app_id 限定 ListPaymentRiskReviews 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  PaymentRiskReviewFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListPaymentRiskReviewsResponse 返回 PaymentRiskReviews 结果集合及分页信息。
+message ListPaymentRiskReviewsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PaymentRiskReview items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// DecidePaymentRiskReviewRequest 定义执行 DecidePaymentRiskReview 的幂等管理命令参数。
+message DecidePaymentRiskReviewRequest {
+  // app_id 限定 DecidePaymentRiskReview 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // review_id 标识关联的 Review。
+  uint64 review_id = 2;
+  // approve 显式表示 DecidePaymentRiskReview 是否满足该条件。
+  bool approve = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // expected_version 标识 DecidePaymentRiskReview 所采用的契约或资源版本。
+  uint64 expected_version = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 7;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8;
+}
+
+// PaymentAnalyticsBucket 定义对应业务维度允许使用的离散取值。
+enum PaymentAnalyticsBucket {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PAYMENT_ANALYTICS_BUCKET_UNSPECIFIED = 0;
+  // PAYMENT_ANALYTICS_BUCKET_HOUR 提取小时参与筛选或排序。
+  PAYMENT_ANALYTICS_BUCKET_HOUR = 1;
+  // PAYMENT_ANALYTICS_BUCKET_DAY 提取月内日期参与筛选或排序。
+  PAYMENT_ANALYTICS_BUCKET_DAY = 2;
+}
+
+// PaymentAnalyticsFilter 定义可组合的查询筛选条件。
+message PaymentAnalyticsFilter {
+  // currencies 限定规则、渠道或查询支持的币种集合。
+  repeated string currencies = 1;
+  // providers 列出 PaymentAnalyticsFilter 关联的 PaymentProvider。
+  repeated PaymentProvider providers = 2;
+  // methods 列出 PaymentAnalyticsFilter 关联的 PaymentMethod。
+  repeated PaymentMethod methods = 3;
+  // biz_types 限定路由或分析规则适用的业务类型。
+  repeated string biz_types = 4;
+}
+
+// GetPaymentAnalyticsRequest 标识待查询的 PaymentAnalytics。
+message GetPaymentAnalyticsRequest {
+  // app_id 限定 GetPaymentAnalytics 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // window_from 指定 GetPaymentAnalytics 查询或生效区间的起始边界。
+  google.protobuf.Timestamp window_from = 2;
+  // window_to 指定 GetPaymentAnalytics 查询或生效区间的结束边界。
+  google.protobuf.Timestamp window_to = 3;
+  // bucket 承载 GetPaymentAnalytics 关联的 PaymentAnalyticsBucket。
+  PaymentAnalyticsBucket bucket = 4;
+  // filter 限定本次查询采用的筛选条件。
+  PaymentAnalyticsFilter filter = 5;
+}
+
+// PaymentAnalyticsPoint 表示一个时间 Bucket 内的 Payment 聚合指标。
+message PaymentAnalyticsPoint {
+  // bucket_start 指定 PaymentAnalyticsPoint 生效或查询区间的起始时间。
+  google.protobuf.Timestamp bucket_start = 1;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 3;
+  // method 指定 PaymentAnalyticsPoint 使用的 PaymentMethod。
+  PaymentMethod method = 4;
+  // biz_type 区分 PaymentAnalyticsPoint 的业务类型。
+  string biz_type = 5;
+  // payment_count 记录 PaymentAnalyticsPoint 中符合对应条件的数量。
+  uint64 payment_count = 6;
+  // payment_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 payment_amount = 7;
+  // payment_success_count 记录 PaymentAnalyticsPoint 中符合对应条件的数量。
+  uint64 payment_success_count = 8;
+  // payment_success_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 payment_success_amount = 9;
+  // refund_count 记录 PaymentAnalyticsPoint 中符合对应条件的数量。
+  uint64 refund_count = 10;
+  // refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 refund_amount = 11;
+  // subscription_renewal_count 记录 PaymentAnalyticsPoint 中符合对应条件的数量。
+  uint64 subscription_renewal_count = 12;
+  // subscription_renewal_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 subscription_renewal_amount = 13;
+}
+
+// GetPaymentAnalyticsResponse 承载 GetPaymentAnalytics 的返回结果。
+message GetPaymentAnalyticsResponse {
+  // window_from 指定 GetPaymentAnalytics 查询或生效区间的起始边界。
+  google.protobuf.Timestamp window_from = 1;
+  // window_to 指定 GetPaymentAnalytics 查询或生效区间的结束边界。
+  google.protobuf.Timestamp window_to = 2;
+  // bucket 承载 GetPaymentAnalytics 关联的 PaymentAnalyticsBucket。
+  PaymentAnalyticsBucket bucket = 3;
+  // points 列出 GetPaymentAnalytics 关联的 PaymentAnalyticsPoint。
+  repeated PaymentAnalyticsPoint points = 4;
+  // generated_at 记录 GetPaymentAnalytics 对应业务阶段的时间点。
+  google.protobuf.Timestamp generated_at = 200;
+}

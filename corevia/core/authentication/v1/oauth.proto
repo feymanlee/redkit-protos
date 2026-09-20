@@ -1,0 +1,349 @@
+﻿syntax = "proto3";
+
+package core.authentication.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+
+import "core/authentication/v1/operator_credential.proto";
+
+// OAuth 服务接口
+service OAuthService {
+  // 列出当前后台人员所有已关联第三方账号（支持分页）
+  rpc ListLinkedAccounts(ListLinkedAccountsRequest) returns (ListLinkedAccountsResponse) {}
+
+  // 获取单个已关联账号详情（不返回明文 refresh/access）
+  rpc GetLinkedAccount(GetLinkedAccountRequest) returns (GetLinkedAccountResponse) {}
+
+  // 开始关联流程（返回 authorization_url 或 verification_id 等）
+  rpc StartLinkOAuth(StartLinkOAuthRequest) returns (StartLinkOAuthResponse) {}
+
+  // 确认关联：前端使用 code/token/verification_id 提交以完成关联
+  rpc ConfirmLinkOAuth(ConfirmLinkOAuthRequest) returns (ConfirmLinkOAuthResponse) {}
+
+  // 兼容：直接关联（若已有 oauth_token/code 可直接创建）
+  rpc LinkOAuth(LinkOAuthRequest) returns (LinkOAuthResponse) {}
+
+  // 解除关联（按 provider 或已关联凭证 id）
+  rpc UnlinkOAuth(UnlinkOAuthRequest) returns (google.protobuf.Empty) {}
+
+  // 撤销指定已关联凭证的所有令牌/访问权（偏向安全/强制撤销）
+  rpc RevokeLinkedAccount(RevokeLinkedAccountRequest) returns (google.protobuf.Empty) {}
+
+  // 使用 refresh token 刷新 access token（实现可选择只返回元信息）
+  rpc RefreshOAuthToken(RefreshOAuthTokenRequest) returns (RefreshOAuthTokenResponse) {}
+
+  // 使用服务端接收到的 code 交换 token（常用于 server-side OAuth 流程）
+  rpc ExchangeOAuthCode(ExchangeOAuthCodeRequest) returns (ExchangeOAuthCodeResponse) {}
+
+  // 列出支持的 OAuth 提供商与其元信息（授权端点、scope 建议等）
+  rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse) {}
+
+  // 获取单个提供商元信息
+  rpc GetProviderMetadata(GetProviderMetadataRequest) returns (ProviderMetadata) {}
+}
+
+// 第三方 OAuth 账号服务
+enum OAuthProvider {
+  // 未指定。
+  OAUTH_PROVIDER_UNSPECIFIED = 0; // 未指定
+
+  // 微信。
+  WECHAT = 1; // 微信
+  // QQ。
+  QQ = 2; // QQ
+  // 微博。
+  WEIBO = 3; // 微博
+  // 抖音。
+  DOUYIN = 4; // 抖音
+  // 快手。
+  KUAISHOU = 5; // 快手
+  // 百度。
+  BAIDU = 6; // 百度
+  // 支付宝。
+  ALIPAY = 7; // 支付宝
+  // 淘宝。
+  TAOBAO = 8; // 淘宝
+  // 京东。
+  JD = 9; // 京东
+  // 美团。
+  MEITUAN = 10; // 美团
+  // 钉钉。
+  DINGTALK = 11; // 钉钉
+  // 哔哩哔哩。
+  BILIBILI = 12; // 哔哩哔哩
+  // 小红书。
+  XIAOHONGSHU = 13; // 小红书
+
+  // Google。
+  GOOGLE = 100; // Google
+  // Facebook。
+  FACEBOOK = 101; // Facebook
+  // Apple。
+  APPLE = 102; // Apple
+  // Telegram。
+  TELEGRAM = 103; // Telegram
+  // Twitter。
+  TWITTER = 104; // Twitter
+  // LinkedIn。
+  LINKEDIN = 105; // LinkedIn
+  // GitHub。
+  GITHUB = 106; // GitHub
+  // Microsoft。
+  MICROSOFT = 107; // Microsoft
+  // Discord。
+  DISCORD = 108; // Discord
+  // Slack。
+  SLACK = 109; // Slack
+  // Instagram。
+  INSTAGRAM = 110; // Instagram
+  // TikTok。
+  TIKTOK = 111; // TikTok
+  // Reddit。
+  REDDIT = 112; // Reddit
+  // YouTube。
+  YOUTUBE = 113; // YouTube
+  // Spotify。
+  SPOTIFY = 114; // Spotify
+  // Pinterest。
+  PINTEREST = 115; // Pinterest
+  // Snapchat。
+  SNAPCHAT = 116; // Snapchat
+  // Tumblr。
+  TUMBLR = 117; // Tumblr
+  // Yahoo。
+  YAHOO = 118; // Yahoo
+  // WhatsApp。
+  WHATSAPP = 119; // WhatsApp
+  // LINE。
+  LINE = 120; // LINE
+}
+
+// OAuth 授权类型
+enum OAuthGrantType {
+  // 未指定。
+  OAUTH_GRANT_UNSPECIFIED = 0;
+
+  // client_credentials。
+  CLIENT_CREDENTIALS = 1; // client_credentials
+  // authorization_code。
+  AUTHORIZATION_CODE = 2; // authorization_code
+  // implicit。
+  IMPLICIT = 3;           // implicit
+  // password。
+  PASSWORD = 4;           // password
+  // refresh_token (用于标注凭证来源/用途)。
+  REFRESH_TOKEN = 5;      // refresh_token (用于标注凭证来源/用途)
+}
+
+// 简化的 token 表示（返回时需谨慎）
+message OAuthToken {
+  // 访问 令牌。
+  string access_token = 1;
+  // refresh 令牌。
+  optional string refresh_token = 2;
+  // scopes。
+  repeated string scopes = 3;
+  // expires at。
+  optional google.protobuf.Timestamp expires_at = 4;
+}
+
+// 列表 linked accounts请求。
+message ListLinkedAccountsRequest {
+  // 后台人员 ID。
+  optional string operator_id = 1;
+  // 页面 size。
+  optional uint32 page_size = 2;
+  // 页面 令牌。
+  optional string page_token = 3;
+}
+// 列表 linked accounts响应。
+message ListLinkedAccountsResponse {
+  // 列表项。
+  repeated OperatorCredential items = 1;
+  // 总数。
+  uint64 total = 2;
+  // next 页面 令牌。
+  string next_page_token = 3;
+}
+
+// 关联第三方账号请求
+message LinkOAuthRequest {
+  // provider。
+  OAuthProvider provider = 1;
+  // 可选：当使用自定义平台或细化标识时填写。
+  string provider_custom = 2; // 可选：当使用自定义平台或细化标识时填写
+  // 第三方返回的 token / code。
+  string oauth_token = 3;         // 第三方返回的 token / code
+  // 可选：用于某些平台回调验证。
+  string redirect_uri = 4;       // 可选：用于某些平台回调验证
+}
+
+// 关联响应（包含已创建的 LinkedAccount）
+message LinkOAuthResponse {
+  // account。
+  OperatorCredential account = 1;
+  // 可扩展字段：verification_id、state 等
+}
+
+// 解除关联请求
+message UnlinkOAuthRequest {
+  // 凭证 ID。
+  optional string credential_id = 1;
+  // provider。
+  OAuthProvider provider = 2;
+  // provider custom。
+  string provider_custom = 3;
+}
+
+// 获取 linked account请求。
+message GetLinkedAccountRequest {
+  // 凭证 ID。
+  string credential_id = 1;
+}
+// 获取 linked account响应。
+message GetLinkedAccountResponse {
+  // account。
+  OperatorCredential account = 1;
+}
+
+// Start / Confirm 流
+message StartLinkOAuthRequest {
+  // provider。
+  OAuthProvider provider = 1 [(google.api.field_behavior) = REQUIRED];
+  // provider custom。
+  string provider_custom = 2;
+  // redirect URI。
+  string redirect_uri = 3;
+  // scopes。
+  repeated string scopes = 4;
+  // state。
+  optional string state = 5;
+}
+// start link o 认证响应。
+message StartLinkOAuthResponse {
+  // authorization URL。
+  optional string authorization_url = 1;
+  // 操作 ID。
+  optional string operation_id = 2;
+  // expires at。
+  optional google.protobuf.Timestamp expires_at = 3;
+  // display hint。
+  optional string display_hint = 4;
+}
+
+// confirm link o 认证请求。
+message ConfirmLinkOAuthRequest {
+  // 操作 ID。
+  optional string operation_id = 1;
+  // provider。
+  OAuthProvider provider = 2;
+  // provider custom。
+  string provider_custom = 3;
+  // ConfirmLinkOAuthRequest 在以下身份或安全证明中选择一种。
+  oneof credential {
+    // OAuth 令牌。
+    string oauth_token = 10;
+    // 编码。
+    string code = 11;
+    // authorization 响应。
+    string authorization_response = 12;
+  }
+  // state。
+  optional string state = 20;
+  // display 名称。
+  optional string display_name = 21;
+}
+// confirm link o 认证响应。
+message ConfirmLinkOAuthResponse {
+  // account。
+  OperatorCredential account = 1;
+  // secret。
+  optional OAuthToken secret = 10;
+}
+
+// Refresh / Exchange / Revoke
+message RefreshOAuthTokenRequest {
+  // 凭证 ID。
+  string credential_id = 1;
+  // refresh 令牌。
+  optional string refresh_token = 2;
+}
+// refresh o 认证 令牌响应。
+message RefreshOAuthTokenResponse {
+  // 访问 令牌。
+  optional string access_token = 1;
+  // expires at。
+  optional google.protobuf.Timestamp expires_at = 2;
+  // scopes。
+  repeated string scopes = 3;
+  // refresh 令牌 present。
+  optional bool refresh_token_present = 4;
+}
+
+// exchange o 认证 编码请求。
+message ExchangeOAuthCodeRequest {
+  // provider。
+  OAuthProvider provider = 1;
+  // provider custom。
+  string provider_custom = 2;
+  // 编码。
+  string code = 3;
+  // redirect URI。
+  string redirect_uri = 4;
+}
+// exchange o 认证 编码响应。
+message ExchangeOAuthCodeResponse {
+  // 令牌。
+  OAuthToken token = 1;
+  // provider。
+  ProviderMetadata provider = 2;
+}
+
+// revoke linked account请求。
+message RevokeLinkedAccountRequest {
+  // 凭证 ID。
+  string credential_id = 1;
+  // 原因。
+  optional string reason = 10;
+}
+
+// 提供商列表与元信息
+message ListProvidersRequest {}
+// 列表 providers响应。
+message ListProvidersResponse {
+  // 列表项。
+  repeated ProviderMetadata items = 1;
+}
+
+// 获取 provider metadata请求。
+message GetProviderMetadataRequest {
+  // provider。
+  OAuthProvider provider = 1;
+  // provider custom。
+  optional string provider_custom = 2;
+}
+// provider metadata。
+message ProviderMetadata {
+  // provider。
+  OAuthProvider provider = 1;
+  // provider custom。
+  string provider_custom = 2;
+  // display 名称。
+  string display_name = 3;
+  // authorization endpoint。
+  string authorization_endpoint = 4;
+  // 令牌 endpoint。
+  string token_endpoint = 5;
+  // default scopes。
+  repeated string default_scopes = 6;
+  // authorize params。
+  map<string, string> authorize_params = 10;
+  // 令牌 params。
+  map<string, string> token_params = 11;
+}

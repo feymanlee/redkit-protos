@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package support.configuration.v1;
+
+import "errors/errors.proto";
+
+// ConfigurationErrorReason defines Support Configuration query failures.
+enum ConfigurationErrorReason {
+  option (errors.default_code) = 500;
+
+  // Request parameters are invalid.
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // Requested Draft or stable identity does not exist in the App.
+  NOT_FOUND = 400 [(errors.code) = 404];
+  // Draft state or idempotency identity conflicts with the command.
+  CONFLICT = 409 [(errors.code) = 409];
+  // Requested Delivery Probe target is not allowed for this App.
+  PROBE_TARGET_NOT_ALLOWED = 403 [(errors.code) = 403];
+  // Service failed to load readiness state.
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+}

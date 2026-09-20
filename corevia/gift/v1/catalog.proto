@@ -1,0 +1,1045 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "common/v1/common.proto";
+import "common/pagination/v1/pagination.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "common/file/v1/file.proto";
+import "validate/validate.proto";
+
+// 礼物分类。
+message GiftCategory {
+  // 分类 ID。
+  optional uint32 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 分类名称。
+  optional string name = 3;
+  // 分类编码。
+  optional string code = 4;
+  // 排序值，越大越靠前。
+  optional uint32 sort = 5;
+  // 是否启用。
+  optional bool enabled = 6;
+  // 备注。
+  optional string remark = 7;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 礼物信息。
+message Gift {
+  // 礼物 ID。
+  optional uint32 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 分类 ID。
+  optional uint32 category_id = 3;
+  // 礼物名称。
+  optional string name = 4;
+  // 礼物编码。
+  optional string code = 5;
+  // 图标文件 ID。
+  optional uint64 icon_file_id = 6;
+  // 虚拟币价格。
+  optional int64 price = 7 [(gnostic.openapi.v3.property) = {description: "虚拟币价格"}];
+  // 是否启用。
+  optional bool enabled = 8;
+  // 备注。
+  optional string remark = 9;
+  // 动画资源文件 ID。
+  optional uint64 animation_file_id = 10;
+  // 排序值，越大越靠前。
+  optional uint32 sort = 11;
+  // 标签，使用逗号分隔。
+  optional string tags = 12;
+  // 单次最大赠送数量，0 表示不限制。
+  optional uint32 max_quantity = 13;
+  // 单用户每日最大赠送数量，0 表示不限制。
+  optional uint32 daily_limit = 14;
+  // 平台分成比例，万分比。
+  optional uint32 platform_rate = 15;
+  // 收礼人分成比例，万分比。
+  optional uint32 recipient_rate = 16;
+  // 上架时间。
+  optional google.protobuf.Timestamp online_at = 17;
+  // 下架时间。
+  optional google.protobuf.Timestamp offline_at = 18;
+  // 图标安全展示对象。
+  common.file.v1.FileView icon = 19;
+  // 动画安全展示对象。
+  common.file.v1.FileView animation = 20;
+  // 当前非生产 Draft；没有 Draft 时为空。
+  GiftDraft draft = 21;
+  // 当前立即生效的不可变 Revision；未发布时为空。
+  GiftRevision active_revision = 22;
+  // Active Revision ID；未发布时为空。
+  optional uint64 active_revision_id = 23;
+  // 是否曾经发布过 Revision。
+  bool has_published = 24;
+  // 当前等待 Worker 激活的不可变 Revision；没有排期时为空。
+  GiftRevision scheduled_revision = 25;
+  // Scheduled Revision ID；没有排期时为空。
+  optional uint64 scheduled_revision_id = 26;
+  // 当前排期运行状态；没有排期时为空。
+  GiftRevisionSchedule schedule = 27;
+  // 稳定 Gift 身份当前生命周期，不替代 Revision 的 enabled/window 配置。
+  GiftLifecycleStatus lifecycle_status = 28;
+  // 当前紧急下线事实；恢复后为空，历史由 Operator Audit 保留。
+  GiftEmergencyOffline emergency_offline = 29;
+  // 不可逆归档事实；未归档时为空。
+  GiftArchive archive = 30;
+  // Active Revision 的结构化 Scene Type allowlist；空表示允许当前 App 所有已启用类型。
+  repeated string scene_type_codes = 31;
+  // 礼物展示等级，取值 COMMON、LUXURY 或 EFFECT。
+  optional string gift_tier = 32 [(validate.rules).string = {in: ["COMMON", "LUXURY", "EFFECT"]}];
+  // 结构化特效资源清单；空集合表示仅使用 animation 素材。
+  repeated GiftEffect effects = 33;
+  // App 级陈列位投放；不含房间 Scene ID。
+  repeated GiftDisplayPlacement display_placements = 34;
+  // 多语言名称与描述；默认 locale 在非空清单中必填。
+  repeated GiftLocaleText locales = 35;
+  // 礼物目录身份类型，取值 STANDARD 或 COMBO。
+  optional string gift_kind = 36 [(validate.rules).string = {in: ["STANDARD", "COMBO"]}];
+  // combo_items 列出 COMBO 礼物展开的既有 Gift 与数量；STANDARD 必须为空。
+  repeated GiftComboItem combo_items = 37;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// GiftEffect is one structured presentation asset attached to a Gift Draft or immutable Revision.
+message GiftEffect {
+  // kind 标识特效类型，取值 ANIMATION、COMBO 或 FULL_SCREEN。
+  string kind = 1 [(validate.rules).string = {in: ["ANIMATION", "COMBO", "FULL_SCREEN"]}];
+  // file_id 标识关联的特效 File。
+  uint64 file_id = 2 [(validate.rules).uint64.gt = 0];
+  // file_reference_version 锁定本次快照采用的 File 引用版本。
+  uint64 file_reference_version = 3;
+}
+
+// GiftDisplayPlacement is one App-level merchandising placement on a Gift Draft or immutable Revision.
+message GiftDisplayPlacement {
+  // slot_code 是稳定陈列位编码，例如 RECOMMENDED、HOT 或 NEW。
+  string slot_code = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  // sort 在同一陈列位内排序，越大越靠前。
+  uint32 sort = 2;
+  // online_at 是该投放生效时间；为空表示随 Revision 立即可见。
+  optional google.protobuf.Timestamp online_at = 3;
+  // offline_at 是该投放结束时间；为空表示不自动结束。
+  optional google.protobuf.Timestamp offline_at = 4;
+}
+
+// GiftLocaleText is one locale-specific gift copy snapshot.
+message GiftLocaleText {
+  // locale 使用 BCP-47 语言标记，例如 zh-CN 或 en-US。
+  string locale = 1 [(validate.rules).string = {min_len: 2, max_len: 35}];
+  // name 是该 locale 下的展示名称。
+  string name = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // description 是该 locale 下的展示描述。
+  string description = 3 [(validate.rules).string = {max_len: 500}];
+}
+
+// GiftComboItem is one existing Gift identity and quantity inside a COMBO gift revision.
+message GiftComboItem {
+  // gift_id 标识被组合的既有 Gift。
+  uint32 gift_id = 1 [(validate.rules).uint32.gt = 0];
+  // quantity 是该组件在组合中的数量。
+  uint32 quantity = 2 [(validate.rules).uint32.gt = 0];
+}
+
+// GiftLifecycleStatus 刻画对应资源的生命周期状态。
+enum GiftLifecycleStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_LIFECYCLE_STATUS_UNSPECIFIED = 0;
+  // 尚未发布，不对新的业务流量生效。
+  GIFT_LIFECYCLE_STATUS_UNPUBLISHED = 1;
+  // 当前已生效并可用于业务处理。
+  GIFT_LIFECYCLE_STATUS_ACTIVE = 2;
+  // GIFT_LIFECYCLE_STATUS_EMERGENCY_OFFLINE 表示资源处于对应业务阶段。
+  GIFT_LIFECYCLE_STATUS_EMERGENCY_OFFLINE = 3;
+  // 已退出使用，仅保留历史查询能力。
+  GIFT_LIFECYCLE_STATUS_ARCHIVED = 4;
+}
+
+// GiftEmergencyOffline 记录 Gift 紧急下线操作及其审计信息。
+message GiftEmergencyOffline {
+  // occurred_at 记录 GiftEmergencyOffline 对应业务阶段的时间点。
+  google.protobuf.Timestamp occurred_at = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // active_revision_id 标识关联的 ActiveRevision。
+  uint64 active_revision_id = 4;
+}
+
+// GiftArchive 记录一次 Gift Archive 操作及其审计信息。
+message GiftArchive {
+  // occurred_at 记录 GiftArchive 对应业务阶段的时间点。
+  google.protobuf.Timestamp occurred_at = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+}
+
+// 礼物可编辑字段，不携带资源身份或服务端投影。
+message GiftPatch {
+  // category_id 标识关联的 Category。
+  optional uint32 category_id = 1;
+  // name 提供 GiftPatch 面向展示或识别的名称。
+  optional string name = 2;
+  // icon_file_id 标识关联的 IconFile。
+  optional uint64 icon_file_id = 3;
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 price = 4 [(gnostic.openapi.v3.property) = {description: "虚拟币价格"}];
+  // enabled 显式表示 GiftPatch 是否满足该条件。
+  optional bool enabled = 5;
+  // remark 提供 GiftPatch 的补充说明。
+  optional string remark = 6;
+  // animation_file_id 标识关联的 AnimationFile。
+  optional uint64 animation_file_id = 7;
+  // sort 指定结果排序规则。
+  optional uint32 sort = 8;
+  // tags 携带用于检索和治理的业务标签。
+  optional string tags = 9;
+  // scene_type_codes 列出 Gift 可使用的 Scene Type Code。
+  repeated string scene_type_codes = 10;
+  // max_quantity 限定 GiftPatch 对应操作允许使用的数量或阈值。
+  optional uint32 max_quantity = 11;
+  // daily_limit 限定 GiftPatch 对应操作允许使用的数量或阈值。
+  optional uint32 daily_limit = 12;
+  // platform_rate 以基点表示平台的结算比例，一万基点等于 100%。
+  optional uint32 platform_rate = 13;
+  // recipient_rate 以基点表示收礼方的结算比例，一万基点等于 100%。
+  optional uint32 recipient_rate = 14;
+  // online_at 记录 GiftPatch 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp online_at = 15;
+  // offline_at 记录 GiftPatch 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp offline_at = 16;
+  // gift_tier 设置礼物展示等级，取值 COMMON、LUXURY 或 EFFECT。
+  optional string gift_tier = 17 [(validate.rules).string = {in: ["COMMON", "LUXURY", "EFFECT"]}];
+  // effects 设置结构化特效资源清单；提供时整体替换 Draft 中的既有清单。
+  repeated GiftEffect effects = 18;
+  // display_placements 设置 App 级陈列位投放；提供时整体替换。
+  repeated GiftDisplayPlacement display_placements = 19;
+  // locales 设置多语言文案；提供时整体替换，默认 locale 必填。
+  repeated GiftLocaleText locales = 20;
+  // gift_kind 设置目录身份类型，取值 STANDARD 或 COMBO。
+  optional string gift_kind = 21 [(validate.rules).string = {in: ["STANDARD", "COMBO"]}];
+  // combo_items 设置 COMBO 组件清单；提供时整体替换。
+  repeated GiftComboItem combo_items = 22;
+}
+
+// GiftCreateData creates one stable identity and its initial non-production Draft.
+message GiftCreateData {
+  // code 提供 GiftCreateData 对外稳定使用的业务编码。
+  string code = 1;
+  // draft 承载 GiftCreateData 关联的 GiftPatch。
+  GiftPatch draft = 2;
+}
+
+// GiftDraft is the mutable, non-production catalog working state.
+message GiftDraft {
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 1;
+  // app_id 限定 GiftDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // category_id 标识关联的 Category。
+  uint32 category_id = 3;
+  // name 提供 GiftDraft 面向展示或识别的名称。
+  string name = 4;
+  // icon_file_id 标识关联的 IconFile。
+  uint64 icon_file_id = 5;
+  // icon_reference_version 标识 GiftDraft 所采用的契约或资源版本。
+  uint64 icon_reference_version = 6;
+  // animation_file_id 标识关联的 AnimationFile。
+  uint64 animation_file_id = 7;
+  // animation_reference_version 标识 GiftDraft 所采用的契约或资源版本。
+  uint64 animation_reference_version = 8;
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 price = 9;
+  // enabled 显式表示 GiftDraft 是否满足该条件。
+  bool enabled = 10;
+  // sort 指定结果排序规则。
+  uint32 sort = 11;
+  // tags 携带用于检索和治理的业务标签。
+  string tags = 12;
+  // scene_type_codes 列出 Gift 可使用的 Scene Type Code。
+  repeated string scene_type_codes = 13;
+  // max_quantity 限定 GiftDraft 对应操作允许使用的数量或阈值。
+  uint32 max_quantity = 14;
+  // daily_limit 限定 GiftDraft 对应操作允许使用的数量或阈值。
+  uint32 daily_limit = 15;
+  // platform_rate 以基点表示平台的结算比例，一万基点等于 100%。
+  uint32 platform_rate = 16;
+  // recipient_rate 以基点表示收礼方的结算比例，一万基点等于 100%。
+  uint32 recipient_rate = 17;
+  // online_at 记录 GiftDraft 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp online_at = 18;
+  // offline_at 记录 GiftDraft 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp offline_at = 19;
+  // remark 提供 GiftDraft 的补充说明。
+  string remark = 20;
+  // icon 承载 GiftDraft 关联的 FileView。
+  common.file.v1.FileView icon = 21;
+  // animation 承载 GiftDraft 关联的 FileView。
+  common.file.v1.FileView animation = 22;
+  // 礼物展示等级，取值 COMMON、LUXURY 或 EFFECT。
+  string gift_tier = 23 [(validate.rules).string = {in: ["COMMON", "LUXURY", "EFFECT"]}];
+  // effects 列出 Draft 当前配置的结构化特效资源。
+  repeated GiftEffect effects = 24;
+  // display_placements 列出 Draft 当前配置的 App 级陈列位投放。
+  repeated GiftDisplayPlacement display_placements = 25;
+  // locales 列出 Draft 当前配置的多语言文案。
+  repeated GiftLocaleText locales = 26;
+  // 礼物目录身份类型，取值 STANDARD 或 COMBO。
+  string gift_kind = 27 [(validate.rules).string = {in: ["STANDARD", "COMBO"]}];
+  // combo_items 列出 COMBO 礼物的组件清单。
+  repeated GiftComboItem combo_items = 28;
+  // created_at 记录 GiftDraft 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 GiftDraft 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// GiftRevision is an immutable published configuration snapshot.
+message GiftRevision {
+  // id 标识关联的 GiftRevision。
+  uint64 id = 1;
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 2;
+  // app_id 限定 GiftRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 3;
+  // revision_no 是 GiftRevision 对外关联与审计使用的业务编号。
+  uint32 revision_no = 4;
+  // category_id 标识关联的 Category。
+  uint32 category_id = 5;
+  // name 提供 GiftRevision 面向展示或识别的名称。
+  string name = 6;
+  // icon_file_id 标识关联的 IconFile。
+  uint64 icon_file_id = 7;
+  // icon_reference_version 标识 GiftRevision 所采用的契约或资源版本。
+  uint64 icon_reference_version = 8;
+  // animation_file_id 标识关联的 AnimationFile。
+  uint64 animation_file_id = 9;
+  // animation_reference_version 标识 GiftRevision 所采用的契约或资源版本。
+  uint64 animation_reference_version = 10;
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 price = 11;
+  // enabled 显式表示 GiftRevision 是否满足该条件。
+  bool enabled = 12;
+  // sort 指定结果排序规则。
+  uint32 sort = 13;
+  // tags 携带用于检索和治理的业务标签。
+  string tags = 14;
+  // scene_type_codes 列出 Gift 可使用的 Scene Type Code。
+  repeated string scene_type_codes = 15;
+  // max_quantity 限定 GiftRevision 对应操作允许使用的数量或阈值。
+  uint32 max_quantity = 16;
+  // daily_limit 限定 GiftRevision 对应操作允许使用的数量或阈值。
+  uint32 daily_limit = 17;
+  // platform_rate 以基点表示平台的结算比例，一万基点等于 100%。
+  uint32 platform_rate = 18;
+  // recipient_rate 以基点表示收礼方的结算比例，一万基点等于 100%。
+  uint32 recipient_rate = 19;
+  // online_at 记录 GiftRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp online_at = 20;
+  // offline_at 记录 GiftRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp offline_at = 21;
+  // remark 提供 GiftRevision 的补充说明。
+  string remark = 22;
+  // published_by 标识触发或负责 GiftRevision 对应业务阶段的主体。
+  uint32 published_by = 23;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 24;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 25;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 26;
+  // published_at 记录 GiftRevision 对应业务阶段的时间点。
+  google.protobuf.Timestamp published_at = 27;
+  // icon 承载 GiftRevision 关联的 FileView。
+  common.file.v1.FileView icon = 28;
+  // animation 承载 GiftRevision 关联的 FileView。
+  common.file.v1.FileView animation = 29;
+  // 此 Revision 被要求生效的确定时间点；立即发布时等于 published_at。
+  google.protobuf.Timestamp effective_at = 30;
+  // 此 Revision 的排期历史；立即发布时为空。
+  GiftRevisionSchedule schedule = 31;
+  // 礼物展示等级，取值 COMMON、LUXURY 或 EFFECT；发布后不可变。
+  string gift_tier = 32 [(validate.rules).string = {in: ["COMMON", "LUXURY", "EFFECT"]}];
+  // effects 列出该不可变 Revision 快照中的结构化特效资源。
+  repeated GiftEffect effects = 33;
+  // display_placements 列出该不可变 Revision 快照中的 App 级陈列位投放。
+  repeated GiftDisplayPlacement display_placements = 34;
+  // locales 列出该不可变 Revision 快照中的多语言文案。
+  repeated GiftLocaleText locales = 35;
+  // 礼物目录身份类型，取值 STANDARD 或 COMBO；发布后不可变。
+  string gift_kind = 36 [(validate.rules).string = {in: ["STANDARD", "COMBO"]}];
+  // combo_items 列出该不可变 Revision 快照中的 COMBO 组件清单。
+  repeated GiftComboItem combo_items = 37;
+}
+
+// GiftRevisionScheduleStatus 刻画对应资源的生命周期状态。
+enum GiftRevisionScheduleStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_REVISION_SCHEDULE_STATUS_UNSPECIFIED = 0;
+  // 已安排在约定时间生效或执行。
+  GIFT_REVISION_SCHEDULE_STATUS_SCHEDULED = 1;
+  // 已经激活并进入生效状态。
+  GIFT_REVISION_SCHEDULE_STATUS_ACTIVATED = 2;
+  // 处理已取消，不再继续推进。
+  GIFT_REVISION_SCHEDULE_STATUS_CANCELED = 3;
+}
+
+// GiftRevisionSchedule is the mutable execution fact around one immutable Revision.
+message GiftRevisionSchedule {
+  // id 标识关联的 GiftRevisionSchedule。
+  uint64 id = 1;
+  // app_id 限定 GiftRevisionSchedule 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 3;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 4;
+  // status 表示 GiftRevisionSchedule 当前可观察的生命周期状态。
+  GiftRevisionScheduleStatus status = 5;
+  // effective_at 记录 GiftRevisionSchedule 对应业务阶段的时间点。
+  google.protobuf.Timestamp effective_at = 6;
+  // scheduled_by 标识触发或负责 GiftRevisionSchedule 对应业务阶段的主体。
+  uint32 scheduled_by = 7;
+  // scheduled_at 记录 GiftRevisionSchedule 对应业务阶段的时间点。
+  google.protobuf.Timestamp scheduled_at = 8;
+  // activated_at 记录 GiftRevisionSchedule 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp activated_at = 9;
+  // canceled_by 标识触发或负责 GiftRevisionSchedule 对应业务阶段的主体。
+  optional uint32 canceled_by = 10;
+  // canceled_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string canceled_reason = 11;
+  // cancel_operation_no 关联原始管理操作的审计编号，用于追踪与幂等收敛。
+  optional string cancel_operation_no = 12;
+  // cancel_request_id 标识关联的 CancelRequest。
+  optional string cancel_request_id = 13;
+  // canceled_at 记录 GiftRevisionSchedule 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp canceled_at = 14;
+}
+
+// 礼物分类可编辑字段，不携带资源身份。
+message GiftCategoryPatch {
+  // name 提供 GiftCategoryPatch 面向展示或识别的名称。
+  optional string name = 1;
+  // sort 指定结果排序规则。
+  optional uint32 sort = 2;
+  // remark 提供 GiftCategoryPatch 的补充说明。
+  optional string remark = 3;
+}
+
+// GiftCategoryCreateData carries the stable identity fields accepted at creation.
+message GiftCategoryCreateData {
+  // name 提供 GiftCategoryCreateData 面向展示或识别的名称。
+  string name = 1;
+  // code 提供 GiftCategoryCreateData 对外稳定使用的业务编码。
+  string code = 2;
+  // sort 指定结果排序规则。
+  optional uint32 sort = 3;
+  // remark 提供 GiftCategoryCreateData 的补充说明。
+  optional string remark = 4;
+}
+
+// GiftSceneType 表示 Gift Scene Type 的稳定身份与启用状态。
+message GiftSceneType {
+  // id 标识关联的 GiftSceneType。
+  uint32 id = 1;
+  // app_id 限定 GiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // code 提供 GiftSceneType 对外稳定使用的业务编码。
+  string code = 3;
+  // name 提供 GiftSceneType 面向展示或识别的名称。
+  string name = 4;
+  // enabled 显式表示 GiftSceneType 是否满足该条件。
+  bool enabled = 5;
+  // created_at 记录 GiftSceneType 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 GiftSceneType 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// GiftSceneTypeCreateData 承载创建 Gift Scene Type 所需的业务数据。
+message GiftSceneTypeCreateData {
+  // code 提供 GiftSceneTypeCreateData 对外稳定使用的业务编码。
+  string code = 1;
+  // name 提供 GiftSceneTypeCreateData 面向展示或识别的名称。
+  string name = 2;
+}
+
+// GiftSceneTypePatch 承载 Gift Scene Type 的局部更新；presence 表示是否修改。
+message GiftSceneTypePatch {
+  // name 提供 GiftSceneTypePatch 面向展示或识别的名称。
+  optional string name = 1;
+}
+
+// ListGiftSceneTypesResponse 返回 GiftSceneTypes 结果集合及分页信息。
+message ListGiftSceneTypesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated GiftSceneType items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CreateGiftSceneTypeRequest 定义创建 GiftSceneType 的命令参数。
+message CreateGiftSceneTypeRequest {
+  // data 承载 CreateGiftSceneType 对应阶段的结构化业务内容。
+  GiftSceneTypeCreateData data = 1;
+  // app_id 限定 CreateGiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// UpdateGiftSceneTypeRequest 定义更新 GiftSceneType 的命令参数。
+message UpdateGiftSceneTypeRequest {
+  // id 标识关联的 UpdateGiftSceneType。
+  uint32 id = 1;
+  // data 承载 UpdateGiftSceneType 对应阶段的结构化业务内容。
+  GiftSceneTypePatch data = 2;
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 3;
+  // app_id 限定 UpdateGiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 4;
+}
+
+// DeleteGiftSceneTypeRequest 定义删除 GiftSceneType 的命令参数。
+message DeleteGiftSceneTypeRequest {
+  // id 标识关联的 DeleteGiftSceneType。
+  uint32 id = 1;
+  // app_id 限定 DeleteGiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// GetGiftSceneTypeImpactRequest 标识待查询的 GiftSceneTypeImpact。
+message GetGiftSceneTypeImpactRequest {
+  // id 标识关联的 GetGiftSceneTypeImpact。
+  uint32 id = 1;
+  // app_id 限定 GetGiftSceneTypeImpact 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// GiftSceneTypeImpact 汇总 Gift Scene Type 变更影响的 Gift 与 Revision。
+message GiftSceneTypeImpact {
+  // scene_type 区分 GiftSceneTypeImpact 的业务类型。
+  GiftSceneType scene_type = 1;
+  // gifts 列出 GiftSceneTypeImpact 关联的 Gift。
+  repeated Gift gifts = 2;
+  // gift_count 记录 GiftSceneTypeImpact 中符合对应条件的数量。
+  uint64 gift_count = 3;
+}
+
+// SetGiftSceneTypeEnabledRequest 定义设置 GiftSceneTypeEnabled 的幂等管理命令参数。
+message SetGiftSceneTypeEnabledRequest {
+  // id 标识关联的 SetGiftSceneTypeEnabled。
+  uint32 id = 1;
+  // enabled 显式表示 SetGiftSceneTypeEnabled 是否满足该条件。
+  bool enabled = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+  // app_id 限定 SetGiftSceneTypeEnabled 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 7;
+}
+
+// SetGiftSceneTypeEnabledResponse 承载 SetGiftSceneTypeEnabled 的返回结果。
+message SetGiftSceneTypeEnabledResponse {
+  // scene_type 区分 SetGiftSceneTypeEnabled 的业务类型。
+  GiftSceneType scene_type = 1;
+  // impact 承载 SetGiftSceneTypeEnabled 关联的 GiftSceneTypeImpact。
+  GiftSceneTypeImpact impact = 2;
+  // audit 承载 SetGiftSceneTypeEnabled 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 3;
+  // replayed 显式表示 SetGiftSceneTypeEnabled 是否满足该条件。
+  bool replayed = 4;
+}
+// 礼物列表响应。
+message ListGiftResponse {
+  // 列表项。
+  repeated Gift items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 礼物分类列表响应。
+message ListGiftCategoryResponse {
+  // 列表项。
+  repeated GiftCategory items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+// 获取礼物请求。
+message GetGiftRequest {
+  // 礼物 ID。
+  uint32 id = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+}
+
+// 创建礼物请求。
+message CreateGiftRequest {
+  // 数据。
+  GiftCreateData data = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+}
+
+// 创建礼物分类请求。
+message CreateGiftCategoryRequest {
+  // 数据。
+  GiftCategoryCreateData data = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+}
+
+// 更新礼物请求。
+message UpdateGiftDraftRequest {
+  // ID。
+  uint32 id = 1;
+  // 数据。
+  GiftPatch data = 2;
+  // 更新字段掩码。
+  google.protobuf.FieldMask update_mask = 3;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 4;
+}
+
+// DiscardGiftDraftRequest removes working state; never-published identities are removed too.
+message DiscardGiftDraftRequest {
+  // id 标识关联的 DiscardGiftDraft。
+  uint32 id = 1;
+  // app_id 限定 DiscardGiftDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// PublishGiftDraftRequest publishes one immutable Revision immediately or at a future instant.
+message PublishGiftDraftRequest {
+  // id 标识关联的 PublishGiftDraft。
+  uint32 id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // app_id 限定 PublishGiftDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 6;
+  // effective_at 记录 PublishGiftDraft 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp effective_at = 7;
+}
+
+// PublishGiftDraftResponse returns the active aggregate and governed facts.
+message PublishGiftDraftResponse {
+  // gift 承载 PublishGiftDraft 关联的 Gift。
+  Gift gift = 1;
+  // revision 标识 PublishGiftDraft 所采用的契约或资源版本。
+  GiftRevision revision = 2;
+  // audit 承载 PublishGiftDraft 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 3;
+  // replayed 显式表示 PublishGiftDraft 是否满足该条件。
+  bool replayed = 4;
+}
+
+// ListGiftRevisionsRequest reads one Gift's immutable history.
+message ListGiftRevisionsRequest {
+  // id 标识关联的 ListGiftRevisions。
+  uint32 id = 1;
+  // app_id 限定 ListGiftRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListGiftRevisionsResponse 返回 GiftRevisions 结果集合及分页信息。
+message ListGiftRevisionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated GiftRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CompareGiftRevisionsRequest asks for a read-only field-level diff of two Revisions of one Gift.
+message CompareGiftRevisionsRequest {
+  // gift_id 标识同一 Gift 稳定身份。
+  uint32 gift_id = 1;
+  // base_revision_id 是对比基准 Revision。
+  uint64 base_revision_id = 2;
+  // head_revision_id 是被对比的 Revision。
+  uint64 head_revision_id = 3;
+  // app_id 限定 CompareGiftRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 4;
+}
+
+// GiftRevisionFieldChange is one field-level difference between two immutable Revisions.
+message GiftRevisionFieldChange {
+  // field 是稳定字段名，例如 name、price 或 combo_items。
+  string field = 1;
+  // before 是基准 Revision 的投影值；空值表示该字段在基准中为空。
+  string before = 2;
+  // after 是被对比 Revision 的投影值；空值表示该字段在 head 中为空。
+  string after = 3;
+}
+
+// CompareGiftRevisionsResponse returns ordered field changes without mutating history.
+message CompareGiftRevisionsResponse {
+  // gift_id 标识被对比的 Gift。
+  uint32 gift_id = 1;
+  // base_revision_id 是对比基准 Revision。
+  uint64 base_revision_id = 2;
+  // head_revision_id 是被对比的 Revision。
+  uint64 head_revision_id = 3;
+  // changes 列出有序字段差异；空表示两 Revision 投影一致。
+  repeated GiftRevisionFieldChange changes = 4;
+}
+
+// GiftCatalogImportRow is one create-or-update draft instruction in a governed bulk import.
+message GiftCatalogImportRow {
+  // code 是稳定 Gift 业务编码。
+  string code = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // draft 承载导入的 Draft 配置；发布仍走既有 PublishGiftDraft。
+  GiftPatch draft = 2 [(validate.rules).message.required = true];
+  // create_if_missing 为 true 时允许创建新 Gift 身份；false 时缺失 code 失败。
+  bool create_if_missing = 3;
+}
+
+// ApplyCatalogImportRequest submits an all-or-nothing catalog draft import.
+message ApplyCatalogImportRequest {
+  // app_id 限定 ApplyCatalogImport 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // rows 列出待导入的 Draft 指令；任一行失败则整批不生效。
+  repeated GiftCatalogImportRow rows = 6;
+}
+
+// ApplyCatalogImportResult reports how many identities were created or updated.
+message ApplyCatalogImportResult {
+  // created_count 是本批新建的 Gift 身份数量。
+  uint32 created_count = 1;
+  // updated_count 是本批更新 Draft 的 Gift 数量。
+  uint32 updated_count = 2;
+  // total_rows 是本批导入的行数。
+  uint32 total_rows = 3;
+}
+
+// ApplyCatalogImportResponse returns the governed import outcome.
+message ApplyCatalogImportResponse {
+  // result 承载 ApplyCatalogImport 对应阶段的结构化业务内容。
+  ApplyCatalogImportResult result = 1;
+  // audit 记录本次导入的不可变 Operator Audit。
+  GiftOperatorAudit audit = 2;
+  // replayed 表示本次是否为幂等重放。
+  bool replayed = 3;
+}
+
+// CancelScheduledGiftRevisionRequest stops one future activation without deleting its Revision.
+message CancelScheduledGiftRevisionRequest {
+  // id 标识关联的 CancelScheduledGiftRevision。
+  uint32 id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // app_id 限定 CancelScheduledGiftRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 6;
+}
+
+// CancelScheduledGiftRevisionResponse 承载 CancelScheduledGiftRevision 的返回结果。
+message CancelScheduledGiftRevisionResponse {
+  // gift 承载 CancelScheduledGiftRevision 关联的 Gift。
+  Gift gift = 1;
+  // revision 标识 CancelScheduledGiftRevision 所采用的契约或资源版本。
+  GiftRevision revision = 2;
+  // audit 承载 CancelScheduledGiftRevision 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 3;
+  // replayed 显式表示 CancelScheduledGiftRevision 是否满足该条件。
+  bool replayed = 4;
+}
+
+// EmergencyOfflineGiftRequest 定义执行 EmergencyOfflineGift 的幂等管理命令参数。
+message EmergencyOfflineGiftRequest {
+  // id 标识关联的 EmergencyOfflineGift。
+  uint32 id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // app_id 限定 EmergencyOfflineGift 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 6;
+}
+
+// EmergencyOfflineGiftResponse 承载 EmergencyOfflineGift 的返回结果。
+message EmergencyOfflineGiftResponse {
+  // gift 承载 EmergencyOfflineGift 关联的 Gift。
+  Gift gift = 1;
+  // audit 承载 EmergencyOfflineGift 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 2;
+  // replayed 显式表示 EmergencyOfflineGift 是否满足该条件。
+  bool replayed = 3;
+}
+
+// GiftArchiveBlocker 定义对应业务维度允许使用的离散取值。
+enum GiftArchiveBlocker {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_ARCHIVE_BLOCKER_UNSPECIFIED = 0;
+  // 尚未发布，不对新的业务流量生效。
+  GIFT_ARCHIVE_BLOCKER_UNPUBLISHED = 1;
+  // 已退出使用，仅保留历史查询能力。
+  GIFT_ARCHIVE_BLOCKER_ALREADY_ARCHIVED = 2;
+  // GIFT_ARCHIVE_BLOCKER_BACKPACK_INVENTORY 表示 BACKPACK_INVENTORY 条件阻止当前流程继续。
+  GIFT_ARCHIVE_BLOCKER_BACKPACK_INVENTORY = 3;
+  // GIFT_ARCHIVE_BLOCKER_SCHEDULED_REVISION 表示 SCHEDULED_REVISION 条件阻止当前流程继续。
+  GIFT_ARCHIVE_BLOCKER_SCHEDULED_REVISION = 4;
+  // GIFT_ARCHIVE_BLOCKER_IN_FLIGHT_SENDS 表示 IN_FLIGHT_SENDS 条件阻止当前流程继续。
+  GIFT_ARCHIVE_BLOCKER_IN_FLIGHT_SENDS = 5;
+}
+
+// GetGiftArchivePreflightRequest 标识待查询的 GiftArchivePreflight。
+message GetGiftArchivePreflightRequest {
+  // id 标识关联的 GetGiftArchivePreflight。
+  uint32 id = 1;
+  // app_id 限定 GetGiftArchivePreflight 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// GiftArchivePreflight 返回 Gift Archive 前置检查及阻塞原因。
+message GiftArchivePreflight {
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 1;
+  // can_archive 显式表示 GiftArchivePreflight 是否满足该条件。
+  bool can_archive = 2;
+  // available_backpack_quantity 表示 GiftArchivePreflight 涉及的业务对象数量。
+  uint64 available_backpack_quantity = 3;
+  // in_flight_send_count 记录 GiftArchivePreflight 中符合对应条件的数量。
+  uint64 in_flight_send_count = 4;
+  // has_scheduled_revision 标识 GiftArchivePreflight 所采用的契约或资源版本。
+  bool has_scheduled_revision = 5;
+  // blockers 列出 GiftArchivePreflight 关联的 GiftArchiveBlocker。
+  repeated GiftArchiveBlocker blockers = 6;
+}
+
+// ArchiveGiftRequest 定义归档 Gift 的幂等管理命令参数。
+message ArchiveGiftRequest {
+  // id 标识关联的 ArchiveGift。
+  uint32 id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // app_id 限定 ArchiveGift 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 6;
+}
+
+// ArchiveGiftResponse 承载 ArchiveGift 的返回结果。
+message ArchiveGiftResponse {
+  // gift 承载 ArchiveGift 关联的 Gift。
+  Gift gift = 1;
+  // audit 承载 ArchiveGift 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 2;
+  // replayed 显式表示 ArchiveGift 是否满足该条件。
+  bool replayed = 3;
+}
+
+// 更新礼物分类请求。
+message UpdateGiftCategoryRequest {
+  // 分类 ID。
+  uint32 id = 1;
+  // 数据。
+  GiftCategoryPatch data = 2;
+  // 更新字段掩码。
+  google.protobuf.FieldMask update_mask = 3;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 4;
+}
+
+// DisableGiftCategoryRequest performs one idempotent governed state change.
+message DisableGiftCategoryRequest {
+  // id 标识关联的 DisableGiftCategory。
+  uint32 id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // App ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 6;
+}
+
+// DisableGiftCategoryResponse returns the current Category and the immutable audit fact.
+message DisableGiftCategoryResponse {
+  // category 承载 DisableGiftCategory 关联的 GiftCategory。
+  GiftCategory category = 1;
+  // audit 承载 DisableGiftCategory 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 2;
+  // True when the operation identity had already completed successfully.
+  bool replayed = 3;
+}
+
+// GiftOperatorAuditAction is a typed, extensible Gift governance action.
+enum GiftOperatorAuditAction {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_OPERATOR_AUDIT_ACTION_UNSPECIFIED = 0;
+  // 当前未生效，不用于新的业务处理。
+  GIFT_OPERATOR_AUDIT_ACTION_CATEGORY_DISABLED = 1;
+  // 已经发布并对约定作用域生效。
+  GIFT_OPERATOR_AUDIT_ACTION_GIFT_PUBLISHED = 2;
+  // 处理已取消，不再继续推进。
+  GIFT_OPERATOR_AUDIT_ACTION_GIFT_SCHEDULE_CANCELED = 3;
+  // 已经激活并进入生效状态。
+  GIFT_OPERATOR_AUDIT_ACTION_GIFT_SCHEDULE_ACTIVATED = 4;
+  // GIFT_OPERATOR_AUDIT_ACTION_GIFT_EMERGENCY_OFFLINE 执行 GIFT_EMERGENCY_OFFLINE 业务动作。
+  GIFT_OPERATOR_AUDIT_ACTION_GIFT_EMERGENCY_OFFLINE = 5;
+  // 已退出使用，仅保留历史查询能力。
+  GIFT_OPERATOR_AUDIT_ACTION_GIFT_ARCHIVED = 6;
+  // 当前未生效，不用于新的业务处理。
+  GIFT_OPERATOR_AUDIT_ACTION_SCENE_TYPE_DISABLED = 7;
+  // 当前已生效并可用于业务处理。
+  GIFT_OPERATOR_AUDIT_ACTION_SCENE_TYPE_ENABLED = 8;
+  // GIFT_OPERATOR_AUDIT_ACTION_BACKPACK_ADJUSTED 执行 BACKPACK_ADJUSTED 业务动作。
+  GIFT_OPERATOR_AUDIT_ACTION_BACKPACK_ADJUSTED = 9;
+  // GIFT_OPERATOR_AUDIT_ACTION_SEND_RECONCILED 执行 SEND_RECONCILED 业务动作。
+  GIFT_OPERATOR_AUDIT_ACTION_SEND_RECONCILED = 10;
+  // 相关人员已经确认知悉，事实本身仍保留。
+  GIFT_OPERATOR_AUDIT_ACTION_RECONCILIATION_ISSUE_ACKNOWLEDGED = 11;
+  // GIFT_OPERATOR_AUDIT_ACTION_RECONCILIATION_ISSUE_NOTE_ADDED 执行 RECONCILIATION_ISSUE_NOTE_ADDED 业务动作。
+  GIFT_OPERATOR_AUDIT_ACTION_RECONCILIATION_ISSUE_NOTE_ADDED = 12;
+  // GIFT_OPERATOR_AUDIT_ACTION_SETTLEMENT_RECONCILED 执行 SETTLEMENT_RECONCILED 业务动作。
+  GIFT_OPERATOR_AUDIT_ACTION_SETTLEMENT_RECONCILED = 13;
+  // GIFT_OPERATOR_AUDIT_ACTION_EXPORT_REQUESTED 执行 EXPORT_REQUESTED 业务动作。
+  GIFT_OPERATOR_AUDIT_ACTION_EXPORT_REQUESTED = 14;
+  // 资源已创建，尚未进入后续处理阶段。
+  GIFT_OPERATOR_AUDIT_ACTION_EXPORT_DOWNLOAD_GRANT_CREATED = 15;
+  // GIFT_OPERATOR_AUDIT_ACTION_EXPORT_DOWNLOAD_REDEEMED 执行 EXPORT_DOWNLOAD_REDEEMED 业务动作。
+  GIFT_OPERATOR_AUDIT_ACTION_EXPORT_DOWNLOAD_REDEEMED = 16;
+}
+
+// GiftOperatorAuditResource identifies the governed Gift resource kind.
+enum GiftOperatorAuditResource {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_OPERATOR_AUDIT_RESOURCE_UNSPECIFIED = 0;
+  // GIFT_OPERATOR_AUDIT_RESOURCE_CATEGORY 选择 CATEGORY 资源作为操作目标。
+  GIFT_OPERATOR_AUDIT_RESOURCE_CATEGORY = 1;
+  // GIFT_OPERATOR_AUDIT_RESOURCE_GIFT 选择 GIFT 资源作为操作目标。
+  GIFT_OPERATOR_AUDIT_RESOURCE_GIFT = 2;
+  // GIFT_OPERATOR_AUDIT_RESOURCE_SCENE_TYPE 选择 SCENE_TYPE 资源作为操作目标。
+  GIFT_OPERATOR_AUDIT_RESOURCE_SCENE_TYPE = 3;
+  // GIFT_OPERATOR_AUDIT_RESOURCE_BACKPACK 选择 BACKPACK 资源作为操作目标。
+  GIFT_OPERATOR_AUDIT_RESOURCE_BACKPACK = 4;
+  // GIFT_OPERATOR_AUDIT_RESOURCE_SEND 选择 SEND 资源作为操作目标。
+  GIFT_OPERATOR_AUDIT_RESOURCE_SEND = 5;
+  // GIFT_OPERATOR_AUDIT_RESOURCE_RECONCILIATION_ISSUE 选择 RECONCILIATION_ISSUE 资源作为操作目标。
+  GIFT_OPERATOR_AUDIT_RESOURCE_RECONCILIATION_ISSUE = 6;
+  // GIFT_OPERATOR_AUDIT_RESOURCE_EXPORT_JOB 选择 EXPORT_JOB 资源作为操作目标。
+  GIFT_OPERATOR_AUDIT_RESOURCE_EXPORT_JOB = 7;
+}
+
+// GiftOperatorAuditResult records the bounded command result.
+enum GiftOperatorAuditResult {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_OPERATOR_AUDIT_RESULT_UNSPECIFIED = 0;
+  // 处理已成功完成。
+  GIFT_OPERATOR_AUDIT_RESULT_SUCCEEDED = 1;
+}
+
+// GiftOperatorAudit is an immutable, App-scoped, secret-free governance fact.
+message GiftOperatorAudit {
+  // id 标识关联的 GiftOperatorAudit。
+  uint64 id = 1;
+  // app_id 限定 GiftOperatorAudit 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // action 指定本次状态推进采用的业务动作。
+  GiftOperatorAuditAction action = 4;
+  // resource_type 区分 GiftOperatorAudit 的业务类型。
+  GiftOperatorAuditResource resource_type = 5;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 6;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 7;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 9;
+  // result 承载 GiftOperatorAudit 关联的 GiftOperatorAuditResult。
+  GiftOperatorAuditResult result = 10;
+  // before_state 表示 GiftOperatorAudit 当前可观察的生命周期状态。
+  string before_state = 11;
+  // after_state 表示 GiftOperatorAudit 当前可观察的生命周期状态。
+  string after_state = 12;
+  // occurred_at 记录 GiftOperatorAudit 对应业务阶段的时间点。
+  google.protobuf.Timestamp occurred_at = 13;
+}
+
+// GiftOperatorAuditFilter contains only typed, bounded audit filters.
+message GiftOperatorAuditFilter {
+  // operator_id 标识关联的后台 Operator。
+  optional uint32 operator_id = 1;
+  // actions 列出 GiftOperatorAuditFilter 关联的 GiftOperatorAuditAction。
+  repeated GiftOperatorAuditAction actions = 2;
+  // resource_types 列出 GiftOperatorAuditFilter 关联的 GiftOperatorAuditResource。
+  repeated GiftOperatorAuditResource resource_types = 3;
+  // resource_id 标识关联的 Resource。
+  optional string resource_id = 4;
+  // occurred_from 指定 GiftOperatorAuditFilter 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp occurred_from = 5;
+  // occurred_to 指定 GiftOperatorAuditFilter 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp occurred_to = 6;
+}
+
+// ListGiftOperatorAuditsRequest lists immutable audit facts inside one App.
+message ListGiftOperatorAuditsRequest {
+  // app_id 限定 ListGiftOperatorAudits 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  GiftOperatorAuditFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListGiftOperatorAuditsResponse returns newest-first stable pages.
+message ListGiftOperatorAuditsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated GiftOperatorAudit items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}

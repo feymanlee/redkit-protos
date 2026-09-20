@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package admin.support.v1;
+
+import "google/api/annotations.proto";
+import "common/pagination/v1/pagination.proto";
+import "support/verification/v1/verification.proto";
+
+// SupportVerificationService 提供后台验证码审计入口。
+service SupportVerificationService {
+  // 查询验证码审计记录。
+  rpc ListVerificationAudits(AdminListVerificationAuditsRequest) returns (.support.verification.v1.ListVerificationAuditsResponse) {
+    option (google.api.http) = {get: "/admin/v1/support/verification-audits"};
+  }
+  // 查询一条脱敏验证码审计详情。
+  rpc GetVerificationAudit(AdminGetVerificationAuditRequest) returns (.support.verification.v1.VerificationAudit) {
+    option (google.api.http) = {get: "/admin/v1/support/verification-audits/{audit_id}"};
+  }
+  // 显式读取完整 Recipient Phone；路由使用独立敏感数据权限。
+  rpc RevealVerificationRecipientPhone(AdminRevealVerificationRecipientPhoneRequest) returns (.support.verification.v1.RevealVerificationRecipientPhoneResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/support/verification-audits/{audit_id}:reveal-recipient-phone"
+      body: "*"
+    };
+  }
+}
+
+// AdminListVerificationAuditsRequest selects the authenticated App's Verification observations.
+message AdminListVerificationAuditsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.verification.v1.VerificationAuditFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminGetVerificationAuditRequest selects one masked Verification Audit fact.
+message AdminGetVerificationAuditRequest {
+  // audit_id 标识关联的 Audit。
+  uint64 audit_id = 1;
+}
+
+// AdminRevealVerificationRecipientPhoneRequest selects one audit fact for audited FULL display.
+message AdminRevealVerificationRecipientPhoneRequest {
+  // audit_id 标识关联的 Audit。
+  uint64 audit_id = 1;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "wallet/v1/intervention.proto";
+
+// 钱包干预服务。
+service WalletInterventionService {
+  // 创建 Intervention。
+  rpc CreateIntervention(CreateWalletInterventionRequest) returns (WalletIntervention) {}
+  // 批准 Intervention。
+  rpc ApproveIntervention(ReviewWalletInterventionRequest) returns (WalletIntervention) {}
+  // 拒绝 Intervention。
+  rpc RejectIntervention(ReviewWalletInterventionRequest) returns (WalletIntervention) {}
+  // 查询 Intervention 列表。
+  rpc ListInterventions(ListWalletInterventionsRequest) returns (ListWalletInterventionResponse) {}
+}

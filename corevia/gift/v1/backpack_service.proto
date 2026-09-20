@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "gift/v1/backpack.proto";
+
+// 礼物背包服务。
+service GiftBackpackService {
+  // 发放背包礼物。
+  rpc GrantBackpackGift(GrantBackpackGiftRequest) returns (GiftBackpackBatch) {}
+  // 扣回未使用背包礼物。
+  rpc RevokeBackpackGift(RevokeBackpackGiftRequest) returns (GiftBackpackTransaction) {}
+  // 处理已过期背包礼物。
+  rpc ExpireBackpackItems(ExpireBackpackItemsRequest) returns (ExpireBackpackItemsResponse) {}
+  // 执行单 User、单 Gift 的受审计库存纠错。
+  rpc AdjustBackpackGift(AdjustBackpackGiftRequest) returns (AdjustBackpackGiftResponse) {}
+  // 查询背包聚合余额列表。
+  rpc ListBackpackBalances(ListBackpackBalancesRequest) returns (ListGiftBackpackBalanceResponse) {}
+  // 查询背包批次列表。
+  rpc ListBackpackBatches(ListBackpackBatchesRequest) returns (ListGiftBackpackBatchResponse) {}
+  // 查询背包流水列表。
+  rpc ListBackpackTransactions(ListBackpackTransactionsRequest) returns (ListGiftBackpackTransactionResponse) {}
+  // 查询背包流水批次明细列表。
+  rpc ListBackpackTransactionItems(ListBackpackTransactionItemsRequest) returns (ListGiftBackpackTransactionItemResponse) {}
+}

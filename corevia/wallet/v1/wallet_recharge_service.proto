@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/protobuf/empty.proto";
+import "wallet/v1/recharge.proto";
+import "wallet/v1/refund.proto";
+
+// 钱包充值服务。
+service WalletRechargeService {
+  // 查询当前 App 和 User 可购买的 Recharge Offer。
+  rpc ListConsumerRechargeOffers(ListConsumerRechargeOffersRequest) returns (ListConsumerRechargeOffersResponse) {}
+  // 按 Purchase Request ID 创建或恢复权威 Recharge Order。
+  rpc CreateOrGetConsumerRechargeOrder(CreateOrGetConsumerRechargeOrderRequest) returns (ConsumerRechargeOrder) {}
+  // 创建或恢复绑定精确 Store SKU 的 Recharge Purchase Action。
+  rpc PrepareStoreRechargePurchase(PrepareStoreRechargePurchaseRequest) returns (StoreRechargePurchaseAction) {}
+  // 供 Payment 按可信 App/User/Purchase Request 重新加载权威 Recharge Order。
+  rpc GetRechargeOrderForPayment(GetRechargeOrderForPaymentRequest) returns (RechargeOrderPaymentFact) {}
+  // 预处理充值退款并冻结待扣回虚拟币。
+  rpc PrepareRechargeRefund(PrepareRechargeRefundRequest) returns (RechargeRefund) {}
+  // 确认充值退款并扣减冻结虚拟币。
+  rpc ConfirmRechargeRefund(ConfirmRechargeRefundRequest) returns (RechargeRefund) {}
+  // 应用充值退款扣回；支持渠道强制退款，不足部分记录欠款。
+  rpc ApplyRechargeRefund(ApplyRechargeRefundRequest) returns (RechargeRefund) {}
+  // 取消充值退款并释放冻结虚拟币。
+  rpc CancelRechargeRefund(CancelRechargeRefundRequest) returns (RechargeRefund) {}
+  // 查询充值商品列表。
+  rpc ListRechargeProducts(common.pagination.v1.PagingRequest) returns (ListRechargeProductResponse) {}
+  // 查询充值商品 Revision 历史。
+  rpc ListRechargeProductRevisions(ListRechargeProductRevisionRequest) returns (ListRechargeProductRevisionResponse) {}
+  // 创建充值商品 Revision 草稿。
+  rpc CreateRechargeProductRevision(CreateRechargeProductRevisionRequest) returns (RechargeProductRevision) {}
+  // 审批充值商品 Revision 并安排生效。
+  rpc ApproveRechargeProductRevision(ApproveRechargeProductRevisionRequest) returns (RechargeProductRevision) {}
+  // 创建充值订单。
+  rpc CreateRechargeOrder(CreateRechargeOrderRequest) returns (RechargeOrder) {}
+  // 查询充值订单列表。
+  rpc ListRechargeOrders(common.pagination.v1.PagingRequest) returns (ListRechargeOrderResponse) {}
+  // 按订单号查询充值订单。
+  rpc GetRechargeOrder(GetRechargeOrderRequest) returns (RechargeOrder) {}
+  // 关闭充值订单。
+  rpc CloseRechargeOrder(CloseRechargeOrderRequest) returns (google.protobuf.Empty) {}
+  // 幂等处理支付服务的充值成功事件。
+  rpc CreditRecharge(CreditRechargeRequest) returns (RechargeOrder) {}
+  // 幂等标记充值入账终态失败，不执行资金入账。
+  rpc MarkRechargeCreditFailed(CreditRechargeRequest) returns (RechargeOrder) {}
+}

@@ -1,0 +1,471 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/v1/common.proto";
+import "common/pagination/v1/pagination.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "wallet/v1/wallet_types.proto";
+
+// Consumer 购买入口使用的客户端平台。
+enum RechargeClientPlatform {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECHARGE_CLIENT_PLATFORM_UNSPECIFIED = 0;
+  // RECHARGE_CLIENT_PLATFORM_IOS 表示请求来自 IOS 客户端平台。
+  RECHARGE_CLIENT_PLATFORM_IOS = 1;
+  // RECHARGE_CLIENT_PLATFORM_ANDROID 表示请求来自 ANDROID 客户端平台。
+  RECHARGE_CLIENT_PLATFORM_ANDROID = 2;
+  // RECHARGE_CLIENT_PLATFORM_WEB 表示请求来自 WEB 客户端平台。
+  RECHARGE_CLIENT_PLATFORM_WEB = 3;
+  // 使用 Google Play Billing 的 Android；中国 Android 继续使用 ANDROID。
+  RECHARGE_CLIENT_PLATFORM_GOOGLE_PLAY = 4;
+}
+
+// Wallet 支持的一次性 Store 商品提供方。
+enum RechargeStoreProvider {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECHARGE_STORE_PROVIDER_UNSPECIFIED = 0;
+  // RECHARGE_STORE_PROVIDER_APPLE_IAP 选择对应的外部 Provider。
+  RECHARGE_STORE_PROVIDER_APPLE_IAP = 1;
+  // RECHARGE_STORE_PROVIDER_GOOGLE_PLAY 选择对应的外部 Provider。
+  RECHARGE_STORE_PROVIDER_GOOGLE_PLAY = 2;
+}
+
+// StoreKit 或 Play Billing 发起购买所需的公开商品身份。
+message RechargeStoreProduct {
+  // store_app_id 标识外部 Store 中承载该商品或订阅的应用。
+  string store_app_id = 1;
+  // sku 是外部商店或商品目录使用的稳定商品编码。
+  string sku = 2;
+}
+
+// 不可变 Recharge Product Revision 拥有的 Store 商品映射。
+message RechargeStoreProductMapping {
+  // id 标识关联的 RechargeStoreProductMapping。
+  optional uint64 id = 1;
+  // app_id 限定 RechargeStoreProductMapping 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // product_revision_id 标识关联的 ProductRevision。
+  optional uint64 product_revision_id = 3;
+  // provider 标识本次能力使用的外部 Provider。
+  RechargeStoreProvider provider = 4;
+  // store_app_id 标识外部 Store 中承载该商品或订阅的应用。
+  string store_app_id = 5;
+  // sku 是外部商店或商品目录使用的稳定商品编码。
+  string sku = 6;
+  // available_from 指定 RechargeStoreProductMapping 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp available_from = 7;
+  // available_until 指定 RechargeStoreProductMapping 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp available_until = 8;
+  // created_at 记录 RechargeStoreProductMapping 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// 创建 Revision 时一并提交的 Store 商品身份；有效窗口由 Revision 发布流程决定。
+message RechargeStoreProductInput {
+  // provider 标识本次能力使用的外部 Provider。
+  RechargeStoreProvider provider = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // store_app_id 标识外部 Store 中承载该商品或订阅的应用。
+  string store_app_id = 2 [(validate.rules).string = {min_len: 1, max_len: 255}];
+  // sku 是外部商店或商品目录使用的稳定商品编码。
+  string sku = 3 [(validate.rules).string = {min_len: 1, max_len: 255}];
+}
+
+// 充值商品稳定身份。
+message RechargeProduct {
+  // 商品 ID。
+  optional uint32 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 商品名称。
+  optional string name = 3;
+  // 商品编码。
+  optional string code = 4;
+  // 当前生效 Revision ID；尚未激活时为空。
+  optional uint64 active_revision_id = 5;
+  // 当前生效 Revision；尚未激活时为空。
+  optional RechargeProductRevision active_revision = 6;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 充值商品不可变配置修订。
+message RechargeProductRevision {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    STATUS_UNSPECIFIED = 0;
+    // 仍处于草稿阶段，尚未对业务生效。
+    DRAFT = 1;
+    // 已安排在约定时间生效或执行。
+    SCHEDULED = 2;
+    // 已经激活并进入生效状态。
+    ACTIVATED = 3;
+    // 处理失败；是否可重试由具体失败原因决定。
+    FAILED = 4;
+  }
+
+  // id 标识关联的 RechargeProductRevision。
+  optional uint64 id = 1;
+  // app_id 限定 RechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // product_id 标识关联的 Product。
+  optional uint32 product_id = 3;
+  // revision_no 是 RechargeProductRevision 对外关联与审计使用的业务编号。
+  optional uint32 revision_no = 4;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 amount = 5 [(gnostic.openapi.v3.property) = {description: "现金金额，分"}];
+  // diamond_amount 以 Diamond 的最小计量单位表示，不使用浮点数。
+  optional int64 diamond_amount = 6;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 7;
+  // enabled 显式表示 RechargeProductRevision 是否满足该条件。
+  optional bool enabled = 8;
+  // remark 提供 RechargeProductRevision 的补充说明。
+  optional string remark = 9;
+  // status 表示 RechargeProductRevision 当前可观察的生命周期状态。
+  optional Status status = 10;
+  // requester_id 标识关联的 Requester。
+  optional uint32 requester_id = 11;
+  // approver_id 标识关联的 Approver。
+  optional uint32 approver_id = 12;
+  // base_revision_id 标识关联的 BaseRevision。
+  optional uint64 base_revision_id = 13;
+  // effective_at 记录 RechargeProductRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp effective_at = 14;
+  // approved_at 记录 RechargeProductRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp approved_at = 15;
+  // activated_at 记录 RechargeProductRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp activated_at = 16;
+  // failure_category 对失败进行稳定分类，供调用方决定重试或终止。
+  optional string failure_category = 17;
+  // 该 Revision 停止创建新订单的时间；为空表示不自动停售。
+  optional google.protobuf.Timestamp available_until = 18;
+  // 与该 Revision 一同发布并冻结的 Store 商品映射。
+  repeated RechargeStoreProductMapping store_products = 19;
+  // created_at 记录 RechargeProductRevision 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 RechargeProductRevision 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 充值订单。
+message RechargeOrder {
+  // 订单状态。
+  enum Status {
+    // 已创建。
+    CREATED = 0;
+    // 入账处理中。
+    CREDITING = 1;
+    // 已到账。
+    CREDITED = 2;
+    // 入账失败。
+    CREDIT_FAILED = 3;
+    // 已关闭。
+    CLOSED = 4;
+    // 已取消。
+    CANCELED = 5;
+  }
+
+  // 订单 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 商品 ID。
+  optional uint32 product_id = 4;
+  // 订单号。
+  optional string order_no = 5;
+  // 支付单号。
+  optional string payment_no = 6;
+  // 现金金额。
+  optional int64 amount = 7;
+  // 充值币数量。
+  optional int64 diamond_amount = 8;
+  // 币种代码。
+  optional string currency = 9;
+  // 订单状态。
+  optional Status status = 10;
+  // 创建订单时使用的不可变商品 Revision ID。
+  optional uint64 product_revision_id = 11;
+  // Consumer Purchase Request 身份；历史和后台订单为空。
+  optional string purchase_request_id = 12;
+  // 创建订单时使用的稳定 Offer Code 快照。
+  optional string offer_code = 13;
+  // 创建订单时绑定的客户端平台。
+  optional RechargeClientPlatform client_platform = 14;
+  // 业务订单支付有效期。
+  optional google.protobuf.Timestamp expires_at = 15;
+  // 支付时间。
+  optional google.protobuf.Timestamp paid_at = 20;
+  // 关闭时间。
+  optional google.protobuf.Timestamp closed_at = 21;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 面向 BFF 的安全 Recharge Offer，不暴露内部 Product 或 Revision ID。
+message ConsumerRechargeOffer {
+  // offer_code 提供 ConsumerRechargeOffer 对外稳定使用的业务编码。
+  string offer_code = 1;
+  // display_name 提供 ConsumerRechargeOffer 面向展示或识别的名称。
+  string display_name = 2;
+  // Provider Checkout 的权威价格；Store 平台不返回，展示价格由 StoreKit/Play Billing 提供。
+  optional int64 amount = 3;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 4;
+  // diamond_amount 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 diamond_amount = 5;
+  // available_until 指定 ConsumerRechargeOffer 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp available_until = 6;
+  // store_product 承载 ConsumerRechargeOffer 关联的 RechargeStoreProduct。
+  optional RechargeStoreProduct store_product = 7;
+}
+
+// 面向 BFF 的安全 Recharge Order，不暴露 App、User、Payment 或内部 Revision 身份。
+message ConsumerRechargeOrder {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1;
+  // order_no 是 ConsumerRechargeOrder 对外关联与审计使用的业务编号。
+  string order_no = 2;
+  // offer_code 提供 ConsumerRechargeOrder 对外稳定使用的业务编码。
+  string offer_code = 3;
+  // client_platform 承载 ConsumerRechargeOrder 关联的 RechargeClientPlatform。
+  RechargeClientPlatform client_platform = 4;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 5;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 6;
+  // diamond_amount 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 diamond_amount = 7;
+  // status 表示 ConsumerRechargeOrder 当前可观察的生命周期状态。
+  RechargeOrder.Status status = 8;
+  // expires_at 指定 ConsumerRechargeOrder 失效的时间点。
+  google.protobuf.Timestamp expires_at = 9;
+  // created_at 记录 ConsumerRechargeOrder 的创建时间。
+  google.protobuf.Timestamp created_at = 10;
+  // updated_at 记录 ConsumerRechargeOrder 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// 查询当前 App 可购买 Recharge Offer；App 和 User 只来自可信 metadata。
+message ListConsumerRechargeOffersRequest {
+  // client_platform 承载 ListConsumerRechargeOffers 关联的 RechargeClientPlatform。
+  RechargeClientPlatform client_platform = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// ListConsumerRechargeOffersResponse 返回 ConsumerRechargeOffers 结果集合及分页信息。
+message ListConsumerRechargeOffersResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ConsumerRechargeOffer items = 1;
+}
+
+// 创建或恢复 Consumer Recharge Order；金额、币种和 Diamond 数量由 Wallet 决定。
+message CreateOrGetConsumerRechargeOrderRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // offer_code 提供 CreateOrGetConsumerRechargeOrder 对外稳定使用的业务编码。
+  string offer_code = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // client_platform 承载 CreateOrGetConsumerRechargeOrder 关联的 RechargeClientPlatform。
+  RechargeClientPlatform client_platform = 3 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// 为 StoreKit 或 Play Billing 创建或恢复精确的一次性充值商品购买动作。
+message PrepareStoreRechargePurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // offer_code 提供 PrepareStoreRechargePurchase 对外稳定使用的业务编码。
+  string offer_code = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // client_platform 承载 PrepareStoreRechargePurchase 关联的 RechargeClientPlatform。
+  RechargeClientPlatform client_platform = 3 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// 相同 Purchase Request ID 永远恢复相同的 Store 商品动作。
+message StoreRechargePurchaseAction {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1;
+  // offer_code 提供 StoreRechargePurchaseAction 对外稳定使用的业务编码。
+  string offer_code = 2;
+  // client_platform 承载 StoreRechargePurchaseAction 关联的 RechargeClientPlatform。
+  RechargeClientPlatform client_platform = 3;
+  // store_product 承载 StoreRechargePurchaseAction 关联的 RechargeStoreProduct。
+  RechargeStoreProduct store_product = 4;
+}
+
+// Payment 重新校验充值订单时使用的窄化请求；App 与 User 只来自可信 metadata。
+message GetRechargeOrderForPaymentRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// Payment 专用订单状态使用显式零值，避免缺失或未知状态被解释为可支付。
+enum RechargeOrderPaymentStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECHARGE_ORDER_PAYMENT_STATUS_UNSPECIFIED = 0;
+  // 资源已创建，尚未进入后续处理阶段。
+  RECHARGE_ORDER_PAYMENT_STATUS_CREATED = 1;
+  // 正在入账，尚未形成最终余额事实。
+  RECHARGE_ORDER_PAYMENT_STATUS_CREDITING = 2;
+  // 入账已经完成，余额与账本事实已经更新。
+  RECHARGE_ORDER_PAYMENT_STATUS_CREDITED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  RECHARGE_ORDER_PAYMENT_STATUS_CREDIT_FAILED = 4;
+  // 当前流程已关闭，不再接受新的处理动作。
+  RECHARGE_ORDER_PAYMENT_STATUS_CLOSED = 5;
+  // 处理已取消，不再继续推进。
+  RECHARGE_ORDER_PAYMENT_STATUS_CANCELED = 6;
+}
+
+// Wallet 返回给 Payment 的权威充值订单事实，不作为 Consumer 响应。
+message RechargeOrderPaymentFact {
+  // app_id 限定 RechargeOrderPaymentFact 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 3;
+  // order_no 是 RechargeOrderPaymentFact 对外关联与审计使用的业务编号。
+  string order_no = 4;
+  // product_revision_id 标识关联的 ProductRevision。
+  uint64 product_revision_id = 5;
+  // offer_code 提供 RechargeOrderPaymentFact 对外稳定使用的业务编码。
+  string offer_code = 6;
+  // client_platform 承载 RechargeOrderPaymentFact 关联的 RechargeClientPlatform。
+  RechargeClientPlatform client_platform = 7;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 8;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 9;
+  // diamond_amount 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 diamond_amount = 10;
+  // status 表示 RechargeOrderPaymentFact 当前可观察的生命周期状态。
+  RechargeOrderPaymentStatus status = 11;
+  // expires_at 指定 RechargeOrderPaymentFact 失效的时间点。
+  google.protobuf.Timestamp expires_at = 12;
+  // created_at 记录 RechargeOrderPaymentFact 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 RechargeOrderPaymentFact 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// 充值商品列表响应。
+message ListRechargeProductResponse {
+  // 列表项。
+  repeated RechargeProduct items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// ListRechargeProductRevisionRequest 定义 RechargeProductRevision 的筛选与分页参数。
+message ListRechargeProductRevisionRequest {
+  // app_id 限定 ListRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // product_id 标识关联的 Product。
+  optional uint32 product_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListRechargeProductRevisionResponse 返回 RechargeProductRevision 结果集合及分页信息。
+message ListRechargeProductRevisionResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated RechargeProductRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// 充值订单列表响应。
+message ListRechargeOrderResponse {
+  // 列表项。
+  repeated RechargeOrder items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 按应用和订单号查询充值订单请求。
+message GetRechargeOrderRequest {
+  // order_no 是 GetRechargeOrder 对外关联与审计使用的业务编号。
+  string order_no = 1 [(google.api.field_behavior) = REQUIRED];
+  // app_id 限定 GetRechargeOrder 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// 创建充值商品 Revision 草稿；product_id 为空时同时创建稳定商品身份。
+message CreateRechargeProductRevisionRequest {
+  // app_id 限定 CreateRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // product_id 标识关联的 Product。
+  optional uint32 product_id = 2;
+  // name 提供 CreateRechargeProductRevision 面向展示或识别的名称。
+  optional string name = 3;
+  // code 提供 CreateRechargeProductRevision 对外稳定使用的业务编码。
+  optional string code = 4;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 5;
+  // diamond_amount 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 diamond_amount = 6;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 7;
+  // enabled 显式表示 CreateRechargeProductRevision 是否满足该条件。
+  bool enabled = 8;
+  // remark 提供 CreateRechargeProductRevision 的补充说明。
+  optional string remark = 9;
+  // governance 承载 CreateRechargeProductRevision 关联的 WalletGovernanceIdentity。
+  optional WalletGovernanceIdentity governance = 10;
+  // 该 Revision 停止创建新订单的时间；为空表示不自动停售。
+  optional google.protobuf.Timestamp available_until = 11;
+  // Mapping 与 Revision 在同一事务创建，并在 Revision 发布时冻结有效窗口。
+  repeated RechargeStoreProductInput store_products = 12;
+}
+
+// 审批 Revision 并安排生效时间。
+message ApproveRechargeProductRevisionRequest {
+  // app_id 限定 ApproveRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2;
+  // effective_at 记录 ApproveRechargeProductRevision 对应业务阶段的时间点。
+  google.protobuf.Timestamp effective_at = 3;
+  // governance 承载 ApproveRechargeProductRevision 关联的 WalletGovernanceIdentity。
+  optional WalletGovernanceIdentity governance = 4;
+}
+
+// 创建充值订单请求。
+message CreateRechargeOrderRequest {
+  // 应用 ID。
+  common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // 商品 ID。
+  uint32 product_id = 3;
+}
+
+// 关闭充值订单请求。
+message CloseRechargeOrderRequest {
+  // 订单号。
+  string order_no = 1;
+  // 应用 ID。
+  optional common.v1.AppId app_id = 2;
+  // Trusted governance identity for Admin closure.
+  optional WalletGovernanceIdentity governance = 3;
+}
+
+// 充值入账命令。
+message CreditRechargeRequest {
+  // 稳定事件 ID。
+  string event_id = 1;
+  // 应用 ID。
+  common.v1.AppId app_id = 2;
+  // 充值订单号。
+  string order_no = 3;
+  // 支付单号。
+  string payment_no = 4;
+}

@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package admin.gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/export.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+// 礼物导出服务。
+service GiftExportService {
+  // 创建 GiftExportJob。
+  rpc CreateGiftExportJob(AdminCreateGiftExportJobRequest) returns (.gift.v1.CreateGiftExportJobResponse) {
+    option (google.api.http) = {post: "/admin/v1/gift-export-jobs" body: "*"};
+  }
+  // 查询 GiftExportJob 列表。
+  rpc ListGiftExportJobs(AdminListGiftExportJobsRequest) returns (.gift.v1.ListGiftExportJobsResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-export-jobs"};
+  }
+  // 查询 GiftExportJob。
+  rpc GetGiftExportJob(AdminGetGiftExportJobRequest) returns (.gift.v1.GiftExportJob) {
+    option (google.api.http) = {get: "/admin/v1/gift-export-jobs/{id}"};
+  }
+  // 创建 GiftExportDownloadGrant。
+  rpc CreateGiftExportDownloadGrant(AdminCreateGiftExportDownloadGrantRequest) returns (.gift.v1.GiftExportDownloadGrant) {
+    option (google.api.http) = {post: "/admin/v1/gift-export-jobs/{job_id}/download-grants" body: "*"};
+  }
+  // 兑换 GiftExportDownloadGrant。
+  rpc RedeemGiftExportDownloadGrant(AdminRedeemGiftExportDownloadGrantRequest) returns (.gift.v1.RedeemGiftExportDownloadGrantResponse) {
+    option (google.api.http) = {post: "/admin/v1/gift-export-download-grants:redeem" body: "*"};
+  }
+}
+
+// AdminCreateGiftExportJobRequest 定义创建 GiftExportJob 的幂等命令参数。
+message AdminCreateGiftExportJobRequest {
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 3 [(validate.rules).string.max_len = 128];
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.GiftExportFilter filter = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminListGiftExportJobsRequest 定义 GiftExportJobs 的筛选与分页参数。
+message AdminListGiftExportJobsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.GiftExportJobFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminGetGiftExportJobRequest 标识待查询的 GiftExportJob。
+message AdminGetGiftExportJobRequest {
+  // id 标识关联的 GetGiftExportJob。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminCreateGiftExportDownloadGrantRequest 定义创建 GiftExportDownloadGrant 的幂等命令参数。
+message AdminCreateGiftExportDownloadGrantRequest {
+  // job_id 标识关联的 Job。
+  uint64 job_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 3 [(validate.rules).string.max_len = 128];
+}
+
+// AdminRedeemGiftExportDownloadGrantRequest 定义执行 RedeemGiftExportDownloadGrant 的幂等管理命令参数。
+message AdminRedeemGiftExportDownloadGrantRequest {
+  // token 承载敏感凭据或校验材料，不得写入普通日志。
+  string token = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 256}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 3 [(validate.rules).string.max_len = 128];
+}

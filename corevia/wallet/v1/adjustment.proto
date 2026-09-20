@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "wallet/v1/wallet_types.proto";
+
+// 人工调账申请。
+message WalletAdjustment {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    STATUS_UNSPECIFIED = 0;
+    // 已受理并等待后续处理。
+    PENDING = 1;
+    // 变更已经应用并形成可查询结果。
+    APPLIED = 2;
+    // 审核已拒绝，不再按原请求继续。
+    REJECTED = 3;
+    // 请求已由发起方撤回，不再继续处理。
+    WITHDRAWN = 4;
+    // 有效期已结束，不再接受后续使用。
+    EXPIRED = 5;
+  }
+  // 调账 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 调账币种。
+  optional WalletCurrency currency = 4;
+  // 调账金额，正数加币、负数扣币。
+  optional int64 amount = 5;
+  // 原因。
+  optional string reason = 6;
+  // 状态。
+  optional Status status = 7;
+  // 申请人 ID。
+  optional uint32 requester_id = 8;
+  // 审批人 ID。
+  optional uint32 reviewer_id = 9;
+  // 审批备注。
+  optional string review_note = 10;
+  // 幂等键。
+  optional string idempotency_key = 11;
+  // 流水 ID。
+  optional uint64 transaction_id = 12;
+  // 审批截止时间。
+  optional google.protobuf.Timestamp expires_at = 13;
+  // 审批完成时间。
+  optional google.protobuf.Timestamp reviewed_at = 14;
+  // 撤回时间。
+  optional google.protobuf.Timestamp withdrawn_at = 15;
+  // 过期时间。
+  optional google.protobuf.Timestamp expired_at = 16;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+// 创建人工调账请求。
+message CreateWalletAdjustmentRequest {
+  // 应用 ID。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // 用户 ID。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // 调账币种。
+  optional WalletCurrency currency = 3;
+  // 调账金额，正数加币、负数扣币。
+  int64 amount = 4 [(google.api.field_behavior) = REQUIRED];
+  // 原因。
+  string reason = 5 [(google.api.field_behavior) = REQUIRED];
+  // 申请人 ID。
+  uint32 requester_id = 6 [(google.api.field_behavior) = REQUIRED];
+  // 幂等键。
+  string idempotency_key = 7 [(google.api.field_behavior) = REQUIRED];
+  // Trusted governance identity for the request.
+  optional WalletGovernanceIdentity governance = 8;
+}
+
+// 审批人工调账请求。
+message ReviewWalletAdjustmentRequest {
+  // 调账 ID。
+  uint64 adjustment_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // 审批人 ID。
+  uint32 reviewer_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // 审批备注。
+  optional string review_note = 3;
+  // 应用 ID。
+  optional common.v1.AppId app_id = 4;
+  // Trusted governance identity for the review.
+  optional WalletGovernanceIdentity governance = 5;
+}
+
+// 撤回人工调账请求。
+message WithdrawWalletAdjustmentRequest {
+  // adjustment_id 标识关联的 Adjustment。
+  uint64 adjustment_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // requester_id 标识关联的 Requester。
+  uint32 requester_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // app_id 限定 WithdrawWalletAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 3;
+  // governance 承载 WithdrawWalletAdjustment 关联的 WalletGovernanceIdentity。
+  optional WalletGovernanceIdentity governance = 4;
+}
+
+// 人工调账审批中心筛选条件。
+message WalletAdjustmentFilter {
+  // status 表示 WalletAdjustmentFilter 当前可观察的生命周期状态。
+  optional WalletAdjustment.Status status = 1;
+  // requester_id 标识关联的 Requester。
+  optional uint32 requester_id = 2;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 3;
+  // 仅返回创建时间早于当前时间减去该秒数的申请。
+  optional uint64 minimum_age_seconds = 4;
+}
+
+// 查询人工调账申请。
+message ListWalletAdjustmentsRequest {
+  // app_id 限定 ListWalletAdjustments 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+  // filter 限定本次查询采用的筛选条件。
+  optional WalletAdjustmentFilter filter = 3;
+}

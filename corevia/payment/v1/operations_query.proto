@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+
+// PaymentOperationsQueryService exposes bounded operational read models owned by Payment.
+service PaymentOperationsQueryService {
+  // 查询 RechargeDeadLetterSummary。
+  rpc GetRechargeDeadLetterSummary(GetRechargeDeadLetterSummaryRequest) returns (PaymentOperationsMetric);
+}
+
+// GetRechargeDeadLetterSummaryRequest 标识待查询的 RechargeDeadLetterSummary。
+message GetRechargeDeadLetterSummaryRequest {
+  // app_id 限定 GetRechargeDeadLetterSummary 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// PaymentOperationsAmount 表示运营指标中的金额及其币种。
+message PaymentOperationsAmount {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 2;
+}
+
+// PaymentOperationsMetric 承载 GetRechargeDeadLetterSummary 调用的返回结果。
+message PaymentOperationsMetric {
+  // count 记录 PaymentOperationsMetric 中符合对应条件的数量。
+  uint64 count = 1;
+  // amounts 列出 PaymentOperationsMetric 关联的 PaymentOperationsAmount。
+  repeated PaymentOperationsAmount amounts = 2;
+  // oldest_at 记录 PaymentOperationsMetric 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp oldest_at = 3;
+}

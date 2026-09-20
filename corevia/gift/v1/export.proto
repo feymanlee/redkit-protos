@@ -1,0 +1,224 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "gift/v1/backpack.proto";
+import "gift/v1/send.proto";
+import "gift/v1/settlement.proto";
+import "gift/v1/stats.proto";
+import "google/protobuf/timestamp.proto";
+
+// GiftExportType is the bounded Gift administration projection being exported.
+enum GiftExportType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_EXPORT_TYPE_UNSPECIFIED = 0;
+  // GIFT_EXPORT_TYPE_SEND 选择 SEND 业务类型。
+  GIFT_EXPORT_TYPE_SEND = 1;
+  // GIFT_EXPORT_TYPE_BACKPACK_TRANSACTION 选择 BACKPACK_TRANSACTION 业务类型。
+  GIFT_EXPORT_TYPE_BACKPACK_TRANSACTION = 2;
+  // GIFT_EXPORT_TYPE_RECONCILIATION_ISSUE 选择 RECONCILIATION_ISSUE 业务类型。
+  GIFT_EXPORT_TYPE_RECONCILIATION_ISSUE = 3;
+  // GIFT_EXPORT_TYPE_SETTLEMENT_RECORD 选择 SETTLEMENT_RECORD 业务类型。
+  GIFT_EXPORT_TYPE_SETTLEMENT_RECORD = 4;
+  // GIFT_EXPORT_TYPE_GIFT_STAT 选择 GIFT_STAT 业务类型。
+  GIFT_EXPORT_TYPE_GIFT_STAT = 5;
+  // GIFT_EXPORT_TYPE_GIFT_EVENT 选择 GIFT_EVENT 业务类型；导出需额外具备审计查看权限。
+  GIFT_EXPORT_TYPE_GIFT_EVENT = 6;
+  // GIFT_EXPORT_TYPE_CATALOG 选择 CATALOG 业务类型。
+  GIFT_EXPORT_TYPE_CATALOG = 7;
+}
+
+// GiftExportStatus describes the durable asynchronous job lifecycle.
+enum GiftExportStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_EXPORT_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  GIFT_EXPORT_STATUS_PENDING = 1;
+  // 正在处理中，尚未形成终态。
+  GIFT_EXPORT_STATUS_PROCESSING = 2;
+  // 前一次处理失败，正在按既定策略重试。
+  GIFT_EXPORT_STATUS_RETRYING = 3;
+  // 处理已成功完成。
+  GIFT_EXPORT_STATUS_SUCCEEDED = 4;
+  // 处理失败；是否可重试由具体失败原因决定。
+  GIFT_EXPORT_STATUS_FAILED = 5;
+  // 已超过契约允许的数量、额度或处理上限。
+  GIFT_EXPORT_STATUS_LIMIT_EXCEEDED = 6;
+}
+
+// GiftExportFilter deliberately admits only typed administration filters.
+message GiftExportFilter {
+  // GiftExportFilter 在以下 value 分支中选择一种。
+  oneof value {
+    // send 承载 GiftExportFilter 关联的 GiftSendFilter。
+    GiftSendFilter send = 1;
+    // backpack_transaction 承载 GiftExportFilter 关联的 BackpackTransactionFilter。
+    BackpackTransactionFilter backpack_transaction = 2;
+    // reconciliation_issue 承载 GiftExportFilter 关联的 GiftReconciliationIssueFilter。
+    GiftReconciliationIssueFilter reconciliation_issue = 3;
+    // settlement_record 承载 GiftExportFilter 关联的 GiftSettlementRecordFilter。
+    GiftSettlementRecordFilter settlement_record = 4;
+    // gift_stat 承载 GiftExportFilter 关联的 GiftStatFilter。
+    GiftStatFilter gift_stat = 5;
+    // gift_event 承载 GiftExportFilter 关联的 GiftEventFilter。
+    GiftEventFilter gift_event = 6;
+    // catalog 承载 GiftExportFilter 关联的 GiftCatalogExportFilter。
+    GiftCatalogExportFilter catalog = 7;
+  }
+}
+
+// GiftCatalogExportFilter selects catalog rows for asynchronous export.
+message GiftCatalogExportFilter {
+  // gift_ids 为空时导出当前 App 全部 Gift 身份。
+  repeated uint32 gift_ids = 1;
+  // only_published 为 true 时仅导出曾经发布过的 Gift。
+  optional bool only_published = 2;
+}
+
+// GiftExportJob omits the private object identity from ordinary API projections.
+message GiftExportJob {
+  // id 标识关联的 GiftExportJob。
+  uint64 id = 1;
+  // app_id 限定 GiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // requested_by 标识触发或负责 GiftExportJob 对应业务阶段的主体。
+  uint32 requested_by = 3;
+  // export_type 区分 GiftExportJob 的业务类型。
+  GiftExportType export_type = 4;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 7;
+  // filter 限定本次查询采用的筛选条件。
+  GiftExportFilter filter = 8;
+  // status 表示 GiftExportJob 当前可观察的生命周期状态。
+  GiftExportStatus status = 9;
+  // row_count 记录 GiftExportJob 中符合对应条件的数量。
+  uint64 row_count = 10;
+  // size_bytes 以字节表示 GiftExportJob 对应数据的大小。
+  uint64 size_bytes = 11;
+  // failure_code 提供机器可判断的处理结果或失败分类。
+  optional string failure_code = 12;
+  // failure_message 提供最近失败的可读诊断信息，不作为错误分类依据。
+  optional string failure_message = 13;
+  // attempts 记录当前流程累计执行的尝试次数。
+  uint32 attempts = 14;
+  // max_attempts 记录 GiftExportJob 中符合对应条件的数量。
+  uint32 max_attempts = 15;
+  // created_at 记录 GiftExportJob 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 GiftExportJob 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+  // completed_at 记录 GiftExportJob 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp completed_at = 202;
+}
+
+// CreateGiftExportJobRequest 定义创建 GiftExportJob 的幂等命令参数。
+message CreateGiftExportJobRequest {
+  // app_id 限定 CreateGiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // filter 限定本次查询采用的筛选条件。
+  GiftExportFilter filter = 6;
+}
+
+// CreateGiftExportJobResponse 承载 CreateGiftExportJob 的返回结果。
+message CreateGiftExportJobResponse {
+  // job 承载 CreateGiftExportJob 关联的 GiftExportJob。
+  GiftExportJob job = 1;
+  // replayed 显式表示 CreateGiftExportJob 是否满足该条件。
+  bool replayed = 2;
+}
+
+// GiftExportJobFilter 定义可组合的查询筛选条件。
+message GiftExportJobFilter {
+  // export_types 列出 GiftExportJobFilter 关联的 GiftExportType。
+  repeated GiftExportType export_types = 1;
+  // statuses 列出 GiftExportJobFilter 关联的 GiftExportStatus。
+  repeated GiftExportStatus statuses = 2;
+}
+
+// ListGiftExportJobsRequest 定义 GiftExportJobs 的筛选与分页参数。
+message ListGiftExportJobsRequest {
+  // app_id 限定 ListGiftExportJobs 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  GiftExportJobFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListGiftExportJobsResponse 返回 GiftExportJobs 结果集合及分页信息。
+message ListGiftExportJobsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated GiftExportJob items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetGiftExportJobRequest 标识待查询的 GiftExportJob。
+message GetGiftExportJobRequest {
+  // app_id 限定 GetGiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // id 标识关联的 GetGiftExportJob。
+  uint64 id = 2;
+}
+
+// GiftExportDownloadGrant contains an opaque token only at creation time.
+message GiftExportDownloadGrant {
+  // id 标识关联的 GiftExportDownloadGrant。
+  uint64 id = 1;
+  // job_id 标识关联的 Job。
+  uint64 job_id = 2;
+  // token 承载敏感凭据或校验材料，不得写入普通日志。
+  string token = 3;
+  // expires_at 指定 GiftExportDownloadGrant 失效的时间点。
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+// CreateGiftExportDownloadGrantRequest 定义创建 GiftExportDownloadGrant 的幂等命令参数。
+message CreateGiftExportDownloadGrantRequest {
+  // app_id 限定 CreateGiftExportDownloadGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // job_id 标识关联的 Job。
+  uint64 job_id = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+}
+
+// RedeemGiftExportDownloadGrantRequest 定义执行 RedeemGiftExportDownloadGrant 的幂等管理命令参数。
+message RedeemGiftExportDownloadGrantRequest {
+  // app_id 限定 RedeemGiftExportDownloadGrant 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // token 承载敏感凭据或校验材料，不得写入普通日志。
+  string token = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+}
+
+// RedeemGiftExportDownloadGrantResponse 承载 RedeemGiftExportDownloadGrant 的返回结果。
+message RedeemGiftExportDownloadGrantResponse {
+  // download_url 指定 RedeemGiftExportDownloadGrant 访问或跳转使用的目标地址。
+  string download_url = 1;
+  // expires_at 指定 RedeemGiftExportDownloadGrant 失效的时间点。
+  google.protobuf.Timestamp expires_at = 2;
+}

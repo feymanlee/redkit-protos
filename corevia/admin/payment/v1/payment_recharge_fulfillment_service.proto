@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "payment/v1/payment_contract.proto";
+import "validate/validate.proto";
+
+// 支付充值履约管理服务。
+service PaymentRechargeFulfillmentService {
+  // 查询 DeliveryFailure 列表。
+  rpc ListDeliveryFailures(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListDeliveryFailureResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-delivery-failures"};
+  }
+  // 重放 RechargeDeliveryFailure。
+  rpc ReplayRechargeDeliveryFailure(AdminReplayDeliveryFailureRequest) returns (.payment.v1.DeliveryFailure) {
+    option (google.api.http) = {post: "/admin/v1/payment-delivery-failures/recharge/{event_id}:replay" body: "*"};
+  }
+  // 重放 RefundDeliveryFailure。
+  rpc ReplayRefundDeliveryFailure(AdminReplayDeliveryFailureRequest) returns (.payment.v1.DeliveryFailure) {
+    option (google.api.http) = {post: "/admin/v1/payment-delivery-failures/refund/{event_id}:replay" body: "*"};
+  }
+  // 重放 FileReferenceDeliveryFailure。
+  rpc ReplayFileReferenceDeliveryFailure(AdminReplayDeliveryFailureRequest) returns (.payment.v1.DeliveryFailure) {
+    option (google.api.http) = {post: "/admin/v1/payment-delivery-failures/file-reference/{event_id}:replay" body: "*"};
+  }
+  // 重放 ProviderBillDeliveryFailure。
+  rpc ReplayProviderBillDeliveryFailure(AdminReplayDeliveryFailureRequest) returns (.payment.v1.DeliveryFailure) {
+    option (google.api.http) = {post: "/admin/v1/payment-delivery-failures/provider-bill/{event_id}:replay" body: "*"};
+  }
+  // 重放 PaymentAttemptExpirationDeliveryFailure。
+  rpc ReplayPaymentAttemptExpirationDeliveryFailure(AdminReplayDeliveryFailureRequest) returns (.payment.v1.DeliveryFailure) {
+    option (google.api.http) = {post: "/admin/v1/payment-delivery-failures/payment-attempt-expiration/{event_id}:replay" body: "*"};
+  }
+  // 查询充值入账死信列表。
+  rpc ListRechargeDeadLetters(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListPaymentOutboxEventResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-recharge-dead-letters"};
+  }
+  // 重放充值入账死信。
+  rpc ReplayRechargeDeadLetter(AdminReplayPaymentOutboxEventRequest) returns (.payment.v1.PaymentOutboxEvent) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-recharge-dead-letters/{event_id}:replay"
+      body: "*"
+    };
+  }
+}
+
+// AdminReplayDeliveryFailureRequest 定义重放 DeliveryFailure 的幂等管理命令参数。
+message AdminReplayDeliveryFailureRequest {
+  // event_id 标识关联的 Event。
+  string event_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 160}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 3 [(validate.rules).string.max_len = 120];
+}
+
+// AdminReplayPaymentOutboxEventRequest 定义重放 PaymentOutboxEvent 的命令参数。
+message AdminReplayPaymentOutboxEventRequest {
+  // event_id 标识关联的 Event。
+  string event_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+}

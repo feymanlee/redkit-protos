@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "errors/errors.proto";
+
+// 支付错误原因。
+enum PaymentErrorReason {
+  option (errors.default_code) = 500;
+
+  // bad 请求。
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // unauthorized。
+  UNAUTHORIZED = 100 [(errors.code) = 401];
+  // 支付 required。
+  PAYMENT_REQUIRED = 200 [(errors.code) = 402];
+  // forbidden。
+  FORBIDDEN = 300 [(errors.code) = 403];
+  // not found。
+  NOT_FOUND = 400 [(errors.code) = 404];
+  // conflict。
+  CONFLICT = 900 [(errors.code) = 409];
+  // 权威业务订单当前不可发起新的支付。
+  RECHARGE_ORDER_NOT_PAYABLE = 901 [(errors.code) = 409];
+  // Recharge Order 已超过 Wallet 固定的业务有效期。
+  RECHARGE_ORDER_EXPIRED = 902 [(errors.code) = 409];
+  // 公开 Payment Option 当前不可执行。
+  PAYMENT_OPTION_UNAVAILABLE = 903 [(errors.code) = 409];
+  // Purchase Request 或派生 Payment 身份已绑定其他不可变参数。
+  PURCHASE_IDEMPOTENCY_CONFLICT = 904 [(errors.code) = 409];
+  // Purchase 当前状态不允许创建下一 Payment Attempt。
+  PURCHASE_NOT_RETRYABLE = 905 [(errors.code) = 409];
+  // 当前 App 与客户端平台下不存在可购买的固定期限 Subscription Offer。
+  SUBSCRIPTION_OFFER_UNAVAILABLE = 906 [(errors.code) = 409];
+  // Payment 自有的 Subscription Purchase Order 已过业务有效期。
+  SUBSCRIPTION_PURCHASE_EXPIRED = 907 [(errors.code) = 409];
+  // 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+  RECHARGE_OFFER_UNAVAILABLE = 908 [(errors.code) = 409];
+  // Store App、Provider、SKU 与发布时间窗解析到了多个 Recharge Revision。
+  RECHARGE_STORE_MAPPING_AMBIGUOUS = 909 [(errors.code) = 409];
+  // 站内 server 错误。
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+  // service unavailable。
+  SERVICE_UNAVAILABLE = 2300 [(errors.code) = 503];
+  // Provider 收款结果未知，客户端只能等待恢复。
+  PROVIDER_OUTCOME_UNKNOWN = 2301 [(errors.code) = 503];
+}

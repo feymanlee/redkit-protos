@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package admin.core.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+
+import "core/operator/v1/operator.proto";
+
+// 当前后台人员个人资料服务。
+service OperatorProfileService {
+  // 获取当前后台人员资料。
+  rpc GetOperator (google.protobuf.Empty) returns (.core.operator.v1.Operator) {
+    option (google.api.http) = {
+      get: "/admin/v1/me"
+    };
+
+    // 该身份 bootstrap operation 只要求已认证身份，允许在选择具体 App 前调用。
+    option (gnostic.openapi.v3.operation) = {
+      security: [
+        {
+          additional_properties: [
+            {
+              name: "BearerAuth"; value: {}
+            }
+          ]
+        }
+      ]
+    };
+  }
+
+  // 更新后台人员资料
+  rpc UpdateOperator (UpdateMyOperatorProfileRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/me"
+      body: "*"
+    };
+  }
+
+  // 修改后台人员密码
+  rpc ChangePassword(.core.operator.v1.ChangePasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/me/password"
+      body: "*"
+    };
+  }
+
+  // 绑定手机号码/邮箱
+  rpc BindContact(.core.operator.v1.BindContactRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/me/contact"
+      body: "*"
+    };
+  }
+  // 验证手机号码/邮箱
+  rpc VerifyContact(.core.operator.v1.VerifyContactRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/me/contact/verify"
+      body: "*"
+    };
+  }
+}
+
+// UpdateMyOperatorProfileRequest 定义更新 MyOperatorProfile 的命令参数。
+message UpdateMyOperatorProfileRequest {
+  // data 承载 UpdateMyOperatorProfile 对应阶段的结构化业务内容。
+  .core.operator.v1.OperatorProfile data = 1;
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 2;
+}

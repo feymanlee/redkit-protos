@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package admin.core.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "core/permission/v1/menu.proto";
+
+// 后台前端初始化数据与配置服务
+service AdminPortalService {
+  // 查询前端路由表
+  rpc GetNavigation (google.protobuf.Empty) returns (ListRouteResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/routes"
+    };
+
+    // 该初始化 operation 只要求已认证身份，允许在选择具体 App 前调用。
+    option (gnostic.openapi.v3.operation) = {
+      security: [
+        {
+          additional_properties: [
+            {
+              name: "BearerAuth"; value: {}
+            }
+          ]
+        }
+      ]
+    };
+  }
+
+  // 查询权限码列表
+  rpc GetMyPermissionCode (google.protobuf.Empty) returns (ListPermissionCodeResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/perm-codes"
+    };
+
+    // 该初始化 operation 只要求已认证身份，允许在选择具体 App 前调用。
+    option (gnostic.openapi.v3.operation) = {
+      security: [
+        {
+          additional_properties: [
+            {
+              name: "BearerAuth"; value: {}
+            }
+          ]
+        }
+      ]
+    };
+  }
+
+  // 一次性获取进入后台所需的所有上下文
+  rpc GetInitialContext (google.protobuf.Empty) returns (InitialContextResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/initial-context"
+    };
+
+    // 该初始化 operation 只要求已认证身份，允许在选择具体 App 前调用。
+    option (gnostic.openapi.v3.operation) = {
+      security: [
+        {
+          additional_properties: [
+            {
+              name: "BearerAuth"; value: {}
+            }
+          ]
+        }
+      ]
+    };
+  }
+}
+
+// 查询路由列表 - 回应
+message ListRouteResponse {
+  // 路由列表。
+  repeated .core.permission.v1.MenuRouteItem items = 1;  // 路由列表
+}
+
+// 查询权限码列表 - 回应
+message ListPermissionCodeResponse {
+  // 权限码列表。
+  repeated string codes = 1;  // 权限码列表
+}
+
+// 初始上下文响应
+message InitialContextResponse {
+  // 菜单树。
+  repeated .core.permission.v1.MenuRouteItem menus = 1;  // 菜单树
+  // 权限码。
+  repeated string permissions = 2;  // 权限码
+}

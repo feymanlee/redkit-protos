@@ -1,0 +1,442 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/v1/common.proto";
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/catalog.proto";
+import "google/protobuf/timestamp.proto";
+
+// 礼物背包聚合余额。
+message GiftBackpackBalance {
+  // 余额 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 礼物 ID。
+  optional uint32 gift_id = 4;
+  // 累计发放数量。
+  optional uint64 total_quantity = 5;
+  // 可用数量。
+  optional uint64 available_quantity = 6;
+  // 锁定数量。
+  optional uint64 locked_quantity = 7;
+  // 已使用数量。
+  optional uint64 used_quantity = 8;
+  // 已过期数量。
+  optional uint64 expired_quantity = 9;
+  // 已扣回数量。
+  optional uint64 revoked_quantity = 10;
+  // 有效可用数量，已排除过期未归集库存。
+  optional uint64 effective_available_quantity = 11;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 礼物背包批次。
+message GiftBackpackBatch {
+  // 批次 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 礼物 ID。
+  optional uint32 gift_id = 4;
+  // 来源类型，例如 ADMIN、ACTIVITY。
+  optional string source_type = 5;
+  // 来源单号。
+  optional string source_id = 6;
+  // 发放数量。
+  optional uint64 quantity = 7;
+  // 剩余可用数量。
+  optional uint64 available_quantity = 8;
+  // 已使用数量。
+  optional uint64 used_quantity = 9;
+  // 已过期数量。
+  optional uint64 expired_quantity = 10;
+  // 已扣回数量。
+  optional uint64 revoked_quantity = 11;
+  // 礼物面值快照。
+  optional int64 unit_price = 12;
+  // 批次总面值。
+  optional int64 total_price = 13;
+  // 批次状态。
+  optional string status = 14;
+  // 过期时间，为空表示永不过期。
+  optional google.protobuf.Timestamp expire_at = 15;
+  // 发放人 ID。
+  optional uint32 granted_by = 16;
+  // 操作单号。
+  optional string operation_no = 17;
+  // 幂等键。
+  optional string idempotency_key = 18;
+  // 来源服务。
+  optional string source_service = 19;
+  // 请求 ID。
+  optional string request_id = 20;
+  // 元数据 JSON。
+  optional string metadata = 21;
+  // 库存创建时冻结的 Gift Revision ID。
+  optional uint64 gift_revision_id = 22;
+  // 库存创建时冻结的平台分成万分比。
+  optional uint32 platform_rate = 23;
+  // 库存创建时冻结的收礼人分成万分比。
+  optional uint32 recipient_rate = 24;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 礼物背包流水。
+message GiftBackpackTransaction {
+  // 流水 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 礼物 ID。
+  optional uint32 gift_id = 4;
+  // 批次 ID。
+  optional uint64 batch_id = 5;
+  // 送礼记录 ID。
+  optional uint64 send_record_id = 6;
+  // 流水类型，GRANT、CONSUME、REVOKE、EXPIRE。
+  optional string transaction_type = 7;
+  // 变动数量。
+  optional uint64 quantity = 8;
+  // 变动前可用数量。
+  optional uint64 before_quantity = 9;
+  // 变动后可用数量。
+  optional uint64 after_quantity = 10;
+  // 礼物面值快照。
+  optional int64 unit_price = 11;
+  // 变动总面值。
+  optional int64 total_price = 12;
+  // 来源类型。
+  optional string source_type = 13;
+  // 来源单号。
+  optional string source_id = 14;
+  // 操作单号。
+  optional string operation_no = 15;
+  // 幂等键。
+  optional string idempotency_key = 16;
+  // 来源服务。
+  optional string source_service = 17;
+  // 操作人 ID。
+  optional uint32 operator_id = 18;
+  // 请求 ID。
+  optional string request_id = 19;
+  // 审计备注。
+  optional string audit_note = 20;
+  // 元数据 JSON。
+  optional string metadata = 21;
+  // 单批次流水绑定的 Gift Revision ID；跨批次流水可为空。
+  optional uint64 gift_revision_id = 22;
+  // 单批次流水冻结的平台分成万分比。
+  optional uint32 platform_rate = 23;
+  // 单批次流水冻结的收礼人分成万分比。
+  optional uint32 recipient_rate = 24;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// 礼物背包流水批次明细。
+message GiftBackpackTransactionItem {
+  // 明细 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 背包流水 ID。
+  optional uint64 transaction_id = 3;
+  // 批次 ID。
+  optional uint64 batch_id = 4;
+  // 用户 ID。
+  optional uint64 user_id = 5;
+  // 礼物 ID。
+  optional uint32 gift_id = 6;
+  // 流水类型，CONSUME、REVOKE、EXPIRE。
+  optional string transaction_type = 7;
+  // 变动数量。
+  optional uint64 quantity = 8;
+  // 批次变动前可用数量。
+  optional uint64 before_quantity = 9;
+  // 批次变动后可用数量。
+  optional uint64 after_quantity = 10;
+  // 礼物面值快照。
+  optional int64 unit_price = 11;
+  // 变动总面值。
+  optional int64 total_price = 12;
+  // 本批次变动绑定的 Gift Revision ID。
+  optional uint64 gift_revision_id = 13;
+  // 本批次变动使用的平台分成万分比。
+  optional uint32 platform_rate = 14;
+  // 本批次变动使用的收礼人分成万分比。
+  optional uint32 recipient_rate = 15;
+  // 本批次变动对应的平台金额。
+  optional int64 platform_amount = 16;
+  // 本批次变动对应的收礼人金额。
+  optional int64 recipient_amount = 17;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+// 礼物背包余额列表响应。
+message ListGiftBackpackBalanceResponse {
+  // 列表项。
+  repeated GiftBackpackBalance items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 礼物背包批次列表响应。
+message ListGiftBackpackBatchResponse {
+  // 列表项。
+  repeated GiftBackpackBatch items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 礼物背包流水列表响应。
+message ListGiftBackpackTransactionResponse {
+  // 列表项。
+  repeated GiftBackpackTransaction items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 礼物背包流水批次明细列表响应。
+message ListGiftBackpackTransactionItemResponse {
+  // 列表项。
+  repeated GiftBackpackTransactionItem items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// BackpackBatchExpiry selects batches by their current expiry state.
+enum BackpackBatchExpiry {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  BACKPACK_BATCH_EXPIRY_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  BACKPACK_BATCH_EXPIRY_ACTIVE = 1;
+  // 有效期已结束，不再接受后续使用。
+  BACKPACK_BATCH_EXPIRY_EXPIRED = 2;
+  // BACKPACK_BATCH_EXPIRY_NO_EXPIRY 选择 NO_EXPIRY 作为对应业务维度的有效取值。
+  BACKPACK_BATCH_EXPIRY_NO_EXPIRY = 3;
+}
+
+// BackpackAdjustmentDirection distinguishes corrective inventory increases and decreases.
+enum BackpackAdjustmentDirection {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  BACKPACK_ADJUSTMENT_DIRECTION_UNSPECIFIED = 0;
+  // BACKPACK_ADJUSTMENT_DIRECTION_INCREASE 表示业务流转采用 INCREASE 方向。
+  BACKPACK_ADJUSTMENT_DIRECTION_INCREASE = 1;
+  // BACKPACK_ADJUSTMENT_DIRECTION_DECREASE 表示业务流转采用 DECREASE 方向。
+  BACKPACK_ADJUSTMENT_DIRECTION_DECREASE = 2;
+}
+
+// BackpackBalanceFilter requires an exact User identity inside the selected App.
+message BackpackBalanceFilter {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // gift_id 标识关联的 Gift。
+  optional uint32 gift_id = 2;
+}
+
+// BackpackBatchFilter contains bounded, typed workbench filters.
+message BackpackBatchFilter {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // gift_id 标识关联的 Gift。
+  optional uint32 gift_id = 2;
+  // source_types 限定查询包含的 Backpack Batch 来源类型。
+  repeated string source_types = 3;
+  // expiry_states 列出 BackpackBatchFilter 关联的 BackpackBatchExpiry。
+  repeated BackpackBatchExpiry expiry_states = 4;
+  // expire_from 指定 BackpackBatchFilter 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp expire_from = 5;
+  // expire_to 指定 BackpackBatchFilter 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp expire_to = 6;
+}
+
+// BackpackTransactionFilter contains bounded, typed immutable-history filters.
+// user_id=0 selects all Users in the already-scoped App; non-zero selects one exact User.
+message BackpackTransactionFilter {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // gift_id 标识关联的 Gift。
+  optional uint32 gift_id = 2;
+  // transaction_types 限定查询包含的 Backpack Transaction 类型。
+  repeated string transaction_types = 3;
+  // occurred_from 指定 BackpackTransactionFilter 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp occurred_from = 4;
+  // occurred_to 指定 BackpackTransactionFilter 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp occurred_to = 5;
+}
+
+// ListBackpackBalancesRequest 定义 BackpackBalances 的筛选与分页参数。
+message ListBackpackBalancesRequest {
+  // app_id 限定 ListBackpackBalances 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  BackpackBalanceFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListBackpackBatchesRequest 定义 BackpackBatches 的筛选与分页参数。
+message ListBackpackBatchesRequest {
+  // app_id 限定 ListBackpackBatches 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  BackpackBatchFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListBackpackTransactionsRequest 定义 BackpackTransactions 的筛选与分页参数。
+message ListBackpackTransactionsRequest {
+  // app_id 限定 ListBackpackTransactions 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  BackpackTransactionFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListBackpackTransactionItemsRequest 定义 BackpackTransactionItems 的筛选与分页参数。
+message ListBackpackTransactionItemsRequest {
+  // app_id 限定 ListBackpackTransactionItems 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // transaction_id 标识关联的 Transaction。
+  uint64 transaction_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// AdjustBackpackGiftRequest performs one single-User, single-Gift corrective command.
+message AdjustBackpackGiftRequest {
+  // app_id 限定 AdjustBackpackGift 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 3;
+  // direction 指定 AdjustBackpackGift 统计、流转或查询采用的业务维度。
+  BackpackAdjustmentDirection direction = 4;
+  // quantity 表示 AdjustBackpackGift 涉及的业务对象数量。
+  uint64 quantity = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 6;
+  // external_reference 记录外部系统或关联流程提供的引用标识。
+  string external_reference = 7;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 9;
+  // expire_at 指定 AdjustBackpackGift 失效的时间点。
+  optional google.protobuf.Timestamp expire_at = 10;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 11;
+}
+
+// AdjustBackpackGiftResponse returns the immutable inventory and governance facts.
+message AdjustBackpackGiftResponse {
+  // transaction 承载 AdjustBackpackGift 关联的 GiftBackpackTransaction。
+  GiftBackpackTransaction transaction = 1;
+  // batch 承载 AdjustBackpackGift 关联的 GiftBackpackBatch。
+  optional GiftBackpackBatch batch = 2;
+  // audit 承载 AdjustBackpackGift 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 3;
+  // replayed 显式表示 AdjustBackpackGift 是否满足该条件。
+  bool replayed = 4;
+}
+
+// 发放背包礼物请求。
+message GrantBackpackGiftRequest {
+  // 应用 ID。
+  optional common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // 礼物 ID。
+  uint32 gift_id = 3;
+  // 发放数量。
+  uint64 quantity = 4;
+  // 来源类型，例如 ADMIN、ACTIVITY。
+  string source_type = 5;
+  // 来源单号。
+  optional string source_id = 6;
+  // 过期时间，为空表示永不过期。
+  optional google.protobuf.Timestamp expire_at = 7;
+  // 操作人 ID。
+  optional uint32 operator_id = 8;
+  // 幂等键。
+  string idempotency_key = 9;
+  // 来源服务。
+  optional string source_service = 10;
+  // 请求 ID。
+  optional string request_id = 11;
+  // 审计备注。
+  optional string audit_note = 12;
+  // 元数据 JSON。
+  optional string metadata = 13;
+}
+
+// 扣回背包礼物请求。
+message RevokeBackpackGiftRequest {
+  // 应用 ID。
+  optional common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // 礼物 ID。
+  uint32 gift_id = 3;
+  // 扣回数量。
+  uint64 quantity = 4;
+  // 来源类型。
+  optional string source_type = 5;
+  // 来源单号。
+  optional string source_id = 6;
+  // 操作人 ID。
+  optional uint32 operator_id = 7;
+  // 幂等键。
+  string idempotency_key = 8;
+  // 来源服务。
+  optional string source_service = 9;
+  // 请求 ID。
+  optional string request_id = 10;
+  // 审计备注。
+  optional string audit_note = 11;
+  // 元数据 JSON。
+  optional string metadata = 12;
+}
+
+// 处理过期背包礼物请求。
+message ExpireBackpackItemsRequest {
+  // 应用 ID；同步调用使用具体 App，省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 1;
+  // 用户 ID，0 表示全部用户。
+  optional uint64 user_id = 2;
+  // 礼物 ID，0 表示全部礼物。
+  optional uint32 gift_id = 3;
+  // 批次 ID，0 表示按条件扫描。
+  optional uint64 batch_id = 4;
+  // 操作人 ID。
+  optional uint32 operator_id = 5;
+  // 请求 ID。
+  optional string request_id = 6;
+  // 幂等键。
+  optional string idempotency_key = 7;
+}
+
+// 处理过期背包礼物响应。
+message ExpireBackpackItemsResponse {
+  // 处理批次数。
+  uint64 expired_batches = 1;
+  // 过期礼物数量。
+  uint64 expired_quantity = 2;
+}

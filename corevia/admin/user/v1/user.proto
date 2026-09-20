@@ -1,0 +1,326 @@
+syntax = "proto3";
+
+package admin.user.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "user/administration/v1/account.proto";
+import "user/administration/v1/administration.proto";
+import "user/administration/v1/credential.proto";
+import "user/administration/v1/profile.proto";
+import "user/administration/v1/security.proto";
+import "user/administration/v1/types.proto";
+import "validate/validate.proto";
+
+// C 端用户管理服务，所有请求均由 Admin BFF 注入当前 App。
+service UserService {
+  // 获取当前 App 的 C 端用户列表。
+  rpc ListUsers(AdminListUsersRequest) returns (.user.administration.v1.SearchUsersResponse) {
+    option (google.api.http) = {get: "/admin/v1/users"};
+  }
+  // 获取当前 App 的一个 C 端用户。
+  rpc GetUser(GetAdminUserRequest) returns (.user.administration.v1.Account) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}"};
+  }
+  // 获取当前 App 的一个 C 端用户公开资料。
+  rpc GetUserProfile(GetAdminUserRequest) returns (.user.administration.v1.Profile) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/profile"};
+  }
+  // 暂停一个 C 端账号。
+  rpc SuspendUser(AdminSuspendUserRequest) returns (.user.administration.v1.Account) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:suspend"
+      body: "*"
+    };
+  }
+  // 恢复一个已暂停的 C 端账号。
+  rpc ReactivateUser(AdminReactivateUserRequest) returns (.user.administration.v1.Account) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:reactivate"
+      body: "*"
+    };
+  }
+  // 清理或重置允许处置的公开资料字段。
+  rpc ModerateUserProfile(AdminModerateUserProfileRequest) returns (.user.administration.v1.Profile) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/profile:moderate"
+      body: "*"
+    };
+  }
+  // 由系统生成新的 User Code。
+  rpc ResetUserCode(AdminResetUserCodeRequest) returns (.user.administration.v1.Account) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:reset-code"
+      body: "*"
+    };
+  }
+  // 为一个 ACTIVE Account 发起保留冷静期的后台注销流程。
+  rpc BeginAccountClosure(AdminBeginAccountClosureRequest) returns (.user.administration.v1.Account) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:begin-closure"
+      body: "*"
+    };
+  }
+  // 获取 User-owned Account Closure Saga 及 participant 进度。
+  rpc GetUserClosure(GetAdminUserRequest) returns (.user.administration.v1.AccountClosure) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/closure"};
+  }
+  // 在首个不可逆 Apply 前请求取消 Account Closure。
+  rpc CancelAccountClosure(AdminCancelAccountClosureRequest) returns (.user.administration.v1.AccountClosure) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:cancel-closure"
+      body: "*"
+    };
+  }
+  // 获取脱敏后的登录凭据。
+  rpc ListUserCredentials(AdminListUserCredentialsRequest) returns (.user.administration.v1.ListCredentialsResponse) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/credentials"};
+  }
+  // 在独立权限校验后按审计原因查看完整手机号或邮箱。
+  rpc RevealUserPII(AdminRevealUserPIIRequest) returns (.user.administration.v1.ListCredentialPIIResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}:reveal-pii"
+      body: "*"
+    };
+  }
+  // 查询后台对该用户执行的高风险操作审计。
+  rpc ListUserAdminActions(AdminListUserAdminActionsRequest) returns (.user.administration.v1.ListAdminActionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/admin-actions"};
+  }
+  // 查询安全通知意图和 Support Message 引用；独立路由允许配置通知观察权限。
+  rpc ListUserSecurityNotices(AdminListUserSecurityNoticesRequest) returns (.user.administration.v1.ListSecurityNoticesResponse) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/security-notices"};
+  }
+  // 为当前 User 的最新 FAILED Security Notice 创建新的投递 attempt。
+  rpc ResendUserSecurityNotice(AdminResendUserSecurityNoticeRequest) returns (.user.administration.v1.SecurityNotice) {
+    option (google.api.http) = {
+      post: "/admin/v1/users/{user_id}/security-notices/{notice_no}:resend"
+      body: "*"
+    };
+  }
+}
+
+// GetAdminUserRequest 标识待查询的 AdminUser。
+message GetAdminUserRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+}
+// AdminListUsersRequest omits App scope because Admin BFF injects the selected App.
+message AdminListUsersRequest {
+  // search selects one explicit User lookup strategy.
+  .user.administration.v1.UserSearchQuery search = 1;
+  // filter contains the supported Account and security filters.
+  .user.administration.v1.UserSearchFilter filter = 2;
+  // paging controls the bounded result page.
+  .common.pagination.v1.PagingRequest paging = 3;
+}
+// AdminSuspendUserRequest 定义暂停 User 的幂等管理命令参数。
+message AdminSuspendUserRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // suspended_until 指定 SuspendUser 查询或生效区间的结束边界。
+  google.protobuf.Timestamp suspended_until = 2;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3;
+  // reason_code 提供机器可判断的业务原因分类。
+  .user.administration.v1.AccountSuspensionReason reason_code = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [0]
+    }
+  ];
+  // internal_note 记录人工判断的补充说明，供审计与复核。
+  optional string internal_note = 5 [(validate.rules).string.max_len = 512];
+}
+// AdminReactivateUserRequest 定义恢复 User 的幂等管理命令参数。
+message AdminReactivateUserRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 2;
+  // reason_code 提供机器可判断的业务原因分类。
+  .user.administration.v1.AccountReactivationReason reason_code = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [0]
+    }
+  ];
+  // internal_note 记录人工判断的补充说明，供审计与复核。
+  optional string internal_note = 4 [(validate.rules).string.max_len = 512];
+}
+// AdminModerateUserProfileRequest 定义审核 UserProfile 的幂等管理命令参数。
+message AdminModerateUserProfileRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // clear_fields 列出 ModerateUserProfile 关联的 ProfileModerationField。
+  repeated .user.administration.v1.ProfileModerationField clear_fields = 2 [(validate.rules).repeated = {
+    max_items: 5
+    unique: true
+    items: {
+      enum: {
+        defined_only: true
+        not_in: [0]
+      }
+    }
+  }];
+  // reset_fields 列出 ModerateUserProfile 关联的 ProfileModerationField。
+  repeated .user.administration.v1.ProfileModerationField reset_fields = 3 [(validate.rules).repeated = {
+    max_items: 3
+    unique: true
+    items: {
+      enum: {
+        defined_only: true
+        not_in: [0]
+      }
+    }
+  }];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// AdminResetUserCodeRequest 定义重置 UserCode 的幂等管理命令参数。
+message AdminResetUserCodeRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// AdminBeginAccountClosureRequest 定义开始 AccountClosure 的幂等管理命令参数。
+message AdminBeginAccountClosureRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// AdminCancelAccountClosureRequest 定义取消 AccountClosure 的幂等管理命令参数。
+message AdminCancelAccountClosureRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}
+// AdminRevealUserPIIRequest 定义执行 RevealUserPII 的命令参数。
+message AdminRevealUserPIIRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+}
+// AdminListUserCredentialsRequest 定义 UserCredentials 的筛选与分页参数。
+message AdminListUserCredentialsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+// AdminListUserAdminActionsRequest 定义 UserAdminActions 的筛选与分页参数。
+message AdminListUserAdminActionsRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+// AdminListUserSecurityNoticesRequest 定义 UserSecurityNotices 的筛选与分页参数。
+message AdminListUserSecurityNoticesRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+// AdminResendUserSecurityNoticeRequest 定义执行 ResendUserSecurityNotice 的幂等管理命令参数。
+message AdminResendUserSecurityNoticeRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // notice_no 是 ResendUserSecurityNotice 对外关联与审计使用的业务编号。
+  string notice_no = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 64
+    }
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 512
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 128
+    }
+  ];
+}

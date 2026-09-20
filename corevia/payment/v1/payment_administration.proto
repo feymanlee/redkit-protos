@@ -1,0 +1,290 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/callback.proto";
+import "payment/v1/channel.proto";
+import "payment/v1/governance.proto";
+import "payment/v1/financial_operations.proto";
+import "payment/v1/payment_contract.proto";
+import "payment/v1/payment_types.proto";
+import "payment/v1/reconciliation.proto";
+import "payment/v1/refund.proto";
+import "payment/v1/risk.proto";
+import "payment/v1/subscription.proto";
+
+// PaymentSearchFilter is the typed, App-scoped administration search contract.
+message PaymentSearchFilter {
+  // payment_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
+  optional string payment_no = 1;
+  // order_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
+  optional string order_no = 2;
+  // refund_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
+  optional string refund_no = 3;
+  // provider_trade_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
+  optional string provider_trade_no = 4;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 5;
+  // created_from 指定 PaymentSearchFilter 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp created_from = 6;
+  // created_to 指定 PaymentSearchFilter 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp created_to = 7;
+  // providers 列出 PaymentSearchFilter 关联的 PaymentProvider。
+  repeated PaymentProvider providers = 8;
+  // methods 列出 PaymentSearchFilter 关联的 PaymentMethod。
+  repeated PaymentMethod methods = 9;
+  // biz_type 区分 PaymentSearchFilter 的业务类型。
+  optional string biz_type = 10;
+  // statuses 列出 PaymentSearchFilter 关联的 Status。
+  repeated Payment.Status statuses = 11;
+  // fulfillment_statuses 列出 PaymentSearchFilter 关联的 FulfillmentStatus。
+  repeated Payment.FulfillmentStatus fulfillment_statuses = 12;
+  // amount_min 以对应 currency 的最小货币单位限定查询金额下界。
+  optional int64 amount_min = 13;
+  // amount_max 以对应 currency 的最小货币单位限定查询金额上界。
+  optional int64 amount_max = 14;
+}
+
+// ListPaymentsRequest 定义 Payments 的筛选与分页参数。
+message ListPaymentsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  PaymentSearchFilter filter = 2;
+}
+
+// PaymentDetailSectionAvailability 定义对应业务维度允许使用的离散取值。
+enum PaymentDetailSectionAvailability {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PAYMENT_DETAIL_SECTION_AVAILABILITY_UNSPECIFIED = 0;
+  // 当前可供业务流程选择或使用。
+  AVAILABLE = 1;
+  // 当前没有可展示或可处理的数据。
+  EMPTY = 2;
+  // 当前不可供业务流程选择或使用。
+  UNAVAILABLE = 3;
+  // NOT_IMPLEMENTED 选择 NOT_IMPLEMENTED 作为对应业务维度的有效取值。
+  NOT_IMPLEMENTED = 4;
+}
+
+// PaymentDetailSectionState 表示 Payment Detail 中一个 Section 的加载与可见状态。
+message PaymentDetailSectionState {
+  // availability 承载 PaymentDetailSectionState 关联的 PaymentDetailSectionAvailability。
+  PaymentDetailSectionAvailability availability = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 2;
+}
+
+// GetPaymentDetailRequest 标识待查询的 PaymentDetail。
+message GetPaymentDetailRequest {
+  // payment_no 是 GetPaymentDetail 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // app_id 限定 GetPaymentDetail 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// ChannelCapabilitySnapshot 区分 Revision 声明、Provider 实现上限与两者交集。
+message ChannelCapabilitySnapshot {
+  // declared_capabilities 是历史 Channel Revision 明确获准启用的能力。
+  repeated ChannelCapability declared_capabilities = 1;
+  // provider_supported_capabilities 是当前 Provider 实现的代码级能力上限。
+  repeated ChannelCapability provider_supported_capabilities = 2;
+  // effective_capabilities 是声明能力与实现能力的交集，仅供管理观察。
+  repeated ChannelCapability effective_capabilities = 3;
+  // provider_contract_version 是 ProviderBundle 显式维护的能力契约版本。
+  string provider_contract_version = 4;
+  // provider_capability_fingerprint 标识当前 Provider 能力实现及 verifier 版本。
+  string provider_capability_fingerprint = 5;
+  // error_class 对能力不可用原因进行稳定分类。
+  optional string error_class = 6;
+}
+
+// ProviderStateRefreshResult 定义对应业务维度允许使用的离散取值。
+enum ProviderStateRefreshResult {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PROVIDER_STATE_REFRESH_RESULT_UNSPECIFIED = 0;
+  // PROVIDER_STATE_REFRESH_CONFIRMED 表示处理结果为 PROVIDER_STATE_REFRESH_CONFIRMED。
+  PROVIDER_STATE_REFRESH_CONFIRMED = 1;
+  // 当前取值无法确定；调用方不得推断成功或失败。
+  PROVIDER_STATE_REFRESH_UNKNOWN = 2;
+  // 审核已拒绝，不再按原请求继续。
+  PROVIDER_STATE_REFRESH_REJECTED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  PROVIDER_STATE_REFRESH_FAILED = 4;
+}
+
+// ProviderStateRefresh is the safe projection of one authoritative Provider query.
+message ProviderStateRefresh {
+  // target_type 区分 ProviderStateRefresh 的业务类型。
+  string target_type = 1;
+  // target_id 标识关联的 Target。
+  string target_id = 2;
+  // provider_status 表示 ProviderStateRefresh 当前可观察的生命周期状态。
+  optional string provider_status = 3;
+  // result 承载 ProviderStateRefresh 关联的 ProviderStateRefreshResult。
+  ProviderStateRefreshResult result = 4;
+  // next_step 标识 ProviderStateRefresh 当前或下一处理阶段。
+  string next_step = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+  // refreshed_at 记录 ProviderStateRefresh 对应业务阶段的时间点。
+  google.protobuf.Timestamp refreshed_at = 7;
+}
+
+// RefreshPaymentProviderStateRequest 定义执行 RefreshPaymentProviderState 的幂等管理命令参数。
+message RefreshPaymentProviderStateRequest {
+  // payment_no 是 RefreshPaymentProviderState 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // app_id 限定 RefreshPaymentProviderState 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+}
+
+// RefreshPaymentProviderStateResponse 承载 RefreshPaymentProviderState 的返回结果。
+message RefreshPaymentProviderStateResponse {
+  // payment 承载 RefreshPaymentProviderState 关联的 Payment。
+  Payment payment = 1;
+  // refresh 承载 RefreshPaymentProviderState 关联的 ProviderStateRefresh。
+  ProviderStateRefresh refresh = 2;
+}
+
+// RefreshRefundProviderStateRequest 定义执行 RefreshRefundProviderState 的幂等管理命令参数。
+message RefreshRefundProviderStateRequest {
+  // refund_no 是 RefreshRefundProviderState 对外关联与审计使用的业务编号。
+  string refund_no = 1;
+  // app_id 限定 RefreshRefundProviderState 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+}
+
+// RefreshRefundProviderStateResponse 承载 RefreshRefundProviderState 的返回结果。
+message RefreshRefundProviderStateResponse {
+  // refund 承载 RefreshRefundProviderState 关联的 Refund。
+  Refund refund = 1;
+  // refresh 承载 RefreshRefundProviderState 关联的 ProviderStateRefresh。
+  ProviderStateRefresh refresh = 2;
+}
+
+// PaymentDetail is a read projection. It does not own or copy adjacent-context facts.
+message PaymentDetail {
+  // payment 承载 PaymentDetail 关联的 Payment。
+  Payment payment = 1;
+  // refunds 列出 PaymentDetail 关联的 Refund。
+  repeated Refund refunds = 2;
+  // callbacks 列出 PaymentDetail 关联的 PaymentCallback。
+  repeated PaymentCallback callbacks = 3;
+  // events 列出 PaymentDetail 关联的 PaymentEvent。
+  repeated PaymentEvent events = 4;
+  // delivery_failures 列出 PaymentDetail 关联的 PaymentOutboxEvent。
+  repeated PaymentOutboxEvent delivery_failures = 5;
+  // governance_events 列出 PaymentDetail 关联的 PaymentGovernanceEvent。
+  repeated PaymentGovernanceEvent governance_events = 6;
+  // subscriptions 列出 PaymentDetail 关联的 UserSubscription。
+  repeated UserSubscription subscriptions = 7;
+  // reconciliation_findings 列出 PaymentDetail 关联的 ReconciliationItem。
+  repeated ReconciliationItem reconciliation_findings = 8;
+  // refund_requests 列出 PaymentDetail 关联的 RefundRequest。
+  repeated RefundRequest refund_requests = 9;
+  // refund_availability 承载 PaymentDetail 关联的 RefundAvailability。
+  RefundAvailability refund_availability = 10;
+  // channel_capabilities 承载 PaymentDetail 关联的 ChannelCapabilitySnapshot。
+  ChannelCapabilitySnapshot channel_capabilities = 11;
+  // latest_provider_refreshes 列出 PaymentDetail 关联的 ProviderStateRefresh。
+  repeated ProviderStateRefresh latest_provider_refreshes = 12;
+  // typed_delivery_failures 列出 PaymentDetail 关联的 DeliveryFailure。
+  repeated DeliveryFailure typed_delivery_failures = 13;
+  // disputes 列出 PaymentDetail 关联的 Dispute。
+  repeated Dispute disputes = 14;
+  // settlements 以契约字段约定的单位表示对应流程的持续时间或上限。
+  repeated SettlementStatement settlements = 15;
+  // risk_decision 记录 PaymentDetail 对应审核或执行流程的结论。
+  optional PaymentRiskDecision risk_decision = 16;
+
+  // refunds_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState refunds_state = 20;
+  // callbacks_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState callbacks_state = 21;
+  // events_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState events_state = 22;
+  // delivery_failures_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState delivery_failures_state = 23;
+  // governance_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState governance_state = 24;
+  // subscriptions_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState subscriptions_state = 25;
+  // reconciliation_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState reconciliation_state = 26;
+  // refund_requests_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState refund_requests_state = 27;
+  // disputes_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState disputes_state = 28;
+  // settlements_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState settlements_state = 29;
+  // risk_decision_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  PaymentDetailSectionState risk_decision_state = 30;
+}
+
+// GetUserPaymentSummaryRequest 标识待查询的 UserPaymentSummary。
+message GetUserPaymentSummaryRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // app_id 限定 GetUserPaymentSummary 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// UserPaymentCurrencySummary 表示面向查询的汇总投影。
+message UserPaymentCurrencySummary {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1;
+  // successful_payment_count 记录 UserPaymentCurrencySummary 中符合对应条件的数量。
+  uint64 successful_payment_count = 2;
+  // successful_paid_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 successful_paid_amount = 3;
+  // successful_refunded_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 successful_refunded_amount = 4;
+}
+
+// UserPaymentLatestPaymentSummary exposes only the latest Payment facts needed by User Administration.
+message UserPaymentLatestPaymentSummary {
+  // payment_no 是 UserPaymentLatestPaymentSummary 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // status 表示 UserPaymentLatestPaymentSummary 当前可观察的生命周期状态。
+  Payment.Status status = 2;
+  // occurred_at 记录 UserPaymentLatestPaymentSummary 对应业务阶段的时间点。
+  google.protobuf.Timestamp occurred_at = 3;
+}
+
+// UserPaymentActiveSubscriptionSummary exposes only current entitlement facts needed by User Administration.
+message UserPaymentActiveSubscriptionSummary {
+  // plan_id 标识关联的 Plan。
+  uint32 plan_id = 1;
+  // active 显式表示 UserPaymentActiveSubscriptionSummary 是否满足该条件。
+  bool active = 2;
+  // expired_at 指定 UserPaymentActiveSubscriptionSummary 失效的时间点。
+  optional google.protobuf.Timestamp expired_at = 3;
+}
+
+// UserPaymentSummary is Payment-owned and can be embedded by User Administration without copying facts.
+message UserPaymentSummary {
+  // payment_count 记录 UserPaymentSummary 中符合对应条件的数量。
+  uint64 payment_count = 1;
+  // currency_summaries 列出 UserPaymentSummary 关联的 UserPaymentCurrencySummary。
+  repeated UserPaymentCurrencySummary currency_summaries = 2;
+  // latest_payment_summary 承载 UserPaymentSummary 关联的 UserPaymentLatestPaymentSummary。
+  optional UserPaymentLatestPaymentSummary latest_payment_summary = 3;
+  // active_subscription_summaries 列出 UserPaymentSummary 关联的 UserPaymentActiveSubscriptionSummary。
+  repeated UserPaymentActiveSubscriptionSummary active_subscription_summaries = 4;
+}

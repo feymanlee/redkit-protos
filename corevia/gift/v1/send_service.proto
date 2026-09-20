@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "gift/v1/send.proto";
+
+// 赠礼服务。
+service GiftSendService {
+  // 发送礼物。
+  rpc SendGift(SendGiftRequest) returns (GiftSendRecord) {}
+  // 查询送礼记录详情。
+  rpc GetGiftSendRecord(GetGiftSendRecordRequest) returns (GiftSendRecord) {}
+  // 查询 Gift-owned 送礼工作台详情。
+  rpc GetGiftSendWorkbenchDetail(GetGiftSendRecordRequest) returns (GiftSendWorkbenchDetail) {}
+  // 使用权威下游事实对账一笔既有 Send；不得重放送礼或扣款命令。
+  rpc ReconcileGiftSend(ReconcileGiftSendRequest) returns (ReconcileGiftSendResponse) {}
+  // 使用背包礼物发送礼物。
+  rpc SendBackpackGift(SendBackpackGiftRequest) returns (GiftSendRecord) {}
+  // 查询礼物发送记录列表。
+  rpc ListGiftSendRecords(ListGiftSendRecordsRequest) returns (ListGiftSendRecordResponse) {}
+}

@@ -1,0 +1,300 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "payment/v1/channel.proto";
+import "payment/v1/payment_types.proto";
+import "validate/validate.proto";
+
+// 支付渠道服务。
+service PaymentChannelService {
+  // 创建 PaymentChannel。
+  rpc CreatePaymentChannel(AdminCreatePaymentChannelRequest) returns (.payment.v1.PaymentChannel) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-channels"
+      body: "*"
+    };
+  }
+  // 创建 ChannelRevision。
+  rpc CreateChannelRevision(AdminCreateChannelRevisionRequest) returns (.payment.v1.PaymentChannelRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-channels/{channel_id}/revisions"
+      body: "*"
+    };
+  }
+  // 探测 ChannelRevision。
+  rpc ProbeChannelRevision(AdminProbeChannelRevisionRequest) returns (.payment.v1.ChannelProbe) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-channel-revisions/{revision_id}:probe"
+      body: "*"
+    };
+  }
+  // 查询 PaymentChannel 列表。
+  rpc ListPaymentChannels(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListPaymentChannelResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-channels"};
+  }
+  // 查询 ChannelRevision 列表。
+  rpc ListChannelRevisions(AdminListChannelRevisionsRequest) returns (.payment.v1.ListChannelRevisionResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-channels/{channel_id}/revisions"};
+  }
+  // 创建 RoutingPolicyRevision。
+  rpc CreateRoutingPolicyRevision(AdminCreateRoutingPolicyRevisionRequest) returns (.payment.v1.RoutingPolicyRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-routing-policy-revisions"
+      body: "*"
+    };
+  }
+  // 提交 ChannelPublication。
+  rpc SubmitChannelPublication(AdminSubmitChannelPublicationRequest) returns (.payment.v1.ChannelPublication) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-channel-publications"
+      body: "*"
+    };
+  }
+  // 复核 ChannelPublication。
+  rpc ReviewChannelPublication(AdminReviewChannelPublicationRequest) returns (.payment.v1.ChannelPublication) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-channel-publications/{publication_id}:review"
+      body: "*"
+    };
+  }
+  // 查询 ChannelPublication 列表。
+  rpc ListChannelPublications(AdminListChannelPublicationsRequest) returns (.payment.v1.ListChannelPublicationResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-channel-publications"};
+  }
+  // 查询 RoutingPolicyRevision 列表。
+  rpc ListRoutingPolicyRevisions(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListRoutingPolicyRevisionResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-routing-policy-revisions"};
+  }
+  // 预览 PaymentRouting。
+  rpc PreviewPaymentRouting(AdminPreviewPaymentRoutingRequest) returns (.payment.v1.PaymentRoutingDecision) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-routing:preview"
+      body: "*"
+    };
+  }
+  // 查询当前代码版本注册的 Provider 能力上限。
+  rpc ListProviderCapabilitySupport(google.protobuf.Empty) returns (.payment.v1.ListProviderCapabilitySupportResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-provider-capabilities"};
+  }
+}
+
+// AdminChannelRevisionDraft 承载管理端编辑 Channel Revision Draft 的可变字段。
+message AdminChannelRevisionDraft {
+  // merchant_id 标识关联的 Merchant。
+  string merchant_id = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  // channel_app_id 标识支付 Provider 为当前 Channel 分配的应用身份。
+  string channel_app_id = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  // sandbox 显式表示 ChannelRevisionDraft 是否满足该条件。
+  bool sandbox = 3;
+  // secret_reference 仅引用外部 Secret，不在契约中承载明文密钥。
+  optional string secret_reference = 4 [(validate.rules).string.max_len = 512];
+  // public_config 承载可公开给运行时使用的 Channel 配置，不得包含密钥。
+  optional string public_config = 5 [(validate.rules).string.max_len = 8192];
+  // capabilities 列出 ChannelRevisionDraft 关联的 ChannelCapability。
+  repeated .payment.v1.ChannelCapability capabilities = 6 [(validate.rules).repeated = {
+    min_items: 1
+    unique: true
+    items: {
+      enum: {
+        defined_only: true
+        not_in: [0]
+      }
+    }
+  }];
+  // valid_from 指定 ChannelRevisionDraft 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp valid_from = 7;
+  // valid_until 指定 ChannelRevisionDraft 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp valid_until = 8;
+  // icon_file_id 标识关联的 IconFile。
+  optional uint64 icon_file_id = 9;
+  // remark 提供 ChannelRevisionDraft 的补充说明。
+  optional string remark = 10 [(validate.rules).string.max_len = 1000];
+}
+
+// AdminCreatePaymentChannelRequest 定义创建 PaymentChannel 的幂等命令参数。
+message AdminCreatePaymentChannelRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  // method 指定 CreatePaymentChannel 使用的 PaymentMethod。
+  .payment.v1.PaymentMethod method = 2 [(validate.rules).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  // initial_revision 标识 CreatePaymentChannel 所采用的契约或资源版本。
+  AdminChannelRevisionDraft initial_revision = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).message.required = true
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 1000
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 5 [(validate.rules).string.max_len = 120];
+}
+
+// AdminCreateChannelRevisionRequest 定义创建 ChannelRevision 的幂等命令参数。
+message AdminCreateChannelRevisionRequest {
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint32.gt = 0
+  ];
+  // draft 承载 CreateChannelRevision 关联的 AdminChannelRevisionDraft。
+  AdminChannelRevisionDraft draft = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).message.required = true
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 1000
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 4 [(validate.rules).string.max_len = 120];
+}
+
+// AdminProbeChannelRevisionRequest 定义执行 ProbeChannelRevision 的幂等管理命令参数。
+message AdminProbeChannelRevisionRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 1000
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 3 [(validate.rules).string.max_len = 120];
+}
+
+// AdminListChannelRevisionsRequest 定义 ChannelRevisions 的筛选与分页参数。
+message AdminListChannelRevisionsRequest {
+  // channel_id 标识关联的 Channel。
+  uint32 channel_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint32.gt = 0
+  ];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminCreateRoutingPolicyRevisionRequest 定义创建 RoutingPolicyRevision 的幂等命令参数。
+message AdminCreateRoutingPolicyRevisionRequest {
+  // rules 列出 CreateRoutingPolicyRevision 关联的 PaymentRoutingRule。
+  repeated .payment.v1.PaymentRoutingRule rules = 1 [(validate.rules).repeated.min_items = 1];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 1000
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 3 [(validate.rules).string.max_len = 120];
+}
+
+// AdminSubmitChannelPublicationRequest 定义提交 ChannelPublication 的幂等管理命令参数。
+message AdminSubmitChannelPublicationRequest {
+  // target_type 区分 SubmitChannelPublication 的业务类型。
+  .payment.v1.ChannelPublicationTargetType target_type = 1 [(validate.rules).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  // action 指定本次状态推进采用的业务动作。
+  .payment.v1.ChannelPublicationAction action = 2 [(validate.rules).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  // channel_revision_id 标识关联的 ChannelRevision。
+  optional uint64 channel_revision_id = 3 [(validate.rules).uint64.gt = 0];
+  // routing_policy_revision_id 标识关联的 RoutingPolicyRevision。
+  optional uint64 routing_policy_revision_id = 4 [(validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 1000
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 6 [(validate.rules).string.max_len = 120];
+}
+
+// AdminReviewChannelPublicationRequest 定义审核 ChannelPublication 的幂等管理命令参数。
+message AdminReviewChannelPublicationRequest {
+  // publication_id 标识关联的 Publication。
+  uint64 publication_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // decision 记录 ReviewChannelPublication 对应审核或执行流程的结论。
+  .payment.v1.ChannelPublicationDecision decision = 2 [(validate.rules).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 1000
+    }
+  ];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 4 [(validate.rules).string.max_len = 120];
+}
+
+// AdminListChannelPublicationsRequest 定义 ChannelPublications 的筛选与分页参数。
+message AdminListChannelPublicationsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // status 表示 ListChannelPublications 当前可观察的生命周期状态。
+  optional .payment.v1.ChannelPublicationStatus status = 2 [(validate.rules).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+}
+
+// AdminPreviewPaymentRoutingRequest 定义执行 PreviewPaymentRouting 的命令参数。
+message AdminPreviewPaymentRoutingRequest {
+  // biz_type 区分 PreviewPaymentRouting 的业务类型。
+  string biz_type = 1 [(validate.rules).string.max_len = 64];
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 2 [(validate.rules).string = {min_len: 1, max_len: 32}];
+  // method 指定 PreviewPaymentRouting 使用的 PaymentMethod。
+  .payment.v1.PaymentMethod method = 3 [(validate.rules).enum.defined_only = true];
+  // client_platform 承载 PreviewPaymentRouting 关联的 RoutingClientPlatform。
+  .payment.v1.RoutingClientPlatform client_platform = 4 [(validate.rules).enum.defined_only = true];
+  // stable_key 在约定作用域内稳定定位 PreviewPaymentRouting。
+  string stable_key = 5 [(validate.rules).string = {min_len: 1, max_len: 200}];
+}

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "errors/errors.proto";
+
+// 礼物错误原因。
+enum GiftErrorReason {
+  option (errors.default_code) = 500;
+
+  // bad 请求。
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // unauthorized。
+  UNAUTHORIZED = 100 [(errors.code) = 401];
+  // 支付 required。
+  PAYMENT_REQUIRED = 200 [(errors.code) = 402];
+  // forbidden。
+  FORBIDDEN = 300 [(errors.code) = 403];
+  // not found。
+  NOT_FOUND = 400 [(errors.code) = 404];
+  // 礼物 not found。
+  GIFT_NOT_FOUND = 401 [(errors.code) = 404];
+  // Reward Item 幂等身份与原请求冲突。
+  IDEMPOTENCY_CONFLICT = 402 [(errors.code) = 409];
+  // conflict。
+  CONFLICT = 900 [(errors.code) = 409];
+  // 站内 server 错误。
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+  // service unavailable。
+  SERVICE_UNAVAILABLE = 2300 [(errors.code) = 503];
+}

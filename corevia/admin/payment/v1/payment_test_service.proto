@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_contract.proto";
+import "payment/v1/payment_types.proto";
+import "payment/v1/channel.proto";
+import "validate/validate.proto";
+
+// Payment 测试控制台服务。只允许非生产 Admin 注册。
+service PaymentTestService {
+  // 创建测试支付单。
+  rpc CreatePayment(AdminCreatePaymentRequest) returns (.payment.v1.Payment) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-test/payments"
+      body: "*"
+    };
+  }
+  // 模拟测试支付成功。
+  rpc SimulatePaymentSuccess(AdminSimulatePaymentSuccessRequest) returns (.payment.v1.Payment) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-test/payments/{payment_no}:simulate-success"
+      body: "*"
+    };
+  }
+}
+
+// AdminCreatePaymentRequest 定义创建 Payment 的命令参数。
+message AdminCreatePaymentRequest {
+  // data 承载 CreatePayment 对应阶段的结构化业务内容。
+  AdminPaymentPatch data = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminPaymentPatch 承载 Payment 的局部管理修正；presence 表示是否修改。
+message AdminPaymentPatch {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // payment_no 是 PaymentPatch 对外关联与审计使用的业务编号。
+  optional string payment_no = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // order_no 是 PaymentPatch 对外关联与审计使用的业务编号。
+  optional string order_no = 3 [(validate.rules).string.max_len = 128];
+  // subject 标识触发或负责 PaymentPatch 对应业务阶段的主体。
+  optional string subject = 4 [(validate.rules).string.max_len = 256];
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gt = 0];
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 6 [(validate.rules).string = {min_len: 1, max_len: 32}];
+  // provider 标识本次能力使用的外部 Provider。
+  .payment.v1.PaymentProvider provider = 7 [(validate.rules).enum.defined_only = true];
+  // method 指定 PaymentPatch 使用的 PaymentMethod。
+  optional .payment.v1.PaymentMethod method = 8 [(validate.rules).enum.defined_only = true];
+  // biz_type 区分 PaymentPatch 的业务类型。
+  optional string biz_type = 9 [(validate.rules).string.max_len = 64];
+  // biz_id 标识关联的 Biz。
+  optional string biz_id = 10 [(validate.rules).string.max_len = 128];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 11 [(validate.rules).string.max_len = 128];
+  // notify_url 指定 PaymentPatch 访问或跳转使用的目标地址。
+  optional string notify_url = 12 [(validate.rules).string.max_len = 2048];
+  // return_url 指定 PaymentPatch 访问或跳转使用的目标地址。
+  optional string return_url = 13 [(validate.rules).string.max_len = 2048];
+  // metadata 携带 PaymentPatch 的扩展元数据，不作为核心业务事实。
+  optional string metadata = 14 [(validate.rules).string.max_len = 8192];
+  // expire_at 指定 PaymentPatch 失效的时间点。
+  optional google.protobuf.Timestamp expire_at = 15;
+  // client_platform 承载 PaymentPatch 关联的 RoutingClientPlatform。
+  optional .payment.v1.RoutingClientPlatform client_platform = 16 [(validate.rules).enum.defined_only = true];
+}
+
+// AdminSimulatePaymentSuccessRequest 定义执行 SimulatePaymentSuccess 的命令参数。
+message AdminSimulatePaymentSuccessRequest {
+  // payment_no 是 SimulatePaymentSuccess 对外关联与审计使用的业务编号。
+  string payment_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}

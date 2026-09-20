@@ -1,0 +1,231 @@
+syntax = "proto3";
+
+package support.messaging.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// SmsProvider 表示短信渠道提供方。
+enum SmsProvider {
+  // 未指定渠道。
+  SMS_PROVIDER_UNSPECIFIED = 0;
+  // 本地模拟渠道。
+  SMS_PROVIDER_SIMULATED = 1;
+  // 阿里云短信。
+  SMS_PROVIDER_ALIYUN = 2;
+  // 腾讯云短信。
+  SMS_PROVIDER_TENCENT = 3;
+}
+
+// SmsMessageStatus 表示短信发送状态。
+enum SmsMessageStatus {
+  // 未指定状态。
+  SMS_MESSAGE_STATUS_UNSPECIFIED = 0;
+  // 待发送。
+  SMS_MESSAGE_STATUS_PENDING = 1;
+  // 发送成功。
+  SMS_MESSAGE_STATUS_SENT = 2;
+  // 发送失败。
+  SMS_MESSAGE_STATUS_FAILED = 3;
+}
+
+// SmsDeliveryFailureCategory is the safe failure class derived from an attempt.
+enum SmsDeliveryFailureCategory {
+  // No failure category is available.
+  SMS_DELIVERY_FAILURE_CATEGORY_UNSPECIFIED = 0;
+  // The attempt succeeded.
+  SMS_DELIVERY_FAILURE_CATEGORY_NONE = 1;
+  // The provider failure allowed fallback or retry.
+  SMS_DELIVERY_FAILURE_CATEGORY_RETRYABLE_PROVIDER = 2;
+  // The provider rejected the request without retry eligibility.
+  SMS_DELIVERY_FAILURE_CATEGORY_PROVIDER_REJECTED = 3;
+}
+
+// SmsMessage 记录一次逻辑短信请求。
+message SmsMessage {
+  // 记录 ID。
+  uint64 id = 1;
+  // App ID。
+  common.v1.AppId app_id = 2;
+  // 用户 ID。
+  uint64 user_id = 3;
+  // 消息号。
+  string message_no = 4;
+  // 脱敏手机号。
+  string masked_phone = 5;
+  // 模板代码。
+  string template_code = 6;
+  // 状态。
+  SmsMessageStatus status = 7;
+  // 最终使用的渠道。
+  SmsProvider selected_provider = 8;
+  // 幂等键。
+  string idempotency_key = 9;
+  // 请求 ID。
+  string request_id = 10;
+  // 失败原因。
+  string failure_reason = 11;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 12;
+  // 发送时间。
+  google.protobuf.Timestamp sent_at = 13;
+  // 发送时固定的 Support Configuration Release ID。
+  uint64 configuration_release_id = 14;
+  // 最终成功或最后尝试的 SMS Channel Revision ID。
+  uint64 channel_revision_id = 15;
+  // 所有投递尝试共用的 SMS Template Revision ID。
+  uint64 template_revision_id = 16;
+}
+
+// SmsDeliveryAttempt 记录一次具体渠道投递。
+message SmsDeliveryAttempt {
+  // 记录 ID。
+  uint64 id = 1;
+  // App ID。
+  common.v1.AppId app_id = 2;
+  // 消息号。
+  string message_no = 3;
+  // 渠道。
+  SmsProvider provider = 4;
+  // 尝试序号。
+  uint32 attempt_no = 5;
+  // 是否成功。
+  bool succeeded = 6;
+  // 渠道消息 ID。
+  string provider_message_id = 7;
+  // 错误是否可重试。
+  bool retryable = 8;
+  // 渠道错误码。
+  string error_code = 9;
+  // 脱敏错误信息。
+  string error_message = 10;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 11;
+  // Safe failure category derived from succeeded and retryable.
+  SmsDeliveryFailureCategory failure_category = 12;
+  // Parent Message 固定的 Support Configuration Release ID。
+  uint64 configuration_release_id = 13;
+  // 本次投递实际使用的 SMS Channel Revision ID。
+  uint64 channel_revision_id = 14;
+  // Parent Message 固定的 SMS Template Revision ID。
+  uint64 template_revision_id = 15;
+}
+
+// SendTemplateSmsRequest 请求发送模板短信。
+message SendTemplateSmsRequest {
+  // App ID。
+  common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // E.164 格式手机号。
+  string phone = 3;
+  // 业务模板代码。
+  string template_code = 4;
+  // 模板参数。
+  map<string, string> parameters = 5;
+  // 幂等键。
+  string idempotency_key = 6;
+  // 请求 ID。
+  string request_id = 7;
+}
+
+// SendTemplateSmsResponse 返回短信发送结果。
+message SendTemplateSmsResponse {
+  // 消息记录。
+  SmsMessage message = 1;
+}
+
+// GetSmsMessageByIdempotencyRequest 用于调用方 timeout 结果不确定时查询一个持久化 Message。
+message GetSmsMessageByIdempotencyRequest {
+  // 具体 App 身份；metadata 必须携带相同 App。
+  common.v1.AppId app_id = 1;
+  // 原始 App 作用域幂等键。
+  string idempotency_key = 2;
+}
+
+// ListSmsMessagesResponse 返回短信消息列表。
+message ListSmsMessagesResponse {
+  // 消息项。
+  repeated SmsMessage items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// SmsMessageFilter defines the typed filters supported by the observation workbench.
+message SmsMessageFilter {
+  // status filters one durable message status.
+  optional SmsMessageStatus status = 1;
+  // provider filters the provider selected by the terminal message.
+  optional SmsProvider provider = 2;
+  // template_code filters one stable business template code.
+  string template_code = 3;
+  // message_no filters one exact logical message identity.
+  string message_no = 4;
+  // user_id filters one exact User identity.
+  uint64 user_id = 5;
+  // created_from includes messages created at or after this instant.
+  google.protobuf.Timestamp created_from = 6;
+  // created_to includes messages created at or before this instant.
+  google.protobuf.Timestamp created_to = 7;
+  // recipient_phone is backend-normalized and matched as one exact E.164 value.
+  string recipient_phone = 8;
+}
+
+// ListSmsMessagesRequest carries App scope, typed filters, and bounded paging.
+message ListSmsMessagesRequest {
+  // Concrete App identity.
+  common.v1.AppId app_id = 1;
+  // Optional typed observation filters.
+  SmsMessageFilter filter = 2;
+  // Bounded server-side paging.
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListSmsDeliveryAttemptsResponse 返回短信投递明细。
+message ListSmsDeliveryAttemptsResponse {
+  // 投递项。
+  repeated SmsDeliveryAttempt items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// ListSmsDeliveryAttemptsRequest selects attempts for one logical message.
+message ListSmsDeliveryAttemptsRequest {
+  // Concrete App identity.
+  common.v1.AppId app_id = 1;
+  // Exact logical message identity.
+  string message_no = 2;
+  // Bounded server-side paging.
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// RevealSmsRecipientPhoneRequest explicitly selects FULL display for one Message.
+message RevealSmsRecipientPhoneRequest {
+  // Concrete App identity.
+  common.v1.AppId app_id = 1;
+  // Exact logical message identity.
+  string message_no = 2;
+}
+
+// RevealSmsRecipientPhoneResponse returns one complete audited Recipient Phone.
+message RevealSmsRecipientPhoneResponse {
+  // Exact logical message identity.
+  string message_no = 1;
+  // Complete backend-normalized E.164 Recipient Phone.
+  string recipient_phone = 2;
+}
+
+// SmsService 提供受模板约束的短信发送和审计查询。
+service SmsService {
+  // 发送模板短信。
+  rpc SendTemplateSms(SendTemplateSmsRequest) returns (SendTemplateSmsResponse);
+  // 按原始幂等键查询已受理的逻辑消息，用于调用方在 timeout 后收敛结果。
+  rpc GetSmsMessageByIdempotency(GetSmsMessageByIdempotencyRequest) returns (SmsMessage);
+  // 查询短信消息。
+  rpc ListSmsMessages(ListSmsMessagesRequest) returns (ListSmsMessagesResponse);
+  // 查询渠道投递明细。
+  rpc ListSmsDeliveryAttempts(ListSmsDeliveryAttemptsRequest) returns (ListSmsDeliveryAttemptsResponse);
+  // 显式读取一条消息的完整 Recipient Phone。
+  rpc RevealSmsRecipientPhone(RevealSmsRecipientPhoneRequest) returns (RevealSmsRecipientPhoneResponse);
+}

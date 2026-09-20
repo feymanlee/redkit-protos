@@ -1,0 +1,538 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/channel.proto";
+import "payment/v1/subscription.proto";
+import "validate/validate.proto";
+
+// PurchaseState 刻画对应资源的生命周期状态。
+enum PurchaseState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PURCHASE_STATE_UNSPECIFIED = 0;
+  // 需要人工审核、补充材料或执行明确处置后才能继续。
+  PURCHASE_STATE_ACTION_REQUIRED = 1;
+  // 正在处理中，尚未形成终态。
+  PURCHASE_STATE_PROCESSING = 2;
+  // PURCHASE_STATE_FULFILLING 表示资源处于对应业务阶段。
+  PURCHASE_STATE_FULFILLING = 3;
+  // 处理已成功完成。
+  PURCHASE_STATE_COMPLETED = 4;
+  // 当前可供业务流程选择或使用。
+  PURCHASE_STATE_RETRY_AVAILABLE = 5;
+  // 需要人工审核、补充材料或执行明确处置后才能继续。
+  PURCHASE_STATE_ATTENTION_REQUIRED = 6;
+  // 当前流程已关闭，不再接受新的处理动作。
+  PURCHASE_STATE_CLOSED = 7;
+  // 相关金额已经全部退款。
+  PURCHASE_STATE_PARTIALLY_REFUNDED = 8;
+  // 相关金额已经全部退款。
+  PURCHASE_STATE_REFUNDED = 9;
+}
+
+// PurchasePaymentState 刻画对应资源的生命周期状态。
+enum PurchasePaymentState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PURCHASE_PAYMENT_STATE_UNSPECIFIED = 0;
+  // 资源已创建，尚未进入后续处理阶段。
+  PURCHASE_PAYMENT_STATE_CREATED = 1;
+  // 已受理并等待后续处理。
+  PURCHASE_PAYMENT_STATE_PENDING = 2;
+  // 正在处理中，尚未形成终态。
+  PURCHASE_PAYMENT_STATE_PROCESSING = 3;
+  // 处理已成功完成。
+  PURCHASE_PAYMENT_STATE_SUCCEEDED = 4;
+  // 处理失败；是否可重试由具体失败原因决定。
+  PURCHASE_PAYMENT_STATE_FAILED = 5;
+  // 当前流程已关闭，不再接受新的处理动作。
+  PURCHASE_PAYMENT_STATE_CLOSED = 6;
+  // 有效期已结束，不再接受后续使用。
+  PURCHASE_PAYMENT_STATE_EXPIRED = 7;
+  // PURCHASE_PAYMENT_STATE_REFUNDING 表示资源处于对应业务阶段。
+  PURCHASE_PAYMENT_STATE_REFUNDING = 8;
+  // 相关金额已经全部退款。
+  PURCHASE_PAYMENT_STATE_PARTIALLY_REFUNDED = 9;
+  // 相关金额已经全部退款。
+  PURCHASE_PAYMENT_STATE_REFUNDED = 10;
+}
+
+// PurchaseFulfillmentState 刻画对应资源的生命周期状态。
+enum PurchaseFulfillmentState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PURCHASE_FULFILLMENT_STATE_UNSPECIFIED = 0;
+  // PURCHASE_FULFILLMENT_STATE_NOT_STARTED 表示资源处于对应业务阶段。
+  PURCHASE_FULFILLMENT_STATE_NOT_STARTED = 1;
+  // 正在处理中，尚未形成终态。
+  PURCHASE_FULFILLMENT_STATE_PROCESSING = 2;
+  // 处理已成功完成。
+  PURCHASE_FULFILLMENT_STATE_SUCCEEDED = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  PURCHASE_FULFILLMENT_STATE_FAILED = 4;
+}
+
+// PurchaseAllowedAction 区分可执行的状态推进动作。
+enum PurchaseAllowedAction {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PURCHASE_ALLOWED_ACTION_UNSPECIFIED = 0;
+  // PURCHASE_ALLOWED_ACTION_EXECUTE_PAYMENT 执行 EXECUTE_PAYMENT 业务动作。
+  PURCHASE_ALLOWED_ACTION_EXECUTE_PAYMENT = 1;
+  // PURCHASE_ALLOWED_ACTION_WAIT 执行 WAIT 业务动作。
+  PURCHASE_ALLOWED_ACTION_WAIT = 2;
+  // PURCHASE_ALLOWED_ACTION_RETRY_PAYMENT 执行 RETRY_PAYMENT 业务动作。
+  PURCHASE_ALLOWED_ACTION_RETRY_PAYMENT = 3;
+  // PURCHASE_ALLOWED_ACTION_CONTACT_SUPPORT 执行 CONTACT_SUPPORT 业务动作。
+  PURCHASE_ALLOWED_ACTION_CONTACT_SUPPORT = 4;
+  // PURCHASE_ALLOWED_ACTION_FINISH_STORE_PURCHASE 执行 FINISH_STORE_PURCHASE 业务动作。
+  PURCHASE_ALLOWED_ACTION_FINISH_STORE_PURCHASE = 5;
+}
+
+// RefundGuidance 定义对应业务维度允许使用的离散取值。
+enum RefundGuidance {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REFUND_GUIDANCE_UNSPECIFIED = 0;
+  // REFUND_GUIDANCE_NO_ACTION 指示调用方执行 NO_ACTION 后续动作。
+  REFUND_GUIDANCE_NO_ACTION = 1;
+  // REFUND_GUIDANCE_CONTACT_SUPPORT 指示调用方执行 CONTACT_SUPPORT 后续动作。
+  REFUND_GUIDANCE_CONTACT_SUPPORT = 2;
+  // REFUND_GUIDANCE_MANAGE_IN_STORE 指示调用方执行 MANAGE_IN_STORE 后续动作。
+  REFUND_GUIDANCE_MANAGE_IN_STORE = 3;
+}
+
+// AppSdkPaymentAction 描述客户端调用 App SDK 发起支付所需的参数。
+message AppSdkPaymentAction {
+  // app_id 限定 AppSdkPaymentAction 所属 App；UNSPECIFIED 不表示跨 App。
+  optional string app_id = 1;
+  // partner_id 标识关联的 Partner。
+  optional string partner_id = 2;
+  // prepay_id 标识关联的 Prepay。
+  optional string prepay_id = 3;
+  // package_value 记录 App SDK 支付流程使用的应用包身份。
+  optional string package_value = 4;
+  // nonce 提供防重放校验使用的一次性随机值。
+  optional string nonce = 5;
+  // timestamp 记录该事实发生的时间点。
+  optional string timestamp = 6;
+  // signature 承载敏感凭据或校验材料，不得写入普通日志。
+  optional string signature = 7;
+  // order_string 指定查询结果采用的排序表达式。
+  optional string order_string = 8;
+}
+
+// H5RedirectPaymentAction 描述客户端跳转 H5 收银台所需的目标与参数。
+message H5RedirectPaymentAction {
+  // url 指定 H5RedirectPaymentAction 访问或跳转使用的目标地址。
+  string url = 1;
+}
+
+// QrCodePaymentAction 描述客户端展示 Provider 支付二维码所需的数据。
+message QrCodePaymentAction {
+  // code_url 指定 QrCodePaymentAction 访问或跳转使用的目标地址。
+  string code_url = 1;
+}
+
+// StorePurchasePaymentAction 描述客户端继续 Store Purchase 所需的服务端订单身份。
+message StorePurchasePaymentAction {
+  // product_id 标识关联的 Product。
+  string product_id = 1;
+}
+
+// PaymentAction 在客户端可执行的支付动作中选择一种载荷。
+message PaymentAction {
+  // PaymentAction 在以下 action 分支中选择一种。
+  oneof action {
+    // app_sdk 承载 PaymentAction 关联的 AppSdkPaymentAction。
+    AppSdkPaymentAction app_sdk = 1;
+    // h5_redirect 承载 PaymentAction 关联的 H5RedirectPaymentAction。
+    H5RedirectPaymentAction h5_redirect = 2;
+    // qr_code 承载 Provider 返回的支付二维码内容。
+    QrCodePaymentAction qr_code = 3;
+    // store_purchase 承载 PaymentAction 关联的 StorePurchasePaymentAction。
+    StorePurchasePaymentAction store_purchase = 4;
+    // no_action 指定本次状态推进采用的业务动作。
+    google.protobuf.Empty no_action = 5;
+  }
+}
+
+// PaymentAttemptSummary 只公开历史 Attempt 的用户可见状态，不包含渠道与路由身份。
+message PaymentAttemptSummary {
+  // payment_no 是 PaymentAttemptSummary 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // attempt_number 是 PaymentAttemptSummary 对外关联与审计使用的业务编号。
+  uint32 attempt_number = 2;
+  // payment_state 表示 PaymentAttemptSummary 当前可观察的生命周期状态。
+  PurchasePaymentState payment_state = 3;
+  // fulfillment_state 表示 PaymentAttemptSummary 当前可观察的生命周期状态。
+  PurchaseFulfillmentState fulfillment_state = 4;
+  // created_at 记录 PaymentAttemptSummary 的创建时间。
+  google.protobuf.Timestamp created_at = 5;
+  // updated_at 记录 PaymentAttemptSummary 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+// PurchaseView 表示面向查询的只读投影。
+message PurchaseView {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1;
+  // order_no 是 PurchaseView 对外关联与审计使用的业务编号。
+  string order_no = 2;
+  // offer_code 提供 PurchaseView 对外稳定使用的业务编码。
+  string offer_code = 3;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 4;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 5;
+  // diamond_amount 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 diamond_amount = 6;
+  // payment_no 是 PurchaseView 对外关联与审计使用的业务编号。
+  string payment_no = 7;
+  // attempt_number 是 PurchaseView 对外关联与审计使用的业务编号。
+  uint32 attempt_number = 8;
+  // payment_state 表示 PurchaseView 当前可观察的生命周期状态。
+  PurchasePaymentState payment_state = 9;
+  // fulfillment_state 表示 PurchaseView 当前可观察的生命周期状态。
+  PurchaseFulfillmentState fulfillment_state = 10;
+  // state 表示 PurchaseView 当前可观察的生命周期状态。
+  PurchaseState state = 11;
+  // allowed_actions 列出 PurchaseView 关联的 PurchaseAllowedAction。
+  repeated PurchaseAllowedAction allowed_actions = 12;
+  // payment_action 指定本次状态推进采用的业务动作。
+  optional PaymentAction payment_action = 13;
+  // expires_at 指定 PurchaseView 失效的时间点。
+  google.protobuf.Timestamp expires_at = 14;
+  // updated_at 记录 PurchaseView 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 15;
+  // previous_attempts 记录 PurchaseView 中符合对应条件的数量。
+  repeated PaymentAttemptSummary previous_attempts = 16;
+  // purchase_type 区分 PurchaseView 的业务类型。
+  PurchaseType purchase_type = 17;
+  // subscription_duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  uint32 subscription_duration_days = 18;
+  // refund_guidance 承载 PurchaseView 关联的 RefundGuidance。
+  RefundGuidance refund_guidance = 19;
+  // refunded_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 refunded_amount = 20;
+  // purchase_reference 记录外部系统或关联流程提供的引用标识。
+  string purchase_reference = 21;
+}
+
+// SubscriptionOffer 表示消费端可购买的 Subscription Offer 与展示价格。
+message SubscriptionOffer {
+  // offer_code 提供 SubscriptionOffer 对外稳定使用的业务编码。
+  string offer_code = 1;
+  // display_name 提供 SubscriptionOffer 面向展示或识别的名称。
+  string display_name = 2;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 3;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 4;
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  uint32 duration_days = 5;
+  // mode 指定 SubscriptionOffer 使用的 SubscriptionMode。
+  SubscriptionMode mode = 6;
+}
+
+// ListSubscriptionOffersRequest 定义 SubscriptionOffers 的筛选与分页参数。
+message ListSubscriptionOffersRequest {
+  // client_platform 承载 ListSubscriptionOffers 关联的 RoutingClientPlatform。
+  RoutingClientPlatform client_platform = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// ListSubscriptionOffersResponse 返回 SubscriptionOffers 结果集合及分页信息。
+message ListSubscriptionOffersResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated SubscriptionOffer items = 1;
+}
+
+// Consumer 只提交稳定购买身份、公开 Option、客户端平台与可选 Return Target Code。
+message StartRechargeCheckoutRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // payment_option_code 提供 StartRechargeCheckout 对外稳定使用的业务编码。
+  string payment_option_code = 2 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+  // client_platform 承载 StartRechargeCheckout 关联的 RoutingClientPlatform。
+  RoutingClientPlatform client_platform = 3 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // return_target 指定完成当前操作后允许返回的受控目标。
+  optional string return_target = 4 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+}
+
+// Consumer 只提交 Store Recharge 的稳定购买身份、公开 Offer 与客户端平台。
+message PrepareStoreRechargePurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // offer_code 提供 PrepareStoreRechargePurchase 对外稳定使用的业务编码。
+  string offer_code = 2 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+  // client_platform 承载 PrepareStoreRechargePurchase 关联的 RoutingClientPlatform。
+  RoutingClientPlatform client_platform = 3 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// VerifyStoreRechargePurchaseRequest 只接受稳定购买身份与 StoreKit/Play Billing 的最小凭证。
+// 客户端平台由已冻结的 Wallet Recharge Order 决定，不能在验单时改写。
+message VerifyStoreRechargePurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // store_purchase_evidence 提供支撑 VerifyStoreRechargePurchase 判断或处置的证明材料。
+  string store_purchase_evidence = 2 [(validate.rules).string = {min_len: 1, max_len: 65536}];
+}
+
+// ConfirmStoreRechargePurchaseCompletionRequest 仅在 iOS 客户端完成 StoreKit Transaction.finish 后确认。
+message ConfirmStoreRechargePurchaseCompletionRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// StoreRechargePurchaseAction 是通过 Payment 跨类型身份校验后返回的 Store 商品动作。
+message StoreRechargePurchaseAction {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1;
+  // offer_code 提供 StoreRechargePurchaseAction 对外稳定使用的业务编码。
+  string offer_code = 2;
+  // client_platform 承载 StoreRechargePurchaseAction 关联的 RoutingClientPlatform。
+  RoutingClientPlatform client_platform = 3;
+  // store_app_id 标识外部 Store 中承载该商品或订阅的应用。
+  string store_app_id = 4;
+  // sku 是外部商店或商品目录使用的稳定商品编码。
+  string sku = 5;
+}
+
+// PrepareAppleSubscriptionPurchaseRequest only contains the stable purchase identity and public Offer Code.
+message PrepareAppleSubscriptionPurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // offer_code 提供 PrepareAppleSubscriptionPurchase 对外稳定使用的业务编码。
+  string offer_code = 2 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+}
+
+// AppleSubscriptionPurchaseAction contains the server-frozen StoreKit product identity.
+message AppleSubscriptionPurchaseAction {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1;
+  // offer_code 提供 AppleSubscriptionPurchaseAction 对外稳定使用的业务编码。
+  string offer_code = 2;
+  // store_app_id 标识外部 Store 中承载该商品或订阅的应用。
+  string store_app_id = 3;
+  // sku 是外部商店或商品目录使用的稳定商品编码。
+  string sku = 4;
+  // StoreKit purchase(options: [.appAccountToken(...)]) 必须使用的服务端冻结 UUID。
+  string app_account_token = 5;
+}
+
+// VerifyAppleSubscriptionPurchaseRequest accepts only the signed StoreKit transaction from a prepared purchase.
+message VerifyAppleSubscriptionPurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // signed_purchase 承载 Store 签名的购买材料，属于敏感校验数据。
+  string signed_purchase = 2 [(validate.rules).string = {min_len: 1, max_len: 65536}];
+}
+
+// GetAppleSubscriptionManagementActionRequest 标识待查询的 AppleSubscriptionManagementAction。
+message GetAppleSubscriptionManagementActionRequest {}
+
+// AppleSubscriptionManagementAction 描述跳转 Apple Subscription 管理界面的客户端动作。
+message AppleSubscriptionManagementAction {
+  // url 指定 AppleSubscriptionManagementAction 访问或跳转使用的目标地址。
+  string url = 1;
+}
+
+// PrepareGoogleSubscriptionPurchaseRequest 仅包含稳定购买身份和公开 Offer Code。
+message PrepareGoogleSubscriptionPurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // offer_code 提供 PrepareGoogleSubscriptionPurchase 对外稳定使用的业务编码。
+  string offer_code = 2 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+}
+
+// GoogleSubscriptionPurchaseAction 包含服务端冻结的 Play Billing 商品和账户绑定。
+message GoogleSubscriptionPurchaseAction {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1;
+  // offer_code 提供 GoogleSubscriptionPurchaseAction 对外稳定使用的业务编码。
+  string offer_code = 2;
+  // store_app_id 标识外部 Store 中承载该商品或订阅的应用。
+  string store_app_id = 3;
+  // sku 是外部商店或商品目录使用的稳定商品编码。
+  string sku = 4;
+  // obfuscated_account_id 标识关联的 ObfuscatedAccount。
+  string obfuscated_account_id = 5;
+}
+
+// VerifyGoogleSubscriptionPurchaseRequest 仅接受已准备购买的 Play Billing Purchase Token。
+message VerifyGoogleSubscriptionPurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // purchase_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string purchase_token = 2 [(validate.rules).string = {min_len: 1, max_len: 65536}];
+}
+
+// GetGoogleSubscriptionManagementActionRequest 标识待查询的 GoogleSubscriptionManagementAction。
+message GetGoogleSubscriptionManagementActionRequest {}
+
+// GoogleSubscriptionManagementAction 描述跳转 Google Play Subscription 管理界面的客户端动作。
+message GoogleSubscriptionManagementAction {
+  // url 指定 GoogleSubscriptionManagementAction 访问或跳转使用的目标地址。
+  string url = 1;
+}
+
+// RestoreStorePurchasesRequest 仅接收 Store 返回的最小凭证集合，App 和 User 始终来自可信上下文。
+message RestoreStorePurchasesRequest {
+  // items 包含本次返回或处理的业务条目。
+  repeated StorePurchaseRestoreEvidence items = 1 [(validate.rules).repeated = {min_items: 1, max_items: 50}];
+}
+
+// StorePurchaseRestoreEvidence 以互斥凭证表达 Store Provider，客户端不能提交商品、金额或所有者。
+message StorePurchaseRestoreEvidence {
+  // StorePurchaseRestoreEvidence 在以下 evidence 分支中选择一种。
+  oneof evidence {
+    // apple_signed_transaction 承载 Apple 签名交易材料，属于敏感校验数据。
+    string apple_signed_transaction = 1 [(validate.rules).string = {min_len: 1, max_len: 65536}];
+    // google_purchase_token 承载敏感凭据或校验材料，不得写入普通日志。
+    string google_purchase_token = 2 [(validate.rules).string = {min_len: 1, max_len: 65536}];
+  }
+}
+
+// StorePurchaseRestoreState 刻画对应资源的生命周期状态。
+enum StorePurchaseRestoreState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  STORE_PURCHASE_RESTORE_STATE_UNSPECIFIED = 0;
+  // STORE_PURCHASE_RESTORE_STATE_RESTORED 表示资源处于对应业务阶段。
+  STORE_PURCHASE_RESTORE_STATE_RESTORED = 1;
+  // STORE_PURCHASE_RESTORE_STATE_OWNERSHIP_CONFLICT 表示资源处于对应业务阶段。
+  STORE_PURCHASE_RESTORE_STATE_OWNERSHIP_CONFLICT = 2;
+  // 当前值未通过校验，调用方应修正后重试。
+  STORE_PURCHASE_RESTORE_STATE_EVIDENCE_INVALID = 3;
+  // 当前取值无法确定；调用方不得推断成功或失败。
+  STORE_PURCHASE_RESTORE_STATE_PROVIDER_OUTCOME_UNKNOWN = 4;
+}
+
+// StorePurchaseRestoreResult 为批量恢复中的单笔处理结果，不回显原始凭证或 Store 交易标识。
+message StorePurchaseRestoreResult {
+  // item_index 标识 StorePurchaseRestoreResult 在稳定处理顺序中的位置。
+  uint32 item_index = 1;
+  // state 表示 StorePurchaseRestoreResult 当前可观察的生命周期状态。
+  StorePurchaseRestoreState state = 2;
+  // purchase 承载 StorePurchaseRestoreResult 关联的 PurchaseView。
+  optional PurchaseView purchase = 3;
+}
+
+// RestoreStorePurchasesResponse 承载 RestoreStorePurchases 的返回结果。
+message RestoreStorePurchasesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated StorePurchaseRestoreResult items = 1;
+}
+
+// GetMyPurchaseRequest 仅接受当前 User 已知的公开购买引用。
+message GetMyPurchaseRequest {
+  // GetMyPurchaseRequest 在以下 reference 分支中选择一种。
+  oneof reference {
+    // purchase_request_id 标识关联的 PurchaseRequest。
+    string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+    // purchase_reference 记录外部系统或关联流程提供的引用标识。
+    string purchase_reference = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  }
+}
+
+// ListMyPurchasesRequest 使用 Payment 生成的不透明游标；App、User 和合并别名均不由客户端提供。
+message ListMyPurchasesRequest {
+  // page_size 限定单次查询允许返回的最大条目数。
+  uint32 page_size = 1 [(validate.rules).uint32 = {lte: 100}];
+  // page_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string page_token = 2 [(validate.rules).string = {max_len: 512}];
+  // purchase_types 列出 ListMyPurchases 关联的 PurchaseType。
+  repeated PurchaseType purchase_types = 3 [(validate.rules).repeated = {max_items: 2}];
+  // states 列出 ListMyPurchases 关联的 PurchaseState。
+  repeated PurchaseState states = 4 [(validate.rules).repeated = {max_items: 9}];
+}
+
+// ListMyPurchasesResponse 返回 MyPurchases 结果集合及分页信息。
+message ListMyPurchasesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated PurchaseView items = 1;
+  // next_page_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string next_page_token = 2;
+}
+
+// CurrentSubscriptionState 刻画对应资源的生命周期状态。
+enum CurrentSubscriptionState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CURRENT_SUBSCRIPTION_STATE_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  CURRENT_SUBSCRIPTION_STATE_ACTIVE = 1;
+  // CURRENT_SUBSCRIPTION_STATE_GRACE_PERIOD 表示资源处于对应业务阶段。
+  CURRENT_SUBSCRIPTION_STATE_GRACE_PERIOD = 2;
+  // CURRENT_SUBSCRIPTION_STATE_BILLING_RETRY 表示资源处于对应业务阶段。
+  CURRENT_SUBSCRIPTION_STATE_BILLING_RETRY = 3;
+  // CURRENT_SUBSCRIPTION_STATE_CANCELLED_AT_PERIOD_END 表示资源处于对应业务阶段。
+  CURRENT_SUBSCRIPTION_STATE_CANCELLED_AT_PERIOD_END = 4;
+  // 有效期已结束，不再接受后续使用。
+  CURRENT_SUBSCRIPTION_STATE_EXPIRED = 5;
+  // 相关授权或凭据已撤销，不能继续使用。
+  CURRENT_SUBSCRIPTION_STATE_REVOKED = 6;
+}
+
+// SubscriptionManagementAction 区分可执行的状态推进动作。
+enum SubscriptionManagementAction {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_MANAGEMENT_ACTION_UNSPECIFIED = 0;
+  // SUBSCRIPTION_MANAGEMENT_ACTION_NO_ACTION 执行 NO_ACTION 业务动作。
+  SUBSCRIPTION_MANAGEMENT_ACTION_NO_ACTION = 1;
+  // SUBSCRIPTION_MANAGEMENT_ACTION_MANAGE_APPLE_STORE 执行 MANAGE_APPLE_STORE 业务动作。
+  SUBSCRIPTION_MANAGEMENT_ACTION_MANAGE_APPLE_STORE = 2;
+  // SUBSCRIPTION_MANAGEMENT_ACTION_MANAGE_GOOGLE_PLAY 执行 MANAGE_GOOGLE_PLAY 业务动作。
+  SUBSCRIPTION_MANAGEMENT_ACTION_MANAGE_GOOGLE_PLAY = 3;
+}
+
+// CurrentSubscriptionView 是当前权益投影，不复用购买历史或 Provider 原始生命周期事实。
+message CurrentSubscriptionView {
+  // plan_code 提供 CurrentSubscriptionView 对外稳定使用的业务编码。
+  string plan_code = 1;
+  // plan_name 提供 CurrentSubscriptionView 面向展示或识别的名称。
+  string plan_name = 2;
+  // mode 指定 CurrentSubscriptionView 使用的 SubscriptionMode。
+  SubscriptionMode mode = 3;
+  // started_at 指定 CurrentSubscriptionView 生效或查询区间的起始时间。
+  google.protobuf.Timestamp started_at = 4;
+  // expires_at 指定 CurrentSubscriptionView 失效的时间点。
+  google.protobuf.Timestamp expires_at = 5;
+  // state 表示 CurrentSubscriptionView 当前可观察的生命周期状态。
+  CurrentSubscriptionState state = 6;
+  // management_action 指定本次状态推进采用的业务动作。
+  SubscriptionManagementAction management_action = 7;
+  // management_url 指定 CurrentSubscriptionView 访问或跳转使用的目标地址。
+  string management_url = 8;
+}
+
+// GetMySubscriptionRequest 不接受任何身份、订阅或套餐内部标识。
+message GetMySubscriptionRequest {}
+
+// GetMySubscriptionResponse 承载 GetMySubscription 的返回结果。
+message GetMySubscriptionResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated CurrentSubscriptionView items = 1;
+}
+
+// Consumer 只提交稳定购买身份、公开 Offer/Option、客户端平台与可选 Return Target Code。
+message StartFixedTermSubscriptionCheckoutRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // offer_code 提供 StartFixedTermSubscriptionCheckout 对外稳定使用的业务编码。
+  string offer_code = 2 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+  // payment_option_code 提供 StartFixedTermSubscriptionCheckout 对外稳定使用的业务编码。
+  string payment_option_code = 3 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+  // client_platform 承载 StartFixedTermSubscriptionCheckout 关联的 RoutingClientPlatform。
+  RoutingClientPlatform client_platform = 4 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // return_target 指定完成当前操作后允许返回的受控目标。
+  optional string return_target = 5 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+}
+
+// RetryMyPurchaseRequest 使用当前公开 Attempt Number 作为并发与幂等栅栏。
+message RetryMyPurchaseRequest {
+  // purchase_request_id 标识关联的 PurchaseRequest。
+  string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // payment_option_code 提供 RetryMyPurchase 对外稳定使用的业务编码。
+  string payment_option_code = 2 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+  // expected_attempt_number 是 RetryMyPurchase 对外关联与审计使用的业务编号。
+  uint32 expected_attempt_number = 3 [(validate.rules).uint32 = {gt: 0}];
+  // return_target 指定完成当前操作后允许返回的受控目标。
+  optional string return_target = 4 [(validate.rules).string = {pattern: "^[a-z0-9][a-z0-9_-]{0,79}$"}];
+}

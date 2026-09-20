@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package admin.wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+import "wallet/v1/reconciliation.proto";
+import "wallet/v1/wallet_types.proto";
+
+// 钱包对账管理服务。
+service WalletReconciliationService {
+  // 创建余额对账批次。
+  rpc CreateReconciliationBatch(AdminCreateWalletReconciliationBatchRequest) returns (.wallet.v1.WalletReconciliationBatch) {
+    option (google.api.http) = {
+      post: "/admin/v1/wallet-reconciliation-batches"
+      body: "*"
+    };
+  }
+  // 重试失败批次。
+  rpc RetryReconciliationBatch(AdminRetryWalletReconciliationBatchRequest) returns (.wallet.v1.WalletReconciliationBatch) {
+    option (google.api.http) = {
+      post: "/admin/v1/wallet-reconciliation-batches/{batch_id}:retry"
+      body: "*"
+    };
+  }
+  // 记录差异调查与处置引用。
+  rpc ResolveReconciliationItem(AdminResolveWalletReconciliationItemRequest) returns (.wallet.v1.WalletReconciliationItem) {
+    option (google.api.http) = {
+      post: "/admin/v1/wallet-reconciliation-items/{item_id}:resolve"
+      body: "*"
+    };
+  }
+  // 查询余额对账批次。
+  rpc ListReconciliationBatches(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListWalletReconciliationBatchResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-reconciliation-batches"};
+  }
+  // 查询余额对账明细。
+  rpc ListReconciliationItems(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListWalletReconciliationItemResponse) {
+    option (google.api.http) = {get: "/admin/v1/wallet-reconciliation-items"};
+  }
+}
+
+// AdminCreateWalletReconciliationBatchRequest 定义创建 WalletReconciliationBatch 的幂等命令参数。
+message AdminCreateWalletReconciliationBatchRequest {
+  // currency 指定相关金额使用的币种或计量单位。
+  optional .wallet.v1.WalletCurrency currency = 1 [(validate.rules).enum.defined_only = true];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 500
+    }
+  ];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3 [(validate.rules).string.max_len = 128];
+}
+
+// AdminRetryWalletReconciliationBatchRequest 定义重试 WalletReconciliationBatch 的幂等管理命令参数。
+message AdminRetryWalletReconciliationBatchRequest {
+  // batch_id 标识关联的 Batch。
+  uint64 batch_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 500
+    }
+  ];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3 [(validate.rules).string.max_len = 128];
+}
+
+// AdminResolveWalletReconciliationItemRequest 定义处置 WalletReconciliationItem 的幂等管理命令参数。
+message AdminResolveWalletReconciliationItemRequest {
+  // item_id 标识关联的 Item。
+  uint64 item_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).uint64.gt = 0
+  ];
+  // investigation 记录人工调查过程与结论摘要，供审计复核。
+  optional string investigation = 2 [(validate.rules).string.max_len = 2000];
+  // conclusion 记录 ResolveWalletReconciliationItem 对应审核或执行流程的结论。
+  optional string conclusion = 3 [(validate.rules).string.max_len = 64];
+  // repair_reference 记录外部系统或关联流程提供的引用标识。
+  optional string repair_reference = 4 [(validate.rules).string.max_len = 256];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string = {
+      min_len: 1
+      max_len: 500
+    }
+  ];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 6 [(validate.rules).string.max_len = 128];
+  // investigation_status 表示 ResolveWalletReconciliationItem 当前可观察的生命周期状态。
+  .wallet.v1.WalletReconciliationInvestigationStatus investigation_status = 7 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum = {
+      defined_only: true
+      not_in: [
+        0,
+        1,
+        4
+      ]
+    }
+  ];
+}

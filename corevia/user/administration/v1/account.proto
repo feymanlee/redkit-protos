@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/empty.proto";
+import "user/administration/v1/types.proto";
+
+// UserAccountService 管理 C 端账号生命周期与内部用户解析。
+service UserAccountService {
+  // 创建 Account。
+  rpc CreateAccount(CreateAccountRequest) returns (Account);
+  // 查询 Account。
+  rpc GetAccount(GetAccountRequest) returns (Account);
+  // 查询 Account 列表。
+  rpc ListAccounts(ListAccountsRequest) returns (ListAccountsResponse);
+  // 发起 AccountClosure。
+  rpc BeginAccountClosure(BeginAccountClosureRequest) returns (Account);
+  // 取消 AccountClosure。
+  rpc CancelAccountClosure(CancelAccountClosureRequest) returns (Account);
+  // 完成 AccountClosure。
+  rpc FinalizeAccountClosure(FinalizeAccountClosureRequest) returns (Account);
+  // 变更 UserCode。
+  rpc ChangeUserCode(ChangeUserCodeRequest) returns (Account);
+}
+
+// CreateAccountRequest 定义创建 Account 的幂等命令参数。
+message CreateAccountRequest {
+  // app_id 限定 CreateAccount 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 2;
+}
+// GetAccountRequest 标识待查询的 Account。
+message GetAccountRequest {
+  // app_id 限定 GetAccount 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // GetAccountRequest 使用以下一种查询表达式。
+  oneof query {
+    // user_id 标识当前 App 内关联的 User。
+    uint64 user_id = 2;
+    // user_code 提供 GetAccount 对外稳定使用的业务编码。
+    string user_code = 3;
+  }
+}
+// ListAccountsRequest 定义 Accounts 的筛选与分页参数。
+message ListAccountsRequest {
+  // app_id 限定 ListAccounts 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+}
+// ListAccountsResponse 返回 Accounts 结果集合及分页信息。
+message ListAccountsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated Account items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+// BeginAccountClosureRequest 定义开始 AccountClosure 的幂等管理命令参数。
+message BeginAccountClosureRequest {
+  // app_id 限定 BeginAccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}
+// CancelAccountClosureRequest 定义取消 AccountClosure 的幂等管理命令参数。
+message CancelAccountClosureRequest {
+  // app_id 限定 CancelAccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}
+// FinalizeAccountClosureRequest 定义执行 FinalizeAccountClosure 的幂等管理命令参数。
+message FinalizeAccountClosureRequest {
+  // app_id 限定 FinalizeAccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3;
+}
+// ChangeUserCodeRequest 定义执行 ChangeUserCode 的幂等管理命令参数。
+message ChangeUserCodeRequest {
+  // app_id 限定 ChangeUserCode 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // user_code 提供 ChangeUserCode 对外稳定使用的业务编码。
+  string user_code = 3;
+  // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+  string verification_ticket = 4;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5;
+}

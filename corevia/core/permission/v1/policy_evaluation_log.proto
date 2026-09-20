@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package core.permission.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/api/annotations.proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/duration.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+
+// 策略评估日志服务
+service PolicyEvaluationLogService {
+  // 查询策略评估日志列表
+  rpc List (common.pagination.v1.PagingRequest) returns (ListPolicyEvaluationLogResponse) {}
+
+  // 查询策略评估日志详情
+  rpc Get (GetPolicyEvaluationLogRequest) returns (PolicyEvaluationLog) {}
+
+  // 创建策略评估日志
+  rpc Create (CreatePolicyEvaluationLogRequest) returns (google.protobuf.Empty) {}
+}
+
+// 策略评估日志
+message PolicyEvaluationLog {
+  // 策略评估日志ID。
+  optional uint32 id = 1 [
+    (gnostic.openapi.v3.property) = {description: "策略评估日志ID"}
+  ]; // 策略评估日志ID
+
+  // AppID。
+  optional uint32 app_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "AppID"}
+  ];  // AppID
+
+  // 后台人员 ID。
+  optional uint32 operator_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "后台人员 ID"}
+  ];
+
+  // 权限点ID。
+  optional uint32 permission_id = 10 [
+    (gnostic.openapi.v3.property) = {description: "权限点ID"}
+  ]; // 权限点ID
+
+  // 策略ID（可能无策略）。
+  optional uint32 policy_id = 11 [
+    (gnostic.openapi.v3.property) = {description: "策略ID（可能无策略）"}
+  ]; // 策略ID（可能无策略）
+
+  // 请求API路径。
+  optional string request_path = 12 [
+    (gnostic.openapi.v3.property) = {description: "请求API路径"}
+  ]; // 请求API路径
+
+  // 请求HTTP方法。
+  optional string request_method = 13 [
+    (gnostic.openapi.v3.property) = {description: "请求HTTP方法"}
+  ]; // 请求HTTP方法
+
+
+  // 是否通过。
+  optional bool result = 20 [
+    (gnostic.openapi.v3.property) = {description: "是否通过"}
+  ]; // 是否通过
+
+  // 评估详情/拒绝原因。
+  optional string effect_details = 21 [
+    (gnostic.openapi.v3.property) = {description: "评估详情/拒绝原因"}
+  ]; // 评估详情/拒绝原因
+
+
+  // 生成的SQL条件。
+  optional string scope_sql = 30 [
+    (gnostic.openapi.v3.property) = {description: "生成的SQL条件"}
+  ]; // 生成的SQL条件
+
+
+  // 操作者IP地址。
+  optional string ip_address = 40 [
+    (gnostic.openapi.v3.property) = {description: "操作者IP地址"}
+  ]; // 操作者IP地址
+
+  // 全局链路追踪ID（符合W3C TraceContext标准）。
+  optional string trace_id = 41 [
+    (gnostic.openapi.v3.property) = {description: "全局链路追踪ID（符合W3C TraceContext标准）"}
+  ]; // 全局链路追踪ID
+
+
+  // 决策上下文快照(如用户属性、环境属性)。
+  optional string evaluation_context = 50 [
+    (gnostic.openapi.v3.property) = {description: "决策上下文快照(如用户属性、环境属性)"}
+  ]; // 决策上下文快照
+
+
+  // ========== 合规校验 ==========
+
+  // log_hash 用于校验 PolicyEvaluationLog 对应内容或版本的一致性。
+  optional string log_hash = 60 [
+    (gnostic.openapi.v3.property).description = "日志内容哈希（SHA256，十六进制字符串）"
+  ]; // 日志哈希
+
+  // 日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）。
+  optional bytes signature = 61 [
+    (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）"
+  ]; // 日志数字签名
+
+  // ========== 时间字段 ==========
+
+  // created_at 记录 PolicyEvaluationLog 的创建时间。
+  optional google.protobuf.Timestamp created_at = 70 [
+    (gnostic.openapi.v3.property) = {description: "日志创建时间"}
+  ];// 日志创建时间
+}
+
+// 查询策略评估日志列表 - 回应
+message ListPolicyEvaluationLogResponse {
+  // 列表项。
+  repeated PolicyEvaluationLog items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 查询策略评估日志详情 - 请求
+message GetPolicyEvaluationLogRequest {
+  // GetPolicyEvaluationLogRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // ID。
+    uint32 id = 1 [
+      (gnostic.openapi.v3.property) = {description: "ID", read_only: true}]; // ID
+  }
+
+  // 读取字段掩码。
+  optional google.protobuf.FieldMask view_mask = 100 [
+    (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }
+  ]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 创建策略评估日志 - 请求
+message CreatePolicyEvaluationLogRequest {
+  // 数据。
+  PolicyEvaluationLog data = 1;
+}

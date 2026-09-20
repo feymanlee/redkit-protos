@@ -1,0 +1,250 @@
+syntax = "proto3";
+
+package admin.ops.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "ops/reward/v1/reward_package.proto";
+import "ops/reward/v1/reward.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+// OpsRewardPackageService exposes App-scoped Reward Package governance.
+service OpsRewardPackageService {
+  // 查询 RewardPackage 列表。
+  rpc ListRewardPackages(AdminListRewardPackagesRequest) returns (.ops.reward.v1.ListRewardPackagesResponse) {
+    option (google.api.http) = {get: "/admin/v1/ops/reward-packages"};
+  }
+  // 查询 RewardPackage。
+  rpc GetRewardPackage(AdminGetRewardPackageRequest) returns (.ops.reward.v1.RewardPackage) {
+    option (google.api.http) = {get: "/admin/v1/ops/reward-packages/{package_id}"};
+  }
+  // 创建 RewardPackage。
+  rpc CreateRewardPackage(AdminCreateRewardPackageRequest) returns (.ops.reward.v1.RewardPackage) {
+    option (google.api.http) = {post: "/admin/v1/ops/reward-packages" body: "*"};
+  }
+  // 创建 RewardPackageRevisionDraft。
+  rpc CreateRewardPackageRevisionDraft(AdminCreateRewardPackageRevisionDraftRequest) returns (.ops.reward.v1.RewardPackage) {
+    option (google.api.http) = {post: "/admin/v1/ops/reward-packages/{package_id}/revisions" body: "*"};
+  }
+  // 更新 RewardPackageDraft。
+  rpc UpdateRewardPackageDraft(AdminUpdateRewardPackageDraftRequest) returns (.ops.reward.v1.RewardPackage) {
+    option (google.api.http) = {put: "/admin/v1/ops/reward-packages/{package_id}/draft" body: "*"};
+  }
+  // 预检 RewardPackageDraft。
+  rpc PreflightRewardPackageDraft(AdminPreflightRewardPackageDraftRequest) returns (.ops.reward.v1.RewardPackagePreflight) {
+    option (google.api.http) = {post: "/admin/v1/ops/reward-packages/{package_id}:preflight" body: "*"};
+  }
+  // 发布 RewardPackage。
+  rpc PublishRewardPackage(AdminPublishRewardPackageRequest) returns (.ops.reward.v1.RewardPackage) {
+    option (google.api.http) = {post: "/admin/v1/ops/reward-packages/{package_id}:publish" body: "*"};
+  }
+  // 停用 RewardPackage。
+  rpc DisableRewardPackage(AdminDisableRewardPackageRequest) returns (.ops.reward.v1.RewardPackage) {
+    option (google.api.http) = {post: "/admin/v1/ops/reward-packages/{package_id}:disable" body: "*"};
+  }
+  // 废弃 RewardPackageDraft。
+  rpc DiscardRewardPackageDraft(AdminDiscardRewardPackageDraftRequest) returns (.ops.reward.v1.RewardPackage) {
+    option (google.api.http) = {post: "/admin/v1/ops/reward-packages/{package_id}/draft/{revision_id}:discard" body: "*"};
+  }
+}
+
+// OpsRewardGrantService exposes App-scoped Reward observation and Manual Reward review.
+service OpsRewardGrantService {
+  // 查询 RewardGrant 列表。
+  rpc ListRewardGrants(AdminListRewardGrantsRequest) returns (.ops.reward.v1.ListRewardGrantsResponse) {
+    option (google.api.http) = {get: "/admin/v1/ops/reward-grants"};
+  }
+  // 查询 RewardGrantObservation。
+  rpc GetRewardGrantObservation(AdminGetRewardGrantObservationRequest) returns (.ops.reward.v1.RewardGrantObservation) {
+    option (google.api.http) = {get: "/admin/v1/ops/reward-grants/{grant_id}"};
+  }
+  // 查询 ActionRequiredRewardItem 列表。
+  rpc ListActionRequiredRewardItems(AdminListActionRequiredRewardItemsRequest) returns (.ops.reward.v1.ListActionRequiredRewardItemsResponse) {
+    option (google.api.http) = {get: "/admin/v1/ops/action-required-reward-items"};
+  }
+  // 重放 RewardItem。
+  rpc ReplayRewardItem(AdminReplayRewardItemRequest) returns (.ops.reward.v1.ReplayRewardItemResponse) {
+    option (google.api.http) = {post: "/admin/v1/ops/action-required-reward-items/{item_id}:replay" body: "*"};
+  }
+  // 查询 PendingManualRewardGrant 列表。
+  rpc ListPendingManualRewardGrants(AdminListPendingManualRewardGrantsRequest) returns (.ops.reward.v1.ListPendingManualRewardGrantsResponse) {
+    option (google.api.http) = {get: "/admin/v1/ops/manual-reward-grants"};
+  }
+  // 创建 ManualRewardGrant。
+  rpc CreateManualRewardGrant(AdminCreateManualRewardGrantRequest) returns (.ops.reward.v1.CreateManualRewardGrantResponse) {
+    option (google.api.http) = {post: "/admin/v1/ops/manual-reward-grants" body: "*"};
+  }
+  // 批准 ManualRewardGrant。
+  rpc ApproveManualRewardGrant(AdminApproveManualRewardGrantRequest) returns (.ops.reward.v1.ManualRewardGrant) {
+    option (google.api.http) = {post: "/admin/v1/ops/manual-reward-grants/{manual_grant_id}:approve" body: "*"};
+  }
+  // 拒绝 ManualRewardGrant。
+  rpc RejectManualRewardGrant(AdminRejectManualRewardGrantRequest) returns (.ops.reward.v1.ManualRewardGrant) {
+    option (google.api.http) = {post: "/admin/v1/ops/manual-reward-grants/{manual_grant_id}:reject" body: "*"};
+  }
+  // 撤回 ManualRewardGrant。
+  rpc WithdrawManualRewardGrant(AdminWithdrawManualRewardGrantRequest) returns (.ops.reward.v1.ManualRewardGrant) {
+    option (google.api.http) = {post: "/admin/v1/ops/manual-reward-grants/{manual_grant_id}:withdraw" body: "*"};
+  }
+}
+
+// AdminListRewardGrantsRequest 定义 RewardGrants 的筛选与分页参数。
+message AdminListRewardGrantsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .ops.reward.v1.RewardGrantFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminGetRewardGrantObservationRequest 标识待查询的 RewardGrantObservation。
+message AdminGetRewardGrantObservationRequest {
+  // grant_id 标识关联的 Grant。
+  uint64 grant_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminListActionRequiredRewardItemsRequest 定义 ActionRequiredRewardItems 的筛选与分页参数。
+message AdminListActionRequiredRewardItemsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+}
+
+// AdminReplayRewardItemRequest 定义重放 RewardItem 的幂等管理命令参数。
+message AdminReplayRewardItemRequest {
+  // item_id 标识关联的 Item。
+  uint64 item_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminListPendingManualRewardGrantsRequest 定义 PendingManualRewardGrants 的筛选与分页参数。
+message AdminListPendingManualRewardGrantsRequest {}
+
+// AdminCreateManualRewardGrantRequest 定义创建 ManualRewardGrant 的幂等命令参数。
+message AdminCreateManualRewardGrantRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // requested_user_id 标识当前 App 内关联的 User。
+  uint64 requested_user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminApproveManualRewardGrantRequest 定义批准 ManualRewardGrant 的命令参数。
+message AdminApproveManualRewardGrantRequest {
+  // manual_grant_id 标识关联的 ManualGrant。
+  uint64 manual_grant_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+}
+
+// AdminRejectManualRewardGrantRequest 定义拒绝 ManualRewardGrant 的命令参数。
+message AdminRejectManualRewardGrantRequest {
+  // manual_grant_id 标识关联的 ManualGrant。
+  uint64 manual_grant_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+}
+
+// AdminWithdrawManualRewardGrantRequest 定义撤回 ManualRewardGrant 的命令参数。
+message AdminWithdrawManualRewardGrantRequest {
+  // manual_grant_id 标识关联的 ManualGrant。
+  uint64 manual_grant_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+}
+
+// AdminListRewardPackagesRequest 定义 RewardPackages 的筛选与分页参数。
+message AdminListRewardPackagesRequest {}
+
+// AdminGetRewardPackageRequest 标识待查询的 RewardPackage。
+message AdminGetRewardPackageRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminCreateRewardPackageRequest 定义创建 RewardPackage 的幂等命令参数。
+message AdminCreateRewardPackageRequest {
+  // package_code 提供 CreateRewardPackage 对外稳定使用的业务编码。
+  string package_code = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
+  // display_name 提供 CreateRewardPackage 面向展示或识别的名称。
+  string display_name = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // coin_amount 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 coin_amount = 3 [deprecated = true];
+  // daily_grant_limit 限定 CreateRewardPackage 对应操作允许使用的数量或阈值。
+  uint32 daily_grant_limit = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // items 包含本次返回或处理的业务条目。
+  repeated .ops.reward.v1.RewardPackageItemInput items = 7;
+}
+
+// AdminCreateRewardPackageRevisionDraftRequest 定义创建 RewardPackageRevisionDraft 的幂等命令参数。
+message AdminCreateRewardPackageRevisionDraftRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminUpdateRewardPackageDraftRequest 定义更新 RewardPackageDraft 的命令参数。
+message AdminUpdateRewardPackageDraftRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // display_name 提供 UpdateRewardPackageDraft 面向展示或识别的名称。
+  string display_name = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // coin_amount 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 coin_amount = 3 [deprecated = true];
+  // daily_grant_limit 限定 UpdateRewardPackageDraft 对应操作允许使用的数量或阈值。
+  uint32 daily_grant_limit = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // items 包含本次返回或处理的业务条目。
+  repeated .ops.reward.v1.RewardPackageItemInput items = 6;
+}
+
+// AdminPreflightRewardPackageDraftRequest 定义执行 PreflightRewardPackageDraft 的命令参数。
+message AdminPreflightRewardPackageDraftRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminPublishRewardPackageRequest 定义发布 RewardPackage 的幂等管理命令参数。
+message AdminPublishRewardPackageRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminDisableRewardPackageRequest 定义停用 RewardPackage 的幂等管理命令参数。
+message AdminDisableRewardPackageRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminDiscardRewardPackageDraftRequest 定义执行 DiscardRewardPackageDraft 的幂等管理命令参数。
+message AdminDiscardRewardPackageDraftRequest {
+  // package_id 标识关联的 Package。
+  uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package admin.core.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "common/pagination/v1/pagination.proto";
+import "core/authentication/v1/login_policy.proto";
+
+// 登录策略管理服务
+service LoginPolicyService {
+  // 查询登录策略列表
+  rpc List (.common.pagination.v1.PagingRequest) returns (.core.authentication.v1.ListLoginPolicyResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/login-policies"
+    };
+  }
+
+  // 查询登录策略详情
+  rpc Get (.core.authentication.v1.GetLoginPolicyRequest) returns (.core.authentication.v1.LoginPolicy) {
+    option (google.api.http) = {
+      get: "/admin/v1/login-policies/{id}"
+    };
+  }
+
+  // 创建登录策略
+  rpc Create (.core.authentication.v1.CreateLoginPolicyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/login-policies"
+      body: "*"
+    };
+  }
+
+  // 更新登录策略
+  rpc Update (.core.authentication.v1.UpdateLoginPolicyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/login-policies/{id}"
+      body: "*"
+    };
+  }
+
+  // 删除登录策略
+  rpc Delete (.core.authentication.v1.DeleteLoginPolicyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin/v1/login-policies/{id}"
+    };
+  }
+}

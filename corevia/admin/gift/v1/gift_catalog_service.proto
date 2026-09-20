@@ -1,0 +1,423 @@
+syntax = "proto3";
+
+package admin.gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/catalog.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// 礼物目录管理服务。
+service GiftCatalogService {
+  // 查询礼物列表。
+  rpc ListGifts(.common.pagination.v1.PagingRequest) returns (.gift.v1.ListGiftResponse) {
+    option (google.api.http) = {get: "/admin/v1/gifts"};
+  }
+  // 获取礼物详情。
+  rpc GetGift(AdminGetGiftRequest) returns (.gift.v1.Gift) {
+    option (google.api.http) = {get: "/admin/v1/gifts/{id}"};
+  }
+  // 创建礼物。
+  rpc CreateGift(AdminCreateGiftRequest) returns (.gift.v1.Gift) {
+    option (google.api.http) = {
+      post: "/admin/v1/gifts"
+      body: "*"
+    };
+  }
+  // 更新非生产 Gift Draft。
+  rpc UpdateGiftDraft(AdminUpdateGiftDraftRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/gifts/{id}/draft"
+      body: "*"
+    };
+  }
+  // 丢弃非生产 Gift Draft。
+  rpc DiscardGiftDraft(AdminDiscardGiftDraftRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin/v1/gifts/{id}/draft"
+    };
+  }
+  // 发布不可变 Gift Revision，并立即激活或等待指定时间。
+  rpc PublishGiftDraft(AdminPublishGiftDraftRequest) returns (.gift.v1.PublishGiftDraftResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gifts/{id}/draft:publish"
+      body: "*"
+    };
+  }
+  // 取消未来激活但保留不可变 Revision。
+  rpc CancelScheduledGiftRevision(AdminCancelScheduledGiftRevisionRequest) returns (.gift.v1.CancelScheduledGiftRevisionResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gifts/{id}/scheduled-revision:cancel"
+      body: "*"
+    };
+  }
+  // 因线上事故立即阻止新 Gift Send。
+  rpc EmergencyOfflineGift(AdminEmergencyOfflineGiftRequest) returns (.gift.v1.EmergencyOfflineGiftResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gifts/{id}:emergency-offline"
+      body: "*"
+    };
+  }
+  // 查询不可逆归档的当前阻塞项。
+  rpc GetGiftArchivePreflight(AdminGetGiftArchivePreflightRequest) returns (.gift.v1.GiftArchivePreflight) {
+    option (google.api.http) = {get: "/admin/v1/gifts/{id}/archive-preflight"};
+  }
+  // 不可逆归档一个已退出运营的 Gift。
+  rpc ArchiveGift(AdminArchiveGiftRequest) returns (.gift.v1.ArchiveGiftResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gifts/{id}:archive"
+      body: "*"
+    };
+  }
+  // 查询不可变 Gift Revision 历史。
+  rpc ListGiftRevisions(AdminListGiftRevisionsRequest) returns (.gift.v1.ListGiftRevisionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/gifts/{id}/revisions"};
+  }
+  // 只读对比同一 Gift 的两个 Revision；不提供回滚。
+  rpc CompareGiftRevisions(AdminCompareGiftRevisionsRequest) returns (.gift.v1.CompareGiftRevisionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/gifts/{gift_id}/revisions:diff"};
+  }
+  // 全量校验并原子应用目录导入；任一行失败则不生效。
+  rpc ApplyCatalogImport(AdminApplyCatalogImportRequest) returns (.gift.v1.ApplyCatalogImportResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gifts:import"
+      body: "*"
+    };
+  }
+  // 查询礼物分类列表。
+  rpc ListGiftCategories(.common.pagination.v1.PagingRequest) returns (.gift.v1.ListGiftCategoryResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-categories"};
+  }
+  // 创建礼物分类。
+  rpc CreateGiftCategory(AdminCreateGiftCategoryRequest) returns (.gift.v1.GiftCategory) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-categories"
+      body: "*"
+    };
+  }
+  // 更新礼物分类。
+  rpc UpdateGiftCategory(AdminUpdateGiftCategoryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/gift-categories/{id}"
+      body: "*"
+    };
+  }
+  // 停用礼物分类并记录不可变审计。
+  rpc DisableGiftCategory(AdminDisableGiftCategoryRequest) returns (.gift.v1.DisableGiftCategoryResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-categories/{id}:disable"
+      body: "*"
+    };
+  }
+  // 查询 GiftSceneType 列表。
+  rpc ListGiftSceneTypes(.common.pagination.v1.PagingRequest) returns (.gift.v1.ListGiftSceneTypesResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-scene-types"};
+  }
+  // 创建 GiftSceneType。
+  rpc CreateGiftSceneType(AdminCreateGiftSceneTypeRequest) returns (.gift.v1.GiftSceneType) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-scene-types"
+      body: "*"
+    };
+  }
+  // 更新 GiftSceneType。
+  rpc UpdateGiftSceneType(AdminUpdateGiftSceneTypeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/gift-scene-types/{id}"
+      body: "*"
+    };
+  }
+  // 删除 GiftSceneType。
+  rpc DeleteGiftSceneType(AdminDeleteGiftSceneTypeRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/admin/v1/gift-scene-types/{id}"};
+  }
+  // 查询 GiftSceneTypeImpact。
+  rpc GetGiftSceneTypeImpact(AdminGetGiftSceneTypeImpactRequest) returns (.gift.v1.GiftSceneTypeImpact) {
+    option (google.api.http) = {get: "/admin/v1/gift-scene-types/{id}/impact"};
+  }
+  // 设置 GiftSceneTypeEnabled。
+  rpc SetGiftSceneTypeEnabled(AdminSetGiftSceneTypeEnabledRequest) returns (.gift.v1.SetGiftSceneTypeEnabledResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-scene-types/{id}:set-enabled"
+      body: "*"
+    };
+  }
+  // 查询 Gift Operator Audit。
+  rpc ListGiftOperatorAudits(AdminListGiftOperatorAuditsRequest) returns (.gift.v1.ListGiftOperatorAuditsResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-operator-audits"};
+  }
+}
+
+// AdminGiftPatch 承载 Gift 的局部更新；presence 表示是否修改。
+message AdminGiftPatch {
+  // category_id 标识关联的 Category。
+  optional uint32 category_id = 1;
+  // name 提供 GiftPatch 面向展示或识别的名称。
+  optional string name = 2 [(validate.rules).string.max_len = 128];
+  // icon_file_id 标识关联的 IconFile。
+  optional uint64 icon_file_id = 3;
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 price = 4 [(validate.rules).int64.gte = 0];
+  // enabled 显式表示 GiftPatch 是否满足该条件。
+  optional bool enabled = 5;
+  // remark 提供 GiftPatch 的补充说明。
+  optional string remark = 6 [(validate.rules).string.max_len = 1000];
+  // animation_file_id 标识关联的 AnimationFile。
+  optional uint64 animation_file_id = 7;
+  // sort 指定结果排序规则。
+  optional uint32 sort = 8;
+  // tags 携带用于检索和治理的业务标签。
+  optional string tags = 9 [(validate.rules).string.max_len = 1000];
+  // scene_type_codes 列出 Gift 可使用的 Scene Type Code。
+  repeated string scene_type_codes = 10 [(validate.rules).repeated = {unique: true, items: {string: {min_len: 1, max_len: 64}}}];
+  // max_quantity 限定 GiftPatch 对应操作允许使用的数量或阈值。
+  optional uint32 max_quantity = 11;
+  // daily_limit 限定 GiftPatch 对应操作允许使用的数量或阈值。
+  optional uint32 daily_limit = 12;
+  // platform_rate 以基点表示平台的结算比例，一万基点等于 100%。
+  optional uint32 platform_rate = 13 [(validate.rules).uint32.lte = 10000];
+  // recipient_rate 以基点表示收礼方的结算比例，一万基点等于 100%。
+  optional uint32 recipient_rate = 14 [(validate.rules).uint32.lte = 10000];
+  // online_at 记录 GiftPatch 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp online_at = 15;
+  // offline_at 记录 GiftPatch 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp offline_at = 16;
+  // gift_tier 设置礼物展示等级，取值 COMMON、LUXURY 或 EFFECT。
+  optional string gift_tier = 17 [(validate.rules).string = {in: ["COMMON", "LUXURY", "EFFECT"]}];
+  // effects 设置结构化特效资源清单；提供时整体替换 Draft 中的既有清单。
+  repeated .gift.v1.GiftEffect effects = 18;
+  // display_placements 设置 App 级陈列位投放；提供时整体替换。
+  repeated .gift.v1.GiftDisplayPlacement display_placements = 19;
+  // locales 设置多语言文案；提供时整体替换，默认 locale 必填。
+  repeated .gift.v1.GiftLocaleText locales = 20;
+  // gift_kind 设置目录身份类型，取值 STANDARD 或 COMBO。
+  optional string gift_kind = 21 [(validate.rules).string = {in: ["STANDARD", "COMBO"]}];
+  // combo_items 设置 COMBO 组件清单；提供时整体替换。
+  repeated .gift.v1.GiftComboItem combo_items = 22;
+}
+
+// AdminCreateGiftData 承载管理端创建 Gift 时提交的初始业务数据。
+message AdminCreateGiftData {
+  // code 提供 CreateGiftData 对外稳定使用的业务编码。
+  string code = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // draft 承载 CreateGiftData 关联的 AdminGiftPatch。
+  AdminGiftPatch draft = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminGiftCategoryPatch 承载 Gift Category 的局部更新；presence 表示是否修改。
+message AdminGiftCategoryPatch {
+  // name 提供 GiftCategoryPatch 面向展示或识别的名称。
+  optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // sort 指定结果排序规则。
+  optional uint32 sort = 2;
+  // remark 提供 GiftCategoryPatch 的补充说明。
+  optional string remark = 3 [(validate.rules).string.max_len = 1000];
+}
+
+// Category creation carries the stable Code; subsequent patches cannot alter it.
+message AdminCreateGiftCategoryData {
+  // name 提供 CreateGiftCategoryData 面向展示或识别的名称。
+  string name = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // code 提供 CreateGiftCategoryData 对外稳定使用的业务编码。
+  string code = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // sort 指定结果排序规则。
+  optional uint32 sort = 3;
+  // remark 提供 CreateGiftCategoryData 的补充说明。
+  optional string remark = 4 [(validate.rules).string.max_len = 1000];
+}
+
+// AdminGetGiftRequest 标识待查询的 Gift。
+message AdminGetGiftRequest {
+  // id 标识关联的 GetGift。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+}
+
+// AdminCreateGiftRequest 定义创建 Gift 的命令参数。
+message AdminCreateGiftRequest {
+  // data 承载 CreateGift 对应阶段的结构化业务内容。
+  AdminCreateGiftData data = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminUpdateGiftDraftRequest 定义更新 GiftDraft 的命令参数。
+message AdminUpdateGiftDraftRequest {
+  // id 标识关联的 UpdateGiftDraft。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // data 承载 UpdateGiftDraft 对应阶段的结构化业务内容。
+  AdminGiftPatch data = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminDiscardGiftDraftRequest 定义执行 DiscardGiftDraft 的命令参数。
+message AdminDiscardGiftDraftRequest {
+  // id 标识关联的 DiscardGiftDraft。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+}
+
+// AdminPublishGiftDraftRequest 定义发布 GiftDraft 的幂等管理命令参数。
+message AdminPublishGiftDraftRequest {
+  // id 标识关联的 PublishGiftDraft。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+  // effective_at 记录 PublishGiftDraft 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp effective_at = 5;
+}
+
+// AdminCancelScheduledGiftRevisionRequest 定义取消 ScheduledGiftRevision 的幂等管理命令参数。
+message AdminCancelScheduledGiftRevisionRequest {
+  // id 标识关联的 CancelScheduledGiftRevision。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}
+
+// AdminEmergencyOfflineGiftRequest 定义执行 EmergencyOfflineGift 的幂等管理命令参数。
+message AdminEmergencyOfflineGiftRequest {
+  // id 标识关联的 EmergencyOfflineGift。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}
+
+// AdminGetGiftArchivePreflightRequest 标识待查询的 GiftArchivePreflight。
+message AdminGetGiftArchivePreflightRequest {
+  // id 标识关联的 GetGiftArchivePreflight。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+}
+
+// AdminArchiveGiftRequest 定义归档 Gift 的幂等管理命令参数。
+message AdminArchiveGiftRequest {
+  // id 标识关联的 ArchiveGift。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}
+
+// AdminListGiftRevisionsRequest 定义 GiftRevisions 的筛选与分页参数。
+message AdminListGiftRevisionsRequest {
+  // id 标识关联的 ListGiftRevisions。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminCompareGiftRevisionsRequest 定义同一 Gift 两 Revision 的只读对比参数。
+message AdminCompareGiftRevisionsRequest {
+  // gift_id 标识同一 Gift 稳定身份。
+  uint32 gift_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // base_revision_id 是对比基准 Revision。
+  uint64 base_revision_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // head_revision_id 是被对比的 Revision。
+  uint64 head_revision_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminApplyCatalogImportRequest 定义全有或全无的目录导入命令参数。
+message AdminApplyCatalogImportRequest {
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 3 [(validate.rules).string.max_len = 128];
+  // rows 列出待导入的 Draft 指令；任一行失败则整批不生效。
+  repeated .gift.v1.GiftCatalogImportRow rows = 4 [(validate.rules).repeated = {min_items: 1, max_items: 200}];
+}
+
+// AdminCreateGiftCategoryRequest 定义创建 GiftCategory 的命令参数。
+message AdminCreateGiftCategoryRequest {
+  // data 承载 CreateGiftCategory 对应阶段的结构化业务内容。
+  AdminCreateGiftCategoryData data = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminUpdateGiftCategoryRequest 定义更新 GiftCategory 的命令参数。
+message AdminUpdateGiftCategoryRequest {
+  // id 标识关联的 UpdateGiftCategory。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // data 承载 UpdateGiftCategory 对应阶段的结构化业务内容。
+  AdminGiftCategoryPatch data = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminDisableGiftCategoryRequest 定义停用 GiftCategory 的幂等管理命令参数。
+message AdminDisableGiftCategoryRequest {
+  // id 标识关联的 DisableGiftCategory。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}
+
+// AdminCreateGiftSceneTypeRequest 定义创建 GiftSceneType 的命令参数。
+message AdminCreateGiftSceneTypeRequest {
+  // data 承载 CreateGiftSceneType 对应阶段的结构化业务内容。
+  .gift.v1.GiftSceneTypeCreateData data = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminUpdateGiftSceneTypeRequest 定义更新 GiftSceneType 的命令参数。
+message AdminUpdateGiftSceneTypeRequest {
+  // id 标识关联的 UpdateGiftSceneType。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // data 承载 UpdateGiftSceneType 对应阶段的结构化业务内容。
+  .gift.v1.GiftSceneTypePatch data = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminDeleteGiftSceneTypeRequest 定义删除 GiftSceneType 的命令参数。
+message AdminDeleteGiftSceneTypeRequest {
+  // id 标识关联的 DeleteGiftSceneType。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+}
+
+// AdminGetGiftSceneTypeImpactRequest 标识待查询的 GiftSceneTypeImpact。
+message AdminGetGiftSceneTypeImpactRequest {
+  // id 标识关联的 GetGiftSceneTypeImpact。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+}
+
+// AdminSetGiftSceneTypeEnabledRequest 定义设置 GiftSceneTypeEnabled 的幂等管理命令参数。
+message AdminSetGiftSceneTypeEnabledRequest {
+  // id 标识关联的 SetGiftSceneTypeEnabled。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // enabled 显式表示 SetGiftSceneTypeEnabled 是否满足该条件。
+  bool enabled = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5 [(validate.rules).string.max_len = 128];
+}
+
+// AdminListGiftOperatorAuditsRequest 定义 GiftOperatorAudits 的筛选与分页参数。
+message AdminListGiftOperatorAuditsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.GiftOperatorAuditFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}

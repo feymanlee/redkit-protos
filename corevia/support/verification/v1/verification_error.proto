@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package support.verification.v1;
+
+import "errors/errors.proto";
+
+// VerificationErrorReason 定义验证码领域错误。
+enum VerificationErrorReason {
+  option (errors.default_code) = 500;
+
+  // 请求参数错误。
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // 验证码或票据无效。
+  INVALID_CODE = 1 [(errors.code) = 400];
+  // 验证码或票据已过期。
+  EXPIRED = 2 [(errors.code) = 410];
+  // 发送频率过高。
+  TOO_MANY_REQUESTS = 3 [(errors.code) = 429];
+  // 尝试次数耗尽。
+  ATTEMPTS_EXCEEDED = 4 [(errors.code) = 429];
+  // 资源不存在。
+  NOT_FOUND = 5 [(errors.code) = 404];
+  // 状态冲突。
+  CONFLICT = 6 [(errors.code) = 409];
+  // Recipient Phone 无法按 App 默认区域规范化为有效 E.164。
+  INVALID_RECIPIENT_PHONE = 7 [(errors.code) = 400];
+  // 当前 App 没有可用于 Verification Runtime 的完整 Active Release。
+  SUPPORT_CONFIGURATION_NOT_READY = 8 [(errors.code) = 503];
+  // 服务内部错误。
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+  // 短信渠道不可用。
+  SERVICE_UNAVAILABLE = 2300 [(errors.code) = 503];
+}

@@ -1,0 +1,399 @@
+syntax = "proto3";
+
+package user.types.v1;
+
+import "common/file/v1/file.proto";
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// AccountStatus 刻画对应资源的生命周期状态。
+enum AccountStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ACCOUNT_STATUS_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  ACCOUNT_STATUS_ACTIVE = 1;
+  // 当前已暂停，恢复前不接受新的业务动作。
+  ACCOUNT_STATUS_SUSPENDED = 2;
+  // 关闭流程正在执行，尚未形成关闭终态。
+  ACCOUNT_STATUS_CLOSING = 3;
+  // 当前流程已关闭，不再接受新的处理动作。
+  ACCOUNT_STATUS_CLOSED = 4;
+}
+
+// CredentialType 区分对应资源的业务类型。
+enum CredentialType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CREDENTIAL_TYPE_UNSPECIFIED = 0;
+  // CREDENTIAL_TYPE_PHONE 选择 PHONE 业务类型。
+  CREDENTIAL_TYPE_PHONE = 1;
+  // CREDENTIAL_TYPE_PASSWORD 选择 PASSWORD 业务类型。
+  CREDENTIAL_TYPE_PASSWORD = 2;
+  // CREDENTIAL_TYPE_APPLE 选择 APPLE 业务类型。
+  CREDENTIAL_TYPE_APPLE = 3;
+  // CREDENTIAL_TYPE_GOOGLE 选择 GOOGLE 业务类型。
+  CREDENTIAL_TYPE_GOOGLE = 4;
+  // CREDENTIAL_TYPE_EMAIL 选择 EMAIL 业务类型。
+  CREDENTIAL_TYPE_EMAIL = 5;
+}
+
+// CredentialStatus 刻画对应资源的生命周期状态。
+enum CredentialStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CREDENTIAL_STATUS_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  CREDENTIAL_STATUS_ACTIVE = 1;
+  // 相关授权或凭据已撤销，不能继续使用。
+  CREDENTIAL_STATUS_REVOKED = 2;
+}
+
+// AuthenticationMethod 区分对应流程采用的处理方式。
+enum AuthenticationMethod {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  AUTHENTICATION_METHOD_UNSPECIFIED = 0;
+  // AUTHENTICATION_METHOD_PHONE_OTP 使用 PHONE_OTP 作为认证或处理方式。
+  AUTHENTICATION_METHOD_PHONE_OTP = 1;
+  // AUTHENTICATION_METHOD_PHONE_PASSWORD 使用 PHONE_PASSWORD 作为认证或处理方式。
+  AUTHENTICATION_METHOD_PHONE_PASSWORD = 2;
+  // AUTHENTICATION_METHOD_APPLE 使用 APPLE 作为认证或处理方式。
+  AUTHENTICATION_METHOD_APPLE = 3;
+  // AUTHENTICATION_METHOD_GOOGLE 使用 GOOGLE 作为认证或处理方式。
+  AUTHENTICATION_METHOD_GOOGLE = 4;
+  // 当前取值无法确定；调用方不得推断成功或失败。
+  AUTHENTICATION_METHOD_UNKNOWN = 5;
+}
+
+// ExternalIdentityProvider 标识能力所使用的外部 Provider。
+enum ExternalIdentityProvider {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  EXTERNAL_IDENTITY_PROVIDER_UNSPECIFIED = 0;
+  // EXTERNAL_IDENTITY_PROVIDER_APPLE 选择对应的外部 Provider。
+  EXTERNAL_IDENTITY_PROVIDER_APPLE = 1;
+  // EXTERNAL_IDENTITY_PROVIDER_GOOGLE 选择对应的外部 Provider。
+  EXTERNAL_IDENTITY_PROVIDER_GOOGLE = 2;
+}
+
+// ConsumerPlatform 定义对应业务维度允许使用的离散取值。
+enum ConsumerPlatform {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CONSUMER_PLATFORM_UNSPECIFIED = 0;
+  // CONSUMER_PLATFORM_IOS 表示请求来自 IOS 客户端平台。
+  CONSUMER_PLATFORM_IOS = 1;
+  // CONSUMER_PLATFORM_ANDROID 表示请求来自 ANDROID 客户端平台。
+  CONSUMER_PLATFORM_ANDROID = 2;
+  // CONSUMER_PLATFORM_WEB 表示请求来自 WEB 客户端平台。
+  CONSUMER_PLATFORM_WEB = 3;
+}
+
+// PhoneBindingRequirement 定义对应业务维度允许使用的离散取值。
+enum PhoneBindingRequirement {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PHONE_BINDING_REQUIREMENT_UNSPECIFIED = 0;
+  // PHONE_BINDING_REQUIREMENT_OPTIONAL 选择 OPTIONAL 作为对应业务维度的有效取值。
+  PHONE_BINDING_REQUIREMENT_OPTIONAL = 1;
+  // PHONE_BINDING_REQUIREMENT_REQUIRED 表示该业务条件为必需。
+  PHONE_BINDING_REQUIREMENT_REQUIRED = 2;
+}
+
+// SessionStatus 刻画对应资源的生命周期状态。
+enum SessionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SESSION_STATUS_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  SESSION_STATUS_ACTIVE = 1;
+  // 相关授权或凭据已撤销，不能继续使用。
+  SESSION_STATUS_REVOKED = 2;
+  // 有效期已结束，不再接受后续使用。
+  SESSION_STATUS_EXPIRED = 3;
+}
+
+// DeviceTrustStatus 刻画对应资源的生命周期状态。
+enum DeviceTrustStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  DEVICE_TRUST_STATUS_UNSPECIFIED = 0;
+  // 未通过可信校验，需要附加验证或拒绝处理。
+  DEVICE_TRUST_STATUS_UNTRUSTED = 1;
+  // 已经通过可信校验，可按受信路径处理。
+  DEVICE_TRUST_STATUS_TRUSTED = 2;
+  // 相关授权或凭据已撤销，不能继续使用。
+  DEVICE_TRUST_STATUS_REVOKED = 3;
+}
+
+// RecoveryDeviceKeyAlgorithm 定义对应业务维度允许使用的离散取值。
+enum RecoveryDeviceKeyAlgorithm {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECOVERY_DEVICE_KEY_ALGORITHM_UNSPECIFIED = 0;
+  // RECOVERY_DEVICE_KEY_ALGORITHM_ED25519 使用 ED25519 算法执行签名或校验。
+  RECOVERY_DEVICE_KEY_ALGORITHM_ED25519 = 1;
+}
+
+// SecurityActivityType 区分对应资源的业务类型。
+enum SecurityActivityType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SECURITY_ACTIVITY_TYPE_UNSPECIFIED = 0;
+  // SECURITY_ACTIVITY_TYPE_LOGIN 选择 LOGIN 业务类型。
+  SECURITY_ACTIVITY_TYPE_LOGIN = 1;
+  // SECURITY_ACTIVITY_TYPE_NEW_DEVICE 选择 NEW_DEVICE 业务类型。
+  SECURITY_ACTIVITY_TYPE_NEW_DEVICE = 2;
+  // SECURITY_ACTIVITY_TYPE_PHONE_CHANGED 选择 PHONE_CHANGED 业务类型。
+  SECURITY_ACTIVITY_TYPE_PHONE_CHANGED = 3;
+  // SECURITY_ACTIVITY_TYPE_PASSWORD_CHANGED 选择 PASSWORD_CHANGED 业务类型。
+  SECURITY_ACTIVITY_TYPE_PASSWORD_CHANGED = 4;
+  // SECURITY_ACTIVITY_TYPE_EXTERNAL_IDENTITY_CHANGED 选择 EXTERNAL_IDENTITY_CHANGED 业务类型。
+  SECURITY_ACTIVITY_TYPE_EXTERNAL_IDENTITY_CHANGED = 5;
+  // SECURITY_ACTIVITY_TYPE_TOTP_CHANGED 选择 TOTP_CHANGED 业务类型。
+  SECURITY_ACTIVITY_TYPE_TOTP_CHANGED = 6;
+  // 相关授权或凭据已撤销，不能继续使用。
+  SECURITY_ACTIVITY_TYPE_SESSION_REVOKED = 7;
+  // 相关授权或凭据已撤销，不能继续使用。
+  SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED = 8;
+  // SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY 选择 ACCOUNT_RECOVERY 业务类型。
+  SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY = 9;
+  // SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE 选择 ACCOUNT_MERGE 业务类型。
+  SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE = 10;
+  // SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE 选择 ACCOUNT_CLOSURE 业务类型。
+  SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE = 11;
+}
+
+// Account 表示当前 App 内 User Account 的身份与生命周期快照。
+message Account {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // app_id 限定 Account 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // user_code 提供 Account 对外稳定使用的业务编码。
+  string user_code = 3;
+  // status 表示 Account 当前可观察的生命周期状态。
+  AccountStatus status = 4;
+  // canonical_user_id 标识当前 App 内关联的 User。
+  uint64 canonical_user_id = 5;
+  // suspended_until 指定 Account 查询或生效区间的结束边界。
+  google.protobuf.Timestamp suspended_until = 6;
+  // closing_at 记录 Account 对应业务阶段的时间点。
+  google.protobuf.Timestamp closing_at = 7;
+  // closed_at 记录 Account 对应业务阶段的时间点。
+  google.protobuf.Timestamp closed_at = 8;
+  // created_at 记录 Account 的创建时间。
+  google.protobuf.Timestamp created_at = 9;
+  // updated_at 记录 Account 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// Profile 表示当前 User 的可编辑资料快照。
+message Profile {
+  // app_id 限定 Profile 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // nickname 承载用户资料或其脱敏展示值，按个人信息保护。
+  string nickname = 3;
+  // avatar_file_id 标识关联的 AvatarFile。
+  uint64 avatar_file_id = 4;
+  // avatar 承载 Profile 关联的 FileView。
+  common.file.v1.FileView avatar = 5;
+  // gender 承载用户资料或其脱敏展示值，按个人信息保护。
+  string gender = 6;
+  // region 指定号码、服务或业务规则采用的地区。
+  string region = 7;
+  // description 提供 Profile 的补充说明。
+  string description = 8;
+  // updated_at 记录 Profile 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// PublicProfile 表示允许对其他 User 展示的 Profile 投影。
+message PublicProfile {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1;
+  // user_code 提供 PublicProfile 对外稳定使用的业务编码。
+  string user_code = 2;
+  // nickname 承载用户资料或其脱敏展示值，按个人信息保护。
+  string nickname = 3;
+  // avatar_file_id 标识关联的 AvatarFile。
+  uint64 avatar_file_id = 4;
+  // avatar 承载 PublicProfile 关联的 FileView。
+  common.file.v1.FileView avatar = 5;
+  // gender 承载用户资料或其脱敏展示值，按个人信息保护。
+  string gender = 6;
+  // region 指定号码、服务或业务规则采用的地区。
+  string region = 7;
+  // description 提供 PublicProfile 的补充说明。
+  string description = 8;
+  // updated_at 记录 PublicProfile 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// Credential 表示 User Credential 的类型、状态与脱敏身份。
+message Credential {
+  // credential_id 标识关联的 Credential。
+  uint64 credential_id = 1;
+  // type 区分 Credential 的业务类型。
+  CredentialType type = 2;
+  // masked_identifier 承载用户资料或其脱敏展示值，按个人信息保护。
+  string masked_identifier = 3;
+  // provider 标识本次能力使用的外部 Provider。
+  ExternalIdentityProvider provider = 4;
+  // status 表示 Credential 当前可观察的生命周期状态。
+  CredentialStatus status = 5;
+  // usable 显式表示 Credential 是否满足该条件。
+  bool usable = 6;
+  // verified_at 记录 Credential 对应业务阶段的时间点。
+  google.protobuf.Timestamp verified_at = 7;
+  // created_at 记录 Credential 的创建时间。
+  google.protobuf.Timestamp created_at = 8;
+}
+
+// TokenPair 承载 Access Token、Refresh Token 及其失效时间。
+message TokenPair {
+  // access_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string access_token = 1;
+  // refresh_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string refresh_token = 2;
+  // access_token_expires_at 指定 TokenPair 失效的时间点。
+  google.protobuf.Timestamp access_token_expires_at = 3;
+  // refresh_token_expires_at 指定 TokenPair 失效的时间点。
+  google.protobuf.Timestamp refresh_token_expires_at = 4;
+}
+
+// ConsumerClientContext 描述消费端请求所在的设备、平台与版本上下文。
+message ConsumerClientContext {
+  // installation_id 标识关联的 Installation。
+  string installation_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 16, max_len: 256}];
+  // platform 承载 ConsumerClientContext 关联的 ConsumerPlatform。
+  ConsumerPlatform platform = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // device_model 记录客户端设备上报的型号。
+  string device_model = 3 [(validate.rules).string.max_len = 128];
+  // app_version 标识 ConsumerClientContext 所采用的契约或资源版本。
+  string app_version = 4 [(validate.rules).string.max_len = 64];
+  // locale 指定内容展示或消息投递采用的语言区域。
+  string locale = 5 [(validate.rules).string.max_len = 32];
+}
+
+// Session 表示当前 App 内 User Session 的生命周期快照。
+message Session {
+  // session_id 标识关联的 Session。
+  string session_id = 1;
+  // device_id 标识关联的 Device。
+  uint64 device_id = 2;
+  // status 表示 Session 当前可观察的生命周期状态。
+  SessionStatus status = 3;
+  // authentication_method 指定 Session 使用的 AuthenticationMethod。
+  AuthenticationMethod authentication_method = 4;
+  // client_type 区分 Session 的业务类型。
+  string client_type = 5;
+  // masked_ip 承载经过契约约定处理的网络来源标识，按敏感数据保护。
+  string masked_ip = 6;
+  // current 显式表示 Session 是否满足该条件。
+  bool current = 7;
+  // mfa_verified 显式表示 Session 是否满足该条件。
+  bool mfa_verified = 8;
+  // last_seen_at 记录 Session 对应业务阶段的时间点。
+  google.protobuf.Timestamp last_seen_at = 9;
+  // expires_at 指定 Session 失效的时间点。
+  google.protobuf.Timestamp expires_at = 10;
+  // created_at 记录 Session 的创建时间。
+  google.protobuf.Timestamp created_at = 11;
+}
+
+// Device 表示 User Device 的信任状态与最近活动快照。
+message Device {
+  // device_id 标识关联的 Device。
+  uint64 device_id = 1;
+  // platform 承载 Device 关联的 ConsumerPlatform。
+  ConsumerPlatform platform = 2;
+  // model 记录客户端设备上报的型号。
+  string model = 3;
+  // app_version 标识 Device 所采用的契约或资源版本。
+  string app_version = 4;
+  // trust_status 表示 Device 当前可观察的生命周期状态。
+  DeviceTrustStatus trust_status = 5;
+  // current 显式表示 Device 是否满足该条件。
+  bool current = 6;
+  // recovery_key_registered 显式表示 Device 是否满足该条件。
+  bool recovery_key_registered = 7;
+  // recovery_key_algorithm 指定 Device 采用的校验或计算算法。
+  RecoveryDeviceKeyAlgorithm recovery_key_algorithm = 8;
+  // recovery_key_registered_at 记录 Device 对应业务阶段的时间点。
+  google.protobuf.Timestamp recovery_key_registered_at = 9;
+  // first_seen_at 记录 Device 对应业务阶段的时间点。
+  google.protobuf.Timestamp first_seen_at = 10;
+  // last_seen_at 记录 Device 对应业务阶段的时间点。
+  google.protobuf.Timestamp last_seen_at = 11;
+}
+
+// ConsumerAccountCapabilities 汇总当前 User Account 允许执行的消费端能力。
+message ConsumerAccountCapabilities {
+  // can_update_profile 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  bool can_update_profile = 1;
+  // can_manage_credentials 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  bool can_manage_credentials = 2;
+  // can_manage_sessions 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  bool can_manage_sessions = 3;
+  // can_manage_mfa 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  bool can_manage_mfa = 4;
+  // can_change_user_code 表示当前 User 是否允许变更 User Code。
+  bool can_change_user_code = 5;
+  // user_code_change_available_at 记录 ConsumerAccountCapabilities 对应业务阶段的时间点。
+  google.protobuf.Timestamp user_code_change_available_at = 6;
+  // can_start_merge 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  bool can_start_merge = 7;
+  // can_start_closure 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  bool can_start_closure = 8;
+  // active_lifecycle_operation_type 区分 ConsumerAccountCapabilities 的业务类型。
+  string active_lifecycle_operation_type = 9;
+}
+
+// SecurityOverview 表示面向查询的汇总投影。
+message SecurityOverview {
+  // totp_enabled 显式表示 SecurityOverview 是否满足该条件。
+  bool totp_enabled = 1;
+  // unused_recovery_code_count 记录 SecurityOverview 中符合对应条件的数量。
+  uint32 unused_recovery_code_count = 2;
+  // password_enabled 显式表示 SecurityOverview 是否满足该条件。
+  bool password_enabled = 3;
+  // password_changed_at 记录 SecurityOverview 对应业务阶段的时间点。
+  google.protobuf.Timestamp password_changed_at = 4;
+  // password_reset_required 显式表示 SecurityOverview 是否满足该条件。
+  bool password_reset_required = 5;
+  // recovery_hold 显式表示 SecurityOverview 是否满足该条件。
+  bool recovery_hold = 6;
+  // locked_until 指定 SecurityOverview 查询或生效区间的结束边界。
+  google.protobuf.Timestamp locked_until = 7;
+}
+
+// SecurityActivity 记录 User Account 上可供本人查看的安全活动。
+message SecurityActivity {
+  // activity_id 标识关联的 Activity。
+  string activity_id = 1;
+  // type 区分 SecurityActivity 的业务类型。
+  SecurityActivityType type = 2;
+  // succeeded 显式表示 SecurityActivity 是否满足该条件。
+  bool succeeded = 3;
+  // initiated_by_user 显式表示 SecurityActivity 是否满足该条件。
+  bool initiated_by_user = 4;
+  // device_id 标识关联的 Device。
+  uint64 device_id = 5;
+  // device_summary 提供设备信息的只读摘要投影。
+  string device_summary = 6;
+  // client_type 区分 SecurityActivity 的业务类型。
+  string client_type = 7;
+  // masked_ip 承载经过契约约定处理的网络来源标识，按敏感数据保护。
+  string masked_ip = 8;
+  // occurred_at 记录 SecurityActivity 对应业务阶段的时间点。
+  google.protobuf.Timestamp occurred_at = 9;
+}
+
+// CursorPageRequest 定义执行 CursorPage 的命令参数。
+message CursorPageRequest {
+  // page_size 限定单次查询允许返回的最大条目数。
+  uint32 page_size = 1 [(validate.rules).uint32.lte = 100];
+  // page_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string page_token = 2 [(validate.rules).string.max_len = 2048];
+}
+
+// CursorPageResponse 承载 CursorPage 的返回结果。
+message CursorPageResponse {
+  // next_page_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string next_page_token = 1;
+}

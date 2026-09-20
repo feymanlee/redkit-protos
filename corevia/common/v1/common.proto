@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package common.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// 平台固定 App 标识。
+enum AppId {
+  // 未指定 App。
+  APP_ID_UNSPECIFIED = 0;
+  // Gamoji App。
+  APP_ID_GAMOJI = 1;
+  // Pincp App。
+  APP_ID_PINCP = 2;
+}
+
+// 用户引用。
+message UserRef {
+  // 用户 ID。
+  uint64 user_id = 1 [(gnostic.openapi.v3.property) = {description: "User ID"}];
+}
+
+// 通用审计字段。
+message AuditFields {
+  // 创建人。
+  optional uint32 created_by = 1;
+  // 更新人。
+  optional uint32 updated_by = 2;
+  // 删除人。
+  optional uint32 deleted_by = 3;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 4;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 5;
+  // 删除时间。
+  optional google.protobuf.Timestamp deleted_at = 6;
+}
+
+// 金额信息。
+message Money {
+  // 金额，最小货币单位。
+  int64 amount = 1 [(gnostic.openapi.v3.property) = {description: "Amount in the smallest currency unit"}];
+  // 币种代码。
+  string currency = 2 [(gnostic.openapi.v3.property) = {description: "Currency code"}];
+}
+
+// 虚拟币金额信息。
+message VirtualCoin {
+  // 数量，最小单位。
+  int64 amount = 1 [(gnostic.openapi.v3.property) = {description: "Virtual coin amount in the smallest unit"}];
+  // 虚拟币代码。
+  string currency = 2 [(gnostic.openapi.v3.property) = {description: "Virtual currency code"}];
+}

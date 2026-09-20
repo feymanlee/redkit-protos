@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "wallet/v1/reconciliation.proto";
+
+// 钱包对账服务。
+service WalletReconciliationService {
+  // 创建余额对账批次。
+  rpc CreateReconciliationBatch(CreateWalletReconciliationBatchRequest) returns (WalletReconciliationBatch) {}
+  // 重试失败批次。
+  rpc RetryReconciliationBatch(RetryWalletReconciliationBatchRequest) returns (WalletReconciliationBatch) {}
+  // 记录差异调查与处置引用。
+  rpc ResolveReconciliationItem(ResolveWalletReconciliationItemRequest) returns (WalletReconciliationItem) {}
+  // 查询余额对账批次。
+  rpc ListReconciliationBatches(common.pagination.v1.PagingRequest) returns (ListWalletReconciliationBatchResponse) {}
+  // 查询余额对账明细。
+  rpc ListReconciliationItems(common.pagination.v1.PagingRequest) returns (ListWalletReconciliationItemResponse) {}
+}

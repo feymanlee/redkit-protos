@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package support.governance.v1;
+
+import "errors/errors.proto";
+
+// GovernanceErrorReason defines transport errors for governance history.
+enum GovernanceErrorReason {
+  option (errors.default_code) = 500;
+
+  // BAD_REQUEST 表示因 BAD_REQUEST 条件导致流程无法按原路径继续。
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // INTERNAL_SERVER_ERROR 表示因 INTERNAL_SERVER_ERROR 条件导致流程无法按原路径继续。
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+}

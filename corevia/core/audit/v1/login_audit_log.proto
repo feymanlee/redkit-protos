@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+package core.audit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/empty.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+import "core/audit/v1/geo_location.proto";
+import "core/audit/v1/device_info.proto";
+
+// 登录审计日志管理服务
+service LoginAuditLogService {
+  // 查询登录审计日志列表
+  rpc List (common.pagination.v1.PagingRequest) returns (ListLoginAuditLogResponse) {}
+
+  // 查询登录审计日志详情
+  rpc Get (GetLoginAuditLogRequest) returns (LoginAuditLog) {}
+
+  // 创建登录审计日志
+  rpc Create (CreateLoginAuditLogRequest) returns (google.protobuf.Empty) {}
+}
+
+// 登录审计日志
+message LoginAuditLog {
+  // 事件动作
+  enum ActionType {
+    // 未指定。
+    ACTION_TYPE_UNSPECIFIED = 0; // 未指定
+
+    // 用户主动登录。
+    LOGIN = 1;            // 用户主动登录
+    // 用户主动登出。
+    LOGOUT = 2;           // 用户主动登出
+    // 系统触发的会话过期（非用户操作）。
+    SESSION_EXPIRED = 3;  // 系统触发的会话过期（非用户操作）
+    // 用户被强制下线。
+    KICKED_OUT = 4;       // 用户被强制下线
+    // 密码重置后强制登出。
+    PASSWORD_RESET = 5;   // 密码重置后强制登出
+  }
+
+  // 操作状态
+  enum Status {
+    // 未指定。
+    STATUS_UNSPECIFIED = 0;
+
+    // 操作成功。
+    SUCCESS = 1;  // 操作成功
+    // 操作失败。
+    FAILED = 2;   // 操作失败
+    // 部分成功（如MFA验证中）。
+    PARTIAL = 3;  // 部分成功（如MFA验证中）
+    // 账号锁定。
+    LOCKED = 4;   // 账号锁定
+  }
+
+  // 风险等级
+  enum RiskLevel {
+    // 未指定。
+    RISK_LEVEL_UNSPECIFIED = 0;
+
+    // 低风险（无异常）。
+    LOW = 1;      // 低风险（无异常）
+    // 中风险（需事后核查）。
+    MEDIUM = 2;   // 中风险（需事后核查）
+    // 高风险（异常登录行为）。
+    HIGH = 3;     // 高风险（异常登录行为）
+  }
+
+  // 登录方式
+  enum LoginMethod {
+    // 未指定。
+    LOGIN_METHOD_UNSPECIFIED = 0;
+
+    // 密码。
+    PASSWORD = 1; // 密码
+    // 短信验证码。
+    SMS_CODE = 2; // 短信验证码
+    // 二维码。
+    QR_CODE = 3; // 二维码
+    // 第三方登录。
+    OIDC_SOCIAL = 4; // 第三方登录
+    // 指纹/面部。
+    BIOMETRIC = 5;   // 指纹/面部
+    // 硬件密钥。
+    FIDO2 = 6;       // 硬件密钥
+  }
+
+  // 登录审计日志ID。
+  optional uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "登录审计日志ID"}]; // 登录审计日志ID
+
+  // AppID。
+  optional uint32 app_id = 2 [ (gnostic.openapi.v3.property) = {description: "AppID"}]; // AppID
+
+  // App名称。
+  optional string app_name = 3 [ (gnostic.openapi.v3.property) = {description: "App名称"}]; // App名称
+
+  // 后台人员 ID。
+  optional uint32 operator_id = 4 [ (gnostic.openapi.v3.property) = {description: "后台人员 ID"}];
+
+  // 账号名。
+  optional string username = 5 [ (gnostic.openapi.v3.property) = {description: "账号名"}]; // 账号名
+
+  // ========== 终端信息 ==========
+
+  // ip_address 承载经过契约约定处理的网络来源标识，按敏感数据保护。
+  optional string ip_address = 10 [ (gnostic.openapi.v3.property) = {description: "IP地址"}]; // IP地址
+
+  // 地理位置(来自IP库)。
+  optional GeoLocation geo_location = 11 [ (gnostic.openapi.v3.property) = {description: "地理位置(来自IP库)"}]; // 地理位置(来自IP库)
+
+  // 会话ID。
+  optional string session_id = 12 [ (gnostic.openapi.v3.property) = {description: "会话ID"}]; // 会话ID
+
+  // 设备信息。
+  optional DeviceInfo device_info = 13 [ (gnostic.openapi.v3.property) = {description: "设备信息"}]; // 设备信息
+
+  // 全局请求ID（关联网关日志）。
+  optional string request_id = 16 [ (gnostic.openapi.v3.property) = {description: "全局请求ID（关联网关日志）"}]; // 全局请求ID（关联网关日志）
+
+  // 全局链路追踪ID。
+  optional string trace_id = 17 [ (gnostic.openapi.v3.property) = {description: "全局链路追踪ID"}]; // 全局链路追踪ID
+
+  // ========== 操作/状态 ==========
+
+  // action_type 区分 LoginAuditLog 的业务类型。
+  optional ActionType action_type = 20 [ (gnostic.openapi.v3.property) = {description: "事件动作类型"}]; // 事件动作类型
+
+  // 操作结果状态。
+  optional Status status = 21 [ (gnostic.openapi.v3.property).description = "操作结果状态"]; // 操作结果状态
+
+  // 失败原因。
+  optional string failure_reason = 22 [ (gnostic.openapi.v3.property) = {description: "失败原因：密码错误/MFA验证失败/IP黑名单等"}]; // 失败原因
+
+  // MFA状态 MFA场景必传。
+  optional string mfa_status = 23 [ (gnostic.openapi.v3.property) = {description: "MFA状态：UNVERIFIED/VERIFYING/VERIFIED/FAILED"}]; // MFA状态 MFA场景必传
+
+  // 登录方式。
+  optional LoginMethod login_method = 24 [ (gnostic.openapi.v3.property) = {description: "登录方式"}];
+
+  // ========== 风险管控 ==========
+
+  // risk_score 记录风险或质量评估使用的量化分值。
+  optional uint32 risk_score = 30 [ (gnostic.openapi.v3.property) = {description: "风险评分（0-100，分值越高风险越大）"}]; // 风险评分（0-100，分值越高风险越大）
+
+  // 风险等级（高风险需实时告警）。
+  optional RiskLevel risk_level = 31 [ (gnostic.openapi.v3.property) = {description: "风险等级（高风险需实时告警）"}]; // 风险等级（高风险需实时告警）
+
+  // 风险因素（ISO 27001标准，如：异地登录/新设备/密码尝试次数过多）。
+  repeated string risk_factors = 32 [ (gnostic.openapi.v3.property).description = "风险因素（ISO 27001标准，如：异地登录/新设备/密码尝试次数过多）"]; // 风险因素（ISO 27001标准，如：异地登录/新设备/密码尝试次数过多）
+
+  // ========== 合规校验 ==========
+
+  // log_hash 用于校验 LoginAuditLog 对应内容或版本的一致性。
+  optional string log_hash = 40 [ (gnostic.openapi.v3.property).description = "日志内容哈希（SHA256，十六进制字符串）"]; // 日志内容哈希（SHA256，十六进制字符串）
+
+  // 日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）。
+  optional bytes signature = 41 [ (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）"]; // 日志数字签名
+
+  // ========== 时间字段 ==========
+
+  // created_at 记录 LoginAuditLog 的创建时间。
+  optional google.protobuf.Timestamp created_at = 50 [ (gnostic.openapi.v3.property) = {description: "日志创建时间"}];// 日志创建时间
+}
+
+// 查询登录审计日志列表 - 回应
+message ListLoginAuditLogResponse {
+  // 列表项。
+  repeated LoginAuditLog items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 查询登录审计日志详情 - 请求
+message GetLoginAuditLogRequest {
+  // GetLoginAuditLogRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // ID。
+    uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "ID", read_only: true}]; // ID
+  }
+
+  // 视图字段过滤器，用于控制返回的字段。
+  optional google.protobuf.FieldMask view_mask = 100 [ (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 创建登录审计日志 - 请求
+message CreateLoginAuditLogRequest {
+  // 数据。
+  LoginAuditLog data = 1;
+}

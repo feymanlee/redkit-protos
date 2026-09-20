@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package core.audit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/api/annotations.proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/duration.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+// 权限变更审计日志服务
+service PermissionAuditLogService {
+  // 查询权限变更审计日志列表
+  rpc List (common.pagination.v1.PagingRequest) returns (ListPermissionAuditLogResponse) {}
+
+  // 查询权限变更审计日志详情
+  rpc Get (GetPermissionAuditLogRequest) returns (PermissionAuditLog) {}
+
+  // 创建权限变更审计日志
+  rpc Create (CreatePermissionAuditLogRequest) returns (google.protobuf.Empty) {}
+}
+
+// 权限变更审计日志
+message PermissionAuditLog {
+  // 变更动作
+  enum ActionType {
+    // 未指定。
+    ACTION_TYPE_UNSPECIFIED = 0;
+
+    // 授予权限/角色。
+    GRANT = 1;    // 授予权限/角色
+    // 回收权限/角色。
+    REVOKE = 2;   // 回收权限/角色
+    // 修改权限属性(如过期时间、条件约束)。
+    UPDATE = 3;   // 修改权限属性(如过期时间、条件约束)
+    // 重置权限。
+    RESET = 4;    // 重置权限
+
+    // 创建角色/权限模板等资源。
+    CREATE = 5;       // 创建角色/权限模板等资源
+    // 删除角色/权限资源。
+    DELETE = 6;       // 删除角色/权限资源
+    // 分配（将角色/权限指派给用户/组）。
+    ASSIGN = 7;       // 分配（将角色/权限指派给用户/组）
+    // 取消分配。
+    UNASSIGN = 8;     // 取消分配
+    // 批量授予。
+    BULK_GRANT = 9;   // 批量授予
+    // 批量回收。
+    BULK_REVOKE = 10; // 批量回收
+    // 权限到期失效（系统自动）。
+    EXPIRE = 11;      // 权限到期失效（系统自动）
+    // 暂停/冻结权限。
+    SUSPEND = 12;     // 暂停/冻结权限
+    // 恢复已暂停的权限。
+    RESUME = 13;      // 恢复已暂停的权限
+    // 回滚先前的变更。
+    ROLLBACK = 14;    // 回滚先前的变更
+
+    // 其他未分类操作。
+    OTHER = 100;      // 其他未分类操作
+  }
+
+  // 权限变更审计日志ID。
+  optional uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "权限变更审计日志ID"}]; // 权限变更审计日志ID
+
+  // AppID。
+  optional uint32 app_id = 2 [ (gnostic.openapi.v3.property) = {description: "AppID"}];  // AppID
+
+  // 操作者用户ID。
+  optional uint32 operator_id = 3 [ (gnostic.openapi.v3.property) = {description: "操作者用户ID"}]; // 操作者用户ID
+
+  // 操作者用户名。
+  optional string operator_name = 4 [ (gnostic.openapi.v3.property) = {description: "操作者用户名"}]; // 操作者用户名
+
+  // 目标类型。
+  optional string target_type = 10 [ (gnostic.openapi.v3.property) = {description: "目标类型"}]; // 目标类型
+
+  // 目标ID。
+  optional string target_id = 11 [ (gnostic.openapi.v3.property) = {description: "目标ID"}]; // 目标ID
+
+  // 目标名称。
+  optional string target_name = 12 [ (gnostic.openapi.v3.property) = {description: "目标名称"}]; // 目标名称
+
+  // 变更动作。
+  optional ActionType action = 20 [ (gnostic.openapi.v3.property) = {description: "变更动作"}]; // 变更动作
+
+  // 旧值。
+  optional string old_value = 30 [ (gnostic.openapi.v3.property) = {description: "旧值"}]; // 旧值
+
+  // 新值。
+  optional string new_value = 31 [ (gnostic.openapi.v3.property) = {description: "新值"}]; // 新值
+
+  // 操作者IP地址。
+  optional string ip_address = 40 [ (gnostic.openapi.v3.property) = {description: "操作者IP地址"}]; // 操作者IP地址
+
+  // 关联全局请求ID。
+  optional string request_id = 41 [ (gnostic.openapi.v3.property) = {description: "关联全局请求ID"}]; // 关联全局请求ID
+
+  // 变更原因。
+  optional string reason = 42 [ (gnostic.openapi.v3.property) = {description: "变更原因"}]; // 变更原因
+
+  // ========== 合规校验 ==========
+
+  // log_hash 用于校验 PermissionAuditLog 对应内容或版本的一致性。
+  optional string log_hash = 50 [ (gnostic.openapi.v3.property).description = "日志内容哈希（SHA256，十六进制字符串）"]; // 日志哈希
+
+  // 日志数字签名。
+  optional bytes signature = 51 [ (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：app_id+user_id+created_at+log_hash）"]; // 日志数字签名
+
+  // ========== 时间字段 ==========
+
+  // created_at 记录 PermissionAuditLog 的创建时间。
+  optional google.protobuf.Timestamp created_at = 60 [ (gnostic.openapi.v3.property) = {description: "日志创建时间"}];// 日志创建时间
+}
+
+// 查询权限变更审计日志列表 - 回应
+message ListPermissionAuditLogResponse {
+  // 列表项。
+  repeated PermissionAuditLog items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 查询权限变更审计日志详情 - 请求
+message GetPermissionAuditLogRequest {
+  // GetPermissionAuditLogRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // ID。
+    uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "ID", read_only: true}]; // ID
+  }
+
+  // 视图字段过滤器，用于控制返回的字段。
+  optional google.protobuf.FieldMask view_mask = 100 [ (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 创建权限变更审计日志 - 请求
+message CreatePermissionAuditLogRequest {
+  // 数据。
+  PermissionAuditLog data = 1;
+}

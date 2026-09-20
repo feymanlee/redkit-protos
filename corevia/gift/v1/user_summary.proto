@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// GetUserGiftSummaryRequest 标识待查询的 UserGiftSummary。
+message GetUserGiftSummaryRequest {
+  // app_id 限定 GetUserGiftSummary 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// UserGiftSummary is a transient aggregate and does not expose send or backpack rows.
+message UserGiftSummary {
+  // sent_quantity 表示 UserGiftSummary 涉及的业务对象数量。
+  uint64 sent_quantity = 1;
+  // sent_value 汇总已发送 Gift 对应的业务价值。
+  int64 sent_value = 2;
+  // wallet_funded_sent_quantity 表示 UserGiftSummary 涉及的业务对象数量。
+  uint64 wallet_funded_sent_quantity = 3;
+  // wallet_funded_sent_value 汇总由 Wallet 资金支付的 Gift 发送价值。
+  int64 wallet_funded_sent_value = 4;
+  // backpack_funded_sent_quantity 表示 UserGiftSummary 涉及的业务对象数量。
+  uint64 backpack_funded_sent_quantity = 5;
+  // backpack_funded_sent_value 汇总由 Backpack 库存支付的 Gift 发送价值。
+  int64 backpack_funded_sent_value = 6;
+  // backpack_distinct_gift_count 记录 UserGiftSummary 中符合对应条件的数量。
+  uint64 backpack_distinct_gift_count = 7;
+  // backpack_available_quantity 表示 UserGiftSummary 涉及的业务对象数量。
+  uint64 backpack_available_quantity = 8;
+  // latest_send_at 指定 UserGiftSummary 生效或查询区间的结束时间。
+  google.protobuf.Timestamp latest_send_at = 9;
+}

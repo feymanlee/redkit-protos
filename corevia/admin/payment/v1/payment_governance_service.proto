@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "payment/v1/governance.proto";
+import "validate/validate.proto";
+
+// Payment 治理与单资源诊断访问服务。
+service PaymentGovernanceService {
+  // 查询 GovernanceEvent 列表。
+  rpc ListGovernanceEvents(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListPaymentGovernanceEventResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-governance-events"};
+  }
+  // 查询 RawDiagnosticData。
+  rpc GetRawDiagnosticData(AdminGetRawDiagnosticDataRequest) returns (.payment.v1.RawDiagnosticData) {
+    option (google.api.http) = {get: "/admin/v1/payment-diagnostics/{resource_type}/{resource_id}:raw"};
+  }
+  // 擦除 DiagnosticData。
+  rpc EraseDiagnosticData(AdminEraseDiagnosticDataRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/payment-diagnostics/{resource_type}/{resource_id}:erase"
+      body: "*"
+    };
+  }
+}
+
+// AdminGetRawDiagnosticDataRequest 标识待查询的 RawDiagnosticData。
+message AdminGetRawDiagnosticDataRequest {
+  // resource_type 区分 GetRawDiagnosticData 的业务类型。
+  .payment.v1.DiagnosticResourceType resource_type = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // resource_id 标识关联的 Resource。
+  string resource_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminEraseDiagnosticDataRequest 定义执行 EraseDiagnosticData 的命令参数。
+message AdminEraseDiagnosticDataRequest {
+  // resource_type 区分 EraseDiagnosticData 的业务类型。
+  .payment.v1.DiagnosticResourceType resource_type = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // resource_id 标识关联的 Resource。
+  string resource_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+}

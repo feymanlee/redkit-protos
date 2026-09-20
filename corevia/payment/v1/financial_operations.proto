@@ -1,0 +1,649 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_types.proto";
+
+// SettlementStatement 表示 Provider Settlement Statement 及其核对状态。
+message SettlementStatement {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    SETTLEMENT_STATUS_UNSPECIFIED = 0;
+    // 数据已导入，等待后续核对或处理。
+    SETTLEMENT_STATUS_IMPORTED = 1;
+    // 需要人工审核、补充材料或执行明确处置后才能继续。
+    SETTLEMENT_STATUS_REVIEW_REQUIRED = 2;
+    // 已受理并等待后续处理。
+    SETTLEMENT_STATUS_PAYOUT_PENDING = 3;
+    // 结算已经完成，相关金额已形成可查询事实。
+    SETTLEMENT_STATUS_SETTLED = 4;
+    // 异常或争议已经处置完成。
+    SETTLEMENT_STATUS_RESOLVED = 5;
+  }
+  // id 标识关联的 SettlementStatement。
+  uint64 id = 1;
+  // app_id 限定 SettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 3;
+  // provider_bill_id 标识关联的 ProviderBill。
+  optional uint64 provider_bill_id = 4;
+  // period_start 指定 SettlementStatement 统计或结算周期的起点。
+  string period_start = 5;
+  // period_end 指定 SettlementStatement 统计或结算周期的终点。
+  string period_end = 6;
+  // source_identity 记录外部或上游系统用于稳定关联 SettlementStatement 的身份。
+  string source_identity = 7;
+  // checksum 用于校验 SettlementStatement 对应内容或版本的一致性。
+  string checksum = 8;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 9;
+  // gross_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 gross_amount = 10;
+  // refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 refund_amount = 11;
+  // fee_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 fee_amount = 12;
+  // adjustment_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 adjustment_amount = 13;
+  // net_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 net_amount = 14;
+  // payout_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 payout_amount = 15;
+  // payout_reference 记录外部系统或关联流程提供的引用标识。
+  optional string payout_reference = 16;
+  // payout_at 记录 SettlementStatement 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp payout_at = 17;
+  // status 表示 SettlementStatement 当前可观察的生命周期状态。
+  Status status = 18;
+  // imported_by 标识触发或负责 SettlementStatement 对应业务阶段的主体。
+  optional uint32 imported_by = 19;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 20;
+  // created_at 记录 SettlementStatement 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 SettlementStatement 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// SettlementEntry 表示所属集合中的一个业务条目。
+message SettlementEntry {
+  // EntryType 区分对应资源的业务类型。
+  enum EntryType {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    SETTLEMENT_ENTRY_TYPE_UNSPECIFIED = 0;
+    // SETTLEMENT_ENTRY_TYPE_PAYMENT 选择 PAYMENT 业务类型。
+    SETTLEMENT_ENTRY_TYPE_PAYMENT = 1;
+    // SETTLEMENT_ENTRY_TYPE_REFUND 选择 REFUND 业务类型。
+    SETTLEMENT_ENTRY_TYPE_REFUND = 2;
+  }
+  // id 标识关联的 SettlementEntry。
+  uint64 id = 1;
+  // statement_id 标识关联的 Statement。
+  uint64 statement_id = 2;
+  // entry_type 区分 SettlementEntry 的业务类型。
+  EntryType entry_type = 3;
+  // reference_no 是 SettlementEntry 对外关联与审计使用的业务编号。
+  string reference_no = 4;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 5;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 6;
+  // created_at 记录 SettlementEntry 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// SettlementDiscrepancy 表示结算单与本地事实之间的一项待处置差异。
+message SettlementDiscrepancy {
+  // DiscrepancyType 区分对应资源的业务类型。
+  enum DiscrepancyType {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    SETTLEMENT_DISCREPANCY_TYPE_UNSPECIFIED = 0;
+    // SETTLEMENT_DISCREPANCY_TYPE_AMOUNT_MISMATCH 选择 AMOUNT_MISMATCH 业务类型。
+    SETTLEMENT_DISCREPANCY_TYPE_AMOUNT_MISMATCH = 1;
+    // SETTLEMENT_DISCREPANCY_TYPE_FEE_MISMATCH 选择 FEE_MISMATCH 业务类型。
+    SETTLEMENT_DISCREPANCY_TYPE_FEE_MISMATCH = 2;
+    // SETTLEMENT_DISCREPANCY_TYPE_PAYOUT_MISSING 选择 PAYOUT_MISSING 业务类型。
+    SETTLEMENT_DISCREPANCY_TYPE_PAYOUT_MISSING = 3;
+    // SETTLEMENT_DISCREPANCY_TYPE_PAYOUT_DATE_MISMATCH 选择 PAYOUT_DATE_MISMATCH 业务类型。
+    SETTLEMENT_DISCREPANCY_TYPE_PAYOUT_DATE_MISMATCH = 4;
+  }
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    SETTLEMENT_DISCREPANCY_STATUS_UNSPECIFIED = 0;
+    // 当前处于开放状态，可继续处理。
+    SETTLEMENT_DISCREPANCY_STATUS_OPEN = 1;
+    // 正在调查事实与证据，尚未形成处置结论。
+    SETTLEMENT_DISCREPANCY_STATUS_INVESTIGATING = 2;
+    // 异常或争议已经处置完成。
+    SETTLEMENT_DISCREPANCY_STATUS_RESOLVED = 3;
+    // 已确认无需继续处置，但保留历史记录。
+    SETTLEMENT_DISCREPANCY_STATUS_IGNORED = 4;
+  }
+  // id 标识关联的 SettlementDiscrepancy。
+  uint64 id = 1;
+  // app_id 限定 SettlementDiscrepancy 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // statement_id 标识关联的 Statement。
+  uint64 statement_id = 3;
+  // discrepancy_type 区分 SettlementDiscrepancy 的业务类型。
+  DiscrepancyType discrepancy_type = 4;
+  // expected_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 expected_amount = 5;
+  // actual_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 actual_amount = 6;
+  // status 表示 SettlementDiscrepancy 当前可观察的生命周期状态。
+  Status status = 7;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 8;
+  // evidence 提供支撑 SettlementDiscrepancy 判断或处置的证明材料。
+  optional string evidence = 9;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 10;
+  // resolved_at 记录 SettlementDiscrepancy 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp resolved_at = 11;
+  // created_at 记录 SettlementDiscrepancy 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 SettlementDiscrepancy 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// SettlementDiscrepancyAction 记录 Settlement Discrepancy 的一次状态推进及审计信息。
+message SettlementDiscrepancyAction {
+  // id 标识关联的 SettlementDiscrepancyAction。
+  uint64 id = 1;
+  // discrepancy_id 标识关联的 Discrepancy。
+  uint64 discrepancy_id = 2;
+  // from_status 记录本次状态推进前的生命周期状态。
+  SettlementDiscrepancy.Status from_status = 3;
+  // to_status 记录本次状态推进后的生命周期状态。
+  SettlementDiscrepancy.Status to_status = 4;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 5;
+  // evidence 提供支撑 SettlementDiscrepancyAction 判断或处置的证明材料。
+  optional string evidence = 6;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 7;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 10;
+  // created_at 记录 SettlementDiscrepancyAction 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// SettlementStatementDetail 表示面向查询的只读投影。
+message SettlementStatementDetail {
+  // statement 承载 SettlementStatementDetail 关联的 SettlementStatement。
+  SettlementStatement statement = 1;
+  // entries 包含本次返回或处理的业务条目。
+  repeated SettlementEntry entries = 2;
+  // discrepancies 列出 SettlementStatementDetail 关联的 SettlementDiscrepancy。
+  repeated SettlementDiscrepancy discrepancies = 3;
+  // actions 列出 SettlementStatementDetail 关联的 SettlementDiscrepancyAction。
+  repeated SettlementDiscrepancyAction actions = 4;
+}
+
+// SettlementReference 标识结算条目关联的 Payment 或 Refund 流水。
+message SettlementReference {
+  // entry_type 区分 SettlementReference 的业务类型。
+  SettlementEntry.EntryType entry_type = 1;
+  // reference_no 是 SettlementReference 对外关联与审计使用的业务编号。
+  string reference_no = 2;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 3;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 4;
+}
+
+// ImportSettlementStatementRequest 定义导入 SettlementStatement 的幂等管理命令参数。
+message ImportSettlementStatementRequest {
+  // app_id 限定 ImportSettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 2;
+  // provider_bill_id 标识关联的 ProviderBill。
+  optional uint64 provider_bill_id = 3;
+  // period_start 指定 ImportSettlementStatement 统计或结算周期的起点。
+  string period_start = 4;
+  // period_end 指定 ImportSettlementStatement 统计或结算周期的终点。
+  string period_end = 5;
+  // source_identity 记录外部或上游系统用于稳定关联 ImportSettlementStatement 的身份。
+  string source_identity = 6;
+  // checksum 用于校验 ImportSettlementStatement 对应内容或版本的一致性。
+  string checksum = 7;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 8;
+  // gross_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 gross_amount = 9;
+  // refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 refund_amount = 10;
+  // fee_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 fee_amount = 11;
+  // adjustment_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 adjustment_amount = 12;
+  // net_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 net_amount = 13;
+  // payout_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 payout_amount = 14;
+  // payout_reference 记录外部系统或关联流程提供的引用标识。
+  optional string payout_reference = 15;
+  // payout_at 记录 ImportSettlementStatement 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp payout_at = 16;
+  // references 列出 ImportSettlementStatement 关联的 SettlementReference。
+  repeated SettlementReference references = 17;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 18;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 19;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 20;
+}
+
+// ListSettlementStatementsRequest 定义 SettlementStatements 的筛选与分页参数。
+message ListSettlementStatementsRequest {
+  // app_id 限定 ListSettlementStatements 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 2;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 3;
+  // status 表示 ListSettlementStatements 当前可观察的生命周期状态。
+  optional SettlementStatement.Status status = 4;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 5;
+}
+
+// ListSettlementStatementsResponse 返回 SettlementStatements 结果集合及分页信息。
+message ListSettlementStatementsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated SettlementStatement items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetSettlementStatementRequest 标识待查询的 SettlementStatement。
+message GetSettlementStatementRequest {
+  // app_id 限定 GetSettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // statement_id 标识关联的 Statement。
+  uint64 statement_id = 2;
+}
+
+// MutateSettlementDiscrepancyRequest 定义变更 SettlementDiscrepancy 的幂等管理命令参数。
+message MutateSettlementDiscrepancyRequest {
+  // Action 区分可执行的状态推进动作。
+  enum Action {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    SETTLEMENT_DISCREPANCY_ACTION_UNSPECIFIED = 0;
+    // SETTLEMENT_DISCREPANCY_ACTION_START_INVESTIGATION 执行 START_INVESTIGATION 业务动作。
+    SETTLEMENT_DISCREPANCY_ACTION_START_INVESTIGATION = 1;
+    // SETTLEMENT_DISCREPANCY_ACTION_ASSIGN 执行 ASSIGN 业务动作。
+    SETTLEMENT_DISCREPANCY_ACTION_ASSIGN = 2;
+    // SETTLEMENT_DISCREPANCY_ACTION_RESOLVE 执行 RESOLVE 业务动作。
+    SETTLEMENT_DISCREPANCY_ACTION_RESOLVE = 3;
+    // SETTLEMENT_DISCREPANCY_ACTION_IGNORE 执行 IGNORE 业务动作。
+    SETTLEMENT_DISCREPANCY_ACTION_IGNORE = 4;
+    // SETTLEMENT_DISCREPANCY_ACTION_REOPEN 执行 REOPEN 业务动作。
+    SETTLEMENT_DISCREPANCY_ACTION_REOPEN = 5;
+  }
+  // app_id 限定 MutateSettlementDiscrepancy 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // discrepancy_id 标识关联的 Discrepancy。
+  uint64 discrepancy_id = 2;
+  // action 指定本次状态推进采用的业务动作。
+  Action action = 3;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 4;
+  // evidence 提供支撑 MutateSettlementDiscrepancy 判断或处置的证明材料。
+  optional string evidence = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 6;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 7;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 9;
+}
+
+// Dispute 表示 Provider Dispute 的生命周期、金额与处置状态。
+message Dispute {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    DISPUTE_STATUS_UNSPECIFIED = 0;
+    // 当前处于开放状态，可继续处理。
+    DISPUTE_STATUS_OPEN = 1;
+    // 需要人工审核、补充材料或执行明确处置后才能继续。
+    DISPUTE_STATUS_EVIDENCE_REQUIRED = 2;
+    // 已提交处理，等待后续审核或执行。
+    DISPUTE_STATUS_EVIDENCE_SUBMITTED = 3;
+    // DISPUTE_STATUS_UNDER_REVIEW 表示资源处于对应业务阶段。
+    DISPUTE_STATUS_UNDER_REVIEW = 4;
+    // DISPUTE_STATUS_WON 表示资源处于对应业务阶段。
+    DISPUTE_STATUS_WON = 5;
+    // DISPUTE_STATUS_LOST 表示资源处于对应业务阶段。
+    DISPUTE_STATUS_LOST = 6;
+    // 已受理并等待后续处理。
+    DISPUTE_STATUS_CHARGEBACK_PENDING = 7;
+    // DISPUTE_STATUS_CHARGEBACKED 表示资源处于对应业务阶段。
+    DISPUTE_STATUS_CHARGEBACKED = 8;
+    // 当前流程已关闭，不再接受新的处理动作。
+    DISPUTE_STATUS_CLOSED = 9;
+  }
+  // CompensationStatus 刻画对应资源的生命周期状态。
+  enum CompensationStatus {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    DISPUTE_COMPENSATION_STATUS_UNSPECIFIED = 0;
+    // DISPUTE_COMPENSATION_STATUS_NONE 表示资源处于对应业务阶段。
+    DISPUTE_COMPENSATION_STATUS_NONE = 1;
+    // 已受理并等待后续处理。
+    DISPUTE_COMPENSATION_STATUS_PENDING = 2;
+    // 处理已成功完成。
+    DISPUTE_COMPENSATION_STATUS_SUCCEEDED = 3;
+    // 处理失败；是否可重试由具体失败原因决定。
+    DISPUTE_COMPENSATION_STATUS_FAILED = 4;
+  }
+  // id 标识关联的 Dispute。
+  uint64 id = 1;
+  // app_id 限定 Dispute 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 3;
+  // provider_case_id 标识关联的 ProviderCase。
+  string provider_case_id = 4;
+  // payment_no 是 Dispute 对外关联与审计使用的业务编号。
+  string payment_no = 5;
+  // provider_trade_no 是 Dispute 对外关联与审计使用的业务编号。
+  optional string provider_trade_no = 6;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 7;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 8;
+  // reason_code 提供机器可判断的业务原因分类。
+  string reason_code = 9;
+  // reason_detail 补充可供人工复核的原因细节。
+  optional string reason_detail = 10;
+  // evidence_deadline 记录 Dispute 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp evidence_deadline = 11;
+  // status 表示 Dispute 当前可观察的生命周期状态。
+  Status status = 12;
+  // provider_status 表示 Dispute 当前可观察的生命周期状态。
+  optional string provider_status = 13;
+  // chargeback_reference 记录外部系统或关联流程提供的引用标识。
+  optional string chargeback_reference = 14;
+  // chargeback_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 chargeback_amount = 15;
+  // chargeback_at 记录 Dispute 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp chargeback_at = 16;
+  // compensation_status 表示 Dispute 当前可观察的生命周期状态。
+  CompensationStatus compensation_status = 17;
+  // compensation_error 记录 Dispute 最近一次可诊断的失败信息。
+  optional string compensation_error = 18;
+  // version 标识 Dispute 所采用的契约或资源版本。
+  uint64 version = 19;
+  // opened_at 记录 Dispute 对应业务阶段的时间点。
+  google.protobuf.Timestamp opened_at = 20;
+  // closed_at 记录 Dispute 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp closed_at = 21;
+  // created_at 记录 Dispute 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 Dispute 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// DisputeEvidence 表示提交给 Provider Dispute 的一份证据及其状态。
+message DisputeEvidence {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    DISPUTE_EVIDENCE_STATUS_UNSPECIFIED = 0;
+    // DISPUTE_EVIDENCE_STATUS_PENDING_REFERENCE 表示资源处于对应业务阶段。
+    DISPUTE_EVIDENCE_STATUS_PENDING_REFERENCE = 1;
+    // DISPUTE_EVIDENCE_STATUS_ATTACHED 表示资源处于对应业务阶段。
+    DISPUTE_EVIDENCE_STATUS_ATTACHED = 2;
+    // DISPUTE_EVIDENCE_STATUS_REMOVED 表示资源处于对应业务阶段。
+    DISPUTE_EVIDENCE_STATUS_REMOVED = 3;
+  }
+  // id 标识关联的 DisputeEvidence。
+  uint64 id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+  // file_id 标识关联的 File。
+  uint64 file_id = 3;
+  // evidence_type 区分 DisputeEvidence 的业务类型。
+  string evidence_type = 4;
+  // description 提供 DisputeEvidence 的补充说明。
+  optional string description = 5;
+  // reference_version 标识 DisputeEvidence 所采用的契约或资源版本。
+  uint64 reference_version = 6;
+  // status 表示 DisputeEvidence 当前可观察的生命周期状态。
+  Status status = 7;
+  // submitted_by 标识触发或负责 DisputeEvidence 对应业务阶段的主体。
+  uint32 submitted_by = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+  // created_at 记录 DisputeEvidence 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // attached_at 记录 DisputeEvidence 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp attached_at = 201;
+  // removed_at 记录 DisputeEvidence 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp removed_at = 202;
+}
+
+// DisputeAttempt 描述一次异步处理的生命周期与结果。
+message DisputeAttempt {
+  // AttemptType 区分对应资源的业务类型。
+  enum AttemptType {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    DISPUTE_ATTEMPT_TYPE_UNSPECIFIED = 0;
+    // DISPUTE_ATTEMPT_TYPE_PROVIDER_SYNC 选择 PROVIDER_SYNC 业务类型。
+    DISPUTE_ATTEMPT_TYPE_PROVIDER_SYNC = 1;
+    // DISPUTE_ATTEMPT_TYPE_EVIDENCE_ADDED 选择 EVIDENCE_ADDED 业务类型。
+    DISPUTE_ATTEMPT_TYPE_EVIDENCE_ADDED = 2;
+    // DISPUTE_ATTEMPT_TYPE_EVIDENCE_REMOVED 选择 EVIDENCE_REMOVED 业务类型。
+    DISPUTE_ATTEMPT_TYPE_EVIDENCE_REMOVED = 3;
+    // 已提交处理，等待后续审核或执行。
+    DISPUTE_ATTEMPT_TYPE_EVIDENCE_SUBMITTED = 4;
+    // DISPUTE_ATTEMPT_TYPE_CHARGEBACK_COMPENSATION 选择 CHARGEBACK_COMPENSATION 业务类型。
+    DISPUTE_ATTEMPT_TYPE_CHARGEBACK_COMPENSATION = 5;
+  }
+  // id 标识关联的 DisputeAttempt。
+  uint64 id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+  // attempt_type 区分 DisputeAttempt 的业务类型。
+  AttemptType attempt_type = 3;
+  // event_key 在约定作用域内稳定定位 DisputeAttempt。
+  optional string event_key = 4;
+  // from_status 记录本次状态推进前的生命周期状态。
+  Dispute.Status from_status = 5;
+  // to_status 记录本次状态推进后的生命周期状态。
+  Dispute.Status to_status = 6;
+  // result 记录操作或治理事件的可观察执行结果。
+  string result = 7;
+  // provider_status 表示 DisputeAttempt 当前可观察的生命周期状态。
+  optional string provider_status = 8;
+  // detail 承载 DisputeAttempt 对应阶段的结构化业务内容。
+  optional string detail = 9;
+  // error_message 提供最近失败的可读诊断信息，不作为错误分类依据。
+  optional string error_message = 10;
+  // operator_id 标识关联的后台 Operator。
+  optional uint32 operator_id = 11;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 12;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 13;
+  // created_at 记录 DisputeAttempt 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// DisputeDetail 表示面向查询的只读投影。
+message DisputeDetail {
+  // dispute 承载 DisputeDetail 关联的 Dispute。
+  Dispute dispute = 1;
+  // evidences 列出 DisputeDetail 关联的 DisputeEvidence。
+  repeated DisputeEvidence evidences = 2;
+  // attempts 列出 DisputeDetail 关联的 DisputeAttempt。
+  repeated DisputeAttempt attempts = 3;
+}
+
+// RecordProviderDisputeRequest 定义执行 RecordProviderDispute 的命令参数。
+message RecordProviderDisputeRequest {
+  // app_id 限定 RecordProviderDispute 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 2;
+  // provider_case_id 标识关联的 ProviderCase。
+  string provider_case_id = 3;
+  // event_key 在约定作用域内稳定定位 RecordProviderDispute。
+  string event_key = 4;
+  // payment_no 是 RecordProviderDispute 对外关联与审计使用的业务编号。
+  string payment_no = 5;
+  // provider_trade_no 是 RecordProviderDispute 对外关联与审计使用的业务编号。
+  optional string provider_trade_no = 6;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 7;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 8;
+  // reason_code 提供机器可判断的业务原因分类。
+  string reason_code = 9;
+  // reason_detail 补充可供人工复核的原因细节。
+  optional string reason_detail = 10;
+  // evidence_deadline 记录 RecordProviderDispute 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp evidence_deadline = 11;
+  // status 表示 RecordProviderDispute 当前可观察的生命周期状态。
+  Dispute.Status status = 12;
+  // provider_status 表示 RecordProviderDispute 当前可观察的生命周期状态。
+  optional string provider_status = 13;
+  // chargeback_reference 记录外部系统或关联流程提供的引用标识。
+  optional string chargeback_reference = 14;
+  // chargeback_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 chargeback_amount = 15;
+  // chargeback_at 记录 RecordProviderDispute 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp chargeback_at = 16;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 17;
+}
+
+// ListDisputesRequest 定义 Disputes 的筛选与分页参数。
+message ListDisputesRequest {
+  // app_id 限定 ListDisputes 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 2;
+  // status 表示 ListDisputes 当前可观察的生命周期状态。
+  optional Dispute.Status status = 3;
+  // payment_no 是 ListDisputes 对外关联与审计使用的业务编号。
+  optional string payment_no = 4;
+  // evidence_due 显式表示 ListDisputes 是否满足该条件。
+  optional bool evidence_due = 5;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 6;
+}
+
+// ListDisputesResponse 返回 Disputes 结果集合及分页信息。
+message ListDisputesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated Dispute items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetDisputeRequest 标识待查询的 Dispute。
+message GetDisputeRequest {
+  // app_id 限定 GetDispute 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+}
+
+// RefreshDisputeRequest 定义执行 RefreshDispute 的幂等管理命令参数。
+message RefreshDisputeRequest {
+  // app_id 限定 RefreshDispute 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 5;
+}
+
+// AddDisputeEvidenceRequest 定义执行 AddDisputeEvidence 的幂等管理命令参数。
+message AddDisputeEvidenceRequest {
+  // app_id 限定 AddDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+  // file_id 标识关联的 File。
+  uint64 file_id = 3;
+  // evidence_type 区分 AddDisputeEvidence 的业务类型。
+  string evidence_type = 4;
+  // description 提供 AddDisputeEvidence 的补充说明。
+  optional string description = 5;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 6;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 8;
+}
+
+// RemoveDisputeEvidenceRequest 定义删除 DisputeEvidence 的命令参数。
+message RemoveDisputeEvidenceRequest {
+  // app_id 限定 RemoveDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+  // evidence_id 标识关联的 Evidence。
+  uint64 evidence_id = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 7;
+}
+
+// SubmitDisputeEvidenceRequest 定义提交 DisputeEvidence 的幂等管理命令参数。
+message SubmitDisputeEvidenceRequest {
+  // app_id 限定 SubmitDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 5;
+}
+
+// ApplyChargebackRequest 定义应用 Chargeback 的幂等管理命令参数。
+message ApplyChargebackRequest {
+  // app_id 限定 ApplyChargeback 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // dispute_id 标识关联的 Dispute。
+  uint64 dispute_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+}

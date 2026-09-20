@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package support.messaging.v1;
+
+import "errors/errors.proto";
+
+// MessagingErrorReason 定义短信领域错误。
+enum MessagingErrorReason {
+  option (errors.default_code) = 500;
+
+  // 请求参数错误。
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // 资源不存在。
+  NOT_FOUND = 1 [(errors.code) = 404];
+  // 状态或幂等冲突。
+  CONFLICT = 2 [(errors.code) = 409];
+  // Recipient Phone 无法按 App 默认区域规范化为有效 E.164。
+  INVALID_RECIPIENT_PHONE = 3 [(errors.code) = 400];
+  // 服务内部错误。
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+  // 短信渠道不可用。
+  SERVICE_UNAVAILABLE = 2300 [(errors.code) = 503];
+  // 当前 App 没有可用于新发送的 Active Configuration Release。
+  SUPPORT_CONFIGURATION_NOT_READY = 2301 [(errors.code) = 503];
+}

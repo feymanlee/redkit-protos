@@ -1,0 +1,7 @@
+{
+  "source": "/Users/feyman/code/corevia/backend/api",
+  "source_commit": "41467de5c18be8234fd49be229f002407696405a",
+  "synced_at": "2026-09-20T10:25:47Z",
+  "mode": "full-api-trees",
+  "packages": ["admin","common","core","gift","ops","payment","support","user","wallet"]
+}

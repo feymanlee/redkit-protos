@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_types.proto";
+import "validate/validate.proto";
+
+// PaymentRecoveryEvidenceService 是 User 调用的窄核验边界；Payment 保持支付事实与 proof authority。
+service PaymentRecoveryEvidenceService {
+  // VerifyRecoveryPaymentEvidence 核验完整 Provider receipt，只返回稳定 proof 和最小结果。
+  rpc VerifyRecoveryPaymentEvidence(VerifyRecoveryPaymentEvidenceRequest) returns (RecoveryPaymentEvidenceProof);
+}
+
+// RecoveryPaymentEvidenceResult 定义对应业务维度允许使用的离散取值。
+enum RecoveryPaymentEvidenceResult {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RECOVERY_PAYMENT_EVIDENCE_RESULT_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  RECOVERY_PAYMENT_EVIDENCE_RESULT_PENDING = 1;
+  // 校验已经通过。
+  RECOVERY_PAYMENT_EVIDENCE_RESULT_VERIFIED = 2;
+  // RECOVERY_PAYMENT_EVIDENCE_RESULT_NOT_MATCHED 表示处理结果为 NOT_MATCHED。
+  RECOVERY_PAYMENT_EVIDENCE_RESULT_NOT_MATCHED = 3;
+}
+
+// VerifyRecoveryPaymentEvidenceRequest 定义校验 RecoveryPaymentEvidence 的命令参数。
+message VerifyRecoveryPaymentEvidenceRequest {
+  // app_id 限定 VerifyRecoveryPaymentEvidence 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // recovery_request_no 是 VerifyRecoveryPaymentEvidence 对外关联与审计使用的业务编号。
+  string recovery_request_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true}];
+  // receipt 是 Payment 定义的 opaque envelope，包含完整 Provider payload；不得记录、trace 或持久化。
+  string receipt = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 131072}];
+  // verification_identity 由 User 为一次 Evidence 尝试生成，只用于幂等绑定，不是 proof reference。
+  string verification_identity = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// RecoveryPaymentEvidenceProof 不包含 Payment、订单、金额、receipt 或 Provider payload。
+message RecoveryPaymentEvidenceProof {
+  // proof_reference 记录外部系统或关联流程提供的引用标识。
+  string proof_reference = 1 [(google.api.field_behavior) = REQUIRED];
+  // result 承载 RecoveryPaymentEvidenceProof 关联的 RecoveryPaymentEvidenceResult。
+  RecoveryPaymentEvidenceResult result = 2 [(google.api.field_behavior) = REQUIRED];
+  // verified_at 记录 RecoveryPaymentEvidenceProof 对应业务阶段的时间点。
+  google.protobuf.Timestamp verified_at = 3;
+}

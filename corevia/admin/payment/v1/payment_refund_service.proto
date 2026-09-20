@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "payment/v1/refund.proto";
+import "payment/v1/payment_administration.proto";
+import "validate/validate.proto";
+
+// 支付退款管理服务。
+service PaymentRefundService {
+  // 提交退款申请。
+  rpc SubmitRefundRequest(AdminSubmitRefundRequest) returns (.payment.v1.RefundRequest) {
+    option (google.api.http) = {
+      post: "/admin/v1/refund-requests"
+      body: "*"
+    };
+  }
+  // 批准 RefundRequest。
+  rpc ApproveRefundRequest(AdminReviewRefundRequest) returns (.payment.v1.RefundRequest) {
+    option (google.api.http) = {post: "/admin/v1/refund-requests/{operation_no}:approve" body: "*"};
+  }
+  // 拒绝 RefundRequest。
+  rpc RejectRefundRequest(AdminReviewRefundRequest) returns (.payment.v1.RefundRequest) {
+    option (google.api.http) = {post: "/admin/v1/refund-requests/{operation_no}:reject" body: "*"};
+  }
+  // 查询 RefundRequest 列表。
+  rpc ListRefundRequests(AdminListRefundRequestsRequest) returns (.payment.v1.ListRefundRequestsResponse) {
+    option (google.api.http) = {get: "/admin/v1/refund-requests"};
+  }
+  // 创建或更新 RefundRiskRule。
+  rpc UpsertRefundRiskRule(AdminUpsertRefundRiskRuleRequest) returns (.payment.v1.RefundRiskRule) {
+    option (google.api.http) = {put: "/admin/v1/refund-risk-rules/{currency}" body: "*"};
+  }
+  // 查询 RefundRiskRule 列表。
+  rpc ListRefundRiskRules(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListRefundRiskRulesResponse) {
+    option (google.api.http) = {get: "/admin/v1/refund-risk-rules"};
+  }
+  // 刷新 RefundProviderState。
+  rpc RefreshRefundProviderState(AdminRefreshRefundProviderStateRequest) returns (.payment.v1.RefreshRefundProviderStateResponse) {
+    option (google.api.http) = {post: "/admin/v1/refunds/{refund_no}:refresh-provider-state" body: "*"};
+  }
+  // 查询退款单列表。
+  rpc ListRefunds(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListRefundResponse) {
+    option (google.api.http) = {get: "/admin/v1/refunds"};
+  }
+}
+
+// AdminSubmitRefundRequest 定义提交 Refund 的幂等管理命令参数。
+message AdminSubmitRefundRequest {
+  // payment_no 是 SubmitRefund 对外关联与审计使用的业务编号。
+  string payment_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gt = 0];
+  // reason_code 提供机器可判断的业务原因分类。
+  .payment.v1.RefundRequest.ReasonCode reason_code = 3 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // remark 提供 SubmitRefund 的补充说明。
+  optional string remark = 4 [(validate.rules).string.max_len = 1000];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 5 [(validate.rules).string.max_len = 160];
+}
+
+// AdminReviewRefundRequest 定义审核 Refund 的幂等管理命令参数。
+message AdminReviewRefundRequest {
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 160}];
+  // review_note 记录人工判断的补充说明，供审计与复核。
+  optional string review_note = 2 [(validate.rules).string.max_len = 1000];
+}
+
+// AdminListRefundRequestsRequest 定义 RefundRequests 的筛选与分页参数。
+message AdminListRefundRequestsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  .payment.v1.RefundRequestFilter filter = 2;
+}
+
+// AdminUpsertRefundRiskRuleRequest 定义执行 UpsertRefundRiskRule 的命令参数。
+message AdminUpsertRefundRiskRuleRequest {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {pattern: "^[A-Z]{3}$"}];
+  // auto_approve_max_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 auto_approve_max_amount = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gte = 0];
+  // cumulative_review_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 cumulative_review_amount = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gte = 0];
+  // enabled 显式表示 UpsertRefundRiskRule 是否满足该条件。
+  bool enabled = 4;
+}
+
+// AdminRefreshRefundProviderStateRequest 定义执行 RefreshRefundProviderState 的幂等管理命令参数。
+message AdminRefreshRefundProviderStateRequest {
+  // refund_no 是 RefreshRefundProviderState 对外关联与审计使用的业务编号。
+  string refund_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 2 [(validate.rules).string.max_len = 120];
+}

@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// GetUserWalletSummaryRequest 标识待查询的 UserWalletSummary。
+message GetUserWalletSummaryRequest {
+  // app_id 限定 GetUserWalletSummary 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// UserWalletSummary is a transient aggregate and does not expose ledger rows.
+message UserWalletSummary {
+  // diamond 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 diamond = 1;
+  // coin 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 coin = 2;
+  // frozen_diamond 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 frozen_diamond = 3;
+  // frozen_coin 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 frozen_coin = 4;
+  // debt_diamond 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 debt_diamond = 5;
+  // debt_coin 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 debt_coin = 6;
+  // lifetime_consumed_diamond 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 lifetime_consumed_diamond = 7;
+  // lifetime_consumed_coin 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 lifetime_consumed_coin = 8;
+  // latest_transaction_at 记录 UserWalletSummary 对应业务阶段的时间点。
+  google.protobuf.Timestamp latest_transaction_at = 9;
+}

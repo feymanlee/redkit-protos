@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package admin.user.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "user/administration/v1/recovery.proto";
+import "validate/validate.proto";
+
+// UserRecoveryAdminService 暴露所选 App 的 Recovery 初审队列。
+service UserRecoveryAdminService {
+  // ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+  rpc ListRecoveryRequests(AdminListRecoveryRequestsRequest) returns (.user.administration.v1.ListRecoveryRequestsResponse) {
+    option (google.api.http) = {get: "/admin/v1/user-recovery-requests"};
+  }
+  // GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+  rpc GetRecoveryRequest(AdminGetRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
+    option (google.api.http) = {get: "/admin/v1/user-recovery-requests/{request_no}"};
+  }
+  // AcceptRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+  rpc AcceptRecoveryRequest(AdminAcceptRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
+    option (google.api.http) = {post: "/admin/v1/user-recovery-requests/{request_no}:accept" body: "*"};
+  }
+  // ApproveRecoveryRequest 受 user:recovery:approve 控制；Grant 明文永不经过 Admin 边界。
+  rpc ApproveRecoveryRequest(AdminApproveRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
+    option (google.api.http) = {post: "/admin/v1/user-recovery-requests/{request_no}:approve" body: "*"};
+  }
+  // RejectRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+  rpc RejectRecoveryRequest(AdminRejectRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
+    option (google.api.http) = {post: "/admin/v1/user-recovery-requests/{request_no}:reject" body: "*"};
+  }
+}
+
+// AdminListRecoveryRequestsRequest 定义 RecoveryRequests 的筛选与分页参数。
+message AdminListRecoveryRequestsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  .user.administration.v1.RecoveryRequestFilter filter = 2;
+}
+
+// AdminGetRecoveryRequestRequest 标识待查询的 RecoveryRequest。
+message AdminGetRecoveryRequestRequest {
+  // request_no 是 GetRecoveryRequest 对外关联与审计使用的业务编号。
+  string request_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
+}
+
+// AdminAcceptRecoveryRequestRequest 定义执行 AcceptRecoveryRequest 的幂等管理命令参数。
+message AdminAcceptRecoveryRequestRequest {
+  // request_no 是 AcceptRecoveryRequest 对外关联与审计使用的业务编号。
+  string request_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminApproveRecoveryRequestRequest 定义批准 RecoveryRequest 的幂等管理命令参数。
+message AdminApproveRecoveryRequestRequest {
+  // request_no 是 ApproveRecoveryRequest 对外关联与审计使用的业务编号。
+  string request_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminRejectRecoveryRequestRequest 定义拒绝 RecoveryRequest 的幂等管理命令参数。
+message AdminRejectRecoveryRequestRequest {
+  // request_no 是 RejectRecoveryRequest 对外关联与审计使用的业务编号。
+  string request_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}

@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package support.file.v1;
+
+import "common/file/v1/file.proto";
+import "common/v1/common.proto";
+import "support/file/v1/types.proto";
+
+// CreateUploadSessionRequest 创建一次受限客户端直传意图。
+message CreateUploadSessionRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // 强类型业务用途。
+  common.file.v1.FilePurpose purpose = 2;
+  // 文件归属主体类型。
+  common.file.v1.FileOwnerType owner_type = 3;
+  // 文件归属主体 ID。
+  uint64 owner_id = 4;
+  // 创建主体类型。
+  common.file.v1.FileCreatorType creator_type = 5;
+  // 创建主体 ID。
+  uint64 creator_id = 6;
+  // 原始文件名，仅用于内部审计。
+  string source_filename = 7;
+  // 客户端声明内容类型。
+  string content_type = 8;
+  // 客户端声明字节数。
+  uint64 size_bytes = 9;
+  // 客户端声明校验算法。
+  string checksum_algorithm = 10;
+  // 客户端声明校验值。
+  string checksum = 11;
+  // 调用方生成的幂等键。
+  string idempotency_key = 12;
+  // 请求链标识。
+  string request_id = 13;
+}
+
+// CreateUploadSessionResponse 返回直传会话和短期凭据。
+message CreateUploadSessionResponse {
+  // 直传会话。
+  UploadSession session = 1;
+  // 短期受限上传凭据。
+  TemporaryCredential credential = 2;
+}
+
+// CompleteUploadSessionRequest 校验上传结果并创建不可变 File。
+message CompleteUploadSessionRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // 会话号。
+  string session_no = 2;
+  // Provider 返回的 ETag。
+  string etag = 3;
+  // 客户端观测校验值。
+  string checksum = 4;
+  // 请求链标识。
+  string request_id = 5;
+}
+
+// CompleteUploadSessionResponse 返回首次完成时创建的 File。
+message CompleteUploadSessionResponse {
+  // File 生命周期对象。
+  File file = 1;
+}
+
+// AbortUploadSessionRequest 取消仍在等待的上传会话。
+message AbortUploadSessionRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // 会话号。
+  string session_no = 2;
+  // 取消原因。
+  string reason = 3;
+  // 请求链标识。
+  string request_id = 4;
+}
+
+// GetUploadSessionRequest 查询一个上传会话。
+message GetUploadSessionRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // 会话号。
+  string session_no = 2;
+}
+
+// StoreServiceFileMetadata fixes the immutable identity before an internal service streams bytes.
+message StoreServiceFileMetadata {
+  // purpose 指定 StoreServiceFileMetadata 数据或能力的预期用途。
+  common.file.v1.FilePurpose purpose = 1;
+  // owner_type 区分 StoreServiceFileMetadata 的业务类型。
+  common.file.v1.FileOwnerType owner_type = 2;
+  // owner_id 标识关联的 Owner。
+  uint64 owner_id = 3;
+  // creator_id 标识关联的 Creator。
+  uint64 creator_id = 4;
+  // source_filename 保留上传方提供的原始文件名，仅用于展示和审计。
+  string source_filename = 5;
+  // content_type 区分 StoreServiceFileMetadata 的业务类型。
+  string content_type = 6;
+  // size_bytes 以字节表示 StoreServiceFileMetadata 对应数据的大小。
+  uint64 size_bytes = 7;
+  // checksum_algorithm 指定 StoreServiceFileMetadata 采用的校验或计算算法。
+  string checksum_algorithm = 8;
+  // checksum 用于校验 StoreServiceFileMetadata 对应内容或版本的一致性。
+  string checksum = 9;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 10;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 11;
+}
+
+// StoreServiceFileRequest streams one internal-service-owned file without exposing storage credentials.
+message StoreServiceFileRequest {
+  // app_id 限定 StoreServiceFile 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // StoreServiceFileRequest 在以下 part 分支中选择一种。
+  oneof part {
+    // metadata 携带 StoreServiceFile 的扩展元数据，不作为核心业务事实。
+    StoreServiceFileMetadata metadata = 2;
+    // chunk 承载分片上传中的一段数据及其顺序信息。
+    bytes chunk = 3;
+  }
+}
+
+// FileUploadService 管理客户端直传控制面。
+service FileUploadService {
+  // 创建上传会话并签发受限凭据。
+  rpc CreateUploadSession(CreateUploadSessionRequest) returns (CreateUploadSessionResponse);
+  // 校验上传结果并创建 File。
+  rpc CompleteUploadSession(CompleteUploadSessionRequest) returns (CompleteUploadSessionResponse);
+  // 取消上传会话。
+  rpc AbortUploadSession(AbortUploadSessionRequest) returns (UploadSession);
+  // 查询上传会话。
+  rpc GetUploadSession(GetUploadSessionRequest) returns (UploadSession);
+  // 内部服务流式保存受 File Policy 管理的文件。
+  rpc StoreServiceFile(stream StoreServiceFileRequest) returns (CompleteUploadSessionResponse);
+}

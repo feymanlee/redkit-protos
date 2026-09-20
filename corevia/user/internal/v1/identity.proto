@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package user.internal.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+import "user/types/v1/types.proto";
+
+// 用户身份查询服务。
+service UserIdentityQueryService {
+  // 解析 UserIdentity。
+  rpc ResolveUserIdentity(ResolveUserIdentityRequest) returns (ResolveUserIdentityResponse);
+  // 批量处理 ResolveUsers。
+  rpc BatchResolveUsers(BatchResolveUsersRequest) returns (BatchResolveUsersResponse);
+  // 批量处理 GetPublicProfiles。
+  rpc BatchGetPublicProfiles(BatchGetPublicProfilesRequest) returns (BatchGetPublicProfilesResponse);
+}
+
+// UserReference 在内部服务间稳定引用当前 App 内的 User。
+message UserReference {
+  // app_id 限定 UserReference 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // canonical_user_id 标识当前 App 内关联的 User。
+  uint64 canonical_user_id = 3;
+  // user_code 提供 UserReference 对外稳定使用的业务编码。
+  string user_code = 4;
+  // status 表示 UserReference 当前可观察的生命周期状态。
+  user.types.v1.AccountStatus status = 5;
+  // can_initiate_business 显式表示 UserReference 是否满足该条件。
+  bool can_initiate_business = 6;
+  // can_receive_business 显式表示 UserReference 是否满足该条件。
+  bool can_receive_business = 7;
+}
+
+// ResolveUserIdentityRequest 定义处置 UserIdentity 的命令参数。
+message ResolveUserIdentityRequest {
+  // app_id 限定 ResolveUserIdentity 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// ResolveUserIdentityResponse 承载 ResolveUserIdentity 的返回结果。
+message ResolveUserIdentityResponse {
+  // canonical_user 承载 ResolveUserIdentity 关联的 UserReference。
+  UserReference canonical_user = 1;
+}
+
+// BatchResolveUsersRequest 定义执行 BatchResolveUsers 的命令参数。
+message BatchResolveUsersRequest {
+  // app_id 限定 BatchResolveUsers 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_ids 列出本次请求关联的 User 标识。
+  repeated uint64 user_ids = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).repeated = {min_items: 1, max_items: 200, unique: true, items: {uint64: {gt: 0}}}];
+}
+
+// BatchResolveUsersResponse 返回 Batch Resolve Users 的逐项执行结果。
+message BatchResolveUsersResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated UserReference items = 1;
+}
+
+// BatchGetPublicProfilesRequest 定义执行 BatchGetPublicProfiles 的命令参数。
+message BatchGetPublicProfilesRequest {
+  // app_id 限定 BatchGetPublicProfiles 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_ids 列出本次请求关联的 User 标识。
+  repeated uint64 user_ids = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).repeated = {min_items: 1, max_items: 200, unique: true, items: {uint64: {gt: 0}}}];
+}
+
+// BatchGetPublicProfilesResponse 返回 Batch Get Public Profiles 的逐项执行结果。
+message BatchGetPublicProfilesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated user.types.v1.PublicProfile items = 1;
+}

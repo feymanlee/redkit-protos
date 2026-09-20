@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+// WalletRewardOptionsWrapper 通过 bootstrap custom-config loader 提供 Reward 配置。
+message WalletRewardOptionsWrapper {
+  // wallet_reward 承载 WalletRewardOptionsWrapper 关联的 WalletRewardOptions。
+  WalletRewardOptions wallet_reward = 1;
+}
+
+// WalletRewardOptions 包含 Wallet Reward 的部署安全基线。
+message WalletRewardOptions {
+  // 单个 Coin Reward 允许发放的最大数量；非正数表示能力未启用。
+  int64 coin_maximum_amount = 1;
+}

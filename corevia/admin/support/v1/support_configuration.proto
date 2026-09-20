@@ -1,0 +1,235 @@
+syntax = "proto3";
+
+package admin.support.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "support/configuration/v1/configuration.proto";
+import "support/messaging/v1/messaging.proto";
+import "support/verification/v1/verification.proto";
+
+// SupportConfigurationService exposes Support Configuration Draft governance.
+service SupportConfigurationService {
+  // GetConfigurationReadiness returns readiness for the authenticated App.
+  rpc GetConfigurationReadiness(AdminGetConfigurationReadinessRequest) returns (.support.configuration.v1.ConfigurationReadiness) {
+    option (google.api.http) = {get: "/admin/v1/support/configuration/readiness"};
+  }
+  // 创建 ConfigurationDraft。
+  rpc CreateConfigurationDraft(AdminCreateConfigurationDraftRequest) returns (.support.configuration.v1.ConfigurationDraftSummary) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/drafts" body: "*"};
+  }
+  // 创建 SmsChannelRevision。
+  rpc CreateSmsChannelRevision(AdminCreateSmsChannelRevisionRequest) returns (.support.configuration.v1.SmsChannelRevisionSummary) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/drafts/{draft_id}/channel-revisions" body: "*"};
+  }
+  // 创建 SmsTemplateRevision。
+  rpc CreateSmsTemplateRevision(AdminCreateSmsTemplateRevisionRequest) returns (.support.configuration.v1.SmsTemplateRevisionSummary) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/drafts/{draft_id}/template-revisions" body: "*"};
+  }
+  // 更新 VerificationPolicyDraft。
+  rpc UpdateVerificationPolicyDraft(AdminUpdateVerificationPolicyDraftRequest) returns (.support.configuration.v1.ConfigurationDraftSummary) {
+    option (google.api.http) = {put: "/admin/v1/support/configuration/drafts/{draft_id}/verification-policy" body: "*"};
+  }
+  // 预检 ConfigurationDraft。
+  rpc PreflightConfigurationDraft(AdminPreflightConfigurationDraftRequest) returns (.support.configuration.v1.ConfigurationPreflightResult) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/drafts/{draft_id}:preflight" body: "*"};
+  }
+  // 废弃 ConfigurationDraft。
+  rpc DiscardConfigurationDraft(AdminDiscardConfigurationDraftRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/drafts/{draft_id}:discard" body: "*"};
+  }
+  // 查询 DeliveryProbeReadiness。
+  rpc GetDeliveryProbeReadiness(AdminGetDeliveryProbeReadinessRequest) returns (.support.configuration.v1.DeliveryProbeReadiness) {
+    option (google.api.http) = {get: "/admin/v1/support/configuration/delivery-probes"};
+  }
+  // 执行 DeliveryProbe。
+  rpc ExecuteDeliveryProbe(AdminExecuteDeliveryProbeRequest) returns (.support.configuration.v1.DeliveryProbe) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/drafts/{draft_id}:delivery-probe" body: "*"};
+  }
+  // 查询 ConfigurationRelease 列表。
+  rpc ListConfigurationReleases(AdminListConfigurationReleasesRequest) returns (.support.configuration.v1.ListConfigurationReleasesResponse) {
+    option (google.api.http) = {get: "/admin/v1/support/configuration/releases"};
+  }
+  // 启用 ConfigurationDraft。
+  rpc ActivateConfigurationDraft(AdminActivateConfigurationDraftRequest) returns (.support.configuration.v1.ConfigurationRelease) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/drafts/{draft_id}:activate" body: "*"};
+  }
+  // 回滚 ConfigurationRelease。
+  rpc RollbackConfigurationRelease(AdminRollbackConfigurationReleaseRequest) returns (.support.configuration.v1.ConfigurationRelease) {
+    option (google.api.http) = {post: "/admin/v1/support/configuration/releases/{release_id}:rollback" body: "*"};
+  }
+}
+
+// AdminGetConfigurationReadinessRequest selects the authenticated App's readiness view.
+message AdminGetConfigurationReadinessRequest {}
+
+// AdminCreateConfigurationDraftRequest creates an editable Draft for the authenticated App.
+message AdminCreateConfigurationDraftRequest {
+  // default_locale 指定内容展示或消息投递采用的语言区域。
+  string default_locale = 1;
+  // default_phone_region 指定号码、服务或业务规则采用的地区。
+  string default_phone_region = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+}
+
+// AdminCreateSmsChannelRevisionRequest appends one immutable Channel Revision.
+message AdminCreateSmsChannelRevisionRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // channel_code 提供 CreateSmsChannelRevision 对外稳定使用的业务编码。
+  string channel_code = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  .support.messaging.v1.SmsProvider provider = 3;
+  // priority 决定 CreateSmsChannelRevision 在待处理队列中的相对顺序。
+  uint32 priority = 4;
+  // enabled 显式表示 CreateSmsChannelRevision 是否满足该条件。
+  bool enabled = 5;
+  // sign_name 提供 CreateSmsChannelRevision 面向展示或识别的名称。
+  string sign_name = 6;
+  // region 指定号码、服务或业务规则采用的地区。
+  string region = 7;
+  // endpoint 指定 CreateSmsChannelRevision 访问或跳转使用的目标地址。
+  string endpoint = 8;
+  // secret_reference 仅引用外部 Secret，不在契约中承载明文密钥。
+  string secret_reference = 9;
+  // provider_options 承载 Provider 的非敏感扩展配置；密钥仅通过 secret reference 提供。
+  string provider_options = 10;
+  // remark 提供 CreateSmsChannelRevision 的补充说明。
+  string remark = 11;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 12;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 13;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 14;
+}
+
+// AdminCreateSmsTemplateRevisionRequest appends one immutable Template Revision.
+message AdminCreateSmsTemplateRevisionRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // template_code 提供 CreateSmsTemplateRevision 对外稳定使用的业务编码。
+  string template_code = 2;
+  // name 提供 CreateSmsTemplateRevision 面向展示或识别的名称。
+  string name = 3;
+  // purpose 指定 CreateSmsTemplateRevision 数据或能力的预期用途。
+  string purpose = 4;
+  // provider 标识本次能力使用的外部 Provider。
+  .support.messaging.v1.SmsProvider provider = 5;
+  // provider_template_id 标识关联的 ProviderTemplate。
+  string provider_template_id = 6;
+  // parameter_schema 描述消息模板允许使用的参数结构与约束。
+  string parameter_schema = 7;
+  // enabled 显式表示 CreateSmsTemplateRevision 是否满足该条件。
+  bool enabled = 8;
+  // remark 提供 CreateSmsTemplateRevision 的补充说明。
+  string remark = 9;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 10;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 11;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 12;
+}
+
+// AdminUpdateVerificationPolicyDraftRequest replaces Draft defaults and Verification policies.
+message AdminUpdateVerificationPolicyDraftRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // default_locale 指定内容展示或消息投递采用的语言区域。
+  string default_locale = 2;
+  // default_phone_region 指定号码、服务或业务规则采用的地区。
+  string default_phone_region = 3;
+  // delivery_policies 列出 UpdateVerificationPolicyDraft 关联的 VerificationDeliveryPolicyEntry。
+  repeated .support.configuration.v1.VerificationDeliveryPolicyEntry delivery_policies = 4;
+  // verification_policies 列出 UpdateVerificationPolicyDraft 关联的 VerificationPolicy。
+  repeated .support.configuration.v1.VerificationPolicy verification_policies = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 6;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 8;
+}
+
+// AdminPreflightConfigurationDraftRequest validates one editable Draft.
+message AdminPreflightConfigurationDraftRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4;
+}
+
+// AdminDiscardConfigurationDraftRequest discards one unused Draft.
+message AdminDiscardConfigurationDraftRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4;
+}
+
+// AdminGetDeliveryProbeReadinessRequest selects one Draft's safe probe view.
+message AdminGetDeliveryProbeReadinessRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+}
+
+// AdminExecuteDeliveryProbeRequest executes one deployment-restricted diagnostic delivery.
+message AdminExecuteDeliveryProbeRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // target_key 在约定作用域内稳定定位 ExecuteDeliveryProbe。
+  string target_key = 2;
+  // purpose 指定 ExecuteDeliveryProbe 数据或能力的预期用途。
+  .support.verification.v1.VerificationPurpose purpose = 3;
+  // locale 指定内容展示或消息投递采用的语言区域。
+  string locale = 4;
+  // parameters 承载 ExecuteDeliveryProbe 关联的 map<string, string>。
+  map<string, string> parameters = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 6;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 8;
+}
+
+// AdminListConfigurationReleasesRequest selects the authenticated App's Release history.
+message AdminListConfigurationReleasesRequest {}
+
+// AdminActivateConfigurationDraftRequest publishes one fully validated Draft.
+message AdminActivateConfigurationDraftRequest {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4;
+}
+
+// AdminRollbackConfigurationReleaseRequest republishes one historical snapshot.
+message AdminRollbackConfigurationReleaseRequest {
+  // release_id 标识关联的 Release。
+  uint64 release_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4;
+}

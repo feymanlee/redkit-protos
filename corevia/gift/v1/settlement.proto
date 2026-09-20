@@ -1,0 +1,338 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "gift/v1/backpack.proto";
+import "gift/v1/catalog.proto";
+import "google/protobuf/timestamp.proto";
+
+// 礼物分账记录。
+message GiftSettlementRecord {
+  // 记录 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 送礼记录 ID。
+  optional uint64 send_record_id = 3;
+  // 礼物 ID。
+  optional uint32 gift_id = 4;
+  // 发送用户 ID。
+  optional uint64 sender_user_id = 5;
+  // 接收用户 ID。
+  optional uint64 recipient_user_id = 6;
+  // 场景类型。
+  optional string scene_type = 7;
+  // 场景 ID。
+  optional string scene_id = 8;
+  // 总金额。
+  optional int64 total_amount = 9;
+  // 平台收入金额。
+  optional int64 platform_amount = 10;
+  // 收礼人待结算收益金额。
+  optional int64 recipient_amount = 11;
+  // 平台分成比例，万分比。
+  optional uint32 platform_rate = 12;
+  // 收礼人分成比例，万分比。
+  optional uint32 recipient_rate = 13;
+  // 结算状态。
+  optional string status = 14;
+  // 钱包业务 ID。
+  optional string wallet_biz_id = 15;
+  // 支付来源，WALLET 或 BACKPACK。
+  optional string payment_source = 16;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+// 礼物分账记录列表响应。
+message ListGiftSettlementRecordResponse {
+  // 列表项。
+  repeated GiftSettlementRecord items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// GiftSettlementRecordFilter contains bounded, typed Settlement Record workbench criteria.
+message GiftSettlementRecordFilter {
+  // Exact Send identity.
+  optional uint64 send_id = 1;
+  // Exact Gift identity.
+  optional uint32 gift_id = 2;
+  // Exact sender User identity.
+  optional uint64 sender_user_id = 3;
+  // Exact recipient User identity.
+  optional uint64 recipient_user_id = 4;
+  // Exact scene type.
+  optional string scene_type = 5;
+  // Payment sources, currently WALLET or BACKPACK.
+  repeated string payment_sources = 6;
+  // Settlement statuses aligned with Send terminal and in-flight states.
+  repeated string statuses = 7;
+  // Inclusive creation lower bound.
+  optional google.protobuf.Timestamp occurred_from = 8;
+  // Exclusive creation upper bound.
+  optional google.protobuf.Timestamp occurred_to = 9;
+}
+
+// ListGiftSettlementRecordsRequest carries trusted App scope, typed filters and stable paging.
+message ListGiftSettlementRecordsRequest {
+  // app_id 限定 ListGiftSettlementRecords 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  GiftSettlementRecordFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// SettlementReconciliationResult is the latest deterministic Gift-owned check outcome.
+enum SettlementReconciliationResult {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SETTLEMENT_RECONCILIATION_RESULT_UNSPECIFIED = 0;
+  // SETTLEMENT_RECONCILIATION_RESULT_PASSED 表示处理结果为 PASSED。
+  SETTLEMENT_RECONCILIATION_RESULT_PASSED = 1;
+  // SETTLEMENT_RECONCILIATION_RESULT_REBUILT 表示处理结果为 REBUILT。
+  SETTLEMENT_RECONCILIATION_RESULT_REBUILT = 2;
+  // SETTLEMENT_RECONCILIATION_RESULT_MISMATCH 表示处理结果为 MISMATCH。
+  SETTLEMENT_RECONCILIATION_RESULT_MISMATCH = 3;
+}
+
+// GiftReconciliationIssueType classifies preserved Settlement inconsistency evidence.
+enum GiftReconciliationIssueType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_RECONCILIATION_ISSUE_TYPE_UNSPECIFIED = 0;
+  // GIFT_RECONCILIATION_ISSUE_TYPE_DUPLICATE_SETTLEMENT 选择 DUPLICATE_SETTLEMENT 业务类型。
+  GIFT_RECONCILIATION_ISSUE_TYPE_DUPLICATE_SETTLEMENT = 1;
+  // GIFT_RECONCILIATION_ISSUE_TYPE_TOTAL_AMOUNT_MISMATCH 选择 TOTAL_AMOUNT_MISMATCH 业务类型。
+  GIFT_RECONCILIATION_ISSUE_TYPE_TOTAL_AMOUNT_MISMATCH = 2;
+  // GIFT_RECONCILIATION_ISSUE_TYPE_PLATFORM_AMOUNT_MISMATCH 选择 PLATFORM_AMOUNT_MISMATCH 业务类型。
+  GIFT_RECONCILIATION_ISSUE_TYPE_PLATFORM_AMOUNT_MISMATCH = 3;
+  // GIFT_RECONCILIATION_ISSUE_TYPE_RECIPIENT_AMOUNT_MISMATCH 选择 RECIPIENT_AMOUNT_MISMATCH 业务类型。
+  GIFT_RECONCILIATION_ISSUE_TYPE_RECIPIENT_AMOUNT_MISMATCH = 4;
+  // GIFT_RECONCILIATION_ISSUE_TYPE_RATE_MISMATCH 选择 RATE_MISMATCH 业务类型。
+  GIFT_RECONCILIATION_ISSUE_TYPE_RATE_MISMATCH = 5;
+  // GIFT_RECONCILIATION_ISSUE_TYPE_SNAPSHOT_MISMATCH 选择 SNAPSHOT_MISMATCH 业务类型。
+  GIFT_RECONCILIATION_ISSUE_TYPE_SNAPSHOT_MISMATCH = 6;
+  // GIFT_RECONCILIATION_ISSUE_TYPE_MULTIPLE_CONFLICTS 选择 MULTIPLE_CONFLICTS 业务类型。
+  GIFT_RECONCILIATION_ISSUE_TYPE_MULTIPLE_CONFLICTS = 7;
+}
+
+// GiftReconciliationIssueStatus can only become RESOLVED after a passing check.
+enum GiftReconciliationIssueStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_RECONCILIATION_ISSUE_STATUS_UNSPECIFIED = 0;
+  // 当前处于开放状态，可继续处理。
+  GIFT_RECONCILIATION_ISSUE_STATUS_OPEN = 1;
+  // 相关人员已经确认知悉，事实本身仍保留。
+  GIFT_RECONCILIATION_ISSUE_STATUS_ACKNOWLEDGED = 2;
+  // 异常或争议已经处置完成。
+  GIFT_RECONCILIATION_ISSUE_STATUS_RESOLVED = 3;
+}
+
+// GiftSettlementReconciliationEvidence preserves expected and observed Gift-owned facts.
+message GiftSettlementReconciliationEvidence {
+  // expected 承载 GiftSettlementReconciliationEvidence 关联的 GiftSettlementRecord。
+  GiftSettlementRecord expected = 1;
+  // observed 列出 GiftSettlementReconciliationEvidence 关联的 GiftSettlementRecord。
+  repeated GiftSettlementRecord observed = 2;
+  // backpack_items 列出 GiftSettlementReconciliationEvidence 关联的 GiftBackpackTransactionItem。
+  repeated GiftBackpackTransactionItem backpack_items = 3;
+  // mismatched_fields 列出结算核对中存在差异的字段。
+  repeated string mismatched_fields = 4;
+  // checked_at 记录 GiftSettlementReconciliationEvidence 对应业务阶段的时间点。
+  google.protobuf.Timestamp checked_at = 5;
+  // gift_revision_id 标识关联的 GiftRevision。
+  optional uint64 gift_revision_id = 6;
+}
+
+// GiftReconciliationIssue is one App-scoped logical inconsistency for one successful Send.
+message GiftReconciliationIssue {
+  // id 标识关联的 GiftReconciliationIssue。
+  uint64 id = 1;
+  // app_id 限定 GiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // send_record_id 标识关联的 SendRecord。
+  uint64 send_record_id = 3;
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 4;
+  // recipient_id 标识关联的 Recipient。
+  string recipient_id = 5;
+  // recipient_user_id 标识当前 App 内关联的 User。
+  uint64 recipient_user_id = 6;
+  // issue_type 区分 GiftReconciliationIssue 的业务类型。
+  GiftReconciliationIssueType issue_type = 7;
+  // status 表示 GiftReconciliationIssue 当前可观察的生命周期状态。
+  GiftReconciliationIssueStatus status = 8;
+  // latest_result 承载 GiftReconciliationIssue 关联的 SettlementReconciliationResult。
+  SettlementReconciliationResult latest_result = 9;
+  // first_evidence 提供支撑 GiftReconciliationIssue 判断或处置的证明材料。
+  GiftSettlementReconciliationEvidence first_evidence = 10;
+  // latest_evidence 提供支撑 GiftReconciliationIssue 判断或处置的证明材料。
+  GiftSettlementReconciliationEvidence latest_evidence = 11;
+  // check_count 记录 GiftReconciliationIssue 中符合对应条件的数量。
+  uint64 check_count = 12;
+  // acknowledged_by 标识触发或负责 GiftReconciliationIssue 对应业务阶段的主体。
+  optional uint32 acknowledged_by = 13;
+  // acknowledged_at 记录 GiftReconciliationIssue 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp acknowledged_at = 14;
+  // resolved_at 记录 GiftReconciliationIssue 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp resolved_at = 15;
+  // first_detected_at 记录 GiftReconciliationIssue 对应业务阶段的时间点。
+  google.protobuf.Timestamp first_detected_at = 16;
+  // last_checked_at 记录 GiftReconciliationIssue 对应业务阶段的时间点。
+  google.protobuf.Timestamp last_checked_at = 17;
+  // created_at 记录 GiftReconciliationIssue 的创建时间。
+  google.protobuf.Timestamp created_at = 18;
+  // updated_at 记录 GiftReconciliationIssue 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+// GiftReconciliationIssueNote is append-only investigation context.
+message GiftReconciliationIssueNote {
+  // id 标识关联的 GiftReconciliationIssueNote。
+  uint64 id = 1;
+  // app_id 限定 GiftReconciliationIssueNote 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // issue_id 标识关联的 Issue。
+  uint64 issue_id = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // note 提供 GiftReconciliationIssueNote 的补充说明。
+  string note = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 7;
+  // created_at 记录 GiftReconciliationIssueNote 的创建时间。
+  google.protobuf.Timestamp created_at = 8;
+}
+
+// GiftReconciliationIssueFilter contains bounded typed workbench criteria.
+message GiftReconciliationIssueFilter {
+  // send_id 标识关联的 Send。
+  optional uint64 send_id = 1;
+  // recipient_id 标识关联的 Recipient。
+  optional string recipient_id = 2;
+  // gift_id 标识关联的 Gift。
+  optional uint32 gift_id = 3;
+  // issue_types 列出 GiftReconciliationIssueFilter 关联的 GiftReconciliationIssueType。
+  repeated GiftReconciliationIssueType issue_types = 4;
+  // statuses 列出 GiftReconciliationIssueFilter 关联的 GiftReconciliationIssueStatus。
+  repeated GiftReconciliationIssueStatus statuses = 5;
+  // occurred_from 指定 GiftReconciliationIssueFilter 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp occurred_from = 6;
+  // occurred_to 指定 GiftReconciliationIssueFilter 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp occurred_to = 7;
+}
+
+// ListGiftReconciliationIssuesRequest 定义 GiftReconciliationIssues 的筛选与分页参数。
+message ListGiftReconciliationIssuesRequest {
+  // app_id 限定 ListGiftReconciliationIssues 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  GiftReconciliationIssueFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListGiftReconciliationIssuesResponse 返回 GiftReconciliationIssues 结果集合及分页信息。
+message ListGiftReconciliationIssuesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated GiftReconciliationIssue items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetGiftReconciliationIssueRequest 标识待查询的 GiftReconciliationIssue。
+message GetGiftReconciliationIssueRequest {
+  // app_id 限定 GetGiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // id 标识关联的 GetGiftReconciliationIssue。
+  uint64 id = 2;
+}
+
+// GiftReconciliationIssueAuditDetails 保留 Gift Reconciliation Issue 处置前后的审计细节。
+message GiftReconciliationIssueAuditDetails {
+  // issue 承载 GiftReconciliationIssueAuditDetails 关联的 GiftReconciliationIssue。
+  GiftReconciliationIssue issue = 1;
+  // notes 列出 GiftReconciliationIssueAuditDetails 关联的 GiftReconciliationIssueNote。
+  repeated GiftReconciliationIssueNote notes = 2;
+  // audits 列出 GiftReconciliationIssueAuditDetails 关联的 GiftOperatorAudit。
+  repeated GiftOperatorAudit audits = 3;
+}
+
+// AcknowledgeGiftReconciliationIssueRequest 定义执行 AcknowledgeGiftReconciliationIssue 的幂等管理命令参数。
+message AcknowledgeGiftReconciliationIssueRequest {
+  // app_id 限定 AcknowledgeGiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // id 标识关联的 AcknowledgeGiftReconciliationIssue。
+  uint64 id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // note 提供 AcknowledgeGiftReconciliationIssue 的补充说明。
+  string note = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+}
+
+// AddGiftReconciliationIssueNoteRequest 定义执行 AddGiftReconciliationIssueNote 的幂等管理命令参数。
+message AddGiftReconciliationIssueNoteRequest {
+  // app_id 限定 AddGiftReconciliationIssueNote 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // id 标识关联的 AddGiftReconciliationIssueNote。
+  uint64 id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // note 提供 AddGiftReconciliationIssueNote 的补充说明。
+  string note = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+}
+
+// ReconcileGiftSettlementRequest 定义核对 GiftSettlement 的幂等管理命令参数。
+message ReconcileGiftSettlementRequest {
+  // app_id 限定 ReconcileGiftSettlement 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // issue_id 标识关联的 Issue。
+  uint64 issue_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+}
+
+// GiftReconciliationIssueActionResponse 承载 GiftReconciliationIssueAction 的返回结果。
+message GiftReconciliationIssueActionResponse {
+  // issue 承载 GiftReconciliationIssueAction 关联的 GiftReconciliationIssue。
+  GiftReconciliationIssue issue = 1;
+  // note 提供 GiftReconciliationIssueAction 的补充说明。
+  GiftReconciliationIssueNote note = 2;
+  // audit 承载 GiftReconciliationIssueAction 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 3;
+  // replayed 显式表示 GiftReconciliationIssueAction 是否满足该条件。
+  bool replayed = 4;
+}
+
+// ReconcileGiftSettlementResponse 承载 ReconcileGiftSettlement 的返回结果。
+message ReconcileGiftSettlementResponse {
+  // result 承载 ReconcileGiftSettlement 关联的 SettlementReconciliationResult。
+  SettlementReconciliationResult result = 1;
+  // issue 承载 ReconcileGiftSettlement 关联的 GiftReconciliationIssue。
+  GiftReconciliationIssue issue = 2;
+  // settlements 以契约字段约定的单位表示对应流程的持续时间或上限。
+  repeated GiftSettlementRecord settlements = 3;
+  // audit 承载 ReconcileGiftSettlement 关联的 GiftOperatorAudit。
+  GiftOperatorAudit audit = 4;
+  // replayed 显式表示 ReconcileGiftSettlement 是否满足该条件。
+  bool replayed = 5;
+}

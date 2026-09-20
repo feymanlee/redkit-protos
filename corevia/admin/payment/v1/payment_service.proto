@@ -1,0 +1,314 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/callback.proto";
+import "payment/v1/payment_administration.proto";
+import "payment/v1/payment_contract.proto";
+import "payment/v1/operations.proto";
+import "payment/v1/risk.proto";
+import "wallet/v1/recharge.proto";
+import "validate/validate.proto";
+
+// 支付管理服务。
+service PaymentService {
+  // 查询支付单。
+  rpc GetPayment(AdminGetPaymentRequest) returns (AdminPaymentDetail) {
+    option (google.api.http) = {get: "/admin/v1/payments/{payment_no}"};
+  }
+  // 关闭支付单。
+  rpc ClosePayment(AdminClosePaymentRequest) returns (.payment.v1.Payment) {
+    option (google.api.http) = {
+      post: "/admin/v1/payments/{payment_no}:close"
+      body: "*"
+    };
+  }
+  // 主动查询 Provider 权威状态。
+  rpc RefreshPaymentProviderState(AdminRefreshPaymentProviderStateRequest) returns (.payment.v1.RefreshPaymentProviderStateResponse) {
+    option (google.api.http) = {post: "/admin/v1/payments/{payment_no}:refresh-provider-state" body: "*"};
+  }
+  // 查询支付单列表。
+  rpc ListPayments(AdminListPaymentsRequest) returns (.payment.v1.ListPaymentResponse) {
+    option (google.api.http) = {get: "/admin/v1/payments"};
+  }
+  // 查询支付事件列表。
+  rpc ListPaymentEvents(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListPaymentEventResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-events"};
+  }
+  // 查询支付回调列表。
+  rpc ListPaymentCallbacks(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListPaymentCallbackResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-callbacks"};
+  }
+  // 使用原始回调和自动候选 Revision 重处理历史回调。
+  rpc ReprocessPaymentCallback(AdminReprocessPaymentCallbackRequest) returns (.payment.v1.ReprocessPaymentCallbackResponse) {
+    option (google.api.http) = {post: "/admin/v1/payment-callbacks/{callback_id}:reprocess" body: "*"};
+  }
+  // 查询用户支付摘要，供 User Overview 使用。
+  rpc GetUserPaymentSummary(AdminGetUserPaymentSummaryRequest) returns (.payment.v1.UserPaymentSummary) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/payment-summary"};
+  }
+  // 查询 PaymentOperationsSummary。
+  rpc GetPaymentOperationsSummary(AdminGetPaymentOperationsSummaryRequest) returns (.payment.v1.PaymentOperationsSummary) {
+    option (google.api.http) = {get: "/admin/v1/payment-operations/summary"};
+  }
+  // 查询 PaymentWorkQueue 列表。
+  rpc ListPaymentWorkQueue(AdminListPaymentWorkQueueRequest) returns (.payment.v1.ListPaymentWorkQueueResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-work-queue"};
+  }
+  // 领取 RefundRequestWorkQueueItem。
+  rpc ClaimRefundRequestWorkQueueItem(AdminMutatePaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/refund-requests/{resource_id}:claim" body: "*"};
+  }
+  // 转派 RefundRequestWorkQueueItem。
+  rpc ReassignRefundRequestWorkQueueItem(AdminReassignPaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/refund-requests/{resource_id}:reassign" body: "*"};
+  }
+  // 完成 RefundRequestWorkQueueItem。
+  rpc CompleteRefundRequestWorkQueueItem(AdminMutatePaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/refund-requests/{resource_id}:complete" body: "*"};
+  }
+  // 领取 DeliveryFailureWorkQueueItem。
+  rpc ClaimDeliveryFailureWorkQueueItem(AdminMutatePaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/delivery-failures/{resource_id}:claim" body: "*"};
+  }
+  // 转派 DeliveryFailureWorkQueueItem。
+  rpc ReassignDeliveryFailureWorkQueueItem(AdminReassignPaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/delivery-failures/{resource_id}:reassign" body: "*"};
+  }
+  // 完成 DeliveryFailureWorkQueueItem。
+  rpc CompleteDeliveryFailureWorkQueueItem(AdminMutatePaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/delivery-failures/{resource_id}:complete" body: "*"};
+  }
+  // 领取 RiskReviewWorkQueueItem。
+  rpc ClaimRiskReviewWorkQueueItem(AdminMutatePaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/risk-reviews/{resource_id}:claim" body: "*"};
+  }
+  // 转派 RiskReviewWorkQueueItem。
+  rpc ReassignRiskReviewWorkQueueItem(AdminReassignPaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/risk-reviews/{resource_id}:reassign" body: "*"};
+  }
+  // 完成 RiskReviewWorkQueueItem。
+  rpc CompleteRiskReviewWorkQueueItem(AdminMutatePaymentWorkQueueItemRequest) returns (.payment.v1.PaymentWorkQueueItem) {
+    option (google.api.http) = {post: "/admin/v1/payment-work-queue/risk-reviews/{resource_id}:complete" body: "*"};
+  }
+  // 创建 PaymentRiskPolicyRevision。
+  rpc CreatePaymentRiskPolicyRevision(AdminCreatePaymentRiskPolicyRevisionRequest) returns (.payment.v1.PaymentRiskPolicyRevision) {
+    option (google.api.http) = {post: "/admin/v1/payment-risk-policy-revisions" body: "*"};
+  }
+  // 发布 PaymentRiskPolicyRevision。
+  rpc PublishPaymentRiskPolicyRevision(AdminPublishPaymentRiskPolicyRevisionRequest) returns (.payment.v1.PaymentRiskPolicyRevision) {
+    option (google.api.http) = {post: "/admin/v1/payment-risk-policy-revisions/{revision_id}:publish" body: "*"};
+  }
+  // 查询 PaymentRiskPolicyRevision 列表。
+  rpc ListPaymentRiskPolicyRevisions(AdminListPaymentRiskPolicyRevisionsRequest) returns (.payment.v1.ListPaymentRiskPolicyRevisionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-risk-policy-revisions"};
+  }
+  // 查询 PaymentRiskDecision。
+  rpc GetPaymentRiskDecision(AdminGetPaymentRiskDecisionRequest) returns (.payment.v1.PaymentRiskDecision) {
+    option (google.api.http) = {get: "/admin/v1/payments/{payment_no}/risk-decision"};
+  }
+  // 查询 PaymentRiskReview 列表。
+  rpc ListPaymentRiskReviews(AdminListPaymentRiskReviewsRequest) returns (.payment.v1.ListPaymentRiskReviewsResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-risk-reviews"};
+  }
+  // 批准 PaymentRiskReview。
+  rpc ApprovePaymentRiskReview(AdminDecidePaymentRiskReviewRequest) returns (.payment.v1.PaymentRiskDecision) {
+    option (google.api.http) = {post: "/admin/v1/payment-risk-reviews/{review_id}:approve" body: "*"};
+  }
+  // 拒绝 PaymentRiskReview。
+  rpc RejectPaymentRiskReview(AdminDecidePaymentRiskReviewRequest) returns (.payment.v1.PaymentRiskDecision) {
+    option (google.api.http) = {post: "/admin/v1/payment-risk-reviews/{review_id}:reject" body: "*"};
+  }
+  // 查询 PaymentAnalytics。
+  rpc GetPaymentAnalytics(AdminGetPaymentAnalyticsRequest) returns (.payment.v1.GetPaymentAnalyticsResponse) {
+    option (google.api.http) = {get: "/admin/v1/payment-analytics"};
+  }
+}
+
+// AdminCreatePaymentRiskPolicyRevisionRequest 定义创建 PaymentRiskPolicyRevision 的幂等命令参数。
+message AdminCreatePaymentRiskPolicyRevisionRequest {
+  // name 提供 CreatePaymentRiskPolicyRevision 面向展示或识别的名称。
+  string name = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 160}];
+  // review_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 review_ttl_seconds = 2 [(validate.rules).uint32 = {gte: 60, lte: 604800}];
+  // rules 列出 CreatePaymentRiskPolicyRevision 关联的 PaymentRiskRule。
+  repeated .payment.v1.PaymentRiskRule rules = 3 [(validate.rules).repeated = {min_items: 1, max_items: 100}];
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 2000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 5 [(validate.rules).string.max_len = 120];
+}
+
+// AdminPublishPaymentRiskPolicyRevisionRequest 定义发布 PaymentRiskPolicyRevision 的幂等管理命令参数。
+message AdminPublishPaymentRiskPolicyRevisionRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // explanation 记录人工判断的补充说明，供审计与复核。
+  string explanation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 2000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 3 [(validate.rules).string.max_len = 120];
+}
+
+// AdminListPaymentRiskPolicyRevisionsRequest 定义 PaymentRiskPolicyRevisions 的筛选与分页参数。
+message AdminListPaymentRiskPolicyRevisionsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+}
+
+// AdminGetPaymentRiskDecisionRequest 标识待查询的 PaymentRiskDecision。
+message AdminGetPaymentRiskDecisionRequest {
+  // payment_no 是 GetPaymentRiskDecision 对外关联与审计使用的业务编号。
+  string payment_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminListPaymentRiskReviewsRequest 定义 PaymentRiskReviews 的筛选与分页参数。
+message AdminListPaymentRiskReviewsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .payment.v1.PaymentRiskReviewFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminDecidePaymentRiskReviewRequest 定义执行 DecidePaymentRiskReview 的幂等管理命令参数。
+message AdminDecidePaymentRiskReviewRequest {
+  // review_id 标识关联的 Review。
+  uint64 review_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // expected_version 标识 DecidePaymentRiskReview 所采用的契约或资源版本。
+  uint64 expected_version = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 4 [(validate.rules).string.max_len = 120];
+}
+
+// AdminGetPaymentAnalyticsRequest 标识待查询的 PaymentAnalytics。
+message AdminGetPaymentAnalyticsRequest {
+  // window_from 指定 GetPaymentAnalytics 查询或生效区间的起始边界。
+  google.protobuf.Timestamp window_from = 1 [(google.api.field_behavior) = REQUIRED];
+  // window_to 指定 GetPaymentAnalytics 查询或生效区间的结束边界。
+  google.protobuf.Timestamp window_to = 2 [(google.api.field_behavior) = REQUIRED];
+  // bucket 承载 GetPaymentAnalytics 关联的 PaymentAnalyticsBucket。
+  .payment.v1.PaymentAnalyticsBucket bucket = 3 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // filter 限定本次查询采用的筛选条件。
+  .payment.v1.PaymentAnalyticsFilter filter = 4;
+}
+
+// AdminGetPaymentOperationsSummaryRequest 标识待查询的 PaymentOperationsSummary。
+message AdminGetPaymentOperationsSummaryRequest {
+  // window_from 指定 GetPaymentOperationsSummary 查询或生效区间的起始边界。
+  optional google.protobuf.Timestamp window_from = 1;
+  // window_to 指定 GetPaymentOperationsSummary 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp window_to = 2;
+}
+
+// AdminListPaymentWorkQueueRequest 定义 PaymentWorkQueue 的筛选与分页参数。
+message AdminListPaymentWorkQueueRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  .payment.v1.WorkQueueFilter filter = 2;
+}
+
+// AdminMutatePaymentWorkQueueItemRequest 定义变更 PaymentWorkQueueItem 的幂等管理命令参数。
+message AdminMutatePaymentWorkQueueItemRequest {
+  // resource_id 标识关联的 Resource。
+  string resource_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 160}];
+  // expected_version 标识 MutatePaymentWorkQueueItem 所采用的契约或资源版本。
+  uint64 expected_version = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 4 [(validate.rules).string.max_len = 120];
+}
+
+// AdminReassignPaymentWorkQueueItemRequest 定义执行 ReassignPaymentWorkQueueItem 的幂等管理命令参数。
+message AdminReassignPaymentWorkQueueItemRequest {
+  // resource_id 标识关联的 Resource。
+  string resource_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 160}];
+  // expected_version 标识 ReassignPaymentWorkQueueItem 所采用的契约或资源版本。
+  uint64 expected_version = 2;
+  // assignee_operator_id 标识关联的后台 Operator。
+  uint32 assignee_operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 5 [(validate.rules).string.max_len = 120];
+}
+
+// AdminGetPaymentRequest 标识待查询的 Payment。
+message AdminGetPaymentRequest {
+  // payment_no 是 GetPayment 对外关联与审计使用的业务编号。
+  string payment_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminListPaymentsRequest 定义 Payments 的筛选与分页参数。
+message AdminListPaymentsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  .payment.v1.PaymentSearchFilter filter = 2;
+}
+
+// AdminPaymentAction 描述管理端可对 Payment 执行的受控动作。
+message AdminPaymentAction {
+  // code 提供客户端可判断的 Payment Action 编码。
+  string code = 1;
+  // required_permission 标识调用该能力必须具备的 Permission。
+  string required_permission = 2;
+  // available 显式表示 PaymentAction 是否满足该条件。
+  bool available = 3;
+  // unavailable_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string unavailable_reason = 4;
+}
+
+// AdminPaymentDetail 承载 GetPayment 调用的返回结果。
+message AdminPaymentDetail {
+  // payment_detail 承载 PaymentDetail 关联的 PaymentDetail。
+  .payment.v1.PaymentDetail payment_detail = 1;
+  // recharge_order 承载 PaymentDetail 关联的 RechargeOrder。
+  optional .wallet.v1.RechargeOrder recharge_order = 2;
+  // recharge_order_state 表示 PaymentDetail 当前可观察的生命周期状态。
+  .payment.v1.PaymentDetailSectionState recharge_order_state = 3;
+  // actions 列出 PaymentDetail 关联的 AdminPaymentAction。
+  repeated AdminPaymentAction actions = 4;
+}
+
+// AdminGetUserPaymentSummaryRequest 标识待查询的 UserPaymentSummary。
+message AdminGetUserPaymentSummaryRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminClosePaymentRequest 定义关闭 Payment 的幂等管理命令参数。
+message AdminClosePaymentRequest {
+  // payment_no 是 ClosePayment 对外关联与审计使用的业务编号。
+  string payment_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // reason_code 提供机器可判断的业务原因分类。
+  .payment.v1.PaymentClosureReasonCode reason_code = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // remark 提供 ClosePayment 的补充说明。
+  string remark = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 120}];
+}
+
+// AdminRefreshPaymentProviderStateRequest 定义执行 RefreshPaymentProviderState 的幂等管理命令参数。
+message AdminRefreshPaymentProviderStateRequest {
+  // payment_no 是 RefreshPaymentProviderState 对外关联与审计使用的业务编号。
+  string payment_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 2 [(validate.rules).string.max_len = 120];
+}
+
+// AdminReprocessPaymentCallbackRequest 定义执行 ReprocessPaymentCallback 的幂等管理命令参数。
+message AdminReprocessPaymentCallbackRequest {
+  // callback_id 标识关联的 Callback。
+  uint64 callback_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 3 [(validate.rules).string.max_len = 120];
+}

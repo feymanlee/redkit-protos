@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package core.audit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+// 敏感级别
+enum SensitiveLevel {
+  // 未指定。
+  SENSITIVE_LEVEL_UNSPECIFIED = 0;
+
+  // 公开数据。
+  PUBLIC = 1;      // 公开数据
+  // 内部数据。
+  INTERNAL = 2;    // 内部数据
+  // 机密数据（个人身份信息）。
+  CONFIDENTIAL = 3; // 机密数据（个人身份信息）
+  // 秘密数据（金融交易）。
+  SECRET = 4;      // 秘密数据（金融交易）
+}
+
+// 新增保留策略
+enum RetentionPolicy {
+  // 未指定。
+  RETENTION_POLICY_UNSPECIFIED = 0;
+
+  // 90天（普通操作）。
+  DAYS_90 = 1;   // 90天（普通操作）
+  // 180天（等保2.0最低要求）。
+  DAYS_180 = 2;  // 180天（等保2.0最低要求）
+  // 365天（金融核心）。
+  DAYS_365 = 3;  // 365天（金融核心）
+  // 永久（法律要求）。
+  PERMANENT = 4; // 永久（法律要求）
+}
+
+// 业务资源信息
+message BusinessResource {
+  // 资源类型。
+  optional string resource_type = 1 [ (gnostic.openapi.v3.property) = {description: "资源类型"}]; // 资源类型
+
+  // 业务键。
+  optional uint32 resource_key = 2 [ (gnostic.openapi.v3.property) = {description: "业务键"}]; // 业务键
+
+  // 访问字段列表。
+  repeated string accessed_fields = 3 [ (gnostic.openapi.v3.property) = {description: "访问字段列表"}]; // 访问字段列表
+}
+
+// 数字签名
+message DigitalSignature {
+  // 算法标识。
+  string algorithm = 1 [ // 算法标识
+    (validate.rules).string = {
+      in: "ECDSA_P256_SHA256,RSA_2048_PKCS1_V1_5_SHA256"
+    }];
+  // 签名值。
+  bytes value = 2; // 签名值
+}

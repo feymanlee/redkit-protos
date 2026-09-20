@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package core.audit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/empty.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+import "core/audit/v1/common.proto";
+import "core/audit/v1/geo_location.proto";
+
+// 操作审计日志服务
+service OperationAuditLogService {
+  // 查询操作审计日志列表
+  rpc List (common.pagination.v1.PagingRequest) returns (ListOperationAuditLogResponse) {}
+
+  // 查询操作审计日志详情
+  rpc Get (GetOperationAuditLogRequest) returns (OperationAuditLog) {}
+
+  // 创建操作审计日志
+  rpc Create (CreateOperationAuditLogRequest) returns (google.protobuf.Empty) {}
+}
+
+// 操作审计日志
+message OperationAuditLog {
+  // 动作类型
+  enum ActionType {
+    // 未指定。
+    ACTION_TYPE_UNSPECIFIED = 0;
+
+    // 创建。
+    CREATE = 1;     // 创建
+    // 更新。
+    UPDATE = 2;     // 更新
+    // 删除。
+    DELETE = 3;     // 删除
+    // 读取。
+    READ = 4;       // 读取
+    // 分配。
+    ASSIGN = 5;     // 分配
+    // 取消分配。
+    UNASSIGN = 6;   // 取消分配
+    // 导出。
+    EXPORT = 7;     // 导出
+    // 导入。
+    IMPORT = 8;     // 导入
+
+    // 其他。
+    OTHER = 100;      // 其他
+  }
+
+  // 用户操作审计日志ID。
+  optional uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "API审计日志ID"}]; // 用户操作审计日志ID
+
+  // AppID。
+  optional uint32 app_id = 2 [ (gnostic.openapi.v3.property) = {description: "AppID"}];  // AppID
+
+  // App名称。
+  optional string app_name = 3 [ (gnostic.openapi.v3.property) = {description: "App名称"}]; // App名称
+
+  // 后台人员 ID。
+  optional uint32 operator_id = 4 [ (gnostic.openapi.v3.property) = {description: "后台人员 ID"}];
+
+  // 账号名。
+  optional string username = 5 [ (gnostic.openapi.v3.property) = {description: "账号名"}]; // 账号名
+
+  // 资源类型。
+  optional string resource_type = 10 [ (gnostic.openapi.v3.property) = {description: "资源类型"}]; // 资源类型
+
+  // 资源ID。
+  optional string resource_id = 11 [ (gnostic.openapi.v3.property) = {description: "资源ID"}]; // 资源ID
+
+  // 动作。
+  optional ActionType action = 12 [ (gnostic.openapi.v3.property) = {description: "动作"}]; // 动作
+
+  // 操作前数据。
+  optional string before_data = 13 [ (gnostic.openapi.v3.property) = {description: "操作前数据"}]; // 操作前数据
+
+  // 操作后数据。
+  optional string after_data = 14 [ (gnostic.openapi.v3.property) = {description: "操作后数据"}]; // 操作后数据
+
+  // 敏感等级。
+  optional SensitiveLevel sensitive_level = 15 [ (gnostic.openapi.v3.property) = {description: "敏感等级"}]; // 敏感等级
+
+  // 请求ID。
+  optional string request_id = 16 [ (gnostic.openapi.v3.property) = {description: "全局请求ID（关联网关日志）"}]; // 请求ID
+
+  // 全局链路追踪ID。
+  optional string trace_id = 17 [ (gnostic.openapi.v3.property) = {description: "全局链路追踪ID（符合W3C TraceContext标准）"}]; // 全局链路追踪ID
+
+  // 操作结果。
+  optional bool success = 18 [ (gnostic.openapi.v3.property) = {description: "操作是否成功"}]; // 操作结果
+
+  // 失败原因。
+  optional string failure_reason = 19 [ (gnostic.openapi.v3.property) = {description: "失败原因"}]; // 失败原因
+
+  // IP地址。
+  optional string ip_address = 20 [ (gnostic.openapi.v3.property) = {description: "IP地址"}]; // IP地址
+
+  // 地理位置(来自IP库)。
+  optional GeoLocation geo_location = 21 [ (gnostic.openapi.v3.property) = {description: "地理位置(来自IP库)"}]; // 地理位置(来自IP库)
+
+  // ========== 合规校验 ==========
+
+  // log_hash 用于校验 OperationAuditLog 对应内容或版本的一致性。
+  optional string log_hash = 40 [ (gnostic.openapi.v3.property).description = "日志内容哈希（SHA256，十六进制字符串）"]; // 日志哈希
+
+  // 日志数字签名。
+  optional bytes signature = 41 [ (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）"]; // 日志数字签名
+
+  // ========== 时间字段 ==========
+
+  // created_at 记录 OperationAuditLog 的创建时间。
+  optional google.protobuf.Timestamp created_at = 50 [ (gnostic.openapi.v3.property) = {description: "日志创建时间"}];// 日志创建时间
+}
+
+// 查询操作审计日志列表 - 回应
+message ListOperationAuditLogResponse {
+  // 列表项。
+  repeated OperationAuditLog items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 查询操作审计日志详情 - 请求
+message GetOperationAuditLogRequest {
+  // GetOperationAuditLogRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // ID。
+    uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "ID", read_only: true}]; // ID
+  }
+
+  // 视图字段过滤器，用于控制返回的字段。
+  optional google.protobuf.FieldMask view_mask = 100 [ (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 创建操作审计日志 - 请求
+message CreateOperationAuditLogRequest {
+  // 数据。
+  OperationAuditLog data = 1;
+}

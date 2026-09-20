@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/protobuf/empty.proto";
+import "payment/v1/subscription.proto";
+
+// 支付订阅服务。
+service PaymentSubscriptionService {
+  // 创建订阅。
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (UserSubscription) {}
+  // 查询用户订阅列表。
+  rpc ListUserSubscriptions(common.pagination.v1.PagingRequest) returns (ListUserSubscriptionResponse) {}
+  // 查询用户订阅详情。
+  rpc GetUserSubscriptionDetail(GetUserSubscriptionDetailRequest) returns (GetUserSubscriptionDetailResponse) {}
+  // 查询订阅计划列表。
+  rpc ListSubscriptionPlans(common.pagination.v1.PagingRequest) returns (ListSubscriptionPlanResponse) {}
+  // 创建订阅计划。
+  rpc CreateSubscriptionPlan(CreateSubscriptionPlanRequest) returns (SubscriptionPlan) {}
+  // 更新订阅计划。
+  rpc UpdateSubscriptionPlan(UpdateSubscriptionPlanRequest) returns (google.protobuf.Empty) {}
+  // 查询不可变计划版本。
+  rpc ListSubscriptionPlanRevisions(ListSubscriptionPlanRevisionsRequest) returns (ListSubscriptionPlanRevisionsResponse) {}
+  // 创建计划版本草稿。
+  rpc CreateSubscriptionPlanRevision(CreateSubscriptionPlanRevisionRequest) returns (SubscriptionPlanRevision) {}
+  // 发布计划版本。
+  rpc PublishSubscriptionPlanRevision(PublishSubscriptionPlanRevisionRequest) returns (SubscriptionPlanRevision) {}
+  // 提交人工权益处置。
+  rpc SubmitSubscriptionAdjustment(SubmitSubscriptionAdjustmentRequest) returns (SubscriptionAdjustment) {}
+  // 批准高风险人工权益处置。
+  rpc ApproveSubscriptionAdjustment(ReviewSubscriptionAdjustmentRequest) returns (SubscriptionAdjustment) {}
+  // 拒绝高风险人工权益处置。
+  rpc RejectSubscriptionAdjustment(ReviewSubscriptionAdjustmentRequest) returns (SubscriptionAdjustment) {}
+  // 查询人工权益处置。
+  rpc ListSubscriptionAdjustments(ListSubscriptionAdjustmentsRequest) returns (ListSubscriptionAdjustmentsResponse) {}
+  // 设置人工权益自动执行阈值。
+  rpc UpsertSubscriptionAdjustmentRiskRule(UpsertSubscriptionAdjustmentRiskRuleRequest) returns (SubscriptionAdjustmentRiskRule) {}
+  // 查询人工权益自动执行阈值。
+  rpc ListSubscriptionAdjustmentRiskRules(ListSubscriptionAdjustmentRiskRulesRequest) returns (ListSubscriptionAdjustmentRiskRulesResponse) {}
+  // 查询 Provider 自动续订协议。
+  rpc ListProviderSubscriptions(ListProviderSubscriptionsRequest) returns (ListProviderSubscriptionsResponse) {}
+  // 查询 Provider 自动续订协议详情、周期和事件。
+  rpc GetProviderSubscriptionDetail(GetProviderSubscriptionDetailRequest) returns (ProviderSubscriptionDetail) {}
+  // 验证客户端购买并幂等形成首个 Provider 周期。
+  rpc VerifyProviderSubscriptionPurchase(VerifyProviderSubscriptionPurchaseRequest) returns (ProviderSubscriptionDetail) {}
+  // 使用已经按 Channel Revision window 验签归因的历史回调推进订阅。
+  rpc ProcessProviderSubscriptionCallback(ProcessProviderSubscriptionCallbackRequest) returns (ProviderSubscriptionDetail) {}
+  // 关闭未来续订，保留当前已付周期权益。
+  rpc CancelProviderSubscription(CancelProviderSubscriptionRequest) returns (ProviderSubscriptionDetail) {}
+  // 主动查询 Provider 权威状态并收敛本地快照。
+  rpc RefreshProviderSubscription(RefreshProviderSubscriptionRequest) returns (ProviderSubscriptionDetail) {}
+  // 按 Provider 与实际 Plan Revision 输出续订生命周期指标。
+  rpc GetProviderSubscriptionAnalytics(GetProviderSubscriptionAnalyticsRequest) returns (GetProviderSubscriptionAnalyticsResponse) {}
+}

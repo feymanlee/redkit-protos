@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// Gift Reward 背包履约服务。
+service GiftRewardService {
+  // 预检一个 App 下的背包 Gift Reward 配置。
+  rpc PreflightBackpackGiftReward(PreflightBackpackGiftRewardRequest) returns (PreflightBackpackGiftRewardResponse) {}
+  // 按稳定 Reward Item 身份幂等发放背包 Gift。
+  rpc GrantBackpackGiftReward(GrantBackpackGiftRewardRequest) returns (GrantBackpackGiftRewardResponse) {}
+}
+
+// 背包 Gift Reward 预检请求。
+message PreflightBackpackGiftRewardRequest {
+  // 应用 ID，必须与可信 App Scope 一致。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // Gift ID，必须属于当前 App。
+  uint32 gift_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // 发放数量，必须为正数且不超过平台上限。
+  uint64 quantity = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// 背包 Gift Reward 预检结果。
+message PreflightBackpackGiftRewardResponse {
+  // app_id 限定 PreflightBackpackGiftReward 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 2;
+  // quantity 表示 PreflightBackpackGiftReward 涉及的业务对象数量。
+  uint64 quantity = 3;
+}
+
+// 背包 Gift Reward 履约请求。
+message GrantBackpackGiftRewardRequest {
+  // 应用 ID，必须与可信 App Scope 一致。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // Reward 接收用户 ID。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // Gift ID，必须属于当前 App。
+  uint32 gift_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // 发放数量。
+  uint64 quantity = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // Ops 持久化的全局稳定 Reward Item ID。
+  uint64 reward_item_id = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // 已在 Reward Snapshot 冻结的绝对到期时间；省略表示永久有效。
+  optional google.protobuf.Timestamp expire_at = 6 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// 背包 Gift Reward 履约结果。
+message GrantBackpackGiftRewardResponse {
+  // app_id 限定 GrantBackpackGiftReward 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 3;
+  // quantity 表示 GrantBackpackGiftReward 涉及的业务对象数量。
+  uint64 quantity = 4;
+  // reward_item_id 标识关联的 RewardItem。
+  uint64 reward_item_id = 5;
+  // Gift 背包批次 ID；重试返回同一身份。
+  uint64 batch_id = 6;
+  // Gift 背包 GRANT 流水 ID；重试返回同一身份。
+  uint64 transaction_id = 7;
+  // 实际冻结的绝对到期时间；省略表示永久有效。
+  optional google.protobuf.Timestamp expire_at = 8;
+}

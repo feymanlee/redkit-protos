@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+
+// WalletOperationsQueryService exposes bounded operational read models owned by Wallet.
+service WalletOperationsQueryService {
+  // 查询 OperationsSummary。
+  rpc GetOperationsSummary(GetWalletOperationsSummaryRequest) returns (WalletOperationsSummary);
+}
+
+// GetWalletOperationsSummaryRequest 标识待查询的 WalletOperationsSummary。
+message GetWalletOperationsSummaryRequest {
+  // app_id 限定 GetWalletOperationsSummary 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // long_running_freeze_before 指定 GetWalletOperationsSummary 查询或生效区间的结束边界。
+  google.protobuf.Timestamp long_running_freeze_before = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// WalletOperationsAmount 表示 Wallet 运营指标中的金额与 WalletCurrency。
+message WalletOperationsAmount {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1;
+  // amount 以对应 WalletCurrency 的最小计量单位表示，不使用浮点数。
+  int64 amount = 2;
+}
+
+// WalletOperationsMetric 表示 Wallet 运营指标的当前值、对比值与变化量。
+message WalletOperationsMetric {
+  // count 记录 WalletOperationsMetric 中符合对应条件的数量。
+  uint64 count = 1;
+  // amounts 列出 WalletOperationsMetric 关联的 WalletOperationsAmount。
+  repeated WalletOperationsAmount amounts = 2;
+  // oldest_at 记录 WalletOperationsMetric 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp oldest_at = 3;
+}
+
+// WalletOperationsSummary 承载 GetOperationsSummary 调用的返回结果。
+message WalletOperationsSummary {
+  // pending_approvals 承载 WalletOperationsSummary 关联的 WalletOperationsMetric。
+  WalletOperationsMetric pending_approvals = 1;
+  // open_debts 承载 WalletOperationsSummary 关联的 WalletOperationsMetric。
+  WalletOperationsMetric open_debts = 2;
+  // reconciliation_differences 承载 WalletOperationsSummary 关联的 WalletOperationsMetric。
+  WalletOperationsMetric reconciliation_differences = 3;
+  // long_running_freezes 承载 WalletOperationsSummary 关联的 WalletOperationsMetric。
+  WalletOperationsMetric long_running_freezes = 4;
+  // high_risk_events 承载 WalletOperationsSummary 关联的 WalletOperationsMetric。
+  WalletOperationsMetric high_risk_events = 5;
+}

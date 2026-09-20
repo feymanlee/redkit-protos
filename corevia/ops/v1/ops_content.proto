@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package ops.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "ops/v1/placement.proto";
+import "validate/validate.proto";
+
+// JumpTargetType 刻画 Ops Content Item 被选择后的行为分支。
+enum JumpTargetType {
+  // JUMP_TARGET_TYPE_UNSPECIFIED 只表示未提供。
+  JUMP_TARGET_TYPE_UNSPECIFIED = 0;
+  // JUMP_TARGET_TYPE_NONE 仅展示，不跳转。
+  JUMP_TARGET_TYPE_NONE = 1;
+  // JUMP_TARGET_TYPE_URL 外部 http(s) 地址。
+  JUMP_TARGET_TYPE_URL = 2;
+  // JUMP_TARGET_TYPE_APP_INTERNAL_ROUTE 由 App/BFF 解释的内部路由字符串。
+  JUMP_TARGET_TYPE_APP_INTERNAL_ROUTE = 3;
+}
+
+// OpsContentStatus 刻画运营投放内容的生命周期阶段。
+enum OpsContentStatus {
+  // OPS_CONTENT_STATUS_UNSPECIFIED 只表示未提供。
+  OPS_CONTENT_STATUS_UNSPECIFIED = 0;
+  // OPS_CONTENT_STATUS_DRAFT 草稿，不影响线上。
+  OPS_CONTENT_STATUS_DRAFT = 1;
+  // OPS_CONTENT_STATUS_SCHEDULED 已发布且生效时间尚未到达。
+  OPS_CONTENT_STATUS_SCHEDULED = 2;
+  // OPS_CONTENT_STATUS_PUBLISHED 已发布；是否可读取取决于时间窗。
+  OPS_CONTENT_STATUS_PUBLISHED = 3;
+  // OPS_CONTENT_STATUS_OFFLINE 已人工下线，不再下发。
+  OPS_CONTENT_STATUS_OFFLINE = 4;
+  // OPS_CONTENT_STATUS_EXPIRED 时间窗已过，不再下发。
+  OPS_CONTENT_STATUS_EXPIRED = 5;
+}
+
+// JumpTarget 是 Ops Content Item 的结构化跳转声明。
+message JumpTarget {
+  // type 是跳转分支。
+  JumpTargetType type = 1;
+  // value 在 URL 或 APP_INTERNAL_ROUTE 分支下携带目标；NONE 分支必须为空。
+  string value = 2;
+}
+
+// OpsContentItem 是绑定 Placement 的运营投放内容事实。
+message OpsContentItem {
+  // content_id 是当前 App 内内容项标识。
+  uint64 content_id = 1;
+  // app_id 归属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // placement_id 关联的投放位。
+  uint64 placement_id = 3;
+  // placement_code 是冗余展示用投放位 code。
+  string placement_code = 4;
+  // title 是后台管理标题，不强制下发 C 端。
+  string title = 5;
+  // media_file_id 是 Support File 引用；Ops 不拥有 File 字节。
+  string media_file_id = 6;
+  // sort_order 越小越靠前。
+  int32 sort_order = 7;
+  // start_at 是生效开始时间（UTC instant）；业务日与窗口语义按 App Business Time Zone 解释。
+  google.protobuf.Timestamp start_at = 8;
+  // end_at 是生效结束时间（UTC instant）；空表示不自动过期。
+  google.protobuf.Timestamp end_at = 9;
+  // status 是生命周期状态。
+  OpsContentStatus status = 10;
+  // jump 是点击行为。
+  JumpTarget jump = 11;
+  // remark 是运营备注，仅后台可见。
+  string remark = 12;
+  // created_at 是创建时间。
+  google.protobuf.Timestamp created_at = 13;
+  // updated_at 是最近变更时间。
+  google.protobuf.Timestamp updated_at = 14;
+}
+
+// ListOpsContentItemResponse 返回投放内容列表页。
+message ListOpsContentItemResponse {
+  // items 是当前页内容项。
+  repeated OpsContentItem items = 1;
+  // total 是匹配过滤条件的总数。
+  int64 total = 2;
+}
+
+// PublishedPlacementFeedRequest 是受信任 BFF 拉取已发布投放的只读请求。
+message PublishedPlacementFeedRequest {
+  // app_id 由受信任调用方注入具体 App；UNSPECIFIED 必须失败。
+  common.v1.AppId app_id = 1;
+  // placement_code 必填，按稳定投放位代码拉取。
+  string placement_code = 2;
+  // observed_at 可选，缺省使用服务端当前时刻；仅测试/BFF 预览使用时由调用方负责合法性。
+  google.protobuf.Timestamp observed_at = 3;
+}
+
+// PublishedPlacementFeedResponse 返回时间窗内可展示的已发布内容。
+message PublishedPlacementFeedResponse {
+  // placement 是匹配的投放位注册信息。
+  Placement placement = 1;
+  // items 按 sort_order 升序，仅包含当前时间窗内已发布内容。
+  repeated OpsContentItem items = 2;
+}

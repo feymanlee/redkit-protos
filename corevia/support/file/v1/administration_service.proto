@@ -1,0 +1,609 @@
+syntax = "proto3";
+
+package support.file.v1;
+
+import "common/file/v1/file.proto";
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "support/file/v1/types.proto";
+
+// GetFileRequest 查询 Support 内部 File 详情。
+message GetFileRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // File ID。
+  uint64 id = 2;
+}
+
+// FileFilter 定义 File 观察条件。
+message FileFilter {
+  // id 标识关联的 FileFilter。
+  uint64 id = 1;
+  // purpose 指定 FileFilter 数据或能力的预期用途。
+  common.file.v1.FilePurpose purpose = 2;
+  // owner_type 区分 FileFilter 的业务类型。
+  common.file.v1.FileOwnerType owner_type = 3;
+  // owner_id 标识关联的 Owner。
+  uint64 owner_id = 4;
+  // status 表示 FileFilter 当前可观察的生命周期状态。
+  common.file.v1.FileStatus status = 5;
+  // session_no 是 FileFilter 对外关联与审计使用的业务编号。
+  string session_no = 6;
+  // created_from 指定 FileFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 7;
+  // created_to 指定 FileFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 8;
+}
+
+// ListFilesRequest 查询当前 App 的 File。
+message ListFilesRequest {
+  // app_id 限定 ListFiles 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  FileFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListFilesResponse 返回 File 列表。
+message ListFilesResponse {
+  // File 项。
+  repeated File items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// UploadSessionFilter 定义 Upload Session 观察条件。
+message UploadSessionFilter {
+  // session_no 是 UploadSessionFilter 对外关联与审计使用的业务编号。
+  string session_no = 1;
+  // purpose 指定 UploadSessionFilter 数据或能力的预期用途。
+  common.file.v1.FilePurpose purpose = 2;
+  // owner_type 区分 UploadSessionFilter 的业务类型。
+  common.file.v1.FileOwnerType owner_type = 3;
+  // owner_id 标识关联的 Owner。
+  uint64 owner_id = 4;
+  // provider 标识本次能力使用的外部 Provider。
+  StorageProvider provider = 5;
+  // status 表示 UploadSessionFilter 当前可观察的生命周期状态。
+  UploadSessionStatus status = 6;
+  // file_id 标识关联的 File。
+  uint64 file_id = 7;
+  // created_from 指定 UploadSessionFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 8;
+  // created_to 指定 UploadSessionFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 9;
+}
+
+// ListUploadSessionsRequest 查询当前 App 的 Upload Session。
+message ListUploadSessionsRequest {
+  // app_id 限定 ListUploadSessions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  UploadSessionFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListUploadSessionsResponse 返回 Upload Session 列表。
+message ListUploadSessionsResponse {
+  // Session 项。
+  repeated UploadSession items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// PublishStandaloneFileRequest 显式发布一个 App 公共资源。
+message PublishStandaloneFileRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // File ID。
+  uint64 file_id = 2;
+  // 后台操作员 ID。
+  uint64 operator_id = 3;
+  // 幂等操作号。
+  string operation_no = 4;
+  // 请求链标识。
+  string request_id = 5;
+  // 必填发布原因。
+  string reason = 6;
+}
+
+// RevokeFileRequest 永久阻断一个 File 的公共访问。
+message RevokeFileRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // File ID。
+  uint64 file_id = 2;
+  // 后台操作员 ID。
+  uint64 operator_id = 3;
+  // 必填撤销原因。
+  string reason = 4;
+  // 幂等操作号。
+  string operation_no = 5;
+  // 请求链标识。
+  string request_id = 6;
+}
+
+// ListFileReferencesResponse 返回业务引用投影。
+message ListFileReferencesResponse {
+  // 引用项。
+  repeated FileReference items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// FileReferenceFilter 定义 File Reference 观察条件。
+message FileReferenceFilter {
+  // file_id 标识关联的 File。
+  uint64 file_id = 1;
+  // source_context 限定 File Reference 所属的来源业务上下文。
+  string source_context = 2;
+  // resource_type 区分 FileReferenceFilter 的业务类型。
+  string resource_type = 3;
+  // resource_id 标识关联的 Resource。
+  string resource_id = 4;
+  // field_name 提供 FileReferenceFilter 面向展示或识别的名称。
+  string field_name = 5;
+  // status 表示 FileReferenceFilter 当前可观察的生命周期状态。
+  FileReferenceStatus status = 6;
+  // created_from 指定 FileReferenceFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 7;
+  // created_to 指定 FileReferenceFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 8;
+}
+
+// ListFileReferencesRequest 查询当前 App 的业务引用投影。
+message ListFileReferencesRequest {
+  // app_id 限定 ListFileReferences 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  FileReferenceFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListFileEventsResponse 返回不可变审计事件。
+message ListFileEventsResponse {
+  // 事件项。
+  repeated FileEvent items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// FileEventFilter 定义 File Event 观察条件。
+message FileEventFilter {
+  // file_id 标识关联的 File。
+  uint64 file_id = 1;
+  // session_no 是 FileEventFilter 对外关联与审计使用的业务编号。
+  string session_no = 2;
+  // event_type 区分 FileEventFilter 的业务类型。
+  FileEventType event_type = 3;
+  // actor_id 标识关联的 Actor。
+  uint64 actor_id = 4;
+  // failure_code 提供机器可判断的处理结果或失败分类。
+  string failure_code = 5;
+  // occurred_from 指定 FileEventFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp occurred_from = 6;
+  // occurred_to 指定 FileEventFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp occurred_to = 7;
+}
+
+// ListFileEventsRequest 查询当前 App 的不可变 File Event。
+message ListFileEventsRequest {
+  // app_id 限定 ListFileEvents 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  FileEventFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// FileReviewAttemptFilter 定义历史 Review Attempt 观察条件。
+message FileReviewAttemptFilter {
+  // file_id 标识关联的 File。
+  uint64 file_id = 1;
+  // reviewer 标识触发或负责 FileReviewAttemptFilter 对应业务阶段的主体。
+  string reviewer = 2;
+  // status 表示 FileReviewAttemptFilter 当前可观察的生命周期状态。
+  string status = 3;
+  // created_from 指定 FileReviewAttemptFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 4;
+  // created_to 指定 FileReviewAttemptFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 5;
+}
+
+// ListFileReviewAttemptsRequest 查询当前 App 的历史 Review Attempt。
+message ListFileReviewAttemptsRequest {
+  // app_id 限定 ListFileReviewAttempts 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  FileReviewAttemptFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListFileReviewAttemptsResponse 返回历史 Review Attempt。
+message ListFileReviewAttemptsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated FileReviewAttempt items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CreateFilePolicyDraftRequest 创建一个不可变 Policy Draft Revision。
+message CreateFilePolicyDraftRequest {
+  // app_id 限定 CreateFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // purpose 指定 CreateFilePolicyDraft 数据或能力的预期用途。
+  common.file.v1.FilePurpose purpose = 2 [(google.api.field_behavior) = REQUIRED];
+  // enabled 显式表示 CreateFilePolicyDraft 是否满足该条件。
+  bool enabled = 3;
+  // max_size_bytes 限定 CreateFilePolicyDraft 对应操作允许使用的数量或阈值。
+  uint64 max_size_bytes = 4;
+  // allowed_content_types 列出上传策略允许接受的 MIME Content-Type。
+  repeated string allowed_content_types = 5;
+  // remark 提供 CreateFilePolicyDraft 的补充说明。
+  string remark = 6;
+  // 后台操作员 ID。
+  uint64 operator_id = 7 [(google.api.field_behavior) = REQUIRED];
+  // 必填治理原因。
+  string reason = 8 [(google.api.field_behavior) = REQUIRED];
+  // 幂等操作号。
+  string operation_no = 9 [(google.api.field_behavior) = REQUIRED];
+  // 请求链标识。
+  string request_id = 10 [(google.api.field_behavior) = REQUIRED];
+}
+
+// PreflightFilePolicyDraftRequest 对一个 Draft Revision 执行结构化预检。
+message PreflightFilePolicyDraftRequest {
+  // app_id 限定 PreflightFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // 后台操作员 ID。
+  uint64 operator_id = 3 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED];
+  // 请求链标识。
+  string request_id = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+// ActivateFilePolicyDraftRequest 激活一个已通过预检的 Draft Revision。
+message ActivateFilePolicyDraftRequest {
+  // app_id 限定 ActivateFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+// DiscardFilePolicyDraftRequest 丢弃一个从未激活或使用的 Draft Revision。
+message DiscardFilePolicyDraftRequest {
+  // app_id 限定 DiscardFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+// ListFilePolicyRevisionsRequest 查询当前 App 的不可变 Policy 历史。
+message ListFilePolicyRevisionsRequest {
+  // app_id 限定 ListFilePolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // purpose 指定 ListFilePolicyRevisions 数据或能力的预期用途。
+  common.file.v1.FilePurpose purpose = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListFilePolicyRevisionsResponse 返回 Policy Revision 历史。
+message ListFilePolicyRevisionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated FilePolicyRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CreateStorageProviderDraftRequest 创建一个不可变 Provider Draft Revision。
+message CreateStorageProviderDraftRequest {
+  // app_id 限定 CreateStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // 非零时在指定历史 Revision 的稳定 Provider 身份下创建下一版。
+  uint64 source_revision_id = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  StorageProvider provider = 3 [(google.api.field_behavior) = REQUIRED];
+  // is_default 显式表示 CreateStorageProviderDraft 是否满足该条件。
+  bool is_default = 4;
+  // enabled 显式表示 CreateStorageProviderDraft 是否满足该条件。
+  bool enabled = 5;
+  // region 指定号码、服务或业务规则采用的地区。
+  string region = 6;
+  // endpoint 指定 CreateStorageProviderDraft 访问或跳转使用的目标地址。
+  string endpoint = 7;
+  // upload_endpoint 指定 CreateStorageProviderDraft 访问或跳转使用的目标地址。
+  string upload_endpoint = 8;
+  // bucket 标识 Storage Provider 中承载对象的 Bucket。
+  string bucket = 9 [(google.api.field_behavior) = REQUIRED];
+  // cdn_base_url 指定 CreateStorageProviderDraft 访问或跳转使用的目标地址。
+  string cdn_base_url = 10 [(google.api.field_behavior) = REQUIRED];
+  // secret_ref 仅引用外部 Secret，不在契约中承载明文密钥。
+  string secret_ref = 11 [(google.api.field_behavior) = REQUIRED];
+  // provider_options 承载 Provider 的非敏感扩展配置；密钥仅通过 secret reference 提供。
+  string provider_options = 12;
+  // remark 提供 CreateStorageProviderDraft 的补充说明。
+  string remark = 13;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 14 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 15 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 16 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 17 [(google.api.field_behavior) = REQUIRED];
+}
+
+// PreflightStorageProviderDraftRequest 对 Provider Draft 执行真实能力预检。
+message PreflightStorageProviderDraftRequest {
+  // app_id 限定 PreflightStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+// ActivateStorageProviderDraftRequest 激活一个已通过预检的 Provider Draft。
+message ActivateStorageProviderDraftRequest {
+  // app_id 限定 ActivateStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+// DiscardStorageProviderDraftRequest 丢弃未激活或使用的 Provider Draft。
+message DiscardStorageProviderDraftRequest {
+  // app_id 限定 DiscardStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+// ListStorageProviderRevisionsRequest 查询当前 App 的 Provider Revision 历史。
+message ListStorageProviderRevisionsRequest {
+  // app_id 限定 ListStorageProviderRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // provider 标识本次能力使用的外部 Provider。
+  StorageProvider provider = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListStorageProviderRevisionsResponse 返回 Provider Revision 历史。
+message ListStorageProviderRevisionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated StorageProviderRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CreateReconciliationBatchRequest 创建一次只读存储对账。
+message CreateReconciliationBatchRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // 待对账对象存储。
+  StorageProvider provider = 2;
+  // 后台操作员 ID。
+  uint64 operator_id = 3;
+  // 幂等操作号。
+  string operation_no = 4;
+  // 请求链标识。
+  string request_id = 5;
+  // 必填对账原因。
+  string reason = 6;
+}
+
+// ListReconciliationBatchesResponse 返回对账批次。
+message ListReconciliationBatchesResponse {
+  // 批次项。
+  repeated ReconciliationBatch items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// ReconciliationBatchFilter 定义对账批次观察条件。
+message ReconciliationBatchFilter {
+  // provider 标识本次能力使用的外部 Provider。
+  StorageProvider provider = 1;
+  // status 表示 ReconciliationBatchFilter 当前可观察的生命周期状态。
+  ReconciliationStatus status = 2;
+  // batch_no 是 ReconciliationBatchFilter 对外关联与审计使用的业务编号。
+  string batch_no = 3;
+  // created_from 指定 ReconciliationBatchFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 4;
+  // created_to 指定 ReconciliationBatchFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 5;
+}
+
+// ListReconciliationBatchesRequest 查询当前 App 的对账批次。
+message ListReconciliationBatchesRequest {
+  // app_id 限定 ListReconciliationBatches 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  ReconciliationBatchFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListReconciliationItemsResponse 返回对账差异。
+message ListReconciliationItemsResponse {
+  // 差异项。
+  repeated ReconciliationItem items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// ReconciliationItemFilter 定义对账差异观察条件。
+message ReconciliationItemFilter {
+  // batch_id 标识关联的 Batch。
+  uint64 batch_id = 1;
+  // file_id 标识关联的 File。
+  uint64 file_id = 2;
+  // difference_type 区分 ReconciliationItemFilter 的业务类型。
+  ReconciliationDifferenceType difference_type = 3;
+  // created_from 指定 ReconciliationItemFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 4;
+  // created_to 指定 ReconciliationItemFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 5;
+}
+
+// ListReconciliationItemsRequest 查询当前 App 的对账差异。
+message ListReconciliationItemsRequest {
+  // app_id 限定 ListReconciliationItems 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  ReconciliationItemFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListFileTasksResponse 返回异步治理任务。
+message ListFileTasksResponse {
+  // 任务项。
+  repeated FileTask items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// FileTaskFilter 定义异步治理任务观察条件。
+message FileTaskFilter {
+  // file_id 标识关联的 File。
+  uint64 file_id = 1;
+  // task_type 区分 FileTaskFilter 的业务类型。
+  FileTaskType task_type = 2;
+  // status 表示 FileTaskFilter 当前可观察的生命周期状态。
+  FileTaskStatus status = 3;
+  // failure_code 提供机器可判断的处理结果或失败分类。
+  string failure_code = 4;
+  // created_from 指定 FileTaskFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 5;
+  // created_to 指定 FileTaskFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 6;
+}
+
+// ListFileTasksRequest 查询当前 App 的异步治理任务。
+message ListFileTasksRequest {
+  // app_id 限定 ListFileTasks 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  FileTaskFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// RetryFileTaskRequest 将失败任务重新放入待处理队列。
+message RetryFileTaskRequest {
+  // 具体业务 App。
+  common.v1.AppId app_id = 1;
+  // 任务 ID。
+  uint64 task_id = 2;
+  // 后台操作员 ID。
+  uint64 operator_id = 3;
+  // 请求链标识。
+  string request_id = 4;
+  // 必填重试原因。
+  string reason = 5;
+  // 幂等操作号。
+  string operation_no = 6;
+}
+
+// FileAdministrationService 管理 File 配置、审计和治理任务。
+service FileAdministrationService {
+  // 查询 File 详情。
+  rpc GetFile(GetFileRequest) returns (File);
+  // 查询 File 列表。
+  rpc ListFiles(ListFilesRequest) returns (ListFilesResponse);
+  // 查询 Upload Session 列表。
+  rpc ListUploadSessions(ListUploadSessionsRequest) returns (ListUploadSessionsResponse);
+  // 独立发布 App 公共资源。
+  rpc PublishStandaloneFile(PublishStandaloneFileRequest) returns (File);
+  // 永久阻断 File 公共访问。
+  rpc RevokeFile(RevokeFileRequest) returns (File);
+  // 查询业务引用投影。
+  rpc ListFileReferences(ListFileReferencesRequest) returns (ListFileReferencesResponse);
+  // 查询不可变审计事件。
+  rpc ListFileEvents(ListFileEventsRequest) returns (ListFileEventsResponse);
+  // 查询只读历史 Review Attempt。
+  rpc ListFileReviewAttempts(ListFileReviewAttemptsRequest) returns (ListFileReviewAttemptsResponse);
+  // 创建不可变 Policy Draft Revision。
+  rpc CreateFilePolicyDraft(CreateFilePolicyDraftRequest) returns (FilePolicyRevision);
+  // 对 Policy Draft Revision 执行结构化预检。
+  rpc PreflightFilePolicyDraft(PreflightFilePolicyDraftRequest) returns (FilePolicyPreflight);
+  // 激活已通过预检的 Policy Draft Revision。
+  rpc ActivateFilePolicyDraft(ActivateFilePolicyDraftRequest) returns (FilePolicyRevision);
+  // 丢弃未使用的 Policy Draft Revision。
+  rpc DiscardFilePolicyDraft(DiscardFilePolicyDraftRequest) returns (google.protobuf.Empty);
+  // 查询不可变 Policy Revision 历史。
+  rpc ListFilePolicyRevisions(ListFilePolicyRevisionsRequest) returns (ListFilePolicyRevisionsResponse);
+  // 创建不可变 Provider Draft Revision。
+  rpc CreateStorageProviderDraft(CreateStorageProviderDraftRequest) returns (StorageProviderRevision);
+  // 对 Provider Draft 执行真实能力预检。
+  rpc PreflightStorageProviderDraft(PreflightStorageProviderDraftRequest) returns (StorageProviderPreflight);
+  // 激活已通过预检的 Provider Draft。
+  rpc ActivateStorageProviderDraft(ActivateStorageProviderDraftRequest) returns (StorageProviderRevision);
+  // 丢弃未使用的 Provider Draft。
+  rpc DiscardStorageProviderDraft(DiscardStorageProviderDraftRequest) returns (google.protobuf.Empty);
+  // 查询不可变 Provider Revision 历史。
+  rpc ListStorageProviderRevisions(ListStorageProviderRevisionsRequest) returns (ListStorageProviderRevisionsResponse);
+  // 创建只读存储对账批次。
+  rpc CreateReconciliationBatch(CreateReconciliationBatchRequest) returns (ReconciliationBatch);
+  // 查询对账批次。
+  rpc ListReconciliationBatches(ListReconciliationBatchesRequest) returns (ListReconciliationBatchesResponse);
+  // 查询对账差异。
+  rpc ListReconciliationItems(ListReconciliationItemsRequest) returns (ListReconciliationItemsResponse);
+  // 查询异步治理任务。
+  rpc ListFileTasks(ListFileTasksRequest) returns (ListFileTasksResponse);
+  // 重试失败任务。
+  rpc RetryFileTask(RetryFileTaskRequest) returns (FileTask);
+}

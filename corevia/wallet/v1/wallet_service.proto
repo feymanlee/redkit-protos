@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "wallet/v1/ledger.proto";
+import "wallet/v1/export.proto";
+import "wallet/v1/reconciliation.proto";
+import "wallet/v1/refund.proto";
+import "wallet/v1/wallet_types.proto";
+import "wallet/v1/user_summary.proto";
+
+// 钱包服务。
+service WalletService {
+  // 查询钱包列表。
+  rpc ListWallets(common.pagination.v1.PagingRequest) returns (ListWalletResponse) {}
+  // 获取钱包详情。
+  rpc GetWallet(GetWalletRequest) returns (Wallet) {}
+  // 查询 User Overview 使用的钱包聚合摘要。
+  rpc GetUserWalletSummary(GetUserWalletSummaryRequest) returns (UserWalletSummary) {}
+  // 查询交易列表。
+  rpc ListTransactions(common.pagination.v1.PagingRequest) returns (ListWalletTransactionResponse) {}
+  // 增加余额。
+  rpc Credit(ChangeBalanceRequest) returns (ChangeBalanceResponse) {}
+  // 扣减余额。
+  rpc Debit(ChangeBalanceRequest) returns (ChangeBalanceResponse) {}
+  // 冻结余额。
+  rpc Freeze(FreezeWalletRequest) returns (WalletFreeze) {}
+  // 解冻余额。
+  rpc Unfreeze(UnfreezeWalletRequest) returns (WalletFreeze) {}
+  // 查询冻结记录。
+  rpc ListFreezes(common.pagination.v1.PagingRequest) returns (ListWalletFreezeResponse) {}
+  // 用户转账到平台收入账。
+  rpc TransferToPlatform(TransferToPlatformRequest) returns (TransferToPlatformResponse) {}
+  // 按应用和稳定业务键查询用户到平台的转账结果。
+  rpc GetPlatformTransferByBusinessKey(GetPlatformTransferByBusinessKeyRequest) returns (TransferToPlatformResponse) {}
+  // 冲正原始流水。
+  rpc ReverseTransaction(ReverseTransactionRequest) returns (ChangeBalanceResponse) {}
+  // 查询钱包审计事件。
+  rpc ListWalletEvents(common.pagination.v1.PagingRequest) returns (ListWalletEventResponse) {}
+  // 查询用户欠款列表。
+  rpc ListWalletUserDebts(ListWalletUserDebtsRequest) returns (ListWalletUserDebtResponse) {}
+  // 创建受审计的异步导出作业。
+  rpc CreateExport(CreateWalletExportRequest) returns (WalletExportJob) {}
+  // 查询当前 App 的导出作业。
+  rpc ListExports(ListWalletExportsRequest) returns (ListWalletExportsResponse) {}
+  // 重试失败的导出作业。
+  rpc RetryExport(RetryWalletExportRequest) returns (WalletExportJob) {}
+  // 获取已完成导出的短期下载授权。
+  rpc GetExportDownload(GetWalletExportDownloadRequest) returns (WalletExportDownload) {}
+}

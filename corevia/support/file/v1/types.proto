@@ -1,0 +1,689 @@
+syntax = "proto3";
+
+package support.file.v1;
+
+import "common/file/v1/file.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// StorageProvider 表示由 Support 选择的对象存储实现。
+enum StorageProvider {
+  // 未指定对象存储。
+  STORAGE_PROVIDER_UNSPECIFIED = 0;
+  // 本地或 S3 兼容 MinIO。
+  STORAGE_PROVIDER_MINIO = 1;
+  // 阿里云 OSS。
+  STORAGE_PROVIDER_ALIYUN_OSS = 2;
+  // 腾讯云 COS。
+  STORAGE_PROVIDER_TENCENT_COS = 3;
+}
+
+// UploadSessionStatus 表示直传会话状态。
+enum UploadSessionStatus {
+  // 未指定状态。
+  UPLOAD_SESSION_STATUS_UNSPECIFIED = 0;
+  // 等待上传和完成确认。
+  UPLOAD_SESSION_STATUS_PENDING = 1;
+  // 已校验并创建 File。
+  UPLOAD_SESSION_STATUS_COMPLETED = 2;
+  // 已由调用方取消。
+  UPLOAD_SESSION_STATUS_ABORTED = 3;
+  // 已超过完成期限。
+  UPLOAD_SESSION_STATUS_EXPIRED = 4;
+  // 已因确定性校验失败被拒绝。
+  UPLOAD_SESSION_STATUS_REJECTED = 5;
+}
+
+// FileActivationMode 表示 File 通过上传校验后的启用方式。
+enum FileActivationMode {
+  // 未指定启用方式。
+  FILE_ACTIVATION_MODE_UNSPECIFIED = 0;
+  // 同步可信校验完成后立即可用。
+  FILE_ACTIVATION_MODE_IMMEDIATE = 1;
+  // 历史启用方式；新 File 不再产生该值。
+  FILE_ACTIVATION_MODE_REVIEW_REQUIRED = 2;
+}
+
+// StoredObjectKind 表示物理对象用途。
+enum StoredObjectKind {
+  // 未指定对象类型。
+  STORED_OBJECT_KIND_UNSPECIFIED = 0;
+  // 上传和审核阶段的私有对象。
+  STORED_OBJECT_KIND_STAGING = 1;
+  // CDN 回源使用的稳定公共对象。
+  STORED_OBJECT_KIND_PUBLIC = 2;
+  // Provider 迁移或容灾副本。
+  STORED_OBJECT_KIND_REPLICA = 3;
+}
+
+// StoredObjectStatus 表示物理对象状态。
+enum StoredObjectStatus {
+  // 未指定状态。
+  STORED_OBJECT_STATUS_UNSPECIFIED = 0;
+  // 对象当前可用。
+  STORED_OBJECT_STATUS_AVAILABLE = 1;
+  // 对象等待异步删除。
+  STORED_OBJECT_STATUS_DELETE_PENDING = 2;
+  // 对象已从 Provider 删除。
+  STORED_OBJECT_STATUS_DELETED = 3;
+  // Provider 中未找到对象。
+  STORED_OBJECT_STATUS_MISSING = 4;
+}
+
+// FileReferenceStatus 表示派生业务引用状态。
+enum FileReferenceStatus {
+  // 未指定状态。
+  FILE_REFERENCE_STATUS_UNSPECIFIED = 0;
+  // 业务字段当前引用该 File。
+  FILE_REFERENCE_STATUS_ATTACHED = 1;
+  // 业务字段已解除该引用。
+  FILE_REFERENCE_STATUS_DETACHED = 2;
+}
+
+// FileEventType 表示不可变审计事实类型。
+enum FileEventType {
+  // 未指定事件。
+  FILE_EVENT_TYPE_UNSPECIFIED = 0;
+  // 创建上传会话。
+  FILE_EVENT_TYPE_UPLOAD_SESSION_CREATED = 1;
+  // 完成上传并创建 File。
+  FILE_EVENT_TYPE_UPLOAD_COMPLETED = 2;
+  // 取消上传。
+  FILE_EVENT_TYPE_UPLOAD_ABORTED = 3;
+  // 上传会话过期。
+  FILE_EVENT_TYPE_UPLOAD_EXPIRED = 4;
+  // 上传被校验拒绝。
+  FILE_EVENT_TYPE_UPLOAD_REJECTED = 5;
+  // 历史审核通过事实。
+  FILE_EVENT_TYPE_REVIEW_APPROVED = 6;
+  // 历史审核拒绝事实。
+  FILE_EVENT_TYPE_REVIEW_REJECTED = 7;
+  // 文件因业务引用发布。
+  FILE_EVENT_TYPE_REFERENCE_ATTACHED = 8;
+  // 文件业务引用被替换。
+  FILE_EVENT_TYPE_REFERENCE_REPLACED = 9;
+  // 文件业务引用被解除。
+  FILE_EVENT_TYPE_REFERENCE_DETACHED = 10;
+  // 文件被独立发布。
+  FILE_EVENT_TYPE_STANDALONE_PUBLISHED = 11;
+  // 文件被人工阻断访问。
+  FILE_EVENT_TYPE_FILE_REVOKED = 12;
+  // 未发布文件被回收。
+  FILE_EVENT_TYPE_FILE_ORPHANED = 13;
+  // 异步任务执行失败。
+  FILE_EVENT_TYPE_TASK_FAILED = 14;
+  // 存储对账发现差异。
+  FILE_EVENT_TYPE_RECONCILIATION_MISMATCH = 15;
+  // Provider 配置发生变化。
+  FILE_EVENT_TYPE_PROVIDER_CONFIG_CHANGED = 16;
+  // Purpose 收紧策略发生变化。
+  FILE_EVENT_TYPE_POLICY_CHANGED = 17;
+  // App 实际存储量超过默认软配额。
+  FILE_EVENT_TYPE_STORAGE_SOFT_QUOTA_EXCEEDED = 18;
+  // 为受保护文件签发短期下载地址。
+  FILE_EVENT_TYPE_PROTECTED_DOWNLOAD_ISSUED = 19;
+}
+
+// FileTaskType 表示 Support Worker 处理的任务类型。
+enum FileTaskType {
+  // 未指定任务。
+  FILE_TASK_TYPE_UNSPECIFIED = 0;
+  // 历史内容审核任务；新流程不再创建或执行。
+  FILE_TASK_TYPE_REVIEW = 1;
+  // staging 或孤儿对象清理。
+  FILE_TASK_TYPE_CLEANUP = 2;
+  // 发布对象复制。
+  FILE_TASK_TYPE_COPY = 3;
+  // CDN 缓存清理。
+  FILE_TASK_TYPE_CDN_PURGE = 4;
+  // 存储对账。
+  FILE_TASK_TYPE_RECONCILIATION = 5;
+}
+
+// FileTaskStatus 表示异步任务状态。
+enum FileTaskStatus {
+  // 未指定状态。
+  FILE_TASK_STATUS_UNSPECIFIED = 0;
+  // 等待执行。
+  FILE_TASK_STATUS_PENDING = 1;
+  // 正在执行。
+  FILE_TASK_STATUS_PROCESSING = 2;
+  // 执行成功。
+  FILE_TASK_STATUS_SUCCEEDED = 3;
+  // 等待重试。
+  FILE_TASK_STATUS_RETRYING = 4;
+  // 已进入人工处理队列。
+  FILE_TASK_STATUS_FAILED = 5;
+}
+
+// ReconciliationStatus 表示对账批次状态。
+enum ReconciliationStatus {
+  // 未指定状态。
+  RECONCILIATION_STATUS_UNSPECIFIED = 0;
+  // 等待执行。
+  RECONCILIATION_STATUS_PENDING = 1;
+  // 正在执行。
+  RECONCILIATION_STATUS_PROCESSING = 2;
+  // 已执行完成。
+  RECONCILIATION_STATUS_COMPLETED = 3;
+  // 执行失败。
+  RECONCILIATION_STATUS_FAILED = 4;
+}
+
+// ReconciliationDifferenceType 表示存储差异类型。
+enum ReconciliationDifferenceType {
+  // 未指定差异。
+  RECONCILIATION_DIFFERENCE_TYPE_UNSPECIFIED = 0;
+  // Provider 中缺少对象。
+  RECONCILIATION_DIFFERENCE_TYPE_OBJECT_MISSING = 1;
+  // 对象大小不一致。
+  RECONCILIATION_DIFFERENCE_TYPE_SIZE_MISMATCH = 2;
+  // 对象校验值不一致。
+  RECONCILIATION_DIFFERENCE_TYPE_CHECKSUM_MISMATCH = 3;
+  // 对象状态不一致。
+  RECONCILIATION_DIFFERENCE_TYPE_STATUS_MISMATCH = 4;
+  // Provider 中存在未登记对象。
+  RECONCILIATION_DIFFERENCE_TYPE_ORPHAN_OBJECT = 5;
+  // 已发布文件缺少公共副本。
+  RECONCILIATION_DIFFERENCE_TYPE_PUBLIC_OBJECT_MISSING = 6;
+}
+
+// TemporaryCredential 是浏览器或客户端使用的短期受限上传凭据。
+message TemporaryCredential {
+  // 临时访问密钥 ID。
+  string access_key_id = 1;
+  // 临时访问密钥 Secret。
+  string access_key_secret = 2;
+  // 临时会话 Token。
+  string security_token = 3;
+  // 凭据过期时间。
+  google.protobuf.Timestamp expires_at = 4;
+  // 浏览器可访问的上传端点。
+  string endpoint = 5;
+  // 上传地域。
+  string region = 6;
+  // 存储桶。
+  string bucket = 7;
+  // 服务端生成的 staging 对象键。
+  string object_key = 8;
+  // 上传 HTTP 方法。
+  string method = 9;
+  // 上传必须携带的请求头。
+  map<string, string> headers = 10;
+  // 预签名地址；STS 模式下为空。
+  string presigned_url = 11;
+}
+
+// UploadSession 是一次客户端直传意图。
+message UploadSession {
+  // 会话 ID。
+  uint64 id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // 会话号。
+  string session_no = 3;
+  // 文件用途。
+  common.file.v1.FilePurpose purpose = 4;
+  // 文件归属主体类型。
+  common.file.v1.FileOwnerType owner_type = 5;
+  // 文件归属主体 ID；App Owner 使用 App 数值。
+  uint64 owner_id = 6;
+  // 创建主体类型。
+  common.file.v1.FileCreatorType creator_type = 7;
+  // 创建主体 ID。
+  uint64 creator_id = 8;
+  // 原始文件名，仅用于 Support 审计。
+  string source_filename = 9;
+  // 客户端声明内容类型。
+  string declared_content_type = 10;
+  // 客户端声明字节数。
+  uint64 expected_size = 11;
+  // 客户端声明校验值。
+  string expected_checksum = 12;
+  // 校验算法。
+  string checksum_algorithm = 13;
+  // 会话状态。
+  UploadSessionStatus status = 14;
+  // 请求幂等键。
+  string idempotency_key = 15;
+  // 请求链标识。
+  string request_id = 16;
+  // 凭据过期时间。
+  google.protobuf.Timestamp credential_expires_at = 17;
+  // 会话最晚完成时间。
+  google.protobuf.Timestamp complete_before = 18;
+  // 完成后生成的 File ID。
+  uint64 file_id = 19;
+  // 确定性失败码。
+  string failure_code = 20;
+  // 完成时间。
+  google.protobuf.Timestamp completed_at = 21;
+  // 取消时间。
+  google.protobuf.Timestamp aborted_at = 22;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 23;
+  // 更新时间。
+  google.protobuf.Timestamp updated_at = 24;
+  // 本次直传使用的对象存储实现，供客户端选择上传 adapter。
+  StorageProvider provider = 25;
+  // 创建会话时固定的 File Policy Revision。
+  uint64 policy_revision_id = 26;
+  // 创建会话时固定的 Storage Provider Revision。
+  uint64 provider_revision_id = 27;
+}
+
+// File 是 Support 内部管理使用的文件生命周期对象。
+message File {
+  // File ID。
+  uint64 id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // 强类型用途。
+  common.file.v1.FilePurpose purpose = 3;
+  // 归属主体类型。
+  common.file.v1.FileOwnerType owner_type = 4;
+  // 归属主体 ID。
+  uint64 owner_id = 5;
+  // 创建主体类型。
+  common.file.v1.FileCreatorType creator_type = 6;
+  // 创建主体 ID。
+  uint64 creator_id = 7;
+  // 分发等级。
+  common.file.v1.FileVisibility visibility = 8;
+  // 启用方式。
+  FileActivationMode activation_mode = 9;
+  // 可用状态。
+  common.file.v1.FileStatus status = 10;
+  // 发布原因。
+  common.file.v1.FilePublicationMode publication_mode = 11;
+  // 可信检测内容类型。
+  string content_type = 12;
+  // 规范扩展名。
+  string canonical_extension = 13;
+  // 文件字节数。
+  uint64 size_bytes = 14;
+  // 完整性校验算法。
+  string checksum_algorithm = 15;
+  // 完整性校验值。
+  string checksum_value = 16;
+  // 完整性校验来源。
+  string checksum_source = 17;
+  // 随机公共文件键；未发布时也不得对外返回。
+  string public_file_key = 18;
+  // 上传会话号。
+  string session_no = 19;
+  // 审核失败码。
+  string rejection_code = 20;
+  // 发布时间。
+  google.protobuf.Timestamp published_at = 21;
+  // 撤销时间。
+  google.protobuf.Timestamp revoked_at = 22;
+  // 孤儿回收时间。
+  google.protobuf.Timestamp orphaned_at = 23;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 24;
+  // 更新时间。
+  google.protobuf.Timestamp updated_at = 25;
+  // 上传时实际使用的 Storage Provider Revision。
+  uint64 provider_revision_id = 26;
+}
+
+// FileDescriptor 是业务写入前使用的内部绑定事实。
+message FileDescriptor {
+  // File ID。
+  uint64 file_id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // 强类型用途。
+  common.file.v1.FilePurpose purpose = 3;
+  // 归属主体类型。
+  common.file.v1.FileOwnerType owner_type = 4;
+  // 归属主体 ID。
+  uint64 owner_id = 5;
+  // 可用状态。
+  common.file.v1.FileStatus status = 6;
+  // 分发等级。
+  common.file.v1.FileVisibility visibility = 7;
+}
+
+// FileReferenceLocator 唯一描述一个业务字段引用位置。
+message FileReferenceLocator {
+  // 来源领域上下文，例如 user 或 gift。
+  string source_context = 1;
+  // 业务资源类型。
+  string resource_type = 2;
+  // 业务资源标识，支持数字或复合值。
+  string resource_id = 3;
+  // 保存 File ID 的字段名。
+  string field_name = 4;
+}
+
+// FileReference 是业务 File ID事实的当前派生投影。
+message FileReference {
+  // 投影记录 ID。
+  uint64 id = 1;
+  // 引用位置。
+  FileReferenceLocator locator = 2;
+  // 当前 File ID。
+  uint64 file_id = 3;
+  // 单调递增引用版本。
+  uint64 reference_version = 4;
+  // 当前引用状态。
+  FileReferenceStatus status = 5;
+  // 最近操作号。
+  string operation_no = 6;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 7;
+  // 更新时间。
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+// FileEvent 是不可变的文件生命周期审计事实。
+message FileEvent {
+  // 事件 ID。
+  uint64 id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // 事件类型。
+  FileEventType event_type = 3;
+  // 关联 File ID。
+  uint64 file_id = 4;
+  // 关联上传会话号。
+  string session_no = 5;
+  // 幂等操作号。
+  string operation_no = 6;
+  // 请求链标识。
+  string request_id = 7;
+  // 操作主体类型。
+  common.file.v1.FileCreatorType actor_type = 8;
+  // 操作主体 ID。
+  uint64 actor_id = 9;
+  // 状态迁移前值。
+  string from_status = 10;
+  // 状态迁移后值。
+  string to_status = 11;
+  // 引用位置；不涉及引用时为空。
+  FileReferenceLocator reference_locator = 12;
+  // 标准化失败码。
+  string failure_code = 13;
+  // 不含敏感信息的扩展 JSON。
+  string metadata = 14;
+  // 发生时间。
+  google.protobuf.Timestamp occurred_at = 15;
+}
+
+// FileReviewAttempt 是仅供历史观察的不可变审核事实。
+message FileReviewAttempt {
+  // id 标识关联的 FileReviewAttempt。
+  uint64 id = 1;
+  // app_id 限定 FileReviewAttempt 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // file_id 标识关联的 File。
+  uint64 file_id = 3;
+  // reviewer 标识触发或负责 FileReviewAttempt 对应业务阶段的主体。
+  string reviewer = 4;
+  // attempt_no 是 FileReviewAttempt 对外关联与审计使用的业务编号。
+  uint32 attempt_no = 5;
+  // status 表示 FileReviewAttempt 当前可观察的生命周期状态。
+  string status = 6;
+  // provider_request_id 标识关联的 ProviderRequest。
+  string provider_request_id = 7;
+  // result_code 提供机器可判断的处理结果或失败分类。
+  string result_code = 8;
+  // result_summary 提供逐项执行结果的聚合摘要。
+  string result_summary = 9;
+  // retryable 显式表示 FileReviewAttempt 是否满足该条件。
+  bool retryable = 10;
+  // created_at 记录 FileReviewAttempt 的创建时间。
+  google.protobuf.Timestamp created_at = 11;
+}
+
+// FilePolicyPreflightStatus 表示 Policy Revision 对代码安全基线的校验结果。
+enum FilePolicyPreflightStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  FILE_POLICY_PREFLIGHT_STATUS_UNSPECIFIED = 0;
+  // FILE_POLICY_PREFLIGHT_STATUS_PASSED 表示资源处于对应业务阶段。
+  FILE_POLICY_PREFLIGHT_STATUS_PASSED = 1;
+  // 处理失败；是否可重试由具体失败原因决定。
+  FILE_POLICY_PREFLIGHT_STATUS_FAILED = 2;
+}
+
+// FilePolicyPreflightCheck 是一项结构化的安全基线校验结果。
+message FilePolicyPreflightCheck {
+  // name 提供 FilePolicyPreflightCheck 面向展示或识别的名称。
+  string name = 1;
+  // status 表示 FilePolicyPreflightCheck 当前可观察的生命周期状态。
+  FilePolicyPreflightStatus status = 2;
+  // message 提供面向调用方或操作员的可读说明，不作为程序分支依据。
+  string message = 3;
+}
+
+// FilePolicyPreflight 是一个不可变 Policy Revision 最近一次预检结果。
+message FilePolicyPreflight {
+  // id 标识关联的 FilePolicyPreflight。
+  uint64 id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 3;
+  // status 表示 FilePolicyPreflight 当前可观察的生命周期状态。
+  FilePolicyPreflightStatus status = 4;
+  // diagnostics 提供预检失败的可读诊断信息，不作为程序分支依据。
+  string diagnostics = 5;
+  // checks 列出 FilePolicyPreflight 关联的 FilePolicyPreflightCheck。
+  repeated FilePolicyPreflightCheck checks = 6;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 7;
+  // created_at 记录 FilePolicyPreflight 的创建时间。
+  google.protobuf.Timestamp created_at = 8;
+}
+
+// FilePolicyRevision 是 App 对代码安全基线的一次不可变收紧配置。
+message FilePolicyRevision {
+  // id 标识关联的 FilePolicyRevision。
+  uint64 id = 1;
+  // app_id 限定 FilePolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // 稳定 Policy 身份 ID。
+  uint64 policy_id = 3;
+  // revision_no 是 FilePolicyRevision 对外关联与审计使用的业务编号。
+  uint32 revision_no = 4;
+  // 文件用途。
+  common.file.v1.FilePurpose purpose = 5;
+  // 是否允许该用途。
+  bool enabled = 6;
+  // 收紧后的最大字节数；零表示沿用代码基线。
+  uint64 max_size_bytes = 7;
+  // 收紧后的 MIME 白名单。
+  repeated string allowed_content_types = 8;
+  // owner_type 区分 FilePolicyRevision 的业务类型。
+  common.file.v1.FileOwnerType owner_type = 9;
+  // visibility 限定资源对调用方或终端用户的可见范围。
+  string visibility = 10;
+  // 备注。
+  string remark = 11;
+  // created_by 标识触发或负责 FilePolicyRevision 对应业务阶段的主体。
+  uint64 created_by = 12;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 13;
+  // latest_preflight 承载 FilePolicyRevision 关联的 FilePolicyPreflight。
+  FilePolicyPreflight latest_preflight = 14;
+  // active 显式表示 FilePolicyRevision 是否满足该条件。
+  bool active = 15;
+  // activated_at 记录 FilePolicyRevision 对应业务阶段的时间点。
+  google.protobuf.Timestamp activated_at = 16;
+  // changed_fields 列出相邻 Revision 之间发生变化的字段路径。
+  repeated string changed_fields = 17;
+}
+
+// StorageProviderPreflightStatus 表示 Provider Revision 的能力预检结果。
+enum StorageProviderPreflightStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  STORAGE_PROVIDER_PREFLIGHT_STATUS_UNSPECIFIED = 0;
+  // STORAGE_PROVIDER_PREFLIGHT_STATUS_PASSED 表示资源处于对应业务阶段。
+  STORAGE_PROVIDER_PREFLIGHT_STATUS_PASSED = 1;
+  // 处理失败；是否可重试由具体失败原因决定。
+  STORAGE_PROVIDER_PREFLIGHT_STATUS_FAILED = 2;
+}
+
+// StorageProviderPreflightCheck 是一项不含依赖响应明细的能力校验结果。
+message StorageProviderPreflightCheck {
+  // name 提供 StorageProviderPreflightCheck 面向展示或识别的名称。
+  string name = 1;
+  // status 表示 StorageProviderPreflightCheck 当前可观察的生命周期状态。
+  StorageProviderPreflightStatus status = 2;
+  // message 提供面向调用方或操作员的可读说明，不作为程序分支依据。
+  string message = 3;
+}
+
+// StorageProviderPreflight 是一个不可变 Provider Revision 的能力预检结果。
+message StorageProviderPreflight {
+  // id 标识关联的 StorageProviderPreflight。
+  uint64 id = 1;
+  // app_id 限定 StorageProviderPreflight 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 3;
+  // status 表示 StorageProviderPreflight 当前可观察的生命周期状态。
+  StorageProviderPreflightStatus status = 4;
+  // diagnostics 提供预检失败的可读诊断信息，不作为程序分支依据。
+  string diagnostics = 5;
+  // checks 列出 StorageProviderPreflight 关联的 StorageProviderPreflightCheck。
+  repeated StorageProviderPreflightCheck checks = 6;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 7;
+  // created_at 记录 StorageProviderPreflight 的创建时间。
+  google.protobuf.Timestamp created_at = 8;
+}
+
+// StorageProviderRevision 是一个 App 的不可变对象存储和 CDN 配置。
+message StorageProviderRevision {
+  // id 标识关联的 StorageProviderRevision。
+  uint64 id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // 稳定 Provider 身份 ID。
+  uint64 provider_id = 3;
+  // revision_no 是 StorageProviderRevision 对外关联与审计使用的业务编号。
+  uint32 revision_no = 4;
+  // 对象存储实现。
+  StorageProvider provider = 5;
+  // 是否为 App 默认配置。
+  bool is_default = 6;
+  // 是否启用。
+  bool enabled = 7;
+  // 地域。
+  string region = 8;
+  // Support 内部访问端点。
+  string endpoint = 9;
+  // 客户端上传端点。
+  string upload_endpoint = 10;
+  // 存储桶。
+  string bucket = 11;
+  // App 稳定 CDN 域名。
+  string cdn_base_url = 12;
+  // 部署侧密钥引用。
+  string secret_ref = 13;
+  // 当前部署是否能够解析密钥引用。
+  bool secret_available = 14;
+  // 云图片处理等非秘密 JSON 配置。
+  string provider_options = 15;
+  // 备注。
+  string remark = 16;
+  // created_by 标识触发或负责 StorageProviderRevision 对应业务阶段的主体。
+  uint64 created_by = 17;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 18;
+  // latest_preflight 承载 StorageProviderRevision 关联的 StorageProviderPreflight。
+  StorageProviderPreflight latest_preflight = 19;
+  // active 显式表示 StorageProviderRevision 是否满足该条件。
+  bool active = 20;
+  // activated_at 记录 StorageProviderRevision 对应业务阶段的时间点。
+  google.protobuf.Timestamp activated_at = 21;
+  // changed_fields 列出相邻 Revision 之间发生变化的字段路径。
+  repeated string changed_fields = 22;
+  // 当前是否是 App 运行时选择的默认 Provider Revision。
+  bool default_active = 23;
+}
+
+// FileTask 表示 Support Worker 的可重试任务。
+message FileTask {
+  // 任务 ID。
+  uint64 id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // 任务类型。
+  FileTaskType task_type = 3;
+  // 任务状态。
+  FileTaskStatus status = 4;
+  // 关联 File ID。
+  uint64 file_id = 5;
+  // 关联 Stored Object ID。
+  uint64 stored_object_id = 6;
+  // 幂等操作号。
+  string operation_no = 7;
+  // 当前尝试次数。
+  uint32 attempts = 8;
+  // 最大尝试次数。
+  uint32 max_attempts = 9;
+  // 下次执行时间。
+  google.protobuf.Timestamp available_at = 10;
+  // 最后失败码。
+  string failure_code = 11;
+  // 不含敏感信息的任务参数 JSON。
+  string payload = 12;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 13;
+  // 更新时间。
+  google.protobuf.Timestamp updated_at = 14;
+}
+
+// ReconciliationBatch 表示一次存储事实对账。
+message ReconciliationBatch {
+  // 批次 ID。
+  uint64 id = 1;
+  // 具体业务 App。
+  common.v1.AppId app_id = 2;
+  // 对象存储实现。
+  StorageProvider provider = 3;
+  // 批次号。
+  string batch_no = 4;
+  // 批次状态。
+  ReconciliationStatus status = 5;
+  // 扫描对象数。
+  uint64 scanned_count = 6;
+  // 差异对象数。
+  uint64 mismatch_count = 7;
+  // 失败码。
+  string failure_code = 8;
+  // 开始时间。
+  google.protobuf.Timestamp started_at = 9;
+  // 完成时间。
+  google.protobuf.Timestamp completed_at = 10;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 11;
+}
+
+// ReconciliationItem 表示一个只读存储对账差异。
+message ReconciliationItem {
+  // 明细 ID。
+  uint64 id = 1;
+  // 批次 ID。
+  uint64 batch_id = 2;
+  // 具体业务 App。
+  common.v1.AppId app_id = 3;
+  // 关联 File ID。
+  uint64 file_id = 4;
+  // 关联 Stored Object ID。
+  uint64 stored_object_id = 5;
+  // 差异类型。
+  ReconciliationDifferenceType difference_type = 6;
+  // 预期事实 JSON。
+  string expected = 7;
+  // 实际事实 JSON。
+  string actual = 8;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 9;
+  // 对象键，仅用于后台排查 Provider 侧孤立对象，不进入公共 File View。
+  string object_key = 10;
+}

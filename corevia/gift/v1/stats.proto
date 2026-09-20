@@ -1,0 +1,282 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "gift/v1/backpack.proto";
+import "gift/v1/send.proto";
+import "gift/v1/settlement.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// 礼物审计事件。
+message GiftEvent {
+  // 事件 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 事件类型。
+  optional string event_type = 3;
+  // 礼物 ID。
+  optional uint32 gift_id = 4;
+  // 送礼记录 ID。
+  optional uint64 send_record_id = 5;
+  // 发送用户 ID。
+  optional uint64 sender_user_id = 6;
+  // 接收用户 ID。
+  optional uint64 recipient_user_id = 7;
+  // 操作人 ID。
+  optional uint32 operator_id = 8;
+  // 事件消息。
+  optional string message = 9;
+  // 元数据 JSON。
+  optional string metadata = 10;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// 礼物每日统计。
+message GiftStat {
+  // 统计 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 统计日期，格式 YYYY-MM-DD。
+  optional string day = 3;
+  // 场景类型。
+  optional string scene_type = 4;
+  // 场景 ID。
+  optional string scene_id = 5;
+  // 接收用户 ID。
+  optional uint64 recipient_user_id = 6;
+  // 礼物 ID。
+  optional uint32 gift_id = 7;
+  // 送礼次数。
+  optional uint64 send_count = 8;
+  // 送礼人数。
+  optional uint64 sender_count = 9;
+  // 礼物数量。
+  optional uint64 gift_quantity = 10;
+  // 总金额。
+  optional int64 total_amount = 11;
+  // 消费充值币数量。
+  optional int64 diamond = 12;
+  // 消费赠币数量。
+  optional int64 coin = 13;
+  // 平台收入金额。
+  optional int64 platform_amount = 14;
+  // 收礼人待结算收益金额。
+  optional int64 recipient_amount = 15;
+  // 支付来源，WALLET 或 BACKPACK。
+  optional string payment_source = 16;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+// 礼物事件列表响应。
+message ListGiftEventResponse {
+  // 列表项。
+  repeated GiftEvent items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 礼物统计列表响应。
+message ListGiftStatResponse {
+  // 列表项。
+  repeated GiftStat items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// GiftEventFilter contains bounded, typed Gift Event workbench criteria.
+message GiftEventFilter {
+  // Exact event type.
+  optional string event_type = 1;
+  // Exact Gift identity.
+  optional uint32 gift_id = 2;
+  // Exact Send identity when the event references a Send.
+  optional uint64 send_record_id = 3;
+  // Exact sender User identity.
+  optional uint64 sender_user_id = 4;
+  // Exact recipient User identity.
+  optional uint64 recipient_user_id = 5;
+  // Exact Operator identity for admin-originated events.
+  optional uint32 operator_id = 6;
+  // Inclusive creation lower bound.
+  optional google.protobuf.Timestamp occurred_from = 7;
+  // Exclusive creation upper bound.
+  optional google.protobuf.Timestamp occurred_to = 8;
+}
+
+// ListGiftEventsRequest carries trusted App scope, typed filters and stable paging.
+message ListGiftEventsRequest {
+  // app_id 限定 ListGiftEvents 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  GiftEventFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// GiftStatFilter contains bounded, typed Gift Stat workbench criteria over the daily read model.
+message GiftStatFilter {
+  // Inclusive business day lower bound, format YYYY-MM-DD.
+  optional string start_day = 1 [(validate.rules).string = {len: 10}];
+  // Inclusive business day upper bound, format YYYY-MM-DD.
+  optional string end_day = 2 [(validate.rules).string = {len: 10}];
+  // Exact Gift identity.
+  optional uint32 gift_id = 3;
+  // Exact recipient User identity.
+  optional uint64 recipient_user_id = 4;
+  // Exact scene type.
+  optional string scene_type = 5;
+  // Exact scene identity.
+  optional string scene_id = 6;
+  // Payment sources, currently WALLET or BACKPACK.
+  repeated string payment_sources = 7;
+}
+
+// ListGiftStatsRequest carries trusted App scope, typed filters and stable paging.
+message ListGiftStatsRequest {
+  // app_id 限定 ListGiftStats 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  GiftStatFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// GiftOverviewState distinguishes usable data, true emptiness, and read-model failures.
+enum GiftOverviewState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_OVERVIEW_STATE_UNSPECIFIED = 0;
+  // 前置条件已满足，可以开始后续处理。
+  GIFT_OVERVIEW_STATE_READY = 1;
+  // 当前没有可展示或可处理的数据。
+  GIFT_OVERVIEW_STATE_EMPTY = 2;
+  // 仅部分数据或步骤可用，调用方应检查缺失部分。
+  GIFT_OVERVIEW_STATE_PARTIAL = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  GIFT_OVERVIEW_STATE_FAILED = 4;
+}
+
+// GiftOverviewAvailability is reported independently for each owned read section.
+enum GiftOverviewAvailability {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_OVERVIEW_AVAILABILITY_UNSPECIFIED = 0;
+  // 当前可供业务流程选择或使用。
+  GIFT_OVERVIEW_AVAILABILITY_AVAILABLE = 1;
+  // 当前不可供业务流程选择或使用。
+  GIFT_OVERVIEW_AVAILABILITY_UNAVAILABLE = 2;
+}
+
+// GiftOverviewDrilldownDestination names the fact workbench that owns a metric.
+enum GiftOverviewDrilldownDestination {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  GIFT_OVERVIEW_DRILLDOWN_DESTINATION_UNSPECIFIED = 0;
+  // GIFT_OVERVIEW_DRILLDOWN_DESTINATION_SENDS 将后续操作指向 SENDS 目标。
+  GIFT_OVERVIEW_DRILLDOWN_DESTINATION_SENDS = 1;
+  // GIFT_OVERVIEW_DRILLDOWN_DESTINATION_BACKPACK_TRANSACTIONS 将后续操作指向 BACKPACK_TRANSACTIONS 目标。
+  GIFT_OVERVIEW_DRILLDOWN_DESTINATION_BACKPACK_TRANSACTIONS = 2;
+  // GIFT_OVERVIEW_DRILLDOWN_DESTINATION_RECONCILIATION 将后续操作指向 RECONCILIATION 目标。
+  GIFT_OVERVIEW_DRILLDOWN_DESTINATION_RECONCILIATION = 3;
+}
+
+// GiftOverviewRange is the canonical Asia/Shanghai business-day window.
+message GiftOverviewRange {
+  // start_day 指定 GiftOverviewRange 统计或结算周期的起点。
+  string start_day = 1;
+  // end_day 指定 GiftOverviewRange 统计或结算周期的终点。
+  string end_day = 2;
+  // occurred_from 指定 GiftOverviewRange 查询或生效区间的起始边界。
+  google.protobuf.Timestamp occurred_from = 3;
+  // occurred_to 指定 GiftOverviewRange 查询或生效区间的结束边界。
+  google.protobuf.Timestamp occurred_to = 4;
+  // business_time_zone 指定业务日期、调度和报表计算采用的时区。
+  string business_time_zone = 5;
+}
+
+// GiftOverviewDrilldown carries one typed fact filter; clients must not reconstruct it.
+message GiftOverviewDrilldown {
+  // destination 承载 GiftOverviewDrilldown 关联的 GiftOverviewDrilldownDestination。
+  GiftOverviewDrilldownDestination destination = 1;
+  // send_filter 限定本次查询采用的筛选条件。
+  GiftSendFilter send_filter = 2;
+  // backpack_transaction_filter 限定本次查询采用的筛选条件。
+  BackpackTransactionFilter backpack_transaction_filter = 3;
+  // reconciliation_filter 限定本次查询采用的筛选条件。
+  GiftReconciliationIssueFilter reconciliation_filter = 4;
+}
+
+// GiftOverviewMetric is one reproducible count/value pair in integer minimum units.
+message GiftOverviewMetric {
+  // count 记录 GiftOverviewMetric 中符合对应条件的数量。
+  uint64 count = 1;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 2;
+  // drilldown 承载 GiftOverviewMetric 关联的 GiftOverviewDrilldown。
+  GiftOverviewDrilldown drilldown = 3;
+}
+
+// GiftOverviewBreakdownMetric adds stable dimension and basis-point shares.
+message GiftOverviewBreakdownMetric {
+  // dimension 指定 GiftOverviewBreakdownMetric 统计、流转或查询采用的业务维度。
+  string dimension = 1;
+  // count 记录 GiftOverviewBreakdownMetric 中符合对应条件的数量。
+  uint64 count = 2;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 3;
+  // count_share_basis_points 以基点表示 GiftOverviewBreakdownMetric 对应比例，一万基点等于 100%。
+  uint32 count_share_basis_points = 4;
+  // amount_share_basis_points 以基点表示 GiftOverviewBreakdownMetric 对应比例，一万基点等于 100%。
+  uint32 amount_share_basis_points = 5;
+  // drilldown 承载 GiftOverviewBreakdownMetric 关联的 GiftOverviewDrilldown。
+  GiftOverviewDrilldown drilldown = 6;
+}
+
+// GiftOverviewSendSection summarizes all Send statuses and successful value/source mix.
+message GiftOverviewSendSection {
+  // availability 承载 GiftOverviewSendSection 关联的 GiftOverviewAvailability。
+  GiftOverviewAvailability availability = 1;
+  // all_sends 承载 GiftOverviewSendSection 关联的 GiftOverviewMetric。
+  GiftOverviewMetric all_sends = 2;
+  // succeeded_sends 承载 GiftOverviewSendSection 关联的 GiftOverviewMetric。
+  GiftOverviewMetric succeeded_sends = 3;
+  // sources 列出 GiftOverviewSendSection 关联的 GiftOverviewBreakdownMetric。
+  repeated GiftOverviewBreakdownMetric sources = 4;
+  // statuses 列出 GiftOverviewSendSection 关联的 GiftOverviewBreakdownMetric。
+  repeated GiftOverviewBreakdownMetric statuses = 5;
+}
+
+// GiftOverviewCountSection represents one independently available operational count.
+message GiftOverviewCountSection {
+  // availability 承载 GiftOverviewCountSection 关联的 GiftOverviewAvailability。
+  GiftOverviewAvailability availability = 1;
+  // metric 承载 GiftOverviewCountSection 关联的 GiftOverviewMetric。
+  GiftOverviewMetric metric = 2;
+}
+
+// GetGiftOverviewRequest uses inclusive business days in Asia/Shanghai.
+message GetGiftOverviewRequest {
+  // app_id 限定 GetGiftOverview 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // start_day 指定 GetGiftOverview 统计或结算周期的起点。
+  string start_day = 2;
+  // end_day 指定 GetGiftOverview 统计或结算周期的终点。
+  string end_day = 3;
+}
+
+// GiftOverviewResponse never replaces an unavailable section with a silent zero.
+message GiftOverviewResponse {
+  // state 表示 GiftOverview 当前可观察的生命周期状态。
+  GiftOverviewState state = 1;
+  // range 承载 GiftOverview 关联的 GiftOverviewRange。
+  GiftOverviewRange range = 2;
+  // sends 承载 GiftOverview 关联的 GiftOverviewSendSection。
+  GiftOverviewSendSection sends = 3;
+  // open_reconciliation_issues 承载 GiftOverview 关联的 GiftOverviewCountSection。
+  GiftOverviewCountSection open_reconciliation_issues = 4;
+  // backpack_adjustments 承载 GiftOverview 关联的 GiftOverviewCountSection。
+  GiftOverviewCountSection backpack_adjustments = 5;
+}

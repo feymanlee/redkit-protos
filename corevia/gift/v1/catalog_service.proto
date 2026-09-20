@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/catalog.proto";
+import "google/protobuf/empty.proto";
+
+// 礼物目录服务。
+service GiftCatalogService {
+  // 查询礼物列表。
+  rpc ListGifts(common.pagination.v1.PagingRequest) returns (ListGiftResponse) {}
+  // 获取礼物详情。
+  rpc GetGift(GetGiftRequest) returns (Gift) {}
+  // 创建礼物。
+  rpc CreateGift(CreateGiftRequest) returns (Gift) {}
+  // 更新非生产 Gift Draft。
+  rpc UpdateGiftDraft(UpdateGiftDraftRequest) returns (google.protobuf.Empty) {}
+  // 丢弃非生产 Gift Draft。
+  rpc DiscardGiftDraft(DiscardGiftDraftRequest) returns (google.protobuf.Empty) {}
+  // 发布不可变 Gift Revision，并立即激活或等待指定时间。
+  rpc PublishGiftDraft(PublishGiftDraftRequest) returns (PublishGiftDraftResponse) {}
+  // 取消未来激活但保留不可变 Revision。
+  rpc CancelScheduledGiftRevision(CancelScheduledGiftRevisionRequest) returns (CancelScheduledGiftRevisionResponse) {}
+  // 立即阻止新 Gift Send，不修改当前或历史 Revision。
+  rpc EmergencyOfflineGift(EmergencyOfflineGiftRequest) returns (EmergencyOfflineGiftResponse) {}
+  // 读取归档阻塞项；归档命令会在行锁内重复校验。
+  rpc GetGiftArchivePreflight(GetGiftArchivePreflightRequest) returns (GiftArchivePreflight) {}
+  // 在前置条件满足时不可逆归档稳定 Gift 身份。
+  rpc ArchiveGift(ArchiveGiftRequest) returns (ArchiveGiftResponse) {}
+  // 查询不可变 Gift Revision 历史。
+  rpc ListGiftRevisions(ListGiftRevisionsRequest) returns (ListGiftRevisionsResponse) {}
+  // 只读对比同一 Gift 的两个 Revision；不提供回滚。
+  rpc CompareGiftRevisions(CompareGiftRevisionsRequest) returns (CompareGiftRevisionsResponse) {}
+  // 全量校验并原子应用目录导入；任一行失败则不生效。
+  rpc ApplyCatalogImport(ApplyCatalogImportRequest) returns (ApplyCatalogImportResponse) {}
+  // 查询礼物分类列表。
+  rpc ListGiftCategories(common.pagination.v1.PagingRequest) returns (ListGiftCategoryResponse) {}
+  // 创建礼物分类。
+  rpc CreateGiftCategory(CreateGiftCategoryRequest) returns (GiftCategory) {}
+  // 更新礼物分类。
+  rpc UpdateGiftCategory(UpdateGiftCategoryRequest) returns (google.protobuf.Empty) {}
+  // 停用礼物分类并原子记录 Operator Audit。
+  rpc DisableGiftCategory(DisableGiftCategoryRequest) returns (DisableGiftCategoryResponse) {}
+  // 查询 App-scoped Scene Type registry。
+  rpc ListGiftSceneTypes(common.pagination.v1.PagingRequest) returns (ListGiftSceneTypesResponse) {}
+  // 登记稳定 Scene Type Code。
+  rpc CreateGiftSceneType(CreateGiftSceneTypeRequest) returns (GiftSceneType) {}
+  // 更新 Scene Type 展示名。
+  rpc UpdateGiftSceneType(UpdateGiftSceneTypeRequest) returns (google.protobuf.Empty) {}
+  // 删除未被 Draft 或 Revision 引用的 Scene Type。
+  rpc DeleteGiftSceneType(DeleteGiftSceneTypeRequest) returns (google.protobuf.Empty) {}
+  // 预览 Scene Type 开关影响的 Active Gift 范围。
+  rpc GetGiftSceneTypeImpact(GetGiftSceneTypeImpactRequest) returns (GiftSceneTypeImpact) {}
+  // 幂等启用或停用 App 级 Scene Type kill switch。
+  rpc SetGiftSceneTypeEnabled(SetGiftSceneTypeEnabledRequest) returns (SetGiftSceneTypeEnabledResponse) {}
+  // 查询 App 范围内的 Gift Operator Audit。
+  rpc ListGiftOperatorAudits(ListGiftOperatorAuditsRequest) returns (ListGiftOperatorAuditsResponse) {}
+}

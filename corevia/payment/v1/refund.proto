@@ -1,0 +1,323 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/v1/common.proto";
+import "common/pagination/v1/pagination.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_types.proto";
+
+// 退款单。
+message Refund {
+  // 退款状态。
+  enum Status {
+    // 已创建。
+    REFUND_CREATED = 0;
+    // 退款处理中。
+    REFUND_PROCESSING = 1;
+    // 退款成功。
+    REFUND_SUCCEEDED = 2;
+    // 退款失败。
+    REFUND_FAILED = 3;
+    // 已关闭。
+    REFUND_CLOSED = 4;
+  }
+
+  // 退款单 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 支付单号。
+  optional string payment_no = 4;
+  // 退款单号。
+  optional string refund_no = 5;
+  // 渠道退款号。
+  optional string provider_refund_no = 6;
+  // 退款金额，分。
+  optional int64 amount = 7;
+  // 退款原因。
+  optional string reason = 8;
+  // 退款状态。
+  optional Status status = 9;
+  // 原支付币种代码；由不可变 Payment 事实派生。
+  optional string currency = 10;
+  // 退款成功时间。
+  optional google.protobuf.Timestamp refunded_at = 20;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+// 创建退款请求。
+message CreateRefundRequest {
+  // 支付单号。
+  string payment_no = 1;
+  // 退款金额，分。
+  int64 amount = 2;
+  // 退款原因。
+  optional string reason = 3;
+  // 幂等键。
+  optional string idempotency_key = 4;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 5;
+}
+
+// 退款列表响应。
+message ListRefundResponse {
+  // 列表项。
+  repeated Refund items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// Refund Request 是进入渠道退款前的后台处置意图。
+message RefundRequest {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    REFUND_REQUEST_STATUS_UNSPECIFIED = 0;
+    // PENDING_REVIEW 表示资源处于对应业务阶段。
+    PENDING_REVIEW = 1;
+    // 审核已通过，可以继续后续流程。
+    APPROVED = 2;
+    // 审核已拒绝，不再按原请求继续。
+    REJECTED = 3;
+    // 资源已创建，尚未进入后续处理阶段。
+    REFUND_CREATED = 4;
+  }
+
+  // ReasonCode 区分调用方可判断的业务原因。
+  enum ReasonCode {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    REFUND_REASON_CODE_UNSPECIFIED = 0;
+    // CUSTOMER_REQUEST 选择 CUSTOMER_REQUEST 作为对应业务维度的有效取值。
+    CUSTOMER_REQUEST = 1;
+    // DUPLICATE_PAYMENT 选择 DUPLICATE_PAYMENT 作为对应业务维度的有效取值。
+    DUPLICATE_PAYMENT = 2;
+    // PRODUCT_NOT_DELIVERED 选择 PRODUCT_NOT_DELIVERED 作为对应业务维度的有效取值。
+    PRODUCT_NOT_DELIVERED = 3;
+    // FRAUD_SUSPECTED 选择 FRAUD_SUSPECTED 作为对应业务维度的有效取值。
+    FRAUD_SUSPECTED = 4;
+    // OTHER 选择 OTHER 作为对应业务维度的有效取值。
+    OTHER = 5;
+  }
+
+  // RiskResult 定义对应业务维度允许使用的离散取值。
+  enum RiskResult {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    REFUND_RISK_RESULT_UNSPECIFIED = 0;
+    // 审核已通过，可以继续后续流程。
+    AUTO_APPROVED = 1;
+    // 需要人工审核、补充材料或执行明确处置后才能继续。
+    REVIEW_REQUIRED = 2;
+  }
+
+  // RiskHit 定义对应业务维度允许使用的离散取值。
+  enum RiskHit {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    REFUND_RISK_HIT_UNSPECIFIED = 0;
+    // AMOUNT_THRESHOLD 选择 AMOUNT_THRESHOLD 作为对应业务维度的有效取值。
+    AMOUNT_THRESHOLD = 1;
+    // CUMULATIVE_THRESHOLD 选择 CUMULATIVE_THRESHOLD 作为对应业务维度的有效取值。
+    CUMULATIVE_THRESHOLD = 2;
+    // REASON_RULE 选择 REASON_RULE 作为对应业务维度的有效取值。
+    REASON_RULE = 3;
+    // RULE_NOT_CONFIGURED 选择 RULE_NOT_CONFIGURED 作为对应业务维度的有效取值。
+    RULE_NOT_CONFIGURED = 4;
+  }
+
+  // EntitlementImpact 定义对应业务维度允许使用的离散取值。
+  enum EntitlementImpact {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    ENTITLEMENT_IMPACT_UNSPECIFIED = 0;
+    // NONE 选择 NONE 作为对应业务维度的有效取值。
+    NONE = 1;
+    // HISTORY_ONLY 选择 HISTORY_ONLY 作为对应业务维度的有效取值。
+    HISTORY_ONLY = 2;
+    // REVOKE_REMAINING_ENTITLEMENT 选择 REVOKE_REMAINING_ENTITLEMENT 作为对应业务维度的有效取值。
+    REVOKE_REMAINING_ENTITLEMENT = 3;
+  }
+
+  // id 标识关联的 Refund。
+  uint64 id = 1;
+  // app_id 限定 Refund 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // payment_no 是 Refund 对外关联与审计使用的业务编号。
+  string payment_no = 4;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 5;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 6;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 7;
+  // reason_code 提供机器可判断的业务原因分类。
+  ReasonCode reason_code = 8;
+  // remark 提供 Refund 的补充说明。
+  optional string remark = 9;
+  // status 表示 Refund 当前可观察的生命周期状态。
+  Status status = 10;
+  // risk_result 承载 Refund 关联的 RiskResult。
+  RiskResult risk_result = 11;
+  // risk_hits 列出 Refund 关联的 RiskHit。
+  repeated RiskHit risk_hits = 12;
+  // requester_operator_id 标识关联的后台 Operator。
+  uint32 requester_operator_id = 13;
+  // reviewer_operator_id 标识关联的后台 Operator。
+  optional uint32 reviewer_operator_id = 14;
+  // review_note 记录人工判断的补充说明，供审计与复核。
+  optional string review_note = 15;
+  // refund_no 是 Refund 对外关联与审计使用的业务编号。
+  optional string refund_no = 16;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 17;
+  // original_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 original_amount = 18;
+  // succeeded_refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 succeeded_refund_amount = 19;
+  // reserved_refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 reserved_refund_amount = 20;
+  // remaining_refundable_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 remaining_refundable_amount = 21;
+  // entitlement_impact 承载 Refund 关联的 EntitlementImpact。
+  EntitlementImpact entitlement_impact = 22;
+  // reviewed_at 记录 Refund 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp reviewed_at = 23;
+  // created_at 记录 Refund 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 Refund 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// RefundAvailability 是 Payment Detail 上的实时可退款投影。
+message RefundAvailability {
+  // original_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 original_amount = 1;
+  // succeeded_refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 succeeded_refund_amount = 2;
+  // reserved_refund_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 reserved_refund_amount = 3;
+  // remaining_refundable_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 remaining_refundable_amount = 4;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 5;
+  // full_refund_entitlement_impact 承载 RefundAvailability 关联的 EntitlementImpact。
+  RefundRequest.EntitlementImpact full_refund_entitlement_impact = 6;
+}
+
+// RefundRiskRule 按 App 和 ISO 4217 币种控制自动审批边界。
+message RefundRiskRule {
+  // id 标识关联的 RefundRiskRule。
+  uint64 id = 1;
+  // app_id 限定 RefundRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 3;
+  // auto_approve_max_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 auto_approve_max_amount = 4;
+  // cumulative_review_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 cumulative_review_amount = 5;
+  // enabled 显式表示 RefundRiskRule 是否满足该条件。
+  bool enabled = 6;
+  // created_at 记录 RefundRiskRule 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 RefundRiskRule 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// SubmitRefundRequestRequest 定义提交 RefundRequest 的幂等管理命令参数。
+message SubmitRefundRequestRequest {
+  // payment_no 是 SubmitRefundRequest 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 2;
+  // reason_code 提供机器可判断的业务原因分类。
+  RefundRequest.ReasonCode reason_code = 3;
+  // remark 提供 SubmitRefundRequest 的补充说明。
+  optional string remark = 4;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 7;
+  // app_id 限定 SubmitRefundRequest 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 8;
+}
+
+// ReviewRefundRequestRequest 定义审核 RefundRequest 的幂等管理命令参数。
+message ReviewRefundRequestRequest {
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // review_note 记录人工判断的补充说明，供审计与复核。
+  optional string review_note = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4;
+  // app_id 限定 ReviewRefundRequest 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 5;
+}
+
+// RefundRequestFilter 定义可组合的查询筛选条件。
+message RefundRequestFilter {
+  // payment_no 是 RefundRequestFilter 对外关联与审计使用的业务编号。
+  optional string payment_no = 1;
+  // statuses 列出 RefundRequestFilter 关联的 Status。
+  repeated RefundRequest.Status statuses = 2;
+}
+
+// ListRefundRequestsRequest 定义 RefundRequests 的筛选与分页参数。
+message ListRefundRequestsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  RefundRequestFilter filter = 2;
+  // app_id 限定 ListRefundRequests 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 3;
+}
+
+// ListRefundRequestsResponse 返回 RefundRequests 结果集合及分页信息。
+message ListRefundRequestsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated RefundRequest items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// UpsertRefundRiskRuleRequest 定义执行 UpsertRefundRiskRule 的命令参数。
+message UpsertRefundRiskRuleRequest {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1;
+  // auto_approve_max_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 auto_approve_max_amount = 2;
+  // cumulative_review_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 cumulative_review_amount = 3;
+  // enabled 显式表示 UpsertRefundRiskRule 是否满足该条件。
+  bool enabled = 4;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+  // app_id 限定 UpsertRefundRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 7;
+}
+
+// ListRefundRiskRulesRequest 定义 RefundRiskRules 的筛选与分页参数。
+message ListRefundRiskRulesRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // app_id 限定 ListRefundRiskRules 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// ListRefundRiskRulesResponse 返回 RefundRiskRules 结果集合及分页信息。
+message ListRefundRiskRulesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated RefundRiskRule items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}

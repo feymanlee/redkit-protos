@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package admin.ops.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "ops/v1/ops_content.proto";
+import "ops/v1/placement.proto";
+import "validate/validate.proto";
+
+// OpsPlacementService 管理当前 App 的投放位注册。
+service OpsPlacementService {
+  // 查询投放位列表。
+  rpc ListPlacements(.common.pagination.v1.PagingRequest) returns (.ops.v1.ListPlacementResponse) {
+    option (google.api.http) = {get: "/admin/v1/ops/placements"};
+  }
+  // 创建投放位；code 在 App 内唯一且创建后不可改。
+  rpc CreatePlacement(AdminCreatePlacementRequest) returns (.ops.v1.Placement) {
+    option (google.api.http) = {
+      post: "/admin/v1/ops/placements"
+      body: "*"
+    };
+  }
+  // 更新投放位展示名、容量或启用状态；被引用后不能删除只能停用。
+  rpc UpdatePlacement(AdminUpdatePlacementRequest) returns (.ops.v1.Placement) {
+    option (google.api.http) = {
+      put: "/admin/v1/ops/placements/{placement_id}"
+      body: "*"
+    };
+  }
+}
+
+// OpsContentService 管理当前 App 的运营投放内容生命周期。
+service OpsContentService {
+  // 查询运营内容列表。
+  rpc ListOpsContentItems(AdminListOpsContentItemsRequest) returns (.ops.v1.ListOpsContentItemResponse) {
+    option (google.api.http) = {get: "/admin/v1/ops/content-items"};
+  }
+  // 获取运营内容详情。
+  rpc GetOpsContentItem(AdminGetOpsContentItemRequest) returns (.ops.v1.OpsContentItem) {
+    option (google.api.http) = {get: "/admin/v1/ops/content-items/{content_id}"};
+  }
+  // 创建草稿内容项。
+  rpc CreateOpsContentItem(AdminCreateOpsContentItemRequest) returns (.ops.v1.OpsContentItem) {
+    option (google.api.http) = {
+      post: "/admin/v1/ops/content-items"
+      body: "*"
+    };
+  }
+  // 更新草稿或未终态内容的可变字段。
+  rpc UpdateOpsContentItem(AdminUpdateOpsContentItemRequest) returns (.ops.v1.OpsContentItem) {
+    option (google.api.http) = {
+      put: "/admin/v1/ops/content-items/{content_id}"
+      body: "*"
+    };
+  }
+  // 发布内容项；可立即生效或进入 SCHEDULED。
+  rpc PublishOpsContentItem(AdminPublishOpsContentItemRequest) returns (.ops.v1.OpsContentItem) {
+    option (google.api.http) = {
+      post: "/admin/v1/ops/content-items/{content_id}:publish"
+      body: "*"
+    };
+  }
+  // 人工下线已发布内容。
+  rpc OfflineOpsContentItem(AdminOfflineOpsContentItemRequest) returns (.ops.v1.OpsContentItem) {
+    option (google.api.http) = {
+      post: "/admin/v1/ops/content-items/{content_id}:offline"
+      body: "*"
+    };
+  }
+}
+
+// AdminCreatePlacementRequest 创建投放位。
+message AdminCreatePlacementRequest {
+  // code 是 App 内稳定投放位代码。
+  string code = 1 [(validate.rules).string.min_len = 1];
+  // kind 是投放位形态。
+  .ops.v1.PlacementKind kind = 2;
+  // display_name 是后台展示名称。
+  string display_name = 3;
+  // max_active_items 是同时生效上限；0 表示使用形态默认值。
+  uint32 max_active_items = 4;
+}
+
+// AdminUpdatePlacementRequest 更新投放位。
+message AdminUpdatePlacementRequest {
+  // placement_id 标识目标投放位。
+  uint64 placement_id = 1 [(validate.rules).uint64.gt = 0];
+  // display_name 更新展示名。
+  string display_name = 2;
+  // max_active_items 更新容量上限。
+  uint32 max_active_items = 3;
+  // enabled 更新启用状态。
+  bool enabled = 4;
+}
+
+// AdminListOpsContentItemsRequest 按可选过滤条件分页查询内容。
+message AdminListOpsContentItemsRequest {
+  // paging 携带分页参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // placement_id 可选，过滤投放位。
+  uint64 placement_id = 2;
+  // status 可选，过滤生命周期状态。
+  .ops.v1.OpsContentStatus status = 3;
+}
+
+// AdminGetOpsContentItemRequest 获取单条内容。
+message AdminGetOpsContentItemRequest {
+  // content_id 标识内容项。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+}
+
+// AdminCreateOpsContentItemRequest 创建草稿内容。
+message AdminCreateOpsContentItemRequest {
+  // placement_id 必须指向已启用投放位。
+  uint64 placement_id = 1 [(validate.rules).uint64.gt = 0];
+  // title 是后台标题。
+  string title = 2;
+  // media_file_id 是 Support File 引用。
+  string media_file_id = 3 [(validate.rules).string.min_len = 1];
+  // sort_order 越小越靠前。
+  int32 sort_order = 4;
+  // start_at 生效开始。
+  google.protobuf.Timestamp start_at = 5;
+  // end_at 生效结束；空表示不自动过期。
+  google.protobuf.Timestamp end_at = 6;
+  // jump 是点击行为。
+  .ops.v1.JumpTarget jump = 7;
+  // remark 运营备注。
+  string remark = 8;
+}
+
+// AdminUpdateOpsContentItemRequest 更新内容项。
+message AdminUpdateOpsContentItemRequest {
+  // content_id 标识内容项。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+  // title 更新后台标题。
+  string title = 2;
+  // media_file_id 替换素材引用（应为新 File ID）。
+  string media_file_id = 3;
+  // sort_order 更新排序。
+  int32 sort_order = 4;
+  // start_at 更新生效开始。
+  google.protobuf.Timestamp start_at = 5;
+  // end_at 更新生效结束。
+  google.protobuf.Timestamp end_at = 6;
+  // jump 更新点击行为。
+  .ops.v1.JumpTarget jump = 7;
+  // remark 更新运营备注。
+  string remark = 8;
+}
+
+// AdminPublishOpsContentItemRequest 发布内容项。
+message AdminPublishOpsContentItemRequest {
+  // content_id 标识内容项。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+  // reason 记入治理事件的人工原因。
+  string reason = 2 [(validate.rules).string.min_len = 1];
+}
+
+// AdminOfflineOpsContentItemRequest 下线内容项。
+message AdminOfflineOpsContentItemRequest {
+  // content_id 标识内容项。
+  uint64 content_id = 1 [(validate.rules).uint64.gt = 0];
+  // reason 记入治理事件的人工原因。
+  string reason = 2 [(validate.rules).string.min_len = 1];
+}

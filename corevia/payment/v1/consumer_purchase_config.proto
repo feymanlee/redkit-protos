@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package payment.v1;
+
+// ConsumerPurchaseOptionsWrapper 为 bootstrap custom config 提供稳定 YAML 根。
+message ConsumerPurchaseOptionsWrapper {
+  // payment_consumer 承载 ConsumerPurchaseOptionsWrapper 关联的 ConsumerPurchaseOptions。
+  ConsumerPurchaseOptions payment_consumer = 1;
+}
+
+// ConsumerPurchaseOptions 保存 Payment Consumer Purchase 的部署配置。
+message ConsumerPurchaseOptions {
+  // 按 App 和稳定 code 注册的 Return Target JSON，不接受请求侧 URL。
+  string return_targets_json = 1;
+
+  // Consumer BFF issuer 到固定 App ID 与 Ed25519 公钥数组的 JSON allowlist；私钥只属于外部 BFF 部署。
+  string risk_trusted_issuers_json = 2;
+}

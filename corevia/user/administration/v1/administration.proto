@@ -1,0 +1,448 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "user/administration/v1/types.proto";
+import "validate/validate.proto";
+
+// UserAdministrationService 提供后台专用的 User 查询与处置，不承担后台权限校验。
+service UserAdministrationService {
+  // SearchUsers 在具体 App 内执行结构化用户搜索和筛选。
+  rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
+  // SuspendUser 执行后台专用的限时或无限期 Account Suspension。
+  rpc SuspendUser(SuspendUserRequest) returns (Account);
+  // ReactivateUser 执行后台专用的人工 Account 恢复。
+  rpc ReactivateUser(ReactivateUserRequest) returns (Account);
+  // ModerateUserProfile 清理违规公开资料，不允许 Operator 写入替代内容。
+  rpc ModerateUserProfile(ModerateUserProfileRequest) returns (Profile);
+  // ResetUserCode 使用系统生成器替换公开身份并永久保留旧 Code。
+  rpc ResetUserCode(ResetUserCodeRequest) returns (Account);
+  // BeginAdministrativeAccountClosure 由可信 Operator 发起现有 Account Closure 冷静期。
+  rpc BeginAdministrativeAccountClosure(BeginAdministrativeAccountClosureRequest) returns (Account);
+  // GetAccountClosure 返回 User-owned Saga 与 participant 进度，不复制 Reward 明细。
+  rpc GetAccountClosure(GetAccountClosureRequest) returns (AccountClosure);
+  // CancelAdministrativeAccountClosure 在冷静期直接恢复 Account，或请求 Worker 撤销首个 Apply 前的可逆 preparation。
+  rpc CancelAdministrativeAccountClosure(CancelAdministrativeAccountClosureRequest) returns (AccountClosure);
+  // RetryAdministrativeAccountClosure 只重新排队明确 STALLED 的 Closure Saga。
+  rpc RetryAdministrativeAccountClosure(RetryAdministrativeAccountClosureRequest) returns (AccountClosure);
+  // RequirePasswordReset 撤销现有认证状态并要求 User 自行更换密码。
+  rpc RequirePasswordReset(RequirePasswordResetRequest) returns (google.protobuf.Empty);
+  // RevokeCredential 撤销一个已失陷的登录方式，但保留至少一个可用 Credential。
+  rpc RevokeCredential(RevokeCredentialRequest) returns (google.protobuf.Empty);
+  // ResetMFA 撤销现有 MFA 因子、恢复码和认证状态，不创建替代因子。
+  rpc ResetMFA(ResetMFARequest) returns (google.protobuf.Empty);
+  // RevokeDeviceTrust 撤销设备信任以及该设备的全部认证状态。
+  rpc RevokeDeviceTrust(RevokeDeviceTrustRequest) returns (google.protobuf.Empty);
+}
+
+// GetAccountClosureRequest 标识待查询的 AccountClosure。
+message GetAccountClosureRequest {
+  // app_id 限定 GetAccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AccountClosureStatus 刻画对应资源的生命周期状态。
+enum AccountClosureStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ACCOUNT_CLOSURE_STATUS_UNSPECIFIED = 0;
+  // 正在处理中，尚未形成终态。
+  ACCOUNT_CLOSURE_STATUS_PREPARING = 1;
+  // 正在处理中，尚未形成终态。
+  ACCOUNT_CLOSURE_STATUS_RUNNING = 2;
+  // 处理被阻塞，需要外部处置后才能继续。
+  ACCOUNT_CLOSURE_STATUS_BLOCKED = 3;
+  // 处理被阻塞，需要外部处置后才能继续。
+  ACCOUNT_CLOSURE_STATUS_STALLED = 4;
+  // 处理已成功完成。
+  ACCOUNT_CLOSURE_STATUS_COMPLETED = 5;
+  // 处理已取消，不再继续推进。
+  ACCOUNT_CLOSURE_STATUS_CANCELED = 6;
+  // ACCOUNT_CLOSURE_STATUS_CANCELING 表示资源处于对应业务阶段。
+  ACCOUNT_CLOSURE_STATUS_CANCELING = 7;
+}
+
+// AccountClosureParticipantStatus 刻画对应资源的生命周期状态。
+enum AccountClosureParticipantStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ACCOUNT_CLOSURE_PARTICIPANT_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  ACCOUNT_CLOSURE_PARTICIPANT_STATUS_PENDING = 1;
+  // 正在处理中，尚未形成终态。
+  ACCOUNT_CLOSURE_PARTICIPANT_STATUS_RUNNING = 2;
+  // 处理被阻塞，需要外部处置后才能继续。
+  ACCOUNT_CLOSURE_PARTICIPANT_STATUS_BLOCKED = 3;
+  // 处理已成功完成。
+  ACCOUNT_CLOSURE_PARTICIPANT_STATUS_SUCCEEDED = 4;
+  // 处理被阻塞，需要外部处置后才能继续。
+  ACCOUNT_CLOSURE_PARTICIPANT_STATUS_STALLED = 5;
+  // 处理已取消，不再继续推进。
+  ACCOUNT_CLOSURE_PARTICIPANT_STATUS_CANCELED = 6;
+}
+
+// AccountClosureParticipant 记录一个 bounded context 对 Account Closure 的处理状态。
+message AccountClosureParticipant {
+  // participant 标识参与 Account Merge 或 Account Closure 的 bounded context。
+  string participant = 1;
+  // status 表示 AccountClosureParticipant 当前可观察的生命周期状态。
+  AccountClosureParticipantStatus status = 2;
+  // attempt 记录当前流程已经执行的尝试次数。
+  uint32 attempt = 3;
+  // blocker_count 记录 AccountClosureParticipant 中符合对应条件的数量。
+  uint32 blocker_count = 4;
+  // failure_category 对失败进行稳定分类，供调用方决定重试或终止。
+  string failure_category = 5;
+  // safe_error 记录 AccountClosureParticipant 最近一次可诊断的失败信息。
+  string safe_error = 6;
+  // owning_reference 记录外部系统或关联流程提供的引用标识。
+  string owning_reference = 7;
+  // lease_until 指定 AccountClosureParticipant 查询或生效区间的结束边界。
+  google.protobuf.Timestamp lease_until = 8;
+  // completed_at 记录 AccountClosureParticipant 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 9;
+  // updated_at 记录 AccountClosureParticipant 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 10;
+  // blockers 列出 AccountClosureParticipant 关联的 AccountClosureParticipantBlocker。
+  repeated AccountClosureParticipantBlocker blockers = 11;
+  // order 指定查询结果采用的排序方向或优先级。
+  uint32 order = 12;
+}
+
+// AccountClosureParticipantBlocker 描述阻止 Account Closure 继续推进的业务条件。
+message AccountClosureParticipantBlocker {
+  // category 指定记录归属的稳定业务分类。
+  string category = 1;
+  // count 记录 AccountClosureParticipantBlocker 中符合对应条件的数量。
+  uint32 count = 2;
+  // owning_reference 记录外部系统或关联流程提供的引用标识。
+  string owning_reference = 3;
+}
+
+// AccountClosure 表示一次 Account Closure 流程及其参与者状态。
+message AccountClosure {
+  // closure_no 是 AccountClosure 对外关联与审计使用的业务编号。
+  string closure_no = 1;
+  // app_id 限定 AccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 3;
+  // status 表示 AccountClosure 当前可观察的生命周期状态。
+  AccountClosureStatus status = 4;
+  // attempt 记录当前流程已经执行的尝试次数。
+  uint32 attempt = 5;
+  // failure_category 对失败进行稳定分类，供调用方决定重试或终止。
+  string failure_category = 6;
+  // safe_error 记录 AccountClosure 最近一次可诊断的失败信息。
+  string safe_error = 7;
+  // participants 列出 AccountClosure 关联的 AccountClosureParticipant。
+  repeated AccountClosureParticipant participants = 8;
+  // completed_at 记录 AccountClosure 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 9;
+  // created_at 记录 AccountClosure 的创建时间。
+  google.protobuf.Timestamp created_at = 10;
+  // updated_at 记录 AccountClosure 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 11;
+  // cancellation_allowed 显式表示 AccountClosure 是否满足该条件。
+  bool cancellation_allowed = 12;
+  // irreversible_started_at 指定 AccountClosure 生效或查询区间的起始时间。
+  google.protobuf.Timestamp irreversible_started_at = 13;
+  // canceled_at 记录 AccountClosure 对应业务阶段的时间点。
+  google.protobuf.Timestamp canceled_at = 14;
+  // participant_order 按关闭编排顺序列出参与的 bounded context。
+  repeated string participant_order = 15;
+  // closed_at 记录 AccountClosure 对应业务阶段的时间点。
+  google.protobuf.Timestamp closed_at = 16;
+}
+
+// CancelAdministrativeAccountClosureRequest 定义取消 AdministrativeAccountClosure 的幂等管理命令参数。
+message CancelAdministrativeAccountClosureRequest {
+  // app_id 限定 CancelAdministrativeAccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// RetryAdministrativeAccountClosureRequest 定义重试 AdministrativeAccountClosure 的幂等管理命令参数。
+message RetryAdministrativeAccountClosureRequest {
+  // app_id 限定 RetryAdministrativeAccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // closure_no 是 RetryAdministrativeAccountClosure 对外关联与审计使用的业务编号。
+  string closure_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ProfileModerationField 是后台允许清理或重置的公开资料字段白名单。
+enum ProfileModerationField {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PROFILE_MODERATION_FIELD_UNSPECIFIED = 0;
+  // PROFILE_MODERATION_FIELD_NICKNAME 选择导出或查询投影中的 NICKNAME 字段。
+  PROFILE_MODERATION_FIELD_NICKNAME = 1;
+  // PROFILE_MODERATION_FIELD_AVATAR 选择导出或查询投影中的 AVATAR 字段。
+  PROFILE_MODERATION_FIELD_AVATAR = 2;
+  // PROFILE_MODERATION_FIELD_DESCRIPTION 选择导出或查询投影中的 DESCRIPTION 字段。
+  PROFILE_MODERATION_FIELD_DESCRIPTION = 3;
+  // PROFILE_MODERATION_FIELD_GENDER 选择导出或查询投影中的 GENDER 字段。
+  PROFILE_MODERATION_FIELD_GENDER = 4;
+  // PROFILE_MODERATION_FIELD_REGION 选择导出或查询投影中的 REGION 字段。
+  PROFILE_MODERATION_FIELD_REGION = 5;
+}
+
+// ModerateUserProfileRequest 区分直接清空和恢复系统默认值的字段。
+message ModerateUserProfileRequest {
+  // app_id 限定 ModerateUserProfile 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // clear_fields 列出 ModerateUserProfile 关联的 ProfileModerationField。
+  repeated ProfileModerationField clear_fields = 3 [(validate.rules).repeated = {max_items: 5, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
+  // reset_fields 列出 ModerateUserProfile 关联的 ProfileModerationField。
+  repeated ProfileModerationField reset_fields = 4 [(validate.rules).repeated = {max_items: 3, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ResetUserCodeRequest 不包含替代 Code；新值只能由 User 服务生成。
+message ResetUserCodeRequest {
+  // app_id 限定 ResetUserCode 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// BeginAdministrativeAccountClosureRequest 不接受 User 验证票据，也不能绕过冷静期。
+message BeginAdministrativeAccountClosureRequest {
+  // app_id 限定 BeginAdministrativeAccountClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// RequirePasswordResetRequest 不携带新密码；Operator 只能要求 User 自行重设。
+message RequirePasswordResetRequest {
+  // app_id 限定 RequirePasswordReset 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// RevokeCredentialRequest 是后台专用的 Credential 安全处置，不接受 User 验证票据。
+message RevokeCredentialRequest {
+  // app_id 限定 RevokeCredential 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // credential_id 标识关联的 Credential。
+  uint64 credential_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ResetMFARequest 是后台专用的 MFA 安全处置，不接受或返回 MFA Secret。
+message ResetMFARequest {
+  // app_id 限定 ResetMFA 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// RevokeDeviceTrustRequest 是后台专用的设备处置，同时撤销该设备的 Session。
+message RevokeDeviceTrustRequest {
+  // app_id 限定 RevokeDeviceTrust 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // device_id 标识关联的 Device。
+  uint64 device_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AccountSuspensionReason 是 Operator 暂停 Account 时必须选择的标准原因。
+enum AccountSuspensionReason {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ACCOUNT_SUSPENSION_REASON_UNSPECIFIED = 0;
+  // ACCOUNT_SUSPENSION_REASON_POLICY_VIOLATION 表示因 POLICY_VIOLATION 条件导致流程无法按原路径继续。
+  ACCOUNT_SUSPENSION_REASON_POLICY_VIOLATION = 1;
+  // ACCOUNT_SUSPENSION_REASON_SECURITY_RISK 表示因 SECURITY_RISK 条件导致流程无法按原路径继续。
+  ACCOUNT_SUSPENSION_REASON_SECURITY_RISK = 2;
+  // ACCOUNT_SUSPENSION_REASON_ABUSE 表示因 ABUSE 条件导致流程无法按原路径继续。
+  ACCOUNT_SUSPENSION_REASON_ABUSE = 3;
+  // ACCOUNT_SUSPENSION_REASON_COMPLIANCE 表示因 COMPLIANCE 条件导致流程无法按原路径继续。
+  ACCOUNT_SUSPENSION_REASON_COMPLIANCE = 4;
+  // ACCOUNT_SUSPENSION_REASON_OTHER 表示因 OTHER 条件导致流程无法按原路径继续。
+  ACCOUNT_SUSPENSION_REASON_OTHER = 5;
+}
+
+// AccountReactivationReason 是 Operator 人工恢复 Account 时必须选择的标准原因。
+enum AccountReactivationReason {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ACCOUNT_REACTIVATION_REASON_UNSPECIFIED = 0;
+  // ACCOUNT_REACTIVATION_REASON_REVIEW_CLEARED 表示因 REVIEW_CLEARED 条件导致流程无法按原路径继续。
+  ACCOUNT_REACTIVATION_REASON_REVIEW_CLEARED = 1;
+  // 审核已通过，可以继续后续流程。
+  ACCOUNT_REACTIVATION_REASON_APPEAL_APPROVED = 2;
+  // 异常或争议已经处置完成。
+  ACCOUNT_REACTIVATION_REASON_INCIDENT_RESOLVED = 3;
+  // ACCOUNT_REACTIVATION_REASON_OTHER 表示因 OTHER 条件导致流程无法按原路径继续。
+  ACCOUNT_REACTIVATION_REASON_OTHER = 4;
+}
+
+// SuspendUserRequest 携带可信 App scope、标准原因、可选说明和幂等键。
+message SuspendUserRequest {
+  // app_id 限定 SuspendUser 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason_code 提供机器可判断的业务原因分类。
+  AccountSuspensionReason reason_code = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // internal_note 记录人工判断的补充说明，供审计与复核。
+  optional string internal_note = 4 [(validate.rules).string.max_len = 512];
+  // suspended_until 指定 SuspendUser 查询或生效区间的结束边界。
+  google.protobuf.Timestamp suspended_until = 5;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ReactivateUserRequest 携带人工复核原因、可选说明和幂等键。
+message ReactivateUserRequest {
+  // app_id 限定 ReactivateUser 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason_code 提供机器可判断的业务原因分类。
+  AccountReactivationReason reason_code = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // internal_note 记录人工判断的补充说明，供审计与复核。
+  optional string internal_note = 4 [(validate.rules).string.max_len = 512];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// BooleanFilter 为后台布尔筛选提供明确的“不筛选/是/否”三态语义。
+enum BooleanFilter {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  BOOLEAN_FILTER_UNSPECIFIED = 0;
+  // BOOLEAN_FILTER_TRUE 选择 TRUE 作为对应业务维度的有效取值。
+  BOOLEAN_FILTER_TRUE = 1;
+  // BOOLEAN_FILTER_FALSE 选择 FALSE 作为对应业务维度的有效取值。
+  BOOLEAN_FILTER_FALSE = 2;
+}
+
+// UserSearchQuery 明确区分各种搜索语义，避免数字 User ID 与手机号歧义。
+message UserSearchQuery {
+  // UserSearchQuery 使用以下一种查询表达式。
+  oneof query {
+    // user_id 按全局 User ID 精确搜索。
+    uint64 user_id = 1;
+    // user_code 按当前有效 User Code 精确搜索。
+    string user_code = 2;
+    // nickname 按公开昵称模糊搜索。
+    string nickname = 3;
+    // phone 按完整规范化手机号精确搜索。
+    string phone = 4;
+    // email 按完整规范化邮箱精确搜索。
+    string email = 5;
+  }
+}
+
+// UserSearchFilter 是后台列表允许使用的 Account 与安全筛选集合。
+message UserSearchFilter {
+  // account_status 筛选一个 Account 生命周期状态。
+  optional AccountStatus account_status = 1;
+  // locked 筛选当前是否处于临时安全锁。
+  BooleanFilter locked = 2;
+  // suspended 筛选 Account 当前是否处于 SUSPENDED 状态。
+  BooleanFilter suspended = 3;
+  // mfa_enabled 筛选当前是否启用 MFA。
+  BooleanFilter mfa_enabled = 4;
+  // registration_type 筛选最早创建的 Credential 类型。
+  optional CredentialType registration_type = 5;
+  // created_from 筛选不早于该时间创建的 User。
+  google.protobuf.Timestamp created_from = 6;
+  // created_to 筛选不晚于该时间创建的 User。
+  google.protobuf.Timestamp created_to = 7;
+  // last_login_from 筛选最近登录时间下界。
+  google.protobuf.Timestamp last_login_from = 8;
+  // last_login_to 筛选最近登录时间上界。
+  google.protobuf.Timestamp last_login_to = 9;
+}
+
+// SearchUsersRequest 携带待与可信 metadata 匹配的领域 App 身份、结构化查询和分页参数。
+message SearchUsersRequest {
+  // app_id 是 User Search Projection 的具体 App 资源定位身份。
+  common.v1.AppId app_id = 1;
+  // search 为空时列出当前筛选范围内的 User。
+  UserSearchQuery search = 2;
+  // filter 为空时不增加 Account 或安全筛选。
+  UserSearchFilter filter = 3;
+  // paging 控制有界页码和页大小。
+  common.pagination.v1.PagingRequest paging = 4;
+}
+
+// UserSearchProjection 是只包含 User 上下文事实的后台列表读模型。
+message UserSearchProjection {
+  // account 是 User 的 Account 生命周期主体。
+  Account account = 1;
+  // profile 是 User 的通用公开资料。
+  Profile profile = 2;
+  // masked_phone 是脱敏后的当前有效手机号。
+  string masked_phone = 3;
+  // masked_email 是脱敏后的当前有效邮箱。
+  string masked_email = 4;
+  // locked 表示当前仍处于临时安全锁。
+  bool locked = 5;
+  // locked_until 是临时安全锁截止时间。
+  google.protobuf.Timestamp locked_until = 6;
+  // suspended 表示 Account 当前处于 SUSPENDED 状态。
+  bool suspended = 7;
+  // mfa_enabled 表示当前是否启用 MFA。
+  bool mfa_enabled = 8;
+  // registration_type 是最早创建的 Credential 类型。
+  CredentialType registration_type = 9;
+  // registration_provider 是最早创建的 Credential Provider。
+  string registration_provider = 10;
+  // last_login_at 是最近创建的 Session 时间，即最近一次成功登录时间。
+  google.protobuf.Timestamp last_login_at = 11;
+}
+
+// SearchUsersResponse 返回当前页及筛选后的总记录数。
+message SearchUsersResponse {
+  // items 是当前页 User Search Projection。
+  repeated UserSearchProjection items = 1;
+  // total 是应用全部筛选后的记录总数。
+  uint64 total = 2;
+}

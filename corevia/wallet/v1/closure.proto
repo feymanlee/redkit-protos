@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// WalletClosureService 暴露 Account Closure 使用的窄 Wallet participant 契约。
+service WalletClosureService {
+  // PrepareClosure 建立 Wallet fence，并报告余额、冻结和欠款阻断。
+  rpc PrepareClosure(PrepareClosureRequest) returns (ClosureParticipantState) {}
+  // ApplyClosure 在同一 fence 下重新检查 readiness。
+  rpc ApplyClosure(ApplyClosureRequest) returns (ClosureParticipantState) {}
+  // CancelClosure 仅撤销 Apply 前建立的可逆 fence。
+  rpc CancelClosure(CancelClosureRequest) returns (ClosureParticipantState) {}
+  // GetClosureStatus 返回持久化 participant 状态。
+  rpc GetClosureStatus(GetClosureStatusRequest) returns (ClosureParticipantState) {}
+}
+
+// PrepareClosureRequest 定义执行 PrepareClosure 的命令参数。
+message PrepareClosureRequest {
+  // app_id 限定 PrepareClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // closure_no 是 PrepareClosure 对外关联与审计使用的业务编号。
+  string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ApplyClosureRequest 定义应用 Closure 的命令参数。
+message ApplyClosureRequest {
+  // app_id 限定 ApplyClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // closure_no 是 ApplyClosure 对外关联与审计使用的业务编号。
+  string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// CancelClosureRequest 定义取消 Closure 的命令参数。
+message CancelClosureRequest {
+  // app_id 限定 CancelClosure 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // closure_no 是 CancelClosure 对外关联与审计使用的业务编号。
+  string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// GetClosureStatusRequest 标识待查询的 ClosureStatus。
+message GetClosureStatusRequest {
+  // app_id 限定 GetClosureStatus 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // closure_no 是 GetClosureStatus 对外关联与审计使用的业务编号。
+  string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ClosureParticipantStatus 刻画对应资源的生命周期状态。
+enum ClosureParticipantStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CLOSURE_PARTICIPANT_STATUS_UNSPECIFIED = 0;
+  // 正在处理中，尚未形成终态。
+  CLOSURE_PARTICIPANT_STATUS_PREPARING = 1;
+  // 处理被阻塞，需要外部处置后才能继续。
+  CLOSURE_PARTICIPANT_STATUS_BLOCKED = 2;
+  // 关闭流程正在执行，尚未形成关闭终态。
+  CLOSURE_PARTICIPANT_STATUS_CLOSING = 3;
+  // 处理已成功完成。
+  CLOSURE_PARTICIPANT_STATUS_SUCCEEDED = 4;
+  // 处理被阻塞，需要外部处置后才能继续。
+  CLOSURE_PARTICIPANT_STATUS_STALLED = 5;
+  // 处理已取消，不再继续推进。
+  CLOSURE_PARTICIPANT_STATUS_CANCELED = 6;
+}
+
+// ClosureBlocker 描述阻止所属 bounded context 完成 Account Closure 的条件。
+message ClosureBlocker {
+  // category 指定记录归属的稳定业务分类。
+  string category = 1;
+  // count 记录 ClosureBlocker 中符合对应条件的数量。
+  uint32 count = 2;
+  // owning_reference 记录外部系统或关联流程提供的引用标识。
+  string owning_reference = 3;
+}
+
+// ClosureParticipantState 表示所属 bounded context 对 Account Closure 的当前处理状态。
+message ClosureParticipantState {
+  // app_id 限定 ClosureParticipantState 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // closure_no 是 ClosureParticipantState 对外关联与审计使用的业务编号。
+  string closure_no = 3;
+  // status 表示 ClosureParticipantState 当前可观察的生命周期状态。
+  ClosureParticipantStatus status = 4;
+  // attempt 记录当前流程已经执行的尝试次数。
+  uint32 attempt = 5;
+  // blocker_count 记录 ClosureParticipantState 中符合对应条件的数量。
+  uint32 blocker_count = 6;
+  // blockers 列出 ClosureParticipantState 关联的 ClosureBlocker。
+  repeated ClosureBlocker blockers = 7;
+  // failure_category 对失败进行稳定分类，供调用方决定重试或终止。
+  string failure_category = 8;
+  // safe_error 记录 ClosureParticipantState 最近一次可诊断的失败信息。
+  string safe_error = 9;
+  // owning_reference 记录外部系统或关联流程提供的引用标识。
+  string owning_reference = 10;
+  // lease_until 指定 ClosureParticipantState 查询或生效区间的结束边界。
+  google.protobuf.Timestamp lease_until = 11;
+  // updated_at 记录 ClosureParticipantState 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 12;
+  // completed_at 记录 ClosureParticipantState 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 13;
+}

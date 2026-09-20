@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package admin.support.v1;
+
+import "google/api/annotations.proto";
+import "common/pagination/v1/pagination.proto";
+import "support/governance/v1/governance.proto";
+
+// SupportGovernanceService exposes immutable Support governance history to authorized Operators.
+service SupportGovernanceService {
+  // 查询 GovernanceEvent 列表。
+  rpc ListGovernanceEvents(AdminListGovernanceEventsRequest) returns (.support.governance.v1.ListGovernanceEventsResponse) {
+    option (google.api.http) = {get: "/admin/v1/support/governance-events"};
+  }
+}
+
+// AdminListGovernanceEventsRequest 定义 GovernanceEvents 的筛选与分页参数。
+message AdminListGovernanceEventsRequest {
+  // target_type 区分 ListGovernanceEvents 的业务类型。
+  .support.governance.v1.GovernanceTargetType target_type = 1;
+  // target_id 标识关联的 Target。
+  string target_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 3;
+}

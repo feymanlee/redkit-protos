@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package admin.gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/backpack.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// 礼物背包管理服务。
+service GiftBackpackService {
+  // 执行单 User、单 Gift 的库存纠错。
+  rpc AdjustBackpackGift(AdminAdjustBackpackGiftRequest) returns (.gift.v1.AdjustBackpackGiftResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-backpacks:adjust"
+      body: "*"
+    };
+  }
+  // 查询背包聚合余额列表。
+  rpc ListBackpackBalances(AdminListBackpackBalancesRequest) returns (.gift.v1.ListGiftBackpackBalanceResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-backpacks"};
+  }
+  // 查询背包批次列表。
+  rpc ListBackpackBatches(AdminListBackpackBatchesRequest) returns (.gift.v1.ListGiftBackpackBatchResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-backpack-batches"};
+  }
+  // 查询背包流水列表。
+  rpc ListBackpackTransactions(AdminListBackpackTransactionsRequest) returns (.gift.v1.ListGiftBackpackTransactionResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-backpack-transactions"};
+  }
+  // 查询背包流水批次明细列表。
+  rpc ListBackpackTransactionItems(AdminListBackpackTransactionItemsRequest) returns (.gift.v1.ListGiftBackpackTransactionItemResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-backpack-transactions/{transaction_id}/items"};
+  }
+}
+
+// AdminAdjustBackpackGiftRequest 定义执行 AdjustBackpackGift 的幂等管理命令参数。
+message AdminAdjustBackpackGiftRequest {
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // direction 指定 AdjustBackpackGift 统计、流转或查询采用的业务维度。
+  .gift.v1.BackpackAdjustmentDirection direction = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // quantity 表示 AdjustBackpackGift 涉及的业务对象数量。
+  uint64 quantity = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // external_reference 记录外部系统或关联流程提供的引用标识。
+  string external_reference = 7 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 9 [(validate.rules).string.max_len = 128];
+  // expire_at 指定 AdjustBackpackGift 失效的时间点。
+  optional google.protobuf.Timestamp expire_at = 10;
+}
+
+// AdminListBackpackBalancesRequest 定义 BackpackBalances 的筛选与分页参数。
+message AdminListBackpackBalancesRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.BackpackBalanceFilter filter = 1 [(google.api.field_behavior) = REQUIRED];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListBackpackBatchesRequest 定义 BackpackBatches 的筛选与分页参数。
+message AdminListBackpackBatchesRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.BackpackBatchFilter filter = 1 [(google.api.field_behavior) = REQUIRED];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListBackpackTransactionsRequest 定义 BackpackTransactions 的筛选与分页参数。
+message AdminListBackpackTransactionsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.BackpackTransactionFilter filter = 1 [(google.api.field_behavior) = REQUIRED];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListBackpackTransactionItemsRequest 定义 BackpackTransactionItems 的筛选与分页参数。
+message AdminListBackpackTransactionItemsRequest {
+  // transaction_id 标识关联的 Transaction。
+  uint64 transaction_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}

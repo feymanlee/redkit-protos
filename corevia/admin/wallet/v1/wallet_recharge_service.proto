@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package admin.wallet.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "wallet/v1/recharge.proto";
+
+// 钱包充值管理服务。
+service WalletRechargeService {
+  // 查询充值商品列表。
+  rpc ListRechargeProducts(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListRechargeProductResponse) {
+    option (google.api.http) = {get: "/admin/v1/recharge-products"};
+  }
+  // 查询充值商品 Revision 历史。
+  rpc ListRechargeProductRevisions(AdminListRechargeProductRevisionsRequest) returns (.wallet.v1.ListRechargeProductRevisionResponse) {
+    option (google.api.http) = {get: "/admin/v1/recharge-products/{product_id}/revisions"};
+  }
+  // 创建充值商品 Revision 草稿。
+  rpc CreateRechargeProductRevision(AdminCreateRechargeProductRevisionRequest) returns (.wallet.v1.RechargeProductRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/recharge-product-revisions"
+      body: "*"
+    };
+  }
+  // 审批充值商品 Revision 并安排生效。
+  rpc ApproveRechargeProductRevision(AdminApproveRechargeProductRevisionRequest) returns (.wallet.v1.RechargeProductRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/recharge-product-revisions:approve"
+      body: "*"
+    };
+  }
+  // 查询充值订单列表。
+  rpc ListRechargeOrders(.common.pagination.v1.PagingRequest) returns (.wallet.v1.ListRechargeOrderResponse) {
+    option (google.api.http) = {get: "/admin/v1/recharge-orders"};
+  }
+  // 关闭充值订单。
+  rpc CloseRechargeOrder(AdminCloseRechargeOrderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/recharge-orders:close"
+      body: "*"
+    };
+  }
+}
+
+// AdminListRechargeProductRevisionsRequest 定义 RechargeProductRevisions 的筛选与分页参数。
+message AdminListRechargeProductRevisionsRequest {
+  // product_id 标识关联的 Product。
+  uint32 product_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminCreateRechargeProductRevisionRequest 定义创建 RechargeProductRevision 的幂等命令参数。
+message AdminCreateRechargeProductRevisionRequest {
+  // product_id 标识关联的 Product。
+  optional uint32 product_id = 1 [(validate.rules).uint32.gt = 0];
+  // name 提供 CreateRechargeProductRevision 面向展示或识别的名称。
+  optional string name = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // code 提供 CreateRechargeProductRevision 对外稳定使用的业务编码。
+  optional string code = 3 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gt = 0];
+  // diamond_amount 以 Diamond 的最小计量单位表示，不使用浮点数。
+  int64 diamond_amount = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gt = 0];
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 32}];
+  // enabled 显式表示 CreateRechargeProductRevision 是否满足该条件。
+  bool enabled = 7;
+  // remark 提供 CreateRechargeProductRevision 的补充说明。
+  optional string remark = 8 [(validate.rules).string.max_len = 1000];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 9 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 500}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 10 [(validate.rules).string.max_len = 128];
+  // available_until 指定 CreateRechargeProductRevision 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp available_until = 11;
+}
+
+// AdminApproveRechargeProductRevisionRequest 定义批准 RechargeProductRevision 的幂等管理命令参数。
+message AdminApproveRechargeProductRevisionRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // effective_at 记录 ApproveRechargeProductRevision 对应业务阶段的时间点。
+  google.protobuf.Timestamp effective_at = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).timestamp.required = true];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 500}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 4 [(validate.rules).string.max_len = 128];
+}
+// AdminCloseRechargeOrderRequest 定义关闭 RechargeOrder 的幂等管理命令参数。
+message AdminCloseRechargeOrderRequest {
+  // order_no 是 CloseRechargeOrder 对外关联与审计使用的业务编号。
+  string order_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 500}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3 [(validate.rules).string.max_len = 128];
+}

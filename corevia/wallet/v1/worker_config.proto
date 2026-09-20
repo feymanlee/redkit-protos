@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "google/protobuf/duration.proto";
+
+// WalletWorkerOptions contains process-level polling and recovery limits.
+message WalletWorkerOptions {
+  // http_addr 指定 WalletWorkerOptions 访问或跳转使用的目标地址。
+  optional string http_addr = 1;
+  // poll_interval 承载 WalletWorkerOptions 关联的 Duration。
+  optional google.protobuf.Duration poll_interval = 2;
+  // batch_size 限定单批处理允许包含的最大记录数。
+  optional uint32 batch_size = 3;
+  // recharge_product_activation_batch_size 限定单批 Recharge Product 激活任务的最大记录数。
+  optional uint32 recharge_product_activation_batch_size = 4;
+  // risk_governance_batch_size 限定单批风险治理任务处理的最大记录数。
+  optional uint32 risk_governance_batch_size = 5;
+  // reconciliation_claim_limit 限定 WalletWorkerOptions 对应操作允许使用的数量或阈值。
+  optional uint32 reconciliation_claim_limit = 6;
+  // reconciliation_page_size 限定单次 Reconciliation 查询的最大条目数。
+  optional uint32 reconciliation_page_size = 7;
+  // reconciliation_lease_duration 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional google.protobuf.Duration reconciliation_lease_duration = 8;
+  // reconciliation_retry_delay 承载 WalletWorkerOptions 关联的 Duration。
+  optional google.protobuf.Duration reconciliation_retry_delay = 9;
+  // reconciliation_schedule_interval 承载 WalletWorkerOptions 关联的 Duration。
+  optional google.protobuf.Duration reconciliation_schedule_interval = 10;
+  // reconciliation_max_attempts 记录 WalletWorkerOptions 中符合对应条件的数量。
+  optional uint32 reconciliation_max_attempts = 11;
+  // export_claim_limit 限定 WalletWorkerOptions 对应操作允许使用的数量或阈值。
+  optional uint32 export_claim_limit = 12;
+  // export_expiry_limit 限定 WalletWorkerOptions 对应操作允许使用的数量或阈值。
+  optional uint32 export_expiry_limit = 13;
+  // export_lease_duration 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional google.protobuf.Duration export_lease_duration = 14;
+  // export_max_attempts 记录 WalletWorkerOptions 中符合对应条件的数量。
+  optional uint32 export_max_attempts = 15;
+}
+
+// WalletWorkerOptionsWrapper gives the custom bootstrap scanner a stable YAML root.
+message WalletWorkerOptionsWrapper {
+  // wallet_worker 承载 WalletWorkerOptionsWrapper 关联的 WalletWorkerOptions。
+  optional WalletWorkerOptions wallet_worker = 1;
+}

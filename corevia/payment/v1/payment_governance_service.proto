@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/protobuf/empty.proto";
+import "payment/v1/governance.proto";
+
+// 支付治理服务。
+service PaymentGovernanceService {
+  // 查询 GovernanceEvent 列表。
+  rpc ListGovernanceEvents(common.pagination.v1.PagingRequest) returns (ListPaymentGovernanceEventResponse) {}
+  // 查询 RawDiagnosticData。
+  rpc GetRawDiagnosticData(GetRawDiagnosticDataRequest) returns (RawDiagnosticData) {}
+  // 擦除 DiagnosticData。
+  rpc EraseDiagnosticData(EraseDiagnosticDataRequest) returns (google.protobuf.Empty) {}
+}

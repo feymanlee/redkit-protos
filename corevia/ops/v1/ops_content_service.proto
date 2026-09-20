@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package ops.v1;
+
+import "google/api/annotations.proto";
+import "ops/v1/ops_content.proto";
+
+// OpsPlacementFeedService 仅供受信任 App BFF 在具体 App Scope 下读取已发布投放。
+service OpsPlacementFeedService {
+  // ListPublishedPlacementContent 返回指定投放位在当前时间窗内的已发布内容；C 端客户端不得直连。
+  rpc ListPublishedPlacementContent(PublishedPlacementFeedRequest) returns (PublishedPlacementFeedResponse) {
+    option (google.api.http) = {get: "/ops/v1/placements/{placement_code}/content:published"};
+  }
+}

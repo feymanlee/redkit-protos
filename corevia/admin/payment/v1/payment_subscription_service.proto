@@ -1,0 +1,308 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/subscription.proto";
+import "payment/v1/payment_types.proto";
+import "validate/validate.proto";
+
+// 支付订阅管理服务。
+service PaymentSubscriptionService {
+  // 查询用户订阅列表。
+  rpc ListUserSubscriptions(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListUserSubscriptionResponse) {
+    option (google.api.http) = {get: "/admin/v1/user-subscriptions"};
+  }
+  // 查询用户订阅详情。
+  rpc GetUserSubscriptionDetail(AdminGetUserSubscriptionDetailRequest) returns (.payment.v1.GetUserSubscriptionDetailResponse) {
+    option (google.api.http) = {get: "/admin/v1/user-subscriptions/{id}"};
+  }
+  // 查询订阅套餐列表。
+  rpc ListSubscriptionPlans(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListSubscriptionPlanResponse) {
+    option (google.api.http) = {get: "/admin/v1/subscription-plans"};
+  }
+  // 创建订阅套餐。
+  rpc CreateSubscriptionPlan(AdminCreateSubscriptionPlanRequest) returns (.payment.v1.SubscriptionPlan) {
+    option (google.api.http) = {
+      post: "/admin/v1/subscription-plans"
+      body: "*"
+    };
+  }
+  // 更新订阅套餐。
+  rpc UpdateSubscriptionPlan(AdminUpdateSubscriptionPlanRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/subscription-plans/{id}"
+      body: "*"
+    };
+  }
+  // 查询计划版本。
+  rpc ListSubscriptionPlanRevisions(AdminListSubscriptionPlanRevisionsRequest) returns (.payment.v1.ListSubscriptionPlanRevisionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/subscription-plans/{plan_id}/revisions"};
+  }
+  // 创建计划版本草稿。
+  rpc CreateSubscriptionPlanRevision(AdminCreateSubscriptionPlanRevisionRequest) returns (.payment.v1.SubscriptionPlanRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/subscription-plans/{plan_id}/revisions"
+      body: "*"
+    };
+  }
+  // 发布计划版本。
+  rpc PublishSubscriptionPlanRevision(AdminPublishSubscriptionPlanRevisionRequest) returns (.payment.v1.SubscriptionPlanRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/subscription-plan-revisions/{revision_id}:publish"
+      body: "*"
+    };
+  }
+  // 提交 Grant、Extend 或 Revoke。
+  rpc SubmitSubscriptionAdjustment(AdminSubmitSubscriptionAdjustmentRequest) returns (.payment.v1.SubscriptionAdjustment) {
+    option (google.api.http) = {
+      post: "/admin/v1/subscription-adjustments"
+      body: "*"
+    };
+  }
+  // 批准高风险人工权益处置。
+  rpc ApproveSubscriptionAdjustment(AdminReviewSubscriptionAdjustmentRequest) returns (.payment.v1.SubscriptionAdjustment) {
+    option (google.api.http) = {
+      post: "/admin/v1/subscription-adjustments/{operation_no}:approve"
+      body: "*"
+    };
+  }
+  // 拒绝高风险人工权益处置。
+  rpc RejectSubscriptionAdjustment(AdminReviewSubscriptionAdjustmentRequest) returns (.payment.v1.SubscriptionAdjustment) {
+    option (google.api.http) = {
+      post: "/admin/v1/subscription-adjustments/{operation_no}:reject"
+      body: "*"
+    };
+  }
+  // 查询人工权益处置。
+  rpc ListSubscriptionAdjustments(AdminListSubscriptionAdjustmentsRequest) returns (.payment.v1.ListSubscriptionAdjustmentsResponse) {
+    option (google.api.http) = {get: "/admin/v1/subscription-adjustments"};
+  }
+  // 设置人工权益自动执行阈值。
+  rpc UpsertSubscriptionAdjustmentRiskRule(AdminUpsertSubscriptionAdjustmentRiskRuleRequest) returns (.payment.v1.SubscriptionAdjustmentRiskRule) {
+    option (google.api.http) = {
+      put: "/admin/v1/subscription-adjustment-risk-rules/{currency}"
+      body: "*"
+    };
+  }
+  // 查询人工权益自动执行阈值。
+  rpc ListSubscriptionAdjustmentRiskRules(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListSubscriptionAdjustmentRiskRulesResponse) {
+    option (google.api.http) = {get: "/admin/v1/subscription-adjustment-risk-rules"};
+  }
+  // 查询 Provider 自动续订协议。
+  rpc ListProviderSubscriptions(AdminListProviderSubscriptionsRequest) returns (.payment.v1.ListProviderSubscriptionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/provider-subscriptions"};
+  }
+  // 查询 Provider 自动续订协议详情。
+  rpc GetProviderSubscriptionDetail(AdminGetProviderSubscriptionDetailRequest) returns (.payment.v1.ProviderSubscriptionDetail) {
+    option (google.api.http) = {get: "/admin/v1/provider-subscriptions/{id}"};
+  }
+  // 验证购买并收敛首个 Provider 周期。
+  rpc VerifyProviderSubscriptionPurchase(AdminVerifyProviderSubscriptionPurchaseRequest) returns (.payment.v1.ProviderSubscriptionDetail) {
+    option (google.api.http) = {
+      post: "/admin/v1/provider-subscriptions:verify-purchase"
+      body: "*"
+    };
+  }
+  // 停止未来续订，当前已付周期继续有效。
+  rpc CancelProviderSubscription(AdminProviderSubscriptionActionRequest) returns (.payment.v1.ProviderSubscriptionDetail) {
+    option (google.api.http) = {
+      post: "/admin/v1/provider-subscriptions/{id}:cancel"
+      body: "*"
+    };
+  }
+  // 从 Provider 权威状态刷新本地快照。
+  rpc RefreshProviderSubscription(AdminProviderSubscriptionActionRequest) returns (.payment.v1.ProviderSubscriptionDetail) {
+    option (google.api.http) = {
+      post: "/admin/v1/provider-subscriptions/{id}:refresh"
+      body: "*"
+    };
+  }
+  // 查询续订、取消、grace recovery 和 churn 指标。
+  rpc GetProviderSubscriptionAnalytics(AdminGetProviderSubscriptionAnalyticsRequest) returns (.payment.v1.GetProviderSubscriptionAnalyticsResponse) {
+    option (google.api.http) = {get: "/admin/v1/provider-subscriptions:analytics"};
+  }
+}
+
+// AdminGetUserSubscriptionDetailRequest 标识待查询的 UserSubscriptionDetail。
+message AdminGetUserSubscriptionDetailRequest {
+  // id 标识关联的 GetUserSubscriptionDetail。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminSubscriptionPlanPatch 承载 Subscription Plan 的局部更新；presence 表示是否修改。
+message AdminSubscriptionPlanPatch {
+  // name 提供 SubscriptionPlanPatch 面向展示或识别的名称。
+  optional string name = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // code 提供 SubscriptionPlanPatch 对外稳定使用的业务编码。
+  optional string code = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 price = 3 [(validate.rules).int64.gt = 0];
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 4 [(validate.rules).string = {min_len: 1, max_len: 32}];
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional uint32 duration_days = 5 [(validate.rules).uint32.gt = 0];
+  // enabled 显式表示 SubscriptionPlanPatch 是否满足该条件。
+  optional bool enabled = 6;
+  // remark 提供 SubscriptionPlanPatch 的补充说明。
+  optional string remark = 7 [(validate.rules).string.max_len = 1000];
+}
+
+// AdminCreateSubscriptionPlanRequest 定义创建 SubscriptionPlan 的幂等命令参数。
+message AdminCreateSubscriptionPlanRequest {
+  // data 承载 CreateSubscriptionPlan 对应阶段的结构化业务内容。
+  AdminSubscriptionPlanPatch data = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+  // initial_revision 标识 CreateSubscriptionPlan 所采用的契约或资源版本。
+  .payment.v1.SubscriptionPlanRevisionDraft initial_revision = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 4 [(validate.rules).string.max_len = 160];
+}
+
+// AdminUpdateSubscriptionPlanRequest 定义更新 SubscriptionPlan 的命令参数。
+message AdminUpdateSubscriptionPlanRequest {
+  // id 标识关联的 UpdateSubscriptionPlan。
+  uint32 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // data 承载 UpdateSubscriptionPlan 对应阶段的结构化业务内容。
+  AdminSubscriptionPlanPatch data = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+}
+
+// AdminListSubscriptionPlanRevisionsRequest 定义 SubscriptionPlanRevisions 的筛选与分页参数。
+message AdminListSubscriptionPlanRevisionsRequest {
+  // plan_id 标识关联的 Plan。
+  uint32 plan_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminCreateSubscriptionPlanRevisionRequest 定义创建 SubscriptionPlanRevision 的幂等命令参数。
+message AdminCreateSubscriptionPlanRevisionRequest {
+  // plan_id 标识关联的 Plan。
+  uint32 plan_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // draft 承载 CreateSubscriptionPlanRevision 关联的 SubscriptionPlanRevisionDraft。
+  .payment.v1.SubscriptionPlanRevisionDraft draft = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 4 [(validate.rules).string.max_len = 160];
+}
+
+// AdminPublishSubscriptionPlanRevisionRequest 定义发布 SubscriptionPlanRevision 的幂等管理命令参数。
+message AdminPublishSubscriptionPlanRevisionRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 3 [(validate.rules).string.max_len = 160];
+}
+
+// AdminSubmitSubscriptionAdjustmentRequest 定义提交 SubscriptionAdjustment 的幂等管理命令参数。
+message AdminSubmitSubscriptionAdjustmentRequest {
+  // type 区分 SubmitSubscriptionAdjustment 的业务类型。
+  .payment.v1.SubscriptionAdjustmentType type = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // subscription_id 标识关联的 Subscription。
+  optional uint64 subscription_id = 2 [(validate.rules).uint64.gt = 0];
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 3 [(validate.rules).uint64.gt = 0];
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 4 [(validate.rules).uint64.gt = 0];
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional uint32 duration_days = 5 [(validate.rules).uint32.gt = 0];
+  // permanent 显式表示 SubmitSubscriptionAdjustment 是否满足该条件。
+  optional bool permanent = 6;
+  // reason_code 提供机器可判断的业务原因分类。
+  .payment.v1.SubscriptionAdjustmentReasonCode reason_code = 7 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // note 提供 SubmitSubscriptionAdjustment 的补充说明。
+  string note = 8 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 9 [(validate.rules).string.max_len = 160];
+}
+
+// AdminReviewSubscriptionAdjustmentRequest 定义审核 SubscriptionAdjustment 的幂等管理命令参数。
+message AdminReviewSubscriptionAdjustmentRequest {
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 160}];
+  // review_note 记录人工判断的补充说明，供审计与复核。
+  optional string review_note = 2 [(validate.rules).string.max_len = 1000];
+}
+
+// AdminListSubscriptionAdjustmentsRequest 定义 SubscriptionAdjustments 的筛选与分页参数。
+message AdminListSubscriptionAdjustmentsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // statuses 列出 ListSubscriptionAdjustments 关联的 SubscriptionAdjustmentStatus。
+  repeated .payment.v1.SubscriptionAdjustmentStatus statuses = 2 [(validate.rules).repeated = {max_items: 4, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
+  // subscription_id 标识关联的 Subscription。
+  optional uint64 subscription_id = 3 [(validate.rules).uint64.gt = 0];
+}
+
+// AdminUpsertSubscriptionAdjustmentRiskRuleRequest 定义执行 UpsertSubscriptionAdjustmentRiskRule 的命令参数。
+message AdminUpsertSubscriptionAdjustmentRiskRuleRequest {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {len: 3}];
+  // auto_approve_max_value 以对应 currency 的最小货币单位限定可自动批准的最高价值。
+  int64 auto_approve_max_value = 2 [(validate.rules).int64.gte = 0];
+  // auto_approve_max_days 以天为单位限定可自动批准的最长调整期限。
+  uint32 auto_approve_max_days = 3;
+  // enabled 显式表示 UpsertSubscriptionAdjustmentRiskRule 是否满足该条件。
+  bool enabled = 4;
+}
+
+// AdminListProviderSubscriptionsRequest 定义 ProviderSubscriptions 的筛选与分页参数。
+message AdminListProviderSubscriptionsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // providers 列出 ListProviderSubscriptions 关联的 PaymentProvider。
+  repeated .payment.v1.PaymentProvider providers = 2 [(validate.rules).repeated = {max_items: 2, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
+  // statuses 列出 ListProviderSubscriptions 关联的 ProviderSubscriptionStatus。
+  repeated .payment.v1.ProviderSubscriptionStatus statuses = 3 [(validate.rules).repeated = {max_items: 6, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 4 [(validate.rules).uint64.gt = 0];
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 5 [(validate.rules).uint64.gt = 0];
+}
+
+// AdminGetProviderSubscriptionDetailRequest 标识待查询的 ProviderSubscriptionDetail。
+message AdminGetProviderSubscriptionDetailRequest {
+  // id 标识关联的 GetProviderSubscriptionDetail。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminVerifyProviderSubscriptionPurchaseRequest 定义校验 ProviderSubscriptionPurchase 的幂等管理命令参数。
+message AdminVerifyProviderSubscriptionPurchaseRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum = {defined_only: true, in: [3, 4]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // channel_revision_id 标识关联的 ChannelRevision。
+  uint64 channel_revision_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // signed_purchase 承载 Store 签名的购买材料，属于敏感校验数据。
+  string signed_purchase = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 32768}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 5 [(validate.rules).string.max_len = 160];
+}
+
+// AdminProviderSubscriptionActionRequest 定义执行 ProviderSubscriptionAction 的幂等管理命令参数。
+message AdminProviderSubscriptionActionRequest {
+  // id 标识关联的 ProviderSubscriptionAction。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 2 [(validate.rules).string.max_len = 160];
+}
+
+// AdminGetProviderSubscriptionAnalyticsRequest 标识待查询的 ProviderSubscriptionAnalytics。
+message AdminGetProviderSubscriptionAnalyticsRequest {
+  // started_at 指定 GetProviderSubscriptionAnalytics 生效或查询区间的起始时间。
+  google.protobuf.Timestamp started_at = 1 [(google.api.field_behavior) = REQUIRED];
+  // ended_at 指定 GetProviderSubscriptionAnalytics 生效或查询区间的结束时间。
+  google.protobuf.Timestamp ended_at = 2 [(google.api.field_behavior) = REQUIRED];
+}

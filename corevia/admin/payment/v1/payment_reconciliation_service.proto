@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package admin.payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "payment/v1/payment_types.proto";
+import "payment/v1/reconciliation.proto";
+import "validate/validate.proto";
+
+// 支付对账服务。
+service PaymentReconciliationService {
+  // 导入 ProviderBill。
+  rpc ImportProviderBill(AdminImportProviderBillRequest) returns (.payment.v1.ReconciliationBatch) {
+    option (google.api.http) = { post: "/admin/v1/payment/provider-bills:import" body: "*" };
+  }
+  // 创建 ReconciliationBatch。
+  rpc CreateReconciliationBatch(AdminCreatePaymentReconciliationBatchRequest) returns (.payment.v1.ReconciliationBatch) {
+    option (google.api.http) = { post: "/admin/v1/payment/reconciliation-batches" body: "*" };
+  }
+  // 查询 ReconciliationBatch。
+  rpc GetReconciliationBatch(AdminGetPaymentReconciliationBatchRequest) returns (.payment.v1.ReconciliationBatch) {
+    option (google.api.http) = { get: "/admin/v1/payment/reconciliation-batches/{batch_id}" };
+  }
+  // 查询 ReconciliationBatch 列表。
+  rpc ListReconciliationBatches(AdminListPaymentReconciliationBatchesRequest) returns (.payment.v1.ListReconciliationBatchResponse) {
+    option (google.api.http) = { get: "/admin/v1/payment/reconciliation-batches" };
+  }
+  // 查询 ReconciliationFinding 列表。
+  rpc ListReconciliationFindings(AdminListPaymentReconciliationFindingsRequest) returns (.payment.v1.ListReconciliationFindingsResponse) {
+    option (google.api.http) = { get: "/admin/v1/payment/reconciliation-findings" };
+  }
+  // 查询 ReconciliationFinding。
+  rpc GetReconciliationFinding(AdminGetPaymentReconciliationFindingRequest) returns (.payment.v1.ReconciliationFindingDetail) {
+    option (google.api.http) = { get: "/admin/v1/payment/reconciliation-findings/{finding_id}" };
+  }
+  // 变更 ReconciliationFinding。
+  rpc MutateReconciliationFinding(AdminMutatePaymentReconciliationFindingRequest) returns (.payment.v1.ReconciliationFindingDetail) {
+    option (google.api.http) = { post: "/admin/v1/payment/reconciliation-findings/{finding_id}:mutate" body: "*" };
+  }
+  // 查询 ReconciliationItem 列表。
+  rpc ListReconciliationItems(.common.pagination.v1.PagingRequest) returns (.payment.v1.ListReconciliationItemResponse) {
+    option deprecated = true;
+    option (google.api.http) = {get: "/admin/v1/reconciliation-items"};
+  }
+}
+
+// AdminImportProviderBillRequest 定义导入 ProviderBill 的幂等管理命令参数。
+message AdminImportProviderBillRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum.defined_only = true];
+  // bill_date 记录 ImportProviderBill 对应业务阶段的时间点。
+  string bill_date = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {len: 10}];
+  // file_id 标识关联的 File。
+  uint64 file_id = 3 [(validate.rules).uint64 = {gt: 0}];
+  // source_identity 记录外部或上游系统用于稳定关联 ImportProviderBill 的身份。
+  string source_identity = 4 [(validate.rules).string = {min_len: 1, max_len: 256}];
+  // checksum 用于校验 ImportProviderBill 对应内容或版本的一致性。
+  string checksum = 5 [(validate.rules).string = {min_len: 32, max_len: 128}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 6 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7 [(validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminCreatePaymentReconciliationBatchRequest 定义创建 PaymentReconciliationBatch 的幂等命令参数。
+message AdminCreatePaymentReconciliationBatchRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum.defined_only = true];
+  // bill_date 记录 CreatePaymentReconciliationBatch 对应业务阶段的时间点。
+  string bill_date = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {len: 10}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3 [(validate.rules).string.max_len = 128];
+}
+
+// AdminGetPaymentReconciliationBatchRequest 标识待查询的 PaymentReconciliationBatch。
+message AdminGetPaymentReconciliationBatchRequest {
+  // batch_id 标识关联的 Batch。
+  uint64 batch_id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// AdminListPaymentReconciliationBatchesRequest 定义 PaymentReconciliationBatches 的筛选与分页参数。
+message AdminListPaymentReconciliationBatchesRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  optional .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum.defined_only = true];
+  // bill_date 记录 ListPaymentReconciliationBatches 对应业务阶段的时间点。
+  optional string bill_date = 2 [(validate.rules).string = {len: 10}];
+  // status 表示 ListPaymentReconciliationBatches 当前可观察的生命周期状态。
+  optional .payment.v1.ReconciliationBatch.Status status = 3 [(validate.rules).enum.defined_only = true];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 4;
+}
+
+// AdminListPaymentReconciliationFindingsRequest 定义 PaymentReconciliationFindings 的筛选与分页参数。
+message AdminListPaymentReconciliationFindingsRequest {
+  // batch_id 标识关联的 Batch。
+  optional uint64 batch_id = 1;
+  // status 表示 ListPaymentReconciliationFindings 当前可观察的生命周期状态。
+  optional .payment.v1.ReconciliationFinding.Status status = 2 [(validate.rules).enum.defined_only = true];
+  // difference_type 区分 ListPaymentReconciliationFindings 的业务类型。
+  optional .payment.v1.ReconciliationFinding.DifferenceType difference_type = 3 [(validate.rules).enum.defined_only = true];
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 4;
+  // payment_no 是 ListPaymentReconciliationFindings 对外关联与审计使用的业务编号。
+  optional string payment_no = 5;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 6;
+}
+
+// AdminGetPaymentReconciliationFindingRequest 标识待查询的 PaymentReconciliationFinding。
+message AdminGetPaymentReconciliationFindingRequest {
+  // finding_id 标识关联的 Finding。
+  uint64 finding_id = 1 [(validate.rules).uint64 = {gt: 0}];
+}
+
+// AdminMutatePaymentReconciliationFindingRequest 定义变更 PaymentReconciliationFinding 的幂等管理命令参数。
+message AdminMutatePaymentReconciliationFindingRequest {
+  // finding_id 标识关联的 Finding。
+  uint64 finding_id = 1 [(validate.rules).uint64 = {gt: 0}];
+  // action 指定本次状态推进采用的业务动作。
+  .payment.v1.MutateReconciliationFindingRequest.Action action = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 3;
+  // evidence 提供支撑 MutatePaymentReconciliationFinding 判断或处置的证明材料。
+  optional string evidence = 4 [(validate.rules).string.max_len = 4096];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 5 [(validate.rules).string.max_len = 1024];
+  // related_operation_no 关联原始管理操作的审计编号，用于追踪与幂等收敛。
+  optional string related_operation_no = 6 [(validate.rules).string.max_len = 128];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 7 [(validate.rules).string.max_len = 128];
+}

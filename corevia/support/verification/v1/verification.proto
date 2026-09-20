@@ -1,0 +1,263 @@
+syntax = "proto3";
+
+package support.verification.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// VerificationPurpose 约束验证码只能用于平台认可的业务动作。
+enum VerificationPurpose {
+  // 未指定用途。
+  VERIFICATION_PURPOSE_UNSPECIFIED = 0;
+  // 登录。
+  VERIFICATION_PURPOSE_LOGIN = 1;
+  // 注册。
+  VERIFICATION_PURPOSE_REGISTER = 2;
+  // 绑定手机号。
+  VERIFICATION_PURPOSE_BIND_PHONE = 3;
+  // 修改手机号。
+  VERIFICATION_PURPOSE_CHANGE_PHONE = 4;
+  // 重置密码。
+  VERIFICATION_PURPOSE_RESET_PASSWORD = 5;
+  // 敏感操作二次确认。
+  VERIFICATION_PURPOSE_SENSITIVE_OPERATION = 6;
+  // 未登录账号恢复的新手机号验证。
+  VERIFICATION_PURPOSE_ACCOUNT_RECOVERY = 7;
+}
+
+// VerificationAuditEvent identifies one observable verification lifecycle fact.
+enum VerificationAuditEvent {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  VERIFICATION_AUDIT_EVENT_UNSPECIFIED = 0;
+  // 内容或资产已经发送至目标。
+  VERIFICATION_AUDIT_EVENT_CODE_SENT = 1;
+  // 审核已拒绝，不再按原请求继续。
+  VERIFICATION_AUDIT_EVENT_SEND_REJECTED = 2;
+  // 处理失败；是否可重试由具体失败原因决定。
+  VERIFICATION_AUDIT_EVENT_SEND_FAILED = 3;
+  // VERIFICATION_AUDIT_EVENT_SEND_REPLAYED 记录 SEND_REPLAYED 业务事件已经发生。
+  VERIFICATION_AUDIT_EVENT_SEND_REPLAYED = 4;
+  // VERIFICATION_AUDIT_EVENT_SEND_RECOVERED 记录 SEND_RECOVERED 业务事件已经发生。
+  VERIFICATION_AUDIT_EVENT_SEND_RECOVERED = 5;
+  // 处理失败；是否可重试由具体失败原因决定。
+  VERIFICATION_AUDIT_EVENT_SEND_RECOVERY_FAILED = 6;
+  // 校验已经通过。
+  VERIFICATION_AUDIT_EVENT_CODE_VERIFIED = 7;
+  // 处理失败；是否可重试由具体失败原因决定。
+  VERIFICATION_AUDIT_EVENT_VERIFY_FAILED = 8;
+  // VERIFICATION_AUDIT_EVENT_TICKET_CONSUMED 记录 TICKET_CONSUMED 业务事件已经发生。
+  VERIFICATION_AUDIT_EVENT_TICKET_CONSUMED = 9;
+}
+
+// VerificationAuditResult identifies the outcome of an observed lifecycle fact.
+enum VerificationAuditResult {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  VERIFICATION_AUDIT_RESULT_UNSPECIFIED = 0;
+  // 处理已成功完成。
+  VERIFICATION_AUDIT_RESULT_SUCCEEDED = 1;
+  // 处理失败；是否可重试由具体失败原因决定。
+  VERIFICATION_AUDIT_RESULT_FAILED = 2;
+}
+
+// VerificationAudit 记录验证码生命周期的脱敏审计事实。
+message VerificationAudit {
+  // 审计记录 ID。
+  uint64 id = 1;
+  // App ID。
+  common.v1.AppId app_id = 2;
+  // 用户 ID，匿名流程为 0。
+  uint64 user_id = 3;
+  // 验证目标脱敏展示值。
+  string masked_phone = 4;
+  // 验证用途。
+  VerificationPurpose purpose = 5;
+  // 审计事件类型。
+  VerificationAuditEvent event = 6;
+  // 事件结果。
+  VerificationAuditResult result = 7;
+  // 失败原因，成功时为空。
+  string failure_reason = 8;
+  // 请求 ID。
+  string request_id = 9;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 10;
+  // Challenge identity when the event is associated with one challenge.
+  string challenge_id = 11;
+  // Durable SMS Message identity when the event is associated with delivery.
+  string message_no = 12;
+  // Stable consuming operation identity for Ticket consumption; never the Ticket secret.
+  string ticket_operation_no = 13;
+  // Immutable Support Configuration Release used by this event.
+  uint64 configuration_release_id = 14;
+  // Locale requested when the Challenge was created.
+  string requested_locale = 15;
+  // Exact or App Default Locale selected by the Delivery Policy.
+  string resolved_locale = 16;
+  // Stable SMS Template selected by the Delivery Policy.
+  uint64 template_id = 17;
+  // Immutable SMS Template Revision pinned by the Challenge.
+  uint64 template_revision_id = 18;
+  // Effective numeric verification code length.
+  uint32 code_length = 19;
+  // Effective verification code TTL in seconds.
+  uint32 code_ttl_seconds = 20;
+  // Effective Verification Ticket TTL in seconds.
+  uint32 ticket_ttl_seconds = 21;
+  // Effective resend cooldown in seconds.
+  uint32 cooldown_seconds = 22;
+  // Effective maximum verification attempts.
+  uint32 max_attempts = 23;
+}
+
+// SendCodeRequest 请求发送短信验证码。
+message SendCodeRequest {
+  // App ID。
+  common.v1.AppId app_id = 1;
+  // 用户 ID，匿名流程为 0。
+  uint64 user_id = 2;
+  // E.164 格式手机号。
+  string phone = 3;
+  // 验证用途。
+  VerificationPurpose purpose = 4;
+  // 请求 ID。
+  string request_id = 5;
+  // 幂等键。
+  string idempotency_key = 6;
+  // 语言地区，例如 zh-CN。
+  string locale = 7;
+}
+
+// SendCodeResponse 返回验证码挑战信息，不返回验证码明文。
+message SendCodeResponse {
+  // 挑战 ID。
+  string challenge_id = 1;
+  // 脱敏手机号。
+  string masked_phone = 2;
+  // 验证码过期时间。
+  google.protobuf.Timestamp expires_at = 3;
+  // 允许再次发送的时间。
+  google.protobuf.Timestamp resend_at = 4;
+}
+
+// VerifyCodeRequest 请求校验验证码。
+message VerifyCodeRequest {
+  // App ID。
+  common.v1.AppId app_id = 1;
+  // E.164 格式手机号。
+  string phone = 2;
+  // 验证用途。
+  VerificationPurpose purpose = 3;
+  // 用户输入的验证码。
+  string code = 4;
+  // 挑战 ID。
+  string challenge_id = 5;
+  // 请求 ID。
+  string request_id = 6;
+}
+
+// VerifyCodeResponse 返回一次性业务验证票据。
+message VerifyCodeResponse {
+  // 不透明的一次性验证票据。
+  string verification_ticket = 1;
+  // 票据过期时间。
+  google.protobuf.Timestamp expires_at = 2;
+}
+
+// ConsumeVerificationTicketRequest 请求消费一次性验证票据。
+message ConsumeVerificationTicketRequest {
+  // App ID。
+  common.v1.AppId app_id = 1;
+  // E.164 格式手机号。
+  string phone = 2;
+  // 验证用途。
+  VerificationPurpose purpose = 3;
+  // 验证票据。
+  string verification_ticket = 4;
+  // 请求 ID。
+  string request_id = 5;
+  // 消费方稳定操作号；同一票据仅允许向同一操作幂等重放成功。
+  string operation_no = 6;
+}
+
+// ConsumeVerificationTicketResponse 返回票据消费结果。
+message ConsumeVerificationTicketResponse {
+  // 是否完成验证。
+  bool verified = 1;
+}
+
+// VerificationAuditFilter defines typed filters for the observation workbench.
+message VerificationAuditFilter {
+  // purpose 指定 VerificationAuditFilter 数据或能力的预期用途。
+  optional VerificationPurpose purpose = 1;
+  // event 承载 VerificationAuditFilter 关联的 VerificationAuditEvent。
+  optional VerificationAuditEvent event = 2;
+  // result 承载 VerificationAuditFilter 关联的 VerificationAuditResult。
+  optional VerificationAuditResult result = 3;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 4;
+  // recipient_phone 承载按约定地区规则规范化的手机号码。
+  string recipient_phone = 5;
+  // created_from 指定 VerificationAuditFilter 查询或生效区间的起始边界。
+  google.protobuf.Timestamp created_from = 6;
+  // created_to 指定 VerificationAuditFilter 查询或生效区间的结束边界。
+  google.protobuf.Timestamp created_to = 7;
+}
+
+// ListVerificationAuditsRequest carries App scope, typed filters, and bounded paging.
+message ListVerificationAuditsRequest {
+  // app_id 限定 ListVerificationAudits 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // filter 限定本次查询采用的筛选条件。
+  VerificationAuditFilter filter = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// GetVerificationAuditRequest selects one App-scoped audit fact.
+message GetVerificationAuditRequest {
+  // app_id 限定 GetVerificationAudit 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // audit_id 标识关联的 Audit。
+  uint64 audit_id = 2;
+}
+
+// RevealVerificationRecipientPhoneRequest explicitly selects FULL display for one audit fact.
+message RevealVerificationRecipientPhoneRequest {
+  // app_id 限定 RevealVerificationRecipientPhone 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // audit_id 标识关联的 Audit。
+  uint64 audit_id = 2;
+}
+
+// RevealVerificationRecipientPhoneResponse returns one complete audited Recipient Phone.
+message RevealVerificationRecipientPhoneResponse {
+  // audit_id 标识关联的 Audit。
+  uint64 audit_id = 1;
+  // recipient_phone 承载按约定地区规则规范化的手机号码。
+  string recipient_phone = 2;
+}
+
+// ListVerificationAuditsResponse 返回验证码审计记录。
+message ListVerificationAuditsResponse {
+  // 审计记录。
+  repeated VerificationAudit items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// VerificationService 提供验证码挑战和一次性票据能力。
+service VerificationService {
+  // 发送验证码。
+  rpc SendCode(SendCodeRequest) returns (SendCodeResponse);
+  // 校验验证码并签发一次性票据。
+  rpc VerifyCode(VerifyCodeRequest) returns (VerifyCodeResponse);
+  // 消费一次性票据。
+  rpc ConsumeVerificationTicket(ConsumeVerificationTicketRequest) returns (ConsumeVerificationTicketResponse);
+  // 查询脱敏审计记录。
+  rpc ListVerificationAudits(ListVerificationAuditsRequest) returns (ListVerificationAuditsResponse);
+  // 查询一条脱敏审计详情。
+  rpc GetVerificationAudit(GetVerificationAuditRequest) returns (VerificationAudit);
+  // 显式读取一条审计事实的完整 Recipient Phone。
+  rpc RevealVerificationRecipientPhone(RevealVerificationRecipientPhoneRequest) returns (RevealVerificationRecipientPhoneResponse);
+}

@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+import "wallet/v1/wallet_types.proto";
+
+// Coin Reward 履约服务。
+service CoinRewardService {
+  // 预检一个 App 下的 Coin Reward 配置。
+  rpc PreflightCoinReward(PreflightCoinRewardRequest) returns (PreflightCoinRewardResponse) {}
+  // 按稳定 Reward Item 身份幂等发放 Coin。
+  rpc GrantCoinReward(GrantCoinRewardRequest) returns (GrantCoinRewardResponse) {}
+}
+
+// Coin Reward 预检请求。
+message PreflightCoinRewardRequest {
+  // 应用 ID，必须与可信 App Scope 一致。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // Reward 币种，只允许 COIN。
+  WalletCurrency currency = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // Reward 数量，必须为正数且不超过平台上限。
+  int64 amount = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gt = 0];
+}
+
+// Coin Reward 预检结果。
+message PreflightCoinRewardResponse {
+  // 已验证的应用 ID。
+  common.v1.AppId app_id = 1;
+  // 已验证的 Reward 币种。
+  WalletCurrency currency = 2;
+  // 已验证的 Reward 数量。
+  int64 amount = 3;
+}
+
+// Coin Reward 履约请求。
+message GrantCoinRewardRequest {
+  // 应用 ID，必须与可信 App Scope 一致。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // Reward 接收用户 ID。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // Coin 数量。
+  int64 amount = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).int64.gt = 0];
+  // Ops 持久化的全局稳定 Reward Item ID。
+  uint64 reward_item_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// Coin Reward 履约结果。
+message GrantCoinRewardResponse {
+  // 已履约的应用 ID。
+  common.v1.AppId app_id = 1;
+  // 实际入账的 User ID。
+  uint64 user_id = 2;
+  // 已发放的 Coin 数量。
+  int64 amount = 3;
+  // 稳定 Reward Item ID。
+  uint64 reward_item_id = 4;
+  // Wallet 不可变流水 ID；重试返回同一身份。
+  uint64 transaction_id = 5;
+}

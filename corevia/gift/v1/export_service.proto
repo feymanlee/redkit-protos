@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package gift.v1;
+
+import "gift/v1/export.proto";
+
+// 礼物导出服务。
+service GiftExportService {
+  // 创建 GiftExportJob。
+  rpc CreateGiftExportJob(CreateGiftExportJobRequest) returns (CreateGiftExportJobResponse) {}
+  // 查询 GiftExportJob 列表。
+  rpc ListGiftExportJobs(ListGiftExportJobsRequest) returns (ListGiftExportJobsResponse) {}
+  // 查询 GiftExportJob。
+  rpc GetGiftExportJob(GetGiftExportJobRequest) returns (GiftExportJob) {}
+  // 创建 GiftExportDownloadGrant。
+  rpc CreateGiftExportDownloadGrant(CreateGiftExportDownloadGrantRequest) returns (GiftExportDownloadGrant) {}
+  // 兑换 GiftExportDownloadGrant。
+  rpc RedeemGiftExportDownloadGrant(RedeemGiftExportDownloadGrantRequest) returns (RedeemGiftExportDownloadGrantResponse) {}
+}

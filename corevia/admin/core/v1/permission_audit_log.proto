@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package admin.core.v1;
+
+import "google/api/annotations.proto";
+import "common/pagination/v1/pagination.proto";
+import "core/audit/v1/permission_audit_log.proto";
+
+
+// 权限变更审计日志服务
+service PermissionAuditLogService {
+  // 查询权限变更审计日志列表
+  rpc List (.common.pagination.v1.PagingRequest) returns (.core.audit.v1.ListPermissionAuditLogResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/permission-audit-logs"
+    };
+  }
+
+  // 查询权限变更审计日志详情
+  rpc Get (.core.audit.v1.GetPermissionAuditLogRequest) returns (.core.audit.v1.PermissionAuditLog) {
+    option (google.api.http) = {
+      get: "/admin/v1/permission-audit-logs/{id}"
+    };
+  }
+}

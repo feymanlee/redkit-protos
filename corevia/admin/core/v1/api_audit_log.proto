@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package admin.core.v1;
+
+import "google/api/annotations.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+import "core/audit/v1/api_audit_log.proto";
+
+// API审计日志管理服务
+service ApiAuditLogService {
+  // 查询API审计日志列表
+  rpc List (.common.pagination.v1.PagingRequest) returns (.core.audit.v1.ListApiAuditLogResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/api-audit-logs"
+    };
+  }
+
+  // 查询API审计日志详情
+  rpc Get (.core.audit.v1.GetApiAuditLogRequest) returns (.core.audit.v1.ApiAuditLog) {
+    option (google.api.http) = {
+      get: "/admin/v1/api-audit-logs/{id}"
+    };
+  }
+}

@@ -1,0 +1,786 @@
+syntax = "proto3";
+
+package support.configuration.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "support/messaging/v1/messaging.proto";
+import "support/verification/v1/verification.proto";
+
+// DeliveryProbeOptionsWrapper exposes App-specific probe targets through the
+// bootstrap custom-config loader.
+message DeliveryProbeOptionsWrapper {
+  // delivery_probe 承载 DeliveryProbeOptionsWrapper 关联的 DeliveryProbeOptions。
+  DeliveryProbeOptions delivery_probe = 1;
+}
+
+// DeliveryProbeOptions contains deployment-owned targets for all Apps.
+message DeliveryProbeOptions {
+  // apps 列出 DeliveryProbeOptions 关联的 AppDeliveryProbeOptions。
+  repeated AppDeliveryProbeOptions apps = 1;
+}
+
+// AppDeliveryProbeOptions binds probe targets to one concrete App.
+message AppDeliveryProbeOptions {
+  // app_id 限定 AppDeliveryProbeOptions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // targets 列出 AppDeliveryProbeOptions 关联的 DeliveryProbeDeploymentTarget。
+  repeated DeliveryProbeDeploymentTarget targets = 2;
+}
+
+// DeliveryProbeDeploymentTarget is never returned directly to an Operator.
+message DeliveryProbeDeploymentTarget {
+  // key 在约定作用域内稳定定位 DeliveryProbeDeploymentTarget。
+  string key = 1;
+  // label 提供面向操作员展示的短标签。
+  string label = 2;
+  // phone 承载按约定地区规则规范化的手机号码。
+  string phone = 3;
+}
+
+// ConfigurationMigrationStatus is the state of legacy configuration conversion.
+enum ConfigurationMigrationStatus {
+  // No migration record exists for the App.
+  CONFIGURATION_MIGRATION_STATUS_UNSPECIFIED = 0;
+  // Converted configuration requires repair.
+  CONFIGURATION_MIGRATION_STATUS_REQUIRES_REPAIR = 1;
+  // Static conversion checks passed and dynamic preflight may run.
+  CONFIGURATION_MIGRATION_STATUS_READY_FOR_PREFLIGHT = 2;
+  // An immutable Release has been activated.
+  CONFIGURATION_MIGRATION_STATUS_ACTIVE = 3;
+}
+
+// ConfigurationCutoverPhase is the global online migration phase.
+enum ConfigurationCutoverPhase {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CONFIGURATION_CUTOVER_PHASE_UNSPECIFIED = 0;
+  // 正在处理中，尚未形成终态。
+  CONFIGURATION_CUTOVER_PHASE_PREPARING = 1;
+  // 前置条件已满足，可以开始后续处理。
+  CONFIGURATION_CUTOVER_PHASE_READY = 2;
+  // 当前已生效并可用于业务处理。
+  CONFIGURATION_CUTOVER_PHASE_ACTIVE = 3;
+  // 处理失败；是否可重试由具体失败原因决定。
+  CONFIGURATION_CUTOVER_PHASE_FAILED = 4;
+}
+
+// ConfigurationRuntimeModel identifies which configuration source serves runtime work.
+enum ConfigurationRuntimeModel {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CONFIGURATION_RUNTIME_MODEL_UNSPECIFIED = 0;
+  // CONFIGURATION_RUNTIME_MODEL_LEGACY 使用 LEGACY 运行模型。
+  CONFIGURATION_RUNTIME_MODEL_LEGACY = 1;
+  // CONFIGURATION_RUNTIME_MODEL_ACTIVE_RELEASE 使用 ACTIVE_RELEASE 运行模型。
+  CONFIGURATION_RUNTIME_MODEL_ACTIVE_RELEASE = 2;
+}
+
+// ConfigurationCutoverFailureCategory is a safe global migration failure classification.
+enum ConfigurationCutoverFailureCategory {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CONFIGURATION_CUTOVER_FAILURE_CATEGORY_UNSPECIFIED = 0;
+  // CONFIGURATION_CUTOVER_FAILURE_CATEGORY_READINESS_LOST 选择 READINESS_LOST 业务类型。
+  CONFIGURATION_CUTOVER_FAILURE_CATEGORY_READINESS_LOST = 1;
+  // CONFIGURATION_CUTOVER_FAILURE_CATEGORY_DATABASE_ERROR 选择 DATABASE_ERROR 业务类型。
+  CONFIGURATION_CUTOVER_FAILURE_CATEGORY_DATABASE_ERROR = 2;
+  // CONFIGURATION_CUTOVER_FAILURE_CATEGORY_CUTOVER_ERROR 选择 CUTOVER_ERROR 业务类型。
+  CONFIGURATION_CUTOVER_FAILURE_CATEGORY_CUTOVER_ERROR = 3;
+}
+
+// ConfigurationCutoverRecoveryResult is the latest safe recovery outcome.
+enum ConfigurationCutoverRecoveryResult {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  CONFIGURATION_CUTOVER_RECOVERY_RESULT_UNSPECIFIED = 0;
+  // CONFIGURATION_CUTOVER_RECOVERY_RESULT_RESUMED 表示处理结果为 RESUMED。
+  CONFIGURATION_CUTOVER_RECOVERY_RESULT_RESUMED = 1;
+  // 处理已成功完成。
+  CONFIGURATION_CUTOVER_RECOVERY_RESULT_COMPLETED = 2;
+}
+
+// ConfigurationDraftStatus is the current migration Draft state.
+enum ConfigurationDraftStatus {
+  // No Draft is available.
+  CONFIGURATION_DRAFT_STATUS_UNSPECIFIED = 0;
+  // Draft contains known repair work.
+  CONFIGURATION_DRAFT_STATUS_REQUIRES_REPAIR = 1;
+  // Draft passed static conversion checks.
+  CONFIGURATION_DRAFT_STATUS_READY_FOR_PREFLIGHT = 2;
+  // Draft has unvalidated operator changes.
+  CONFIGURATION_DRAFT_STATUS_EDITING = 3;
+}
+
+// ConfigurationPreflightStatus is a persisted validation result.
+enum ConfigurationPreflightStatus {
+  // Preflight has not completed.
+  CONFIGURATION_PREFLIGHT_STATUS_UNSPECIFIED = 0;
+  // Preflight is pending.
+  CONFIGURATION_PREFLIGHT_STATUS_PENDING = 1;
+  // Preflight passed.
+  CONFIGURATION_PREFLIGHT_STATUS_PASSED = 2;
+  // Preflight failed.
+  CONFIGURATION_PREFLIGHT_STATUS_FAILED = 3;
+}
+
+// DeliveryProbeStatus is the durable outcome of a diagnostic delivery.
+enum DeliveryProbeStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  DELIVERY_PROBE_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  DELIVERY_PROBE_STATUS_PENDING = 1;
+  // 处理已成功完成。
+  DELIVERY_PROBE_STATUS_SUCCEEDED = 2;
+  // 处理失败；是否可重试由具体失败原因决定。
+  DELIVERY_PROBE_STATUS_FAILED = 3;
+}
+
+// ConfigurationBlockerCode identifies why a Release is not ready.
+enum ConfigurationBlockerCode {
+  // Unknown blocker.
+  CONFIGURATION_BLOCKER_CODE_UNSPECIFIED = 0;
+  // No converted legacy configuration exists.
+  CONFIGURATION_BLOCKER_CODE_LEGACY_CONFIGURATION_MISSING = 1;
+  // No enabled Channel Revision exists.
+  CONFIGURATION_BLOCKER_CODE_ENABLED_CHANNEL_MISSING = 2;
+  // No enabled Template Revision exists.
+  CONFIGURATION_BLOCKER_CODE_ENABLED_TEMPLATE_MISSING = 3;
+  // A Channel Revision requires repair.
+  CONFIGURATION_BLOCKER_CODE_CHANNEL_REPAIR_REQUIRED = 4;
+  // A Template Revision requires repair.
+  CONFIGURATION_BLOCKER_CODE_TEMPLATE_REPAIR_REQUIRED = 5;
+  // A real provider has no Secret Reference.
+  CONFIGURATION_BLOCKER_CODE_SECRET_REFERENCE_MISSING = 6;
+  // A Secret Reference cannot currently resolve.
+  CONFIGURATION_BLOCKER_CODE_SECRET_REFERENCE_UNAVAILABLE = 7;
+  // Full Draft preflight has not passed.
+  CONFIGURATION_BLOCKER_CODE_PREFLIGHT_REQUIRED = 8;
+  // Enabled Channels contain a duplicate priority.
+  CONFIGURATION_BLOCKER_CODE_CHANNEL_PRIORITY_CONFLICT = 9;
+  // An enabled Template has no compatible enabled Channel provider.
+  CONFIGURATION_BLOCKER_CODE_TEMPLATE_PROVIDER_MISMATCH = 10;
+  // Template parameter constraints are not a supported JSON object.
+  CONFIGURATION_BLOCKER_CODE_TEMPLATE_PARAMETER_SCHEMA_INVALID = 11;
+  // Channel fields are incomplete or inconsistent.
+  CONFIGURATION_BLOCKER_CODE_CHANNEL_CONFIGURATION_INVALID = 12;
+  // Template fields are incomplete or inconsistent.
+  CONFIGURATION_BLOCKER_CODE_TEMPLATE_CONFIGURATION_INVALID = 13;
+  // 当前值未通过校验，调用方应修正后重试。
+  CONFIGURATION_BLOCKER_CODE_DEFAULT_LOCALE_INVALID = 14;
+  // 当前值未通过校验，调用方应修正后重试。
+  CONFIGURATION_BLOCKER_CODE_DEFAULT_PHONE_REGION_INVALID = 15;
+  // CONFIGURATION_BLOCKER_CODE_DELIVERY_POLICY_DUPLICATE 表示 DELIVERY_POLICY_DUPLICATE 条件阻止当前流程继续。
+  CONFIGURATION_BLOCKER_CODE_DELIVERY_POLICY_DUPLICATE = 16;
+  // CONFIGURATION_BLOCKER_CODE_DELIVERY_POLICY_DEFAULT_MISSING 表示 DELIVERY_POLICY_DEFAULT_MISSING 条件阻止当前流程继续。
+  CONFIGURATION_BLOCKER_CODE_DELIVERY_POLICY_DEFAULT_MISSING = 17;
+  // 当前值未通过校验，调用方应修正后重试。
+  CONFIGURATION_BLOCKER_CODE_DELIVERY_POLICY_LOCALE_INVALID = 18;
+  // 当前值未通过校验，调用方应修正后重试。
+  CONFIGURATION_BLOCKER_CODE_DELIVERY_POLICY_CONFIGURATION_INVALID = 19;
+  // CONFIGURATION_BLOCKER_CODE_DELIVERY_TEMPLATE_NOT_FOUND 表示 DELIVERY_TEMPLATE_NOT_FOUND 条件阻止当前流程继续。
+  CONFIGURATION_BLOCKER_CODE_DELIVERY_TEMPLATE_NOT_FOUND = 20;
+  // 当前未生效，不用于新的业务处理。
+  CONFIGURATION_BLOCKER_CODE_DELIVERY_TEMPLATE_DISABLED = 21;
+  // CONFIGURATION_BLOCKER_CODE_DELIVERY_TEMPLATE_PURPOSE_MISMATCH 允许校验结果用于 DELIVERY_TEMPLATE_PURPOSE_MISMATCH 敏感操作。
+  CONFIGURATION_BLOCKER_CODE_DELIVERY_TEMPLATE_PURPOSE_MISMATCH = 22;
+  // CONFIGURATION_BLOCKER_CODE_VERIFICATION_POLICY_DUPLICATE 表示 VERIFICATION_POLICY_DUPLICATE 条件阻止当前流程继续。
+  CONFIGURATION_BLOCKER_CODE_VERIFICATION_POLICY_DUPLICATE = 23;
+  // CONFIGURATION_BLOCKER_CODE_VERIFICATION_POLICY_MISSING 表示 VERIFICATION_POLICY_MISSING 条件阻止当前流程继续。
+  CONFIGURATION_BLOCKER_CODE_VERIFICATION_POLICY_MISSING = 24;
+  // 当前值未通过校验，调用方应修正后重试。
+  CONFIGURATION_BLOCKER_CODE_VERIFICATION_POLICY_CONFIGURATION_INVALID = 25;
+  // CONFIGURATION_BLOCKER_CODE_VERIFICATION_POLICY_BASELINE_RELAXED 表示 VERIFICATION_POLICY_BASELINE_RELAXED 条件阻止当前流程继续。
+  CONFIGURATION_BLOCKER_CODE_VERIFICATION_POLICY_BASELINE_RELAXED = 26;
+}
+
+// ConfigurationTargetType identifies the blocked configuration component.
+enum ConfigurationTargetType {
+  // Unknown target.
+  CONFIGURATION_TARGET_TYPE_UNSPECIFIED = 0;
+  // Whole App configuration.
+  CONFIGURATION_TARGET_TYPE_CONFIGURATION = 1;
+  // One immutable Channel Revision.
+  CONFIGURATION_TARGET_TYPE_CHANNEL_REVISION = 2;
+  // One immutable Template Revision.
+  CONFIGURATION_TARGET_TYPE_TEMPLATE_REVISION = 3;
+  // One Purpose-scoped Verification Policy.
+  CONFIGURATION_TARGET_TYPE_VERIFICATION_POLICY = 4;
+  // One Purpose and Locale Delivery Policy mapping.
+  CONFIGURATION_TARGET_TYPE_DELIVERY_POLICY = 5;
+}
+
+// ConfigurationBlocker is a structured, non-sensitive readiness failure.
+message ConfigurationBlocker {
+  // Stable blocker code.
+  ConfigurationBlockerCode code = 1;
+  // Blocked target type.
+  ConfigurationTargetType target_type = 2;
+  // Revision identity when the blocker targets a Revision.
+  uint64 target_id = 3;
+  // Stable Purpose or Purpose/Locale key when no numeric identity is sufficient.
+  string target_key = 4;
+}
+
+// VerificationDeliveryPolicyEntry maps one Purpose and Locale to a stable SMS Template.
+message VerificationDeliveryPolicyEntry {
+  // purpose 指定 VerificationDeliveryPolicyEntry 数据或能力的预期用途。
+  support.verification.v1.VerificationPurpose purpose = 1;
+  // locale 指定内容展示或消息投递采用的语言区域。
+  string locale = 2;
+  // template_id 标识关联的 Template。
+  uint64 template_id = 3;
+}
+
+// VerificationPolicy configures one Purpose within the platform security baseline.
+message VerificationPolicy {
+  // purpose 指定 VerificationPolicy 数据或能力的预期用途。
+  support.verification.v1.VerificationPurpose purpose = 1;
+  // enabled 显式表示 VerificationPolicy 是否满足该条件。
+  bool enabled = 2;
+  // code_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 code_ttl_seconds = 3;
+  // ticket_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 ticket_ttl_seconds = 4;
+  // cooldown_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 cooldown_seconds = 5;
+  // max_attempts 记录 VerificationPolicy 中符合对应条件的数量。
+  uint32 max_attempts = 6;
+}
+
+// VerificationSecurityBaseline is backend-defined and cannot be edited by an App.
+message VerificationSecurityBaseline {
+  // code_algorithm 指定 VerificationSecurityBaseline 采用的校验或计算算法。
+  string code_algorithm = 1;
+  // code_length 限定一次性验证码的字符数。
+  uint32 code_length = 2;
+  // code_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 code_ttl_seconds = 3;
+  // ticket_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 ticket_ttl_seconds = 4;
+  // cooldown_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 cooldown_seconds = 5;
+  // max_attempts 记录 VerificationSecurityBaseline 中符合对应条件的数量。
+  uint32 max_attempts = 6;
+}
+
+// ConfigurationDraftSummary describes the current migration Draft.
+message ConfigurationDraftSummary {
+  // Draft identity.
+  uint64 id = 1;
+  // Stable Draft number.
+  string draft_no = 2;
+  // Draft state.
+  ConfigurationDraftStatus status = 3;
+  // Stored preflight state.
+  ConfigurationPreflightStatus preflight_status = 4;
+  // Default locale prepared for future Release composition.
+  string default_locale = 5;
+  // Default phone region prepared for future Release composition.
+  string default_phone_region = 6;
+  // Creation time.
+  google.protobuf.Timestamp created_at = 7;
+  // Last Draft change time.
+  google.protobuf.Timestamp updated_at = 8;
+  // Whether operators may append Revisions to this Draft.
+  bool editable = 9;
+  // Purpose and Locale mappings in this Draft.
+  repeated VerificationDeliveryPolicyEntry delivery_policies = 10;
+  // Purpose-scoped Verification settings in this Draft.
+  repeated VerificationPolicy verification_policies = 11;
+}
+
+// SmsChannelRevisionSummary is a safe immutable Channel Revision projection.
+message SmsChannelRevisionSummary {
+  // Stable Channel identity.
+  uint64 channel_id = 1;
+  // Immutable Revision identity.
+  uint64 revision_id = 2;
+  // Monotonic revision number within the Channel.
+  uint32 revision_no = 3;
+  // Stable Channel code.
+  string channel_code = 4;
+  // Provider identity.
+  support.messaging.v1.SmsProvider provider = 5;
+  // Channel order.
+  uint32 priority = 6;
+  // Whether the Revision is enabled in the Draft.
+  bool enabled = 7;
+  // Non-secret SMS signature.
+  string sign_name = 8;
+  // Provider region.
+  string region = 9;
+  // Non-secret provider endpoint.
+  string endpoint = 10;
+  // Deployment-owned Secret Reference identity.
+  string secret_reference = 11;
+  // Whether the Secret Reference currently resolves.
+  bool secret_available = 12;
+  // Stored preflight state.
+  ConfigurationPreflightStatus preflight_status = 13;
+  // Revision creation time.
+  google.protobuf.Timestamp created_at = 14;
+  // Non-secret provider options JSON.
+  string provider_options = 15;
+  // Operator-facing non-sensitive remark.
+  string remark = 16;
+  // Fields changed from the preceding Revision.
+  repeated string changed_fields = 17;
+}
+
+// SmsTemplateRevisionSummary is a safe immutable Template Revision projection.
+message SmsTemplateRevisionSummary {
+  // Stable Template identity.
+  uint64 template_id = 1;
+  // Immutable Revision identity.
+  uint64 revision_id = 2;
+  // Monotonic revision number within the Template.
+  uint32 revision_no = 3;
+  // Stable business template code.
+  string template_code = 4;
+  // Display name.
+  string name = 5;
+  // Business purpose.
+  string purpose = 6;
+  // Provider identity.
+  support.messaging.v1.SmsProvider provider = 7;
+  // Provider-side template identity.
+  string provider_template_id = 8;
+  // Whether the Revision is enabled in the Draft.
+  bool enabled = 9;
+  // Stored preflight state.
+  ConfigurationPreflightStatus preflight_status = 10;
+  // Revision creation time.
+  google.protobuf.Timestamp created_at = 11;
+  // JSON object describing accepted template parameters.
+  string parameter_schema = 12;
+  // Operator-facing non-sensitive remark.
+  string remark = 13;
+  // Fields changed from the preceding Revision.
+  repeated string changed_fields = 14;
+}
+
+// CreateConfigurationDraftRequest creates an editable Draft from the current composition.
+message CreateConfigurationDraftRequest {
+  // app_id 限定 CreateConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // default_locale 指定内容展示或消息投递采用的语言区域。
+  string default_locale = 2;
+  // default_phone_region 指定号码、服务或业务规则采用的地区。
+  string default_phone_region = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 4;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 7;
+}
+
+// CreateSmsChannelRevisionRequest creates and selects a new immutable Channel Revision.
+message CreateSmsChannelRevisionRequest {
+  // app_id 限定 CreateSmsChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+  // channel_code 提供 CreateSmsChannelRevision 对外稳定使用的业务编码。
+  string channel_code = 3;
+  // provider 标识本次能力使用的外部 Provider。
+  support.messaging.v1.SmsProvider provider = 4;
+  // priority 决定 CreateSmsChannelRevision 在待处理队列中的相对顺序。
+  uint32 priority = 5;
+  // enabled 显式表示 CreateSmsChannelRevision 是否满足该条件。
+  bool enabled = 6;
+  // sign_name 提供 CreateSmsChannelRevision 面向展示或识别的名称。
+  string sign_name = 7;
+  // region 指定号码、服务或业务规则采用的地区。
+  string region = 8;
+  // endpoint 指定 CreateSmsChannelRevision 访问或跳转使用的目标地址。
+  string endpoint = 9;
+  // secret_reference 仅引用外部 Secret，不在契约中承载明文密钥。
+  string secret_reference = 10;
+  // provider_options 承载 Provider 的非敏感扩展配置；密钥仅通过 secret reference 提供。
+  string provider_options = 11;
+  // remark 提供 CreateSmsChannelRevision 的补充说明。
+  string remark = 12;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 13;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 14;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 15;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 16;
+}
+
+// CreateSmsTemplateRevisionRequest creates and selects a new immutable Template Revision.
+message CreateSmsTemplateRevisionRequest {
+  // app_id 限定 CreateSmsTemplateRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+  // template_code 提供 CreateSmsTemplateRevision 对外稳定使用的业务编码。
+  string template_code = 3;
+  // name 提供 CreateSmsTemplateRevision 面向展示或识别的名称。
+  string name = 4;
+  // purpose 指定 CreateSmsTemplateRevision 数据或能力的预期用途。
+  string purpose = 5;
+  // provider 标识本次能力使用的外部 Provider。
+  support.messaging.v1.SmsProvider provider = 6;
+  // provider_template_id 标识关联的 ProviderTemplate。
+  string provider_template_id = 7;
+  // parameter_schema 描述消息模板允许使用的参数结构与约束。
+  string parameter_schema = 8;
+  // enabled 显式表示 CreateSmsTemplateRevision 是否满足该条件。
+  bool enabled = 9;
+  // remark 提供 CreateSmsTemplateRevision 的补充说明。
+  string remark = 10;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 11;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 12;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 13;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 14;
+}
+
+// UpdateVerificationPolicyDraftRequest atomically replaces Draft defaults and Verification policies.
+message UpdateVerificationPolicyDraftRequest {
+  // app_id 限定 UpdateVerificationPolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+  // default_locale 指定内容展示或消息投递采用的语言区域。
+  string default_locale = 3;
+  // default_phone_region 指定号码、服务或业务规则采用的地区。
+  string default_phone_region = 4;
+  // delivery_policies 列出 UpdateVerificationPolicyDraft 关联的 VerificationDeliveryPolicyEntry。
+  repeated VerificationDeliveryPolicyEntry delivery_policies = 5;
+  // verification_policies 列出 UpdateVerificationPolicyDraft 关联的 VerificationPolicy。
+  repeated VerificationPolicy verification_policies = 6;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 7;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 10;
+}
+
+// PreflightConfigurationDraftRequest validates one editable Draft without provider delivery.
+message PreflightConfigurationDraftRequest {
+  // app_id 限定 PreflightConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+}
+
+// ConfigurationPreflightResult is the persisted structured Draft validation result.
+message ConfigurationPreflightResult {
+  // draft 承载 ConfigurationPreflightResult 关联的 ConfigurationDraftSummary。
+  ConfigurationDraftSummary draft = 1;
+  // blockers 列出 ConfigurationPreflightResult 关联的 ConfigurationBlocker。
+  repeated ConfigurationBlocker blockers = 2;
+}
+
+// DeliveryProbeTarget is a safe projection of a deployment whitelist entry.
+message DeliveryProbeTarget {
+  // key 在约定作用域内稳定定位 DeliveryProbeTarget。
+  string key = 1;
+  // label 提供面向操作员展示的短标签。
+  string label = 2;
+  // masked_phone 承载按约定地区规则规范化的手机号码。
+  string masked_phone = 3;
+}
+
+// DeliveryProbeAttempt is an immutable, secret-free provider diagnostic.
+message DeliveryProbeAttempt {
+  // id 标识关联的 DeliveryProbeAttempt。
+  uint64 id = 1;
+  // attempt_no 是 DeliveryProbeAttempt 对外关联与审计使用的业务编号。
+  uint32 attempt_no = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  support.messaging.v1.SmsProvider provider = 3;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  uint64 channel_revision_id = 4;
+  // template_revision_id 标识关联的 TemplateRevision。
+  uint64 template_revision_id = 5;
+  // succeeded 显式表示 DeliveryProbeAttempt 是否满足该条件。
+  bool succeeded = 6;
+  // retryable 显式表示 DeliveryProbeAttempt 是否满足该条件。
+  bool retryable = 7;
+  // error_code 提供机器可判断的处理结果或失败分类。
+  string error_code = 8;
+  // error_message 提供最近失败的可读诊断信息，不作为错误分类依据。
+  string error_message = 9;
+  // provider_message_id 标识关联的 ProviderMessage。
+  string provider_message_id = 10;
+  // created_at 记录 DeliveryProbeAttempt 的创建时间。
+  google.protobuf.Timestamp created_at = 11;
+}
+
+// DeliveryProbe is a diagnostic fact isolated from production SMS and Verification facts.
+message DeliveryProbe {
+  // id 标识关联的 DeliveryProbe。
+  uint64 id = 1;
+  // probe_no 是 DeliveryProbe 对外关联与审计使用的业务编号。
+  string probe_no = 2;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 3;
+  // target_key 在约定作用域内稳定定位 DeliveryProbe。
+  string target_key = 4;
+  // masked_phone 承载按约定地区规则规范化的手机号码。
+  string masked_phone = 5;
+  // purpose 指定 DeliveryProbe 数据或能力的预期用途。
+  support.verification.v1.VerificationPurpose purpose = 6;
+  // locale 指定内容展示或消息投递采用的语言区域。
+  string locale = 7;
+  // template_id 标识关联的 Template。
+  uint64 template_id = 8;
+  // template_revision_id 标识关联的 TemplateRevision。
+  uint64 template_revision_id = 9;
+  // status 表示 DeliveryProbe 当前可观察的生命周期状态。
+  DeliveryProbeStatus status = 10;
+  // configuration_fingerprint 用于校验 DeliveryProbe 对应内容或版本的一致性。
+  string configuration_fingerprint = 11;
+  // fingerprint_valid 用于校验 DeliveryProbe 对应内容或版本的一致性。
+  bool fingerprint_valid = 12;
+  // attempts 列出 DeliveryProbe 关联的 DeliveryProbeAttempt。
+  repeated DeliveryProbeAttempt attempts = 13;
+  // created_at 记录 DeliveryProbe 的创建时间。
+  google.protobuf.Timestamp created_at = 14;
+  // completed_at 记录 DeliveryProbe 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 15;
+}
+
+// GetDeliveryProbeReadinessRequest selects the current Draft probe view.
+message GetDeliveryProbeReadinessRequest {
+  // app_id 限定 GetDeliveryProbeReadiness 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+}
+
+// DeliveryProbeReadiness contains safe targets and recent diagnostic facts.
+message DeliveryProbeReadiness {
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 1;
+  // configuration_fingerprint 用于校验 DeliveryProbeReadiness 对应内容或版本的一致性。
+  string configuration_fingerprint = 2;
+  // targets 列出 DeliveryProbeReadiness 关联的 DeliveryProbeTarget。
+  repeated DeliveryProbeTarget targets = 3;
+  // probes 列出 DeliveryProbeReadiness 关联的 DeliveryProbe。
+  repeated DeliveryProbe probes = 4;
+  // default_locale 指定内容展示或消息投递采用的语言区域。
+  string default_locale = 5;
+  // executable 显式表示 DeliveryProbeReadiness 是否满足该条件。
+  bool executable = 6;
+}
+
+// ExecuteDeliveryProbeRequest executes one Draft-only diagnostic delivery.
+message ExecuteDeliveryProbeRequest {
+  // app_id 限定 ExecuteDeliveryProbe 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+  // target_key 在约定作用域内稳定定位 ExecuteDeliveryProbe。
+  string target_key = 3;
+  // purpose 指定 ExecuteDeliveryProbe 数据或能力的预期用途。
+  support.verification.v1.VerificationPurpose purpose = 4;
+  // locale 指定内容展示或消息投递采用的语言区域。
+  string locale = 5;
+  // parameters 承载 ExecuteDeliveryProbe 关联的 map<string, string>。
+  map<string, string> parameters = 6;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 7;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 10;
+}
+
+// DiscardConfigurationDraftRequest discards an unused operator Draft.
+message DiscardConfigurationDraftRequest {
+  // app_id 限定 DiscardConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+}
+
+// ConfigurationReleaseSummary identifies the active immutable Release.
+message ConfigurationReleaseSummary {
+  // Release identity.
+  uint64 id = 1;
+  // Stable Release number.
+  string release_no = 2;
+  // Activation time.
+  google.protobuf.Timestamp activated_at = 3;
+}
+
+// ConfigurationRelease is one complete immutable Support Configuration snapshot.
+message ConfigurationRelease {
+  // id 标识关联的 ConfigurationRelease。
+  uint64 id = 1;
+  // release_no 是 ConfigurationRelease 对外关联与审计使用的业务编号。
+  string release_no = 2;
+  // source_draft_id 标识关联的 SourceDraft。
+  uint64 source_draft_id = 3;
+  // source_release_id 标识关联的 SourceRelease。
+  uint64 source_release_id = 4;
+  // default_locale 指定内容展示或消息投递采用的语言区域。
+  string default_locale = 5;
+  // default_phone_region 指定号码、服务或业务规则采用的地区。
+  string default_phone_region = 6;
+  // delivery_policies 列出 ConfigurationRelease 关联的 VerificationDeliveryPolicyEntry。
+  repeated VerificationDeliveryPolicyEntry delivery_policies = 7;
+  // verification_policies 列出 ConfigurationRelease 关联的 VerificationPolicy。
+  repeated VerificationPolicy verification_policies = 8;
+  // channel_revisions 列出 ConfigurationRelease 关联的 SmsChannelRevisionSummary。
+  repeated SmsChannelRevisionSummary channel_revisions = 9;
+  // template_revisions 列出 ConfigurationRelease 关联的 SmsTemplateRevisionSummary。
+  repeated SmsTemplateRevisionSummary template_revisions = 10;
+  // configuration_fingerprint 用于校验 ConfigurationRelease 对应内容或版本的一致性。
+  string configuration_fingerprint = 11;
+  // active 显式表示 ConfigurationRelease 是否满足该条件。
+  bool active = 12;
+  // changed_fields 列出相邻 Revision 之间发生变化的字段路径。
+  repeated string changed_fields = 13;
+  // created_at 记录 ConfigurationRelease 的创建时间。
+  google.protobuf.Timestamp created_at = 14;
+  // activated_at 记录 ConfigurationRelease 对应业务阶段的时间点。
+  google.protobuf.Timestamp activated_at = 15;
+}
+
+// ListConfigurationReleasesRequest selects one App's immutable history.
+message ListConfigurationReleasesRequest {
+  // app_id 限定 ListConfigurationReleases 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+}
+
+// ListConfigurationReleasesResponse returns newest-first Release snapshots.
+message ListConfigurationReleasesResponse {
+  // releases 列出 ListConfigurationReleases 关联的 ConfigurationRelease。
+  repeated ConfigurationRelease releases = 1;
+}
+
+// ActivateConfigurationDraftRequest publishes one fully validated Draft.
+message ActivateConfigurationDraftRequest {
+  // app_id 限定 ActivateConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // draft_id 标识关联的 Draft。
+  uint64 draft_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+}
+
+// RollbackConfigurationReleaseRequest republishes one historical snapshot.
+message RollbackConfigurationReleaseRequest {
+  // app_id 限定 RollbackConfigurationRelease 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // release_id 标识关联的 Release。
+  uint64 release_id = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint64 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+}
+
+// ConfigurationReadiness is the App-scoped migration and release-readiness view.
+message ConfigurationReadiness {
+  // Concrete App identity.
+  common.v1.AppId app_id = 1;
+  // Migration state.
+  ConfigurationMigrationStatus migration_status = 2;
+  // Current migration Draft, when present.
+  ConfigurationDraftSummary draft = 3;
+  // Channel Revisions in Draft order.
+  repeated SmsChannelRevisionSummary channel_revisions = 4;
+  // Template Revisions in the Draft.
+  repeated SmsTemplateRevisionSummary template_revisions = 5;
+  // Current active Release, when present.
+  ConfigurationReleaseSummary active_release = 6;
+  // Whether the converted Draft can form an initial Release.
+  bool ready_for_release = 7;
+  // Structured blockers.
+  repeated ConfigurationBlocker blockers = 8;
+  // Legacy conversion time.
+  google.protobuf.Timestamp migrated_at = 9;
+  // Backend-owned Verification security boundary.
+  VerificationSecurityBaseline verification_security_baseline = 10;
+  // Global online migration phase shared by both Apps.
+  ConfigurationCutoverPhase cutover_phase = 11;
+  // Whether legacy SMS and Verification configuration writes are frozen.
+  bool configuration_writes_frozen = 12;
+  // Configuration source expected by the running binary.
+  ConfigurationRuntimeModel runtime_model = 13;
+  // Whether Gamoji and Pincp both have Active Releases.
+  bool all_apps_ready = 14;
+  // Safe failure category without credentials or provider responses.
+  ConfigurationCutoverFailureCategory cutover_failure_category = 15;
+  // Latest safe recovery outcome.
+  ConfigurationCutoverRecoveryResult cutover_recovery_result = 16;
+  // Last global cutover state change.
+  google.protobuf.Timestamp cutover_updated_at = 17;
+}
+
+// GetConfigurationReadinessRequest selects one App readiness view.
+message GetConfigurationReadinessRequest {
+  // Concrete App identity.
+  common.v1.AppId app_id = 1;
+}
+
+// ConfigurationService exposes App-scoped immutable Support Configuration Draft governance.
+service ConfigurationService {
+  // GetConfigurationReadiness returns migration, Revision, Draft and Release readiness.
+  rpc GetConfigurationReadiness(GetConfigurationReadinessRequest) returns (ConfigurationReadiness);
+  // CreateConfigurationDraft starts a new editable composition.
+  rpc CreateConfigurationDraft(CreateConfigurationDraftRequest) returns (ConfigurationDraftSummary);
+  // CreateSmsChannelRevision appends and selects a Channel Revision.
+  rpc CreateSmsChannelRevision(CreateSmsChannelRevisionRequest) returns (SmsChannelRevisionSummary);
+  // CreateSmsTemplateRevision appends and selects a Template Revision.
+  rpc CreateSmsTemplateRevision(CreateSmsTemplateRevisionRequest) returns (SmsTemplateRevisionSummary);
+  // UpdateVerificationPolicyDraft replaces defaults and Verification policies atomically.
+  rpc UpdateVerificationPolicyDraft(UpdateVerificationPolicyDraftRequest) returns (ConfigurationDraftSummary);
+  // PreflightConfigurationDraft validates and persists safe blockers.
+  rpc PreflightConfigurationDraft(PreflightConfigurationDraftRequest) returns (ConfigurationPreflightResult);
+  // DiscardConfigurationDraft removes an unused operator Draft.
+  rpc DiscardConfigurationDraft(DiscardConfigurationDraftRequest) returns (google.protobuf.Empty);
+  // GetDeliveryProbeReadiness returns safe targets and recent Draft probes.
+  rpc GetDeliveryProbeReadiness(GetDeliveryProbeReadinessRequest) returns (DeliveryProbeReadiness);
+  // ExecuteDeliveryProbe sends only to a deployment-owned App target.
+  rpc ExecuteDeliveryProbe(ExecuteDeliveryProbeRequest) returns (DeliveryProbe);
+  // ListConfigurationReleases returns immutable Release history.
+  rpc ListConfigurationReleases(ListConfigurationReleasesRequest) returns (ListConfigurationReleasesResponse);
+  // ActivateConfigurationDraft atomically publishes one complete Draft.
+  rpc ActivateConfigurationDraft(ActivateConfigurationDraftRequest) returns (ConfigurationRelease);
+  // RollbackConfigurationRelease republishes a historical snapshot as a new Release.
+  rpc RollbackConfigurationRelease(RollbackConfigurationReleaseRequest) returns (ConfigurationRelease);
+}

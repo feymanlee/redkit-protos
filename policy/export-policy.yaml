@@ -1,0 +1,56 @@
+# redkit-protos 契约策略。
+#
+# 模型：**所有 Protobuf 只住在 redkit-protos**。没有「其他项目各自持有 proto」；
+# 仓外工程（Gamoji/Pincp BFF、App 服务等）只 **消费** 本仓契约，不另建 proto 源。
+#
+# 目录：`corevia/` 是唯一契约 tree（与历史 backend/api 路径兼容，import 仍为 common/v1…）。
+# external / forbidden 约束的是「仓外项目可以 import 什么」，不是「仓库里有没有这些文件」。
+# admin/core 等内部面**也**放在本仓，供平台生成与内部使用；外部项目不得 import。
+
+decision: corevia/docs/adr/0066-protos-live-in-a-dedicated-redkit-protos-repo.md
+module_path: corevia
+proto_home: redkit-protos
+source_of_truth: redkit-protos/corevia（唯一写入面；corevia make proto-pull）
+bootstrap_reverse_sync: scripts/sync_from_corevia.sh（仅初始化/应急）
+
+# 可选：预生成 Go SDK module（非必须；主路径是本仓 proto 源 + 各消费方 codegen）。
+sdk_module: github.com/redkit/corevia-api
+
+# 仓外项目允许 import 的 package（相对 corevia/ module 根）。
+# 其余 package（admin/、core/ 等）存在于本仓，但不是外部集成契约。
+external:
+  packages:
+    - common/
+    - common/pagination/v1
+    - common/file/v1
+    - user/types/v1
+    - user/consumer/v1
+    - user/internal/v1
+    - wallet/v1
+    - payment/v1
+    - ops/v1
+    - ops/reward/v1
+  consumers:
+    - gamoji-bff
+    - pincp-bff
+    - app-bff
+    - app-services
+    - corevia-backend
+
+# 仓外项目禁止 import 的 package 前缀（文件可以在仓内存在）。
+forbidden:
+  packages:
+    - admin/
+    - core/
+    - user/administration/v1
+    - support/governance/
+    - support/configuration/
+    - gift/
+    # 资金管理/对账等偏后台或 interservice 的面，外部默认不依赖；
+    # 若某外部集成确需其中 RPC，再单独放宽 export-policy 并评审。
+
+# 本仓唯一契约归属。不再为 gamoji/pincp 等预留独立 proto 源。
+ownership:
+  owner: platform-api
+  tree: corevia
+  note: 所有项目共用本仓契约；业务差异用 package/字段与 App Scope 表达，不另建 proto 仓库。

@@ -1,0 +1,497 @@
+syntax = "proto3";
+
+package admin.support.v1;
+
+import "common/file/v1/file.proto";
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "support/file/v1/access_service.proto";
+import "support/file/v1/administration_service.proto";
+import "support/file/v1/reference_service.proto";
+import "support/file/v1/types.proto";
+import "support/file/v1/upload_service.proto";
+
+// SupportFileUploadService 提供后台客户端直传控制面。
+service SupportFileUploadService {
+  // 创建上传会话。
+  rpc CreateUploadSession(AdminCreateUploadSessionRequest) returns (.support.file.v1.CreateUploadSessionResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-upload-sessions"
+      body: "*"
+    };
+  }
+  // 完成上传并创建 File。
+  rpc CompleteUploadSession(AdminCompleteUploadSessionRequest) returns (.support.file.v1.CompleteUploadSessionResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-upload-sessions/{session_no}:complete"
+      body: "*"
+    };
+  }
+  // 查询上传会话。
+  rpc GetUploadSession(AdminGetUploadSessionRequest) returns (.support.file.v1.UploadSession) {
+    option (google.api.http) = {get: "/admin/v1/file-upload-sessions/{session_no}"};
+  }
+}
+
+// SupportFileAccessService 提供后台 File View 与绑定校验调试入口。
+service SupportFileAccessService {
+  // 查询一个 File View。
+  rpc GetFileView(AdminGetFileViewRequest) returns (.common.file.v1.FileView) {
+    option (google.api.http) = {get: "/admin/v1/files/{file_id}/view"};
+  }
+  // 批量查询 File View。
+  rpc BatchGetFileViews(AdminBatchGetFileViewsRequest) returns (.support.file.v1.BatchGetFileViewsResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/files:batch-get-views"
+      body: "*"
+    };
+  }
+}
+
+// SupportFileAdministrationService 提供后台 File 治理能力。
+service SupportFileAdministrationService {
+  // 查询 File 详情。
+  rpc GetFile(AdminGetFileRequest) returns (.support.file.v1.File) {
+    option (google.api.http) = {get: "/admin/v1/files/{id}"};
+  }
+  // 查询 File 列表。
+  rpc ListFiles(AdminListFilesRequest) returns (.support.file.v1.ListFilesResponse) {
+    option (google.api.http) = {get: "/admin/v1/files"};
+  }
+  // 查询 Upload Session 列表。
+  rpc ListUploadSessions(AdminListUploadSessionsRequest) returns (.support.file.v1.ListUploadSessionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-upload-sessions"};
+  }
+  // 独立发布 App 公共资源。
+  rpc PublishStandaloneFile(AdminPublishStandaloneFileRequest) returns (.support.file.v1.File) {
+    option (google.api.http) = {
+      post: "/admin/v1/files/{file_id}:publish-standalone"
+      body: "*"
+    };
+  }
+  // 永久阻断 File 公共访问。
+  rpc RevokeFile(AdminRevokeFileRequest) returns (.support.file.v1.File) {
+    option (google.api.http) = {
+      post: "/admin/v1/files/{file_id}:revoke"
+      body: "*"
+    };
+  }
+  // 查询 File Reference。
+  rpc ListFileReferences(AdminListFileReferencesRequest) returns (.support.file.v1.ListFileReferencesResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-references"};
+  }
+  // 查询 File Event。
+  rpc ListFileEvents(AdminListFileEventsRequest) returns (.support.file.v1.ListFileEventsResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-events"};
+  }
+  // 查询历史 File Review Attempt。
+  rpc ListFileReviewAttempts(AdminListFileReviewAttemptsRequest) returns (.support.file.v1.ListFileReviewAttemptsResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-review-attempts"};
+  }
+  // 创建不可变 Policy Draft Revision。
+  rpc CreateFilePolicyDraft(AdminCreateFilePolicyDraftRequest) returns (.support.file.v1.FilePolicyRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-policy-revisions"
+      body: "*"
+    };
+  }
+  // 对 Policy Draft Revision 执行结构化预检。
+  rpc PreflightFilePolicyDraft(AdminPreflightFilePolicyDraftRequest) returns (.support.file.v1.FilePolicyPreflight) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-policy-revisions/{revision_id}:preflight"
+      body: "*"
+    };
+  }
+  // 激活已通过预检的 Policy Draft Revision。
+  rpc ActivateFilePolicyDraft(AdminActivateFilePolicyDraftRequest) returns (.support.file.v1.FilePolicyRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-policy-revisions/{revision_id}:activate"
+      body: "*"
+    };
+  }
+  // 丢弃未使用的 Policy Draft Revision。
+  rpc DiscardFilePolicyDraft(AdminDiscardFilePolicyDraftRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-policy-revisions/{revision_id}:discard"
+      body: "*"
+    };
+  }
+  // 查询不可变 Policy Revision 历史。
+  rpc ListFilePolicyRevisions(AdminListFilePolicyRevisionsRequest) returns (.support.file.v1.ListFilePolicyRevisionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-policy-revisions"};
+  }
+  // 创建不可变 Provider Draft Revision。
+  rpc CreateStorageProviderDraft(AdminCreateStorageProviderDraftRequest) returns (.support.file.v1.StorageProviderRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-provider-revisions"
+      body: "*"
+    };
+  }
+  // 对 Provider Draft 执行真实能力预检。
+  rpc PreflightStorageProviderDraft(AdminPreflightStorageProviderDraftRequest) returns (.support.file.v1.StorageProviderPreflight) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-provider-revisions/{revision_id}:preflight"
+      body: "*"
+    };
+  }
+  // 激活已通过预检的 Provider Draft。
+  rpc ActivateStorageProviderDraft(AdminActivateStorageProviderDraftRequest) returns (.support.file.v1.StorageProviderRevision) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-provider-revisions/{revision_id}:activate"
+      body: "*"
+    };
+  }
+  // 丢弃未使用的 Provider Draft。
+  rpc DiscardStorageProviderDraft(AdminDiscardStorageProviderDraftRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-provider-revisions/{revision_id}:discard"
+      body: "*"
+    };
+  }
+  // 查询不可变 Provider Revision 历史。
+  rpc ListStorageProviderRevisions(AdminListStorageProviderRevisionsRequest) returns (.support.file.v1.ListStorageProviderRevisionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-provider-revisions"};
+  }
+  // 创建存储对账批次。
+  rpc CreateReconciliationBatch(AdminCreateReconciliationBatchRequest) returns (.support.file.v1.ReconciliationBatch) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-reconciliation-batches"
+      body: "*"
+    };
+  }
+  // 查询存储对账批次。
+  rpc ListReconciliationBatches(AdminListReconciliationBatchesRequest) returns (.support.file.v1.ListReconciliationBatchesResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-reconciliation-batches"};
+  }
+  // 查询存储对账明细。
+  rpc ListReconciliationItems(AdminListReconciliationItemsRequest) returns (.support.file.v1.ListReconciliationItemsResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-reconciliation-items"};
+  }
+  // 查询异步治理任务。
+  rpc ListFileTasks(AdminListFileTasksRequest) returns (.support.file.v1.ListFileTasksResponse) {
+    option (google.api.http) = {get: "/admin/v1/file-tasks"};
+  }
+  // 重试失败任务。
+  rpc RetryFileTask(AdminRetryFileTaskRequest) returns (.support.file.v1.FileTask) {
+    option (google.api.http) = {
+      post: "/admin/v1/file-tasks/{task_id}:retry"
+      body: "*"
+    };
+  }
+}
+
+// AdminCreateUploadSessionRequest creates an Operator-created direct-upload intent.
+message AdminCreateUploadSessionRequest {
+  // purpose 指定 CreateUploadSession 数据或能力的预期用途。
+  .common.file.v1.FilePurpose purpose = 1;
+  // owner_type 区分 CreateUploadSession 的业务类型。
+  .common.file.v1.FileOwnerType owner_type = 2;
+  // owner_id 标识关联的 Owner。
+  uint64 owner_id = 3;
+  // source_filename 保留上传方提供的原始文件名，仅用于展示和审计。
+  string source_filename = 4;
+  // content_type 区分 CreateUploadSession 的业务类型。
+  string content_type = 5;
+  // size_bytes 以字节表示 CreateUploadSession 对应数据的大小。
+  uint64 size_bytes = 6;
+  // checksum_algorithm 指定 CreateUploadSession 采用的校验或计算算法。
+  string checksum_algorithm = 7;
+  // checksum 用于校验 CreateUploadSession 对应内容或版本的一致性。
+  string checksum = 8;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 9;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 10;
+}
+
+// AdminCompleteUploadSessionRequest 定义完成 UploadSession 的命令参数。
+message AdminCompleteUploadSessionRequest {
+  // session_no 是 CompleteUploadSession 对外关联与审计使用的业务编号。
+  string session_no = 1;
+  // etag 用于校验 CompleteUploadSession 对应内容或版本的一致性。
+  string etag = 2;
+  // checksum 用于校验 CompleteUploadSession 对应内容或版本的一致性。
+  string checksum = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4;
+}
+
+// AdminGetUploadSessionRequest 标识待查询的 UploadSession。
+message AdminGetUploadSessionRequest {
+  // session_no 是 GetUploadSession 对外关联与审计使用的业务编号。
+  string session_no = 1;
+}
+
+// AdminGetFileViewRequest 标识待查询的 FileView。
+message AdminGetFileViewRequest {
+  // file_id 标识关联的 File。
+  uint64 file_id = 1;
+}
+
+// AdminBatchGetFileViewsRequest 定义执行 BatchGetFileViews 的命令参数。
+message AdminBatchGetFileViewsRequest {
+  // file_ids 列出本次请求关联的 File 标识。
+  repeated uint64 file_ids = 1;
+}
+
+// AdminGetFileRequest 标识待查询的 File。
+message AdminGetFileRequest {
+  // id 标识关联的 GetFile。
+  uint64 id = 1;
+}
+
+// AdminListFilesRequest 定义 Files 的筛选与分页参数。
+message AdminListFilesRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.FileFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListUploadSessionsRequest 定义 UploadSessions 的筛选与分页参数。
+message AdminListUploadSessionsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.UploadSessionFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminPublishStandaloneFileRequest 定义发布 StandaloneFile 的幂等管理命令参数。
+message AdminPublishStandaloneFileRequest {
+  // file_id 标识关联的 File。
+  uint64 file_id = 1;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 2;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+}
+
+// AdminRevokeFileRequest 定义撤销 File 的幂等管理命令参数。
+message AdminRevokeFileRequest {
+  // file_id 标识关联的 File。
+  uint64 file_id = 1;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4;
+}
+
+// AdminListFileReferencesRequest 定义 FileReferences 的筛选与分页参数。
+message AdminListFileReferencesRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.FileReferenceFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListFileEventsRequest 定义 FileEvents 的筛选与分页参数。
+message AdminListFileEventsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.FileEventFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListFileReviewAttemptsRequest 定义 FileReviewAttempts 的筛选与分页参数。
+message AdminListFileReviewAttemptsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.FileReviewAttemptFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminCreateFilePolicyDraftRequest 定义创建 FilePolicyDraft 的幂等命令参数。
+message AdminCreateFilePolicyDraftRequest {
+  // purpose 指定 CreateFilePolicyDraft 数据或能力的预期用途。
+  .common.file.v1.FilePurpose purpose = 1 [(google.api.field_behavior) = REQUIRED];
+  // enabled 显式表示 CreateFilePolicyDraft 是否满足该条件。
+  bool enabled = 2;
+  // max_size_bytes 限定 CreateFilePolicyDraft 对应操作允许使用的数量或阈值。
+  uint64 max_size_bytes = 3;
+  // allowed_content_types 列出上传策略允许接受的 MIME Content-Type。
+  repeated string allowed_content_types = 4;
+  // remark 提供 CreateFilePolicyDraft 的补充说明。
+  string remark = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 6 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 7 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 8 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminPreflightFilePolicyDraftRequest 定义执行 PreflightFilePolicyDraft 的幂等管理命令参数。
+message AdminPreflightFilePolicyDraftRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminActivateFilePolicyDraftRequest 定义激活 FilePolicyDraft 的幂等管理命令参数。
+message AdminActivateFilePolicyDraftRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminDiscardFilePolicyDraftRequest 定义执行 DiscardFilePolicyDraft 的幂等管理命令参数。
+message AdminDiscardFilePolicyDraftRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminListFilePolicyRevisionsRequest 定义 FilePolicyRevisions 的筛选与分页参数。
+message AdminListFilePolicyRevisionsRequest {
+  // purpose 指定 ListFilePolicyRevisions 数据或能力的预期用途。
+  .common.file.v1.FilePurpose purpose = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminCreateStorageProviderDraftRequest 定义创建 StorageProviderDraft 的幂等命令参数。
+message AdminCreateStorageProviderDraftRequest {
+  // source_revision_id 标识关联的 SourceRevision。
+  uint64 source_revision_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  .support.file.v1.StorageProvider provider = 2 [(google.api.field_behavior) = REQUIRED];
+  // is_default 显式表示 CreateStorageProviderDraft 是否满足该条件。
+  bool is_default = 3;
+  // enabled 显式表示 CreateStorageProviderDraft 是否满足该条件。
+  bool enabled = 4;
+  // region 指定号码、服务或业务规则采用的地区。
+  string region = 5;
+  // endpoint 指定 CreateStorageProviderDraft 访问或跳转使用的目标地址。
+  string endpoint = 6;
+  // upload_endpoint 指定 CreateStorageProviderDraft 访问或跳转使用的目标地址。
+  string upload_endpoint = 7;
+  // bucket 标识 Storage Provider 中承载对象的 Bucket。
+  string bucket = 8 [(google.api.field_behavior) = REQUIRED];
+  // cdn_base_url 指定 CreateStorageProviderDraft 访问或跳转使用的目标地址。
+  string cdn_base_url = 9 [(google.api.field_behavior) = REQUIRED];
+  // secret_ref 仅引用外部 Secret，不在契约中承载明文密钥。
+  string secret_ref = 10 [(google.api.field_behavior) = REQUIRED];
+  // provider_options 承载 Provider 的非敏感扩展配置；密钥仅通过 secret reference 提供。
+  string provider_options = 11;
+  // remark 提供 CreateStorageProviderDraft 的补充说明。
+  string remark = 12;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 13 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 14 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 15 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminPreflightStorageProviderDraftRequest 定义执行 PreflightStorageProviderDraft 的幂等管理命令参数。
+message AdminPreflightStorageProviderDraftRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminActivateStorageProviderDraftRequest 定义激活 StorageProviderDraft 的幂等管理命令参数。
+message AdminActivateStorageProviderDraftRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminDiscardStorageProviderDraftRequest 定义执行 DiscardStorageProviderDraft 的幂等管理命令参数。
+message AdminDiscardStorageProviderDraftRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED];
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AdminListStorageProviderRevisionsRequest 定义 StorageProviderRevisions 的筛选与分页参数。
+message AdminListStorageProviderRevisionsRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  .support.file.v1.StorageProvider provider = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminCreateReconciliationBatchRequest 定义创建 ReconciliationBatch 的幂等命令参数。
+message AdminCreateReconciliationBatchRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  .support.file.v1.StorageProvider provider = 1;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 2;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+}
+
+// AdminListReconciliationBatchesRequest 定义 ReconciliationBatches 的筛选与分页参数。
+message AdminListReconciliationBatchesRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.ReconciliationBatchFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListReconciliationItemsRequest 定义 ReconciliationItems 的筛选与分页参数。
+message AdminListReconciliationItemsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.ReconciliationItemFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListFileTasksRequest 定义 FileTasks 的筛选与分页参数。
+message AdminListFileTasksRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .support.file.v1.FileTaskFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminRetryFileTaskRequest 定义重试 FileTask 的幂等管理命令参数。
+message AdminRetryFileTaskRequest {
+  // task_id 标识关联的 Task。
+  uint64 task_id = 1;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+}

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "payment/v1/payment_administration.proto";
+import "payment/v1/refund.proto";
+
+// 支付退款服务。
+service PaymentRefundService {
+  // 创建退款单。
+  rpc CreateRefund(CreateRefundRequest) returns (Refund) {}
+  // 查询退款列表。
+  rpc ListRefunds(common.pagination.v1.PagingRequest) returns (ListRefundResponse) {}
+  // 提交后台退款申请。
+  rpc SubmitRefundRequest(SubmitRefundRequestRequest) returns (RefundRequest) {}
+  // 审批退款申请。
+  rpc ApproveRefundRequest(ReviewRefundRequestRequest) returns (RefundRequest) {}
+  // 拒绝退款申请。
+  rpc RejectRefundRequest(ReviewRefundRequestRequest) returns (RefundRequest) {}
+  // 查询退款申请。
+  rpc ListRefundRequests(ListRefundRequestsRequest) returns (ListRefundRequestsResponse) {}
+  // 配置 App/币种退款风险阈值。
+  rpc UpsertRefundRiskRule(UpsertRefundRiskRuleRequest) returns (RefundRiskRule) {}
+  // 查询退款风险阈值。
+  rpc ListRefundRiskRules(ListRefundRiskRulesRequest) returns (ListRefundRiskRulesResponse) {}
+  // 只读查询 Provider 权威状态并经状态机推进 Refund。
+  rpc RefreshRefundProviderState(RefreshRefundProviderStateRequest) returns (RefreshRefundProviderStateResponse) {}
+}

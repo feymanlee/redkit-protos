@@ -1,0 +1,526 @@
+syntax = "proto3";
+
+package core.operator.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
+
+import "common/pagination/v1/pagination.proto";
+import "common/file/v1/file.proto";
+
+// 后台人员服务
+service OperatorService {
+  // 查询后台人员列表
+  rpc List (ListOperatorsRequest) returns (ListOperatorResponse) {}
+
+  // 统计后台人员数量
+  rpc Count (CountOperatorsRequest) returns (CountOperatorResponse) {}
+
+  // 查询后台人员详情
+  rpc Get (GetOperatorRequest) returns (Operator) {}
+
+  // 创建后台人员
+  rpc Create (CreateOperatorRequest) returns (Operator) {}
+  // 批量创建后台人员
+  rpc BatchCreate (BatchCreateOperatorsRequest) returns (BatchCreateOperatorsResponse) {}
+
+  // 更新后台人员
+  rpc Update (UpdateOperatorRequest) returns (google.protobuf.Empty) {}
+
+  // Update the exact operator's self-service profile fields.
+  rpc UpdateProfile (UpdateOperatorProfileRequest) returns (google.protobuf.Empty) {}
+
+  // 删除后台人员
+  rpc Delete (DeleteOperatorRequest) returns (google.protobuf.Empty) {}
+
+  // 后台人员是否存在
+  rpc OperatorExists (OperatorExistsRequest) returns (OperatorExistsResponse) {}
+
+}
+
+// ListOperatorsRequest 定义 Operators 的筛选与分页参数。
+message ListOperatorsRequest {
+  // app_id 限定 ListOperators 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+}
+
+// CountOperatorsRequest 定义执行 CountOperators 的命令参数。
+message CountOperatorsRequest {
+  // app_id 限定 CountOperators 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+}
+
+// 后台人员
+message Operator {
+  // 后台人员性别
+  enum Gender {
+    // 未知。
+    SECRET = 0;  // 未知
+    // 男性。
+    MALE = 1;     // 男性
+    // 女性。
+    FEMALE = 2;   // 女性
+  }
+
+  // 后台人员状态
+  enum Status {
+    // 禁用 (被管理员手动禁用。后台人员无法登录系统。)。
+    DISABLED = 0; // 禁用 (被管理员手动禁用。后台人员无法登录系统。)
+    // 正常 (后台人员可以正常登录并使用系统。)。
+    NORMAL = 1;  // 正常 (后台人员可以正常登录并使用系统。)
+    // 待激活 (账号已创建，但尚未通过邮箱/短信验证或 HR 激活。)。
+    PENDING = 2; // 待激活 (账号已创建，但尚未通过邮箱/短信验证或 HR 激活。)
+    // 锁定 (因触发安全策略（如密码连续错误次数过多）被系统自动锁定。)。
+    LOCKED = 3;  // 锁定 (因触发安全策略（如密码连续错误次数过多）被系统自动锁定。)
+    // 过期 (账号超过了设定的有效期（常用于临时工、外部顾问）。)。
+    EXPIRED = 4; // 过期 (账号超过了设定的有效期（常用于临时工、外部顾问）。)
+    // 注销 (后台人员主动注销账号。通常在数据脱敏后的软删除状态。)。
+    CLOSED = 9; // 注销 (后台人员主动注销账号。通常在数据脱敏后的软删除状态。)
+  }
+
+  // 后台人员ID。
+  optional uint32 id = 1 [
+    (gnostic.openapi.v3.property) = {description: "后台人员ID"}
+  ];  // 后台人员ID
+
+  // AppID。
+  optional uint32 app_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "AppID"}
+  ];  // AppID
+  // App名称。
+  optional string app_name = 3 [
+    (gnostic.openapi.v3.property) = {description: "App名称"}
+  ];  // App名称
+
+  // 角色ID。
+  optional uint32 role_id = 12 [
+    (gnostic.openapi.v3.property) = {description: "角色ID"}
+  ];  // 角色ID
+  // 角色ID列表。
+  repeated uint32 role_ids = 13 [
+    (gnostic.openapi.v3.property) = {description: "角色ID列表"}
+  ];  // 角色ID列表
+  // 角色码列表。
+  repeated string roles = 14 [
+    (gnostic.openapi.v3.property) = {description: "角色码列表"}
+  ]; // 角色码列表
+  // 角色名称列表。
+  repeated string role_names = 15 [
+    (gnostic.openapi.v3.property) = { description: "角色名称列表"}
+  ]; // 角色名称列表
+
+  // 后台人员名。
+  optional string username = 20 [
+    (gnostic.openapi.v3.property) = {description: "后台人员名"}
+  ]; // 后台人员名
+
+  // 昵称。
+  optional string nickname = 21 [
+    (gnostic.openapi.v3.property) = {description: "昵称"}
+  ]; // 昵称
+
+  // 真实姓名。
+  optional string realname = 22 [
+    (gnostic.openapi.v3.property) = {description: "真实姓名"}
+  ]; // 真实姓名
+
+  // 头像文件 ID。
+  optional uint64 avatar_file_id = 23;
+
+  // 头像安全展示对象。
+  common.file.v1.FileView avatar = 32;
+
+  // 邮箱。
+  optional string email = 24 [
+    (gnostic.openapi.v3.property) = {description: "邮箱"}
+  ]; // 邮箱
+
+  // 手机号。
+  optional string mobile = 25 [
+    (gnostic.openapi.v3.property) = {description: "手机号"}
+  ]; // 手机号
+
+  // 座机号。
+  optional string telephone = 26 [
+    (gnostic.openapi.v3.property) = {description: "座机号"}
+  ]; // 座机号
+
+  // 性别。
+  optional Gender gender = 27 [
+    (gnostic.openapi.v3.property) = {description: "性别"}
+  ]; // 性别
+
+  // 住址。
+  optional string address = 28 [
+    (gnostic.openapi.v3.property) = {description: "住址"}
+  ]; // 住址
+
+  // 国家地区。
+  optional string region = 29 [
+    (gnostic.openapi.v3.property) = {description: "国家地区"}
+  ]; // 国家地区
+
+  // 个人描述。
+  optional string description = 30 [
+    (gnostic.openapi.v3.property) = {description: "个人描述"}
+  ]; // 个人描述
+
+  // 备注。
+  optional string remark = 31 [
+    (gnostic.openapi.v3.property) = {description: "备注"}
+  ]; // 备注
+
+  // 最后登录时间。
+  optional google.protobuf.Timestamp last_login_at = 50 [
+    (gnostic.openapi.v3.property) = {description: "最后登录时间"}
+  ]; // 最后登录时间
+
+  // 最后登录IP。
+  optional string last_login_ip = 51 [
+    (gnostic.openapi.v3.property) = {description: "最后登录IP"}
+  ]; // 最后登录IP
+
+  // 状态。
+  optional Status status = 52 [
+    (gnostic.openapi.v3.property) = {description: "状态"}
+  ]; // 状态
+
+  // 锁定截止时间。
+  optional google.protobuf.Timestamp locked_until = 53 [
+    (gnostic.openapi.v3.property) = {description: "锁定截止时间"}
+  ];// 锁定截止时间
+
+  // 粉丝数。
+  optional uint64 followers = 80 [
+    (gnostic.openapi.v3.property) = {description: "粉丝数"}
+  ]; // 粉丝数
+  // 关注数。
+  optional uint64 following = 81 [
+    (gnostic.openapi.v3.property) = {description: "关注数"}
+  ]; // 关注数
+
+  // 发帖数。
+  optional uint64 post_count = 90 [
+    (gnostic.openapi.v3.property) = {description: "发帖数"}
+  ]; // 发帖数
+  // 评论数。
+  optional uint64 comment_count = 91 [
+    (gnostic.openapi.v3.property) = {description: "评论数"}
+  ]; // 评论数
+  // 获赞数。
+  optional uint64 like_count = 92 [
+    (gnostic.openapi.v3.property) = {description: "获赞数"}
+  ]; // 获赞数
+
+
+  // 创建者后台人员ID。
+  optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者后台人员ID"}]; // 创建者后台人员ID
+  // 更新者后台人员ID。
+  optional uint32 updated_by = 101 [ (gnostic.openapi.v3.property) = {description: "更新者后台人员ID"}]; // 更新者后台人员ID
+  // 删除者后台人员ID。
+  optional uint32 deleted_by = 102 [ (gnostic.openapi.v3.property) = {description: "删除者后台人员ID"}]; // 删除者后台人员ID
+
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200 [ (gnostic.openapi.v3.property) = {description: "创建时间"}];// 创建时间
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201 [ (gnostic.openapi.v3.property) = {description: "更新时间"}];// 更新时间
+  // 删除时间。
+  optional google.protobuf.Timestamp deleted_at = 202 [ (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
+}
+
+// Self-service profile data. Operator, App, status, roles, and credentials are
+// intentionally absent and are mutated only through administrative commands.
+message OperatorProfile {
+  // nickname 承载用户资料或其脱敏展示值，按个人信息保护。
+  optional string nickname = 1;
+  // realname 承载用户实名信息，按敏感个人信息保护。
+  optional string realname = 2;
+  // avatar_file_id 标识关联的 AvatarFile。
+  optional uint64 avatar_file_id = 3;
+  // email 承载联系或认证使用的邮箱地址。
+  optional string email = 4;
+  // mobile 承载联系或认证使用的手机号码，按个人信息保护。
+  optional string mobile = 5;
+  // telephone 承载联系使用的电话号码，按个人信息保护。
+  optional string telephone = 6;
+  // gender 承载用户资料或其脱敏展示值，按个人信息保护。
+  optional Operator.Gender gender = 7;
+  // address 承载联系或网络地址，按其数据分类要求保护。
+  optional string address = 8;
+  // region 指定号码、服务或业务规则采用的地区。
+  optional string region = 9;
+  // description 提供 OperatorProfile 的补充说明。
+  optional string description = 10;
+}
+
+// UpdateOperatorProfileRequest 定义更新 OperatorProfile 的命令参数。
+message UpdateOperatorProfileRequest {
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 1;
+  // app_id 限定 UpdateOperatorProfile 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // data 承载 UpdateOperatorProfile 对应阶段的结构化业务内容。
+  OperatorProfile data = 3 [(google.api.field_behavior) = REQUIRED];
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 4;
+}
+
+// 获取后台人员列表 - 答复
+message ListOperatorResponse {
+  // 列表项。
+  repeated Operator items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 获取后台人员数据 - 请求
+message GetOperatorRequest {
+  // GetOperatorRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // 后台人员ID。
+    uint32 id = 1 [
+      (gnostic.openapi.v3.property) = {description: "后台人员ID", read_only: true}]; // 后台人员ID
+
+    // 后台人员登录名。
+    string username = 2 [
+      (gnostic.openapi.v3.property) = {description: "后台人员登录名", read_only: true}]; // 后台人员登录名
+  }
+
+  // 读取字段掩码。
+  optional google.protobuf.FieldMask view_mask = 100 [
+    (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }
+  ]; // 视图字段过滤器，用于控制返回的字段
+
+  // app_id 限定 GetOperator 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 40;
+}
+
+// 创建后台人员 - 请求
+message CreateOperatorRequest {
+  // 数据。
+  Operator data = 1;
+
+  // 后台人员登录密码。
+  optional string password = 2 [
+    (gnostic.openapi.v3.property) = {description: "后台人员登录密码", read_only: true}]; // 后台人员登录密码
+}
+
+// 更新后台人员 - 请求
+message UpdateOperatorRequest {
+  // ID。
+  uint32 id = 1;
+
+  // 后台人员的数据。
+  Operator data = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (gnostic.openapi.v3.property) = {description: "后台人员的数据"}
+  ]; // 后台人员的数据
+
+  // 后台人员登录密码。
+  optional string password = 3 [
+    (gnostic.openapi.v3.property) = {description: "后台人员登录密码", read_only: true}]; // 后台人员登录密码
+
+  // 更新字段掩码。
+  google.protobuf.FieldMask update_mask = 4 [
+    (gnostic.openapi.v3.property) = {
+      description: "要更新的字段列表",
+      example: {yaml : "id,realname,username"}
+    }
+  ]; // 要更新的字段列表
+
+}
+
+// 删除后台人员 - 请求
+message DeleteOperatorRequest {
+  // DeleteOperatorRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // 后台人员ID。
+    uint32 id = 1 [
+      (gnostic.openapi.v3.property) = {description: "后台人员ID", read_only: true}]; // 后台人员ID
+
+    // 后台人员登录名。
+    string username = 2 [
+      (gnostic.openapi.v3.property) = {description: "后台人员登录名", read_only: true}]; // 后台人员登录名
+  }
+
+  // 删除者后台人员ID。
+  optional uint32 deleted_by = 100 [
+    (gnostic.openapi.v3.property) = {description: "删除者后台人员ID"}
+  ]; // 删除者后台人员ID
+
+  // Required App scope for the aggregate deletion.
+  optional uint32 app_id = 40 [
+    (gnostic.openapi.v3.property) = {description: "AppID scope"}
+  ];
+}
+
+// 后台人员是否存在 - 请求
+message OperatorExistsRequest {
+  // OperatorExistsRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // 后台人员ID。
+    uint32 id = 1 [
+      (gnostic.openapi.v3.property) = {description: "后台人员ID", read_only: true}]; // 后台人员ID
+
+    // 后台人员登录名。
+    string username = 2 [
+      (gnostic.openapi.v3.property) = {description: "后台人员登录名", read_only: true}]; // 后台人员登录名
+  }
+
+  // app_id 限定 OperatorExists 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 40;
+}
+// 后台人员是否存在 - 答复
+message OperatorExistsResponse {
+  // 是否存在。
+  bool exist = 1;
+}
+
+// batch 创建 operators请求。
+message BatchCreateOperatorsRequest {
+  // 列表项。
+  repeated Operator items = 1;
+}
+// batch 创建 operators响应。
+message BatchCreateOperatorsResponse {
+  // created ids。
+  repeated int32 created_ids = 1 [
+    (gnostic.openapi.v3.property) = {
+      description: "创建成功的后台人员ID列表"
+    }
+  ]; // 创建成功的后台人员ID列表
+}
+
+// 获取 operators by ids请求。
+message GetOperatorsByIdsRequest {
+  // ids。
+  repeated uint32 ids = 1;
+}
+
+// 强制修改后台人员密码（不验证） - 请求
+message EditOperatorPasswordRequest {
+  // 后台人员 ID。
+  uint32 operator_id = 1 [
+    (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }
+  ]; // 后台人员ID
+
+  // new password。
+  string new_password = 2 [
+    (gnostic.openapi.v3.property) = {
+      description: "新密码"
+    }
+  ]; // 新密码
+
+  // app_id 限定 EditOperatorPassword 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "AppID scope"}
+  ];
+}
+
+
+// 修改后台人员密码（需要验证旧密码） - 请求
+message ChangePasswordRequest {
+  // old password。
+  string old_password = 1 [
+    (gnostic.openapi.v3.property) = {
+      description: "旧密码"
+    }
+  ]; // 旧密码
+
+  // new password。
+  string new_password = 2 [
+    (gnostic.openapi.v3.property) = {
+      description: "新密码"
+    }
+  ]; // 新密码
+}
+
+// bind contact请求。
+message BindContactRequest {
+  // BindContactRequest 在以下 contact 分支中选择一种。
+  oneof contact {
+    // 手机号。
+    BindPhoneRequest phone = 1;
+    // 邮箱。
+    BindEmailRequest email = 2;
+  }
+}
+// 手机号码。
+message BindPhoneRequest {
+  // 手机号码。
+  string phone = 1 [(gnostic.openapi.v3.property) = { description: "手机号码" }];
+  // 验证码。
+  string code = 2 [(gnostic.openapi.v3.property) = { description: "验证码" }];
+}
+// 邮箱地址。
+message BindEmailRequest {
+  // 邮箱地址。
+  string email = 1 [(gnostic.openapi.v3.property) = { description: "邮箱地址" }];
+
+  // 邮箱验证码（可选）。
+  optional string verification_code = 2 [
+    (gnostic.openapi.v3.property) = { description: "邮箱验证码（可选）" }
+  ];
+}
+
+
+// verify contact请求。
+message VerifyContactRequest {
+  // VerifyContactRequest 在以下 contact 分支中选择一种。
+  oneof contact {
+    // 手机号。
+    PhoneVerification phone = 1;
+    // 邮箱。
+    EmailVerification email = 2;
+  }
+
+  // 可选：服务端生成的验证码会话 id（用于多步骤或回调验证）
+  optional string verification_id = 3 [
+    (gnostic.openapi.v3.property) = { description: "服务端生成的验证码会话ID（可选）" }
+  ];
+}
+
+// 手机验证
+message PhoneVerification {
+  // 手机号码，带国家码。
+  string phone = 1 [
+    (gnostic.openapi.v3.property) = { description: "手机号码，带国家码" }
+  ];
+
+  // 短信验证码。
+  string code = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (gnostic.openapi.v3.property) = { description: "短信验证码" }
+  ];
+}
+
+// 邮箱验证
+message EmailVerification {
+  // 邮箱地址。
+  string email = 1 [
+    (gnostic.openapi.v3.property) = { description: "邮箱地址" }
+  ];
+
+  // 邮箱验证码。
+  string code = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (gnostic.openapi.v3.property) = { description: "邮箱验证码" }
+  ];
+}
+
+// 数量 后台人员响应。
+message CountOperatorResponse {
+  // 数量。
+  uint64 count = 1;
+}

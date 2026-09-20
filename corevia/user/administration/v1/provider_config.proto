@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/duration.proto";
+
+// ExternalIdentityOptionsWrapper exposes App-specific OIDC provider settings
+// through the bootstrap custom-config loader.
+message ExternalIdentityOptionsWrapper {
+  // external_identity 记录外部或上游系统用于稳定关联 ExternalIdentityOptionsWrapper 的身份。
+  ExternalIdentityOptions external_identity = 1;
+}
+
+// ExternalIdentityOptions contains trusted deployment configuration for all Apps.
+message ExternalIdentityOptions {
+  // apps 列出 ExternalIdentityOptions 关联的 AppExternalIdentityOptions。
+  repeated AppExternalIdentityOptions apps = 1;
+}
+
+// AppExternalIdentityOptions binds provider audiences to one concrete App.
+message AppExternalIdentityOptions {
+  // app_id 限定 AppExternalIdentityOptions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // apple 承载 AppExternalIdentityOptions 关联的 OIDCProviderOptions。
+  OIDCProviderOptions apple = 2;
+  // google 承载 AppExternalIdentityOptions 关联的 OIDCProviderOptions。
+  OIDCProviderOptions google = 3;
+}
+
+// OIDCProviderOptions configures ID-token verification. Secrets are not needed
+// because User Service validates signed ID tokens rather than exchanging codes.
+message OIDCProviderOptions {
+  // enabled 显式表示 OIDCProviderOptions 是否满足该条件。
+  bool enabled = 1;
+  // issuer 标识签发 Token 或凭据的权威主体。
+  string issuer = 2;
+  // audience 限定 Token 或凭据允许使用的目标受众。
+  string audience = 3;
+  // jwks_url 指定 OIDCProviderOptions 访问或跳转使用的目标地址。
+  string jwks_url = 4;
+  // jwks_cache_ttl 以契约字段约定的单位表示对应流程的持续时间或上限。
+  google.protobuf.Duration jwks_cache_ttl = 5;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package core.application.v1;
+
+import "common/v1/common.proto";
+
+// BusinessTimeZoneService exposes the fixed business calendar for one App.
+service BusinessTimeZoneService {
+  // Get returns the IANA time zone owned by the requested App.
+  rpc Get(GetBusinessTimeZoneRequest) returns (AppBusinessTimeZone) {}
+}
+
+// GetBusinessTimeZoneRequest identifies one concrete App.
+message GetBusinessTimeZoneRequest {
+  // App must match the trusted App Scope metadata.
+  common.v1.AppId app_id = 1;
+}
+
+// AppBusinessTimeZone describes an App's fixed business calendar.
+message AppBusinessTimeZone {
+  // Concrete App identity.
+  common.v1.AppId app_id = 1;
+  // Canonical IANA time zone name.
+  string iana_name = 2;
+}

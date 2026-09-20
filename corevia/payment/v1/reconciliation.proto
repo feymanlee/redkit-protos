@@ -1,0 +1,451 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_types.proto";
+
+// Provider Bill 是一个账期内不可变的渠道侧完整交易集合。
+message ProviderBill {
+  // SourceType 区分对应资源的业务类型。
+  enum SourceType {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    PROVIDER_BILL_SOURCE_TYPE_UNSPECIFIED = 0;
+    // PROVIDER_BILL_SOURCE_TYPE_PROVIDER_API 选择 PROVIDER_API 业务类型。
+    PROVIDER_BILL_SOURCE_TYPE_PROVIDER_API = 1;
+    // PROVIDER_BILL_SOURCE_TYPE_FILE_IMPORT 选择 FILE_IMPORT 业务类型。
+    PROVIDER_BILL_SOURCE_TYPE_FILE_IMPORT = 2;
+  }
+  // ParseStatus 刻画对应资源的生命周期状态。
+  enum ParseStatus {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    PROVIDER_BILL_PARSE_STATUS_UNSPECIFIED = 0;
+    // 已受理并等待后续处理。
+    PROVIDER_BILL_PARSE_STATUS_PENDING = 1;
+    // PROVIDER_BILL_PARSE_STATUS_PARSED 表示资源处于对应业务阶段。
+    PROVIDER_BILL_PARSE_STATUS_PARSED = 2;
+    // 处理失败；是否可重试由具体失败原因决定。
+    PROVIDER_BILL_PARSE_STATUS_FAILED = 3;
+  }
+
+  // id 标识关联的 ProviderBill。
+  uint64 id = 1;
+  // app_id 限定 ProviderBill 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 3;
+  // bill_date 记录 ProviderBill 对应业务阶段的时间点。
+  string bill_date = 4;
+  // source_type 区分 ProviderBill 的业务类型。
+  SourceType source_type = 5;
+  // source_identity 记录外部或上游系统用于稳定关联 ProviderBill 的身份。
+  string source_identity = 6;
+  // version 标识 ProviderBill 所采用的契约或资源版本。
+  uint32 version = 7;
+  // checksum_algorithm 指定 ProviderBill 采用的校验或计算算法。
+  string checksum_algorithm = 8;
+  // checksum 用于校验 ProviderBill 对应内容或版本的一致性。
+  string checksum = 9;
+  // file_id 标识关联的 File。
+  optional uint64 file_id = 10;
+  // content_type 区分 ProviderBill 的业务类型。
+  string content_type = 11;
+  // size_bytes 以字节表示 ProviderBill 对应数据的大小。
+  uint64 size_bytes = 12;
+  // parse_status 表示 ProviderBill 当前可观察的生命周期状态。
+  ParseStatus parse_status = 13;
+  // record_count 记录 ProviderBill 中符合对应条件的数量。
+  uint64 record_count = 14;
+  // parse_error 记录 ProviderBill 最近一次可诊断的失败信息。
+  optional string parse_error = 15;
+  // parser_version 标识 ProviderBill 所采用的契约或资源版本。
+  string parser_version = 16;
+  // received_by 标识触发或负责 ProviderBill 对应业务阶段的主体。
+  optional uint32 received_by = 17;
+  // received_at 记录 ProviderBill 对应业务阶段的时间点。
+  google.protobuf.Timestamp received_at = 18;
+  // parsed_at 记录 ProviderBill 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp parsed_at = 19;
+  // created_at 记录 ProviderBill 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// Reconciliation Batch 固化一次针对不可变 Provider Bill 的双向比较。
+message ReconciliationBatch {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 资源已创建，尚未进入后续处理阶段。
+    RECONCILIATION_CREATED = 0;
+    // 正在处理中，尚未形成终态。
+    RECONCILIATION_PROCESSING = 1;
+    // 处理已成功完成。
+    RECONCILIATION_COMPLETED = 2;
+    // 处理失败；是否可重试由具体失败原因决定。
+    RECONCILIATION_FAILED = 3;
+  }
+  // TriggerType 区分对应资源的业务类型。
+  enum TriggerType {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    RECONCILIATION_TRIGGER_TYPE_UNSPECIFIED = 0;
+    // 已安排在约定时间生效或执行。
+    RECONCILIATION_TRIGGER_TYPE_SCHEDULED = 1;
+    // RECONCILIATION_TRIGGER_TYPE_MANUAL_RERUN 选择 MANUAL_RERUN 业务类型。
+    RECONCILIATION_TRIGGER_TYPE_MANUAL_RERUN = 2;
+    // RECONCILIATION_TRIGGER_TYPE_FILE_IMPORT 选择 FILE_IMPORT 业务类型。
+    RECONCILIATION_TRIGGER_TYPE_FILE_IMPORT = 3;
+    // RECONCILIATION_TRIGGER_TYPE_LEGACY 选择 LEGACY 业务类型。
+    RECONCILIATION_TRIGGER_TYPE_LEGACY = 4;
+  }
+
+  // id 标识关联的 ReconciliationBatch。
+  uint64 id = 1;
+  // app_id 限定 ReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 3;
+  // bill_date 记录 ReconciliationBatch 对应业务阶段的时间点。
+  string bill_date = 4;
+  // status 表示 ReconciliationBatch 当前可观察的生命周期状态。
+  Status status = 5;
+  // total_count 表示当前查询条件下可见结果的总数。
+  uint32 total_count = 6;
+  // mismatch_count 记录 ReconciliationBatch 中符合对应条件的数量。
+  uint32 mismatch_count = 7;
+  // error_message 提供最近失败的可读诊断信息，不作为错误分类依据。
+  optional string error_message = 8;
+  // provider_bill_id 标识关联的 ProviderBill。
+  optional uint64 provider_bill_id = 9;
+  // trigger_type 区分 ReconciliationBatch 的业务类型。
+  TriggerType trigger_type = 10;
+  // source_type 区分 ReconciliationBatch 的业务类型。
+  ProviderBill.SourceType source_type = 11;
+  // source_identity 记录外部或上游系统用于稳定关联 ReconciliationBatch 的身份。
+  optional string source_identity = 12;
+  // bill_version 标识 ReconciliationBatch 所采用的契约或资源版本。
+  optional uint32 bill_version = 13;
+  // checksum 用于校验 ReconciliationBatch 对应内容或版本的一致性。
+  optional string checksum = 14;
+  // matched_count 记录 ReconciliationBatch 中符合对应条件的数量。
+  uint32 matched_count = 15;
+  // initiated_by 标识触发或负责 ReconciliationBatch 对应业务阶段的主体。
+  optional uint32 initiated_by = 16;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 17;
+  // started_at 指定 ReconciliationBatch 生效或查询区间的起始时间。
+  optional google.protobuf.Timestamp started_at = 18;
+  // completed_at 记录 ReconciliationBatch 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp completed_at = 19;
+  // created_at 记录 ReconciliationBatch 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 ReconciliationBatch 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// Reconciliation Finding 是独立调查和处置的对账差异事实。
+message ReconciliationFinding {
+  // DifferenceType 区分对应资源的业务类型。
+  enum DifferenceType {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    RECONCILIATION_DIFFERENCE_TYPE_UNSPECIFIED = 0;
+    // RECONCILIATION_DIFFERENCE_TYPE_LOCAL_MISSING 选择 LOCAL_MISSING 业务类型。
+    RECONCILIATION_DIFFERENCE_TYPE_LOCAL_MISSING = 1;
+    // RECONCILIATION_DIFFERENCE_TYPE_PROVIDER_MISSING 选择 PROVIDER_MISSING 业务类型。
+    RECONCILIATION_DIFFERENCE_TYPE_PROVIDER_MISSING = 2;
+    // RECONCILIATION_DIFFERENCE_TYPE_AMOUNT_MISMATCH 选择 AMOUNT_MISMATCH 业务类型。
+    RECONCILIATION_DIFFERENCE_TYPE_AMOUNT_MISMATCH = 3;
+    // RECONCILIATION_DIFFERENCE_TYPE_STATUS_MISMATCH 选择 STATUS_MISMATCH 业务类型。
+    RECONCILIATION_DIFFERENCE_TYPE_STATUS_MISMATCH = 4;
+  }
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    RECONCILIATION_FINDING_STATUS_UNSPECIFIED = 0;
+    // 当前处于开放状态，可继续处理。
+    RECONCILIATION_FINDING_STATUS_OPEN = 1;
+    // 正在调查事实与证据，尚未形成处置结论。
+    RECONCILIATION_FINDING_STATUS_INVESTIGATING = 2;
+    // 异常或争议已经处置完成。
+    RECONCILIATION_FINDING_STATUS_RESOLVED = 3;
+    // 已确认无需继续处置，但保留历史记录。
+    RECONCILIATION_FINDING_STATUS_IGNORED = 4;
+  }
+
+  // id 标识关联的 ReconciliationFinding。
+  uint64 id = 1;
+  // app_id 限定 ReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // batch_id 标识关联的 Batch。
+  uint64 batch_id = 3;
+  // provider_bill_row_id 标识关联的 ProviderBillRow。
+  optional uint64 provider_bill_row_id = 4;
+  // payment_no 是 ReconciliationFinding 对外关联与审计使用的业务编号。
+  optional string payment_no = 5;
+  // provider_trade_no 是 ReconciliationFinding 对外关联与审计使用的业务编号。
+  optional string provider_trade_no = 6;
+  // local_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 local_amount = 7;
+  // provider_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 provider_amount = 8;
+  // local_currency 指定相关金额使用的币种或计量单位。
+  optional string local_currency = 9;
+  // provider_currency 指定相关金额使用的币种或计量单位。
+  optional string provider_currency = 10;
+  // local_status 表示 ReconciliationFinding 当前可观察的生命周期状态。
+  optional string local_status = 11;
+  // provider_status 表示 ReconciliationFinding 当前可观察的生命周期状态。
+  optional string provider_status = 12;
+  // difference_type 区分 ReconciliationFinding 的业务类型。
+  DifferenceType difference_type = 13;
+  // status 表示 ReconciliationFinding 当前可观察的生命周期状态。
+  Status status = 14;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 15;
+  // evidence 提供支撑 ReconciliationFinding 判断或处置的证明材料。
+  optional string evidence = 16;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 17;
+  // related_operation_no 关联原始管理操作的审计编号，用于追踪与幂等收敛。
+  optional string related_operation_no = 18;
+  // resolved_at 记录 ReconciliationFinding 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp resolved_at = 19;
+  // created_at 记录 ReconciliationFinding 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 ReconciliationFinding 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// Reconciliation Finding Action 是不可变的处置历史。
+message ReconciliationFindingAction {
+  // id 标识关联的 ReconciliationFindingAction。
+  uint64 id = 1;
+  // app_id 限定 ReconciliationFindingAction 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // finding_id 标识关联的 Finding。
+  uint64 finding_id = 3;
+  // from_status 记录本次状态推进前的生命周期状态。
+  ReconciliationFinding.Status from_status = 4;
+  // to_status 记录本次状态推进后的生命周期状态。
+  ReconciliationFinding.Status to_status = 5;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 6;
+  // evidence 提供支撑 ReconciliationFindingAction 判断或处置的证明材料。
+  optional string evidence = 7;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 8;
+  // related_operation_no 关联原始管理操作的审计编号，用于追踪与幂等收敛。
+  optional string related_operation_no = 9;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 10;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 11;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 12;
+  // created_at 记录 ReconciliationFindingAction 的创建时间。
+  google.protobuf.Timestamp created_at = 200;
+}
+
+// 旧 Reconciliation Item 仅保留兼容读取，新管理面使用 Finding。
+message ReconciliationItem {
+  option deprecated = true;
+  // DifferenceType 区分对应资源的业务类型。
+  enum DifferenceType {
+    // MATCHED 选择 MATCHED 业务类型。
+    MATCHED = 0;
+    // LOCAL_MISSING 选择 LOCAL_MISSING 业务类型。
+    LOCAL_MISSING = 1;
+    // PROVIDER_MISSING 选择 PROVIDER_MISSING 业务类型。
+    PROVIDER_MISSING = 2;
+    // AMOUNT_MISMATCH 选择 AMOUNT_MISMATCH 业务类型。
+    AMOUNT_MISMATCH = 3;
+    // STATUS_MISMATCH 选择 STATUS_MISMATCH 业务类型。
+    STATUS_MISMATCH = 4;
+  }
+  // id 标识关联的 ReconciliationItem。
+  optional uint64 id = 1;
+  // app_id 限定 ReconciliationItem 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // batch_id 标识关联的 Batch。
+  optional uint64 batch_id = 3;
+  // payment_no 是 ReconciliationItem 对外关联与审计使用的业务编号。
+  optional string payment_no = 4;
+  // provider_trade_no 是 ReconciliationItem 对外关联与审计使用的业务编号。
+  optional string provider_trade_no = 5;
+  // local_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 local_amount = 6;
+  // provider_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 provider_amount = 7;
+  // local_status 表示 ReconciliationItem 当前可观察的生命周期状态。
+  optional string local_status = 8;
+  // provider_status 表示 ReconciliationItem 当前可观察的生命周期状态。
+  optional string provider_status = 9;
+  // difference_type 区分 ReconciliationItem 的业务类型。
+  optional DifferenceType difference_type = 10;
+  // remark 提供 ReconciliationItem 的补充说明。
+  optional string remark = 11;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 12;
+  // created_at 记录 ReconciliationItem 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// ImportProviderBillRequest 定义导入 ProviderBill 的幂等管理命令参数。
+message ImportProviderBillRequest {
+  // app_id 限定 ImportProviderBill 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 2;
+  // bill_date 记录 ImportProviderBill 对应业务阶段的时间点。
+  string bill_date = 3;
+  // file_id 标识关联的 File。
+  uint64 file_id = 4;
+  // source_identity 记录外部或上游系统用于稳定关联 ImportProviderBill 的身份。
+  string source_identity = 5;
+  // checksum 用于校验 ImportProviderBill 对应内容或版本的一致性。
+  string checksum = 6;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 7;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 10;
+}
+
+// CreateReconciliationBatchRequest 定义创建 ReconciliationBatch 的幂等命令参数。
+message CreateReconciliationBatchRequest {
+  // app_id 限定 CreateReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 2;
+  // bill_date 记录 CreateReconciliationBatch 对应业务阶段的时间点。
+  string bill_date = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 6;
+}
+
+// GetReconciliationBatchRequest 标识待查询的 ReconciliationBatch。
+message GetReconciliationBatchRequest {
+  // app_id 限定 GetReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // batch_id 标识关联的 Batch。
+  uint64 batch_id = 2;
+}
+
+// ListReconciliationBatchesRequest 定义 ReconciliationBatches 的筛选与分页参数。
+message ListReconciliationBatchesRequest {
+  // app_id 限定 ListReconciliationBatches 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 2;
+  // bill_date 记录 ListReconciliationBatches 对应业务阶段的时间点。
+  optional string bill_date = 3;
+  // status 表示 ListReconciliationBatches 当前可观察的生命周期状态。
+  optional ReconciliationBatch.Status status = 4;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 5;
+}
+
+// ListReconciliationBatchResponse 返回 ReconciliationBatch 结果集合及分页信息。
+message ListReconciliationBatchResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ReconciliationBatch items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// ListReconciliationFindingsRequest 定义 ReconciliationFindings 的筛选与分页参数。
+message ListReconciliationFindingsRequest {
+  // app_id 限定 ListReconciliationFindings 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // batch_id 标识关联的 Batch。
+  optional uint64 batch_id = 2;
+  // status 表示 ListReconciliationFindings 当前可观察的生命周期状态。
+  optional ReconciliationFinding.Status status = 3;
+  // difference_type 区分 ListReconciliationFindings 的业务类型。
+  optional ReconciliationFinding.DifferenceType difference_type = 4;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 5;
+  // payment_no 是 ListReconciliationFindings 对外关联与审计使用的业务编号。
+  optional string payment_no = 6;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 7;
+}
+
+// ListReconciliationFindingsResponse 返回 ReconciliationFindings 结果集合及分页信息。
+message ListReconciliationFindingsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ReconciliationFinding items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetReconciliationFindingRequest 标识待查询的 ReconciliationFinding。
+message GetReconciliationFindingRequest {
+  // app_id 限定 GetReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // finding_id 标识关联的 Finding。
+  uint64 finding_id = 2;
+}
+
+// ReconciliationFindingDetail 表示面向查询的只读投影。
+message ReconciliationFindingDetail {
+  // finding 承载 ReconciliationFindingDetail 关联的 ReconciliationFinding。
+  ReconciliationFinding finding = 1;
+  // actions 列出 ReconciliationFindingDetail 关联的 ReconciliationFindingAction。
+  repeated ReconciliationFindingAction actions = 2;
+}
+
+// MutateReconciliationFindingRequest 定义变更 ReconciliationFinding 的幂等管理命令参数。
+message MutateReconciliationFindingRequest {
+  // Action 区分可执行的状态推进动作。
+  enum Action {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    RECONCILIATION_FINDING_ACTION_UNSPECIFIED = 0;
+    // RECONCILIATION_FINDING_ACTION_START_INVESTIGATION 执行 START_INVESTIGATION 业务动作。
+    RECONCILIATION_FINDING_ACTION_START_INVESTIGATION = 1;
+    // RECONCILIATION_FINDING_ACTION_ASSIGN 执行 ASSIGN 业务动作。
+    RECONCILIATION_FINDING_ACTION_ASSIGN = 2;
+    // RECONCILIATION_FINDING_ACTION_RESOLVE 执行 RESOLVE 业务动作。
+    RECONCILIATION_FINDING_ACTION_RESOLVE = 3;
+    // RECONCILIATION_FINDING_ACTION_IGNORE 执行 IGNORE 业务动作。
+    RECONCILIATION_FINDING_ACTION_IGNORE = 4;
+    // RECONCILIATION_FINDING_ACTION_REOPEN 执行 REOPEN 业务动作。
+    RECONCILIATION_FINDING_ACTION_REOPEN = 5;
+  }
+  // app_id 限定 MutateReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // finding_id 标识关联的 Finding。
+  uint64 finding_id = 2;
+  // action 指定本次状态推进采用的业务动作。
+  Action action = 3;
+  // assignee_operator_id 标识关联的后台 Operator。
+  optional uint32 assignee_operator_id = 4;
+  // evidence 提供支撑 MutateReconciliationFinding 判断或处置的证明材料。
+  optional string evidence = 5;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 6;
+  // related_operation_no 关联原始管理操作的审计编号，用于追踪与幂等收敛。
+  optional string related_operation_no = 7;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9;
+  // request_id 用于关联同一次请求或异步处理链路。
+  string request_id = 10;
+}
+
+// ListReconciliationItemResponse 返回 ReconciliationItem 结果集合及分页信息。
+message ListReconciliationItemResponse {
+  option deprecated = true;
+  // items 包含本次返回或处理的业务条目。
+  repeated ReconciliationItem items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}

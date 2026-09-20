@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package admin.platform.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "common/v1/common.proto";
+
+// 后台 App Selection 审计服务。
+service AppSelectionService {
+  // 记录平台管理员首次选择或切换业务 App。
+  rpc RecordSelection (RecordAppSelectionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/app-selection"
+      body: "*"
+    };
+  }
+}
+
+// 记录 App 选择请求。目标 App 只从 x-md-app-id metadata 获取。
+message RecordAppSelectionRequest {
+  // 切换前的 App；首次选择时为未指定值。
+  .common.v1.AppId previous_app_id = 1;
+}

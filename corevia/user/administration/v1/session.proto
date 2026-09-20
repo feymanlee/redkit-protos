@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/empty.proto";
+import "user/administration/v1/types.proto";
+
+// UserSessionService 管理可撤销登录会话。
+service UserSessionService {
+  // 查询 Session 列表。
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
+  // 检查 Session。
+  rpc CheckSession(CheckSessionRequest) returns (CheckSessionResponse);
+  // 撤销 Session。
+  rpc RevokeSession(RevokeSessionRequest) returns (google.protobuf.Empty);
+  // 撤销 AllSessions。
+  rpc RevokeAllSessions(RevokeAllSessionsRequest) returns (google.protobuf.Empty);
+}
+// ListSessionsRequest 定义 Sessions 的筛选与分页参数。
+message ListSessionsRequest {
+  // app_id 限定 ListSessions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+// ListSessionsResponse 返回 Sessions 结果集合及分页信息。
+message ListSessionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated Session items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+// CheckSessionRequest 定义执行 CheckSession 的命令参数。
+message CheckSessionRequest {
+  // app_id 限定 CheckSession 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // session_id 标识关联的 Session。
+  string session_id = 3;
+  // token_version 标识 CheckSession 所采用的契约或资源版本。
+  uint64 token_version = 4;
+}
+// CheckSessionResponse 承载 CheckSession 的返回结果。
+message CheckSessionResponse {
+  // valid 显式表示 CheckSession 是否满足该条件。
+  bool valid = 1;
+  // account_status 表示 CheckSession 当前可观察的生命周期状态。
+  AccountStatus account_status = 2;
+  // session_status 表示 CheckSession 当前可观察的生命周期状态。
+  SessionStatus session_status = 3;
+}
+// RevokeSessionRequest 定义撤销 Session 的幂等管理命令参数。
+message RevokeSessionRequest {
+  // app_id 限定 RevokeSession 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // session_id 标识关联的 Session。
+  string session_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5;
+}
+// RevokeAllSessionsRequest 定义撤销 AllSessions 的幂等管理命令参数。
+message RevokeAllSessionsRequest {
+  // app_id 限定 RevokeAllSessions 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}

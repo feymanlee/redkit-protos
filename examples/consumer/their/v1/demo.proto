@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package their.v1;
+
+import "common/v1/common.proto";
+
+// TheirGrantContext 是外部项目自己的消息，引用 corevia 共享类型。
+message TheirGrantContext {
+  // app_id 使用 corevia 固定 App 枚举。
+  common.v1.AppId app_id = 1;
+  // user_id 与 corevia C 端身份一致。
+  uint64 user_id = 2;
+}

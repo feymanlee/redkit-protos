@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+package core.audit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+
+import "validate/validate.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+import "core/audit/v1/geo_location.proto";
+import "core/audit/v1/device_info.proto";
+
+// 接口审计日志管理服务
+service ApiAuditLogService {
+  // 查询接口审计日志列表
+  rpc List (common.pagination.v1.PagingRequest) returns (ListApiAuditLogResponse) {}
+
+  // 查询接口审计日志详情
+  rpc Get (GetApiAuditLogRequest) returns (ApiAuditLog) {}
+
+  // 创建接口审计日志。
+  // 只接受结构化传输元数据；请求头、请求体和响应体必须由拥有字段语义的领域审计记录。
+  rpc Create (CreateApiAuditLogRequest) returns (google.protobuf.Empty) {}
+}
+
+// 接口审计日志
+message ApiAuditLog {
+  // 接口审计日志ID。
+  optional uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "接口审计日志ID"}]; // 接口审计日志ID
+
+  // AppID。
+  optional uint32 app_id = 2 [ (gnostic.openapi.v3.property) = {description: "AppID"}];  // AppID
+
+  // App名称。
+  optional string app_name = 3 [ (gnostic.openapi.v3.property) = {description: "App名称"}]; // App名称
+
+  // 后台人员 ID。
+  optional uint32 operator_id = 4 [ (gnostic.openapi.v3.property) = {description: "后台人员 ID"}];
+
+  // 账号名。
+  optional string username = 5 [ (gnostic.openapi.v3.property) = {description: "账号名"}]; // 账号名
+
+  // ========== 终端信息 ==========
+
+  // ip_address 承载经过契约约定处理的网络来源标识，按敏感数据保护。
+  optional string ip_address = 10 [ (gnostic.openapi.v3.property) = {description: "IP地址"}]; // IP地址
+
+  // 地理位置(来自IP库)。
+  optional GeoLocation geo_location = 11 [ (gnostic.openapi.v3.property) = {description: "地理位置(来自IP库)"}]; // 地理位置(来自IP库)
+
+  // 设备信息。
+  optional DeviceInfo device_info = 12 [ (gnostic.openapi.v3.property) = {description: "设备信息"}]; // 设备信息
+
+  // 请求来源 URL，不包含 query。
+  optional string referer = 13 [ (gnostic.openapi.v3.property) = {description: "请求来源 URL（不含 query）"}];
+
+  // 客户端版本号。
+  optional string app_version = 14 [ (gnostic.openapi.v3.property) = {description: "客户端版本号"}]; // 客户端版本号
+
+  // ========== API请求/响应信息 ==========
+
+  // http_method 记录外部 HTTP 交互使用的方法。
+  optional string http_method = 20 [ (gnostic.openapi.v3.property) = {description: "HTTP请求方法（GET/POST/PUT/DELETE）"}]; // HTTP请求方法
+
+  // 请求路径。
+  optional string path = 21 [ (gnostic.openapi.v3.property) = {description: "请求路径（不含参数，如/api/v1/users）"}]; // 请求路径
+
+  // 请求 URI，不包含 query；查询条件由具体领域事实源按需审计。
+  optional string request_uri = 22 [ (gnostic.openapi.v3.property) = {description: "请求 URI（不含 query）"}];
+
+  // API所属业务模块。
+  optional string api_module = 23 [ (gnostic.openapi.v3.property) = {description: "API所属业务模块（如user/permission/order）"}]; // API所属业务模块
+
+  // API业务操作。
+  optional string api_operation = 24 [ (gnostic.openapi.v3.property) = {description: "API业务操作（如查询用户/创建订单，非HTTP方法）"}]; // API业务操作
+
+  // API功能描述。
+  optional string api_description = 25 [ (gnostic.openapi.v3.property) = {description: "API功能描述（如“根据ID查询单个用户信息”）"}]; // API功能描述
+
+  // 请求ID。
+  optional string request_id = 26 [ (gnostic.openapi.v3.property) = {description: "全局请求ID（关联网关日志）"}]; // 请求ID
+
+  // 全局链路追踪ID。
+  optional string trace_id = 27 [ (gnostic.openapi.v3.property) = {description: "全局链路追踪ID（符合W3C TraceContext标准）"}]; // 全局链路追踪ID
+
+  // 当前跨度ID。
+  optional string span_id = 28 [ (gnostic.openapi.v3.property) = {description: "当前跨度ID"}]; // 当前跨度ID
+
+  // API耗时（毫秒）。
+  optional uint32 latency_ms = 29 [
+    (gnostic.openapi.v3.property) = {description: "API耗时（毫秒）"},
+    (validate.rules).uint32.lte = 3600000 // 1小时
+  ]; // API耗时
+
+  // 操作结果。
+  optional bool success = 30 [ (gnostic.openapi.v3.property) = {description: "操作是否成功"}]; // 操作结果
+
+  // HTTP状态码。
+  optional uint32 status_code = 31 [ (gnostic.openapi.v3.property) = {description: "HTTP状态码（200/403/500）"}]; // HTTP状态码
+
+  // 操作失败原因。
+  optional string reason = 32 [ (gnostic.openapi.v3.property) = {description: "操作失败原因（仅success=false时填充）"}]; // 操作失败原因
+
+  // 历史存储兼容字段；当前 Create 拒绝设置，List/Get 也不返回。
+  optional string request_header = 33 [
+    deprecated = true,
+    (gnostic.openapi.v3.property) = {description: "历史字段；当前 API 不接受或返回请求头", read_only: true}
+  ];
+
+  // 历史存储兼容字段；当前 Create 拒绝设置，List/Get 也不返回。
+  optional string request_body = 34 [
+    deprecated = true,
+    (gnostic.openapi.v3.property) = {description: "历史字段；当前 API 不接受或返回请求体", read_only: true}
+  ];
+
+  // 历史存储兼容字段；当前 Create 拒绝设置，List/Get 也不返回。
+  optional string response = 35 [
+    deprecated = true,
+    (gnostic.openapi.v3.property) = {description: "历史字段；当前 API 不接受或返回响应体", read_only: true}
+  ];
+
+  // ========== 合规校验 ==========
+
+  // log_hash 用于校验 ApiAuditLog 对应内容或版本的一致性。
+  optional string log_hash = 40 [ (gnostic.openapi.v3.property).description = "日志内容哈希（SHA256，十六进制字符串）"]; // 日志哈希
+
+  // 日志数字签名。
+  optional bytes signature = 41 [ (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）"]; // 日志数字签名
+
+  // ========== 时间字段 ==========
+
+  // created_at 记录 ApiAuditLog 的创建时间。
+  optional google.protobuf.Timestamp created_at = 50 [ (gnostic.openapi.v3.property) = {description: "日志创建时间"}];// 日志创建时间
+}
+
+// 查询API审计日志列表 - 回应
+message ListApiAuditLogResponse {
+  // 列表项。
+  repeated ApiAuditLog items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 查询API审计日志详情 - 请求
+message GetApiAuditLogRequest {
+  // GetApiAuditLogRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // ID。
+    uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "ID", read_only: true}]; // ID
+  }
+
+  // 视图字段过滤器，用于控制返回的字段。
+  optional google.protobuf.FieldMask view_mask = 100 [ (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 创建API审计日志 - 请求
+message CreateApiAuditLogRequest {
+  // 数据。
+  ApiAuditLog data = 1;
+}

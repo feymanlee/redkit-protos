@@ -1,0 +1,236 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "common/v1/common.proto";
+import "common/pagination/v1/pagination.proto";
+import "google/protobuf/timestamp.proto";
+import "wallet/v1/wallet_types.proto";
+
+// Wallet Risk Rule stable identity.
+message WalletRiskRule {
+  // id 标识关联的 WalletRiskRule。
+  optional uint32 id = 1;
+  // app_id 限定 WalletRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional WalletCurrency currency = 3;
+  // active_revision_id 标识关联的 ActiveRevision。
+  optional uint64 active_revision_id = 4;
+  // active_revision 标识 WalletRiskRule 所采用的契约或资源版本。
+  optional WalletRiskRuleRevision active_revision = 5;
+  // created_at 记录 WalletRiskRule 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 WalletRiskRule 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// Immutable Wallet Risk Rule configuration revision.
+message WalletRiskRuleRevision {
+  // Status 刻画对应资源的生命周期状态。
+  enum Status {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    STATUS_UNSPECIFIED = 0;
+    // 仍处于草稿阶段，尚未对业务生效。
+    DRAFT = 1;
+    // 已安排在约定时间生效或执行。
+    SCHEDULED = 2;
+    // 已经激活并进入生效状态。
+    ACTIVATED = 3;
+    // 处理失败；是否可重试由具体失败原因决定。
+    FAILED = 4;
+  }
+
+  // id 标识关联的 WalletRiskRuleRevision。
+  optional uint64 id = 1;
+  // app_id 限定 WalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // rule_id 标识关联的 Rule。
+  optional uint32 rule_id = 3;
+  // revision_no 是 WalletRiskRuleRevision 对外关联与审计使用的业务编号。
+  optional uint32 revision_no = 4;
+  // single_debit_limit 限定 WalletRiskRuleRevision 对应操作允许使用的数量或阈值。
+  optional int64 single_debit_limit = 5;
+  // daily_debit_limit 限定 WalletRiskRuleRevision 对应操作允许使用的数量或阈值。
+  optional int64 daily_debit_limit = 6;
+  // single_adjustment_limit 限定 WalletRiskRuleRevision 对应操作允许使用的数量或阈值。
+  optional int64 single_adjustment_limit = 7;
+  // enabled 显式表示 WalletRiskRuleRevision 是否满足该条件。
+  optional bool enabled = 8;
+  // status 表示 WalletRiskRuleRevision 当前可观察的生命周期状态。
+  optional Status status = 9;
+  // requester_id 标识关联的 Requester。
+  optional uint32 requester_id = 10;
+  // approver_id 标识关联的 Approver。
+  optional uint32 approver_id = 11;
+  // base_revision_id 标识关联的 BaseRevision。
+  optional uint64 base_revision_id = 12;
+  // effective_at 记录 WalletRiskRuleRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp effective_at = 13;
+  // approved_at 记录 WalletRiskRuleRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp approved_at = 14;
+  // activated_at 记录 WalletRiskRuleRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp activated_at = 15;
+  // failure_category 对失败进行稳定分类，供调用方决定重试或终止。
+  optional string failure_category = 16;
+  // created_at 记录 WalletRiskRuleRevision 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 WalletRiskRuleRevision 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// WalletRiskRuleRevisionPatch 描述对应能力的配置与约束。
+message WalletRiskRuleRevisionPatch {
+  // rule_id 标识关联的 Rule。
+  optional uint32 rule_id = 1;
+  // currency 指定相关金额使用的币种或计量单位。
+  WalletCurrency currency = 2;
+  // single_debit_limit 限定 WalletRiskRuleRevisionPatch 对应操作允许使用的数量或阈值。
+  int64 single_debit_limit = 3;
+  // daily_debit_limit 限定 WalletRiskRuleRevisionPatch 对应操作允许使用的数量或阈值。
+  int64 daily_debit_limit = 4;
+  // single_adjustment_limit 限定 WalletRiskRuleRevisionPatch 对应操作允许使用的数量或阈值。
+  int64 single_adjustment_limit = 5;
+  // enabled 显式表示 WalletRiskRuleRevisionPatch 是否满足该条件。
+  bool enabled = 6;
+}
+
+// CreateWalletRiskRuleRevisionRequest 定义创建 WalletRiskRuleRevision 的命令参数。
+message CreateWalletRiskRuleRevisionRequest {
+  // app_id 限定 CreateWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // data 承载 CreateWalletRiskRuleRevision 对应阶段的结构化业务内容。
+  WalletRiskRuleRevisionPatch data = 2;
+  // governance 承载 CreateWalletRiskRuleRevision 关联的 WalletGovernanceIdentity。
+  optional WalletGovernanceIdentity governance = 3;
+}
+
+// ApproveWalletRiskRuleRevisionRequest 定义批准 WalletRiskRuleRevision 的命令参数。
+message ApproveWalletRiskRuleRevisionRequest {
+  // app_id 限定 ApproveWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 2;
+  // effective_at 记录 ApproveWalletRiskRuleRevision 对应业务阶段的时间点。
+  google.protobuf.Timestamp effective_at = 3;
+  // governance 承载 ApproveWalletRiskRuleRevision 关联的 WalletGovernanceIdentity。
+  optional WalletGovernanceIdentity governance = 4;
+}
+
+// ListWalletRiskRuleResponse 返回 WalletRiskRule 结果集合及分页信息。
+message ListWalletRiskRuleResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated WalletRiskRule items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// ListWalletRiskRuleRevisionRequest 定义 WalletRiskRuleRevision 的筛选与分页参数。
+message ListWalletRiskRuleRevisionRequest {
+  // app_id 限定 ListWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // rule_id 标识关联的 Rule。
+  optional uint32 rule_id = 2;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListWalletRiskRuleRevisionResponse 返回 WalletRiskRuleRevision 结果集合及分页信息。
+message ListWalletRiskRuleRevisionResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated WalletRiskRuleRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// EmergencyWalletBlockScope 限定规则或资源的生效作用域。
+enum EmergencyWalletBlockScope {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  EMERGENCY_WALLET_BLOCK_SCOPE_UNSPECIFIED = 0;
+  // DEBIT 仅在 DEBIT 作用域内生效。
+  DEBIT = 1;
+  // ADJUSTMENT 仅在 ADJUSTMENT 作用域内生效。
+  ADJUSTMENT = 2;
+  // ALL_WRITES 仅在 ALL_WRITES 作用域内生效。
+  ALL_WRITES = 3;
+}
+
+// EmergencyWalletBlockStatus 刻画对应资源的生命周期状态。
+enum EmergencyWalletBlockStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  EMERGENCY_WALLET_BLOCK_STATUS_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  ACTIVE = 1;
+  // 对应有效期或处理窗口已经结束。
+  ENDED = 2;
+  // 有效期已结束，不再接受后续使用。
+  EXPIRED = 3;
+}
+
+// EmergencyWalletBlock 表示针对 Wallet 的紧急冻结措施及其解除状态。
+message EmergencyWalletBlock {
+  // id 标识关联的 EmergencyWalletBlock。
+  optional uint64 id = 1;
+  // app_id 限定 EmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional WalletCurrency currency = 3;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 4;
+  // operation_scope 限定 EmergencyWalletBlock 的生效或授权范围。
+  optional EmergencyWalletBlockScope operation_scope = 5;
+  // status 表示 EmergencyWalletBlock 当前可观察的生命周期状态。
+  optional EmergencyWalletBlockStatus status = 6;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 7;
+  // requester_id 标识关联的 Requester。
+  optional uint32 requester_id = 8;
+  // started_at 指定 EmergencyWalletBlock 生效或查询区间的起始时间。
+  optional google.protobuf.Timestamp started_at = 9;
+  // expires_at 指定 EmergencyWalletBlock 失效的时间点。
+  optional google.protobuf.Timestamp expires_at = 10;
+  // ended_at 指定 EmergencyWalletBlock 生效或查询区间的结束时间。
+  optional google.protobuf.Timestamp ended_at = 11;
+  // ended_by 标识触发或负责 EmergencyWalletBlock 对应业务阶段的主体。
+  optional uint32 ended_by = 12;
+  // ended_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string ended_reason = 13;
+  // created_at 记录 EmergencyWalletBlock 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 EmergencyWalletBlock 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// CreateEmergencyWalletBlockRequest 定义创建 EmergencyWalletBlock 的命令参数。
+message CreateEmergencyWalletBlockRequest {
+  // app_id 限定 CreateEmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // currency 指定相关金额使用的币种或计量单位。
+  WalletCurrency currency = 2;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 3;
+  // operation_scope 限定 CreateEmergencyWalletBlock 的生效或授权范围。
+  EmergencyWalletBlockScope operation_scope = 4;
+  // expires_at 指定 CreateEmergencyWalletBlock 失效的时间点。
+  google.protobuf.Timestamp expires_at = 5;
+  // governance 承载 CreateEmergencyWalletBlock 关联的 WalletGovernanceIdentity。
+  optional WalletGovernanceIdentity governance = 6;
+}
+
+// EndEmergencyWalletBlockRequest 定义执行 EndEmergencyWalletBlock 的命令参数。
+message EndEmergencyWalletBlockRequest {
+  // app_id 限定 EndEmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 1;
+  // block_id 标识关联的 Block。
+  uint64 block_id = 2;
+  // governance 承载 EndEmergencyWalletBlock 关联的 WalletGovernanceIdentity。
+  optional WalletGovernanceIdentity governance = 3;
+}
+
+// ListEmergencyWalletBlockResponse 返回 EmergencyWalletBlock 结果集合及分页信息。
+message ListEmergencyWalletBlockResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated EmergencyWalletBlock items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}

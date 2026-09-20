@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package user.internal.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "user/types/v1/types.proto";
+
+// 用户会话内省服务。
+service UserSessionIntrospectionService {
+  // 检查 Session。
+  rpc CheckSession(CheckSessionRequest) returns (CheckSessionResponse);
+  // 查询 AccessTokenVerificationKeys。
+  rpc GetAccessTokenVerificationKeys(GetAccessTokenVerificationKeysRequest) returns (GetAccessTokenVerificationKeysResponse);
+}
+
+// CheckSessionRequest 定义执行 CheckSession 的命令参数。
+message CheckSessionRequest {
+  // app_id 限定 CheckSession 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // session_id 标识关联的 Session。
+  string session_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
+  // token_version 标识 CheckSession 所采用的契约或资源版本。
+  uint64 token_version = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// CheckSessionResponse 承载 CheckSession 的返回结果。
+message CheckSessionResponse {
+  // valid 显式表示 CheckSession 是否满足该条件。
+  bool valid = 1;
+  // account_status 表示 CheckSession 当前可观察的生命周期状态。
+  user.types.v1.AccountStatus account_status = 2;
+  // session_status 表示 CheckSession 当前可观察的生命周期状态。
+  user.types.v1.SessionStatus session_status = 3;
+}
+
+// VerificationKeyStatus 刻画对应资源的生命周期状态。
+enum VerificationKeyStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  VERIFICATION_KEY_STATUS_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  VERIFICATION_KEY_STATUS_ACTIVE = 1;
+  // VERIFICATION_KEY_STATUS_RETIRING 表示资源处于对应业务阶段。
+  VERIFICATION_KEY_STATUS_RETIRING = 2;
+}
+
+// AccessTokenVerificationKey 描述 Access Token 验签公钥及其生效窗口。
+message AccessTokenVerificationKey {
+  // key_id 标识关联的 Key。
+  string key_id = 1;
+  // algorithm 指定 AccessTokenVerificationKey 采用的校验或计算算法。
+  string algorithm = 2;
+  // public_key_pem 承载 PEM 编码的验签公钥，不包含私钥材料。
+  string public_key_pem = 3;
+  // status 表示 AccessTokenVerificationKey 当前可观察的生命周期状态。
+  VerificationKeyStatus status = 4;
+  // not_before 指定 AccessTokenVerificationKey 查询或生效区间的结束边界。
+  google.protobuf.Timestamp not_before = 5;
+  // expires_at 指定 AccessTokenVerificationKey 失效的时间点。
+  google.protobuf.Timestamp expires_at = 6;
+}
+
+// GetAccessTokenVerificationKeysRequest 标识待查询的 AccessTokenVerificationKeys。
+message GetAccessTokenVerificationKeysRequest {
+  // app_id 限定 GetAccessTokenVerificationKeys 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// GetAccessTokenVerificationKeysResponse 承载 GetAccessTokenVerificationKeys 的返回结果。
+message GetAccessTokenVerificationKeysResponse {
+  // keys 列出 GetAccessTokenVerificationKeys 关联的 AccessTokenVerificationKey。
+  repeated AccessTokenVerificationKey keys = 1;
+  // cache_until 指定 GetAccessTokenVerificationKeys 查询或生效区间的结束边界。
+  google.protobuf.Timestamp cache_until = 2;
+}

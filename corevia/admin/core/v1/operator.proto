@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package admin.core.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "common/pagination/v1/pagination.proto";
+
+import "core/operator/v1/operator.proto";
+
+// 后台人员管理服务。
+service OperatorService {
+  // 获取后台人员列表。
+  rpc List (.common.pagination.v1.PagingRequest) returns (.core.operator.v1.ListOperatorResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/operators"
+    };
+  }
+
+  // 获取后台人员数据。
+  rpc Get (.core.operator.v1.GetOperatorRequest) returns (.core.operator.v1.Operator) {
+    option (google.api.http) = {
+      get: "/admin/v1/operators/{id}"
+      additional_bindings {
+        get: "/admin/v1/operators/username/{username}"
+      }
+    };
+  }
+
+  // 创建后台人员。
+  rpc Create (.core.operator.v1.CreateOperatorRequest) returns (.core.operator.v1.Operator) {
+    option (google.api.http) = {
+      post: "/admin/v1/operators"
+      body: "*"
+    };
+  }
+
+  // 更新后台人员。
+  rpc Update (.core.operator.v1.UpdateOperatorRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/admin/v1/operators/{id}"
+      body: "*"
+    };
+  }
+
+  // 删除后台人员。
+  rpc Delete (.core.operator.v1.DeleteOperatorRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/admin/v1/operators/{id}"
+      additional_bindings {
+        delete: "/admin/v1/operators/username/{username}"
+      }
+    };
+  }
+
+  // 判断后台人员是否存在。
+  rpc OperatorExists (.core.operator.v1.OperatorExistsRequest) returns (.core.operator.v1.OperatorExistsResponse) {
+    option (google.api.http) = {
+      get: "/admin/v1/operators:exists"
+    };
+  }
+
+  // 修改后台人员密码。
+  rpc EditOperatorPassword(.core.operator.v1.EditOperatorPasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/admin/v1/operators/{operator_id}/password"
+      body: "*"
+    };
+  }
+}

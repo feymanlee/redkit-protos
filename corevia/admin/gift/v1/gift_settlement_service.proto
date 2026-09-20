@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package admin.gift.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "gift/v1/settlement.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+// 礼物分账管理服务。
+service GiftSettlementService {
+  // 按 typed filter 分页查询当前 App 的 Settlement Record；只读，不提供编辑或覆盖。
+  rpc ListGiftSettlementRecords(AdminListGiftSettlementRecordsRequest) returns (.gift.v1.ListGiftSettlementRecordResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-settlement-records"};
+  }
+  // 查询 Settlement Reconciliation Issue 工作台。
+  rpc ListGiftReconciliationIssues(AdminListGiftReconciliationIssuesRequest) returns (.gift.v1.ListGiftReconciliationIssuesResponse) {
+    option (google.api.http) = {get: "/admin/v1/gift-reconciliation-issues"};
+  }
+  // 查询普通 Issue 详情与证据。
+  rpc GetGiftReconciliationIssue(AdminGetGiftReconciliationIssueRequest) returns (.gift.v1.GiftReconciliationIssue) {
+    option (google.api.http) = {get: "/admin/v1/gift-reconciliation-issues/{id}"};
+  }
+  // 查询完整 Operator 备注和审计详情。
+  rpc GetGiftReconciliationIssueAuditDetails(AdminGetGiftReconciliationIssueRequest) returns (.gift.v1.GiftReconciliationIssueAuditDetails) {
+    option (google.api.http) = {get: "/admin/v1/gift-reconciliation-issues/{id}/audit-details"};
+  }
+  // 确认 Issue；后台不提供手工 Resolve。
+  rpc AcknowledgeGiftReconciliationIssue(AdminAcknowledgeGiftReconciliationIssueRequest) returns (.gift.v1.GiftReconciliationIssueActionResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-reconciliation-issues/{id}:acknowledge"
+      body: "*"
+    };
+  }
+  // 追加调查备注。
+  rpc AddGiftReconciliationIssueNote(AdminAddGiftReconciliationIssueNoteRequest) returns (.gift.v1.GiftReconciliationIssueActionResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-reconciliation-issues/{id}:add-note"
+      body: "*"
+    };
+  }
+  // 重新核验 Issue 对应的单笔成功 Send。
+  rpc ReconcileGiftSettlement(AdminReconcileGiftSettlementRequest) returns (.gift.v1.ReconcileGiftSettlementResponse) {
+    option (google.api.http) = {
+      post: "/admin/v1/gift-reconciliation-issues/{issue_id}:reconcile"
+      body: "*"
+    };
+  }
+}
+
+// AdminListGiftSettlementRecordsRequest 定义 Settlement Records 的筛选与分页参数。
+message AdminListGiftSettlementRecordsRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.GiftSettlementRecordFilter filter = 1;
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListGiftReconciliationIssuesRequest 定义 GiftReconciliationIssues 的筛选与分页参数。
+message AdminListGiftReconciliationIssuesRequest {
+  // filter 限定本次查询采用的筛选条件。
+  .gift.v1.GiftReconciliationIssueFilter filter = 1 [(google.api.field_behavior) = REQUIRED];
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminGetGiftReconciliationIssueRequest 标识待查询的 GiftReconciliationIssue。
+message AdminGetGiftReconciliationIssueRequest {
+  // id 标识关联的 GetGiftReconciliationIssue。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminAcknowledgeGiftReconciliationIssueRequest 定义执行 AcknowledgeGiftReconciliationIssue 的幂等管理命令参数。
+message AdminAcknowledgeGiftReconciliationIssueRequest {
+  // id 标识关联的 AcknowledgeGiftReconciliationIssue。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // note 提供 AcknowledgeGiftReconciliationIssue 的补充说明。
+  string note = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 2000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}
+
+// AdminAddGiftReconciliationIssueNoteRequest 定义执行 AddGiftReconciliationIssueNote 的幂等管理命令参数。
+message AdminAddGiftReconciliationIssueNoteRequest {
+  // id 标识关联的 AddGiftReconciliationIssueNote。
+  uint64 id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // note 提供 AddGiftReconciliationIssueNote 的补充说明。
+  string note = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 2000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}
+
+// AdminReconcileGiftSettlementRequest 定义核对 GiftSettlement 的幂等管理命令参数。
+message AdminReconcileGiftSettlementRequest {
+  // issue_id 标识关联的 Issue。
+  uint64 issue_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4 [(validate.rules).string.max_len = 128];
+}

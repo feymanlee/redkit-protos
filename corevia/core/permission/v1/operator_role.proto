@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package core.permission.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+
+import "common/pagination/v1/pagination.proto";
+import "core/operator/v1/types.proto";
+
+// 后台人员与角色关联关系
+message OperatorRole {
+  // 状态
+  enum Status {
+    // 未指定（API 层默认）。
+    STATUS_UNSPECIFIED = 0; // 未指定（API 层默认）
+
+    // 待激活状态。
+    PENDING = 1;          // 待激活状态
+    // 激活状态。
+    ACTIVE = 2;           // 激活状态
+    // 禁用状态。
+    DISABLED = 3;         // 禁用状态
+    // 过期状态。
+    EXPIRED = 4;          // 过期状态
+  }
+
+  // ID。
+  optional uint32 id = 1 [
+    (gnostic.openapi.v3.property) = { description: "ID" }
+  ]; // ID
+
+  // 后台人员ID。
+  optional uint32 operator_id = 2 [
+    (gnostic.openapi.v3.property) = { description: "后台人员ID" }
+  ]; // 后台人员ID
+
+  // AppID。
+  optional uint32 app_id = 3 [
+    (gnostic.openapi.v3.property) = { description: "AppID" }
+  ]; // AppID
+
+  // 角色ID。
+  optional uint32 role_id = 4 [
+    (gnostic.openapi.v3.property) = { description: "角色ID" }
+  ]; // 角色ID
+
+  // 是否主角色。
+  optional bool is_primary = 6 [
+    (gnostic.openapi.v3.property) = {description: "是否主角色"}
+  ]; // 是否主角色
+
+  // 状态。
+  optional Status status = 7 [
+    (gnostic.openapi.v3.property) = { description: "状态" }
+  ]; // 状态
+
+  // 分配时间（UTC）。
+  optional google.protobuf.Timestamp assigned_at = 10 [
+    (gnostic.openapi.v3.property) = { description: "分配时间（UTC）" }
+  ]; // 分配时间（UTC）
+  // 分配者后台人员 ID。
+  optional uint32 assigned_by = 11 [
+    (gnostic.openapi.v3.property) = { description: "分配者后台人员 ID" }
+  ]; // 分配者后台人员 ID
+
+  // 生效时间（UTC）。
+  optional google.protobuf.Timestamp start_at = 50 [
+    (gnostic.openapi.v3.property) = {description: "生效时间（UTC）"}
+  ];// 生效时间
+
+  // 失效时间（UTC）。
+  optional google.protobuf.Timestamp end_at = 51 [
+    (gnostic.openapi.v3.property) = {description: "失效时间（UTC）"}
+  ];// 失效时间
+
+  // 数据权限范围。
+  optional core.operator.v1.DataScope data_scope = 80 [
+    (gnostic.openapi.v3.property) = {description: "数据权限范围"}
+  ];// 数据权限范围
+
+  // 创建者后台人员ID。
+  optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者后台人员ID"}]; // 创建者后台人员ID
+  // 更新者后台人员ID。
+  optional uint32 updated_by = 101 [ (gnostic.openapi.v3.property) = {description: "更新者后台人员ID"}]; // 更新者后台人员ID
+  // 删除者后台人员ID。
+  optional uint32 deleted_by = 102 [ (gnostic.openapi.v3.property) = {description: "删除者后台人员ID"}]; // 删除者后台人员ID
+
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200 [ (gnostic.openapi.v3.property) = {description: "创建时间"}];// 创建时间
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201 [ (gnostic.openapi.v3.property) = {description: "更新时间"}];// 更新时间
+  // 删除时间。
+  optional google.protobuf.Timestamp deleted_at = 202 [ (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
+}

@@ -1,0 +1,440 @@
+syntax = "proto3";
+
+package core.authentication.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+
+import "core/operator/v1/operator.proto";
+
+import "core/authentication/v1/operator_token.proto";
+
+// 后台人员登录认证服务
+service AuthenticationService {
+  // 后台人员登录
+  rpc Login (LoginRequest) returns (LoginResponse) {}
+
+  // 后台人员登出
+  rpc Logout (LogoutRequest) returns (google.protobuf.Empty) {}
+
+  // 注册后台人员
+  rpc RegisterOperator (RegisterOperatorRequest) returns (RegisterOperatorResponse) {}
+
+  // 刷新认证令牌
+  rpc RefreshToken (LoginRequest) returns (LoginResponse) {}
+
+  // 验证令牌
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {}
+
+  // 获取访问令牌列表
+  rpc GetAccessTokens(GetAccessTokensRequest) returns (GetAccessTokensResponse) {}
+
+  // 根据令牌ID撤销令牌
+  rpc RevokeTokenById (RevokeTokenByIdRequest) returns (google.protobuf.Empty) {}
+
+  // 拉黑令牌
+  rpc BlockToken (BlockTokenRequest) returns (BlockTokenResponse) {}
+
+  // 解封令牌
+  rpc UnblockToken (UnblockTokenRequest) returns (google.protobuf.Empty) {}
+
+  // 获取当前后台人员身份信息
+  rpc WhoAmI(google.protobuf.Empty) returns (WhoAmIResponse) {}
+
+  // Resolve a user's current effective permissions and, when a route is
+  // supplied, decide whether the claimed role can invoke it.
+  rpc ResolveEffectiveAccess(ResolveEffectiveAccessRequest) returns (ResolveEffectiveAccessResponse) {}
+}
+
+// 授权类型
+enum GrantType {
+  // 密码模式（Resource Owner Password Credentials Grant）。
+  password = 0; // 密码模式（Resource Owner Password Credentials Grant）
+  // 客户端模式（Client Credentials Grant）。
+  client_credentials = 1; // 客户端模式（Client Credentials Grant）
+  // 授权码模式（Authorization Code Grant）。
+  authorization_code = 2; // 授权码模式（Authorization Code Grant）
+  // 刷新令牌 (Refresh Token)。
+  refresh_token = 3;  // 刷新令牌 (Refresh Token)
+  // 简化模式 (Implicit Grant)。
+  implicit = 4;  // 简化模式 (Implicit Grant)
+}
+
+// 令牌类型
+enum TokenType {
+  // Bearer。
+  bearer = 0; // Bearer
+  // MAC。
+  mac = 1; // MAC
+}
+
+// 客户端类型
+enum ClientType {
+  // 管理端。
+  admin = 0; // 管理端
+  // APP。
+  app = 1; // APP
+}
+
+// 令牌类别
+enum TokenCategory {
+  // 由服务端根据 token 推断（默认）。
+  TOKEN_CATEGORY_UNSPECIFIED = 0; // 由服务端根据 token 推断（默认）
+
+  // 访问令牌。
+  ACCESS = 1;  // 访问令牌
+  // 刷新令牌。
+  REFRESH = 2; // 刷新令牌
+}
+
+// ResolveEffectiveAccessRequest 定义处置 EffectiveAccess 的命令参数。
+message ResolveEffectiveAccessRequest {
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 1;
+  // app_id 限定 ResolveEffectiveAccess 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 2;
+  // claimed_role 记录调用方声明但仍需授权校验的 Role。
+  optional string claimed_role = 3;
+  // resource 指定本次查询、导出或操作面向的资源类型。
+  optional string resource = 4;
+  // action 指定本次状态推进采用的业务动作。
+  optional string action = 5;
+}
+
+// ResolveEffectiveAccessResponse 承载 ResolveEffectiveAccess 的返回结果。
+message ResolveEffectiveAccessResponse {
+  // allowed 显式表示 ResolveEffectiveAccess 是否满足该条件。
+  bool allowed = 1;
+  // permission_codes 列出当前主体在 App Scope 内生效的 Permission Code。
+  repeated string permission_codes = 2;
+}
+
+// 后台人员登录 - 请求
+message LoginRequest {
+  // grant 类型。
+  GrantType grant_type = 1 [ (google.api.field_behavior) = REQUIRED,
+    (gnostic.openapi.v3.property) = {
+      description: "授权类型，此处的值固定为\"password\"，必选项。",
+      default: {string: "password"}
+    }]; // 授权类型，此处的值固定为"password"，必选项。
+
+  // 客户端ID。
+  optional string client_id = 2 [ (gnostic.openapi.v3.property) = {
+      description: "客户端ID"
+    }];
+  // 客户端密钥。
+  optional string client_secret = 3 [ (gnostic.openapi.v3.property) = {
+      description: "客户端密钥"
+    }];
+
+  // 以空格分隔的后台人员授予范围列表。如果未提供，scope则授权任何范围，默认为空列表。
+  optional string scope = 4 [ (gnostic.openapi.v3.property) = {
+      description: "以空格分隔的后台人员授予范围列表。如果未提供，scope则授权任何范围，默认为空列表。"
+    }]; // 以空格分隔的范围列表。如果未提供，scope则授权任何范围，默认为空列表。
+
+  // 跳转链接。
+  optional string redirect_uri = 5 [ (gnostic.openapi.v3.property) = {description: "跳转链接"}]; // 跳转链接
+
+  // 后台人员ID。
+  optional uint32 operator_id = 6 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }]; // 后台人员ID
+
+  // 登录标识（后台人员名、邮箱、手机号三选一）
+  oneof identifier {
+    // 后台人员名。
+    string username = 10 [ (gnostic.openapi.v3.property) = {description: "后台人员名"}]; // 后台人员名
+    // 电子邮件地址。
+    string email = 11 [ (gnostic.openapi.v3.property) = {description: "电子邮件地址"}]; // 电子邮件地址
+    // 手机号。
+    string mobile = 12 [ (gnostic.openapi.v3.property) = {description: "手机号"}]; // 手机号
+  }
+
+  // 后台人员的密码。
+  optional string password = 19 [(gnostic.openapi.v3.property) = {description: "后台人员的密码"}]; // 后台人员的密码，必选项。
+
+  // 更新令牌，用来获取下一次的访问令牌，可选项。如果访问令牌将过期，则返回刷新令牌很有用，应用程序可以使用该刷新令牌来获取另一个访问令牌。但是，通过隐式授予颁发的令牌不能颁发刷新令牌。
+  optional string refresh_token = 20 [ (gnostic.openapi.v3.property) = {
+      description: "更新令牌，用来获取下一次的访问令牌，可选项。如果访问令牌将过期，则返回刷新令牌很有用，应用程序可以使用该刷新令牌来获取另一个访问令牌。但是，通过隐式授予颁发的令牌不能颁发刷新令牌。"
+    }]; // 更新令牌，用来获取下一次的访问令牌，必选项。
+
+  // 授权请求中收到的一次性验证/认证码。(当使用授权码模式时)。
+  optional string code = 30 [ (gnostic.openapi.v3.property) = {
+      description: "授权请求中收到的一次性验证/认证码。(当使用授权码模式时)"
+    }]; // 授权请求中收到的一次性验证/认证码。(当使用授权码模式时)
+
+  // 客户端类型。
+  optional ClientType client_type = 40 [ (gnostic.openapi.v3.property) = {
+      description: "客户端类型"
+    }]; // 客户端类型
+
+  // 设备唯一标识（可选），用于设备绑定、推送、风控等。
+  optional string device_id = 50 [ (gnostic.openapi.v3.property) = {
+      description: "设备唯一标识（可选），用于设备绑定、推送、风控等"
+    }];
+
+  // 建议客户端生成并提供 jti（JWT ID）作为唯一标识，服务端可据此防止重放攻击。
+  optional string jti = 60 [ (gnostic.openapi.v3.property) = {
+      description: "建议客户端生成并提供 jti（JWT ID）作为唯一标识，服务端可据此防止重放攻击"
+    }];
+}
+
+// 后台人员登录 - 回应
+message LoginResponse {
+  // 令牌的类型，该值大小写不敏感，必选项，可以是bearer类型或mac类型，通常只是字符串“Bearer”。
+  TokenType token_type = 1 [ (gnostic.openapi.v3.property) = {
+      description: "令牌的类型，该值大小写不敏感，必选项，可以是bearer类型或mac类型，通常只是字符串“Bearer”。",
+      default: {string: "Bearer"}
+    }]; // 令牌类型，该值大小写不敏感，必选项，可以是bearer类型或mac类型。
+
+  // 访问令牌，必选项。授权服务器颁发的访问令牌字符串。
+  string access_token = 2 [ (gnostic.openapi.v3.property) = {
+      description: "访问令牌，必选项。授权服务器颁发的访问令牌字符串。"
+    }]; // 访问令牌，必选项。
+
+  // 访问令牌过期时间（秒）。
+  int64 expires_in = 3 [ (gnostic.openapi.v3.property) = {
+      description: "访问令牌过期时间（秒）"
+    }]; // 访问令牌过期时间（秒）
+
+  // 更新令牌，用来获取下一次的访问令牌，可选项。如果访问令牌将过期，则返回刷新令牌很有用，应用程序可以使用该刷新令牌来获取另一个访问令牌。但是，通过隐式授予颁发的令牌不能颁发刷新令牌。
+  optional string refresh_token = 4 [ (gnostic.openapi.v3.property) = {
+      description: "更新令牌，用来获取下一次的访问令牌，可选项。如果访问令牌将过期，则返回刷新令牌很有用，应用程序可以使用该刷新令牌来获取另一个访问令牌。但是，通过隐式授予颁发的令牌不能颁发刷新令牌。"
+    }]; // 更新令牌，用来获取下一次的访问令牌，可选项。
+
+  // 以空格分隔的后台人员授予范围列表。如果未提供，scope则授权任何范围，默认为空列表。
+  optional string scope = 5 [ (gnostic.openapi.v3.property) = {
+      description: "以空格分隔的后台人员授予范围列表。如果未提供，scope则授权任何范围，默认为空列表。"
+    }]; // 以空格分隔的后台人员授予范围列表。如果未提供，scope则授权任何范围，默认为空列表。
+
+  // 刷新令牌过期时间（秒）。
+  optional int64 refresh_expires_in = 6 [ (gnostic.openapi.v3.property) = {
+      description: "刷新令牌过期时间（秒）"
+    }]; // 刷新令牌过期时间（秒）
+
+  // ID 令牌，OpenID Connect 扩展中定义的 JWT 格式令牌。
+  optional string id_token = 7 [ (gnostic.openapi.v3.property) = {
+      description: "ID 令牌，OpenID Connect 扩展中定义的 JWT 格式令牌"
+    }]; // ID 令牌，OpenID Connect 扩展中定义的 JWT 格式令牌
+}
+
+// 后台人员登出 - 请求
+message LogoutRequest {
+  // 后台人员ID。
+  uint32 operator_id = 1 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }]; // 后台人员ID
+
+  // 客户端类型。
+  ClientType client_type = 2 [ (gnostic.openapi.v3.property) = {
+      description: "客户端类型"
+    }]; // 客户端类型
+}
+
+// 验证令牌 - 请求
+message ValidateTokenRequest {
+  // 令牌。
+  string token = 1 [ (gnostic.openapi.v3.property) = {
+      description: "令牌"
+    }]; // 令牌
+
+  // 客户端类型。
+  ClientType client_type = 2 [ (gnostic.openapi.v3.property) = {
+      description: "客户端类型"
+    }]; // 客户端类型
+
+  // 期望验证的令牌类别：ACCESS=访问令牌，REFRESH=刷新令牌。若未指定，服务端可尝试根据 token 推断处理方式。
+  TokenCategory token_category = 3 [ (gnostic.openapi.v3.property) = {
+      description: "期望验证的令牌类别：ACCESS=访问令牌，REFRESH=刷新令牌。若未指定，服务端可尝试根据 token 推断处理方式。"
+    }];
+
+  // 后台人员ID。
+  optional uint32 operator_id = 4 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }]; // 后台人员ID
+
+  // 可选：为 true 时跳过 Redis 在库校验；默认 false（进行 Redis 校验）。
+  optional bool skip_redis = 5 [ (gnostic.openapi.v3.property) = {
+      description: "可选：为 true 时跳过 Redis 在库校验；默认 false（进行 Redis 校验）"
+    }];
+
+  // 可选：为 true 时跳过黑名单校验；默认 false（进行黑名单校验）。
+  optional bool skip_blacklist = 6 [ (gnostic.openapi.v3.property) = {
+      description: "可选：为 true 时跳过黑名单校验；默认 false（进行黑名单校验）"
+    }];
+}
+
+// 验证令牌 - 回应
+message ValidateTokenResponse {
+  // 后台人员令牌载体。
+  optional OperatorTokenPayload payload = 1 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员令牌载体"
+    }]; // 后台人员令牌载体
+
+  // 令牌是否有效。
+  bool is_valid = 2 [ (gnostic.openapi.v3.property) = {
+      description: "令牌是否有效"
+    }]; // 令牌是否有效
+
+  // 令牌是否被阻塞/列入黑名单。
+  bool is_blocked = 3 [ (gnostic.openapi.v3.property) = {
+      description: "令牌是否被阻塞/列入黑名单"
+    }]; // 令牌是否被阻塞/列入黑名单
+}
+
+// register 后台人员请求。
+message RegisterOperatorRequest {
+  // 后台人员名。
+  string username = 1 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员名"
+    }]; // 后台人员名
+
+  // 登入密码。
+  string password = 2 [ (gnostic.openapi.v3.property) = {
+      description: "登入密码"
+    }]; // 登入密码
+
+  // App代码。
+  string app_code = 3 [ (gnostic.openapi.v3.property) = {
+      description: "App代码"
+    }]; // App代码
+
+  // 电子邮件地址。
+  optional string email = 4 [ (gnostic.openapi.v3.property) = {
+      description: "电子邮件地址"
+    }]; // 电子邮件地址
+
+  // 客户端类型。
+  optional ClientType client_type = 5 [ (gnostic.openapi.v3.property) = {
+      description: "客户端类型"
+    }]; // 客户端类型
+}
+// register 后台人员响应。
+message RegisterOperatorResponse {
+  // 后台人员ID。
+  uint32 operator_id = 1 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }];
+}
+
+// 获取当前后台人员身份信息 - 响应
+message WhoAmIResponse {
+  // 后台人员ID。
+  uint32 operator_id = 1 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }]; // 后台人员ID
+
+  // 当前后台人员的后台人员名。
+  string username = 2 [ (gnostic.openapi.v3.property) = {
+      description: "当前后台人员的后台人员名"
+    }]; // 当前后台人员的后台人员名
+}
+
+// 获取 访问 tokens请求。
+message GetAccessTokensRequest {
+  // 后台人员ID。
+  uint32 operator_id = 1 [ (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }]; // 后台人员ID
+
+  // 客户端类型。
+  ClientType client_type = 2 [ (gnostic.openapi.v3.property) = {
+      description: "客户端类型"
+    }]; // 客户端类型
+}
+// 获取 访问 tokens响应。
+message GetAccessTokensResponse {
+  // 访问令牌列表。
+  repeated string access_tokens = 1 [ (gnostic.openapi.v3.property) = {
+      description: "访问令牌列表"
+    }]; // 访问令牌列表
+}
+
+// 将指定令牌加入黑名单 / 拉黑（支持通过明文 token 或 token_id）
+message BlockTokenRequest {
+  // 后台人员 ID。
+  uint32 operator_id = 1 [ (google.api.field_behavior) = REQUIRED,
+    (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }]; // 后台人员ID
+
+  // 客户端类型。
+  ClientType client_type = 2 [ (gnostic.openapi.v3.property) = {
+      description: "客户端类型"
+    }];
+
+  // BlockTokenRequest 使用以下一种目标资源。
+  oneof target {
+    // 原始 token（服务端应立即哈希并只保存哈希）。
+    string token = 10;    // 原始 token（服务端应立即哈希并只保存哈希）
+    // 推荐：token_id（哈希或 DB id）。
+    string jti = 11; // 推荐：token_id（哈希或 DB id）
+  }
+
+  // 拉黑原因。
+  string reason = 20 [ (gnostic.openapi.v3.property) = {
+      description: "拉黑原因"
+    }]; // 拉黑原因
+
+  // 黑名单保留时长（可选，默认永久）。
+  optional google.protobuf.Duration duration = 30 [ (gnostic.openapi.v3.property) = {
+      description: "黑名单保留时长（可选，默认永久）"
+    }]; // 黑名单保留时长（可选，默认永久）
+}
+
+// unblock 令牌请求。
+message UnblockTokenRequest {
+  // 后台人员 ID。
+  uint32 operator_id = 1 [ (google.api.field_behavior) = REQUIRED,
+    (gnostic.openapi.v3.property) = {
+      description: "后台人员ID"
+    }]; // 后台人员ID
+
+  // 客户端类型。
+  ClientType client_type = 2 [ (gnostic.openapi.v3.property) = {
+      description: "客户端类型"
+    }];
+
+  // UnblockTokenRequest 使用以下一种目标资源。
+  oneof target {
+    // 原始 token（服务端一般按哈希匹配）。
+    string token = 10; // 原始 token（服务端一般按哈希匹配）
+    // token id / 标识。
+    string jti = 11;   // token id / 标识
+  }
+}
+
+// block 令牌响应。
+message BlockTokenResponse {
+  // 返回黑名单保留到期时间（可选）。
+  google.protobuf.Timestamp blocked_until = 1 [ (gnostic.openapi.v3.property) = {
+      description: "返回黑名单保留到期时间（可选）"
+    }]; // 返回黑名单保留到期时间（可选）
+}
+
+// 管理端按 id 撤销（仅管理员/系统）
+message RevokeTokenByIdRequest {
+  // jti。
+  string jti = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // 可选：目标令牌所属的客户端类型（当 jti 非全局唯一时必须提供）。
+  optional ClientType client_type = 2 [ (gnostic.openapi.v3.property) = {
+      description: "可选：目标令牌所属的客户端类型（当 jti 非全局唯一时必须提供）"
+    }]; // 目标令牌所属的客户端类型
+
+  // 撤销原因。
+  string reason = 3 [ (gnostic.openapi.v3.property) = {
+      description: "撤销原因"
+    }]; // 撤销原因
+
+  // 可选：关联的后台人员ID，便于高效定位要撤销的令牌（向后兼容）。
+  optional uint32 operator_id = 4 [ (gnostic.openapi.v3.property) = {
+      description: "可选：关联的后台人员ID，便于高效定位要撤销的令牌（向后兼容）"
+    }]; // 关联后台人员ID（可选）
+}

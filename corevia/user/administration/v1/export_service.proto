@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "user/administration/v1/export.proto";
+
+// 用户导出服务。
+service UserExportService {
+  // 创建 UserExportJob。
+  rpc CreateUserExportJob(CreateUserExportJobRequest) returns (UserExportJob);
+  // 查询 UserExportJob 列表。
+  rpc ListUserExportJobs(ListUserExportJobsRequest) returns (ListUserExportJobsResponse);
+  // 查询 UserExportDownload。
+  rpc GetUserExportDownload(GetUserExportDownloadRequest) returns (UserExportDownload);
+}

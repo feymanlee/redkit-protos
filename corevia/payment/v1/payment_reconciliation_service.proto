@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "payment/v1/reconciliation.proto";
+
+// 支付对账服务。
+service PaymentReconciliationService {
+  // 从受控 Support File 导入不可变 Provider Bill 并创建 Batch。
+  rpc ImportProviderBill(ImportProviderBillRequest) returns (ReconciliationBatch) {}
+  // 从 Provider Bill API 创建或补跑对账批次。
+  rpc CreateReconciliationBatch(CreateReconciliationBatchRequest) returns (ReconciliationBatch) {}
+  // 查询 ReconciliationBatch。
+  rpc GetReconciliationBatch(GetReconciliationBatchRequest) returns (ReconciliationBatch) {}
+  // 查询 ReconciliationBatch 列表。
+  rpc ListReconciliationBatches(ListReconciliationBatchesRequest) returns (ListReconciliationBatchResponse) {}
+  // 查询 ReconciliationFinding 列表。
+  rpc ListReconciliationFindings(ListReconciliationFindingsRequest) returns (ListReconciliationFindingsResponse) {}
+  // 查询 ReconciliationFinding。
+  rpc GetReconciliationFinding(GetReconciliationFindingRequest) returns (ReconciliationFindingDetail) {}
+  // 变更 ReconciliationFinding。
+  rpc MutateReconciliationFinding(MutateReconciliationFindingRequest) returns (ReconciliationFindingDetail) {}
+  // 旧对账明细读取，仅保留兼容。
+  rpc ListReconciliationItems(common.pagination.v1.PagingRequest) returns (ListReconciliationItemResponse) {}
+}

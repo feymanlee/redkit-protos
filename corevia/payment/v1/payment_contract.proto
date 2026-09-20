@@ -1,0 +1,461 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/v1/common.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_types.proto";
+import "payment/v1/governance.proto";
+import "payment/v1/channel.proto";
+
+// 支付单。
+message Payment {
+  // 支付状态。
+  enum Status {
+    // 已创建。
+    CREATED = 0;
+    // 待支付。
+    PENDING = 1;
+    // 渠道处理中。
+    PROCESSING = 2;
+    // 支付成功。
+    SUCCEEDED = 3;
+    // 支付失败。
+    FAILED = 4;
+    // 已关闭。
+    CLOSED = 5;
+    // 已过期。
+    EXPIRED = 6;
+    // 退款中。
+    REFUNDING = 7;
+    // 部分退款。
+    PARTIAL_REFUNDED = 8;
+    // 全额退款。
+    REFUNDED = 9;
+  }
+
+  // 履约状态。
+  enum FulfillmentStatus {
+    // 不适用异步履约。
+    NOT_APPLICABLE = 0;
+    // 充值入账处理中。
+    CREDITING = 1;
+    // 充值已到账。
+    CREDITED = 2;
+    // 充值入账失败。
+    CREDIT_FAILED = 3;
+  }
+
+  // 支付单 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 支付单号。
+  optional string payment_no = 4;
+  // 业务订单号。
+  optional string order_no = 5;
+  // 支付标题。
+  optional string subject = 6;
+  // 现金金额，分。
+  optional int64 amount = 7 [(gnostic.openapi.v3.property) = {description: "现金金额，分"}];
+  // 已退款金额，分。
+  optional int64 refunded_amount = 8 [(gnostic.openapi.v3.property) = {description: "已退款金额，分"}];
+  // 币种代码。
+  optional string currency = 9;
+  // 支付渠道。
+  optional PaymentProvider provider = 10;
+  // 支付方式。
+  optional PaymentMethod method = 11;
+  // 支付状态。
+  optional Status status = 12;
+  // 业务类型。
+  optional string biz_type = 13;
+  // 业务关联 ID。
+  optional string biz_id = 14;
+  // 幂等键。
+  optional string idempotency_key = 15;
+  // 渠道交易号。
+  optional string provider_trade_no = 16;
+  // 支付参数，供客户端拉起支付。
+  optional string payment_params = 17;
+  // 支付通知地址。
+  optional string notify_url = 18;
+  // 支付完成返回地址。
+  optional string return_url = 19;
+  // 业务扩展元数据，JSON 字符串。
+  optional string metadata = 20;
+  // 履约状态；支付成功不代表充值已到账。
+  optional FulfillmentStatus fulfillment_status = 21;
+  // 创建 Provider 支付意图时绑定的稳定 Payment Channel。
+  optional uint32 channel_id = 22;
+  // 创建 Provider 支付意图时绑定的不可变 Channel Revision。
+  optional uint64 channel_revision_id = 23;
+  // 创建时命中的不可变 Routing Policy Revision。
+  optional uint64 routing_policy_revision_id = 24;
+  // 创建时命中的 Routing Policy Rule。
+  optional string routing_rule_id = 25;
+  // 订阅支付创建时绑定的不可变 Subscription Plan Revision。
+  optional uint64 subscription_plan_revision_id = 26;
+  // 同一业务订单内的 Payment Attempt 编号；历史与旧调用默认为 1。
+  optional uint32 attempt_number = 27;
+  // Consumer 选择的稳定公开 Payment Option Code。
+  optional string payment_option_code = 28;
+  // 创建时冻结的不可变 Payment Option Revision。
+  optional uint64 payment_option_revision_id = 29;
+  // 支付时间。
+  optional google.protobuf.Timestamp paid_at = 30;
+  // 过期时间。
+  optional google.protobuf.Timestamp expire_at = 31;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+// 支付事件。
+message PaymentEvent {
+  // 事件 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 支付单号。
+  optional string payment_no = 3;
+  // 事件类型。
+  optional string event_type = 4;
+  // 变更前状态。
+  optional string from_status = 5;
+  // 变更后状态。
+  optional string to_status = 6;
+  // 幂等键。
+  optional string idempotency_key = 7;
+  // 不包含原文或凭据的脱敏诊断摘要。
+  optional MaskedDiagnosticData masked_diagnostic = 8;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// 支付服务 Outbox 事件。
+message PaymentOutboxEvent {
+  // 稳定事件 ID。
+  string event_id = 1;
+  // 事件名称。
+  string event_name = 2;
+  // 投递状态。
+  string status = 3;
+  // 已尝试次数。
+  uint32 attempt_count = 4;
+  // 最近错误。
+  optional string last_error = 5;
+  // 下次可领取时间。
+  google.protobuf.Timestamp available_at = 6;
+  // 事件发生时间。
+  google.protobuf.Timestamp occurred_at = 7;
+  // 死信时间。
+  optional google.protobuf.Timestamp dead_lettered_at = 8;
+  // 人工重放次数。
+  uint32 replay_count = 9;
+  // 最近重放时间。
+  optional google.protobuf.Timestamp last_replayed_at = 10;
+  // 最近重放操作人 ID。
+  optional uint32 last_replayed_by = 11;
+  // 最近重放原因。
+  optional string replay_reason = 12;
+  // 不包含原文或凭据的脱敏诊断摘要。
+  optional MaskedDiagnosticData masked_diagnostic = 13;
+  // 可安全展示的关联支付单号；不从管理端输入推断。
+  optional string payment_no = 14;
+  // 充值履约事件的结构化关联身份；仅充值死信存在。
+  optional RechargeFulfillmentIdentity recharge_identity = 15;
+  // 创建时间。
+  google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  google.protobuf.Timestamp updated_at = 201;
+}
+
+// 充值履约事件身份由原始事件与 Payment 权威事实共同组成。
+message RechargeFulfillmentIdentity {
+  // app_id 限定 RechargeFulfillmentIdentity 所属 App；UNSPECIFIED 不表示跨 App。
+  uint32 app_id = 1;
+  // order_no 是 RechargeFulfillmentIdentity 对外关联与审计使用的业务编号。
+  string order_no = 2;
+  // payment_no 是 RechargeFulfillmentIdentity 对外关联与审计使用的业务编号。
+  string payment_no = 3;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 4;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 amount = 5;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 6;
+}
+
+// DeliveryFailureKind 区分对应资源的业务类型。
+enum DeliveryFailureKind {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  DELIVERY_FAILURE_KIND_UNSPECIFIED = 0;
+  // DELIVERY_FAILURE_KIND_RECHARGE 选择 RECHARGE 业务类型。
+  DELIVERY_FAILURE_KIND_RECHARGE = 1;
+  // DELIVERY_FAILURE_KIND_REFUND_FULFILLMENT 选择 REFUND_FULFILLMENT 业务类型。
+  DELIVERY_FAILURE_KIND_REFUND_FULFILLMENT = 2;
+  // DELIVERY_FAILURE_KIND_FILE_REFERENCE 选择 FILE_REFERENCE 业务类型。
+  DELIVERY_FAILURE_KIND_FILE_REFERENCE = 3;
+  // DELIVERY_FAILURE_KIND_PROVIDER_BILL_TASK 选择 PROVIDER_BILL_TASK 业务类型。
+  DELIVERY_FAILURE_KIND_PROVIDER_BILL_TASK = 4;
+  // DELIVERY_FAILURE_KIND_PAYMENT_ATTEMPT_EXPIRATION 选择 PAYMENT_ATTEMPT_EXPIRATION 业务类型。
+  DELIVERY_FAILURE_KIND_PAYMENT_ATTEMPT_EXPIRATION = 5;
+  // DELIVERY_FAILURE_KIND_SUBSCRIPTION_FULFILLMENT 选择 SUBSCRIPTION_FULFILLMENT 业务类型。
+  DELIVERY_FAILURE_KIND_SUBSCRIPTION_FULFILLMENT = 6;
+}
+
+// RechargeDeliveryFailureDetail 表示面向查询的只读投影。
+message RechargeDeliveryFailureDetail {
+  // payment_no 是 RechargeDeliveryFailureDetail 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // recharge_order_no 是 RechargeDeliveryFailureDetail 对外关联与审计使用的业务编号。
+  string recharge_order_no = 2;
+}
+
+// RefundDeliveryFailureDetail 表示面向查询的只读投影。
+message RefundDeliveryFailureDetail {
+  // payment_no 是 RefundDeliveryFailureDetail 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // refund_no 是 RefundDeliveryFailureDetail 对外关联与审计使用的业务编号。
+  string refund_no = 2;
+}
+
+// FileReferenceDeliveryFailureDetail 表示面向查询的只读投影。
+message FileReferenceDeliveryFailureDetail {
+  // channel_config_id 标识关联的 ChannelConfig。
+  uint32 channel_config_id = 1;
+  // old_file_id 标识关联的 OldFile。
+  uint64 old_file_id = 2;
+  // new_file_id 标识关联的 NewFile。
+  uint64 new_file_id = 3;
+  // reference_version 标识 FileReferenceDeliveryFailureDetail 所采用的契约或资源版本。
+  uint64 reference_version = 4;
+}
+
+// ProviderBillDeliveryFailureDetail 表示面向查询的只读投影。
+message ProviderBillDeliveryFailureDetail {
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 1;
+  // bill_date 记录 ProviderBillDeliveryFailureDetail 对应业务阶段的时间点。
+  string bill_date = 2;
+  // batch_id 标识关联的 Batch。
+  uint64 batch_id = 3;
+}
+
+// PaymentAttemptExpirationDeliveryFailureDetail 表示面向查询的只读投影。
+message PaymentAttemptExpirationDeliveryFailureDetail {
+  // payment_no 是 PaymentAttemptExpirationDeliveryFailureDetail 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // expires_at 指定 PaymentAttemptExpirationDeliveryFailureDetail 失效的时间点。
+  google.protobuf.Timestamp expires_at = 2;
+}
+
+// SubscriptionFulfillmentDeliveryFailureDetail 表示面向查询的只读投影。
+message SubscriptionFulfillmentDeliveryFailureDetail {
+  // payment_no 是 SubscriptionFulfillmentDeliveryFailureDetail 对外关联与审计使用的业务编号。
+  string payment_no = 1;
+  // order_no 是 SubscriptionFulfillmentDeliveryFailureDetail 对外关联与审计使用的业务编号。
+  string order_no = 2;
+  // plan_id 标识关联的 Plan。
+  uint32 plan_id = 3;
+  // plan_revision_id 标识关联的 PlanRevision。
+  uint64 plan_revision_id = 4;
+}
+
+// Delivery Failure 隐藏 raw outbox，只暴露工作流类型和可执行恢复语义。
+message DeliveryFailure {
+  // event 承载 DeliveryFailure 关联的 PaymentOutboxEvent。
+  PaymentOutboxEvent event = 1;
+  // kind 区分 DeliveryFailure 的业务类型。
+  DeliveryFailureKind kind = 2;
+  // error_class 对失败进行稳定分类，供调用方决定重试或终止。
+  string error_class = 3;
+  // next_action 指定本次状态推进采用的业务动作。
+  string next_action = 4;
+  // replay_eligible 显式表示 DeliveryFailure 是否满足该条件。
+  bool replay_eligible = 5;
+  // replay_ineligible_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string replay_ineligible_reason = 6;
+  // DeliveryFailure 在以下 detail 分支中选择一种。
+  oneof detail {
+    // recharge 承载 DeliveryFailure 关联的 RechargeDeliveryFailureDetail。
+    RechargeDeliveryFailureDetail recharge = 10;
+    // refund_fulfillment 承载 DeliveryFailure 关联的 RefundDeliveryFailureDetail。
+    RefundDeliveryFailureDetail refund_fulfillment = 11;
+    // file_reference 记录外部系统或关联流程提供的引用标识。
+    FileReferenceDeliveryFailureDetail file_reference = 12;
+    // provider_bill_task 承载 DeliveryFailure 关联的 ProviderBillDeliveryFailureDetail。
+    ProviderBillDeliveryFailureDetail provider_bill_task = 13;
+    // payment_attempt_expiration 承载 DeliveryFailure 关联的 PaymentAttemptExpirationDeliveryFailureDetail。
+    PaymentAttemptExpirationDeliveryFailureDetail payment_attempt_expiration = 14;
+    // subscription_fulfillment 承载 DeliveryFailure 关联的 SubscriptionFulfillmentDeliveryFailureDetail。
+    SubscriptionFulfillmentDeliveryFailureDetail subscription_fulfillment = 15;
+  }
+}
+
+// ListDeliveryFailureResponse 返回 DeliveryFailure 结果集合及分页信息。
+message ListDeliveryFailureResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated DeliveryFailure items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// ReplayDeliveryFailureRequest 定义重放 DeliveryFailure 的幂等管理命令参数。
+message ReplayDeliveryFailureRequest {
+  // event_id 标识关联的 Event。
+  string event_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // app_id 限定 ReplayDeliveryFailure 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 6;
+}
+// 支付单创建字段，不携带资源身份或服务端状态。
+message PaymentPatch {
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 1;
+  // payment_no 是 PaymentPatch 对外关联与审计使用的业务编号。
+  optional string payment_no = 2;
+  // order_no 是 PaymentPatch 对外关联与审计使用的业务编号。
+  optional string order_no = 3;
+  // subject 标识触发或负责 PaymentPatch 对应业务阶段的主体。
+  optional string subject = 4;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 amount = 5;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 6;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 7;
+  // method 指定 PaymentPatch 使用的 PaymentMethod。
+  optional PaymentMethod method = 8;
+  // biz_type 区分 PaymentPatch 的业务类型。
+  optional string biz_type = 9;
+  // biz_id 标识关联的 Biz。
+  optional string biz_id = 10;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 11;
+  // notify_url 指定 PaymentPatch 访问或跳转使用的目标地址。
+  optional string notify_url = 12;
+  // return_url 指定 PaymentPatch 访问或跳转使用的目标地址。
+  optional string return_url = 13;
+  // metadata 携带 PaymentPatch 的扩展元数据，不作为核心业务事实。
+  optional string metadata = 14;
+  // expire_at 指定 PaymentPatch 失效的时间点。
+  optional google.protobuf.Timestamp expire_at = 15;
+  // 创建前选路使用的客户端平台。
+  optional RoutingClientPlatform client_platform = 16;
+  // 公开 Payment Option Code；Consumer Checkout 必须提供。
+  optional string payment_option_code = 17;
+  // 公开商品 Code；仅参与 Option 适用性校验和幂等身份。
+  optional string product_code = 18;
+}
+
+// 创建支付单请求。
+message CreatePaymentRequest {
+  // 数据。
+  PaymentPatch data = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+}
+
+// 查询支付单请求。
+message GetPaymentRequest {
+  // 支付单号。
+  string payment_no = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+}
+
+// 关闭支付单请求。
+message ClosePaymentRequest {
+  // 支付单号。
+  string payment_no = 1;
+  // 标准关闭原因码。
+  PaymentClosureReasonCode reason_code = 2;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 3;
+  // 可信管理网关注入的操作人。
+  uint32 operator_id = 4;
+  // 跨服务请求 ID。
+  string request_id = 5;
+  // 幂等治理操作号。
+  string operation_no = 6;
+  // 关闭备注。
+  string remark = 7;
+}
+
+// PaymentClosureReasonCode 区分调用方可判断的业务原因。
+enum PaymentClosureReasonCode {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PAYMENT_CLOSURE_REASON_CODE_UNSPECIFIED = 0;
+  // PAYMENT_CLOSURE_CUSTOMER_REQUEST 表示流程因 PAYMENT_CLOSURE_CUSTOMER_REQUEST 业务原因触发。
+  PAYMENT_CLOSURE_CUSTOMER_REQUEST = 1;
+  // PAYMENT_CLOSURE_PAYMENT_ABANDONED 表示流程因 PAYMENT_CLOSURE_PAYMENT_ABANDONED 业务原因触发。
+  PAYMENT_CLOSURE_PAYMENT_ABANDONED = 2;
+  // PAYMENT_CLOSURE_DUPLICATE_ORDER 表示流程因 PAYMENT_CLOSURE_DUPLICATE_ORDER 业务原因触发。
+  PAYMENT_CLOSURE_DUPLICATE_ORDER = 3;
+  // PAYMENT_CLOSURE_RISK_CONTROL 表示流程因 PAYMENT_CLOSURE_RISK_CONTROL 业务原因触发。
+  PAYMENT_CLOSURE_RISK_CONTROL = 4;
+  // PAYMENT_CLOSURE_OPERATIONAL_RECOVERY 表示流程因 PAYMENT_CLOSURE_OPERATIONAL_RECOVERY 业务原因触发。
+  PAYMENT_CLOSURE_OPERATIONAL_RECOVERY = 5;
+  // PAYMENT_CLOSURE_OTHER 表示流程因 PAYMENT_CLOSURE_OTHER 业务原因触发。
+  PAYMENT_CLOSURE_OTHER = 6;
+}
+
+// 模拟支付成功请求。
+message SimulatePaymentSuccessRequest {
+  // 支付单号。
+  string payment_no = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+}
+
+// 支付列表响应。
+message ListPaymentResponse {
+  // 列表项。
+  repeated Payment items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 支付事件列表响应。
+message ListPaymentEventResponse {
+  // 列表项。
+  repeated PaymentEvent items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 支付 Outbox 事件列表响应。
+message ListPaymentOutboxEventResponse {
+  // 列表项。
+  repeated PaymentOutboxEvent items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 重放支付 Outbox 事件请求。
+message ReplayPaymentOutboxEventRequest {
+  // 稳定事件 ID。
+  string event_id = 1;
+  // 操作人 ID，由管理网关注入。
+  uint32 operator_id = 2;
+  // 重放原因。
+  string reason = 3;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 4;
+  // 跨服务请求 ID。
+  string request_id = 5;
+  // 幂等治理操作号。
+  string operation_no = 6;
+}

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "payment/v1/financial_operations.proto";
+
+// 支付资金运营服务，管理 Provider 结算导入、差异处置、争议证据和 chargeback 补偿。
+service PaymentFinancialOperationsService {
+  // 校验本地 Payment/Refund 引用，并原子导入不可变 SettlementStatement 及其差异项。
+  rpc ImportSettlementStatement(ImportSettlementStatementRequest) returns (SettlementStatementDetail) {}
+  // 查询 SettlementStatement 列表。
+  rpc ListSettlementStatements(ListSettlementStatementsRequest) returns (ListSettlementStatementsResponse) {}
+  // 查询 SettlementStatement。
+  rpc GetSettlementStatement(GetSettlementStatementRequest) returns (SettlementStatementDetail) {}
+  // 使用 operation_no 审计并幂等推进 SettlementDiscrepancy 的处置状态。
+  rpc MutateSettlementDiscrepancy(MutateSettlementDiscrepancyRequest) returns (SettlementStatementDetail) {}
+  // 按 Provider event_key 幂等记录或推进 ProviderDispute。
+  rpc RecordProviderDispute(RecordProviderDisputeRequest) returns (DisputeDetail) {}
+  // 查询 Dispute 列表。
+  rpc ListDisputes(ListDisputesRequest) returns (ListDisputesResponse) {}
+  // 查询 Dispute。
+  rpc GetDispute(GetDisputeRequest) returns (DisputeDetail) {}
+  // 只读查询 Provider 权威状态，并按状态机推进 Dispute 投影。
+  rpc RefreshDispute(RefreshDisputeRequest) returns (DisputeDetail) {}
+  // 添加 DisputeEvidence。
+  rpc AddDisputeEvidence(AddDisputeEvidenceRequest) returns (DisputeDetail) {}
+  // 移除 DisputeEvidence。
+  rpc RemoveDisputeEvidence(RemoveDisputeEvidenceRequest) returns (DisputeDetail) {}
+  // 向 Provider 提交当前已关联的 DisputeEvidence，并记录可审计尝试。
+  rpc SubmitDisputeEvidence(SubmitDisputeEvidenceRequest) returns (DisputeDetail) {}
+  // 使用 operation_no 幂等补偿 Recharge Wallet 或 Subscription entitlement，并记录成功或失败结果。
+  rpc ApplyChargeback(ApplyChargebackRequest) returns (DisputeDetail) {}
+}

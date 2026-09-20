@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package support.file.v1;
+
+import "common/v1/common.proto";
+import "support/file/v1/types.proto";
+
+// AttachAndPublishRequest 挂接或替换一个版本化业务引用。
+message AttachAndPublishRequest {
+  // 业务引用位置。
+  FileReferenceLocator locator = 1;
+  // 新的当前 File ID。
+  uint64 file_id = 2;
+  // 单调递增引用版本。
+  uint64 reference_version = 3;
+  // 幂等操作号。
+  string operation_no = 4;
+  // 请求链标识。
+  string request_id = 5;
+  // 具体业务 App。
+  common.v1.AppId app_id = 6;
+}
+
+// DetachReferenceRequest 解除一个版本化业务引用。
+message DetachReferenceRequest {
+  // 业务引用位置。
+  FileReferenceLocator locator = 1;
+  // 调用方预期当前绑定的 File ID。
+  uint64 expected_file_id = 2;
+  // 单调递增引用版本。
+  uint64 reference_version = 3;
+  // 幂等操作号。
+  string operation_no = 4;
+  // 请求链标识。
+  string request_id = 5;
+  // 具体业务 App。
+  common.v1.AppId app_id = 6;
+}
+
+// FileReferenceService 维护业务 File ID事实的派生投影。
+service FileReferenceService {
+  // 挂接新 File，并在替换时先发布新 File 后解除旧 File。
+  rpc AttachAndPublish(AttachAndPublishRequest) returns (FileReference);
+  // 解除当前业务引用。
+  rpc DetachReference(DetachReferenceRequest) returns (FileReference);
+}

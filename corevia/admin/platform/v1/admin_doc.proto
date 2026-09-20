@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package admin.platform.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+import "admin/platform/v1/app_selection.proto";
+import "admin/gift/v1/gift_analytics_service.proto";
+import "admin/gift/v1/gift_backpack_service.proto";
+import "admin/gift/v1/gift_catalog_service.proto";
+import "admin/gift/v1/gift_send_service.proto";
+import "admin/gift/v1/gift_settlement_service.proto";
+import "admin/payment/v1/payment_channel_service.proto";
+import "admin/payment/v1/payment_recharge_fulfillment_service.proto";
+import "admin/payment/v1/payment_reconciliation_service.proto";
+import "admin/payment/v1/payment_refund_service.proto";
+import "admin/payment/v1/payment_service.proto";
+import "admin/payment/v1/payment_subscription_service.proto";
+import "admin/wallet/v1/wallet_adjustment_service.proto";
+import "admin/wallet/v1/wallet_recharge_service.proto";
+import "admin/wallet/v1/wallet_reconciliation_service.proto";
+import "admin/wallet/v1/wallet_risk_service.proto";
+import "admin/wallet/v1/wallet_service.proto";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "Corevia Admin API";
+    version: "1.0";
+    description: "Corevia Admin API";
+    contact: {
+      name: "tx7do";
+      url: "https://github.com/tx7do/platform";
+      email: "yanglinbo@gmail.com";
+    }
+    license: {
+      name: "MIT License";
+      url: "https://github.com/tx7do/platform/blob/master/LICENSE";
+    }
+  }
+
+  security: [
+    {
+      additional_properties: [
+        {
+          name: "BearerAuth"; value: {}
+        },
+        {
+          name: "AppScope"; value: {}
+        }
+      ]
+    }
+  ]
+
+  components: {
+    security_schemes: {
+      additional_properties: [
+        {
+          name: "BearerAuth";
+          value: {
+            security_scheme: {
+              type: "http";
+              scheme: "bearer";
+              bearer_format: "JWT";
+              description: "使用登录接口返回的 access token，格式为 Bearer <token>。";
+            }
+          }
+        },
+        {
+          name: "AppScope";
+          value: {
+            security_scheme: {
+              type: "apiKey";
+              in: "header";
+              name: "x-md-app-id";
+              description: "当前业务 App 的具体 ID；未选择 App 时不得调用 App-scoped operation。";
+            }
+          }
+        }
+      ]
+    }
+
+    schemas: {
+      additional_properties: [
+        {
+          name: "KratosStatus";
+          value: {
+            schema: {
+              type: "object"
+              description: "Kratos错误返回"
+              properties: {
+                additional_properties: [
+                  {
+                    name: "code"
+                    value: {
+                      schema: {
+                        type: "number"
+                        format: "int32"
+                        description: "错误码"
+                      }
+                    }
+                  },
+                  {
+                    name: "message"
+                    value: {
+                      schema: {
+                        type: "string"
+                        description: "错误消息"
+                      }
+                    }
+                  },
+                  {
+                    name: "reason"
+                    value: {
+                      schema: {
+                        type: "string"
+                        description: "错误原因"
+                      }
+                    }
+                  },
+                  {
+                    name: "metadata"
+                    value: {
+                      schema: {
+                        type: "object"
+                        description: "元数据"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+
+    responses: {
+      additional_properties: [
+        {
+          name: "default"
+          value: {
+            response: {
+              description: "default kratos response"
+              content: {
+                additional_properties: [
+                  {
+                    name: "application/json"
+                    value: {
+                      schema: {
+                        reference: {
+                          _ref: "#/components/schemas/KratosStatus"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+
+        //        {
+        //          name: "500"
+        //          value: {
+        //            response: {
+        //              description: "default kratos response"
+        //              content: {
+        //                additional_properties: [
+        //                  {
+        //                    name: "application/json"
+        //                    value: {
+        //                      schema: {
+        //                        reference: {
+        //                          _ref: "#/components/schemas/KratosStatus"
+        //                        }
+        //                      }
+        //                    }
+        //                  }
+        //                ]
+        //              }
+        //            }
+        //          }
+        //        }
+      ]
+    }
+  }
+};

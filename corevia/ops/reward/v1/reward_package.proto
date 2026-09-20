@@ -1,0 +1,348 @@
+syntax = "proto3";
+
+package ops.reward.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// Reward Package 管理与解析服务。
+service RewardPackageService {
+  // 查询 RewardPackage 列表。
+  rpc ListRewardPackages(ListRewardPackagesRequest) returns (ListRewardPackagesResponse) {}
+  // 查询 RewardPackage。
+  rpc GetRewardPackage(GetRewardPackageRequest) returns (RewardPackage) {}
+  // 创建 RewardPackage。
+  rpc CreateRewardPackage(CreateRewardPackageRequest) returns (RewardPackage) {}
+  // 创建 RewardPackageRevisionDraft。
+  rpc CreateRewardPackageRevisionDraft(CreateRewardPackageRevisionDraftRequest) returns (RewardPackage) {}
+  // 更新 RewardPackageDraft。
+  rpc UpdateRewardPackageDraft(UpdateRewardPackageDraftRequest) returns (RewardPackage) {}
+  // 预检 RewardPackageDraft。
+  rpc PreflightRewardPackageDraft(PreflightRewardPackageDraftRequest) returns (RewardPackagePreflight) {}
+  // 发布 RewardPackage。
+  rpc PublishRewardPackage(PublishRewardPackageRequest) returns (RewardPackage) {}
+  // 停用 RewardPackage。
+  rpc DisableRewardPackage(DisableRewardPackageRequest) returns (RewardPackage) {}
+  // 废弃 RewardPackageDraft。
+  rpc DiscardRewardPackageDraft(DiscardRewardPackageDraftRequest) returns (RewardPackage) {}
+  // 解析 PublishedRewardPackage。
+  rpc ResolvePublishedRewardPackage(ResolvePublishedRewardPackageRequest) returns (RewardPackageRevision) {}
+}
+
+// RewardPackageStatus 刻画对应资源的生命周期状态。
+enum RewardPackageStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_PACKAGE_STATUS_UNSPECIFIED = 0;
+  // 仍处于草稿阶段，尚未对业务生效。
+  REWARD_PACKAGE_STATUS_DRAFT = 1;
+  // 已经发布并对约定作用域生效。
+  REWARD_PACKAGE_STATUS_PUBLISHED = 2;
+  // REWARD_PACKAGE_STATUS_SUPERSEDED 表示资源处于对应业务阶段。
+  REWARD_PACKAGE_STATUS_SUPERSEDED = 3;
+}
+
+// RewardPackageLifecycleStatus 刻画对应资源的生命周期状态。
+enum RewardPackageLifecycleStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_PACKAGE_LIFECYCLE_STATUS_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  REWARD_PACKAGE_LIFECYCLE_STATUS_ACTIVE = 1;
+  // 当前未生效，不用于新的业务处理。
+  REWARD_PACKAGE_LIFECYCLE_STATUS_DISABLED = 2;
+}
+
+// RewardPackagePreflightStatus 刻画对应资源的生命周期状态。
+enum RewardPackagePreflightStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_PACKAGE_PREFLIGHT_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  REWARD_PACKAGE_PREFLIGHT_STATUS_PENDING = 1;
+  // REWARD_PACKAGE_PREFLIGHT_STATUS_PASSED 表示资源处于对应业务阶段。
+  REWARD_PACKAGE_PREFLIGHT_STATUS_PASSED = 2;
+  // 处理失败；是否可重试由具体失败原因决定。
+  REWARD_PACKAGE_PREFLIGHT_STATUS_FAILED = 3;
+}
+
+// RewardPackagePreflightBlocker 定义对应业务维度允许使用的离散取值。
+enum RewardPackagePreflightBlocker {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_UNSPECIFIED = 0;
+  // REWARD_PACKAGE_PREFLIGHT_BLOCKER_PLATFORM_LIMIT_MISSING 表示 PLATFORM_LIMIT_MISSING 条件阻止当前流程继续。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_PLATFORM_LIMIT_MISSING = 1;
+  // REWARD_PACKAGE_PREFLIGHT_BLOCKER_APP_LIMIT_MISSING 表示 APP_LIMIT_MISSING 条件阻止当前流程继续。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_APP_LIMIT_MISSING = 2;
+  // 当前值未通过校验，调用方应修正后重试。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_APP_LIMIT_INVALID = 3;
+  // 当前值未通过校验，调用方应修正后重试。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_DAILY_LIMIT_INVALID = 4;
+  // 当前值未通过校验，调用方应修正后重试。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_COIN_AMOUNT_INVALID = 5;
+  // 审核已拒绝，不再按原请求继续。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_WALLET_REJECTED = 6;
+  // 当前不可供业务流程选择或使用。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_WALLET_UNAVAILABLE = 7;
+  // 当前没有可展示或可处理的数据。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_ITEMS_EMPTY = 8;
+  // 当前值未通过校验，调用方应修正后重试。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_ITEM_INVALID = 9;
+  // REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_PLATFORM_LIMIT_MISSING 表示 GIFT_PLATFORM_LIMIT_MISSING 条件阻止当前流程继续。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_PLATFORM_LIMIT_MISSING = 10;
+  // REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_APP_LIMIT_MISSING 表示 GIFT_APP_LIMIT_MISSING 条件阻止当前流程继续。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_APP_LIMIT_MISSING = 11;
+  // 当前值未通过校验，调用方应修正后重试。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_APP_LIMIT_INVALID = 12;
+  // 当前值未通过校验，调用方应修正后重试。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_QUANTITY_INVALID = 13;
+  // 审核已拒绝，不再按原请求继续。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_REJECTED = 14;
+  // 当前不可供业务流程选择或使用。
+  REWARD_PACKAGE_PREFLIGHT_BLOCKER_GIFT_UNAVAILABLE = 15;
+}
+
+// CoinRewardItem 表示所属集合中的一个业务条目。
+message CoinRewardItem {
+  // amount 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 amount = 1 [(validate.rules).int64.gt = 0];
+}
+
+// GiftRewardItem 表示所属集合中的一个业务条目。
+message GiftRewardItem {
+  // gift_id 标识关联的 Gift。
+  uint32 gift_id = 1 [(validate.rules).uint32.gt = 0];
+  // quantity 表示 GiftRewardItem 涉及的业务对象数量。
+  uint64 quantity = 2 [(validate.rules).uint64.gt = 0];
+  // Omitted means permanent validity. A value is relative to Reward Acceptance.
+  optional uint64 validity_duration_seconds = 3 [(validate.rules).uint64.gt = 0];
+}
+
+// RewardPackageItemInput 定义对应操作接受的输入值。
+message RewardPackageItemInput {
+  // RewardPackageItemInput 在以下 reward 分支中选择一种。
+  oneof reward {
+    option (validate.required) = true;
+    // coin 承载 RewardPackageItemInput 关联的 CoinRewardItem。
+    CoinRewardItem coin = 1;
+    // gift 承载 RewardPackageItemInput 关联的 GiftRewardItem。
+    GiftRewardItem gift = 2;
+  }
+}
+
+// RewardPackageItem 表示所属集合中的一个业务条目。
+message RewardPackageItem {
+  // id 标识关联的 RewardPackageItem。
+  uint64 id = 1;
+  // item_no 是 RewardPackageItem 对外关联与审计使用的业务编号。
+  uint32 item_no = 2;
+  // RewardPackageItem 在以下 reward 分支中选择一种。
+  oneof reward {
+    option (validate.required) = true;
+    // coin 承载 RewardPackageItem 关联的 CoinRewardItem。
+    CoinRewardItem coin = 3;
+    // gift 承载 RewardPackageItem 关联的 GiftRewardItem。
+    GiftRewardItem gift = 4;
+  }
+}
+
+// RewardPackageRevision 承载 ResolvePublishedRewardPackage 调用的返回结果。
+message RewardPackageRevision {
+  // id 标识关联的 RewardPackageRevision。
+  uint64 id = 1;
+  // revision_no 是 RewardPackageRevision 对外关联与审计使用的业务编号。
+  uint32 revision_no = 2;
+  // status 表示 RewardPackageRevision 当前可观察的生命周期状态。
+  RewardPackageStatus status = 3;
+  // display_name 提供 RewardPackageRevision 面向展示或识别的名称。
+  string display_name = 4;
+  // coin 承载 RewardPackageRevision 关联的 CoinRewardItem。
+  CoinRewardItem coin = 5 [deprecated = true];
+  // daily_grant_limit 限定 RewardPackageRevision 对应操作允许使用的数量或阈值。
+  uint32 daily_grant_limit = 6;
+  // preflight_status 表示 RewardPackageRevision 当前可观察的生命周期状态。
+  RewardPackagePreflightStatus preflight_status = 7;
+  // preflight_blockers 列出 RewardPackageRevision 关联的 RewardPackagePreflightBlocker。
+  repeated RewardPackagePreflightBlocker preflight_blockers = 8;
+  // created_at 记录 RewardPackageRevision 的创建时间。
+  google.protobuf.Timestamp created_at = 9;
+  // updated_at 记录 RewardPackageRevision 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 10;
+  // published_at 记录 RewardPackageRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp published_at = 11;
+  // superseded_at 记录 RewardPackageRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp superseded_at = 12;
+  // items 包含本次返回或处理的业务条目。
+  repeated RewardPackageItem items = 13;
+}
+
+// RewardPackage 表示 Reward Package 的稳定身份与当前 Revision。
+message RewardPackage {
+  // id 标识关联的 RewardPackage。
+  uint64 id = 1;
+  // package_code 提供 RewardPackage 对外稳定使用的业务编码。
+  string package_code = 2;
+  // draft_revision 标识 RewardPackage 所采用的契约或资源版本。
+  RewardPackageRevision draft_revision = 3;
+  // current_published_revision 标识 RewardPackage 所采用的契约或资源版本。
+  RewardPackageRevision current_published_revision = 4;
+  // created_at 记录 RewardPackage 的创建时间。
+  google.protobuf.Timestamp created_at = 5;
+  // updated_at 记录 RewardPackage 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 6;
+  // lifecycle_status 表示 RewardPackage 当前可观察的生命周期状态。
+  RewardPackageLifecycleStatus lifecycle_status = 7;
+  // revision_history 列出 RewardPackage 关联的 RewardPackageRevision。
+  repeated RewardPackageRevision revision_history = 8;
+  // disabled_at 记录 RewardPackage 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp disabled_at = 9;
+}
+
+// RewardPackagePreflight 承载 PreflightRewardPackageDraft 调用的返回结果。
+message RewardPackagePreflight {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1;
+  // status 表示 RewardPackagePreflight 当前可观察的生命周期状态。
+  RewardPackagePreflightStatus status = 2;
+  // blockers 列出 RewardPackagePreflight 关联的 RewardPackagePreflightBlocker。
+  repeated RewardPackagePreflightBlocker blockers = 3;
+  // checked_at 记录 RewardPackagePreflight 对应业务阶段的时间点。
+  google.protobuf.Timestamp checked_at = 4;
+}
+
+// ListRewardPackagesRequest 定义 RewardPackages 的筛选与分页参数。
+message ListRewardPackagesRequest {
+  // app_id 限定 ListRewardPackages 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+}
+
+// ListRewardPackagesResponse 返回 RewardPackages 结果集合及分页信息。
+message ListRewardPackagesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated RewardPackage items = 1;
+}
+
+// GetRewardPackageRequest 标识待查询的 RewardPackage。
+message GetRewardPackageRequest {
+  // app_id 限定 GetRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// CreateRewardPackageRequest 定义创建 RewardPackage 的幂等命令参数。
+message CreateRewardPackageRequest {
+  // app_id 限定 CreateRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_code 提供 CreateRewardPackage 对外稳定使用的业务编码。
+  string package_code = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
+  // display_name 提供 CreateRewardPackage 面向展示或识别的名称。
+  string display_name = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // coin_amount 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 coin_amount = 4 [deprecated = true];
+  // daily_grant_limit 限定 CreateRewardPackage 对应操作允许使用的数量或阈值。
+  uint32 daily_grant_limit = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 7 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 8 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // items 包含本次返回或处理的业务条目。
+  repeated RewardPackageItemInput items = 9 [(validate.rules).repeated.items.message.required = true];
+}
+
+// CreateRewardPackageRevisionDraftRequest 定义创建 RewardPackageRevisionDraft 的幂等命令参数。
+message CreateRewardPackageRevisionDraftRequest {
+  // app_id 限定 CreateRewardPackageRevisionDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// UpdateRewardPackageDraftRequest 定义更新 RewardPackageDraft 的命令参数。
+message UpdateRewardPackageDraftRequest {
+  // app_id 限定 UpdateRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // display_name 提供 UpdateRewardPackageDraft 面向展示或识别的名称。
+  string display_name = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // coin_amount 以 Coin 的最小计量单位表示，不使用浮点数。
+  int64 coin_amount = 4 [deprecated = true];
+  // daily_grant_limit 限定 UpdateRewardPackageDraft 对应操作允许使用的数量或阈值。
+  uint32 daily_grant_limit = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 7 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // items 包含本次返回或处理的业务条目。
+  repeated RewardPackageItemInput items = 8 [(validate.rules).repeated.items.message.required = true];
+}
+
+// PreflightRewardPackageDraftRequest 定义执行 PreflightRewardPackageDraft 的命令参数。
+message PreflightRewardPackageDraftRequest {
+  // app_id 限定 PreflightRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+}
+
+// PublishRewardPackageRequest 定义发布 RewardPackage 的幂等管理命令参数。
+message PublishRewardPackageRequest {
+  // app_id 限定 PublishRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// DisableRewardPackageRequest 定义停用 RewardPackage 的幂等管理命令参数。
+message DisableRewardPackageRequest {
+  // app_id 限定 DisableRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// DiscardRewardPackageDraftRequest 定义执行 DiscardRewardPackageDraft 的幂等管理命令参数。
+message DiscardRewardPackageDraftRequest {
+  // app_id 限定 DiscardRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_id 标识关联的 Package。
+  uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ResolvePublishedRewardPackageRequest 定义处置 PublishedRewardPackage 的命令参数。
+message ResolvePublishedRewardPackageRequest {
+  // app_id 限定 ResolvePublishedRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
+  // package_code 提供 ResolvePublishedRewardPackage 对外稳定使用的业务编码。
+  string package_code = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
+}

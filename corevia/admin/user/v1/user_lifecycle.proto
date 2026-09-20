@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package admin.user.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "user/administration/v1/lifecycle.proto";
+import "validate/validate.proto";
+
+// UserLifecycleAdminService 是 App-scoped 的 User 生命周期观察与受控恢复 BFF。
+service UserLifecycleAdminService {
+  // 查询 LifecycleOperation 列表。
+  rpc ListLifecycleOperations(AdminListLifecycleOperationsRequest) returns (.user.administration.v1.ListLifecycleOperationsResponse) {
+    option (google.api.http) = {get: "/admin/v1/user-lifecycle-operations"};
+  }
+  // 重试 LifecycleOperation。
+  rpc RetryLifecycleOperation(AdminRetryLifecycleOperationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/admin/v1/user-lifecycle-operations/{operation_no}:retry" body: "*"};
+  }
+}
+
+// AdminListLifecycleOperationsRequest 定义 LifecycleOperations 的筛选与分页参数。
+message AdminListLifecycleOperationsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  .common.pagination.v1.PagingRequest paging = 1;
+  // filter 限定本次查询采用的筛选条件。
+  .user.administration.v1.LifecycleOperationFilter filter = 2;
+}
+
+// AdminRetryLifecycleOperationRequest 定义重试 LifecycleOperation 的幂等管理命令参数。
+message AdminRetryLifecycleOperationRequest {
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  // operation_type 区分 RetryLifecycleOperation 的业务类型。
+  .user.administration.v1.LifecycleOperationType operation_type = 2 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3 [(validate.rules).string = {min_len: 1, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(validate.rules).string = {min_len: 1, max_len: 128}];
+}

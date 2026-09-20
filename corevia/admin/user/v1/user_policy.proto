@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package admin.user.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/field_mask.proto";
+import "user/administration/v1/types.proto";
+
+// C 端用户 App 策略管理服务。
+service UserPolicyAdminService {
+  // 查询 Policy。
+  rpc GetPolicy(GetAdminUserPolicyRequest) returns (.user.administration.v1.UserAppPolicy) {
+    option (google.api.http) = {get: "/admin/v1/user-policy"};
+  }
+  // 更新 Policy。
+  rpc UpdatePolicy(UpdateAdminUserPolicyRequest) returns (.user.administration.v1.UserAppPolicy) {
+    option (google.api.http) = {put: "/admin/v1/user-policy" body: "*"};
+  }
+}
+
+// GetAdminUserPolicyRequest 标识待查询的 AdminUserPolicy。
+message GetAdminUserPolicyRequest {}
+// AdminUserPolicyPatch 描述对应能力的配置与约束。
+message AdminUserPolicyPatch {
+  // enabled_credentials 列出 UserPolicyPatch 关联的 CredentialType。
+  repeated .user.administration.v1.CredentialType enabled_credentials = 1;
+  // registration_enabled 显式表示 UserPolicyPatch 是否满足该条件。
+  bool registration_enabled = 2;
+  // auto_registration_enabled 显式表示 UserPolicyPatch 是否满足该条件。
+  bool auto_registration_enabled = 3;
+  // access_token_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 access_token_ttl_seconds = 4;
+  // refresh_token_ttl_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 refresh_token_ttl_seconds = 5;
+  // max_active_sessions 限定 UserPolicyPatch 对应操作允许使用的数量或阈值。
+  uint32 max_active_sessions = 6;
+  // max_login_attempts 记录 UserPolicyPatch 中符合对应条件的数量。
+  uint32 max_login_attempts = 7;
+  // lock_seconds 以秒表示对应流程的持续时间或上限。
+  uint32 lock_seconds = 8;
+  // mfa_required 显式表示 UserPolicyPatch 是否满足该条件。
+  bool mfa_required = 9;
+  // closure_cooling_days 以天为单位指定 Account Closure 的冷静期。
+  uint32 closure_cooling_days = 10;
+  // user_code_change_interval_days 以天为单位限定两次 User Code 变更之间的最短间隔。
+  uint32 user_code_change_interval_days = 11;
+  // password_min_length 限定可接受密码的最小字符数。
+  uint32 password_min_length = 12;
+  // password_max_length 限定可接受密码的最大字符数。
+  uint32 password_max_length = 13;
+  // password_history_count 记录 UserPolicyPatch 中符合对应条件的数量。
+  uint32 password_history_count = 14;
+}
+// UpdateAdminUserPolicyRequest 定义更新 AdminUserPolicy 的命令参数。
+message UpdateAdminUserPolicyRequest {
+  // data 承载 UpdateAdminUserPolicy 对应阶段的结构化业务内容。
+  AdminUserPolicyPatch data = 1;
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4;
+}

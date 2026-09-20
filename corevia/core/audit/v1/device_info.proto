@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package core.audit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+// 设备信息
+message DeviceInfo {
+  // 设备类型枚举
+  enum DeviceType {
+    // 未指定。
+    DEVICE_TYPE_UNSPECIFIED = 0; // 未指定
+
+    // 台式/笔记本。
+    DESKTOP = 1; // 台式/笔记本
+    // 手机。
+    MOBILE = 2; // 手机
+    // 平板。
+    TABLET = 3; // 平板
+    // 机器人/爬虫。
+    BOT = 4; // 机器人/爬虫
+    // 其他。
+    OTHER = 5; // 其他
+  }
+
+  // 客户端ID。
+  optional string client_id = 1 [ (gnostic.openapi.v3.property) = {
+      description: "客户端ID"
+    }]; // 客户端ID
+
+  // 客户端名称。
+  optional string client_name = 2 [ (gnostic.openapi.v3.property) = {
+      description: "客户端名称"
+    }]; // 客户端名称
+
+  // 操作系统名称。
+  optional string os_name = 3 [ (gnostic.openapi.v3.property) = {
+      description: "操作系统名称"
+    }]; // 操作系统名称
+
+  // 操作系统版本。
+  optional string os_version = 4 [ (gnostic.openapi.v3.property) = {
+      description: "操作系统版本"
+    }]; // 操作系统版本
+
+  // 设备唯一标识（避免存明文敏感ID，建议哈希后保存）。
+  optional string device_id = 5 [ (gnostic.openapi.v3.property) = {
+      description: "设备唯一标识（避免存明文敏感ID，建议哈希后保存）"
+    }]; // 设备唯一ID
+
+  // 设备类型。
+  optional DeviceType device_type = 6 [ (gnostic.openapi.v3.property) = {
+      description: "设备类型"
+    }]; // 设备类型
+
+  // 设备厂商。
+  optional string manufacturer = 7 [ (gnostic.openapi.v3.property) = {
+      description: "设备厂商"
+    }]; // 厂商
+
+  // 设备型号。
+  optional string model = 8 [ (gnostic.openapi.v3.property) = {
+      description: "设备型号"
+    }]; // 型号
+
+  // 运行平台/渠道（如 Android/iOS/Windows）。
+  optional string platform = 9 [ (gnostic.openapi.v3.property) = {
+      description: "运行平台/渠道（如 Android/iOS/Windows）"
+    }]; // 平台
+
+  // 系统构建版本。
+  optional string os_build = 10 [ (gnostic.openapi.v3.property) = {
+      description: "系统构建版本"
+    }]; // 系统构建版本
+
+  // 应用名称（若为 Web 可空）。
+  optional string app_name = 11 [ (gnostic.openapi.v3.property) = {
+      description: "应用名称（若为 Web 可空）"
+    }]; // 应用名称
+
+  // 应用版本。
+  optional string app_version = 12 [ (gnostic.openapi.v3.property) = {
+      description: "应用版本"
+    }]; // 应用版本
+
+  // 屏幕宽度（像素）。
+  optional uint32 screen_width = 13 [ (gnostic.openapi.v3.property) = {
+      description: "屏幕宽度（像素）"
+    }]; // 屏幕宽度
+
+  // 屏幕高度（像素）。
+  optional uint32 screen_height = 14 [ (gnostic.openapi.v3.property) = {
+      description: "屏幕高度（像素）"
+    }]; // 屏幕高度
+
+  // 语言/区域设置。
+  optional string locale = 15 [ (gnostic.openapi.v3.property) = {
+      description: "语言/区域设置"
+    }]; // 区域设置
+
+  // 时区。
+  optional string timezone = 16 [ (gnostic.openapi.v3.property) = {
+      description: "时区"
+    }]; // 时区
+
+  // 网络类型（如 WIFI/4G/5G）。
+  optional string network_type = 17 [ (gnostic.openapi.v3.property) = {
+      description: "网络类型（如 WIFI/4G/5G）"
+    }]; // 网络类型
+
+  // 运营商（如适用）。
+  optional string carrier = 18 [ (gnostic.openapi.v3.property) = {
+      description: "运营商（如适用）"
+    }]; // 运营商
+
+  // 设备指纹（建议存哈希）。
+  optional string device_fingerprint = 19 [ (gnostic.openapi.v3.property) = {
+      description: "设备指纹（建议存哈希）"
+    }]; // 设备指纹哈希
+
+  // 浏览器的用户代理信息。
+  optional string user_agent = 100 [ (gnostic.openapi.v3.property) = {
+      description: "浏览器的用户代理信息"
+    }]; // 浏览器的用户代理信息
+
+  // 浏览器名称。
+  optional string browser_name = 101 [ (gnostic.openapi.v3.property) = {
+      description: "浏览器名称"
+    }]; // 浏览器名称
+
+  // 浏览器版本。
+  optional string browser_version = 102 [ (gnostic.openapi.v3.property) = {
+      description: "浏览器版本"
+    }]; // 浏览器版本
+
+  // 浏览器内核/引擎（如 Blink/WebKit）。
+  optional string browser_engine = 103 [ (gnostic.openapi.v3.property) = {
+      description: "浏览器内核/引擎（如 Blink/WebKit）"
+    }]; // 浏览器内核
+
+  // 内核版本。
+  optional string engine_version = 104 [ (gnostic.openapi.v3.property) = {
+      description: "内核版本"
+    }]; // 内核版本
+}

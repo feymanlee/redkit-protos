@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "wallet/v1/adjustment.proto";
+import "wallet/v1/reconciliation.proto";
+
+// 钱包调账服务。
+service WalletAdjustmentService {
+  // 创建人工调账申请。
+  rpc CreateAdjustment(CreateWalletAdjustmentRequest) returns (WalletAdjustment) {}
+  // 审批人工调账申请。
+  rpc ApproveAdjustment(ReviewWalletAdjustmentRequest) returns (WalletAdjustment) {}
+  // 拒绝人工调账申请。
+  rpc RejectAdjustment(ReviewWalletAdjustmentRequest) returns (WalletAdjustment) {}
+  // 申请人撤回待审批申请。
+  rpc WithdrawAdjustment(WithdrawWalletAdjustmentRequest) returns (WalletAdjustment) {}
+  // 查询人工调账申请。
+  rpc ListAdjustments(ListWalletAdjustmentsRequest) returns (ListWalletAdjustmentResponse) {}
+}

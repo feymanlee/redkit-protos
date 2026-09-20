@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package core.operator.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "core/operator/v1/operator.proto";
+
+// 后台人员个人资料服务
+service OperatorProfileService {
+  // 获取后台人员资料
+  rpc GetOperator (google.protobuf.Empty) returns (core.operator.v1.Operator) {}
+
+  // 更新后台人员资料
+  rpc UpdateOperator (core.operator.v1.UpdateOperatorRequest) returns (google.protobuf.Empty) {}
+}

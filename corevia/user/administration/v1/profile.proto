@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package user.administration.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "user/administration/v1/types.proto";
+
+// UserProfileService 管理通用用户资料及其场景化读取模型。
+service UserProfileService {
+  // 查询 CurrentUser。
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (CurrentUser);
+  // 查询 PublicProfile。
+  rpc GetPublicProfile(GetPublicProfileRequest) returns (Profile);
+  // 批量处理 GetPublicProfiles。
+  rpc BatchGetPublicProfiles(BatchGetPublicProfilesRequest) returns (BatchGetPublicProfilesResponse);
+  // 更新 Profile。
+  rpc UpdateProfile(UpdateProfileRequest) returns (google.protobuf.Empty);
+}
+// GetCurrentUserRequest 标识待查询的 CurrentUser。
+message GetCurrentUserRequest {
+  // app_id 限定 GetCurrentUser 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+}
+// GetPublicProfileRequest 标识待查询的 PublicProfile。
+message GetPublicProfileRequest {
+  // app_id 限定 GetPublicProfile 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // GetPublicProfileRequest 使用以下一种查询表达式。
+  oneof query {
+    // user_id 标识当前 App 内关联的 User。
+    uint64 user_id = 2;
+    // user_code 提供 GetPublicProfile 对外稳定使用的业务编码。
+    string user_code = 3;
+  }
+}
+// BatchGetPublicProfilesRequest 定义执行 BatchGetPublicProfiles 的命令参数。
+message BatchGetPublicProfilesRequest {
+  // app_id 限定 BatchGetPublicProfiles 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_ids 列出本次请求关联的 User 标识。
+  repeated uint64 user_ids = 2;
+}
+// BatchGetPublicProfilesResponse 返回 Batch Get Public Profiles 的逐项执行结果。
+message BatchGetPublicProfilesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated Profile items = 1;
+}
+// ProfilePatch 承载 User Profile 的局部更新；presence 表示是否修改。
+message ProfilePatch {
+  // nickname 承载用户资料或其脱敏展示值，按个人信息保护。
+  string nickname = 1;
+  // avatar_file_id 标识关联的 AvatarFile。
+  uint64 avatar_file_id = 2;
+  // gender 承载用户资料或其脱敏展示值，按个人信息保护。
+  string gender = 3;
+  // region 指定号码、服务或业务规则采用的地区。
+  string region = 4;
+  // description 提供 ProfilePatch 的补充说明。
+  string description = 5;
+}
+// UpdateProfileRequest 定义更新 Profile 的命令参数。
+message UpdateProfileRequest {
+  // app_id 限定 UpdateProfile 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // data 承载 UpdateProfile 对应阶段的结构化业务内容。
+  ProfilePatch data = 3;
+  // update_mask 指定本次请求允许局部更新的字段路径。
+  google.protobuf.FieldMask update_mask = 4;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5;
+}

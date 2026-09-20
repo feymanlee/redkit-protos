@@ -1,0 +1,926 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "payment/v1/payment_contract.proto";
+import "payment/v1/payment_types.proto";
+import "payment/v1/refund.proto";
+
+// 订阅计划的计费模式。
+enum SubscriptionMode {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_MODE_UNSPECIFIED = 0;
+  // SUBSCRIPTION_MODE_FIXED_TERM 选择 FIXED_TERM 作为对应业务维度的有效取值。
+  SUBSCRIPTION_MODE_FIXED_TERM = 1;
+  // SUBSCRIPTION_MODE_AUTO_RENEWING 选择 AUTO_RENEWING 作为对应业务维度的有效取值。
+  SUBSCRIPTION_MODE_AUTO_RENEWING = 2;
+}
+
+// 不可变订阅计划版本的发布状态。
+enum SubscriptionPlanRevisionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_PLAN_REVISION_STATUS_UNSPECIFIED = 0;
+  // 仍处于草稿阶段，尚未对业务生效。
+  SUBSCRIPTION_PLAN_REVISION_STATUS_DRAFT = 1;
+  // 已经发布并对约定作用域生效。
+  SUBSCRIPTION_PLAN_REVISION_STATUS_PUBLISHED = 2;
+  // 已退出使用，仅保留历史查询能力。
+  SUBSCRIPTION_PLAN_REVISION_STATUS_RETIRED = 3;
+}
+
+// 人工订阅权益处置类型。
+enum SubscriptionAdjustmentType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_ADJUSTMENT_TYPE_UNSPECIFIED = 0;
+  // SUBSCRIPTION_ADJUSTMENT_TYPE_GRANT 选择 GRANT 业务类型。
+  SUBSCRIPTION_ADJUSTMENT_TYPE_GRANT = 1;
+  // SUBSCRIPTION_ADJUSTMENT_TYPE_EXTEND 选择 EXTEND 业务类型。
+  SUBSCRIPTION_ADJUSTMENT_TYPE_EXTEND = 2;
+  // SUBSCRIPTION_ADJUSTMENT_TYPE_REVOKE 选择 REVOKE 业务类型。
+  SUBSCRIPTION_ADJUSTMENT_TYPE_REVOKE = 3;
+}
+
+// 人工订阅权益处置状态。
+enum SubscriptionAdjustmentStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_ADJUSTMENT_STATUS_UNSPECIFIED = 0;
+  // SUBSCRIPTION_ADJUSTMENT_STATUS_PENDING_REVIEW 表示资源处于对应业务阶段。
+  SUBSCRIPTION_ADJUSTMENT_STATUS_PENDING_REVIEW = 1;
+  // 审核已通过，可以继续后续流程。
+  SUBSCRIPTION_ADJUSTMENT_STATUS_APPROVED = 2;
+  // 审核已拒绝，不再按原请求继续。
+  SUBSCRIPTION_ADJUSTMENT_STATUS_REJECTED = 3;
+  // 变更已经应用并形成可查询结果。
+  SUBSCRIPTION_ADJUSTMENT_STATUS_APPLIED = 4;
+}
+
+// 人工处置风险结论。
+enum SubscriptionAdjustmentRiskResult {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_ADJUSTMENT_RISK_RESULT_UNSPECIFIED = 0;
+  // 审核已通过，可以继续后续流程。
+  SUBSCRIPTION_ADJUSTMENT_RISK_RESULT_AUTO_APPROVED = 1;
+  // 需要人工审核、补充材料或执行明确处置后才能继续。
+  SUBSCRIPTION_ADJUSTMENT_RISK_RESULT_REVIEW_REQUIRED = 2;
+}
+
+// 人工处置命中的风险原因。
+enum SubscriptionAdjustmentRiskHit {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_ADJUSTMENT_RISK_HIT_UNSPECIFIED = 0;
+  // SUBSCRIPTION_ADJUSTMENT_RISK_HIT_RULE_NOT_CONFIGURED 表示风险规则命中 RULE_NOT_CONFIGURED 条件。
+  SUBSCRIPTION_ADJUSTMENT_RISK_HIT_RULE_NOT_CONFIGURED = 1;
+  // SUBSCRIPTION_ADJUSTMENT_RISK_HIT_VALUE_THRESHOLD 表示风险规则命中 VALUE_THRESHOLD 条件。
+  SUBSCRIPTION_ADJUSTMENT_RISK_HIT_VALUE_THRESHOLD = 2;
+  // SUBSCRIPTION_ADJUSTMENT_RISK_HIT_DURATION_THRESHOLD 表示风险规则命中 DURATION_THRESHOLD 条件。
+  SUBSCRIPTION_ADJUSTMENT_RISK_HIT_DURATION_THRESHOLD = 3;
+  // SUBSCRIPTION_ADJUSTMENT_RISK_HIT_PERMANENT_ENTITLEMENT 表示风险规则命中 PERMANENT_ENTITLEMENT 条件。
+  SUBSCRIPTION_ADJUSTMENT_RISK_HIT_PERMANENT_ENTITLEMENT = 4;
+  // SUBSCRIPTION_ADJUSTMENT_RISK_HIT_PAID_PERIOD_REVOKE 表示风险规则命中 PAID_PERIOD_REVOKE 条件。
+  SUBSCRIPTION_ADJUSTMENT_RISK_HIT_PAID_PERIOD_REVOKE = 5;
+}
+
+// 标准化人工权益处置原因。
+enum SubscriptionAdjustmentReasonCode {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SUBSCRIPTION_ADJUSTMENT_REASON_CODE_UNSPECIFIED = 0;
+  // SUBSCRIPTION_ADJUSTMENT_REASON_CODE_CUSTOMER_SUPPORT 表示流程因 CUSTOMER_SUPPORT 业务原因触发。
+  SUBSCRIPTION_ADJUSTMENT_REASON_CODE_CUSTOMER_SUPPORT = 1;
+  // SUBSCRIPTION_ADJUSTMENT_REASON_CODE_SERVICE_RECOVERY 表示流程因 SERVICE_RECOVERY 业务原因触发。
+  SUBSCRIPTION_ADJUSTMENT_REASON_CODE_SERVICE_RECOVERY = 2;
+  // SUBSCRIPTION_ADJUSTMENT_REASON_CODE_PROMOTION 表示流程因 PROMOTION 业务原因触发。
+  SUBSCRIPTION_ADJUSTMENT_REASON_CODE_PROMOTION = 3;
+  // SUBSCRIPTION_ADJUSTMENT_REASON_CODE_DATA_CORRECTION 表示流程因 DATA_CORRECTION 业务原因触发。
+  SUBSCRIPTION_ADJUSTMENT_REASON_CODE_DATA_CORRECTION = 4;
+  // SUBSCRIPTION_ADJUSTMENT_REASON_CODE_FRAUD_RESPONSE 表示流程因 FRAUD_RESPONSE 业务原因触发。
+  SUBSCRIPTION_ADJUSTMENT_REASON_CODE_FRAUD_RESPONSE = 5;
+  // SUBSCRIPTION_ADJUSTMENT_REASON_CODE_OTHER 表示流程因 OTHER 业务原因触发。
+  SUBSCRIPTION_ADJUSTMENT_REASON_CODE_OTHER = 6;
+}
+
+// Provider 自动续订协议的标准化当前状态。
+enum ProviderSubscriptionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PROVIDER_SUBSCRIPTION_STATUS_UNSPECIFIED = 0;
+  // 当前已生效并可用于业务处理。
+  PROVIDER_SUBSCRIPTION_STATUS_ACTIVE = 1;
+  // PROVIDER_SUBSCRIPTION_STATUS_GRACE_PERIOD 表示资源处于对应业务阶段。
+  PROVIDER_SUBSCRIPTION_STATUS_GRACE_PERIOD = 2;
+  // PROVIDER_SUBSCRIPTION_STATUS_BILLING_RETRY 表示资源处于对应业务阶段。
+  PROVIDER_SUBSCRIPTION_STATUS_BILLING_RETRY = 3;
+  // 处理已取消，不再继续推进。
+  PROVIDER_SUBSCRIPTION_STATUS_CANCELLED = 4;
+  // 有效期已结束，不再接受后续使用。
+  PROVIDER_SUBSCRIPTION_STATUS_EXPIRED = 5;
+  // 相关授权或凭据已撤销，不能继续使用。
+  PROVIDER_SUBSCRIPTION_STATUS_REVOKED = 6;
+}
+
+// Provider 周期的财务/权益处理状态。
+enum ProviderSubscriptionPeriodStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PROVIDER_SUBSCRIPTION_PERIOD_STATUS_UNSPECIFIED = 0;
+  // PROVIDER_SUBSCRIPTION_PERIOD_STATUS_PAID 表示资源处于对应业务阶段。
+  PROVIDER_SUBSCRIPTION_PERIOD_STATUS_PAID = 1;
+  // 相关金额已经全部退款。
+  PROVIDER_SUBSCRIPTION_PERIOD_STATUS_REFUNDED = 2;
+  // 相关授权或凭据已撤销，不能继续使用。
+  PROVIDER_SUBSCRIPTION_PERIOD_STATUS_REVOKED = 3;
+}
+
+// Provider 状态事实的来源。
+enum ProviderSubscriptionEventSource {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  PROVIDER_SUBSCRIPTION_EVENT_SOURCE_UNSPECIFIED = 0;
+  // PROVIDER_SUBSCRIPTION_EVENT_SOURCE_PURCHASE 表示业务事实或请求来自 PURCHASE 来源。
+  PROVIDER_SUBSCRIPTION_EVENT_SOURCE_PURCHASE = 1;
+  // PROVIDER_SUBSCRIPTION_EVENT_SOURCE_CALLBACK 表示业务事实或请求来自 CALLBACK 来源。
+  PROVIDER_SUBSCRIPTION_EVENT_SOURCE_CALLBACK = 2;
+  // PROVIDER_SUBSCRIPTION_EVENT_SOURCE_REFRESH 表示业务事实或请求来自 REFRESH 来源。
+  PROVIDER_SUBSCRIPTION_EVENT_SOURCE_REFRESH = 3;
+  // PROVIDER_SUBSCRIPTION_EVENT_SOURCE_CANCELLATION 表示业务事实或请求来自 CANCELLATION 来源。
+  PROVIDER_SUBSCRIPTION_EVENT_SOURCE_CANCELLATION = 4;
+}
+
+// 一个 Provider 商品与 Plan Revision 的不可变映射。
+message SubscriptionProviderSku {
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 1;
+  // sku 是外部商店或商品目录使用的稳定商品编码。
+  string sku = 2;
+  // Apple/Google Store 商品所属的 Bundle ID 或 package name；非 Store Provider 必须为空。
+  string store_app_id = 3;
+}
+
+// 订阅计划。
+message SubscriptionPlan {
+  // 计划 ID。
+  optional uint32 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 计划名称。
+  optional string name = 3;
+  // 计划编码。
+  optional string code = 4;
+  // 价格。
+  optional int64 price = 5;
+  // 币种代码。
+  optional string currency = 6;
+  // 有效期天数。
+  optional uint32 duration_days = 7;
+  // 是否启用。
+  optional bool enabled = 8;
+  // 备注。
+  optional string remark = 9;
+  // 当前发布版本；不存在已发布版本时为空。
+  optional uint64 active_revision_id = 10;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 订阅计划的一次不可变交易版本。
+message SubscriptionPlanRevision {
+  // id 标识关联的 SubscriptionPlanRevision。
+  optional uint64 id = 1;
+  // app_id 限定 SubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // plan_id 标识关联的 Plan。
+  optional uint32 plan_id = 3;
+  // revision_no 是 SubscriptionPlanRevision 对外关联与审计使用的业务编号。
+  optional uint32 revision_no = 4;
+  // status 表示 SubscriptionPlanRevision 当前可观察的生命周期状态。
+  optional SubscriptionPlanRevisionStatus status = 5;
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 price = 6;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 7;
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional uint32 duration_days = 8;
+  // mode 指定 SubscriptionPlanRevision 使用的 SubscriptionMode。
+  optional SubscriptionMode mode = 9;
+  // provider_skus 列出 SubscriptionPlanRevision 关联的 SubscriptionProviderSku。
+  repeated SubscriptionProviderSku provider_skus = 10;
+  // created_by_operator_id 标识关联的后台 Operator。
+  optional uint32 created_by_operator_id = 11;
+  // published_by_operator_id 标识关联的后台 Operator。
+  optional uint32 published_by_operator_id = 12;
+  // published_at 记录 SubscriptionPlanRevision 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp published_at = 13;
+  // created_at 记录 SubscriptionPlanRevision 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// 用户订阅。
+message UserSubscription {
+  // 订阅 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 计划 ID。
+  optional uint32 plan_id = 4;
+  // 业务订单号。
+  optional string order_no = 5;
+  // 生效时间。
+  optional google.protobuf.Timestamp started_at = 6;
+  // 过期时间。
+  optional google.protobuf.Timestamp expired_at = 7;
+  // 是否有效。
+  optional bool active = 8;
+  // 当前权益绑定的不可变 Plan Revision。
+  optional uint64 plan_revision_id = 9;
+  // 当前权益对应的 Provider Subscription；固定期限权益为空。
+  optional uint64 provider_subscription_id = 10;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 用户订阅明细。
+message UserSubscriptionDetail {
+  // 明细 ID。
+  optional uint64 id = 1;
+  // 应用 ID。
+  optional uint32 app_id = 2;
+  // 用户 ID。
+  optional uint64 user_id = 3;
+  // 用户订阅 ID。
+  optional uint64 subscription_id = 4;
+  // 计划 ID。
+  optional uint32 plan_id = 5;
+  // 计划名称快照。
+  optional string plan_name = 6;
+  // 计划编码快照。
+  optional string plan_code = 7;
+  // 价格快照，分。
+  optional int64 price = 8;
+  // 币种代码快照。
+  optional string currency = 9;
+  // 有效期天数快照。
+  optional uint32 duration_days = 10;
+  // 明细类型：GRANT、RENEWAL、REFUND。
+  optional string detail_type = 11;
+  // 明细状态。
+  optional string status = 12;
+  // 业务订单号。
+  optional string order_no = 13;
+  // 支付单号。
+  optional string payment_no = 14;
+  // 退款单号。
+  optional string refund_no = 15;
+  // 周期开始时间。
+  optional google.protobuf.Timestamp period_started_at = 16;
+  // 周期结束时间。
+  optional google.protobuf.Timestamp period_expired_at = 17;
+  // 支付时间。
+  optional google.protobuf.Timestamp paid_at = 18;
+  // 退款时间。
+  optional google.protobuf.Timestamp refunded_at = 19;
+  // 支付渠道。
+  optional PaymentProvider provider = 20;
+  // 支付方式。
+  optional PaymentMethod method = 21;
+  // 支付金额，分。
+  optional int64 amount = 22;
+  // 退款金额，分。
+  optional int64 refund_amount = 23;
+  // 扩展元数据，JSON 字符串。
+  optional string metadata = 24;
+  // 本次权益事实绑定的不可变 Plan Revision。
+  optional uint64 plan_revision_id = 25;
+  // 人工处置 operation no；支付驱动的明细为空。
+  optional string operation_no = 26;
+  // 人工处置 Operator；支付驱动的明细为空。
+  optional uint32 operator_id = 27;
+  // 标准化人工处置原因。
+  optional SubscriptionAdjustmentReasonCode reason_code = 28;
+  // 人工处置备注。
+  optional string note = 29;
+  // 本次权益事实对应的 Provider Subscription。
+  optional uint64 provider_subscription_id = 30;
+  // 本次权益事实对应的唯一 Provider 周期。
+  optional uint64 provider_subscription_period_id = 31;
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+// 创建订阅请求。
+message CreateSubscriptionRequest {
+  // 应用 ID。
+  common.v1.AppId app_id = 1;
+  // 用户 ID。
+  uint64 user_id = 2;
+  // 计划 ID。
+  uint32 plan_id = 3;
+  // 业务订单号。
+  optional string order_no = 4;
+}
+
+// 用户订阅列表响应。
+message ListUserSubscriptionResponse {
+  // 列表项。
+  repeated UserSubscription items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 查询用户订阅详情请求。
+message GetUserSubscriptionDetailRequest {
+  // 用户订阅 ID。
+  uint64 id = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+}
+
+// 用户订阅详情响应。
+message GetUserSubscriptionDetailResponse {
+  // 当前订阅权益。
+  UserSubscription subscription = 1;
+  // 当前订阅计划。
+  SubscriptionPlan plan = 2;
+  // 订阅历史明细。
+  repeated UserSubscriptionDetail details = 3;
+  // 关联支付单。
+  repeated Payment payments = 4;
+  // 关联退款单。
+  repeated Refund refunds = 5;
+  // 关联支付事件。
+  repeated PaymentEvent events = 6;
+  // 当前权益绑定的不可变计划版本。
+  SubscriptionPlanRevision plan_revision = 7;
+  // 关联人工权益处置。
+  repeated SubscriptionAdjustment adjustments = 8;
+  // 当前权益关联的 Provider 自动续订协议。
+  repeated ProviderSubscription provider_subscriptions = 9;
+}
+
+// Provider 拥有的自动续订协议当前快照。
+message ProviderSubscription {
+  // id 标识关联的 ProviderSubscription。
+  optional uint64 id = 1;
+  // app_id 限定 ProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 3;
+  // original_user_id 标识当前 App 内关联的 User。
+  optional uint64 original_user_id = 4;
+  // user_subscription_id 标识关联的 UserSubscription。
+  optional uint64 user_subscription_id = 5;
+  // plan_id 标识关联的 Plan。
+  optional uint32 plan_id = 6;
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 7;
+  // channel_id 标识关联的 Channel。
+  optional uint32 channel_id = 8;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  optional uint64 channel_revision_id = 9;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 10;
+  // provider_subscription_id 标识关联的 ProviderSubscription。
+  optional string provider_subscription_id = 11;
+  // original_transaction_id 标识关联的 OriginalTransaction。
+  optional string original_transaction_id = 12;
+  // product_sku 是外部商店或商品目录使用的稳定商品编码。
+  optional string product_sku = 13;
+  // status 表示 ProviderSubscription 当前可观察的生命周期状态。
+  optional ProviderSubscriptionStatus status = 14;
+  // current_period_started_at 指定 ProviderSubscription 生效或查询区间的起始时间。
+  optional google.protobuf.Timestamp current_period_started_at = 15;
+  // current_period_expired_at 指定 ProviderSubscription 失效的时间点。
+  optional google.protobuf.Timestamp current_period_expired_at = 16;
+  // auto_renew_enabled 显式表示 ProviderSubscription 是否满足该条件。
+  optional bool auto_renew_enabled = 17;
+  // cancel_at_period_end 显式表示 ProviderSubscription 是否满足该条件。
+  optional bool cancel_at_period_end = 18;
+  // grace_until 指定 ProviderSubscription 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp grace_until = 19;
+  // billing_retry_until 指定 ProviderSubscription 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp billing_retry_until = 20;
+  // cancelled_at 记录 ProviderSubscription 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp cancelled_at = 21;
+  // terminal_at 记录 ProviderSubscription 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp terminal_at = 22;
+  // last_provider_event_at 记录 ProviderSubscription 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp last_provider_event_at = 23;
+  // last_provider_event_id 标识关联的 LastProviderEvent。
+  optional string last_provider_event_id = 24;
+  // created_at 记录 ProviderSubscription 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 ProviderSubscription 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 一个 Provider 已付周期，只能形成一个 Payment 和一条 Subscription Detail。
+message ProviderSubscriptionPeriod {
+  // id 标识关联的 ProviderSubscriptionPeriod。
+  optional uint64 id = 1;
+  // app_id 限定 ProviderSubscriptionPeriod 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // provider_subscription_record_id 标识关联的 ProviderSubscriptionRecord。
+  optional uint64 provider_subscription_record_id = 3;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 4;
+  // provider_transaction_id 标识关联的 ProviderTransaction。
+  optional string provider_transaction_id = 5;
+  // product_sku 是外部商店或商品目录使用的稳定商品编码。
+  optional string product_sku = 6;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 7;
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 8;
+  // source_event_id 标识关联的 SourceEvent。
+  optional uint64 source_event_id = 9;
+  // period_started_at 指定 ProviderSubscriptionPeriod 生效或查询区间的起始时间。
+  optional google.protobuf.Timestamp period_started_at = 10;
+  // period_expired_at 指定 ProviderSubscriptionPeriod 失效的时间点。
+  optional google.protobuf.Timestamp period_expired_at = 11;
+  // status 表示 ProviderSubscriptionPeriod 当前可观察的生命周期状态。
+  optional ProviderSubscriptionPeriodStatus status = 12;
+  // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 amount = 13;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 14;
+  // payment_id 标识关联的 Payment。
+  optional uint64 payment_id = 15;
+  // payment_no 是 ProviderSubscriptionPeriod 对外关联与审计使用的业务编号。
+  optional string payment_no = 16;
+  // subscription_detail_id 标识关联的 SubscriptionDetail。
+  optional uint64 subscription_detail_id = 17;
+  // created_at 记录 ProviderSubscriptionPeriod 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 ProviderSubscriptionPeriod 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// 一条不可变 Provider Subscription 状态事实。
+message ProviderSubscriptionEvent {
+  // id 标识关联的 ProviderSubscriptionEvent。
+  optional uint64 id = 1;
+  // app_id 限定 ProviderSubscriptionEvent 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // provider_subscription_record_id 标识关联的 ProviderSubscriptionRecord。
+  optional uint64 provider_subscription_record_id = 3;
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 4;
+  // provider_event_id 标识关联的 ProviderEvent。
+  optional string provider_event_id = 5;
+  // event_type 区分 ProviderSubscriptionEvent 的业务类型。
+  optional string event_type = 6;
+  // normalized_status 表示 ProviderSubscriptionEvent 当前可观察的生命周期状态。
+  optional ProviderSubscriptionStatus normalized_status = 7;
+  // occurred_at 记录 ProviderSubscriptionEvent 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp occurred_at = 8;
+  // period_started_at 指定 ProviderSubscriptionEvent 生效或查询区间的起始时间。
+  optional google.protobuf.Timestamp period_started_at = 9;
+  // period_expired_at 指定 ProviderSubscriptionEvent 失效的时间点。
+  optional google.protobuf.Timestamp period_expired_at = 10;
+  // auto_renew_enabled 显式表示 ProviderSubscriptionEvent 是否满足该条件。
+  optional bool auto_renew_enabled = 11;
+  // grace_until 指定 ProviderSubscriptionEvent 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp grace_until = 12;
+  // billing_retry_until 指定 ProviderSubscriptionEvent 查询或生效区间的结束边界。
+  optional google.protobuf.Timestamp billing_retry_until = 13;
+  // source 承载 ProviderSubscriptionEvent 关联的 ProviderSubscriptionEventSource。
+  optional ProviderSubscriptionEventSource source = 14;
+  // source_callback_id 标识关联的 SourceCallback。
+  optional uint64 source_callback_id = 15;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  optional uint64 channel_revision_id = 16;
+  // process_outcome 记录 ProviderSubscriptionEvent 对应审核或执行流程的结论。
+  optional string process_outcome = 17;
+  // created_at 记录 ProviderSubscriptionEvent 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+}
+
+// ProviderSubscriptionDetail 表示面向查询的只读投影。
+message ProviderSubscriptionDetail {
+  // subscription 承载 ProviderSubscriptionDetail 关联的 ProviderSubscription。
+  ProviderSubscription subscription = 1;
+  // plan 承载 ProviderSubscriptionDetail 关联的 SubscriptionPlan。
+  SubscriptionPlan plan = 2;
+  // plan_revision 标识 ProviderSubscriptionDetail 所采用的契约或资源版本。
+  SubscriptionPlanRevision plan_revision = 3;
+  // periods 列出 ProviderSubscriptionDetail 关联的 ProviderSubscriptionPeriod。
+  repeated ProviderSubscriptionPeriod periods = 4;
+  // events 列出 ProviderSubscriptionDetail 关联的 ProviderSubscriptionEvent。
+  repeated ProviderSubscriptionEvent events = 5;
+  // payments 列出 ProviderSubscriptionDetail 关联的 Payment。
+  repeated Payment payments = 6;
+}
+
+// ListProviderSubscriptionsRequest 定义 ProviderSubscriptions 的筛选与分页参数。
+message ListProviderSubscriptionsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // providers 列出 ListProviderSubscriptions 关联的 PaymentProvider。
+  repeated PaymentProvider providers = 2;
+  // statuses 列出 ListProviderSubscriptions 关联的 ProviderSubscriptionStatus。
+  repeated ProviderSubscriptionStatus statuses = 3;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 4;
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 5;
+  // app_id 限定 ListProviderSubscriptions 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 6;
+}
+
+// ListProviderSubscriptionsResponse 返回 ProviderSubscriptions 结果集合及分页信息。
+message ListProviderSubscriptionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated ProviderSubscription items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// GetProviderSubscriptionDetailRequest 标识待查询的 ProviderSubscriptionDetail。
+message GetProviderSubscriptionDetailRequest {
+  // id 标识关联的 GetProviderSubscriptionDetail。
+  uint64 id = 1;
+  // app_id 限定 GetProviderSubscriptionDetail 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// VerifyProviderSubscriptionPurchaseRequest 定义校验 ProviderSubscriptionPurchase 的幂等管理命令参数。
+message VerifyProviderSubscriptionPurchaseRequest {
+  // provider 标识本次能力使用的外部 Provider。
+  PaymentProvider provider = 1;
+  // user_id 标识当前 App 内关联的 User。
+  uint64 user_id = 2;
+  // channel_revision_id 标识关联的 ChannelRevision。
+  uint64 channel_revision_id = 3;
+  // signed_purchase 承载 Store 签名的购买材料，属于敏感校验数据。
+  string signed_purchase = 4;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5;
+  // app_id 限定 VerifyProviderSubscriptionPurchase 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 6;
+}
+
+// ProcessProviderSubscriptionCallbackRequest 定义执行 ProcessProviderSubscriptionCallback 的命令参数。
+message ProcessProviderSubscriptionCallbackRequest {
+  // callback_id 标识关联的 Callback。
+  uint64 callback_id = 1;
+  // app_id 限定 ProcessProviderSubscriptionCallback 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// CancelProviderSubscriptionRequest 定义取消 ProviderSubscription 的幂等管理命令参数。
+message CancelProviderSubscriptionRequest {
+  // id 标识关联的 CancelProviderSubscription。
+  uint64 id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4;
+  // app_id 限定 CancelProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 5;
+}
+
+// RefreshProviderSubscriptionRequest 定义执行 RefreshProviderSubscription 的幂等管理命令参数。
+message RefreshProviderSubscriptionRequest {
+  // id 标识关联的 RefreshProviderSubscription。
+  uint64 id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4;
+  // app_id 限定 RefreshProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 5;
+}
+
+// ProviderSubscriptionAnalyticsGroup 按 Provider 与 Plan Revision 汇总 Subscription 指标。
+message ProviderSubscriptionAnalyticsGroup {
+  // provider 标识本次能力使用的外部 Provider。
+  optional PaymentProvider provider = 1;
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 2;
+  // renewal_succeeded 统计观察窗口内续订成功的 Subscription 数量。
+  optional uint64 renewal_succeeded = 3;
+  // cancelled 统计观察窗口内已经取消的 Subscription 数量。
+  optional uint64 cancelled = 4;
+  // grace_recovered 统计观察窗口内从 Grace Period 恢复的 Subscription 数量。
+  optional uint64 grace_recovered = 5;
+  // churned 统计观察窗口内已经流失的 Subscription 数量。
+  optional uint64 churned = 6;
+}
+
+// GetProviderSubscriptionAnalyticsRequest 标识待查询的 ProviderSubscriptionAnalytics。
+message GetProviderSubscriptionAnalyticsRequest {
+  // started_at 指定 GetProviderSubscriptionAnalytics 生效或查询区间的起始时间。
+  google.protobuf.Timestamp started_at = 1;
+  // ended_at 指定 GetProviderSubscriptionAnalytics 生效或查询区间的结束时间。
+  google.protobuf.Timestamp ended_at = 2;
+  // app_id 限定 GetProviderSubscriptionAnalytics 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 3;
+}
+
+// GetProviderSubscriptionAnalyticsResponse 承载 GetProviderSubscriptionAnalytics 的返回结果。
+message GetProviderSubscriptionAnalyticsResponse {
+  // groups 列出 GetProviderSubscriptionAnalytics 关联的 ProviderSubscriptionAnalyticsGroup。
+  repeated ProviderSubscriptionAnalyticsGroup groups = 1;
+}
+
+// 订阅计划列表响应。
+message ListSubscriptionPlanResponse {
+  // 列表项。
+  repeated SubscriptionPlan items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 订阅计划可编辑字段，不携带资源身份。
+message SubscriptionPlanPatch {
+  // name 提供 SubscriptionPlanPatch 面向展示或识别的名称。
+  optional string name = 1;
+  // code 提供 SubscriptionPlanPatch 对外稳定使用的业务编码。
+  optional string code = 2;
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  optional int64 price = 3;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 4;
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional uint32 duration_days = 5;
+  // enabled 显式表示 SubscriptionPlanPatch 是否满足该条件。
+  optional bool enabled = 6;
+  // remark 提供 SubscriptionPlanPatch 的补充说明。
+  optional string remark = 7;
+}
+
+// Subscription Plan Revision 的不可变交易条件。
+message SubscriptionPlanRevisionDraft {
+  // price 以对应 currency 的最小货币单位表示，不使用浮点数。
+  int64 price = 1;
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 2;
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  uint32 duration_days = 3;
+  // mode 指定 SubscriptionPlanRevisionDraft 使用的 SubscriptionMode。
+  SubscriptionMode mode = 4;
+  // provider_skus 列出 SubscriptionPlanRevisionDraft 关联的 SubscriptionProviderSku。
+  repeated SubscriptionProviderSku provider_skus = 5;
+}
+
+// 创建订阅计划请求。
+message CreateSubscriptionPlanRequest {
+  // 数据。
+  SubscriptionPlanPatch data = 1;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 2;
+  // 创建稳定 Plan 时同时创建的初始草稿版本。
+  SubscriptionPlanRevisionDraft initial_revision = 3;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 4;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  optional string reason = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 7;
+}
+
+// ListSubscriptionPlanRevisionsRequest 定义 SubscriptionPlanRevisions 的筛选与分页参数。
+message ListSubscriptionPlanRevisionsRequest {
+  // plan_id 标识关联的 Plan。
+  uint32 plan_id = 1;
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 2;
+  // app_id 限定 ListSubscriptionPlanRevisions 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 3;
+}
+
+// ListSubscriptionPlanRevisionsResponse 返回 SubscriptionPlanRevisions 结果集合及分页信息。
+message ListSubscriptionPlanRevisionsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated SubscriptionPlanRevision items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// CreateSubscriptionPlanRevisionRequest 定义创建 SubscriptionPlanRevision 的幂等命令参数。
+message CreateSubscriptionPlanRevisionRequest {
+  // plan_id 标识关联的 Plan。
+  uint32 plan_id = 1;
+  // draft 承载 CreateSubscriptionPlanRevision 关联的 SubscriptionPlanRevisionDraft。
+  SubscriptionPlanRevisionDraft draft = 2;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 3;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 4;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+  // app_id 限定 CreateSubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 7;
+}
+
+// PublishSubscriptionPlanRevisionRequest 定义发布 SubscriptionPlanRevision 的幂等管理命令参数。
+message PublishSubscriptionPlanRevisionRequest {
+  // revision_id 标识关联的 Revision。
+  uint64 revision_id = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
+  string reason = 3;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 5;
+  // app_id 限定 PublishSubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 6;
+}
+
+// 一次幂等、可复核的人工订阅权益处置。
+message SubscriptionAdjustment {
+  // id 标识关联的 SubscriptionAdjustment。
+  optional uint64 id = 1;
+  // app_id 限定 SubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  optional string operation_no = 3;
+  // type 区分 SubscriptionAdjustment 的业务类型。
+  optional SubscriptionAdjustmentType type = 4;
+  // status 表示 SubscriptionAdjustment 当前可观察的生命周期状态。
+  optional SubscriptionAdjustmentStatus status = 5;
+  // subscription_id 标识关联的 Subscription。
+  optional uint64 subscription_id = 6;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 7;
+  // plan_id 标识关联的 Plan。
+  optional uint32 plan_id = 8;
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 9;
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional uint32 duration_days = 10;
+  // permanent 显式表示 SubscriptionAdjustment 是否满足该条件。
+  optional bool permanent = 11;
+  // entitlement_value 记录 Subscription Adjustment 对权益数量或期限的变更值。
+  optional int64 entitlement_value = 12;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 13;
+  // reason_code 提供机器可判断的业务原因分类。
+  optional SubscriptionAdjustmentReasonCode reason_code = 14;
+  // note 提供 SubscriptionAdjustment 的补充说明。
+  optional string note = 15;
+  // risk_result 承载 SubscriptionAdjustment 关联的 SubscriptionAdjustmentRiskResult。
+  optional SubscriptionAdjustmentRiskResult risk_result = 16;
+  // risk_hits 列出 SubscriptionAdjustment 关联的 SubscriptionAdjustmentRiskHit。
+  repeated SubscriptionAdjustmentRiskHit risk_hits = 17;
+  // requester_operator_id 标识关联的后台 Operator。
+  optional uint32 requester_operator_id = 18;
+  // reviewer_operator_id 标识关联的后台 Operator。
+  optional uint32 reviewer_operator_id = 19;
+  // review_note 记录人工判断的补充说明，供审计与复核。
+  optional string review_note = 20;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  optional string idempotency_key = 21;
+  // reviewed_at 记录 SubscriptionAdjustment 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp reviewed_at = 22;
+  // applied_at 记录 SubscriptionAdjustment 对应业务阶段的时间点。
+  optional google.protobuf.Timestamp applied_at = 23;
+  // created_at 记录 SubscriptionAdjustment 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 SubscriptionAdjustment 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// SubmitSubscriptionAdjustmentRequest 定义提交 SubscriptionAdjustment 的幂等管理命令参数。
+message SubmitSubscriptionAdjustmentRequest {
+  // type 区分 SubmitSubscriptionAdjustment 的业务类型。
+  SubscriptionAdjustmentType type = 1;
+  // subscription_id 标识关联的 Subscription。
+  optional uint64 subscription_id = 2;
+  // user_id 标识当前 App 内关联的 User。
+  optional uint64 user_id = 3;
+  // plan_revision_id 标识关联的 PlanRevision。
+  optional uint64 plan_revision_id = 4;
+  // duration_days 以契约字段约定的单位表示对应流程的持续时间或上限。
+  optional uint32 duration_days = 5;
+  // permanent 显式表示 SubmitSubscriptionAdjustment 是否满足该条件。
+  optional bool permanent = 6;
+  // reason_code 提供机器可判断的业务原因分类。
+  SubscriptionAdjustmentReasonCode reason_code = 7;
+  // note 提供 SubmitSubscriptionAdjustment 的补充说明。
+  string note = 8;
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 9;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 10;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 11;
+  // app_id 限定 SubmitSubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 12;
+}
+
+// ReviewSubscriptionAdjustmentRequest 定义审核 SubscriptionAdjustment 的幂等管理命令参数。
+message ReviewSubscriptionAdjustmentRequest {
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 1;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 2;
+  // review_note 记录人工判断的补充说明，供审计与复核。
+  optional string review_note = 3;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 4;
+  // app_id 限定 ReviewSubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 5;
+}
+
+// ListSubscriptionAdjustmentsRequest 定义 SubscriptionAdjustments 的筛选与分页参数。
+message ListSubscriptionAdjustmentsRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // statuses 列出 ListSubscriptionAdjustments 关联的 SubscriptionAdjustmentStatus。
+  repeated SubscriptionAdjustmentStatus statuses = 2;
+  // subscription_id 标识关联的 Subscription。
+  optional uint64 subscription_id = 3;
+  // app_id 限定 ListSubscriptionAdjustments 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 4;
+}
+
+// ListSubscriptionAdjustmentsResponse 返回 SubscriptionAdjustments 结果集合及分页信息。
+message ListSubscriptionAdjustmentsResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated SubscriptionAdjustment items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// App + currency 维度的人工权益自动执行阈值。
+message SubscriptionAdjustmentRiskRule {
+  // id 标识关联的 SubscriptionAdjustmentRiskRule。
+  optional uint64 id = 1;
+  // app_id 限定 SubscriptionAdjustmentRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
+  optional uint32 app_id = 2;
+  // currency 指定相关金额使用的币种或计量单位。
+  optional string currency = 3;
+  // auto_approve_max_value 以对应 currency 的最小货币单位限定可自动批准的最高价值。
+  optional int64 auto_approve_max_value = 4;
+  // auto_approve_max_days 以天为单位限定可自动批准的最长调整期限。
+  optional uint32 auto_approve_max_days = 5;
+  // enabled 显式表示 SubscriptionAdjustmentRiskRule 是否满足该条件。
+  optional bool enabled = 6;
+  // created_at 记录 SubscriptionAdjustmentRiskRule 的创建时间。
+  optional google.protobuf.Timestamp created_at = 200;
+  // updated_at 记录 SubscriptionAdjustmentRiskRule 最近一次更新的时间。
+  optional google.protobuf.Timestamp updated_at = 201;
+}
+
+// UpsertSubscriptionAdjustmentRiskRuleRequest 定义执行 UpsertSubscriptionAdjustmentRiskRule 的命令参数。
+message UpsertSubscriptionAdjustmentRiskRuleRequest {
+  // currency 指定相关金额使用的币种或计量单位。
+  string currency = 1;
+  // auto_approve_max_value 以对应 currency 的最小货币单位限定可自动批准的最高价值。
+  int64 auto_approve_max_value = 2;
+  // auto_approve_max_days 以天为单位限定可自动批准的最长调整期限。
+  uint32 auto_approve_max_days = 3;
+  // enabled 显式表示 UpsertSubscriptionAdjustmentRiskRule 是否满足该条件。
+  bool enabled = 4;
+  // operator_id 标识关联的后台 Operator。
+  uint32 operator_id = 5;
+  // request_id 用于关联同一次请求或异步处理链路。
+  optional string request_id = 6;
+  // app_id 限定 UpsertSubscriptionAdjustmentRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 7;
+}
+
+// ListSubscriptionAdjustmentRiskRulesRequest 定义 SubscriptionAdjustmentRiskRules 的筛选与分页参数。
+message ListSubscriptionAdjustmentRiskRulesRequest {
+  // paging 指定分页大小和游标等查询参数。
+  common.pagination.v1.PagingRequest paging = 1;
+  // app_id 限定 ListSubscriptionAdjustmentRiskRules 所属 App；UNSPECIFIED 不表示跨 App。
+  optional common.v1.AppId app_id = 2;
+}
+
+// ListSubscriptionAdjustmentRiskRulesResponse 返回 SubscriptionAdjustmentRiskRules 结果集合及分页信息。
+message ListSubscriptionAdjustmentRiskRulesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated SubscriptionAdjustmentRiskRule items = 1;
+  // total 表示当前查询条件下可见结果的总数。
+  uint64 total = 2;
+}
+
+// 更新订阅计划请求。
+message UpdateSubscriptionPlanRequest {
+  // ID。
+  uint32 id = 1;
+  // 数据。
+  SubscriptionPlanPatch data = 2;
+  // 更新字段掩码。
+  google.protobuf.FieldMask update_mask = 3;
+  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
+  optional common.v1.AppId app_id = 4;
+}

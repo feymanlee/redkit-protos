@@ -1,0 +1,711 @@
+syntax = "proto3";
+
+package core.permission.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+
+import "common/pagination/v1/pagination.proto";
+import "core/permission/v1/operator_role.proto";
+
+// 角色服务
+service RoleService {
+  // 查询角色列表
+  rpc List (common.pagination.v1.PagingRequest) returns (ListRoleResponse) {}
+
+  // 统计角色数量
+  rpc Count (common.pagination.v1.PagingRequest) returns (CountRoleResponse) {}
+
+  // 查询角色详情
+  rpc Get (GetRoleRequest) returns (Role) {}
+
+  // 创建角色
+  rpc Create (CreateRoleRequest) returns (google.protobuf.Empty) {}
+  // 更新角色
+  rpc Update (UpdateRoleRequest) returns (google.protobuf.Empty) {}
+
+  // 删除角色
+  rpc Delete (DeleteRoleRequest) returns (google.protobuf.Empty) {}
+
+  // 根据角色ID或角色值获取对应的权限点ID列表
+  rpc ListPermissionIds(ListPermissionIdsRequest) returns (ListPermissionIdsResponse) {}
+
+  // 查询后台人员的角色
+  rpc GetOperatorRoles (GetOperatorRolesRequest) returns (GetOperatorRolesResponse);
+
+  // 给后台人员分配角色
+  rpc AssignRolesToOperator (AssignRolesToOperatorRequest) returns (google.protobuf.Empty);
+  // 解除后台人员与角色关系 - 从后台人员上移除指定角色（或全部）
+  rpc UnassignRolesFromOperator (UnassignRolesFromOperatorRequest) returns (UnassignRolesFromOperatorResponse) {}
+
+}
+
+// 角色
+message Role {
+  // 角色状态
+  enum Status {
+    // 禁用。
+    OFF = 0;         // 禁用
+    // 启用。
+    ON = 1;          // 启用
+  }
+
+  // 角色类型
+  enum Type {
+    // 系统内置角色。
+    SYSTEM = 0;     // 系统内置角色
+    // 角色模板。
+    TEMPLATE = 1;   // 角色模板
+    // App角色。
+    APP = 2;        // App角色
+  }
+
+  // 角色ID。
+  optional uint32 id = 1 [
+    (gnostic.openapi.v3.property) = {description: "角色ID"}
+  ];  // 角色ID
+
+  // 角色名称。
+  optional string name = 2 [
+    (gnostic.openapi.v3.property) = {description: "角色名称"}
+  ];  // 角色名称
+
+  // 编码。
+  optional string code = 3 [
+    (gnostic.openapi.v3.property) = {
+      description: "角色标识码"
+      example: {yaml: "platform:admin, app:admin1"}
+    }
+  ];  // 角色标识码（如：ADMIN, VIEWER）
+
+  // 排序顺序，值越小越靠前。
+  optional uint32 sort_order = 4 [
+    (gnostic.openapi.v3.property) = {description: "排序顺序，值越小越靠前"}
+  ];  // 排序顺序，值越小越靠前
+
+  // 状态。
+  optional Status status = 5 [
+    (gnostic.openapi.v3.property) = {description: "状态"}
+  ];  // 状态
+
+  // 描述。
+  optional string description = 6 [
+    (gnostic.openapi.v3.property) = {description: "描述"}
+  ];  // 描述
+
+  // 受保护角色，仅平台管理员可修改。
+  optional bool is_protected = 7 [
+    (gnostic.openapi.v3.property) = {description: "受保护角色，仅平台管理员可修改"}
+  ];  // 受保护角色，仅平台管理员可修改
+
+  // 角色类型。
+  optional Type type = 8 [
+    (gnostic.openapi.v3.property) = {description: "角色类型"}
+  ];  // 角色类型
+
+  // 绑定的权限点ID列表。
+  repeated uint32 permissions = 10 [
+    (gnostic.openapi.v3.property) = {description: "绑定的权限点ID列表"}
+  ]; // 绑定的权限点ID列表
+
+  // AppID，0代表系统全局角色。
+  optional uint32 app_id = 40 [
+    (gnostic.openapi.v3.property) = {description: "AppID，0代表系统全局角色"}
+  ];  // AppID，0代表系统全局角色
+  // App名称。
+  optional string app_name = 41 [
+    (gnostic.openapi.v3.property) = {description: "App名称"}
+  ];  // App名称
+
+  // 创建者后台人员ID。
+  optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者后台人员ID"}]; // 创建者后台人员ID
+  // 更新者后台人员ID。
+  optional uint32 updated_by = 101 [ (gnostic.openapi.v3.property) = {description: "更新者后台人员ID"}]; // 更新者后台人员ID
+  // 删除者后台人员ID。
+  optional uint32 deleted_by = 102 [ (gnostic.openapi.v3.property) = {description: "删除者后台人员ID"}]; // 删除者后台人员ID
+
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200 [ (gnostic.openapi.v3.property) = {description: "创建时间"}];// 创建时间
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201 [ (gnostic.openapi.v3.property) = {description: "更新时间"}];// 更新时间
+  // 删除时间。
+  optional google.protobuf.Timestamp deleted_at = 202 [ (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
+}
+
+
+// 角色权限覆盖
+message RoleOverride {
+  // 权限点覆盖
+  message PermissionDelta {
+    // App额外增加的权限。
+    repeated string added_permissions = 1 [
+      (gnostic.openapi.v3.property) = {description: "App额外增加的权限"}
+    ]; // App额外增加的权限
+
+    // App明确禁用的权限（即便模板有，也禁用）。
+    repeated string removed_permissions = 2 [
+      (gnostic.openapi.v3.property) = {description: "App明确禁用的权限（即便模板有，也禁用）"}
+    ]; // App明确禁用的权限（即便模板有，也禁用）
+  }
+
+  // 权限点覆盖。
+  PermissionDelta permissions = 1; // 权限点覆盖
+
+  // 基础字段修改（如果为空则沿用模板）
+  optional string display_name = 2 [
+    (gnostic.openapi.v3.property) = {description: "显示名称"}
+  ]; // 显示名称
+
+  // 描述。
+  optional string description = 3 [
+    (gnostic.openapi.v3.property) = {description: "描述"}
+  ]; // 描述
+
+  // 扩展配置
+  map<string, string> extended_settings = 4 [
+    (gnostic.openapi.v3.property) = {description: "扩展配置，存储如 ui_color: #FF0000"}
+  ]; // 存储如 "ui_color": "#FF0000"
+
+  // 策略覆盖
+  message SecurityPolicy {
+    // 强制多因素认证。
+    bool force_mfa = 1 [
+      (gnostic.openapi.v3.property) = {description: "强制多因素认证"}
+    ]; // 强制多因素认证
+
+    // IP 允许列表。
+    repeated string ip_allow_list = 2 [
+      (gnostic.openapi.v3.property) = {description: "IP 允许列表"}
+    ]; // IP 允许列表
+  }
+
+  // 安全策略覆盖。
+  SecurityPolicy security_policy = 5 [
+    (gnostic.openapi.v3.property) = {description: "安全策略覆盖"}
+  ]; // 安全策略覆盖
+}
+
+// 角色元数据
+message RoleMetadata {
+  // 同步策略
+  enum SyncPolicy {
+    // 自动同步。
+    AUTO = 0;        // 自动同步
+    // 手动同步。
+    MANUAL = 1;      // 手动同步
+    // 阻止同步。
+    BLOCKED = 2;     // 阻止同步
+  }
+
+  // 作用域
+  enum Scope {
+    // 平台级。
+    PLATFORM = 0;     // 平台级
+    // App级。
+    APP = 1;          // App级
+  }
+
+  // 角色元数据ID。
+  optional uint32 id = 1 [
+    (gnostic.openapi.v3.property) = {description: "角色元数据ID"}
+  ];  // 角色元数据ID
+
+  // 角色ID。
+  optional uint32 role_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "角色ID"}
+  ];  // 角色ID
+
+  // 是否是模版。
+  optional bool is_template = 3 [
+    (gnostic.openapi.v3.property) = {description: "是否是模版"}
+  ];  // 是否是模版
+
+  // 模板适用对象。
+  optional string template_for = 4 [
+    (gnostic.openapi.v3.property) = {description: "模板适用对象"}
+  ];  // 模板适用对象
+
+  // 模板版本号。
+  optional int32 template_version = 5 [
+    (gnostic.openapi.v3.property) = {description: "模板版本号"}
+  ];  // 模板版本号
+
+  // 上次同步的版本号。
+  optional int32 last_synced_version = 6 [
+    (gnostic.openapi.v3.property) = {description: "上次同步的版本号"}
+  ];  // 上次同步的版本号
+
+  // 最后同步时间。
+  optional google.protobuf.Timestamp last_synced_at = 7 [
+    (gnostic.openapi.v3.property) = {description: "最后同步时间"}
+  ];  // 最后同步时间
+
+  // 同步策略。
+  optional SyncPolicy sync_policy = 8 [
+    (gnostic.openapi.v3.property) = {description: "同步策略"}
+  ];  // 同步策略
+
+  // 作用域。
+  optional Scope scope = 9 [
+    (gnostic.openapi.v3.property) = {description: "作用域"}
+  ];  // 作用域
+
+  // App自定义覆盖项。
+  RoleOverride custom_overrides = 10 [
+    (gnostic.openapi.v3.property) = {description: "App自定义覆盖项"}
+  ];  // App自定义覆盖项
+
+  // AppID，0代表系统全局角色。
+  optional uint32 app_id = 20 [
+    (gnostic.openapi.v3.property) = {description: "AppID，0代表系统全局角色"}
+  ];  // AppID，0代表系统全局角色
+
+  // 创建者后台人员ID。
+  optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者后台人员ID"}]; // 创建者后台人员ID
+  // 更新者后台人员ID。
+  optional uint32 updated_by = 101 [ (gnostic.openapi.v3.property) = {description: "更新者后台人员ID"}]; // 更新者后台人员ID
+  // 删除者后台人员ID。
+  optional uint32 deleted_by = 102 [ (gnostic.openapi.v3.property) = {description: "删除者后台人员ID"}]; // 删除者后台人员ID
+
+  // 创建时间。
+  optional google.protobuf.Timestamp created_at = 200 [ (gnostic.openapi.v3.property) = {description: "创建时间"}];// 创建时间
+  // 更新时间。
+  optional google.protobuf.Timestamp updated_at = 201 [ (gnostic.openapi.v3.property) = {description: "更新时间"}];// 更新时间
+  // 删除时间。
+  optional google.protobuf.Timestamp deleted_at = 202 [ (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
+}
+
+
+// 角色列表 - 答复
+message ListRoleResponse {
+  // 列表项。
+  repeated Role items = 1;
+  // 总数。
+  uint64 total = 2;
+}
+
+// 角色数据 - 请求
+message GetRoleRequest {
+  // GetRoleRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // ID。
+    uint32 id = 1 [
+      (gnostic.openapi.v3.property) = {description: "ID", read_only: true}]; // ID
+
+    // 名称。
+    string name = 2 [
+      (gnostic.openapi.v3.property) = {description: "名称", read_only: true}]; // 名称
+
+    // 唯一编码。
+    string code = 3 [
+      (gnostic.openapi.v3.property) = {description: "唯一编码", read_only: true}]; // 唯一编码
+  }
+
+  // 读取字段掩码。
+  optional google.protobuf.FieldMask view_mask = 100 [
+    (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }
+  ]; // 视图字段过滤器，用于控制返回的字段
+
+  // App scope for this lookup.
+  optional uint32 app_id = 40;
+}
+
+// 创建角色 - 请求
+message CreateRoleRequest {
+  // 数据。
+  Role data = 1;
+}
+
+// 更新角色 - 请求
+message UpdateRoleRequest {
+  // ID。
+  uint32 id = 1;
+
+  // 数据。
+  Role data = 2;
+
+  // 更新字段掩码。
+  google.protobuf.FieldMask update_mask = 3 [
+    (gnostic.openapi.v3.property) = {
+      description: "要更新的字段列表",
+      example: {yaml : "id,realname,username"}
+    }]; // 要更新的字段列表
+
+  // Immutable App scope for the target role.
+  optional uint32 app_id = 4;
+
+}
+
+// 删除角色 - 请求
+message DeleteRoleRequest {
+  // DeleteRoleRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // 角色ID。
+    uint32 id = 1 [
+      (gnostic.openapi.v3.property) = {description: "角色ID", read_only: true}]; // 角色ID
+
+    // 编码。
+    string code = 2 [
+      (gnostic.openapi.v3.property) = {description: "编码", read_only: true}]; // 编码
+
+  }
+
+  // App scope for the target role.
+  optional uint32 app_id = 40;
+}
+
+// batch 创建 roles请求。
+message BatchCreateRolesRequest {
+  // 列表项。
+  repeated Role items = 1;
+}
+// batch 创建 roles响应。
+message BatchCreateRolesResponse {
+  // created ids。
+  repeated int32 created_ids = 1 [
+    (gnostic.openapi.v3.property) = {
+      description: "创建成功的角色ID列表"
+    }
+  ]; // 创建成功的角色ID列表
+}
+
+// 角色ID列表。
+message GetRoleCodesByRoleIdsRequest {
+  // 角色ID列表。
+  repeated uint32 role_ids = 1 [ (gnostic.openapi.v3.property) = {description: "角色ID列表"}];
+}
+// 角色值列表。
+message GetRoleCodesByRoleIdsResponse {
+  // 角色值列表。
+  repeated string role_codes = 1 [ (gnostic.openapi.v3.property) = {description: "角色值列表"}];
+}
+
+// 角色值列表。
+message GetRolesByRoleCodesRequest {
+  // 角色值列表。
+  repeated string role_codes = 1 [ (gnostic.openapi.v3.property) = {description: "角色值列表"}];
+
+  // 读取字段掩码。
+  optional google.protobuf.FieldMask view_mask = 100 [
+    (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }
+  ]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 角色ID列表。
+message GetRolesByRoleIdsRequest {
+  // 角色ID列表。
+  repeated uint32 role_ids = 1 [ (gnostic.openapi.v3.property) = {description: "角色ID列表"}];
+
+  // 读取字段掩码。
+  optional google.protobuf.FieldMask view_mask = 100 [
+    (gnostic.openapi.v3.property) = {
+      description: "视图字段过滤器，用于控制返回的字段"
+    }
+  ]; // 视图字段过滤器，用于控制返回的字段
+}
+
+// 数量 角色响应。
+message CountRoleResponse {
+  // 数量。
+  uint64 count = 1;
+}
+
+// 角色ID列表。
+message ListRoleCodesByIdsRequest {
+  // 角色ID列表。
+  repeated uint32 role_ids = 1 [ (gnostic.openapi.v3.property) = {description: "角色ID列表"}];
+}
+// 角色值列表。
+message ListRoleCodesByIdsResponse {
+  // 角色值列表。
+  repeated string role_codes = 1 [ (gnostic.openapi.v3.property) = {description: "角色值列表"}];
+}
+
+// 角色值列表。
+message ListRoleIdsByCodesRequest {
+  // 角色值列表。
+  repeated string role_codes = 1 [ (gnostic.openapi.v3.property) = {description: "角色值列表"}];
+}
+// 角色ID列表。
+message ListRoleIdsByCodesResponse {
+  // 角色ID列表。
+  repeated uint32 role_ids = 1 [ (gnostic.openapi.v3.property) = {description: "角色ID列表"}];
+}
+
+// 列表 权限 ids请求。
+message ListPermissionIdsRequest {
+  // ListPermissionIdsRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // 角色ID。
+    uint32 role_id = 1 [
+      (gnostic.openapi.v3.property) = {description: "角色ID"}]; // 角色ID
+
+    // 角色值。
+    string role_code = 2 [
+      (gnostic.openapi.v3.property) = {description: "角色值"}]; // 角色值
+
+    // 后台人员ID。
+    uint32 operator_id = 3 [
+      (gnostic.openapi.v3.property) = {description: "后台人员ID"}]; // 后台人员ID
+  }
+
+  // 角色ID。
+  repeated uint32 role_ids = 10 [
+    (gnostic.openapi.v3.property) = {description: "角色ID"}]; // 角色ID
+
+  // 角色值。
+  repeated string role_codes = 11 [
+    (gnostic.openapi.v3.property) = {description: "角色值"}]; // 角色值
+}
+// 列表 权限 ids响应。
+message ListPermissionIdsResponse {
+  // 权限 ids。
+  repeated uint32 permission_ids = 1 [
+    (gnostic.openapi.v3.property) = {
+      description: "权限点ID列表"
+    }
+  ]; // 权限点ID列表
+}
+
+// 从App角色模板创建App角色 - 请求
+message CreateAppRoleFromTemplateRequest {
+  // AppID。
+  uint32 app_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "AppID"}
+  ];  // AppID
+
+  // 操作者ID。
+  uint32 operator_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "操作者ID"}
+  ]; // 操作者ID
+}
+
+// 后台人员ID。
+message AssignRolesToOperatorRequest {
+  // 后台人员ID。
+  uint32 operator_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "后台人员ID"}
+  ]; // 后台人员ID
+
+  // 角色ID列表。
+  repeated uint32 role_ids = 2 [
+    (gnostic.openapi.v3.property) = {description: "角色ID列表"}
+  ]; // 角色ID列表
+
+  // AppID。
+  uint32 app_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "AppID"}
+  ]; // AppID
+
+  // 操作者ID。
+  uint32 operated_by = 4 [
+    (gnostic.openapi.v3.property) = {description: "操作者ID"}
+  ]; // 操作者ID
+
+  // 变更原因。
+  string reason = 5 [
+    (gnostic.openapi.v3.property) = {description: "变更原因"}
+  ]; // 变更原因
+}
+
+// 目标角色ID。
+message AssignOperatorsToRoleRequest {
+  // 目标角色ID。
+  uint32 role_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "目标角色ID"}
+  ]; // 目标角色ID
+
+  // 后台人员ID列表。
+  repeated uint32 operator_ids = 2 [
+    (gnostic.openapi.v3.property) = {description: "后台人员ID列表"}
+  ]; // 全量替换该角色的后台人员列表
+
+  // AppID。
+  uint32 app_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "AppID"}
+  ]; // AppID
+
+  // 操作者ID。
+  uint32 operated_by = 4 [
+    (gnostic.openapi.v3.property) = {description: "操作者ID"}
+  ]; // 操作者ID
+
+  // 变更原因。
+  string reason = 5 [
+    (gnostic.openapi.v3.property) = {description: "变更原因"}
+  ]; // 变更原因
+}
+
+// 查询后台人员角色请求
+message GetOperatorRolesRequest {
+  // 后台人员ID。
+  uint32 operator_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "后台人员ID"}
+  ]; // 后台人员ID
+
+  // AppID。
+  uint32 app_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "AppID"}
+  ]; // AppID
+
+  // 是否包含已过期角色。
+  bool include_expired = 3 [
+    (gnostic.openapi.v3.property) = {description: "是否包含已过期角色"}
+  ]; // 是否包含已过期角色
+}
+
+// 查询后台人员角色响应
+message GetOperatorRolesResponse {
+  // 绑定详情（含有效期）。
+  repeated OperatorRole bindings = 1; // 绑定详情（含有效期）
+}
+
+// 列表 后台人员 角色 i ds请求。
+message ListOperatorRoleIDsRequest {
+  // ListOperatorRoleIDsRequest 使用以下一种查询表达式。
+  oneof query_by {
+    // 后台人员ID。
+    uint32 operator_id = 1 [
+      (gnostic.openapi.v3.property) = {description: "后台人员ID", read_only: true}]; // 后台人员ID
+
+    // 后台人员登录名。
+    string username = 2 [
+      (gnostic.openapi.v3.property) = {description: "后台人员登录名", read_only: true}]; // 后台人员登录名
+  }
+}
+// 列表 后台人员 角色 i ds响应。
+message ListOperatorRoleIDsResponse {
+  // 角色 ids。
+  repeated uint32 role_ids = 1 [
+    (gnostic.openapi.v3.property) = {
+      description: "角色ID列表"
+    }
+  ]; // 角色ID列表
+}
+
+// 角色ID列表。
+message ListOperatorIDsByRoleIDsRequest {
+  // 角色ID列表。
+  repeated uint32 role_ids = 1 [ (gnostic.openapi.v3.property) = {description: "角色ID列表"}];
+
+  // exclude expired。
+  optional bool exclude_expired = 2 [
+    (gnostic.openapi.v3.property) = {
+      description: "是否排除过期后台人员，默认值：false"
+    }
+  ]; // 是否排除过期后台人员，默认值：false
+}
+
+// 后台人员ID列表。
+message ListOperatorIDsResponse {
+  // 后台人员ID列表。
+  repeated uint32 operator_ids = 1 [
+    (gnostic.openapi.v3.property) = {description: "后台人员ID列表"}
+  ]; // 后台人员ID列表
+}
+
+// 目标后台人员ID。
+message UnassignRolesFromOperatorRequest {
+  // 目标后台人员ID。
+  uint32 operator_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "目标后台人员ID"}
+  ];
+
+  // 要移除的角色ID列表。
+  repeated uint32 role_ids = 2 [
+    (gnostic.openapi.v3.property) = {description: "要移除的角色ID列表"}
+  ];
+
+  // AppID，0 表示全局。
+  uint32 app_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "AppID，0 表示全局"}
+  ];
+
+  // 操作者ID，用于审计。
+  uint32 operated_by = 4 [
+    (gnostic.openapi.v3.property) = {description: "操作者ID，用于审计"}
+  ];
+
+  // 变更原因（可选）。
+  optional string reason = 5 [
+    (gnostic.openapi.v3.property) = {description: "变更原因（可选）"}
+  ]; // 变更原因（可选）
+
+  // 如果为 true，忽略 role_ids，移除该后台人员在 app 下的所有角色。
+  bool remove_all = 6 [
+    (gnostic.openapi.v3.property) = {description: "如果为 true，忽略 role_ids，移除该后台人员在 app 下的所有角色"}
+  ]; // 如果为 true，忽略 role_ids，移除该后台人员在 app 下的所有角色
+
+  // 严格模式：如果关系不存在则返回错误。
+  bool strict = 7 [
+    (gnostic.openapi.v3.property) = {description: "严格模式：如果关系不存在则返回错误"}
+  ]; // 严格模式：如果关系不存在则返回错误
+}
+// 成功被移除的角色ID列表（可能为空）。
+message UnassignRolesFromOperatorResponse {
+  // 成功被移除的角色ID列表（可能为空）。
+  repeated uint32 removed_role_ids = 1 [
+    (gnostic.openapi.v3.property) = {description: "成功被移除的角色ID列表（可能为空）"}
+  ];
+
+  // 部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）。
+  repeated uint32 not_found_role_ids = 2 [
+    (gnostic.openapi.v3.property) = {description: "部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）"}
+  ]; // 部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）
+}
+
+// 目标角色ID。
+message UnassignOperatorsFromRoleRequest {
+  // 目标角色ID。
+  uint32 role_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "目标角色ID"}
+  ]; // 目标角色ID
+
+  // 要移除的后台人员ID列表。
+  repeated uint32 operator_ids = 2 [
+    (gnostic.openapi.v3.property) = {description: "要移除的后台人员ID列表"}
+  ]; // 要移除的后台人员ID列表
+
+  // AppID，0 表示全局。
+  uint32 app_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "AppID，0 表示全局"}
+  ];
+
+  // 操作者ID，用于审计。
+  uint32 operator_id = 4 [
+    (gnostic.openapi.v3.property) = {description: "操作者ID，用于审计"}
+  ];
+
+  // 变更原因（可选）。
+  optional string reason = 5 [
+    (gnostic.openapi.v3.property) = {description: "变更原因（可选）"}
+  ]; // 变更原因（可选）
+
+  // 如果为 true，忽略 role_ids，移除该后台人员在 app 下的所有角色。
+  bool remove_all = 6 [
+    (gnostic.openapi.v3.property) = {description: "如果为 true，忽略 role_ids，移除该后台人员在 app 下的所有角色"}
+  ]; // 如果为 true，忽略 role_ids，移除该后台人员在 app 下的所有角色
+
+  // 严格模式：如果关系不存在则返回错误。
+  bool strict = 7 [
+    (gnostic.openapi.v3.property) = {description: "严格模式：如果关系不存在则返回错误"}
+  ]; // 严格模式：如果关系不存在则返回错误
+}
+// 成功被移除的后台人员ID列表（可能为空）。
+message UnassignOperatorsFromRoleResponse {
+  // 成功被移除的后台人员ID列表（可能为空）。
+  repeated uint32 removed_operator_ids = 1 [
+    (gnostic.openapi.v3.property) = {description: "成功被移除的后台人员ID列表（可能为空）"}
+  ]; // 成功被移除的后台人员ID列表（可能为空）
+
+  // 部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）。
+  repeated uint32 not_found_operator_ids = 2 [
+    (gnostic.openapi.v3.property) = {description: "部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）"}
+  ]; // 部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）
+}

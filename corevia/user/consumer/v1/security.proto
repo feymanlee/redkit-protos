@@ -1,0 +1,315 @@
+syntax = "proto3";
+
+package user.consumer.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "user/consumer/v1/authentication.proto";
+import "user/types/v1/types.proto";
+
+// C 端账号安全服务。
+service ConsumerSecurityService {
+  // 查询 SecurityOverview。
+  rpc GetSecurityOverview(GetSecurityOverviewRequest) returns (user.types.v1.SecurityOverview);
+  // 发起 StepUpAuthorization。
+  rpc StartStepUpAuthorization(StartStepUpAuthorizationRequest) returns (StepUpChallenge);
+  // 重新发送 StepUpChallenge。
+  rpc ResendStepUpChallenge(ResendStepUpChallengeRequest) returns (StepUpChallenge);
+  // 完成 StepUpAuthorization。
+  rpc CompleteStepUpAuthorization(CompleteStepUpAuthorizationRequest) returns (StepUpAuthorization);
+  // 发起 TotpEnrollment。
+  rpc BeginTotpEnrollment(BeginTotpEnrollmentRequest) returns (TotpEnrollment);
+  // 确认 TotpEnrollment。
+  rpc ConfirmTotpEnrollment(ConfirmTotpEnrollmentRequest) returns (ConfirmTotpEnrollmentResponse);
+  // 发起 RequiredTotpEnrollment。
+  rpc BeginRequiredTotpEnrollment(BeginRequiredTotpEnrollmentRequest) returns (TotpEnrollment);
+  // 确认 RequiredTotpEnrollment。
+  rpc ConfirmRequiredTotpEnrollment(ConfirmRequiredTotpEnrollmentRequest) returns (ConfirmRequiredTotpEnrollmentResponse);
+  // 重新生成 RecoveryCodes。
+  rpc RegenerateRecoveryCodes(RegenerateRecoveryCodesRequest) returns (RegenerateRecoveryCodesResponse);
+  // 停用 Totp。
+  rpc DisableTotp(DisableTotpRequest) returns (SecurityMutationResponse);
+  // 查询 SecurityActivity 列表。
+  rpc ListSecurityActivities(ListSecurityActivitiesRequest) returns (ListSecurityActivitiesResponse);
+}
+
+// GetSecurityOverviewRequest 标识待查询的 SecurityOverview。
+message GetSecurityOverviewRequest {
+  // app_id 限定 GetSecurityOverview 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+}
+
+// StepUpPurpose 定义对应业务维度允许使用的离散取值。
+enum StepUpPurpose {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  STEP_UP_PURPOSE_UNSPECIFIED = 0;
+  // STEP_UP_PURPOSE_CHANGE_USER_CODE 允许校验结果用于 CHANGE_USER_CODE 敏感操作。
+  STEP_UP_PURPOSE_CHANGE_USER_CODE = 1;
+  // STEP_UP_PURPOSE_BIND_PHONE 允许校验结果用于 BIND_PHONE 敏感操作。
+  STEP_UP_PURPOSE_BIND_PHONE = 2;
+  // STEP_UP_PURPOSE_CHANGE_PHONE 允许校验结果用于 CHANGE_PHONE 敏感操作。
+  STEP_UP_PURPOSE_CHANGE_PHONE = 3;
+  // STEP_UP_PURPOSE_UNBIND_PHONE 允许校验结果用于 UNBIND_PHONE 敏感操作。
+  STEP_UP_PURPOSE_UNBIND_PHONE = 4;
+  // STEP_UP_PURPOSE_SET_PASSWORD 允许校验结果用于 SET_PASSWORD 敏感操作。
+  STEP_UP_PURPOSE_SET_PASSWORD = 5;
+  // STEP_UP_PURPOSE_CHANGE_PASSWORD 允许校验结果用于 CHANGE_PASSWORD 敏感操作。
+  STEP_UP_PURPOSE_CHANGE_PASSWORD = 6;
+  // STEP_UP_PURPOSE_LINK_EXTERNAL_IDENTITY 允许校验结果用于 LINK_EXTERNAL_IDENTITY 敏感操作。
+  STEP_UP_PURPOSE_LINK_EXTERNAL_IDENTITY = 7;
+  // STEP_UP_PURPOSE_UNLINK_EXTERNAL_IDENTITY 允许校验结果用于 UNLINK_EXTERNAL_IDENTITY 敏感操作。
+  STEP_UP_PURPOSE_UNLINK_EXTERNAL_IDENTITY = 8;
+  // STEP_UP_PURPOSE_MANAGE_SESSIONS 允许校验结果用于 MANAGE_SESSIONS 敏感操作。
+  STEP_UP_PURPOSE_MANAGE_SESSIONS = 9;
+  // STEP_UP_PURPOSE_REVOKE_DEVICE 允许校验结果用于 REVOKE_DEVICE 敏感操作。
+  STEP_UP_PURPOSE_REVOKE_DEVICE = 10;
+  // STEP_UP_PURPOSE_MANAGE_RECOVERY_DEVICE_KEY 允许校验结果用于 MANAGE_RECOVERY_DEVICE_KEY 敏感操作。
+  STEP_UP_PURPOSE_MANAGE_RECOVERY_DEVICE_KEY = 11;
+  // STEP_UP_PURPOSE_ENROLL_TOTP 允许校验结果用于 ENROLL_TOTP 敏感操作。
+  STEP_UP_PURPOSE_ENROLL_TOTP = 12;
+  // STEP_UP_PURPOSE_REGENERATE_RECOVERY_CODES 允许校验结果用于 REGENERATE_RECOVERY_CODES 敏感操作。
+  STEP_UP_PURPOSE_REGENERATE_RECOVERY_CODES = 13;
+  // STEP_UP_PURPOSE_DISABLE_TOTP 允许校验结果用于 DISABLE_TOTP 敏感操作。
+  STEP_UP_PURPOSE_DISABLE_TOTP = 14;
+  // STEP_UP_PURPOSE_START_ACCOUNT_MERGE 允许校验结果用于 START_ACCOUNT_MERGE 敏感操作。
+  STEP_UP_PURPOSE_START_ACCOUNT_MERGE = 15;
+  // STEP_UP_PURPOSE_MERGE_AS_TARGET 允许校验结果用于 MERGE_AS_TARGET 敏感操作。
+  STEP_UP_PURPOSE_MERGE_AS_TARGET = 16;
+  // STEP_UP_PURPOSE_BEGIN_ACCOUNT_CLOSURE 允许校验结果用于 BEGIN_ACCOUNT_CLOSURE 敏感操作。
+  STEP_UP_PURPOSE_BEGIN_ACCOUNT_CLOSURE = 17;
+}
+
+// StepUpFactor 定义对应业务维度允许使用的离散取值。
+enum StepUpFactor {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  STEP_UP_FACTOR_UNSPECIFIED = 0;
+  // STEP_UP_FACTOR_PHONE_OTP 使用 PHONE_OTP 作为认证或 Step-up 因子。
+  STEP_UP_FACTOR_PHONE_OTP = 1;
+  // STEP_UP_FACTOR_PASSWORD 使用 PASSWORD 作为认证或 Step-up 因子。
+  STEP_UP_FACTOR_PASSWORD = 2;
+  // STEP_UP_FACTOR_TOTP 使用 TOTP 作为认证或 Step-up 因子。
+  STEP_UP_FACTOR_TOTP = 3;
+  // STEP_UP_FACTOR_RECOVERY_CODE 使用 RECOVERY_CODE 作为认证或 Step-up 因子。
+  STEP_UP_FACTOR_RECOVERY_CODE = 4;
+  // STEP_UP_FACTOR_APPLE 使用 APPLE 作为认证或 Step-up 因子。
+  STEP_UP_FACTOR_APPLE = 5;
+  // STEP_UP_FACTOR_GOOGLE 使用 GOOGLE 作为认证或 Step-up 因子。
+  STEP_UP_FACTOR_GOOGLE = 6;
+}
+
+// StepUpBinding 描述 Step-up Challenge 绑定的敏感操作上下文。
+message StepUpBinding {
+  // StepUpBinding 在以下 value 分支中选择一种。
+  oneof value {
+    // new_phone 承载按约定地区规则规范化的手机号码。
+    string new_phone = 1 [(validate.rules).string = {pattern: "^\\+[1-9][0-9]{7,14}$", max_len: 16}];
+    // credential_id 标识关联的 Credential。
+    uint64 credential_id = 3 [(validate.rules).uint64 = {gt: 0}];
+    // device_id 标识关联的 Device。
+    uint64 device_id = 4 [(validate.rules).uint64 = {gt: 0}];
+    // target_user_code 提供 StepUpBinding 对外稳定使用的业务编码。
+    string target_user_code = 5 [(validate.rules).string = {min_len: 3, max_len: 20}];
+  }
+}
+
+// StartStepUpAuthorizationRequest 定义启动 StepUpAuthorization 的幂等管理命令参数。
+message StartStepUpAuthorizationRequest {
+  // app_id 限定 StartStepUpAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // purpose 指定 StartStepUpAuthorization 数据或能力的预期用途。
+  StepUpPurpose purpose = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // binding 承载 StartStepUpAuthorization 关联的 StepUpBinding。
+  StepUpBinding binding = 3;
+  // preferred_factor 承载 StartStepUpAuthorization 关联的 StepUpFactor。
+  StepUpFactor preferred_factor = 4 [(validate.rules).enum = {defined_only: true}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// StepUpChallenge 表示一次 Step-up Authentication 挑战及可用因子。
+message StepUpChallenge {
+  // challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string challenge_token = 1;
+  // purpose 指定 StepUpChallenge 数据或能力的预期用途。
+  StepUpPurpose purpose = 2;
+  // allowed_factors 列出 StepUpChallenge 关联的 StepUpFactor。
+  repeated StepUpFactor allowed_factors = 3;
+  // masked_target 承载用户资料或其脱敏展示值，按个人信息保护。
+  string masked_target = 4;
+  // expires_at 指定 StepUpChallenge 失效的时间点。
+  google.protobuf.Timestamp expires_at = 5;
+  // resend_at 指定 StepUpChallenge 生效或查询区间的结束时间。
+  google.protobuf.Timestamp resend_at = 6;
+}
+
+// ResendStepUpChallengeRequest 定义执行 ResendStepUpChallenge 的幂等管理命令参数。
+message ResendStepUpChallengeRequest {
+  // app_id 限定 ResendStepUpChallenge 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string challenge_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// CompleteStepUpAuthorizationRequest 定义完成 StepUpAuthorization 的幂等管理命令参数。
+message CompleteStepUpAuthorizationRequest {
+  // app_id 限定 CompleteStepUpAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string challenge_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // CompleteStepUpAuthorizationRequest 在以下身份或安全证明中选择一种。
+  oneof proof {
+    option (validate.required) = true;
+    // phone_code 承载一次性认证因子，不得写入普通日志。
+    string phone_code = 3 [(validate.rules).string = {pattern: "^[0-9]{4,8}$"}];
+    // password 承载敏感凭据或校验材料，不得写入普通日志。
+    string password = 4 [(validate.rules).string = {min_len: 1, max_len: 256}];
+    // totp_code 承载一次性认证因子，不得写入普通日志。
+    string totp_code = 5 [(validate.rules).string = {pattern: "^[0-9]{6}$"}];
+    // recovery_code 承载一次性认证因子，不得写入普通日志。
+    string recovery_code = 6 [(validate.rules).string = {min_len: 8, max_len: 128}];
+    // external_identity 记录外部或上游系统用于稳定关联 CompleteStepUpAuthorization 的身份。
+    ExternalIdentityProof external_identity = 7 [(validate.rules).message = {required: true}];
+  }
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 8 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// StepUpAuthorization 承载 CompleteStepUpAuthorization 调用的返回结果。
+message StepUpAuthorization {
+  // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string step_up_token = 1;
+  // purpose 指定 StepUpAuthorization 数据或能力的预期用途。
+  StepUpPurpose purpose = 2;
+  // expires_at 指定 StepUpAuthorization 失效的时间点。
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+// TotpEnrollment 承载 TOTP Enrollment 的 Secret 与 Provisioning URI。
+message TotpEnrollment {
+  // factor_id 标识关联的 Factor。
+  string factor_id = 1;
+  // secret 承载敏感凭据或校验材料，不得写入普通日志。
+  string secret = 2;
+  // provisioning_uri 承载认证器开户材料，属于敏感凭据。
+  string provisioning_uri = 3;
+  // expires_at 指定 TotpEnrollment 失效的时间点。
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+// BeginTotpEnrollmentRequest 定义开始 TotpEnrollment 的幂等管理命令参数。
+message BeginTotpEnrollmentRequest {
+  // app_id 限定 BeginTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ConfirmTotpEnrollmentRequest 定义执行 ConfirmTotpEnrollment 的幂等管理命令参数。
+message ConfirmTotpEnrollmentRequest {
+  // app_id 限定 ConfirmTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // factor_id 标识关联的 Factor。
+  string factor_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // code 承载调用方输入的一次性验证码，不得写入普通日志。
+  string code = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {pattern: "^[0-9]{6}$"}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ConfirmTotpEnrollmentResponse 承载 ConfirmTotpEnrollment 的返回结果。
+message ConfirmTotpEnrollmentResponse {
+  // recovery_codes 返回一次性 Recovery Code；调用方仅可在本次响应中展示。
+  repeated string recovery_codes = 1;
+  // tokens 承载 ConfirmTotpEnrollment 关联的 TokenPair。
+  user.types.v1.TokenPair tokens = 2;
+}
+
+// BeginRequiredTotpEnrollmentRequest 定义开始 RequiredTotpEnrollment 的幂等管理命令参数。
+message BeginRequiredTotpEnrollmentRequest {
+  // app_id 限定 BeginRequiredTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // action_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string action_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ConfirmRequiredTotpEnrollmentRequest 定义执行 ConfirmRequiredTotpEnrollment 的幂等管理命令参数。
+message ConfirmRequiredTotpEnrollmentRequest {
+  // app_id 限定 ConfirmRequiredTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // action_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string action_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // factor_id 标识关联的 Factor。
+  string factor_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // code 承载调用方输入的一次性验证码，不得写入普通日志。
+  string code = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {pattern: "^[0-9]{6}$"}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ConfirmRequiredTotpEnrollmentResponse 承载 ConfirmRequiredTotpEnrollment 的返回结果。
+message ConfirmRequiredTotpEnrollmentResponse {
+  // recovery_codes 返回一次性 Recovery Code；调用方仅可在本次响应中展示。
+  repeated string recovery_codes = 1;
+  // authenticated 承载 ConfirmRequiredTotpEnrollment 关联的 AuthenticationResult。
+  AuthenticationResult authenticated = 2;
+}
+
+// RegenerateRecoveryCodesRequest 定义执行 RegenerateRecoveryCodes 的幂等管理命令参数。
+message RegenerateRecoveryCodesRequest {
+  // app_id 限定 RegenerateRecoveryCodes 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// RegenerateRecoveryCodesResponse 承载 RegenerateRecoveryCodes 的返回结果。
+message RegenerateRecoveryCodesResponse {
+  // recovery_codes 返回一次性 Recovery Code；调用方仅可在本次响应中展示。
+  repeated string recovery_codes = 1;
+  // tokens 承载 RegenerateRecoveryCodes 关联的 TokenPair。
+  user.types.v1.TokenPair tokens = 2;
+}
+
+// DisableTotpRequest 定义停用 Totp 的幂等管理命令参数。
+message DisableTotpRequest {
+  // app_id 限定 DisableTotp 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// SecurityMutationResponse 承载 SecurityMutation 的返回结果。
+message SecurityMutationResponse {
+  // security 承载 SecurityMutation 关联的 SecurityOverview。
+  user.types.v1.SecurityOverview security = 1;
+  // tokens 承载 SecurityMutation 关联的 TokenPair。
+  user.types.v1.TokenPair tokens = 2;
+}
+
+// ListSecurityActivitiesRequest 定义 SecurityActivities 的筛选与分页参数。
+message ListSecurityActivitiesRequest {
+  // app_id 限定 ListSecurityActivities 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // page 返回继续分页所需的游标和结果规模信息。
+  user.types.v1.CursorPageRequest page = 2;
+}
+
+// ListSecurityActivitiesResponse 返回 SecurityActivities 结果集合及分页信息。
+message ListSecurityActivitiesResponse {
+  // items 包含本次返回或处理的业务条目。
+  repeated user.types.v1.SecurityActivity items = 1;
+  // page 返回继续分页所需的游标和结果规模信息。
+  user.types.v1.CursorPageResponse page = 2;
+}
