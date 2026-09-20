@@ -10,7 +10,7 @@ your-repo/
 ├── proto/
 │   ├── buf.yaml
 │   └── your/v1/demo.proto
-└── third_party/redkit-protos/    # git submodule
+└── third_party/redkit-protos/    # git@github.com:feymanlee/redkit-protos.git
     └── corevia/                  # 契约 module
 ```
 

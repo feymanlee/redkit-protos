@@ -4,19 +4,22 @@
 
 ## 1. 获取契约
 
+远端：`git@github.com:feymanlee/redkit-protos.git`（建议 pin tag，当前 `protos/v0.1.0`）
+
 **推荐：git submodule**
 
 ```bash
 # 在你的仓库根
-git submodule add <REDKIT_PROTOS_GIT_URL> third_party/redkit-protos
+git submodule add git@github.com:feymanlee/redkit-protos.git third_party/redkit-protos
+cd third_party/redkit-protos && git checkout protos/v0.1.0 && cd -
 git submodule update --init
 ```
 
 **或：vendor 目录**
 
 ```bash
-git clone <REDKIT_PROTOS_GIT_URL> third_party/redkit-protos
-# CI 用同一路径拉取，并 pin 到 tag，例如 protos/v0.1.0
+git clone git@github.com:feymanlee/redkit-protos.git third_party/redkit-protos
+cd third_party/redkit-protos && git checkout protos/v0.1.0
 ```
 
 契约树：`third_party/redkit-protos/corevia/`。

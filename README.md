@@ -2,6 +2,8 @@
 
 **所有项目的 Protobuf 都只住在本仓。** 不存在「其他项目自己再放一份 proto」：Gamoji/Pincp/App 等仓外工程只 **消费** 本仓契约，平台与 corevia 的契约树也收敛在这里。
 
+- 远端：`git@github.com:feymanlee/redkit-protos.git`
+- 当前 tag：`protos/v0.1.0`
 - 唯一契约 tree：`corevia/`（路径与历史 `backend/api` 对齐，import 仍是 `common/v1/...`）
 - 仓外 **可以 import** 的 package：见 `policy/export-policy.yaml` 的 `external.packages`
 - `admin/`、`core/` 等内部面**也在本仓**，供平台生成使用；**外部项目不得 import**（`forbidden.packages`）
