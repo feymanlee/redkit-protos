@@ -1,6 +1,49 @@
-# 仓外项目如何引用 redkit-protos 契约
+# 仓外项目如何引用 redkit-protos
 
 适用：Gamoji BFF、Pincp BFF、App BFF / App Services 等**不自建 proto 源**的工程。
+
+## Go 项目（推荐）
+
+```bash
+go get github.com/feymanlee/redkit-protos@vX.Y.Z
+```
+
+```go
+import (
+    commonv1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+)
+```
+
+## 其他语言 / 需要 .proto 源
+
+远端：`git@github.com:feymanlee/redkit-protos.git`（建议 pin `vX.Y.Z`）
+
+```bash
+git submodule add git@github.com:feymanlee/redkit-protos.git third_party/redkit-protos
+cd third_party/redkit-protos && git checkout v0.2.0
+```
+
+契约树：`third_party/redkit-protos/corevia/`。
+
+buf workspace **v1**：
+
+```yaml
+version: v1
+directories:
+  - third_party/redkit-protos/corevia
+  - proto
+```
+
+```proto
+import "common/v1/common.proto";
+```
+
+仅允许 `policy/export-policy.yaml` 的 `external.packages`（禁止 `admin/`、`core/` 等）。
+
+## 运行时
+
+内部 gRPC 仅私网可达；引用 proto/SDK ≠ 公网暴露。
+
 
 ## 1. 获取契约
 

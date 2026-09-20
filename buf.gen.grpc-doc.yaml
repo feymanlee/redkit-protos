@@ -1,0 +1,32 @@
+version: v2
+
+clean: true
+
+managed:
+  enabled: true
+  disable:
+    - module: buf.build/googleapis/googleapis
+    - module: buf.build/envoyproxy/protoc-gen-validate
+    - module: buf.build/kratos/apis
+    - module: buf.build/gnostic/gnostic
+    - module: buf.build/gogo/protobuf
+
+inputs:
+  - directory: .
+    paths:
+      - common
+      - core
+      - user
+      - wallet
+      - payment
+      - gift
+      - support
+      - ops
+
+plugins:
+  - local:
+      - go
+      - run
+      - ./scripts/protoc-gen-grpc-doc
+    out: gen/grpc-docs
+    strategy: all

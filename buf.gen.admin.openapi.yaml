@@ -1,0 +1,135 @@
+version: v2
+
+# Admin OpenAPI — run from redkit-protos root:
+#   cd corevia && buf generate --template ../buf.gen.admin.openapi.yaml --output ../dist/admin
+# Plugin entry uses go run of scripts copied under redkit-protos/scripts.
+
+clean: false
+
+managed:
+  enabled: true
+  disable:
+    - module: buf.build/googleapis/googleapis
+    - module: buf.build/envoyproxy/protoc-gen-validate
+    - module: buf.build/kratos/apis
+    - module: buf.build/gnostic/gnostic
+    - module: buf.build/gogo/protobuf
+
+inputs:
+  - directory: .
+    paths:
+      - admin
+
+plugins:
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=platform
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=core
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=user
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=wallet
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=payment
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=gift
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=support
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true
+  - local:
+      - go
+      - run
+      - ../scripts/protoc-gen-openapi-admin-flat
+    out: gen/openapi/admin
+    strategy: all
+    opt:
+      - service=ops
+      - naming=json
+      - depth=2
+      - default_response=false
+      - enum_type=string
+      - output_mode=merged
+      - fq_schema_naming=true

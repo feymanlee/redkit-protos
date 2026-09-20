@@ -1,0 +1,10 @@
+# Temporary violations tracked by the App Scope migration tickets.
+# Delete each entry in the same change that removes the corresponding violation.
+
+# Admin business requests that still expose App identity.
+
+# Internal requests that still use a raw App ID type.
+
+# Internal requests that still nest App identity below the request top level.
+
+# Shared shallow contract removed by the final contract ticket.
