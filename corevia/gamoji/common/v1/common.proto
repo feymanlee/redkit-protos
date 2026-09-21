@@ -1,0 +1,165 @@
+syntax = "proto3";
+
+package gamoji.common.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+// CommonService 是 Gamoji C 端公用能力的对外 REST 契约（路径以本 proto 的 google.api.http 为唯一事实源）。
+service CommonService {
+  // 发送登录验证码；一期 purpose 白名单仅 LOGIN。
+  rpc SendOTP (SendOTPRequest) returns (SendOTPResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/common/otp/send"
+      body: "*"
+    };
+  }
+  // 创建文件直传会话；BFF 不代理字节。
+  rpc CreateFileUploadSession (CreateFileUploadSessionRequest) returns (FileUploadSession) {
+    option (google.api.http) = {
+      post: "/api/v1/common/files/upload-sessions"
+      body: "*"
+    };
+  }
+  // 完成直传并创建 File。
+  rpc CompleteFileUploadSession (CompleteFileUploadSessionRequest) returns (FileView) {
+    option (google.api.http) = {
+      post: "/api/v1/common/files/upload-sessions/complete"
+      body: "*"
+    };
+  }
+  // 取消直传会话。
+  rpc AbortFileUploadSession (AbortFileUploadSessionRequest) returns (FileUploadSession) {
+    option (google.api.http) = {
+      post: "/api/v1/common/files/upload-sessions/abort"
+      body: "*"
+    };
+  }
+  // 查询直传会话状态。
+  rpc GetFileUploadSession (GetFileUploadSessionRequest) returns (FileUploadSession) {
+    option (google.api.http) = {
+      get: "/api/v1/common/files/upload-sessions"
+    };
+  }
+  // 查询 File View（安全展示投影）。
+  rpc GetFileView (GetFileViewRequest) returns (FileView) {
+    option (google.api.http) = {
+      get: "/api/v1/common/files"
+    };
+  }
+}
+
+// SendOTPRequest 是发码请求。
+message SendOTPRequest {
+  // phone 为 E.164 手机号。
+  string phone = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 8, max_len: 16, prefix: "+"}];
+  // purpose 一期仅允许 LOGIN。
+  string purpose = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// SendOTPResponse 是发码结果；不返回验证码或明文手机号。
+message SendOTPResponse {
+  // purpose 返回本次发码用途字面量。
+  string purpose = 1;
+  // masked_phone 为脱敏手机号。
+  string masked_phone = 2;
+  // expires_at 为票据过期时间 RFC3339。
+  string expires_at = 3;
+  // resend_at 为最早可重发时间 RFC3339。
+  string resend_at = 4;
+}
+
+// CreateFileUploadSessionRequest 创建 C 端直传意图。
+message CreateFileUploadSessionRequest {
+  // purpose 一期白名单仅 USER_AVATAR。
+  string purpose = 1 [(google.api.field_behavior) = REQUIRED];
+  // content_type 为客户端声明的 MIME。
+  string content_type = 2 [(google.api.field_behavior) = REQUIRED];
+  // size_bytes 为客户端声明字节数。
+  uint64 size_bytes = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64 = {gt: 0}];
+  // checksum_algorithm 为可选校验算法名。
+  string checksum_algorithm = 4;
+  // checksum 为可选校验值。
+  string checksum = 5;
+  // file_name 为可选原始文件名，仅审计用途。
+  string file_name = 6;
+}
+
+// UploadCredential 是客户端直传所需的最小凭据投影。
+message UploadCredential {
+  // method 为直传 HTTP 方法。
+  string method = 1;
+  // url 为预签名地址或存储端点。
+  string url = 2;
+  // headers 为直传必须携带的请求头。
+  map<string, string> headers = 3;
+  // expires_at 为凭据过期时间 RFC3339。
+  string expires_at = 4;
+}
+
+// FileUploadSession 是对外可观察的上传会话投影。
+message FileUploadSession {
+  // session_no 为稳定会话号。
+  string session_no = 1;
+  // status 为会话状态短名。
+  string status = 2;
+  // purpose 为文件用途短名。
+  string purpose = 3;
+  // expires_at 为会话或凭据过期时间。
+  string expires_at = 4;
+  // file_id 为完成后创建的 File ID；未完成时为空。
+  string file_id = 5;
+  // upload 为直传凭据投影；查询接口可不返回。
+  UploadCredential upload = 6;
+}
+
+// CompleteFileUploadSessionRequest 完成上传。
+message CompleteFileUploadSessionRequest {
+  // session_no 为会话号。
+  string session_no = 1 [(google.api.field_behavior) = REQUIRED];
+  // checksum 为客户端观测校验值。
+  string checksum = 2;
+  // etag 为 Provider 返回的 ETag。
+  string etag = 3;
+}
+
+// AbortFileUploadSessionRequest 取消上传。
+message AbortFileUploadSessionRequest {
+  // session_no 为会话号。
+  string session_no = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 为可选取消原因。
+  string reason = 2;
+}
+
+// GetFileUploadSessionRequest 以 query 传递 session_no。
+message GetFileUploadSessionRequest {
+  // session_no 为会话号。
+  string session_no = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// GetFileViewRequest 以 query 传递 file_id。
+message GetFileViewRequest {
+  // file_id 为 File 数值 ID 字符串。
+  string file_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// FileView 是 Support File 的安全展示投影。
+message FileView {
+  // file_id 为 File ID。
+  string file_id = 1;
+  // status 为 File 状态短名。
+  string status = 2;
+  // purpose 为用途短名。
+  string purpose = 3;
+  // visibility 为 PUBLIC 或 PROTECTED。
+  string visibility = 4;
+  // content_type 为可信内容类型。
+  string content_type = 5;
+  // size_bytes 为文件字节数。
+  uint64 size_bytes = 6;
+  // public_url 为可公开访问地址；PROTECTED 或未发布时为空。
+  string public_url = 7;
+  // created_at 为创建时间 RFC3339；契约无值时可为空。
+  string created_at = 8;
+}

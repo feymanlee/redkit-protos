@@ -105,6 +105,15 @@ managed:
     - file_option: go_package
       path: ops/reward/v1
       value: github.com/feymanlee/redkit-protos/gen/go/ops/reward/v1;opsrewardv1
+    - file_option: go_package
+      path: gamoji/common/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/gamoji/common/v1;gamojicommonpb
+    - file_option: go_package
+      path: gamoji/auth/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/gamoji/auth/v1;gamojiauthpb
+    - file_option: go_package
+      path: gamoji/user/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/gamoji/user/v1;gamojiuserpb
 
 plugins:
   - local: protoc-gen-go

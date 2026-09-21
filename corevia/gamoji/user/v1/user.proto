@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package gamoji.user.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+
+// UserService 是 Gamoji C 端用户信息查询的对外 REST 契约。
+service UserService {
+  // 统一「查询用户信息」：按 user_code 查公开资料；无 /me 路径。
+  rpc GetPublicProfile (GetPublicProfileRequest) returns (PublicProfile) {
+    option (google.api.http) = {
+      get: "/api/v1/users"
+    };
+  }
+}
+
+// GetPublicProfileRequest 以 query 传递 user_code。
+message GetPublicProfileRequest {
+  // user_code 为对外稳定用户码。
+  string user_code = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// PublicProfile 是公开资料投影。
+message PublicProfile {
+  // user_id 为 C 端用户数值 ID 字符串。
+  string user_id = 1;
+  // user_code 为对外稳定用户码。
+  string user_code = 2;
+  // nickname 为昵称。
+  string nickname = 3;
+  // avatar 为头像展示地址。
+  string avatar = 4;
+  // avatar_file_id 为头像 File ID 字符串。
+  string avatar_file_id = 5;
+  // gender 为性别展示值。
+  string gender = 6;
+  // region 为地区展示值。
+  string region = 7;
+  // description 为简介。
+  string description = 8;
+  // updated_at 为资料更新时间 RFC3339。
+  string updated_at = 9;
+}

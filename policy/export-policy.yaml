@@ -30,6 +30,9 @@ external:
     - payment/v1
     - ops/v1
     - ops/reward/v1
+    - gamoji/common/v1
+    - gamoji/auth/v1
+    - gamoji/user/v1
   consumers:
     - gamoji-bff
     - pincp-bff

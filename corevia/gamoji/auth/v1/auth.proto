@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package gamoji.auth.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+// AuthenticationService 是 Gamoji C 端认证的对外 REST 契约。
+service AuthenticationService {
+  // 手机号验证码登录；BFF 负责 Support 验票与 User Login 编排。
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/login"
+      body: "*"
+    };
+  }
+  // 刷新 TokenPair。
+  rpc RefreshToken (RefreshTokenRequest) returns (TokenPair) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/refresh"
+      body: "*"
+    };
+  }
+  // 登出当前会话。
+  rpc Logout (LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/auth/logout"
+      body: "*"
+    };
+  }
+}
+
+// LoginRequest 是登录请求体。
+message LoginRequest {
+  // phone 为 E.164 手机号。
+  string phone = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 8, max_len: 16, prefix: "+"}];
+  // code 为短信验证码。
+  string code = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// AuthUser 是登录成功的最小用户投影。
+message AuthUser {
+  // user_id 为 C 端用户数值 ID 字符串。
+  string user_id = 1;
+  // user_code 为对外稳定用户码。
+  string user_code = 2;
+  // status 为账号状态短名。
+  string status = 3;
+  // nickname 为昵称；Login 契约无资料时可为空。
+  string nickname = 4;
+  // avatar 为头像展示地址；可为空。
+  string avatar = 5;
+}
+
+// TokenPair 透传 User 签发的访问/刷新令牌。
+message TokenPair {
+  // token_type 固定为 Bearer。
+  string token_type = 1;
+  // access_token 为访问令牌。
+  string access_token = 2;
+  // refresh_token 为刷新令牌。
+  string refresh_token = 3;
+  // expires_in 为访问令牌剩余秒数。
+  int64 expires_in = 4;
+  // refresh_expires_in 为刷新令牌剩余秒数。
+  int64 refresh_expires_in = 5;
+}
+
+// LoginResponse 是 authenticated 结果；challenge/action_required 以错误码返回。
+message LoginResponse {
+  // token_type 固定为 Bearer。
+  string token_type = 1;
+  // access_token 为访问令牌。
+  string access_token = 2;
+  // refresh_token 为刷新令牌。
+  string refresh_token = 3;
+  // expires_in 为访问令牌剩余秒数。
+  int64 expires_in = 4;
+  // refresh_expires_in 为刷新令牌剩余秒数。
+  int64 refresh_expires_in = 5;
+  // user 为最小用户投影。
+  AuthUser user = 6;
+}
+
+// RefreshTokenRequest 刷新令牌。
+message RefreshTokenRequest {
+  // refresh_token 为上次签发的刷新令牌。
+  string refresh_token = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// LogoutRequest 登出；主体来自 Authorization Bearer。
+message LogoutRequest {
+  // idempotency_key 可选；缺失时 BFF 生成。
+  string idempotency_key = 1;
+}
+
+// LogoutResponse 登出成功空对象。
+message LogoutResponse {
+}
