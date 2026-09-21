@@ -44,35 +44,28 @@ grpc-docs:
 	@cd corevia && buf generate --template ../buf.gen.grpc-doc.yaml --output ../dist/grpc-docs
 	@echo "grpc-docs → dist/grpc-docs"
 
-# 将 Admin OpenAPI / TS / api_catalog 拷入 corevia 既有消费路径
+# 权限目录 api_catalog 拷入 corevia（OpenAPI yaml 留在本仓 dist，不进 corevia）
 publish-artifacts: openapi ts
 	@set -e; \
 	CV="$(COREVIA_ROOT)"; \
 	test -d "$$CV/backend"; \
-	mkdir -p "$$CV/backend/api/gen/openapi/admin"; \
-	if [ -d dist/admin-openapi/gen/openapi/admin ]; then \
-		cp -R dist/admin-openapi/gen/openapi/admin/. "$$CV/backend/api/gen/openapi/admin/"; \
+	CAT="$$(find dist -name api_catalog.yaml 2>/dev/null | head -1)"; \
+	if [ -n "$$CAT" ]; then \
+		cp "$$CAT" "$$CV/backend/app/admin/cmd/server/assets/api_catalog.yaml"; \
+		echo "copied api_catalog.yaml"; \
 	else \
-		find dist/admin-openapi -type f \( -name '*.yaml' -o -name '*.yml' \) -exec cp {} "$$CV/backend/api/gen/openapi/admin/" \; 2>/dev/null || true; \
-	fi; \
-	if [ -f dist/admin-assets/api_catalog.yaml ]; then \
-		cp dist/admin-assets/api_catalog.yaml "$$CV/backend/app/admin/cmd/server/assets/api_catalog.yaml"; \
-	elif [ -f dist/admin-openapi/dist/admin-assets/api_catalog.yaml ]; then \
-		cp dist/admin-openapi/dist/admin-assets/api_catalog.yaml "$$CV/backend/app/admin/cmd/server/assets/api_catalog.yaml"; \
-	else \
-		CAT="$$(find dist -name api_catalog.yaml 2>/dev/null | head -1)"; \
-		if [ -n "$$CAT" ]; then cp "$$CAT" "$$CV/backend/app/admin/cmd/server/assets/api_catalog.yaml"; fi; \
+		echo "warning: api_catalog.yaml not found under dist/" >&2; \
 	fi; \
 	if [ -d dist/admin-ts ]; then \
 		mkdir -p "$$CV/frontend/admin/apps/admin/src/api/generated"; \
 		TS_SRC="$$(find dist/admin-ts -type d -name generated 2>/dev/null | head -1)"; \
 		if [ -n "$$TS_SRC" ]; then \
 			cp -R "$$TS_SRC/." "$$CV/frontend/admin/apps/admin/src/api/generated/"; \
+			echo "copied admin TS client"; \
 		else \
 			cp -R dist/admin-ts/. "$$CV/frontend/admin/apps/admin/src/api/generated/" || true; \
 		fi; \
-	fi; \
-	echo "published openapi/ts artifacts into $$CV"
+	fi
 
 clean:
 	@rm -rf examples/consumer/their/.cache dist
