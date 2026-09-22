@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// GiftClosureService 暴露 Account Closure 使用的窄 Gift participant 契约。
+// GiftClosureService 暴露 User Deletion 使用的窄 Gift participant 契约。
 type GiftClosureServiceClient interface {
 	// PrepareClosure 建立 Gift fence，并报告库存和结果不确定 Send 阻断。
 	PrepareClosure(ctx context.Context, in *PrepareClosureRequest, opts ...grpc.CallOption) (*ClosureParticipantState, error)
@@ -93,7 +93,7 @@ func (c *giftClosureServiceClient) GetClosureStatus(ctx context.Context, in *Get
 // All implementations must embed UnimplementedGiftClosureServiceServer
 // for forward compatibility.
 //
-// GiftClosureService 暴露 Account Closure 使用的窄 Gift participant 契约。
+// GiftClosureService 暴露 User Deletion 使用的窄 Gift participant 契约。
 type GiftClosureServiceServer interface {
 	// PrepareClosure 建立 Gift fence，并报告库存和结果不确定 Send 阻断。
 	PrepareClosure(context.Context, *PrepareClosureRequest) (*ClosureParticipantState, error)

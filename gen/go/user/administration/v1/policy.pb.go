@@ -90,8 +90,8 @@ type UserAppPolicyPatch struct {
 	LockSeconds uint32 `protobuf:"varint,8,opt,name=lock_seconds,json=lockSeconds,proto3" json:"lock_seconds,omitempty"`
 	// mfa_required 显式表示 UserAppPolicyPatch 是否满足该条件。
 	MfaRequired bool `protobuf:"varint,9,opt,name=mfa_required,json=mfaRequired,proto3" json:"mfa_required,omitempty"`
-	// closure_cooling_days 以天为单位指定 Account Closure 的冷静期。
-	ClosureCoolingDays uint32 `protobuf:"varint,10,opt,name=closure_cooling_days,json=closureCoolingDays,proto3" json:"closure_cooling_days,omitempty"`
+	// deletion_cooling_days 以天为单位指定 User Deletion 的冷静期。
+	DeletionCoolingDays uint32 `protobuf:"varint,10,opt,name=deletion_cooling_days,json=deletionCoolingDays,proto3" json:"deletion_cooling_days,omitempty"`
 	// user_code_change_interval_days 以天为单位限定两次 User Code 变更之间的最短间隔。
 	UserCodeChangeIntervalDays uint32 `protobuf:"varint,11,opt,name=user_code_change_interval_days,json=userCodeChangeIntervalDays,proto3" json:"user_code_change_interval_days,omitempty"`
 	// password_min_length 限定可接受密码的最小字符数。
@@ -197,9 +197,9 @@ func (x *UserAppPolicyPatch) GetMfaRequired() bool {
 	return false
 }
 
-func (x *UserAppPolicyPatch) GetClosureCoolingDays() uint32 {
+func (x *UserAppPolicyPatch) GetDeletionCoolingDays() uint32 {
 	if x != nil {
-		return x.ClosureCoolingDays
+		return x.DeletionCoolingDays
 	}
 	return 0
 }
@@ -320,7 +320,7 @@ const file_user_administration_v1_policy_proto_rawDesc = "" +
 	"\n" +
 	"#user/administration/v1/policy.proto\x12\x16user.administration.v1\x1a\x16common/v1/common.proto\x1a google/protobuf/field_mask.proto\x1a\"user/administration/v1/types.proto\"B\n" +
 	"\x17GetUserAppPolicyRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"\x80\x06\n" +
+	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"\x82\x06\n" +
 	"\x12UserAppPolicyPatch\x12W\n" +
 	"\x13enabled_credentials\x18\x01 \x03(\x0e2&.user.administration.v1.CredentialTypeR\x12enabledCredentials\x121\n" +
 	"\x14registration_enabled\x18\x02 \x01(\bR\x13registrationEnabled\x12:\n" +
@@ -330,9 +330,9 @@ const file_user_administration_v1_policy_proto_rawDesc = "" +
 	"\x13max_active_sessions\x18\x06 \x01(\rR\x11maxActiveSessions\x12,\n" +
 	"\x12max_login_attempts\x18\a \x01(\rR\x10maxLoginAttempts\x12!\n" +
 	"\flock_seconds\x18\b \x01(\rR\vlockSeconds\x12!\n" +
-	"\fmfa_required\x18\t \x01(\bR\vmfaRequired\x120\n" +
-	"\x14closure_cooling_days\x18\n" +
-	" \x01(\rR\x12closureCoolingDays\x12B\n" +
+	"\fmfa_required\x18\t \x01(\bR\vmfaRequired\x122\n" +
+	"\x15deletion_cooling_days\x18\n" +
+	" \x01(\rR\x13deletionCoolingDays\x12B\n" +
 	"\x1euser_code_change_interval_days\x18\v \x01(\rR\x1auserCodeChangeIntervalDays\x12.\n" +
 	"\x13password_min_length\x18\f \x01(\rR\x11passwordMinLength\x12.\n" +
 	"\x13password_max_length\x18\r \x01(\rR\x11passwordMaxLength\x124\n" +

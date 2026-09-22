@@ -27,68 +27,68 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AccountActionType 区分对应资源的业务类型。
-type AccountActionType int32
+// UserActionType 区分对应资源的业务类型。
+type UserActionType int32
 
 const (
 	// 未提供有效取值；调用方不得据此推断业务状态。
-	AccountActionType_ACCOUNT_ACTION_TYPE_UNSPECIFIED AccountActionType = 0
-	// ACCOUNT_ACTION_TYPE_PHONE_BINDING_REQUIRED 表示该业务条件为必需。
-	AccountActionType_ACCOUNT_ACTION_TYPE_PHONE_BINDING_REQUIRED AccountActionType = 1
-	// ACCOUNT_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED 表示该业务条件为必需。
-	AccountActionType_ACCOUNT_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED AccountActionType = 2
-	// ACCOUNT_ACTION_TYPE_PASSWORD_RESET_REQUIRED 表示该业务条件为必需。
-	AccountActionType_ACCOUNT_ACTION_TYPE_PASSWORD_RESET_REQUIRED AccountActionType = 3
-	// ACCOUNT_ACTION_TYPE_ACCOUNT_MERGE_IN_PROGRESS 选择 ACCOUNT_MERGE_IN_PROGRESS 业务类型。
-	AccountActionType_ACCOUNT_ACTION_TYPE_ACCOUNT_MERGE_IN_PROGRESS AccountActionType = 4
-	// ACCOUNT_ACTION_TYPE_ACCOUNT_CLOSURE_IN_PROGRESS 选择 ACCOUNT_CLOSURE_IN_PROGRESS 业务类型。
-	AccountActionType_ACCOUNT_ACTION_TYPE_ACCOUNT_CLOSURE_IN_PROGRESS AccountActionType = 5
+	UserActionType_USER_ACTION_TYPE_UNSPECIFIED UserActionType = 0
+	// USER_ACTION_TYPE_PHONE_BINDING_REQUIRED 表示该业务条件为必需。
+	UserActionType_USER_ACTION_TYPE_PHONE_BINDING_REQUIRED UserActionType = 1
+	// USER_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED 表示该业务条件为必需。
+	UserActionType_USER_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED UserActionType = 2
+	// USER_ACTION_TYPE_PASSWORD_RESET_REQUIRED 表示该业务条件为必需。
+	UserActionType_USER_ACTION_TYPE_PASSWORD_RESET_REQUIRED UserActionType = 3
+	// USER_ACTION_TYPE_USER_MERGE_IN_PROGRESS 选择 USER_MERGE_IN_PROGRESS 业务类型。
+	UserActionType_USER_ACTION_TYPE_USER_MERGE_IN_PROGRESS UserActionType = 4
+	// USER_ACTION_TYPE_USER_DELETION_IN_PROGRESS 选择 USER_DELETION_IN_PROGRESS 业务类型。
+	UserActionType_USER_ACTION_TYPE_USER_DELETION_IN_PROGRESS UserActionType = 5
 )
 
-// Enum value maps for AccountActionType.
+// Enum value maps for UserActionType.
 var (
-	AccountActionType_name = map[int32]string{
-		0: "ACCOUNT_ACTION_TYPE_UNSPECIFIED",
-		1: "ACCOUNT_ACTION_TYPE_PHONE_BINDING_REQUIRED",
-		2: "ACCOUNT_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED",
-		3: "ACCOUNT_ACTION_TYPE_PASSWORD_RESET_REQUIRED",
-		4: "ACCOUNT_ACTION_TYPE_ACCOUNT_MERGE_IN_PROGRESS",
-		5: "ACCOUNT_ACTION_TYPE_ACCOUNT_CLOSURE_IN_PROGRESS",
+	UserActionType_name = map[int32]string{
+		0: "USER_ACTION_TYPE_UNSPECIFIED",
+		1: "USER_ACTION_TYPE_PHONE_BINDING_REQUIRED",
+		2: "USER_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED",
+		3: "USER_ACTION_TYPE_PASSWORD_RESET_REQUIRED",
+		4: "USER_ACTION_TYPE_USER_MERGE_IN_PROGRESS",
+		5: "USER_ACTION_TYPE_USER_DELETION_IN_PROGRESS",
 	}
-	AccountActionType_value = map[string]int32{
-		"ACCOUNT_ACTION_TYPE_UNSPECIFIED":                 0,
-		"ACCOUNT_ACTION_TYPE_PHONE_BINDING_REQUIRED":      1,
-		"ACCOUNT_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED":    2,
-		"ACCOUNT_ACTION_TYPE_PASSWORD_RESET_REQUIRED":     3,
-		"ACCOUNT_ACTION_TYPE_ACCOUNT_MERGE_IN_PROGRESS":   4,
-		"ACCOUNT_ACTION_TYPE_ACCOUNT_CLOSURE_IN_PROGRESS": 5,
+	UserActionType_value = map[string]int32{
+		"USER_ACTION_TYPE_UNSPECIFIED":               0,
+		"USER_ACTION_TYPE_PHONE_BINDING_REQUIRED":    1,
+		"USER_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED":  2,
+		"USER_ACTION_TYPE_PASSWORD_RESET_REQUIRED":   3,
+		"USER_ACTION_TYPE_USER_MERGE_IN_PROGRESS":    4,
+		"USER_ACTION_TYPE_USER_DELETION_IN_PROGRESS": 5,
 	}
 )
 
-func (x AccountActionType) Enum() *AccountActionType {
-	p := new(AccountActionType)
+func (x UserActionType) Enum() *UserActionType {
+	p := new(UserActionType)
 	*p = x
 	return p
 }
 
-func (x AccountActionType) String() string {
+func (x UserActionType) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (AccountActionType) Descriptor() protoreflect.EnumDescriptor {
+func (UserActionType) Descriptor() protoreflect.EnumDescriptor {
 	return file_user_consumer_v1_authentication_proto_enumTypes[0].Descriptor()
 }
 
-func (AccountActionType) Type() protoreflect.EnumType {
+func (UserActionType) Type() protoreflect.EnumType {
 	return &file_user_consumer_v1_authentication_proto_enumTypes[0]
 }
 
-func (x AccountActionType) Number() protoreflect.EnumNumber {
+func (x UserActionType) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use AccountActionType.Descriptor instead.
-func (AccountActionType) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use UserActionType.Descriptor instead.
+func (UserActionType) EnumDescriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{0}
 }
 
@@ -595,8 +595,8 @@ func (*RegisterRequest_ExternalIdentity) isRegisterRequest_Proof() {}
 // AuthenticationResult 承载 CompleteRequiredPasswordReset 调用的返回结果。
 type AuthenticationResult struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// account 承载 AuthenticationResult 关联的 Account。
-	Account *v11.Account `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	// user 承载 AuthenticationResult 关联的 User。
+	User *v11.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// session 承载 AuthenticationResult 关联的 Session。
 	Session *v11.Session `protobuf:"bytes,2,opt,name=session,proto3" json:"session,omitempty"`
 	// tokens 承载 AuthenticationResult 关联的 TokenPair。
@@ -635,9 +635,9 @@ func (*AuthenticationResult) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *AuthenticationResult) GetAccount() *v11.Account {
+func (x *AuthenticationResult) GetUser() *v11.User {
 	if x != nil {
-		return x.Account
+		return x.User
 	}
 	return nil
 }
@@ -656,35 +656,35 @@ func (x *AuthenticationResult) GetTokens() *v11.TokenPair {
 	return nil
 }
 
-// AccountAction 描述 Account 状态要求调用方继续执行的动作。
-type AccountAction struct {
+// UserAction 描述 User 状态要求调用方继续执行的动作。
+type UserAction struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// type 区分 AccountAction 的业务类型。
-	Type AccountActionType `protobuf:"varint,1,opt,name=type,proto3,enum=user.consumer.v1.AccountActionType" json:"type,omitempty"`
+	// type 区分 UserAction 的业务类型。
+	Type UserActionType `protobuf:"varint,1,opt,name=type,proto3,enum=user.consumer.v1.UserActionType" json:"type,omitempty"`
 	// action_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ActionToken string `protobuf:"bytes,2,opt,name=action_token,json=actionToken,proto3" json:"action_token,omitempty"`
-	// account 承载 AccountAction 关联的 Account。
-	Account *v11.Account `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
-	// expires_at 指定 AccountAction 失效的时间点。
+	// user 承载 UserAction 关联的 User。
+	User *v11.User `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
+	// expires_at 指定 UserAction 失效的时间点。
 	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AccountAction) Reset() {
-	*x = AccountAction{}
+func (x *UserAction) Reset() {
+	*x = UserAction{}
 	mi := &file_user_consumer_v1_authentication_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AccountAction) String() string {
+func (x *UserAction) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AccountAction) ProtoMessage() {}
+func (*UserAction) ProtoMessage() {}
 
-func (x *AccountAction) ProtoReflect() protoreflect.Message {
+func (x *UserAction) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_authentication_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -696,33 +696,33 @@ func (x *AccountAction) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AccountAction.ProtoReflect.Descriptor instead.
-func (*AccountAction) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserAction.ProtoReflect.Descriptor instead.
+func (*UserAction) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *AccountAction) GetType() AccountActionType {
+func (x *UserAction) GetType() UserActionType {
 	if x != nil {
 		return x.Type
 	}
-	return AccountActionType_ACCOUNT_ACTION_TYPE_UNSPECIFIED
+	return UserActionType_USER_ACTION_TYPE_UNSPECIFIED
 }
 
-func (x *AccountAction) GetActionToken() string {
+func (x *UserAction) GetActionToken() string {
 	if x != nil {
 		return x.ActionToken
 	}
 	return ""
 }
 
-func (x *AccountAction) GetAccount() *v11.Account {
+func (x *UserAction) GetUser() *v11.User {
 	if x != nil {
-		return x.Account
+		return x.User
 	}
 	return nil
 }
 
-func (x *AccountAction) GetExpiresAt() *timestamppb.Timestamp {
+func (x *UserAction) GetExpiresAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.ExpiresAt
 	}
@@ -789,7 +789,7 @@ func (x *RegisterResponse) GetAuthenticated() *AuthenticationResult {
 	return nil
 }
 
-func (x *RegisterResponse) GetActionRequired() *AccountAction {
+func (x *RegisterResponse) GetActionRequired() *UserAction {
 	if x != nil {
 		if x, ok := x.Outcome.(*RegisterResponse_ActionRequired); ok {
 			return x.ActionRequired
@@ -808,8 +808,8 @@ type RegisterResponse_Authenticated struct {
 }
 
 type RegisterResponse_ActionRequired struct {
-	// action_required 承载 Register 关联的 AccountAction。
-	ActionRequired *AccountAction `protobuf:"bytes,2,opt,name=action_required,json=actionRequired,proto3,oneof"`
+	// action_required 承载 Register 关联的 UserAction。
+	ActionRequired *UserAction `protobuf:"bytes,2,opt,name=action_required,json=actionRequired,proto3,oneof"`
 }
 
 func (*RegisterResponse_Authenticated) isRegisterResponse_Outcome() {}
@@ -1099,7 +1099,7 @@ func (x *LoginResponse) GetChallenge() *LoginChallenge {
 	return nil
 }
 
-func (x *LoginResponse) GetActionRequired() *AccountAction {
+func (x *LoginResponse) GetActionRequired() *UserAction {
 	if x != nil {
 		if x, ok := x.Outcome.(*LoginResponse_ActionRequired); ok {
 			return x.ActionRequired
@@ -1123,8 +1123,8 @@ type LoginResponse_Challenge struct {
 }
 
 type LoginResponse_ActionRequired struct {
-	// action_required 承载 Login 关联的 AccountAction。
-	ActionRequired *AccountAction `protobuf:"bytes,3,opt,name=action_required,json=actionRequired,proto3,oneof"`
+	// action_required 承载 Login 关联的 UserAction。
+	ActionRequired *UserAction `protobuf:"bytes,3,opt,name=action_required,json=actionRequired,proto3,oneof"`
 }
 
 func (*LoginResponse_Authenticated) isLoginResponse_Outcome() {}
@@ -1951,20 +1951,21 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\x11external_identity\x18\x03 \x01(\v2'.user.consumer.v1.ExternalIdentityProofH\x00R\x10externalIdentity\x12I\n" +
 	"\x06client\x18\x04 \x01(\v2$.user.types.v1.ConsumerClientContextB\v\xe0A\x02\xfaB\x05\x8a\x01\x02\x10\x01R\x06client\x126\n" +
 	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKeyB\f\n" +
-	"\x05proof\x12\x03\xf8B\x01\"\xac\x01\n" +
-	"\x14AuthenticationResult\x120\n" +
-	"\aaccount\x18\x01 \x01(\v2\x16.user.types.v1.AccountR\aaccount\x120\n" +
+	"\x05proof\x12\x03\xf8B\x01\"\xa3\x01\n" +
+	"\x14AuthenticationResult\x12'\n" +
+	"\x04user\x18\x01 \x01(\v2\x13.user.types.v1.UserR\x04user\x120\n" +
 	"\asession\x18\x02 \x01(\v2\x16.user.types.v1.SessionR\asession\x120\n" +
-	"\x06tokens\x18\x03 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\xd8\x01\n" +
-	"\rAccountAction\x127\n" +
-	"\x04type\x18\x01 \x01(\x0e2#.user.consumer.v1.AccountActionTypeR\x04type\x12!\n" +
-	"\faction_token\x18\x02 \x01(\tR\vactionToken\x120\n" +
-	"\aaccount\x18\x03 \x01(\v2\x16.user.types.v1.AccountR\aaccount\x129\n" +
+	"\x06tokens\x18\x03 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\xc9\x01\n" +
 	"\n" +
-	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xb9\x01\n" +
+	"UserAction\x124\n" +
+	"\x04type\x18\x01 \x01(\x0e2 .user.consumer.v1.UserActionTypeR\x04type\x12!\n" +
+	"\faction_token\x18\x02 \x01(\tR\vactionToken\x12'\n" +
+	"\x04user\x18\x03 \x01(\v2\x13.user.types.v1.UserR\x04user\x129\n" +
+	"\n" +
+	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xb6\x01\n" +
 	"\x10RegisterResponse\x12N\n" +
-	"\rauthenticated\x18\x01 \x01(\v2&.user.consumer.v1.AuthenticationResultH\x00R\rauthenticated\x12J\n" +
-	"\x0faction_required\x18\x02 \x01(\v2\x1f.user.consumer.v1.AccountActionH\x00R\x0eactionRequiredB\t\n" +
+	"\rauthenticated\x18\x01 \x01(\v2&.user.consumer.v1.AuthenticationResultH\x00R\rauthenticated\x12G\n" +
+	"\x0faction_required\x18\x02 \x01(\v2\x1c.user.consumer.v1.UserActionH\x00R\x0eactionRequiredB\t\n" +
 	"\aoutcome\"\xbe\x03\n" +
 	"\fLoginRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12>\n" +
@@ -1980,11 +1981,11 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\rmasked_target\x18\x03 \x01(\tR\fmaskedTarget\x129\n" +
 	"\n" +
 	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x127\n" +
-	"\tresend_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\bresendAt\"\xf8\x01\n" +
+	"\tresend_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\bresendAt\"\xf5\x01\n" +
 	"\rLoginResponse\x12N\n" +
 	"\rauthenticated\x18\x01 \x01(\v2&.user.consumer.v1.AuthenticationResultH\x00R\rauthenticated\x12@\n" +
-	"\tchallenge\x18\x02 \x01(\v2 .user.consumer.v1.LoginChallengeH\x00R\tchallenge\x12J\n" +
-	"\x0faction_required\x18\x03 \x01(\v2\x1f.user.consumer.v1.AccountActionH\x00R\x0eactionRequiredB\t\n" +
+	"\tchallenge\x18\x02 \x01(\v2 .user.consumer.v1.LoginChallengeH\x00R\tchallenge\x12G\n" +
+	"\x0faction_required\x18\x03 \x01(\v2\x1c.user.consumer.v1.UserActionH\x00R\x0eactionRequiredB\t\n" +
 	"\aoutcome\"\x90\x02\n" +
 	"\x1bResendLoginChallengeRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x126\n" +
@@ -2038,14 +2039,14 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x120\n" +
 	"\faction_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vactionToken\x120\n" +
 	"\fnew_password\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\vnewPassword\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey*\xb3\x02\n" +
-	"\x11AccountActionType\x12#\n" +
-	"\x1fACCOUNT_ACTION_TYPE_UNSPECIFIED\x10\x00\x12.\n" +
-	"*ACCOUNT_ACTION_TYPE_PHONE_BINDING_REQUIRED\x10\x01\x120\n" +
-	",ACCOUNT_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED\x10\x02\x12/\n" +
-	"+ACCOUNT_ACTION_TYPE_PASSWORD_RESET_REQUIRED\x10\x03\x121\n" +
-	"-ACCOUNT_ACTION_TYPE_ACCOUNT_MERGE_IN_PROGRESS\x10\x04\x123\n" +
-	"/ACCOUNT_ACTION_TYPE_ACCOUNT_CLOSURE_IN_PROGRESS\x10\x05*\xaf\x01\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey*\x99\x02\n" +
+	"\x0eUserActionType\x12 \n" +
+	"\x1cUSER_ACTION_TYPE_UNSPECIFIED\x10\x00\x12+\n" +
+	"'USER_ACTION_TYPE_PHONE_BINDING_REQUIRED\x10\x01\x12-\n" +
+	")USER_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED\x10\x02\x12,\n" +
+	"(USER_ACTION_TYPE_PASSWORD_RESET_REQUIRED\x10\x03\x12+\n" +
+	"'USER_ACTION_TYPE_USER_MERGE_IN_PROGRESS\x10\x04\x12.\n" +
+	"*USER_ACTION_TYPE_USER_DELETION_IN_PROGRESS\x10\x05*\xaf\x01\n" +
 	"\x14LoginChallengeFactor\x12&\n" +
 	"\"LOGIN_CHALLENGE_FACTOR_UNSPECIFIED\x10\x00\x12$\n" +
 	" LOGIN_CHALLENGE_FACTOR_PHONE_OTP\x10\x01\x12\x1f\n" +
@@ -2080,7 +2081,7 @@ func file_user_consumer_v1_authentication_proto_rawDescGZIP() []byte {
 var file_user_consumer_v1_authentication_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_user_consumer_v1_authentication_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_user_consumer_v1_authentication_proto_goTypes = []any{
-	(AccountActionType)(0),                        // 0: user.consumer.v1.AccountActionType
+	(UserActionType)(0),                           // 0: user.consumer.v1.UserActionType
 	(LoginChallengeFactor)(0),                     // 1: user.consumer.v1.LoginChallengeFactor
 	(*GetAuthenticationOptionsRequest)(nil),       // 2: user.consumer.v1.GetAuthenticationOptionsRequest
 	(*AuthenticationOptions)(nil),                 // 3: user.consumer.v1.AuthenticationOptions
@@ -2089,7 +2090,7 @@ var file_user_consumer_v1_authentication_proto_goTypes = []any{
 	(*ExternalIdentityProof)(nil),                 // 6: user.consumer.v1.ExternalIdentityProof
 	(*RegisterRequest)(nil),                       // 7: user.consumer.v1.RegisterRequest
 	(*AuthenticationResult)(nil),                  // 8: user.consumer.v1.AuthenticationResult
-	(*AccountAction)(nil),                         // 9: user.consumer.v1.AccountAction
+	(*UserAction)(nil),                            // 9: user.consumer.v1.UserAction
 	(*RegisterResponse)(nil),                      // 10: user.consumer.v1.RegisterResponse
 	(*LoginRequest)(nil),                          // 11: user.consumer.v1.LoginRequest
 	(*LoginChallenge)(nil),                        // 12: user.consumer.v1.LoginChallenge
@@ -2109,7 +2110,7 @@ var file_user_consumer_v1_authentication_proto_goTypes = []any{
 	(v11.PhoneBindingRequirement)(0),              // 26: user.types.v1.PhoneBindingRequirement
 	(v11.ExternalIdentityProvider)(0),             // 27: user.types.v1.ExternalIdentityProvider
 	(*v11.ConsumerClientContext)(nil),             // 28: user.types.v1.ConsumerClientContext
-	(*v11.Account)(nil),                           // 29: user.types.v1.Account
+	(*v11.User)(nil),                              // 29: user.types.v1.User
 	(*v11.Session)(nil),                           // 30: user.types.v1.Session
 	(*v11.TokenPair)(nil),                         // 31: user.types.v1.TokenPair
 	(*timestamppb.Timestamp)(nil),                 // 32: google.protobuf.Timestamp
@@ -2125,14 +2126,14 @@ var file_user_consumer_v1_authentication_proto_depIdxs = []int32{
 	4,  // 6: user.consumer.v1.RegisterRequest.phone_otp:type_name -> user.consumer.v1.PhoneOtpProof
 	6,  // 7: user.consumer.v1.RegisterRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
 	28, // 8: user.consumer.v1.RegisterRequest.client:type_name -> user.types.v1.ConsumerClientContext
-	29, // 9: user.consumer.v1.AuthenticationResult.account:type_name -> user.types.v1.Account
+	29, // 9: user.consumer.v1.AuthenticationResult.user:type_name -> user.types.v1.User
 	30, // 10: user.consumer.v1.AuthenticationResult.session:type_name -> user.types.v1.Session
 	31, // 11: user.consumer.v1.AuthenticationResult.tokens:type_name -> user.types.v1.TokenPair
-	0,  // 12: user.consumer.v1.AccountAction.type:type_name -> user.consumer.v1.AccountActionType
-	29, // 13: user.consumer.v1.AccountAction.account:type_name -> user.types.v1.Account
-	32, // 14: user.consumer.v1.AccountAction.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 12: user.consumer.v1.UserAction.type:type_name -> user.consumer.v1.UserActionType
+	29, // 13: user.consumer.v1.UserAction.user:type_name -> user.types.v1.User
+	32, // 14: user.consumer.v1.UserAction.expires_at:type_name -> google.protobuf.Timestamp
 	8,  // 15: user.consumer.v1.RegisterResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
-	9,  // 16: user.consumer.v1.RegisterResponse.action_required:type_name -> user.consumer.v1.AccountAction
+	9,  // 16: user.consumer.v1.RegisterResponse.action_required:type_name -> user.consumer.v1.UserAction
 	24, // 17: user.consumer.v1.LoginRequest.app_id:type_name -> common.v1.AppId
 	4,  // 18: user.consumer.v1.LoginRequest.phone_otp:type_name -> user.consumer.v1.PhoneOtpProof
 	5,  // 19: user.consumer.v1.LoginRequest.phone_password:type_name -> user.consumer.v1.PhonePasswordProof
@@ -2143,7 +2144,7 @@ var file_user_consumer_v1_authentication_proto_depIdxs = []int32{
 	32, // 24: user.consumer.v1.LoginChallenge.resend_at:type_name -> google.protobuf.Timestamp
 	8,  // 25: user.consumer.v1.LoginResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
 	12, // 26: user.consumer.v1.LoginResponse.challenge:type_name -> user.consumer.v1.LoginChallenge
-	9,  // 27: user.consumer.v1.LoginResponse.action_required:type_name -> user.consumer.v1.AccountAction
+	9,  // 27: user.consumer.v1.LoginResponse.action_required:type_name -> user.consumer.v1.UserAction
 	24, // 28: user.consumer.v1.ResendLoginChallengeRequest.app_id:type_name -> common.v1.AppId
 	28, // 29: user.consumer.v1.ResendLoginChallengeRequest.client:type_name -> user.types.v1.ConsumerClientContext
 	24, // 30: user.consumer.v1.CompleteLoginChallengeRequest.app_id:type_name -> common.v1.AppId

@@ -181,7 +181,7 @@ func (m *UserAppPolicyPatch) validate(all bool) error {
 
 	// no validation rules for MfaRequired
 
-	// no validation rules for ClosureCoolingDays
+	// no validation rules for DeletionCoolingDays
 
 	// no validation rules for UserCodeChangeIntervalDays
 

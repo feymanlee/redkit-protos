@@ -23,8 +23,8 @@ enum UserErrorReason {
   PASSWORD_RESET_REQUIRED = 303 [(errors.code) = 403];
   // NOT_FOUND 表示因 NOT_FOUND 条件导致流程无法按原路径继续。
   NOT_FOUND = 400 [(errors.code) = 404];
-  // ACCOUNT_NOT_FOUND 表示因 ACCOUNT_NOT_FOUND 条件导致流程无法按原路径继续。
-  ACCOUNT_NOT_FOUND = 401 [(errors.code) = 404];
+  // USER_NOT_FOUND 表示因 USER_NOT_FOUND 条件导致流程无法按原路径继续。
+  USER_NOT_FOUND = 401 [(errors.code) = 404];
   // CREDENTIAL_NOT_FOUND 表示因 CREDENTIAL_NOT_FOUND 条件导致流程无法按原路径继续。
   CREDENTIAL_NOT_FOUND = 402 [(errors.code) = 404];
   // SESSION_NOT_FOUND 表示因 SESSION_NOT_FOUND 条件导致流程无法按原路径继续。
@@ -35,8 +35,8 @@ enum UserErrorReason {
   IDEMPOTENCY_CONFLICT = 901 [(errors.code) = 409];
   // CREDENTIAL_ALREADY_BOUND 表示因 CREDENTIAL_ALREADY_BOUND 条件导致流程无法按原路径继续。
   CREDENTIAL_ALREADY_BOUND = 902 [(errors.code) = 409];
-  // INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-  INVALID_ACCOUNT_STATE = 903 [(errors.code) = 409];
+  // INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+  INVALID_USER_STATE = 903 [(errors.code) = 409];
   // 当前不可供业务流程选择或使用。
   USER_CODE_UNAVAILABLE = 904 [(errors.code) = 409];
   // 正在处理中，尚未形成终态。

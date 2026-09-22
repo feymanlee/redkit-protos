@@ -36,7 +36,7 @@ var (
 	_ = anypb.Any{}
 	_ = sort.Sort
 
-	_ = useradministrationpb.AccountSuspensionReason(0)
+	_ = useradministrationpb.UserSuspensionReason(0)
 )
 
 // Validate checks the field values on GetAdminUserRequest with the rules
@@ -390,7 +390,7 @@ func (m *AdminSuspendUserRequest) validate(all bool) error {
 	if _, ok := _AdminSuspendUserRequest_ReasonCode_NotInLookup[m.GetReasonCode()]; ok {
 		err := AdminSuspendUserRequestValidationError{
 			field:  "ReasonCode",
-			reason: "value must not be in list [ACCOUNT_SUSPENSION_REASON_UNSPECIFIED]",
+			reason: "value must not be in list [USER_SUSPENSION_REASON_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -398,7 +398,7 @@ func (m *AdminSuspendUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := useradministrationpb.AccountSuspensionReason_name[int32(m.GetReasonCode())]; !ok {
+	if _, ok := useradministrationpb.UserSuspensionReason_name[int32(m.GetReasonCode())]; !ok {
 		err := AdminSuspendUserRequestValidationError{
 			field:  "ReasonCode",
 			reason: "value must be one of the defined enum values",
@@ -504,7 +504,7 @@ var _ interface {
 	ErrorName() string
 } = AdminSuspendUserRequestValidationError{}
 
-var _AdminSuspendUserRequest_ReasonCode_NotInLookup = map[useradministrationpb.AccountSuspensionReason]struct{}{
+var _AdminSuspendUserRequest_ReasonCode_NotInLookup = map[useradministrationpb.UserSuspensionReason]struct{}{
 	0: {},
 }
 
@@ -537,7 +537,7 @@ func (m *AdminReactivateUserRequest) validate(all bool) error {
 	if _, ok := _AdminReactivateUserRequest_ReasonCode_NotInLookup[m.GetReasonCode()]; ok {
 		err := AdminReactivateUserRequestValidationError{
 			field:  "ReasonCode",
-			reason: "value must not be in list [ACCOUNT_REACTIVATION_REASON_UNSPECIFIED]",
+			reason: "value must not be in list [USER_REACTIVATION_REASON_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -545,7 +545,7 @@ func (m *AdminReactivateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := useradministrationpb.AccountReactivationReason_name[int32(m.GetReasonCode())]; !ok {
+	if _, ok := useradministrationpb.UserReactivationReason_name[int32(m.GetReasonCode())]; !ok {
 		err := AdminReactivateUserRequestValidationError{
 			field:  "ReasonCode",
 			reason: "value must be one of the defined enum values",
@@ -651,7 +651,7 @@ var _ interface {
 	ErrorName() string
 } = AdminReactivateUserRequestValidationError{}
 
-var _AdminReactivateUserRequest_ReasonCode_NotInLookup = map[useradministrationpb.AccountReactivationReason]struct{}{
+var _AdminReactivateUserRequest_ReasonCode_NotInLookup = map[useradministrationpb.UserReactivationReason]struct{}{
 	0: {},
 }
 
@@ -1022,22 +1022,22 @@ var _ interface {
 	ErrorName() string
 } = AdminResetUserCodeRequestValidationError{}
 
-// Validate checks the field values on AdminBeginAccountClosureRequest with the
+// Validate checks the field values on AdminBeginUserDeletionRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *AdminBeginAccountClosureRequest) Validate() error {
+func (m *AdminBeginUserDeletionRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on AdminBeginAccountClosureRequest with
+// ValidateAll checks the field values on AdminBeginUserDeletionRequest with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the result is a list of violation errors wrapped in
-// AdminBeginAccountClosureRequestMultiError, or nil if none found.
-func (m *AdminBeginAccountClosureRequest) ValidateAll() error {
+// AdminBeginUserDeletionRequestMultiError, or nil if none found.
+func (m *AdminBeginUserDeletionRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *AdminBeginAccountClosureRequest) validate(all bool) error {
+func (m *AdminBeginUserDeletionRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1045,7 +1045,7 @@ func (m *AdminBeginAccountClosureRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetUserId() <= 0 {
-		err := AdminBeginAccountClosureRequestValidationError{
+		err := AdminBeginUserDeletionRequestValidationError{
 			field:  "UserId",
 			reason: "value must be greater than 0",
 		}
@@ -1056,7 +1056,7 @@ func (m *AdminBeginAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetReason()); l < 1 || l > 512 {
-		err := AdminBeginAccountClosureRequestValidationError{
+		err := AdminBeginUserDeletionRequestValidationError{
 			field:  "Reason",
 			reason: "value length must be between 1 and 512 runes, inclusive",
 		}
@@ -1067,7 +1067,7 @@ func (m *AdminBeginAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := AdminBeginAccountClosureRequestValidationError{
+		err := AdminBeginUserDeletionRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -1078,19 +1078,19 @@ func (m *AdminBeginAccountClosureRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return AdminBeginAccountClosureRequestMultiError(errors)
+		return AdminBeginUserDeletionRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// AdminBeginAccountClosureRequestMultiError is an error wrapping multiple
-// validation errors returned by AdminBeginAccountClosureRequest.ValidateAll()
+// AdminBeginUserDeletionRequestMultiError is an error wrapping multiple
+// validation errors returned by AdminBeginUserDeletionRequest.ValidateAll()
 // if the designated constraints aren't met.
-type AdminBeginAccountClosureRequestMultiError []error
+type AdminBeginUserDeletionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AdminBeginAccountClosureRequestMultiError) Error() string {
+func (m AdminBeginUserDeletionRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1099,12 +1099,12 @@ func (m AdminBeginAccountClosureRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AdminBeginAccountClosureRequestMultiError) AllErrors() []error { return m }
+func (m AdminBeginUserDeletionRequestMultiError) AllErrors() []error { return m }
 
-// AdminBeginAccountClosureRequestValidationError is the validation error
-// returned by AdminBeginAccountClosureRequest.Validate if the designated
+// AdminBeginUserDeletionRequestValidationError is the validation error
+// returned by AdminBeginUserDeletionRequest.Validate if the designated
 // constraints aren't met.
-type AdminBeginAccountClosureRequestValidationError struct {
+type AdminBeginUserDeletionRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1112,24 +1112,24 @@ type AdminBeginAccountClosureRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e AdminBeginAccountClosureRequestValidationError) Field() string { return e.field }
+func (e AdminBeginUserDeletionRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AdminBeginAccountClosureRequestValidationError) Reason() string { return e.reason }
+func (e AdminBeginUserDeletionRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AdminBeginAccountClosureRequestValidationError) Cause() error { return e.cause }
+func (e AdminBeginUserDeletionRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AdminBeginAccountClosureRequestValidationError) Key() bool { return e.key }
+func (e AdminBeginUserDeletionRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AdminBeginAccountClosureRequestValidationError) ErrorName() string {
-	return "AdminBeginAccountClosureRequestValidationError"
+func (e AdminBeginUserDeletionRequestValidationError) ErrorName() string {
+	return "AdminBeginUserDeletionRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e AdminBeginAccountClosureRequestValidationError) Error() string {
+func (e AdminBeginUserDeletionRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1141,14 +1141,14 @@ func (e AdminBeginAccountClosureRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAdminBeginAccountClosureRequest.%s: %s%s",
+		"invalid %sAdminBeginUserDeletionRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AdminBeginAccountClosureRequestValidationError{}
+var _ error = AdminBeginUserDeletionRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1156,25 +1156,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AdminBeginAccountClosureRequestValidationError{}
+} = AdminBeginUserDeletionRequestValidationError{}
 
-// Validate checks the field values on AdminCancelAccountClosureRequest with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the first error encountered is returned, or nil if there are
-// no violations.
-func (m *AdminCancelAccountClosureRequest) Validate() error {
+// Validate checks the field values on AdminCancelUserDeletionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *AdminCancelUserDeletionRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on AdminCancelAccountClosureRequest with
+// ValidateAll checks the field values on AdminCancelUserDeletionRequest with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the result is a list of violation errors wrapped in
-// AdminCancelAccountClosureRequestMultiError, or nil if none found.
-func (m *AdminCancelAccountClosureRequest) ValidateAll() error {
+// AdminCancelUserDeletionRequestMultiError, or nil if none found.
+func (m *AdminCancelUserDeletionRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *AdminCancelAccountClosureRequest) validate(all bool) error {
+func (m *AdminCancelUserDeletionRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1182,7 +1181,7 @@ func (m *AdminCancelAccountClosureRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetUserId() <= 0 {
-		err := AdminCancelAccountClosureRequestValidationError{
+		err := AdminCancelUserDeletionRequestValidationError{
 			field:  "UserId",
 			reason: "value must be greater than 0",
 		}
@@ -1193,7 +1192,7 @@ func (m *AdminCancelAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetReason()); l < 1 || l > 512 {
-		err := AdminCancelAccountClosureRequestValidationError{
+		err := AdminCancelUserDeletionRequestValidationError{
 			field:  "Reason",
 			reason: "value length must be between 1 and 512 runes, inclusive",
 		}
@@ -1204,7 +1203,7 @@ func (m *AdminCancelAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := AdminCancelAccountClosureRequestValidationError{
+		err := AdminCancelUserDeletionRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -1215,20 +1214,19 @@ func (m *AdminCancelAccountClosureRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return AdminCancelAccountClosureRequestMultiError(errors)
+		return AdminCancelUserDeletionRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// AdminCancelAccountClosureRequestMultiError is an error wrapping multiple
-// validation errors returned by
-// AdminCancelAccountClosureRequest.ValidateAll() if the designated
-// constraints aren't met.
-type AdminCancelAccountClosureRequestMultiError []error
+// AdminCancelUserDeletionRequestMultiError is an error wrapping multiple
+// validation errors returned by AdminCancelUserDeletionRequest.ValidateAll()
+// if the designated constraints aren't met.
+type AdminCancelUserDeletionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AdminCancelAccountClosureRequestMultiError) Error() string {
+func (m AdminCancelUserDeletionRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1237,12 +1235,12 @@ func (m AdminCancelAccountClosureRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AdminCancelAccountClosureRequestMultiError) AllErrors() []error { return m }
+func (m AdminCancelUserDeletionRequestMultiError) AllErrors() []error { return m }
 
-// AdminCancelAccountClosureRequestValidationError is the validation error
-// returned by AdminCancelAccountClosureRequest.Validate if the designated
+// AdminCancelUserDeletionRequestValidationError is the validation error
+// returned by AdminCancelUserDeletionRequest.Validate if the designated
 // constraints aren't met.
-type AdminCancelAccountClosureRequestValidationError struct {
+type AdminCancelUserDeletionRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1250,24 +1248,24 @@ type AdminCancelAccountClosureRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e AdminCancelAccountClosureRequestValidationError) Field() string { return e.field }
+func (e AdminCancelUserDeletionRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AdminCancelAccountClosureRequestValidationError) Reason() string { return e.reason }
+func (e AdminCancelUserDeletionRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AdminCancelAccountClosureRequestValidationError) Cause() error { return e.cause }
+func (e AdminCancelUserDeletionRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AdminCancelAccountClosureRequestValidationError) Key() bool { return e.key }
+func (e AdminCancelUserDeletionRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AdminCancelAccountClosureRequestValidationError) ErrorName() string {
-	return "AdminCancelAccountClosureRequestValidationError"
+func (e AdminCancelUserDeletionRequestValidationError) ErrorName() string {
+	return "AdminCancelUserDeletionRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e AdminCancelAccountClosureRequestValidationError) Error() string {
+func (e AdminCancelUserDeletionRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1279,14 +1277,14 @@ func (e AdminCancelAccountClosureRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAdminCancelAccountClosureRequest.%s: %s%s",
+		"invalid %sAdminCancelUserDeletionRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AdminCancelAccountClosureRequestValidationError{}
+var _ error = AdminCancelUserDeletionRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1294,7 +1292,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AdminCancelAccountClosureRequestValidationError{}
+} = AdminCancelUserDeletionRequestValidationError{}
 
 // Validate checks the field values on AdminRevealUserPIIRequest with the rules
 // defined in the proto definition for this message. If any rules are

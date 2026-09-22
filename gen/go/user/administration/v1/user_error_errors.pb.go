@@ -123,18 +123,18 @@ func ErrorNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, UserErrorReason_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
-// ACCOUNT_NOT_FOUND 表示因 ACCOUNT_NOT_FOUND 条件导致流程无法按原路径继续。
-func IsAccountNotFound(err error) bool {
+// USER_NOT_FOUND 表示因 USER_NOT_FOUND 条件导致流程无法按原路径继续。
+func IsUserNotFound(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == UserErrorReason_ACCOUNT_NOT_FOUND.String() && e.Code == 404
+	return e.Reason == UserErrorReason_USER_NOT_FOUND.String() && e.Code == 404
 }
 
-// ACCOUNT_NOT_FOUND 表示因 ACCOUNT_NOT_FOUND 条件导致流程无法按原路径继续。
-func ErrorAccountNotFound(format string, args ...interface{}) *errors.Error {
-	return errors.New(404, UserErrorReason_ACCOUNT_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+// USER_NOT_FOUND 表示因 USER_NOT_FOUND 条件导致流程无法按原路径继续。
+func ErrorUserNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(404, UserErrorReason_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
 // CREDENTIAL_NOT_FOUND 表示因 CREDENTIAL_NOT_FOUND 条件导致流程无法按原路径继续。
@@ -207,18 +207,18 @@ func ErrorCredentialAlreadyBound(format string, args ...interface{}) *errors.Err
 	return errors.New(409, UserErrorReason_CREDENTIAL_ALREADY_BOUND.String(), fmt.Sprintf(format, args...))
 }
 
-// INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-func IsInvalidAccountState(err error) bool {
+// INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+func IsInvalidUserState(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == UserErrorReason_INVALID_ACCOUNT_STATE.String() && e.Code == 409
+	return e.Reason == UserErrorReason_INVALID_USER_STATE.String() && e.Code == 409
 }
 
-// INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-func ErrorInvalidAccountState(format string, args ...interface{}) *errors.Error {
-	return errors.New(409, UserErrorReason_INVALID_ACCOUNT_STATE.String(), fmt.Sprintf(format, args...))
+// INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+func ErrorInvalidUserState(format string, args ...interface{}) *errors.Error {
+	return errors.New(409, UserErrorReason_INVALID_USER_STATE.String(), fmt.Sprintf(format, args...))
 }
 
 // 当前不可供业务流程选择或使用。

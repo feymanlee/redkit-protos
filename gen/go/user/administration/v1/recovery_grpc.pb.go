@@ -38,7 +38,7 @@ const (
 //
 // RecoveryService 管理未登录恢复申请提交和可信后台初审。
 type RecoveryServiceClient interface {
-	// SubmitRecoveryRequest 仅为恰有一个活动 Credential 的 Account 建立申请；所有验证通过的提交返回同形态 opaque continuation，验证或依赖失败保持可重试错误。
+	// SubmitRecoveryRequest 仅为恰有一个活动 Credential 的 User 建立申请；所有验证通过的提交返回同形态 opaque continuation，验证或依赖失败保持可重试错误。
 	SubmitRecoveryRequest(ctx context.Context, in *SubmitRecoveryRequestRequest, opts ...grpc.CallOption) (*SubmitRecoveryRequestResponse, error)
 	// CreateTrustedDeviceRecoveryChallenge 为 Request 所属 User 的显式登记可信设备创建短时 Challenge；只持久化摘要。
 	CreateTrustedDeviceRecoveryChallenge(ctx context.Context, in *CreateTrustedDeviceRecoveryChallengeRequest, opts ...grpc.CallOption) (*TrustedDeviceRecoveryChallenge, error)
@@ -186,7 +186,7 @@ func (c *recoveryServiceClient) CompleteRecoveryRequest(ctx context.Context, in 
 //
 // RecoveryService 管理未登录恢复申请提交和可信后台初审。
 type RecoveryServiceServer interface {
-	// SubmitRecoveryRequest 仅为恰有一个活动 Credential 的 Account 建立申请；所有验证通过的提交返回同形态 opaque continuation，验证或依赖失败保持可重试错误。
+	// SubmitRecoveryRequest 仅为恰有一个活动 Credential 的 User 建立申请；所有验证通过的提交返回同形态 opaque continuation，验证或依赖失败保持可重试错误。
 	SubmitRecoveryRequest(context.Context, *SubmitRecoveryRequestRequest) (*SubmitRecoveryRequestResponse, error)
 	// CreateTrustedDeviceRecoveryChallenge 为 Request 所属 User 的显式登记可信设备创建短时 Challenge；只持久化摘要。
 	CreateTrustedDeviceRecoveryChallenge(context.Context, *CreateTrustedDeviceRecoveryChallengeRequest) (*TrustedDeviceRecoveryChallenge, error)

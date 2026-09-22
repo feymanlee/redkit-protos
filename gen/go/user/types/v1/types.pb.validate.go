@@ -39,21 +39,21 @@ var (
 	_ = commonpb.AppId(0)
 )
 
-// Validate checks the field values on Account with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *Account) Validate() error {
+// Validate checks the field values on User with the rules defined in the proto
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
+func (m *User) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Account with the rules defined in the
+// ValidateAll checks the field values on User with the rules defined in the
 // proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in AccountMultiError, or nil if none found.
-func (m *Account) ValidateAll() error {
+// a list of violation errors wrapped in UserMultiError, or nil if none found.
+func (m *User) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Account) validate(all bool) error {
+func (m *User) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -74,7 +74,7 @@ func (m *Account) validate(all bool) error {
 		switch v := interface{}(m.GetSuspendedUntil()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "SuspendedUntil",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -82,7 +82,7 @@ func (m *Account) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "SuspendedUntil",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -91,7 +91,7 @@ func (m *Account) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetSuspendedUntil()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountValidationError{
+			return UserValidationError{
 				field:  "SuspendedUntil",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -100,28 +100,28 @@ func (m *Account) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetClosingAt()).(type) {
+		switch v := interface{}(m.GetDeletingAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountValidationError{
-					field:  "ClosingAt",
+				errors = append(errors, UserValidationError{
+					field:  "DeletingAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountValidationError{
-					field:  "ClosingAt",
+				errors = append(errors, UserValidationError{
+					field:  "DeletingAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetClosingAt()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetDeletingAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountValidationError{
-				field:  "ClosingAt",
+			return UserValidationError{
+				field:  "DeletingAt",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -129,28 +129,28 @@ func (m *Account) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetClosedAt()).(type) {
+		switch v := interface{}(m.GetDeletedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountValidationError{
-					field:  "ClosedAt",
+				errors = append(errors, UserValidationError{
+					field:  "DeletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountValidationError{
-					field:  "ClosedAt",
+				errors = append(errors, UserValidationError{
+					field:  "DeletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetClosedAt()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetDeletedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountValidationError{
-				field:  "ClosedAt",
+			return UserValidationError{
+				field:  "DeletedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -161,7 +161,7 @@ func (m *Account) validate(all bool) error {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -169,7 +169,7 @@ func (m *Account) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -178,7 +178,7 @@ func (m *Account) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountValidationError{
+			return UserValidationError{
 				field:  "CreatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -190,7 +190,7 @@ func (m *Account) validate(all bool) error {
 		switch v := interface{}(m.GetUpdatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -198,7 +198,7 @@ func (m *Account) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountValidationError{
+				errors = append(errors, UserValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -207,7 +207,7 @@ func (m *Account) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountValidationError{
+			return UserValidationError{
 				field:  "UpdatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -216,18 +216,18 @@ func (m *Account) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return AccountMultiError(errors)
+		return UserMultiError(errors)
 	}
 
 	return nil
 }
 
-// AccountMultiError is an error wrapping multiple validation errors returned
-// by Account.ValidateAll() if the designated constraints aren't met.
-type AccountMultiError []error
+// UserMultiError is an error wrapping multiple validation errors returned by
+// User.ValidateAll() if the designated constraints aren't met.
+type UserMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AccountMultiError) Error() string {
+func (m UserMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -236,11 +236,11 @@ func (m AccountMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AccountMultiError) AllErrors() []error { return m }
+func (m UserMultiError) AllErrors() []error { return m }
 
-// AccountValidationError is the validation error returned by Account.Validate
-// if the designated constraints aren't met.
-type AccountValidationError struct {
+// UserValidationError is the validation error returned by User.Validate if the
+// designated constraints aren't met.
+type UserValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -248,22 +248,22 @@ type AccountValidationError struct {
 }
 
 // Field function returns field value.
-func (e AccountValidationError) Field() string { return e.field }
+func (e UserValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AccountValidationError) Reason() string { return e.reason }
+func (e UserValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AccountValidationError) Cause() error { return e.cause }
+func (e UserValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AccountValidationError) Key() bool { return e.key }
+func (e UserValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AccountValidationError) ErrorName() string { return "AccountValidationError" }
+func (e UserValidationError) ErrorName() string { return "UserValidationError" }
 
 // Error satisfies the builtin error interface
-func (e AccountValidationError) Error() string {
+func (e UserValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -275,14 +275,14 @@ func (e AccountValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAccount.%s: %s%s",
+		"invalid %sUser.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AccountValidationError{}
+var _ error = UserValidationError{}
 
 var _ interface {
 	Field() string
@@ -290,7 +290,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AccountValidationError{}
+} = UserValidationError{}
 
 // Validate checks the field values on Profile with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -1538,22 +1538,22 @@ var _ interface {
 	ErrorName() string
 } = DeviceValidationError{}
 
-// Validate checks the field values on ConsumerAccountCapabilities with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on ConsumerUserCapabilities with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ConsumerAccountCapabilities) Validate() error {
+func (m *ConsumerUserCapabilities) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ConsumerAccountCapabilities with the
+// ValidateAll checks the field values on ConsumerUserCapabilities with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ConsumerAccountCapabilitiesMultiError, or nil if none found.
-func (m *ConsumerAccountCapabilities) ValidateAll() error {
+// ConsumerUserCapabilitiesMultiError, or nil if none found.
+func (m *ConsumerUserCapabilities) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ConsumerAccountCapabilities) validate(all bool) error {
+func (m *ConsumerUserCapabilities) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1574,7 +1574,7 @@ func (m *ConsumerAccountCapabilities) validate(all bool) error {
 		switch v := interface{}(m.GetUserCodeChangeAvailableAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ConsumerAccountCapabilitiesValidationError{
+				errors = append(errors, ConsumerUserCapabilitiesValidationError{
 					field:  "UserCodeChangeAvailableAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1582,7 +1582,7 @@ func (m *ConsumerAccountCapabilities) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, ConsumerAccountCapabilitiesValidationError{
+				errors = append(errors, ConsumerUserCapabilitiesValidationError{
 					field:  "UserCodeChangeAvailableAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1591,7 +1591,7 @@ func (m *ConsumerAccountCapabilities) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUserCodeChangeAvailableAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return ConsumerAccountCapabilitiesValidationError{
+			return ConsumerUserCapabilitiesValidationError{
 				field:  "UserCodeChangeAvailableAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -1601,24 +1601,24 @@ func (m *ConsumerAccountCapabilities) validate(all bool) error {
 
 	// no validation rules for CanStartMerge
 
-	// no validation rules for CanStartClosure
+	// no validation rules for CanStartDeletion
 
 	// no validation rules for ActiveLifecycleOperationType
 
 	if len(errors) > 0 {
-		return ConsumerAccountCapabilitiesMultiError(errors)
+		return ConsumerUserCapabilitiesMultiError(errors)
 	}
 
 	return nil
 }
 
-// ConsumerAccountCapabilitiesMultiError is an error wrapping multiple
-// validation errors returned by ConsumerAccountCapabilities.ValidateAll() if
-// the designated constraints aren't met.
-type ConsumerAccountCapabilitiesMultiError []error
+// ConsumerUserCapabilitiesMultiError is an error wrapping multiple validation
+// errors returned by ConsumerUserCapabilities.ValidateAll() if the designated
+// constraints aren't met.
+type ConsumerUserCapabilitiesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ConsumerAccountCapabilitiesMultiError) Error() string {
+func (m ConsumerUserCapabilitiesMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1627,12 +1627,11 @@ func (m ConsumerAccountCapabilitiesMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ConsumerAccountCapabilitiesMultiError) AllErrors() []error { return m }
+func (m ConsumerUserCapabilitiesMultiError) AllErrors() []error { return m }
 
-// ConsumerAccountCapabilitiesValidationError is the validation error returned
-// by ConsumerAccountCapabilities.Validate if the designated constraints
-// aren't met.
-type ConsumerAccountCapabilitiesValidationError struct {
+// ConsumerUserCapabilitiesValidationError is the validation error returned by
+// ConsumerUserCapabilities.Validate if the designated constraints aren't met.
+type ConsumerUserCapabilitiesValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1640,24 +1639,24 @@ type ConsumerAccountCapabilitiesValidationError struct {
 }
 
 // Field function returns field value.
-func (e ConsumerAccountCapabilitiesValidationError) Field() string { return e.field }
+func (e ConsumerUserCapabilitiesValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ConsumerAccountCapabilitiesValidationError) Reason() string { return e.reason }
+func (e ConsumerUserCapabilitiesValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ConsumerAccountCapabilitiesValidationError) Cause() error { return e.cause }
+func (e ConsumerUserCapabilitiesValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ConsumerAccountCapabilitiesValidationError) Key() bool { return e.key }
+func (e ConsumerUserCapabilitiesValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ConsumerAccountCapabilitiesValidationError) ErrorName() string {
-	return "ConsumerAccountCapabilitiesValidationError"
+func (e ConsumerUserCapabilitiesValidationError) ErrorName() string {
+	return "ConsumerUserCapabilitiesValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ConsumerAccountCapabilitiesValidationError) Error() string {
+func (e ConsumerUserCapabilitiesValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1669,14 +1668,14 @@ func (e ConsumerAccountCapabilitiesValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sConsumerAccountCapabilities.%s: %s%s",
+		"invalid %sConsumerUserCapabilities.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ConsumerAccountCapabilitiesValidationError{}
+var _ error = ConsumerUserCapabilitiesValidationError{}
 
 var _ interface {
 	Field() string
@@ -1684,7 +1683,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ConsumerAccountCapabilitiesValidationError{}
+} = ConsumerUserCapabilitiesValidationError{}
 
 // Validate checks the field values on SecurityOverview with the rules defined
 // in the proto definition for this message. If any rules are violated, the

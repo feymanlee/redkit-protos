@@ -37,7 +37,7 @@ type UserReference struct {
 	// user_code 提供 UserReference 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,4,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
 	// status 表示 UserReference 当前可观察的生命周期状态。
-	Status v11.AccountStatus `protobuf:"varint,5,opt,name=status,proto3,enum=user.types.v1.AccountStatus" json:"status,omitempty"`
+	Status v11.UserStatus `protobuf:"varint,5,opt,name=status,proto3,enum=user.types.v1.UserStatus" json:"status,omitempty"`
 	// can_initiate_business 显式表示 UserReference 是否满足该条件。
 	CanInitiateBusiness bool `protobuf:"varint,6,opt,name=can_initiate_business,json=canInitiateBusiness,proto3" json:"can_initiate_business,omitempty"`
 	// can_receive_business 显式表示 UserReference 是否满足该条件。
@@ -104,11 +104,11 @@ func (x *UserReference) GetUserCode() string {
 	return ""
 }
 
-func (x *UserReference) GetStatus() v11.AccountStatus {
+func (x *UserReference) GetStatus() v11.UserStatus {
 	if x != nil {
 		return x.Status
 	}
-	return v11.AccountStatus(0)
+	return v11.UserStatus(0)
 }
 
 func (x *UserReference) GetCanInitiateBusiness() bool {
@@ -432,13 +432,13 @@ var File_user_internal_v1_identity_proto protoreflect.FileDescriptor
 
 const file_user_internal_v1_identity_proto_rawDesc = "" +
 	"\n" +
-	"\x1fuser/internal/v1/identity.proto\x12\x10user.internal.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xb6\x02\n" +
+	"\x1fuser/internal/v1/identity.proto\x12\x10user.internal.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xb3\x02\n" +
 	"\rUserReference\x12'\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12*\n" +
 	"\x11canonical_user_id\x18\x03 \x01(\x04R\x0fcanonicalUserId\x12\x1b\n" +
-	"\tuser_code\x18\x04 \x01(\tR\buserCode\x124\n" +
-	"\x06status\x18\x05 \x01(\x0e2\x1c.user.types.v1.AccountStatusR\x06status\x122\n" +
+	"\tuser_code\x18\x04 \x01(\tR\buserCode\x121\n" +
+	"\x06status\x18\x05 \x01(\x0e2\x19.user.types.v1.UserStatusR\x06status\x122\n" +
 	"\x15can_initiate_business\x18\x06 \x01(\bR\x13canInitiateBusiness\x120\n" +
 	"\x14can_receive_business\x18\a \x01(\bR\x12canReceiveBusiness\"y\n" +
 	"\x1aResolveUserIdentityRequest\x126\n" +
@@ -485,12 +485,12 @@ var file_user_internal_v1_identity_proto_goTypes = []any{
 	(*BatchGetPublicProfilesRequest)(nil),  // 5: user.internal.v1.BatchGetPublicProfilesRequest
 	(*BatchGetPublicProfilesResponse)(nil), // 6: user.internal.v1.BatchGetPublicProfilesResponse
 	(v1.AppId)(0),                          // 7: common.v1.AppId
-	(v11.AccountStatus)(0),                 // 8: user.types.v1.AccountStatus
+	(v11.UserStatus)(0),                    // 8: user.types.v1.UserStatus
 	(*v11.PublicProfile)(nil),              // 9: user.types.v1.PublicProfile
 }
 var file_user_internal_v1_identity_proto_depIdxs = []int32{
 	7,  // 0: user.internal.v1.UserReference.app_id:type_name -> common.v1.AppId
-	8,  // 1: user.internal.v1.UserReference.status:type_name -> user.types.v1.AccountStatus
+	8,  // 1: user.internal.v1.UserReference.status:type_name -> user.types.v1.UserStatus
 	7,  // 2: user.internal.v1.ResolveUserIdentityRequest.app_id:type_name -> common.v1.AppId
 	0,  // 3: user.internal.v1.ResolveUserIdentityResponse.canonical_user:type_name -> user.internal.v1.UserReference
 	7,  // 4: user.internal.v1.BatchResolveUsersRequest.app_id:type_name -> common.v1.AppId

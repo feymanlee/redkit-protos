@@ -26,76 +26,76 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AccountRecoveryStatus 刻画对应资源的生命周期状态。
-type AccountRecoveryStatus int32
+// UserRecoveryStatus 刻画对应资源的生命周期状态。
+type UserRecoveryStatus int32
 
 const (
 	// 未提供有效取值；调用方不得据此推断业务状态。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_UNSPECIFIED AccountRecoveryStatus = 0
+	UserRecoveryStatus_USER_RECOVERY_STATUS_UNSPECIFIED UserRecoveryStatus = 0
 	// 已提交处理，等待后续审核或执行。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_SUBMITTED AccountRecoveryStatus = 1
-	// ACCOUNT_RECOVERY_STATUS_UNDER_REVIEW 表示资源处于对应业务阶段。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_UNDER_REVIEW AccountRecoveryStatus = 2
+	UserRecoveryStatus_USER_RECOVERY_STATUS_SUBMITTED UserRecoveryStatus = 1
+	// USER_RECOVERY_STATUS_UNDER_REVIEW 表示资源处于对应业务阶段。
+	UserRecoveryStatus_USER_RECOVERY_STATUS_UNDER_REVIEW UserRecoveryStatus = 2
 	// 审核已通过，可以继续后续流程。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_APPROVED AccountRecoveryStatus = 3
+	UserRecoveryStatus_USER_RECOVERY_STATUS_APPROVED UserRecoveryStatus = 3
 	// 处理已成功完成。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_COMPLETED AccountRecoveryStatus = 4
+	UserRecoveryStatus_USER_RECOVERY_STATUS_COMPLETED UserRecoveryStatus = 4
 	// 审核已拒绝，不再按原请求继续。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_REJECTED AccountRecoveryStatus = 5
+	UserRecoveryStatus_USER_RECOVERY_STATUS_REJECTED UserRecoveryStatus = 5
 	// 处理已取消，不再继续推进。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_CANCELED AccountRecoveryStatus = 6
+	UserRecoveryStatus_USER_RECOVERY_STATUS_CANCELED UserRecoveryStatus = 6
 	// 有效期已结束，不再接受后续使用。
-	AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_EXPIRED AccountRecoveryStatus = 7
+	UserRecoveryStatus_USER_RECOVERY_STATUS_EXPIRED UserRecoveryStatus = 7
 )
 
-// Enum value maps for AccountRecoveryStatus.
+// Enum value maps for UserRecoveryStatus.
 var (
-	AccountRecoveryStatus_name = map[int32]string{
-		0: "ACCOUNT_RECOVERY_STATUS_UNSPECIFIED",
-		1: "ACCOUNT_RECOVERY_STATUS_SUBMITTED",
-		2: "ACCOUNT_RECOVERY_STATUS_UNDER_REVIEW",
-		3: "ACCOUNT_RECOVERY_STATUS_APPROVED",
-		4: "ACCOUNT_RECOVERY_STATUS_COMPLETED",
-		5: "ACCOUNT_RECOVERY_STATUS_REJECTED",
-		6: "ACCOUNT_RECOVERY_STATUS_CANCELED",
-		7: "ACCOUNT_RECOVERY_STATUS_EXPIRED",
+	UserRecoveryStatus_name = map[int32]string{
+		0: "USER_RECOVERY_STATUS_UNSPECIFIED",
+		1: "USER_RECOVERY_STATUS_SUBMITTED",
+		2: "USER_RECOVERY_STATUS_UNDER_REVIEW",
+		3: "USER_RECOVERY_STATUS_APPROVED",
+		4: "USER_RECOVERY_STATUS_COMPLETED",
+		5: "USER_RECOVERY_STATUS_REJECTED",
+		6: "USER_RECOVERY_STATUS_CANCELED",
+		7: "USER_RECOVERY_STATUS_EXPIRED",
 	}
-	AccountRecoveryStatus_value = map[string]int32{
-		"ACCOUNT_RECOVERY_STATUS_UNSPECIFIED":  0,
-		"ACCOUNT_RECOVERY_STATUS_SUBMITTED":    1,
-		"ACCOUNT_RECOVERY_STATUS_UNDER_REVIEW": 2,
-		"ACCOUNT_RECOVERY_STATUS_APPROVED":     3,
-		"ACCOUNT_RECOVERY_STATUS_COMPLETED":    4,
-		"ACCOUNT_RECOVERY_STATUS_REJECTED":     5,
-		"ACCOUNT_RECOVERY_STATUS_CANCELED":     6,
-		"ACCOUNT_RECOVERY_STATUS_EXPIRED":      7,
+	UserRecoveryStatus_value = map[string]int32{
+		"USER_RECOVERY_STATUS_UNSPECIFIED":  0,
+		"USER_RECOVERY_STATUS_SUBMITTED":    1,
+		"USER_RECOVERY_STATUS_UNDER_REVIEW": 2,
+		"USER_RECOVERY_STATUS_APPROVED":     3,
+		"USER_RECOVERY_STATUS_COMPLETED":    4,
+		"USER_RECOVERY_STATUS_REJECTED":     5,
+		"USER_RECOVERY_STATUS_CANCELED":     6,
+		"USER_RECOVERY_STATUS_EXPIRED":      7,
 	}
 )
 
-func (x AccountRecoveryStatus) Enum() *AccountRecoveryStatus {
-	p := new(AccountRecoveryStatus)
+func (x UserRecoveryStatus) Enum() *UserRecoveryStatus {
+	p := new(UserRecoveryStatus)
 	*p = x
 	return p
 }
 
-func (x AccountRecoveryStatus) String() string {
+func (x UserRecoveryStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (AccountRecoveryStatus) Descriptor() protoreflect.EnumDescriptor {
+func (UserRecoveryStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_user_consumer_v1_recovery_proto_enumTypes[0].Descriptor()
 }
 
-func (AccountRecoveryStatus) Type() protoreflect.EnumType {
+func (UserRecoveryStatus) Type() protoreflect.EnumType {
 	return &file_user_consumer_v1_recovery_proto_enumTypes[0]
 }
 
-func (x AccountRecoveryStatus) Number() protoreflect.EnumNumber {
+func (x UserRecoveryStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use AccountRecoveryStatus.Descriptor instead.
-func (AccountRecoveryStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use UserRecoveryStatus.Descriptor instead.
+func (UserRecoveryStatus) EnumDescriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{0}
 }
 
@@ -278,7 +278,7 @@ func (RecoveryPaymentProvider) EnumDescriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{3}
 }
 
-// RecoveryEvidence 表示 Account Recovery 使用的一份证据及校验状态。
+// RecoveryEvidence 表示 User Recovery 使用的一份证据及校验状态。
 type RecoveryEvidence struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// type 区分 RecoveryEvidence 的业务类型。
@@ -360,41 +360,41 @@ func (x *RecoveryEvidence) GetVerifiedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// AccountRecovery 表示一次 Account Recovery 流程的状态与安全上下文。
-type AccountRecovery struct {
+// UserRecovery 表示一次 User Recovery 流程的状态与安全上下文。
+type UserRecovery struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// status 表示 AccountRecovery 当前可观察的生命周期状态。
-	Status AccountRecoveryStatus `protobuf:"varint,1,opt,name=status,proto3,enum=user.consumer.v1.AccountRecoveryStatus" json:"status,omitempty"`
-	// evidences 列出 AccountRecovery 关联的 RecoveryEvidence。
+	// status 表示 UserRecovery 当前可观察的生命周期状态。
+	Status UserRecoveryStatus `protobuf:"varint,1,opt,name=status,proto3,enum=user.consumer.v1.UserRecoveryStatus" json:"status,omitempty"`
+	// evidences 列出 UserRecovery 关联的 RecoveryEvidence。
 	Evidences []*RecoveryEvidence `protobuf:"bytes,2,rep,name=evidences,proto3" json:"evidences,omitempty"`
-	// cancelable 显式表示 AccountRecovery 是否满足该条件。
+	// cancelable 显式表示 UserRecovery 是否满足该条件。
 	Cancelable bool `protobuf:"varint,3,opt,name=cancelable,proto3" json:"cancelable,omitempty"`
-	// grant_available 显式表示 AccountRecovery 是否满足该条件。
+	// grant_available 显式表示 UserRecovery 是否满足该条件。
 	GrantAvailable bool `protobuf:"varint,4,opt,name=grant_available,json=grantAvailable,proto3" json:"grant_available,omitempty"`
-	// submitted_at 记录 AccountRecovery 对应业务阶段的时间点。
+	// submitted_at 记录 UserRecovery 对应业务阶段的时间点。
 	SubmittedAt *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=submitted_at,json=submittedAt,proto3" json:"submitted_at,omitempty"`
-	// expires_at 指定 AccountRecovery 失效的时间点。
+	// expires_at 指定 UserRecovery 失效的时间点。
 	ExpiresAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
-	// completed_at 记录 AccountRecovery 对应业务阶段的时间点。
+	// completed_at 记录 UserRecovery 对应业务阶段的时间点。
 	CompletedAt   *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AccountRecovery) Reset() {
-	*x = AccountRecovery{}
+func (x *UserRecovery) Reset() {
+	*x = UserRecovery{}
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AccountRecovery) String() string {
+func (x *UserRecovery) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AccountRecovery) ProtoMessage() {}
+func (*UserRecovery) ProtoMessage() {}
 
-func (x *AccountRecovery) ProtoReflect() protoreflect.Message {
+func (x *UserRecovery) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -406,72 +406,72 @@ func (x *AccountRecovery) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AccountRecovery.ProtoReflect.Descriptor instead.
-func (*AccountRecovery) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserRecovery.ProtoReflect.Descriptor instead.
+func (*UserRecovery) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *AccountRecovery) GetStatus() AccountRecoveryStatus {
+func (x *UserRecovery) GetStatus() UserRecoveryStatus {
 	if x != nil {
 		return x.Status
 	}
-	return AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_UNSPECIFIED
+	return UserRecoveryStatus_USER_RECOVERY_STATUS_UNSPECIFIED
 }
 
-func (x *AccountRecovery) GetEvidences() []*RecoveryEvidence {
+func (x *UserRecovery) GetEvidences() []*RecoveryEvidence {
 	if x != nil {
 		return x.Evidences
 	}
 	return nil
 }
 
-func (x *AccountRecovery) GetCancelable() bool {
+func (x *UserRecovery) GetCancelable() bool {
 	if x != nil {
 		return x.Cancelable
 	}
 	return false
 }
 
-func (x *AccountRecovery) GetGrantAvailable() bool {
+func (x *UserRecovery) GetGrantAvailable() bool {
 	if x != nil {
 		return x.GrantAvailable
 	}
 	return false
 }
 
-func (x *AccountRecovery) GetSubmittedAt() *timestamppb.Timestamp {
+func (x *UserRecovery) GetSubmittedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.SubmittedAt
 	}
 	return nil
 }
 
-func (x *AccountRecovery) GetExpiresAt() *timestamppb.Timestamp {
+func (x *UserRecovery) GetExpiresAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.ExpiresAt
 	}
 	return nil
 }
 
-func (x *AccountRecovery) GetCompletedAt() *timestamppb.Timestamp {
+func (x *UserRecovery) GetCompletedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CompletedAt
 	}
 	return nil
 }
 
-// StartAccountRecoveryRequest 定义启动 AccountRecovery 的幂等管理命令参数。
-type StartAccountRecoveryRequest struct {
+// StartUserRecoveryRequest 定义启动 UserRecovery 的幂等管理命令参数。
+type StartUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 StartAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+	// app_id 限定 StartUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// StartAccountRecoveryRequest 使用以下一种方式定位目标资源。
+	// StartUserRecoveryRequest 使用以下一种方式定位目标资源。
 	//
-	// Types that are valid to be assigned to AccountLocator:
+	// Types that are valid to be assigned to UserLocator:
 	//
-	//	*StartAccountRecoveryRequest_UserCode
-	//	*StartAccountRecoveryRequest_CurrentPhone
-	AccountLocator isStartAccountRecoveryRequest_AccountLocator `protobuf_oneof:"account_locator"`
+	//	*StartUserRecoveryRequest_UserCode
+	//	*StartUserRecoveryRequest_CurrentPhone
+	UserLocator isStartUserRecoveryRequest_UserLocator `protobuf_oneof:"user_locator"`
 	// new_phone 承载按约定地区规则规范化的手机号码。
 	NewPhone string `protobuf:"bytes,4,opt,name=new_phone,json=newPhone,proto3" json:"new_phone,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
@@ -482,20 +482,20 @@ type StartAccountRecoveryRequest struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *StartAccountRecoveryRequest) Reset() {
-	*x = StartAccountRecoveryRequest{}
+func (x *StartUserRecoveryRequest) Reset() {
+	*x = StartUserRecoveryRequest{}
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StartAccountRecoveryRequest) String() string {
+func (x *StartUserRecoveryRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StartAccountRecoveryRequest) ProtoMessage() {}
+func (*StartUserRecoveryRequest) ProtoMessage() {}
 
-func (x *StartAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
+func (x *StartUserRecoveryRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -507,107 +507,107 @@ func (x *StartAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StartAccountRecoveryRequest.ProtoReflect.Descriptor instead.
-func (*StartAccountRecoveryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use StartUserRecoveryRequest.ProtoReflect.Descriptor instead.
+func (*StartUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *StartAccountRecoveryRequest) GetAppId() v1.AppId {
+func (x *StartUserRecoveryRequest) GetAppId() v1.AppId {
 	if x != nil {
 		return x.AppId
 	}
 	return v1.AppId(0)
 }
 
-func (x *StartAccountRecoveryRequest) GetAccountLocator() isStartAccountRecoveryRequest_AccountLocator {
+func (x *StartUserRecoveryRequest) GetUserLocator() isStartUserRecoveryRequest_UserLocator {
 	if x != nil {
-		return x.AccountLocator
+		return x.UserLocator
 	}
 	return nil
 }
 
-func (x *StartAccountRecoveryRequest) GetUserCode() string {
+func (x *StartUserRecoveryRequest) GetUserCode() string {
 	if x != nil {
-		if x, ok := x.AccountLocator.(*StartAccountRecoveryRequest_UserCode); ok {
+		if x, ok := x.UserLocator.(*StartUserRecoveryRequest_UserCode); ok {
 			return x.UserCode
 		}
 	}
 	return ""
 }
 
-func (x *StartAccountRecoveryRequest) GetCurrentPhone() string {
+func (x *StartUserRecoveryRequest) GetCurrentPhone() string {
 	if x != nil {
-		if x, ok := x.AccountLocator.(*StartAccountRecoveryRequest_CurrentPhone); ok {
+		if x, ok := x.UserLocator.(*StartUserRecoveryRequest_CurrentPhone); ok {
 			return x.CurrentPhone
 		}
 	}
 	return ""
 }
 
-func (x *StartAccountRecoveryRequest) GetNewPhone() string {
+func (x *StartUserRecoveryRequest) GetNewPhone() string {
 	if x != nil {
 		return x.NewPhone
 	}
 	return ""
 }
 
-func (x *StartAccountRecoveryRequest) GetVerificationTicket() string {
+func (x *StartUserRecoveryRequest) GetVerificationTicket() string {
 	if x != nil {
 		return x.VerificationTicket
 	}
 	return ""
 }
 
-func (x *StartAccountRecoveryRequest) GetIdempotencyKey() string {
+func (x *StartUserRecoveryRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
 	}
 	return ""
 }
 
-type isStartAccountRecoveryRequest_AccountLocator interface {
-	isStartAccountRecoveryRequest_AccountLocator()
+type isStartUserRecoveryRequest_UserLocator interface {
+	isStartUserRecoveryRequest_UserLocator()
 }
 
-type StartAccountRecoveryRequest_UserCode struct {
-	// user_code 提供 StartAccountRecovery 对外稳定使用的业务编码。
+type StartUserRecoveryRequest_UserCode struct {
+	// user_code 提供 StartUserRecovery 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,2,opt,name=user_code,json=userCode,proto3,oneof"`
 }
 
-type StartAccountRecoveryRequest_CurrentPhone struct {
+type StartUserRecoveryRequest_CurrentPhone struct {
 	// current_phone 承载按约定地区规则规范化的手机号码。
 	CurrentPhone string `protobuf:"bytes,3,opt,name=current_phone,json=currentPhone,proto3,oneof"`
 }
 
-func (*StartAccountRecoveryRequest_UserCode) isStartAccountRecoveryRequest_AccountLocator() {}
+func (*StartUserRecoveryRequest_UserCode) isStartUserRecoveryRequest_UserLocator() {}
 
-func (*StartAccountRecoveryRequest_CurrentPhone) isStartAccountRecoveryRequest_AccountLocator() {}
+func (*StartUserRecoveryRequest_CurrentPhone) isStartUserRecoveryRequest_UserLocator() {}
 
-// StartAccountRecoveryResponse 承载 StartAccountRecovery 的返回结果。
-type StartAccountRecoveryResponse struct {
+// StartUserRecoveryResponse 承载 StartUserRecovery 的返回结果。
+type StartUserRecoveryResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,1,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
-	// expires_at 指定 StartAccountRecovery 失效的时间点。
+	// expires_at 指定 StartUserRecovery 失效的时间点。
 	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StartAccountRecoveryResponse) Reset() {
-	*x = StartAccountRecoveryResponse{}
+func (x *StartUserRecoveryResponse) Reset() {
+	*x = StartUserRecoveryResponse{}
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StartAccountRecoveryResponse) String() string {
+func (x *StartUserRecoveryResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StartAccountRecoveryResponse) ProtoMessage() {}
+func (*StartUserRecoveryResponse) ProtoMessage() {}
 
-func (x *StartAccountRecoveryResponse) ProtoReflect() protoreflect.Message {
+func (x *StartUserRecoveryResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -619,29 +619,29 @@ func (x *StartAccountRecoveryResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StartAccountRecoveryResponse.ProtoReflect.Descriptor instead.
-func (*StartAccountRecoveryResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use StartUserRecoveryResponse.ProtoReflect.Descriptor instead.
+func (*StartUserRecoveryResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *StartAccountRecoveryResponse) GetRecoveryContinuation() string {
+func (x *StartUserRecoveryResponse) GetRecoveryContinuation() string {
 	if x != nil {
 		return x.RecoveryContinuation
 	}
 	return ""
 }
 
-func (x *StartAccountRecoveryResponse) GetExpiresAt() *timestamppb.Timestamp {
+func (x *StartUserRecoveryResponse) GetExpiresAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.ExpiresAt
 	}
 	return nil
 }
 
-// GetAccountRecoveryRequest 标识待查询的 AccountRecovery。
-type GetAccountRecoveryRequest struct {
+// GetUserRecoveryRequest 标识待查询的 UserRecovery。
+type GetUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+	// app_id 限定 GetUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
@@ -649,20 +649,20 @@ type GetAccountRecoveryRequest struct {
 	sizeCache            protoimpl.SizeCache
 }
 
-func (x *GetAccountRecoveryRequest) Reset() {
-	*x = GetAccountRecoveryRequest{}
+func (x *GetUserRecoveryRequest) Reset() {
+	*x = GetUserRecoveryRequest{}
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetAccountRecoveryRequest) String() string {
+func (x *GetUserRecoveryRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetAccountRecoveryRequest) ProtoMessage() {}
+func (*GetUserRecoveryRequest) ProtoMessage() {}
 
-func (x *GetAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserRecoveryRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -674,29 +674,29 @@ func (x *GetAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetAccountRecoveryRequest.ProtoReflect.Descriptor instead.
-func (*GetAccountRecoveryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserRecoveryRequest.ProtoReflect.Descriptor instead.
+func (*GetUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetAccountRecoveryRequest) GetAppId() v1.AppId {
+func (x *GetUserRecoveryRequest) GetAppId() v1.AppId {
 	if x != nil {
 		return x.AppId
 	}
 	return v1.AppId(0)
 }
 
-func (x *GetAccountRecoveryRequest) GetRecoveryContinuation() string {
+func (x *GetUserRecoveryRequest) GetRecoveryContinuation() string {
 	if x != nil {
 		return x.RecoveryContinuation
 	}
 	return ""
 }
 
-// CancelAccountRecoveryRequest 定义取消 AccountRecovery 的幂等管理命令参数。
-type CancelAccountRecoveryRequest struct {
+// CancelUserRecoveryRequest 定义取消 UserRecovery 的幂等管理命令参数。
+type CancelUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CancelAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+	// app_id 限定 CancelUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
@@ -706,20 +706,20 @@ type CancelAccountRecoveryRequest struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *CancelAccountRecoveryRequest) Reset() {
-	*x = CancelAccountRecoveryRequest{}
+func (x *CancelUserRecoveryRequest) Reset() {
+	*x = CancelUserRecoveryRequest{}
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CancelAccountRecoveryRequest) String() string {
+func (x *CancelUserRecoveryRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CancelAccountRecoveryRequest) ProtoMessage() {}
+func (*CancelUserRecoveryRequest) ProtoMessage() {}
 
-func (x *CancelAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
+func (x *CancelUserRecoveryRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -731,26 +731,26 @@ func (x *CancelAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CancelAccountRecoveryRequest.ProtoReflect.Descriptor instead.
-func (*CancelAccountRecoveryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CancelUserRecoveryRequest.ProtoReflect.Descriptor instead.
+func (*CancelUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CancelAccountRecoveryRequest) GetAppId() v1.AppId {
+func (x *CancelUserRecoveryRequest) GetAppId() v1.AppId {
 	if x != nil {
 		return x.AppId
 	}
 	return v1.AppId(0)
 }
 
-func (x *CancelAccountRecoveryRequest) GetRecoveryContinuation() string {
+func (x *CancelUserRecoveryRequest) GetRecoveryContinuation() string {
 	if x != nil {
 		return x.RecoveryContinuation
 	}
 	return ""
 }
 
-func (x *CancelAccountRecoveryRequest) GetIdempotencyKey() string {
+func (x *CancelUserRecoveryRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
 	}
@@ -1143,7 +1143,7 @@ func (x *ClaimRecoveryGrantRequest) GetIdempotencyKey() string {
 // RecoveryGrant 承载 ClaimRecoveryGrant 调用的返回结果。
 type RecoveryGrant struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+	// grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
 	Grant string `protobuf:"bytes,1,opt,name=grant,proto3" json:"grant,omitempty"`
 	// expires_at 指定 RecoveryGrant 失效的时间点。
 	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
@@ -1195,12 +1195,12 @@ func (x *RecoveryGrant) GetExpiresAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// CompleteAccountRecoveryRequest 定义完成 AccountRecovery 的幂等管理命令参数。
-type CompleteAccountRecoveryRequest struct {
+// CompleteUserRecoveryRequest 定义完成 UserRecovery 的幂等管理命令参数。
+type CompleteUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompleteAccountRecovery 所属 App；UNSPECIFIED 不表示跨 App。
+	// app_id 限定 CompleteUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+	// grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
 	Grant string `protobuf:"bytes,2,opt,name=grant,proto3" json:"grant,omitempty"`
 	// new_phone 承载按约定地区规则规范化的手机号码。
 	NewPhone string `protobuf:"bytes,3,opt,name=new_phone,json=newPhone,proto3" json:"new_phone,omitempty"`
@@ -1212,20 +1212,20 @@ type CompleteAccountRecoveryRequest struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *CompleteAccountRecoveryRequest) Reset() {
-	*x = CompleteAccountRecoveryRequest{}
+func (x *CompleteUserRecoveryRequest) Reset() {
+	*x = CompleteUserRecoveryRequest{}
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CompleteAccountRecoveryRequest) String() string {
+func (x *CompleteUserRecoveryRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CompleteAccountRecoveryRequest) ProtoMessage() {}
+func (*CompleteUserRecoveryRequest) ProtoMessage() {}
 
-func (x *CompleteAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
+func (x *CompleteUserRecoveryRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1237,71 +1237,71 @@ func (x *CompleteAccountRecoveryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CompleteAccountRecoveryRequest.ProtoReflect.Descriptor instead.
-func (*CompleteAccountRecoveryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CompleteUserRecoveryRequest.ProtoReflect.Descriptor instead.
+func (*CompleteUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *CompleteAccountRecoveryRequest) GetAppId() v1.AppId {
+func (x *CompleteUserRecoveryRequest) GetAppId() v1.AppId {
 	if x != nil {
 		return x.AppId
 	}
 	return v1.AppId(0)
 }
 
-func (x *CompleteAccountRecoveryRequest) GetGrant() string {
+func (x *CompleteUserRecoveryRequest) GetGrant() string {
 	if x != nil {
 		return x.Grant
 	}
 	return ""
 }
 
-func (x *CompleteAccountRecoveryRequest) GetNewPhone() string {
+func (x *CompleteUserRecoveryRequest) GetNewPhone() string {
 	if x != nil {
 		return x.NewPhone
 	}
 	return ""
 }
 
-func (x *CompleteAccountRecoveryRequest) GetVerificationTicket() string {
+func (x *CompleteUserRecoveryRequest) GetVerificationTicket() string {
 	if x != nil {
 		return x.VerificationTicket
 	}
 	return ""
 }
 
-func (x *CompleteAccountRecoveryRequest) GetIdempotencyKey() string {
+func (x *CompleteUserRecoveryRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
 	}
 	return ""
 }
 
-// CompleteAccountRecoveryResponse 承载 CompleteAccountRecovery 的返回结果。
-type CompleteAccountRecoveryResponse struct {
+// CompleteUserRecoveryResponse 承载 CompleteUserRecovery 的返回结果。
+type CompleteUserRecoveryResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// status 表示 CompleteAccountRecovery 当前可观察的生命周期状态。
-	Status AccountRecoveryStatus `protobuf:"varint,1,opt,name=status,proto3,enum=user.consumer.v1.AccountRecoveryStatus" json:"status,omitempty"`
-	// completed_at 记录 CompleteAccountRecovery 对应业务阶段的时间点。
+	// status 表示 CompleteUserRecovery 当前可观察的生命周期状态。
+	Status UserRecoveryStatus `protobuf:"varint,1,opt,name=status,proto3,enum=user.consumer.v1.UserRecoveryStatus" json:"status,omitempty"`
+	// completed_at 记录 CompleteUserRecovery 对应业务阶段的时间点。
 	CompletedAt   *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CompleteAccountRecoveryResponse) Reset() {
-	*x = CompleteAccountRecoveryResponse{}
+func (x *CompleteUserRecoveryResponse) Reset() {
+	*x = CompleteUserRecoveryResponse{}
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CompleteAccountRecoveryResponse) String() string {
+func (x *CompleteUserRecoveryResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CompleteAccountRecoveryResponse) ProtoMessage() {}
+func (*CompleteUserRecoveryResponse) ProtoMessage() {}
 
-func (x *CompleteAccountRecoveryResponse) ProtoReflect() protoreflect.Message {
+func (x *CompleteUserRecoveryResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_user_consumer_v1_recovery_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1313,19 +1313,19 @@ func (x *CompleteAccountRecoveryResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CompleteAccountRecoveryResponse.ProtoReflect.Descriptor instead.
-func (*CompleteAccountRecoveryResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CompleteUserRecoveryResponse.ProtoReflect.Descriptor instead.
+func (*CompleteUserRecoveryResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *CompleteAccountRecoveryResponse) GetStatus() AccountRecoveryStatus {
+func (x *CompleteUserRecoveryResponse) GetStatus() UserRecoveryStatus {
 	if x != nil {
 		return x.Status
 	}
-	return AccountRecoveryStatus_ACCOUNT_RECOVERY_STATUS_UNSPECIFIED
+	return UserRecoveryStatus_USER_RECOVERY_STATUS_UNSPECIFIED
 }
 
-func (x *CompleteAccountRecoveryResponse) GetCompletedAt() *timestamppb.Timestamp {
+func (x *CompleteUserRecoveryResponse) GetCompletedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CompletedAt
 	}
@@ -1343,9 +1343,9 @@ const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"\tdevice_id\x18\x03 \x01(\x04R\bdeviceId\x126\n" +
 	"\x17payment_proof_reference\x18\x04 \x01(\tR\x15paymentProofReference\x12;\n" +
 	"\vverified_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"verifiedAt\"\x96\x03\n" +
-	"\x0fAccountRecovery\x12?\n" +
-	"\x06status\x18\x01 \x01(\x0e2'.user.consumer.v1.AccountRecoveryStatusR\x06status\x12@\n" +
+	"verifiedAt\"\x90\x03\n" +
+	"\fUserRecovery\x12<\n" +
+	"\x06status\x18\x01 \x01(\x0e2$.user.consumer.v1.UserRecoveryStatusR\x06status\x12@\n" +
 	"\tevidences\x18\x02 \x03(\v2\".user.consumer.v1.RecoveryEvidenceR\tevidences\x12\x1e\n" +
 	"\n" +
 	"cancelable\x18\x03 \x01(\bR\n" +
@@ -1354,23 +1354,23 @@ const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"\fsubmitted_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\vsubmittedAt\x129\n" +
 	"\n" +
 	"expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12=\n" +
-	"\fcompleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"\x92\x03\n" +
-	"\x1bStartAccountRecoveryRequest\x126\n" +
+	"\fcompleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"\x8c\x03\n" +
+	"\x18StartUserRecoveryRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12(\n" +
 	"\tuser_code\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14H\x00R\buserCode\x12D\n" +
 	"\rcurrent_phone\x18\x03 \x01(\tB\x1d\xfaB\x1ar\x18\x18\x102\x14^\\+[1-9][0-9]{7,14}$H\x00R\fcurrentPhone\x12;\n" +
 	"\tnew_phone\x18\x04 \x01(\tB\x1e\xe0A\x02\xfaB\x18r\x162\x14^\\+[1-9][0-9]{7,14}$R\bnewPhone\x12>\n" +
 	"\x13verification_ticket\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x10R\x12verificationTicket\x126\n" +
-	"\x0fidempotency_key\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKeyB\x16\n" +
-	"\x0faccount_locator\x12\x03\xf8B\x01\"\x8e\x01\n" +
-	"\x1cStartAccountRecoveryResponse\x123\n" +
+	"\x0fidempotency_key\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKeyB\x13\n" +
+	"\fuser_locator\x12\x03\xf8B\x01\"\x8b\x01\n" +
+	"\x19StartUserRecoveryResponse\x123\n" +
 	"\x15recovery_continuation\x18\x01 \x01(\tR\x14recoveryContinuation\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x97\x01\n" +
-	"\x19GetAccountRecoveryRequest\x126\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x94\x01\n" +
+	"\x16GetUserRecoveryRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
-	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\"\xd2\x01\n" +
-	"\x1cCancelAccountRecoveryRequest\x126\n" +
+	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\"\xcf\x01\n" +
+	"\x19CancelUserRecoveryRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
 	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\x126\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x8a\x02\n" +
@@ -1407,25 +1407,25 @@ const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"\rRecoveryGrant\x12\x14\n" +
 	"\x05grant\x18\x01 \x01(\tR\x05grant\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xb4\x02\n" +
-	"\x1eCompleteAccountRecoveryRequest\x126\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xb1\x02\n" +
+	"\x1bCompleteUserRecoveryRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
 	"\x05grant\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x05grant\x12=\n" +
 	"\tnew_phone\x18\x03 \x01(\tB \xe0A\x02\xfaB\x1ar\x18\x18\x102\x14^\\+[1-9][0-9]{7,14}$R\bnewPhone\x12>\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x10R\x12verificationTicket\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa1\x01\n" +
-	"\x1fCompleteAccountRecoveryResponse\x12?\n" +
-	"\x06status\x18\x01 \x01(\x0e2'.user.consumer.v1.AccountRecoveryStatusR\x06status\x12=\n" +
-	"\fcompleted_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt*\xcf\x02\n" +
-	"\x15AccountRecoveryStatus\x12'\n" +
-	"#ACCOUNT_RECOVERY_STATUS_UNSPECIFIED\x10\x00\x12%\n" +
-	"!ACCOUNT_RECOVERY_STATUS_SUBMITTED\x10\x01\x12(\n" +
-	"$ACCOUNT_RECOVERY_STATUS_UNDER_REVIEW\x10\x02\x12$\n" +
-	" ACCOUNT_RECOVERY_STATUS_APPROVED\x10\x03\x12%\n" +
-	"!ACCOUNT_RECOVERY_STATUS_COMPLETED\x10\x04\x12$\n" +
-	" ACCOUNT_RECOVERY_STATUS_REJECTED\x10\x05\x12$\n" +
-	" ACCOUNT_RECOVERY_STATUS_CANCELED\x10\x06\x12#\n" +
-	"\x1fACCOUNT_RECOVERY_STATUS_EXPIRED\x10\a*\x8d\x01\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x9b\x01\n" +
+	"\x1cCompleteUserRecoveryResponse\x12<\n" +
+	"\x06status\x18\x01 \x01(\x0e2$.user.consumer.v1.UserRecoveryStatusR\x06status\x12=\n" +
+	"\fcompleted_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt*\xb4\x02\n" +
+	"\x12UserRecoveryStatus\x12$\n" +
+	" USER_RECOVERY_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
+	"\x1eUSER_RECOVERY_STATUS_SUBMITTED\x10\x01\x12%\n" +
+	"!USER_RECOVERY_STATUS_UNDER_REVIEW\x10\x02\x12!\n" +
+	"\x1dUSER_RECOVERY_STATUS_APPROVED\x10\x03\x12\"\n" +
+	"\x1eUSER_RECOVERY_STATUS_COMPLETED\x10\x04\x12!\n" +
+	"\x1dUSER_RECOVERY_STATUS_REJECTED\x10\x05\x12!\n" +
+	"\x1dUSER_RECOVERY_STATUS_CANCELED\x10\x06\x12 \n" +
+	"\x1cUSER_RECOVERY_STATUS_EXPIRED\x10\a*\x8d\x01\n" +
 	"\x14RecoveryEvidenceType\x12&\n" +
 	"\"RECOVERY_EVIDENCE_TYPE_UNSPECIFIED\x10\x00\x12)\n" +
 	"%RECOVERY_EVIDENCE_TYPE_TRUSTED_DEVICE\x10\x01\x12\"\n" +
@@ -1442,16 +1442,16 @@ const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"$RECOVERY_PAYMENT_PROVIDER_WECHAT_PAY\x10\x02\x12$\n" +
 	" RECOVERY_PAYMENT_PROVIDER_ALIPAY\x10\x03\x12'\n" +
 	"#RECOVERY_PAYMENT_PROVIDER_APPLE_IAP\x10\x04\x12)\n" +
-	"%RECOVERY_PAYMENT_PROVIDER_GOOGLE_PLAY\x10\x052\xe9\a\n" +
-	"\x17ConsumerRecoveryService\x12u\n" +
-	"\x14StartAccountRecovery\x12-.user.consumer.v1.StartAccountRecoveryRequest\x1a..user.consumer.v1.StartAccountRecoveryResponse\x12d\n" +
-	"\x12GetAccountRecovery\x12+.user.consumer.v1.GetAccountRecoveryRequest\x1a!.user.consumer.v1.AccountRecovery\x12j\n" +
-	"\x15CancelAccountRecovery\x12..user.consumer.v1.CancelAccountRecoveryRequest\x1a!.user.consumer.v1.AccountRecovery\x12\x97\x01\n" +
+	"%RECOVERY_PAYMENT_PROVIDER_GOOGLE_PLAY\x10\x052\xc5\a\n" +
+	"\x17ConsumerRecoveryService\x12l\n" +
+	"\x11StartUserRecovery\x12*.user.consumer.v1.StartUserRecoveryRequest\x1a+.user.consumer.v1.StartUserRecoveryResponse\x12[\n" +
+	"\x0fGetUserRecovery\x12(.user.consumer.v1.GetUserRecoveryRequest\x1a\x1e.user.consumer.v1.UserRecovery\x12a\n" +
+	"\x12CancelUserRecovery\x12+.user.consumer.v1.CancelUserRecoveryRequest\x1a\x1e.user.consumer.v1.UserRecovery\x12\x97\x01\n" +
 	"$CreateTrustedDeviceRecoveryChallenge\x12=.user.consumer.v1.CreateTrustedDeviceRecoveryChallengeRequest\x1a0.user.consumer.v1.TrustedDeviceRecoveryChallenge\x12\x89\x01\n" +
 	"$VerifyTrustedDeviceRecoveryChallenge\x12=.user.consumer.v1.VerifyTrustedDeviceRecoveryChallengeRequest\x1a\".user.consumer.v1.RecoveryEvidence\x12{\n" +
 	"\x1dSubmitPaymentRecoveryEvidence\x126.user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest\x1a\".user.consumer.v1.RecoveryEvidence\x12b\n" +
-	"\x12ClaimRecoveryGrant\x12+.user.consumer.v1.ClaimRecoveryGrantRequest\x1a\x1f.user.consumer.v1.RecoveryGrant\x12~\n" +
-	"\x17CompleteAccountRecovery\x120.user.consumer.v1.CompleteAccountRecoveryRequest\x1a1.user.consumer.v1.CompleteAccountRecoveryResponseB\xd2\x01\n" +
+	"\x12ClaimRecoveryGrant\x12+.user.consumer.v1.ClaimRecoveryGrantRequest\x1a\x1f.user.consumer.v1.RecoveryGrant\x12u\n" +
+	"\x14CompleteUserRecovery\x12-.user.consumer.v1.CompleteUserRecoveryRequest\x1a..user.consumer.v1.CompleteUserRecoveryResponseB\xd2\x01\n" +
 	"\x14com.user.consumer.v1B\rRecoveryProtoP\x01ZIgithub.com/feymanlee/redkit-protos/gen/go/user/consumer/v1;userconsumerpb\xa2\x02\x03UCX\xaa\x02\x10User.Consumer.V1\xca\x02\x10User\\Consumer\\V1\xe2\x02\x1cUser\\Consumer\\V1\\GPBMetadata\xea\x02\x12User::Consumer::V1b\x06proto3"
 
 var (
@@ -1469,24 +1469,24 @@ func file_user_consumer_v1_recovery_proto_rawDescGZIP() []byte {
 var file_user_consumer_v1_recovery_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_user_consumer_v1_recovery_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_user_consumer_v1_recovery_proto_goTypes = []any{
-	(AccountRecoveryStatus)(0),                          // 0: user.consumer.v1.AccountRecoveryStatus
+	(UserRecoveryStatus)(0),                             // 0: user.consumer.v1.UserRecoveryStatus
 	(RecoveryEvidenceType)(0),                           // 1: user.consumer.v1.RecoveryEvidenceType
 	(RecoveryEvidenceStatus)(0),                         // 2: user.consumer.v1.RecoveryEvidenceStatus
 	(RecoveryPaymentProvider)(0),                        // 3: user.consumer.v1.RecoveryPaymentProvider
 	(*RecoveryEvidence)(nil),                            // 4: user.consumer.v1.RecoveryEvidence
-	(*AccountRecovery)(nil),                             // 5: user.consumer.v1.AccountRecovery
-	(*StartAccountRecoveryRequest)(nil),                 // 6: user.consumer.v1.StartAccountRecoveryRequest
-	(*StartAccountRecoveryResponse)(nil),                // 7: user.consumer.v1.StartAccountRecoveryResponse
-	(*GetAccountRecoveryRequest)(nil),                   // 8: user.consumer.v1.GetAccountRecoveryRequest
-	(*CancelAccountRecoveryRequest)(nil),                // 9: user.consumer.v1.CancelAccountRecoveryRequest
+	(*UserRecovery)(nil),                                // 5: user.consumer.v1.UserRecovery
+	(*StartUserRecoveryRequest)(nil),                    // 6: user.consumer.v1.StartUserRecoveryRequest
+	(*StartUserRecoveryResponse)(nil),                   // 7: user.consumer.v1.StartUserRecoveryResponse
+	(*GetUserRecoveryRequest)(nil),                      // 8: user.consumer.v1.GetUserRecoveryRequest
+	(*CancelUserRecoveryRequest)(nil),                   // 9: user.consumer.v1.CancelUserRecoveryRequest
 	(*CreateTrustedDeviceRecoveryChallengeRequest)(nil), // 10: user.consumer.v1.CreateTrustedDeviceRecoveryChallengeRequest
 	(*TrustedDeviceRecoveryChallenge)(nil),              // 11: user.consumer.v1.TrustedDeviceRecoveryChallenge
 	(*VerifyTrustedDeviceRecoveryChallengeRequest)(nil), // 12: user.consumer.v1.VerifyTrustedDeviceRecoveryChallengeRequest
 	(*SubmitPaymentRecoveryEvidenceRequest)(nil),        // 13: user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest
 	(*ClaimRecoveryGrantRequest)(nil),                   // 14: user.consumer.v1.ClaimRecoveryGrantRequest
 	(*RecoveryGrant)(nil),                               // 15: user.consumer.v1.RecoveryGrant
-	(*CompleteAccountRecoveryRequest)(nil),              // 16: user.consumer.v1.CompleteAccountRecoveryRequest
-	(*CompleteAccountRecoveryResponse)(nil),             // 17: user.consumer.v1.CompleteAccountRecoveryResponse
+	(*CompleteUserRecoveryRequest)(nil),                 // 16: user.consumer.v1.CompleteUserRecoveryRequest
+	(*CompleteUserRecoveryResponse)(nil),                // 17: user.consumer.v1.CompleteUserRecoveryResponse
 	(*timestamppb.Timestamp)(nil),                       // 18: google.protobuf.Timestamp
 	(v1.AppId)(0),                                       // 19: common.v1.AppId
 }
@@ -1494,15 +1494,15 @@ var file_user_consumer_v1_recovery_proto_depIdxs = []int32{
 	1,  // 0: user.consumer.v1.RecoveryEvidence.type:type_name -> user.consumer.v1.RecoveryEvidenceType
 	2,  // 1: user.consumer.v1.RecoveryEvidence.status:type_name -> user.consumer.v1.RecoveryEvidenceStatus
 	18, // 2: user.consumer.v1.RecoveryEvidence.verified_at:type_name -> google.protobuf.Timestamp
-	0,  // 3: user.consumer.v1.AccountRecovery.status:type_name -> user.consumer.v1.AccountRecoveryStatus
-	4,  // 4: user.consumer.v1.AccountRecovery.evidences:type_name -> user.consumer.v1.RecoveryEvidence
-	18, // 5: user.consumer.v1.AccountRecovery.submitted_at:type_name -> google.protobuf.Timestamp
-	18, // 6: user.consumer.v1.AccountRecovery.expires_at:type_name -> google.protobuf.Timestamp
-	18, // 7: user.consumer.v1.AccountRecovery.completed_at:type_name -> google.protobuf.Timestamp
-	19, // 8: user.consumer.v1.StartAccountRecoveryRequest.app_id:type_name -> common.v1.AppId
-	18, // 9: user.consumer.v1.StartAccountRecoveryResponse.expires_at:type_name -> google.protobuf.Timestamp
-	19, // 10: user.consumer.v1.GetAccountRecoveryRequest.app_id:type_name -> common.v1.AppId
-	19, // 11: user.consumer.v1.CancelAccountRecoveryRequest.app_id:type_name -> common.v1.AppId
+	0,  // 3: user.consumer.v1.UserRecovery.status:type_name -> user.consumer.v1.UserRecoveryStatus
+	4,  // 4: user.consumer.v1.UserRecovery.evidences:type_name -> user.consumer.v1.RecoveryEvidence
+	18, // 5: user.consumer.v1.UserRecovery.submitted_at:type_name -> google.protobuf.Timestamp
+	18, // 6: user.consumer.v1.UserRecovery.expires_at:type_name -> google.protobuf.Timestamp
+	18, // 7: user.consumer.v1.UserRecovery.completed_at:type_name -> google.protobuf.Timestamp
+	19, // 8: user.consumer.v1.StartUserRecoveryRequest.app_id:type_name -> common.v1.AppId
+	18, // 9: user.consumer.v1.StartUserRecoveryResponse.expires_at:type_name -> google.protobuf.Timestamp
+	19, // 10: user.consumer.v1.GetUserRecoveryRequest.app_id:type_name -> common.v1.AppId
+	19, // 11: user.consumer.v1.CancelUserRecoveryRequest.app_id:type_name -> common.v1.AppId
 	19, // 12: user.consumer.v1.CreateTrustedDeviceRecoveryChallengeRequest.app_id:type_name -> common.v1.AppId
 	18, // 13: user.consumer.v1.TrustedDeviceRecoveryChallenge.expires_at:type_name -> google.protobuf.Timestamp
 	19, // 14: user.consumer.v1.VerifyTrustedDeviceRecoveryChallengeRequest.app_id:type_name -> common.v1.AppId
@@ -1510,25 +1510,25 @@ var file_user_consumer_v1_recovery_proto_depIdxs = []int32{
 	3,  // 16: user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest.provider:type_name -> user.consumer.v1.RecoveryPaymentProvider
 	19, // 17: user.consumer.v1.ClaimRecoveryGrantRequest.app_id:type_name -> common.v1.AppId
 	18, // 18: user.consumer.v1.RecoveryGrant.expires_at:type_name -> google.protobuf.Timestamp
-	19, // 19: user.consumer.v1.CompleteAccountRecoveryRequest.app_id:type_name -> common.v1.AppId
-	0,  // 20: user.consumer.v1.CompleteAccountRecoveryResponse.status:type_name -> user.consumer.v1.AccountRecoveryStatus
-	18, // 21: user.consumer.v1.CompleteAccountRecoveryResponse.completed_at:type_name -> google.protobuf.Timestamp
-	6,  // 22: user.consumer.v1.ConsumerRecoveryService.StartAccountRecovery:input_type -> user.consumer.v1.StartAccountRecoveryRequest
-	8,  // 23: user.consumer.v1.ConsumerRecoveryService.GetAccountRecovery:input_type -> user.consumer.v1.GetAccountRecoveryRequest
-	9,  // 24: user.consumer.v1.ConsumerRecoveryService.CancelAccountRecovery:input_type -> user.consumer.v1.CancelAccountRecoveryRequest
+	19, // 19: user.consumer.v1.CompleteUserRecoveryRequest.app_id:type_name -> common.v1.AppId
+	0,  // 20: user.consumer.v1.CompleteUserRecoveryResponse.status:type_name -> user.consumer.v1.UserRecoveryStatus
+	18, // 21: user.consumer.v1.CompleteUserRecoveryResponse.completed_at:type_name -> google.protobuf.Timestamp
+	6,  // 22: user.consumer.v1.ConsumerRecoveryService.StartUserRecovery:input_type -> user.consumer.v1.StartUserRecoveryRequest
+	8,  // 23: user.consumer.v1.ConsumerRecoveryService.GetUserRecovery:input_type -> user.consumer.v1.GetUserRecoveryRequest
+	9,  // 24: user.consumer.v1.ConsumerRecoveryService.CancelUserRecovery:input_type -> user.consumer.v1.CancelUserRecoveryRequest
 	10, // 25: user.consumer.v1.ConsumerRecoveryService.CreateTrustedDeviceRecoveryChallenge:input_type -> user.consumer.v1.CreateTrustedDeviceRecoveryChallengeRequest
 	12, // 26: user.consumer.v1.ConsumerRecoveryService.VerifyTrustedDeviceRecoveryChallenge:input_type -> user.consumer.v1.VerifyTrustedDeviceRecoveryChallengeRequest
 	13, // 27: user.consumer.v1.ConsumerRecoveryService.SubmitPaymentRecoveryEvidence:input_type -> user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest
 	14, // 28: user.consumer.v1.ConsumerRecoveryService.ClaimRecoveryGrant:input_type -> user.consumer.v1.ClaimRecoveryGrantRequest
-	16, // 29: user.consumer.v1.ConsumerRecoveryService.CompleteAccountRecovery:input_type -> user.consumer.v1.CompleteAccountRecoveryRequest
-	7,  // 30: user.consumer.v1.ConsumerRecoveryService.StartAccountRecovery:output_type -> user.consumer.v1.StartAccountRecoveryResponse
-	5,  // 31: user.consumer.v1.ConsumerRecoveryService.GetAccountRecovery:output_type -> user.consumer.v1.AccountRecovery
-	5,  // 32: user.consumer.v1.ConsumerRecoveryService.CancelAccountRecovery:output_type -> user.consumer.v1.AccountRecovery
+	16, // 29: user.consumer.v1.ConsumerRecoveryService.CompleteUserRecovery:input_type -> user.consumer.v1.CompleteUserRecoveryRequest
+	7,  // 30: user.consumer.v1.ConsumerRecoveryService.StartUserRecovery:output_type -> user.consumer.v1.StartUserRecoveryResponse
+	5,  // 31: user.consumer.v1.ConsumerRecoveryService.GetUserRecovery:output_type -> user.consumer.v1.UserRecovery
+	5,  // 32: user.consumer.v1.ConsumerRecoveryService.CancelUserRecovery:output_type -> user.consumer.v1.UserRecovery
 	11, // 33: user.consumer.v1.ConsumerRecoveryService.CreateTrustedDeviceRecoveryChallenge:output_type -> user.consumer.v1.TrustedDeviceRecoveryChallenge
 	4,  // 34: user.consumer.v1.ConsumerRecoveryService.VerifyTrustedDeviceRecoveryChallenge:output_type -> user.consumer.v1.RecoveryEvidence
 	4,  // 35: user.consumer.v1.ConsumerRecoveryService.SubmitPaymentRecoveryEvidence:output_type -> user.consumer.v1.RecoveryEvidence
 	15, // 36: user.consumer.v1.ConsumerRecoveryService.ClaimRecoveryGrant:output_type -> user.consumer.v1.RecoveryGrant
-	17, // 37: user.consumer.v1.ConsumerRecoveryService.CompleteAccountRecovery:output_type -> user.consumer.v1.CompleteAccountRecoveryResponse
+	17, // 37: user.consumer.v1.ConsumerRecoveryService.CompleteUserRecovery:output_type -> user.consumer.v1.CompleteUserRecoveryResponse
 	30, // [30:38] is the sub-list for method output_type
 	22, // [22:30] is the sub-list for method input_type
 	22, // [22:22] is the sub-list for extension type_name
@@ -1542,8 +1542,8 @@ func file_user_consumer_v1_recovery_proto_init() {
 		return
 	}
 	file_user_consumer_v1_recovery_proto_msgTypes[2].OneofWrappers = []any{
-		(*StartAccountRecoveryRequest_UserCode)(nil),
-		(*StartAccountRecoveryRequest_CurrentPhone)(nil),
+		(*StartUserRecoveryRequest_UserCode)(nil),
+		(*StartUserRecoveryRequest_CurrentPhone)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

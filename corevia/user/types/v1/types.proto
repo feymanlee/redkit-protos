@@ -8,18 +8,20 @@ import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
-// AccountStatus 刻画对应资源的生命周期状态。
-enum AccountStatus {
+// UserStatus 刻画对应资源的生命周期状态。
+enum UserStatus {
   // 未提供有效取值；调用方不得据此推断业务状态。
-  ACCOUNT_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_UNSPECIFIED = 0;
   // 当前已生效并可用于业务处理。
-  ACCOUNT_STATUS_ACTIVE = 1;
+  USER_STATUS_ACTIVE = 1;
   // 当前已暂停，恢复前不接受新的业务动作。
-  ACCOUNT_STATUS_SUSPENDED = 2;
+  USER_STATUS_SUSPENDED = 2;
   // 关闭流程正在执行，尚未形成关闭终态。
-  ACCOUNT_STATUS_CLOSING = 3;
+  USER_STATUS_DELETING = 3;
   // 当前流程已关闭，不再接受新的处理动作。
-  ACCOUNT_STATUS_CLOSED = 4;
+  USER_STATUS_DELETED = 4;
+  // 已完成注册受理但尚未建立 Credential，业务动作仍受限。
+  USER_STATUS_PENDING = 5;
 }
 
 // CredentialType 区分对应资源的业务类型。
@@ -148,35 +150,35 @@ enum SecurityActivityType {
   SECURITY_ACTIVITY_TYPE_SESSION_REVOKED = 7;
   // 相关授权或凭据已撤销，不能继续使用。
   SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED = 8;
-  // SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY 选择 ACCOUNT_RECOVERY 业务类型。
-  SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY = 9;
-  // SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE 选择 ACCOUNT_MERGE 业务类型。
-  SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE = 10;
-  // SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE 选择 ACCOUNT_CLOSURE 业务类型。
-  SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE = 11;
+  // SECURITY_ACTIVITY_TYPE_USER_RECOVERY 选择 USER_RECOVERY 业务类型。
+  SECURITY_ACTIVITY_TYPE_USER_RECOVERY = 9;
+  // SECURITY_ACTIVITY_TYPE_USER_MERGE 选择 USER_MERGE 业务类型。
+  SECURITY_ACTIVITY_TYPE_USER_MERGE = 10;
+  // SECURITY_ACTIVITY_TYPE_USER_DELETION 选择 USER_DELETION 业务类型。
+  SECURITY_ACTIVITY_TYPE_USER_DELETION = 11;
 }
 
-// Account 表示当前 App 内 User Account 的身份与生命周期快照。
-message Account {
+// User 表示当前 App 内 User 的身份与生命周期快照。
+message User {
   // user_id 标识当前 App 内关联的 User。
   uint64 user_id = 1;
-  // app_id 限定 Account 所属 App；UNSPECIFIED 不表示跨 App。
+  // app_id 限定 User 所属 App；UNSPECIFIED 不表示跨 App。
   common.v1.AppId app_id = 2;
-  // user_code 提供 Account 对外稳定使用的业务编码。
+  // user_code 提供 User 对外稳定使用的业务编码。
   string user_code = 3;
-  // status 表示 Account 当前可观察的生命周期状态。
-  AccountStatus status = 4;
+  // status 表示 User 当前可观察的生命周期状态。
+  UserStatus status = 4;
   // canonical_user_id 标识当前 App 内关联的 User。
   uint64 canonical_user_id = 5;
-  // suspended_until 指定 Account 查询或生效区间的结束边界。
+  // suspended_until 指定 User 查询或生效区间的结束边界。
   google.protobuf.Timestamp suspended_until = 6;
-  // closing_at 记录 Account 对应业务阶段的时间点。
-  google.protobuf.Timestamp closing_at = 7;
-  // closed_at 记录 Account 对应业务阶段的时间点。
-  google.protobuf.Timestamp closed_at = 8;
-  // created_at 记录 Account 的创建时间。
+  // deleting_at 记录 User 对应业务阶段的时间点。
+  google.protobuf.Timestamp deleting_at = 7;
+  // deleted_at 记录 User 对应业务阶段的时间点。
+  google.protobuf.Timestamp deleted_at = 8;
+  // created_at 记录 User 的创建时间。
   google.protobuf.Timestamp created_at = 9;
-  // updated_at 记录 Account 最近一次更新的时间。
+  // updated_at 记录 User 最近一次更新的时间。
   google.protobuf.Timestamp updated_at = 10;
 }
 
@@ -322,25 +324,25 @@ message Device {
   google.protobuf.Timestamp last_seen_at = 11;
 }
 
-// ConsumerAccountCapabilities 汇总当前 User Account 允许执行的消费端能力。
-message ConsumerAccountCapabilities {
-  // can_update_profile 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+// ConsumerUserCapabilities 汇总当前 User 允许执行的消费端能力。
+message ConsumerUserCapabilities {
+  // can_update_profile 显式表示 ConsumerUserCapabilities 是否满足该条件。
   bool can_update_profile = 1;
-  // can_manage_credentials 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  // can_manage_credentials 显式表示 ConsumerUserCapabilities 是否满足该条件。
   bool can_manage_credentials = 2;
-  // can_manage_sessions 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  // can_manage_sessions 显式表示 ConsumerUserCapabilities 是否满足该条件。
   bool can_manage_sessions = 3;
-  // can_manage_mfa 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  // can_manage_mfa 显式表示 ConsumerUserCapabilities 是否满足该条件。
   bool can_manage_mfa = 4;
   // can_change_user_code 表示当前 User 是否允许变更 User Code。
   bool can_change_user_code = 5;
-  // user_code_change_available_at 记录 ConsumerAccountCapabilities 对应业务阶段的时间点。
+  // user_code_change_available_at 记录 ConsumerUserCapabilities 对应业务阶段的时间点。
   google.protobuf.Timestamp user_code_change_available_at = 6;
-  // can_start_merge 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+  // can_start_merge 显式表示 ConsumerUserCapabilities 是否满足该条件。
   bool can_start_merge = 7;
-  // can_start_closure 显式表示 ConsumerAccountCapabilities 是否满足该条件。
-  bool can_start_closure = 8;
-  // active_lifecycle_operation_type 区分 ConsumerAccountCapabilities 的业务类型。
+  // can_start_deletion 显式表示 ConsumerUserCapabilities 是否满足该条件。
+  bool can_start_deletion = 8;
+  // active_lifecycle_operation_type 区分 ConsumerUserCapabilities 的业务类型。
   string active_lifecycle_operation_type = 9;
 }
 
@@ -362,7 +364,7 @@ message SecurityOverview {
   google.protobuf.Timestamp locked_until = 7;
 }
 
-// SecurityActivity 记录 User Account 上可供本人查看的安全活动。
+// SecurityActivity 记录 User 上可供本人查看的安全活动。
 message SecurityActivity {
   // activity_id 标识关联的 Activity。
   string activity_id = 1;

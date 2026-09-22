@@ -91,8 +91,8 @@ message UserOverviewDrilldown {
 
 // UserOverviewIdentity 汇总 User Overview 使用的稳定身份与资料摘要。
 message UserOverviewIdentity {
-  // account 承载 UserOverviewIdentity 关联的 Account。
-  .user.administration.v1.Account account = 1;
+  // user 承载 UserOverviewIdentity 关联的 User。
+  .user.administration.v1.User user = 1;
   // profile 承载 UserOverviewIdentity 关联的 Profile。
   .user.administration.v1.Profile profile = 2;
   // security_state 表示 UserOverviewIdentity 当前可观察的生命周期状态。

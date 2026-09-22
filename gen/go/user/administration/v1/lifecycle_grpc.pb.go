@@ -20,17 +20,26 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	UserLifecycleService_ListLifecycleOperations_FullMethodName = "/user.administration.v1.UserLifecycleService/ListLifecycleOperations"
+	UserLifecycleService_BeginUserDeletion_FullMethodName       = "/user.administration.v1.UserLifecycleService/BeginUserDeletion"
+	UserLifecycleService_CancelUserDeletion_FullMethodName      = "/user.administration.v1.UserLifecycleService/CancelUserDeletion"
+	UserLifecycleService_FinalizeUserDeletion_FullMethodName    = "/user.administration.v1.UserLifecycleService/FinalizeUserDeletion"
 )
 
 // UserLifecycleServiceClient is the client API for UserLifecycleService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// UserLifecycleService 暴露 User 拥有的 Recovery、Closure 和 Merge 只读强类型投影，
+// UserLifecycleService 暴露 User 拥有的 Recovery、Deletion 和 Merge 只读强类型投影，
 // 不引入通用任务状态机。
 type UserLifecycleServiceClient interface {
 	// 查询 LifecycleOperation 列表。
 	ListLifecycleOperations(ctx context.Context, in *ListLifecycleOperationsRequest, opts ...grpc.CallOption) (*ListLifecycleOperationsResponse, error)
+	// 发起带冷静期的 UserDeletion。
+	BeginUserDeletion(ctx context.Context, in *BeginUserDeletionRequest, opts ...grpc.CallOption) (*User, error)
+	// 取消尚未进入不可逆阶段的 UserDeletion。
+	CancelUserDeletion(ctx context.Context, in *CancelUserDeletionRequest, opts ...grpc.CallOption) (*User, error)
+	// 完成 UserDeletion。
+	FinalizeUserDeletion(ctx context.Context, in *FinalizeUserDeletionRequest, opts ...grpc.CallOption) (*User, error)
 }
 
 type userLifecycleServiceClient struct {
@@ -51,15 +60,51 @@ func (c *userLifecycleServiceClient) ListLifecycleOperations(ctx context.Context
 	return out, nil
 }
 
+func (c *userLifecycleServiceClient) BeginUserDeletion(ctx context.Context, in *BeginUserDeletionRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserLifecycleService_BeginUserDeletion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userLifecycleServiceClient) CancelUserDeletion(ctx context.Context, in *CancelUserDeletionRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserLifecycleService_CancelUserDeletion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userLifecycleServiceClient) FinalizeUserDeletion(ctx context.Context, in *FinalizeUserDeletionRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserLifecycleService_FinalizeUserDeletion_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserLifecycleServiceServer is the server API for UserLifecycleService service.
 // All implementations must embed UnimplementedUserLifecycleServiceServer
 // for forward compatibility.
 //
-// UserLifecycleService 暴露 User 拥有的 Recovery、Closure 和 Merge 只读强类型投影，
+// UserLifecycleService 暴露 User 拥有的 Recovery、Deletion 和 Merge 只读强类型投影，
 // 不引入通用任务状态机。
 type UserLifecycleServiceServer interface {
 	// 查询 LifecycleOperation 列表。
 	ListLifecycleOperations(context.Context, *ListLifecycleOperationsRequest) (*ListLifecycleOperationsResponse, error)
+	// 发起带冷静期的 UserDeletion。
+	BeginUserDeletion(context.Context, *BeginUserDeletionRequest) (*User, error)
+	// 取消尚未进入不可逆阶段的 UserDeletion。
+	CancelUserDeletion(context.Context, *CancelUserDeletionRequest) (*User, error)
+	// 完成 UserDeletion。
+	FinalizeUserDeletion(context.Context, *FinalizeUserDeletionRequest) (*User, error)
 	mustEmbedUnimplementedUserLifecycleServiceServer()
 }
 
@@ -72,6 +117,15 @@ type UnimplementedUserLifecycleServiceServer struct{}
 
 func (UnimplementedUserLifecycleServiceServer) ListLifecycleOperations(context.Context, *ListLifecycleOperationsRequest) (*ListLifecycleOperationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListLifecycleOperations not implemented")
+}
+func (UnimplementedUserLifecycleServiceServer) BeginUserDeletion(context.Context, *BeginUserDeletionRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BeginUserDeletion not implemented")
+}
+func (UnimplementedUserLifecycleServiceServer) CancelUserDeletion(context.Context, *CancelUserDeletionRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelUserDeletion not implemented")
+}
+func (UnimplementedUserLifecycleServiceServer) FinalizeUserDeletion(context.Context, *FinalizeUserDeletionRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FinalizeUserDeletion not implemented")
 }
 func (UnimplementedUserLifecycleServiceServer) mustEmbedUnimplementedUserLifecycleServiceServer() {}
 func (UnimplementedUserLifecycleServiceServer) testEmbeddedByValue()                              {}
@@ -112,6 +166,60 @@ func _UserLifecycleService_ListLifecycleOperations_Handler(srv interface{}, ctx 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserLifecycleService_BeginUserDeletion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BeginUserDeletionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserLifecycleServiceServer).BeginUserDeletion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserLifecycleService_BeginUserDeletion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserLifecycleServiceServer).BeginUserDeletion(ctx, req.(*BeginUserDeletionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserLifecycleService_CancelUserDeletion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelUserDeletionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserLifecycleServiceServer).CancelUserDeletion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserLifecycleService_CancelUserDeletion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserLifecycleServiceServer).CancelUserDeletion(ctx, req.(*CancelUserDeletionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserLifecycleService_FinalizeUserDeletion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FinalizeUserDeletionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserLifecycleServiceServer).FinalizeUserDeletion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserLifecycleService_FinalizeUserDeletion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserLifecycleServiceServer).FinalizeUserDeletion(ctx, req.(*FinalizeUserDeletionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserLifecycleService_ServiceDesc is the grpc.ServiceDesc for UserLifecycleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +230,18 @@ var UserLifecycleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListLifecycleOperations",
 			Handler:    _UserLifecycleService_ListLifecycleOperations_Handler,
+		},
+		{
+			MethodName: "BeginUserDeletion",
+			Handler:    _UserLifecycleService_BeginUserDeletion_Handler,
+		},
+		{
+			MethodName: "CancelUserDeletion",
+			Handler:    _UserLifecycleService_CancelUserDeletion_Handler,
+		},
+		{
+			MethodName: "FinalizeUserDeletion",
+			Handler:    _UserLifecycleService_FinalizeUserDeletion_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

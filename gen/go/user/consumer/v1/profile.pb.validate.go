@@ -39,6 +39,327 @@ var (
 	_ = commonpb.AppId(0)
 )
 
+// Validate checks the field values on ChangeUserCodeRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ChangeUserCodeRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ChangeUserCodeRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ChangeUserCodeRequestMultiError, or nil if none found.
+func (m *ChangeUserCodeRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ChangeUserCodeRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if _, ok := _ChangeUserCodeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := ChangeUserCodeRequestValidationError{
+			field:  "AppId",
+			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
+		err := ChangeUserCodeRequestValidationError{
+			field:  "AppId",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetUserCode()); l < 3 || l > 20 {
+		err := ChangeUserCodeRequestValidationError{
+			field:  "UserCode",
+			reason: "value length must be between 3 and 20 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
+		err := ChangeUserCodeRequestValidationError{
+			field:  "StepUpToken",
+			reason: "value length must be between 32 and 512 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
+		err := ChangeUserCodeRequestValidationError{
+			field:  "IdempotencyKey",
+			reason: "value length must be between 1 and 128 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ChangeUserCodeRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ChangeUserCodeRequestMultiError is an error wrapping multiple validation
+// errors returned by ChangeUserCodeRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ChangeUserCodeRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ChangeUserCodeRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ChangeUserCodeRequestMultiError) AllErrors() []error { return m }
+
+// ChangeUserCodeRequestValidationError is the validation error returned by
+// ChangeUserCodeRequest.Validate if the designated constraints aren't met.
+type ChangeUserCodeRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ChangeUserCodeRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ChangeUserCodeRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ChangeUserCodeRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ChangeUserCodeRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ChangeUserCodeRequestValidationError) ErrorName() string {
+	return "ChangeUserCodeRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ChangeUserCodeRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sChangeUserCodeRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ChangeUserCodeRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ChangeUserCodeRequestValidationError{}
+
+var _ChangeUserCodeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+	0: {},
+}
+
+// Validate checks the field values on ChangeUserCodeResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ChangeUserCodeResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ChangeUserCodeResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ChangeUserCodeResponseMultiError, or nil if none found.
+func (m *ChangeUserCodeResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ChangeUserCodeResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ChangeUserCodeResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ChangeUserCodeResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ChangeUserCodeResponseValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetTokens()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ChangeUserCodeResponseValidationError{
+					field:  "Tokens",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ChangeUserCodeResponseValidationError{
+					field:  "Tokens",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTokens()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ChangeUserCodeResponseValidationError{
+				field:  "Tokens",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return ChangeUserCodeResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ChangeUserCodeResponseMultiError is an error wrapping multiple validation
+// errors returned by ChangeUserCodeResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ChangeUserCodeResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ChangeUserCodeResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ChangeUserCodeResponseMultiError) AllErrors() []error { return m }
+
+// ChangeUserCodeResponseValidationError is the validation error returned by
+// ChangeUserCodeResponse.Validate if the designated constraints aren't met.
+type ChangeUserCodeResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ChangeUserCodeResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ChangeUserCodeResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ChangeUserCodeResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ChangeUserCodeResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ChangeUserCodeResponseValidationError) ErrorName() string {
+	return "ChangeUserCodeResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ChangeUserCodeResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sChangeUserCodeResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ChangeUserCodeResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ChangeUserCodeResponseValidationError{}
+
 // Validate checks the field values on GetCurrentUserRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -190,11 +511,11 @@ func (m *CurrentUser) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetAccount()).(type) {
+		switch v := interface{}(m.GetUser()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, CurrentUserValidationError{
-					field:  "Account",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -202,16 +523,16 @@ func (m *CurrentUser) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, CurrentUserValidationError{
-					field:  "Account",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetAccount()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return CurrentUserValidationError{
-				field:  "Account",
+				field:  "User",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

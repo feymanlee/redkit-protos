@@ -39,6 +39,335 @@ var (
 	_ = commonpb.AppId(0)
 )
 
+// Validate checks the field values on BeginUserDeletionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *BeginUserDeletionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on BeginUserDeletionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// BeginUserDeletionRequestMultiError, or nil if none found.
+func (m *BeginUserDeletionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *BeginUserDeletionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AppId
+
+	// no validation rules for UserId
+
+	// no validation rules for VerificationTicket
+
+	// no validation rules for IdempotencyKey
+
+	if len(errors) > 0 {
+		return BeginUserDeletionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// BeginUserDeletionRequestMultiError is an error wrapping multiple validation
+// errors returned by BeginUserDeletionRequest.ValidateAll() if the designated
+// constraints aren't met.
+type BeginUserDeletionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m BeginUserDeletionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m BeginUserDeletionRequestMultiError) AllErrors() []error { return m }
+
+// BeginUserDeletionRequestValidationError is the validation error returned by
+// BeginUserDeletionRequest.Validate if the designated constraints aren't met.
+type BeginUserDeletionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e BeginUserDeletionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e BeginUserDeletionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e BeginUserDeletionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e BeginUserDeletionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e BeginUserDeletionRequestValidationError) ErrorName() string {
+	return "BeginUserDeletionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e BeginUserDeletionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sBeginUserDeletionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = BeginUserDeletionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = BeginUserDeletionRequestValidationError{}
+
+// Validate checks the field values on CancelUserDeletionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CancelUserDeletionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CancelUserDeletionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CancelUserDeletionRequestMultiError, or nil if none found.
+func (m *CancelUserDeletionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CancelUserDeletionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AppId
+
+	// no validation rules for UserId
+
+	// no validation rules for VerificationTicket
+
+	// no validation rules for IdempotencyKey
+
+	if len(errors) > 0 {
+		return CancelUserDeletionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CancelUserDeletionRequestMultiError is an error wrapping multiple validation
+// errors returned by CancelUserDeletionRequest.ValidateAll() if the
+// designated constraints aren't met.
+type CancelUserDeletionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CancelUserDeletionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CancelUserDeletionRequestMultiError) AllErrors() []error { return m }
+
+// CancelUserDeletionRequestValidationError is the validation error returned by
+// CancelUserDeletionRequest.Validate if the designated constraints aren't met.
+type CancelUserDeletionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CancelUserDeletionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CancelUserDeletionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CancelUserDeletionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CancelUserDeletionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CancelUserDeletionRequestValidationError) ErrorName() string {
+	return "CancelUserDeletionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CancelUserDeletionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCancelUserDeletionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CancelUserDeletionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CancelUserDeletionRequestValidationError{}
+
+// Validate checks the field values on FinalizeUserDeletionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *FinalizeUserDeletionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on FinalizeUserDeletionRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// FinalizeUserDeletionRequestMultiError, or nil if none found.
+func (m *FinalizeUserDeletionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *FinalizeUserDeletionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AppId
+
+	// no validation rules for UserId
+
+	// no validation rules for IdempotencyKey
+
+	if len(errors) > 0 {
+		return FinalizeUserDeletionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// FinalizeUserDeletionRequestMultiError is an error wrapping multiple
+// validation errors returned by FinalizeUserDeletionRequest.ValidateAll() if
+// the designated constraints aren't met.
+type FinalizeUserDeletionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m FinalizeUserDeletionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m FinalizeUserDeletionRequestMultiError) AllErrors() []error { return m }
+
+// FinalizeUserDeletionRequestValidationError is the validation error returned
+// by FinalizeUserDeletionRequest.Validate if the designated constraints
+// aren't met.
+type FinalizeUserDeletionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e FinalizeUserDeletionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e FinalizeUserDeletionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e FinalizeUserDeletionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e FinalizeUserDeletionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e FinalizeUserDeletionRequestValidationError) ErrorName() string {
+	return "FinalizeUserDeletionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e FinalizeUserDeletionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sFinalizeUserDeletionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = FinalizeUserDeletionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = FinalizeUserDeletionRequestValidationError{}
+
 // Validate checks the field values on LifecycleOperationFilter with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

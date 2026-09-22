@@ -43,7 +43,7 @@ const (
 	// 敏感操作二次确认。
 	VerificationPurpose_VERIFICATION_PURPOSE_SENSITIVE_OPERATION VerificationPurpose = 6
 	// 未登录账号恢复的新手机号验证。
-	VerificationPurpose_VERIFICATION_PURPOSE_ACCOUNT_RECOVERY VerificationPurpose = 7
+	VerificationPurpose_VERIFICATION_PURPOSE_USER_RECOVERY VerificationPurpose = 7
 )
 
 // Enum value maps for VerificationPurpose.
@@ -56,7 +56,7 @@ var (
 		4: "VERIFICATION_PURPOSE_CHANGE_PHONE",
 		5: "VERIFICATION_PURPOSE_RESET_PASSWORD",
 		6: "VERIFICATION_PURPOSE_SENSITIVE_OPERATION",
-		7: "VERIFICATION_PURPOSE_ACCOUNT_RECOVERY",
+		7: "VERIFICATION_PURPOSE_USER_RECOVERY",
 	}
 	VerificationPurpose_value = map[string]int32{
 		"VERIFICATION_PURPOSE_UNSPECIFIED":         0,
@@ -66,7 +66,7 @@ var (
 		"VERIFICATION_PURPOSE_CHANGE_PHONE":        4,
 		"VERIFICATION_PURPOSE_RESET_PASSWORD":      5,
 		"VERIFICATION_PURPOSE_SENSITIVE_OPERATION": 6,
-		"VERIFICATION_PURPOSE_ACCOUNT_RECOVERY":    7,
+		"VERIFICATION_PURPOSE_USER_RECOVERY":       7,
 	}
 )
 
@@ -1417,7 +1417,7 @@ const file_support_verification_v1_verification_proto_rawDesc = "" +
 	"\x0frecipient_phone\x18\x02 \x01(\tR\x0erecipientPhone\"x\n" +
 	"\x1eListVerificationAuditsResponse\x12@\n" +
 	"\x05items\x18\x01 \x03(\v2*.support.verification.v1.VerificationAuditR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total*\xcc\x02\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total*\xc9\x02\n" +
 	"\x13VerificationPurpose\x12$\n" +
 	" VERIFICATION_PURPOSE_UNSPECIFIED\x10\x00\x12\x1e\n" +
 	"\x1aVERIFICATION_PURPOSE_LOGIN\x10\x01\x12!\n" +
@@ -1425,8 +1425,8 @@ const file_support_verification_v1_verification_proto_rawDesc = "" +
 	"\x1fVERIFICATION_PURPOSE_BIND_PHONE\x10\x03\x12%\n" +
 	"!VERIFICATION_PURPOSE_CHANGE_PHONE\x10\x04\x12'\n" +
 	"#VERIFICATION_PURPOSE_RESET_PASSWORD\x10\x05\x12,\n" +
-	"(VERIFICATION_PURPOSE_SENSITIVE_OPERATION\x10\x06\x12)\n" +
-	"%VERIFICATION_PURPOSE_ACCOUNT_RECOVERY\x10\a*\xd2\x03\n" +
+	"(VERIFICATION_PURPOSE_SENSITIVE_OPERATION\x10\x06\x12&\n" +
+	"\"VERIFICATION_PURPOSE_USER_RECOVERY\x10\a*\xd2\x03\n" +
 	"\x16VerificationAuditEvent\x12(\n" +
 	"$VERIFICATION_AUDIT_EVENT_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"VERIFICATION_AUDIT_EVENT_CODE_SENT\x10\x01\x12*\n" +

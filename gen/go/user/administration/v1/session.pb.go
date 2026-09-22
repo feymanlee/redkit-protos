@@ -221,8 +221,8 @@ type CheckSessionResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// valid 显式表示 CheckSession 是否满足该条件。
 	Valid bool `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
-	// account_status 表示 CheckSession 当前可观察的生命周期状态。
-	AccountStatus AccountStatus `protobuf:"varint,2,opt,name=account_status,json=accountStatus,proto3,enum=user.administration.v1.AccountStatus" json:"account_status,omitempty"`
+	// user_status 表示 CheckSession 当前可观察的生命周期状态。
+	UserStatus UserStatus `protobuf:"varint,2,opt,name=user_status,json=userStatus,proto3,enum=user.administration.v1.UserStatus" json:"user_status,omitempty"`
 	// session_status 表示 CheckSession 当前可观察的生命周期状态。
 	SessionStatus SessionStatus `protobuf:"varint,3,opt,name=session_status,json=sessionStatus,proto3,enum=user.administration.v1.SessionStatus" json:"session_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -266,11 +266,11 @@ func (x *CheckSessionResponse) GetValid() bool {
 	return false
 }
 
-func (x *CheckSessionResponse) GetAccountStatus() AccountStatus {
+func (x *CheckSessionResponse) GetUserStatus() UserStatus {
 	if x != nil {
-		return x.AccountStatus
+		return x.UserStatus
 	}
-	return AccountStatus_ACCOUNT_STATUS_UNSPECIFIED
+	return UserStatus_USER_STATUS_UNSPECIFIED
 }
 
 func (x *CheckSessionResponse) GetSessionStatus() SessionStatus {
@@ -452,10 +452,11 @@ const file_user_administration_v1_session_proto_rawDesc = "" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x03 \x01(\tR\tsessionId\x12#\n" +
-	"\rtoken_version\x18\x04 \x01(\x04R\ftokenVersion\"\xc8\x01\n" +
+	"\rtoken_version\x18\x04 \x01(\x04R\ftokenVersion\"\xbf\x01\n" +
 	"\x14CheckSessionResponse\x12\x14\n" +
-	"\x05valid\x18\x01 \x01(\bR\x05valid\x12L\n" +
-	"\x0eaccount_status\x18\x02 \x01(\x0e2%.user.administration.v1.AccountStatusR\raccountStatus\x12L\n" +
+	"\x05valid\x18\x01 \x01(\bR\x05valid\x12C\n" +
+	"\vuser_status\x18\x02 \x01(\x0e2\".user.administration.v1.UserStatusR\n" +
+	"userStatus\x12L\n" +
 	"\x0esession_status\x18\x03 \x01(\x0e2%.user.administration.v1.SessionStatusR\rsessionStatus\"\xb8\x01\n" +
 	"\x14RevokeSessionRequest\x12'\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
@@ -499,7 +500,7 @@ var file_user_administration_v1_session_proto_goTypes = []any{
 	(v1.AppId)(0),                    // 6: common.v1.AppId
 	(*v11.PagingRequest)(nil),        // 7: common.pagination.v1.PagingRequest
 	(*Session)(nil),                  // 8: user.administration.v1.Session
-	(AccountStatus)(0),               // 9: user.administration.v1.AccountStatus
+	(UserStatus)(0),                  // 9: user.administration.v1.UserStatus
 	(SessionStatus)(0),               // 10: user.administration.v1.SessionStatus
 	(*emptypb.Empty)(nil),            // 11: google.protobuf.Empty
 }
@@ -508,7 +509,7 @@ var file_user_administration_v1_session_proto_depIdxs = []int32{
 	7,  // 1: user.administration.v1.ListSessionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
 	8,  // 2: user.administration.v1.ListSessionsResponse.items:type_name -> user.administration.v1.Session
 	6,  // 3: user.administration.v1.CheckSessionRequest.app_id:type_name -> common.v1.AppId
-	9,  // 4: user.administration.v1.CheckSessionResponse.account_status:type_name -> user.administration.v1.AccountStatus
+	9,  // 4: user.administration.v1.CheckSessionResponse.user_status:type_name -> user.administration.v1.UserStatus
 	10, // 5: user.administration.v1.CheckSessionResponse.session_status:type_name -> user.administration.v1.SessionStatus
 	6,  // 6: user.administration.v1.RevokeSessionRequest.app_id:type_name -> common.v1.AppId
 	6,  // 7: user.administration.v1.RevokeAllSessionsRequest.app_id:type_name -> common.v1.AppId

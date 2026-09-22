@@ -369,8 +369,8 @@ func (x *UserOverviewDrilldown) GetUserId() uint64 {
 // UserOverviewIdentity 汇总 User Overview 使用的稳定身份与资料摘要。
 type UserOverviewIdentity struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// account 承载 UserOverviewIdentity 关联的 Account。
-	Account *v1.Account `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	// user 承载 UserOverviewIdentity 关联的 User。
+	User *v1.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// profile 承载 UserOverviewIdentity 关联的 Profile。
 	Profile *v1.Profile `protobuf:"bytes,2,opt,name=profile,proto3" json:"profile,omitempty"`
 	// security_state 表示 UserOverviewIdentity 当前可观察的生命周期状态。
@@ -409,9 +409,9 @@ func (*UserOverviewIdentity) Descriptor() ([]byte, []int) {
 	return file_admin_user_v1_user_overview_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *UserOverviewIdentity) GetAccount() *v1.Account {
+func (x *UserOverviewIdentity) GetUser() *v1.User {
 	if x != nil {
-		return x.Account
+		return x.User
 	}
 	return nil
 }
@@ -846,9 +846,9 @@ const file_admin_user_v1_user_overview_proto_rawDesc = "" +
 	"\asection\x18\x02 \x01(\x0e2\".admin.user.v1.UserOverviewSectionB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\asection\"z\n" +
 	"\x15UserOverviewDrilldown\x12H\n" +
 	"\vdestination\x18\x01 \x01(\x0e2&.admin.user.v1.UserOverviewDestinationR\vdestination\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x04R\x06userId\"\xda\x01\n" +
-	"\x14UserOverviewIdentity\x129\n" +
-	"\aaccount\x18\x01 \x01(\v2\x1f.user.administration.v1.AccountR\aaccount\x129\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\"\xd1\x01\n" +
+	"\x14UserOverviewIdentity\x120\n" +
+	"\x04user\x18\x01 \x01(\v2\x1c.user.administration.v1.UserR\x04user\x129\n" +
 	"\aprofile\x18\x02 \x01(\v2\x1f.user.administration.v1.ProfileR\aprofile\x12L\n" +
 	"\x0esecurity_state\x18\x03 \x01(\v2%.user.administration.v1.SecurityStateR\rsecurityState\"\xeb\x01\n" +
 	"\x19UserWalletOverviewSection\x12R\n" +
@@ -928,7 +928,7 @@ var file_admin_user_v1_user_overview_proto_goTypes = []any{
 	(*UserCustomerCareOverviewSection)(nil), // 10: admin.user.v1.UserCustomerCareOverviewSection
 	(*UserOverview)(nil),                    // 11: admin.user.v1.UserOverview
 	(*UserOverviewSectionResponse)(nil),     // 12: admin.user.v1.UserOverviewSectionResponse
-	(*v1.Account)(nil),                      // 13: user.administration.v1.Account
+	(*v1.User)(nil),                         // 13: user.administration.v1.User
 	(*v1.Profile)(nil),                      // 14: user.administration.v1.Profile
 	(*v1.SecurityState)(nil),                // 15: user.administration.v1.SecurityState
 	(*v11.UserWalletSummary)(nil),           // 16: wallet.v1.UserWalletSummary
@@ -938,7 +938,7 @@ var file_admin_user_v1_user_overview_proto_goTypes = []any{
 var file_admin_user_v1_user_overview_proto_depIdxs = []int32{
 	0,  // 0: admin.user.v1.GetUserOverviewSectionRequest.section:type_name -> admin.user.v1.UserOverviewSection
 	2,  // 1: admin.user.v1.UserOverviewDrilldown.destination:type_name -> admin.user.v1.UserOverviewDestination
-	13, // 2: admin.user.v1.UserOverviewIdentity.account:type_name -> user.administration.v1.Account
+	13, // 2: admin.user.v1.UserOverviewIdentity.user:type_name -> user.administration.v1.User
 	14, // 3: admin.user.v1.UserOverviewIdentity.profile:type_name -> user.administration.v1.Profile
 	15, // 4: admin.user.v1.UserOverviewIdentity.security_state:type_name -> user.administration.v1.SecurityState
 	1,  // 5: admin.user.v1.UserWalletOverviewSection.availability:type_name -> admin.user.v1.UserOverviewSectionAvailability

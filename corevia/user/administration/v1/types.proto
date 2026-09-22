@@ -6,20 +6,20 @@ import "common/v1/common.proto";
 import "common/file/v1/file.proto";
 import "google/protobuf/timestamp.proto";
 
-// AccountStatus 表示 C 端账号的业务生命周期。
-enum AccountStatus {
+// UserStatus 表示 C 端账号的业务生命周期。
+enum UserStatus {
   // 未提供有效取值；调用方不得据此推断业务状态。
-  ACCOUNT_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_UNSPECIFIED = 0;
   // 已受理并等待后续处理。
-  ACCOUNT_STATUS_PENDING = 1;
+  USER_STATUS_PENDING = 1;
   // 当前已生效并可用于业务处理。
-  ACCOUNT_STATUS_ACTIVE = 2;
+  USER_STATUS_ACTIVE = 2;
   // 当前已暂停，恢复前不接受新的业务动作。
-  ACCOUNT_STATUS_SUSPENDED = 3;
+  USER_STATUS_SUSPENDED = 3;
   // 关闭流程正在执行，尚未形成关闭终态。
-  ACCOUNT_STATUS_CLOSING = 4;
+  USER_STATUS_DELETING = 4;
   // 当前流程已关闭，不再接受新的处理动作。
-  ACCOUNT_STATUS_CLOSED = 5;
+  USER_STATUS_DELETED = 5;
 }
 
 // CredentialType 表示受支持的登录凭据类型。
@@ -80,27 +80,27 @@ enum RecoveryDeviceKeyAlgorithm {
   RECOVERY_DEVICE_KEY_ALGORITHM_ED25519 = 1;
 }
 
-// Account 是 App 内 C 端用户账号的聚合根。
-message Account {
-  // id 标识关联的 Account。
+// User 是 App 内 C 端用户账号的聚合根。
+message User {
+  // id 标识关联的 User。
   uint64 id = 1;
-  // app_id 限定 Account 所属 App；UNSPECIFIED 不表示跨 App。
+  // app_id 限定 User 所属 App；UNSPECIFIED 不表示跨 App。
   common.v1.AppId app_id = 2;
-  // user_code 提供 Account 对外稳定使用的业务编码。
+  // user_code 提供 User 对外稳定使用的业务编码。
   string user_code = 3;
-  // status 表示 Account 当前可观察的生命周期状态。
-  AccountStatus status = 4;
+  // status 表示 User 当前可观察的生命周期状态。
+  UserStatus status = 4;
   // status_reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string status_reason = 5;
-  // suspended_until 指定 Account 查询或生效区间的结束边界。
+  // suspended_until 指定 User 查询或生效区间的结束边界。
   google.protobuf.Timestamp suspended_until = 7;
-  // closing_at 记录 Account 对应业务阶段的时间点。
-  google.protobuf.Timestamp closing_at = 8;
-  // closed_at 记录 Account 对应业务阶段的时间点。
-  google.protobuf.Timestamp closed_at = 9;
-  // created_at 记录 Account 的创建时间。
+  // deleting_at 记录 User 对应业务阶段的时间点。
+  google.protobuf.Timestamp deleting_at = 8;
+  // deleted_at 记录 User 对应业务阶段的时间点。
+  google.protobuf.Timestamp deleted_at = 9;
+  // created_at 记录 User 的创建时间。
   google.protobuf.Timestamp created_at = 10;
-  // updated_at 记录 Account 最近一次更新的时间。
+  // updated_at 记录 User 最近一次更新的时间。
   google.protobuf.Timestamp updated_at = 11;
 }
 
@@ -115,7 +115,7 @@ message UserReference {
   // user_code 提供 UserReference 对外稳定使用的业务编码。
   string user_code = 4;
   // status 表示 UserReference 当前可观察的生命周期状态。
-  AccountStatus status = 5;
+  UserStatus status = 5;
   // can_initiate_business 显式表示 UserReference 是否满足该条件。
   bool can_initiate_business = 6;
   // can_receive_business 显式表示 UserReference 是否满足该条件。
@@ -146,8 +146,8 @@ message Profile {
 
 // CurrentUser 返回当前用户可读取的账号和资料。
 message CurrentUser {
-  // account 承载 CurrentUser 关联的 Account。
-  Account account = 1;
+  // user 承载 CurrentUser 关联的 User。
+  User user = 1;
   // profile 承载 CurrentUser 关联的 Profile。
   Profile profile = 2;
   // credentials 列出 CurrentUser 关联的 Credential。
@@ -248,7 +248,7 @@ message Device {
   google.protobuf.Timestamp recovery_key_registered_at = 12;
 }
 
-// SecurityState 保存用户当前安全状态，不与 Account 生命周期混用。
+// SecurityState 保存用户当前安全状态，不与 User 生命周期混用。
 message SecurityState {
   // user_id 标识当前 App 内关联的 User。
   uint64 user_id = 1;
@@ -336,8 +336,8 @@ message UserAppPolicy {
   uint32 lock_seconds = 9;
   // mfa_required 显式表示 UserAppPolicy 是否满足该条件。
   bool mfa_required = 10;
-  // closure_cooling_days 以天为单位指定 Account Closure 的冷静期。
-  uint32 closure_cooling_days = 11;
+  // deletion_cooling_days 以天为单位指定 User Deletion 的冷静期。
+  uint32 deletion_cooling_days = 11;
   // user_code_change_interval_days 以天为单位限定两次 User Code 变更之间的最短间隔。
   uint32 user_code_change_interval_days = 12;
   // password_min_length 限定可接受密码的最小字符数。

@@ -137,18 +137,18 @@ func ErrorUserCodeUnavailable(format string, args ...interface{}) *errors.Error 
 	return errors.New(409, ConsumerUserErrorReason_USER_CODE_UNAVAILABLE.String(), fmt.Sprintf(format, args...))
 }
 
-// INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-func IsInvalidAccountState(err error) bool {
+// INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+func IsInvalidUserState(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ConsumerUserErrorReason_INVALID_ACCOUNT_STATE.String() && e.Code == 412
+	return e.Reason == ConsumerUserErrorReason_INVALID_USER_STATE.String() && e.Code == 412
 }
 
-// INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-func ErrorInvalidAccountState(format string, args ...interface{}) *errors.Error {
-	return errors.New(412, ConsumerUserErrorReason_INVALID_ACCOUNT_STATE.String(), fmt.Sprintf(format, args...))
+// INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+func ErrorInvalidUserState(format string, args ...interface{}) *errors.Error {
+	return errors.New(412, ConsumerUserErrorReason_INVALID_USER_STATE.String(), fmt.Sprintf(format, args...))
 }
 
 // INVALID_RECOVERY_STATE 表示因 INVALID_RECOVERY_STATE 条件导致流程无法按原路径继续。
@@ -179,18 +179,18 @@ func ErrorInvalidMergeState(format string, args ...interface{}) *errors.Error {
 	return errors.New(412, ConsumerUserErrorReason_INVALID_MERGE_STATE.String(), fmt.Sprintf(format, args...))
 }
 
-// INVALID_CLOSURE_STATE 表示因 INVALID_CLOSURE_STATE 条件导致流程无法按原路径继续。
-func IsInvalidClosureState(err error) bool {
+// INVALID_DELETION_STATE 表示因 INVALID_DELETION_STATE 条件导致流程无法按原路径继续。
+func IsInvalidDeletionState(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ConsumerUserErrorReason_INVALID_CLOSURE_STATE.String() && e.Code == 412
+	return e.Reason == ConsumerUserErrorReason_INVALID_DELETION_STATE.String() && e.Code == 412
 }
 
-// INVALID_CLOSURE_STATE 表示因 INVALID_CLOSURE_STATE 条件导致流程无法按原路径继续。
-func ErrorInvalidClosureState(format string, args ...interface{}) *errors.Error {
-	return errors.New(412, ConsumerUserErrorReason_INVALID_CLOSURE_STATE.String(), fmt.Sprintf(format, args...))
+// INVALID_DELETION_STATE 表示因 INVALID_DELETION_STATE 条件导致流程无法按原路径继续。
+func ErrorInvalidDeletionState(format string, args ...interface{}) *errors.Error {
+	return errors.New(412, ConsumerUserErrorReason_INVALID_DELETION_STATE.String(), fmt.Sprintf(format, args...))
 }
 
 // LAST_CREDENTIAL 表示因 LAST_CREDENTIAL 条件导致流程无法按原路径继续。

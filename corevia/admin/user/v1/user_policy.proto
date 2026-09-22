@@ -40,8 +40,8 @@ message AdminUserPolicyPatch {
   uint32 lock_seconds = 8;
   // mfa_required 显式表示 UserPolicyPatch 是否满足该条件。
   bool mfa_required = 9;
-  // closure_cooling_days 以天为单位指定 Account Closure 的冷静期。
-  uint32 closure_cooling_days = 10;
+  // deletion_cooling_days 以天为单位指定 User Deletion 的冷静期。
+  uint32 deletion_cooling_days = 10;
   // user_code_change_interval_days 以天为单位限定两次 User Code 变更之间的最短间隔。
   uint32 user_code_change_interval_days = 11;
   // password_min_length 限定可接受密码的最小字符数。

@@ -977,11 +977,11 @@ func (m *AuthenticationResult) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetAccount()).(type) {
+		switch v := interface{}(m.GetUser()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, AuthenticationResultValidationError{
-					field:  "Account",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -989,16 +989,16 @@ func (m *AuthenticationResult) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, AuthenticationResultValidationError{
-					field:  "Account",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetAccount()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return AuthenticationResultValidationError{
-				field:  "Account",
+				field:  "User",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -1143,22 +1143,22 @@ var _ interface {
 	ErrorName() string
 } = AuthenticationResultValidationError{}
 
-// Validate checks the field values on AccountAction with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
+// Validate checks the field values on UserAction with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *AccountAction) Validate() error {
+func (m *UserAction) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on AccountAction with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in AccountActionMultiError, or
+// ValidateAll checks the field values on UserAction with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in UserActionMultiError, or
 // nil if none found.
-func (m *AccountAction) ValidateAll() error {
+func (m *UserAction) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *AccountAction) validate(all bool) error {
+func (m *UserAction) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1170,28 +1170,28 @@ func (m *AccountAction) validate(all bool) error {
 	// no validation rules for ActionToken
 
 	if all {
-		switch v := interface{}(m.GetAccount()).(type) {
+		switch v := interface{}(m.GetUser()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountActionValidationError{
-					field:  "Account",
+				errors = append(errors, UserActionValidationError{
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountActionValidationError{
-					field:  "Account",
+				errors = append(errors, UserActionValidationError{
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetAccount()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountActionValidationError{
-				field:  "Account",
+			return UserActionValidationError{
+				field:  "User",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -1202,7 +1202,7 @@ func (m *AccountAction) validate(all bool) error {
 		switch v := interface{}(m.GetExpiresAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountActionValidationError{
+				errors = append(errors, UserActionValidationError{
 					field:  "ExpiresAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1210,7 +1210,7 @@ func (m *AccountAction) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountActionValidationError{
+				errors = append(errors, UserActionValidationError{
 					field:  "ExpiresAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1219,7 +1219,7 @@ func (m *AccountAction) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetExpiresAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountActionValidationError{
+			return UserActionValidationError{
 				field:  "ExpiresAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -1228,19 +1228,18 @@ func (m *AccountAction) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return AccountActionMultiError(errors)
+		return UserActionMultiError(errors)
 	}
 
 	return nil
 }
 
-// AccountActionMultiError is an error wrapping multiple validation errors
-// returned by AccountAction.ValidateAll() if the designated constraints
-// aren't met.
-type AccountActionMultiError []error
+// UserActionMultiError is an error wrapping multiple validation errors
+// returned by UserAction.ValidateAll() if the designated constraints aren't met.
+type UserActionMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AccountActionMultiError) Error() string {
+func (m UserActionMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1249,11 +1248,11 @@ func (m AccountActionMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AccountActionMultiError) AllErrors() []error { return m }
+func (m UserActionMultiError) AllErrors() []error { return m }
 
-// AccountActionValidationError is the validation error returned by
-// AccountAction.Validate if the designated constraints aren't met.
-type AccountActionValidationError struct {
+// UserActionValidationError is the validation error returned by
+// UserAction.Validate if the designated constraints aren't met.
+type UserActionValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1261,22 +1260,22 @@ type AccountActionValidationError struct {
 }
 
 // Field function returns field value.
-func (e AccountActionValidationError) Field() string { return e.field }
+func (e UserActionValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AccountActionValidationError) Reason() string { return e.reason }
+func (e UserActionValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AccountActionValidationError) Cause() error { return e.cause }
+func (e UserActionValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AccountActionValidationError) Key() bool { return e.key }
+func (e UserActionValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AccountActionValidationError) ErrorName() string { return "AccountActionValidationError" }
+func (e UserActionValidationError) ErrorName() string { return "UserActionValidationError" }
 
 // Error satisfies the builtin error interface
-func (e AccountActionValidationError) Error() string {
+func (e UserActionValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1288,14 +1287,14 @@ func (e AccountActionValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAccountAction.%s: %s%s",
+		"invalid %sUserAction.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AccountActionValidationError{}
+var _ error = UserActionValidationError{}
 
 var _ interface {
 	Field() string
@@ -1303,7 +1302,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AccountActionValidationError{}
+} = UserActionValidationError{}
 
 // Validate checks the field values on RegisterResponse with the rules defined
 // in the proto definition for this message. If any rules are violated, the

@@ -7,7 +7,7 @@ import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
-// GiftClosureService 暴露 Account Closure 使用的窄 Gift participant 契约。
+// GiftClosureService 暴露 User Deletion 使用的窄 Gift participant 契约。
 service GiftClosureService {
   // PrepareClosure 建立 Gift fence，并报告库存和结果不确定 Send 阻断。
   rpc PrepareClosure(PrepareClosureRequest) returns (ClosureParticipantState) {}
@@ -77,7 +77,7 @@ enum ClosureParticipantStatus {
   CLOSURE_PARTICIPANT_STATUS_CANCELED = 6;
 }
 
-// ClosureBlocker 描述阻止所属 bounded context 完成 Account Closure 的条件。
+// ClosureBlocker 描述阻止所属 bounded context 完成 User Deletion 的条件。
 message ClosureBlocker {
   // category 指定记录归属的稳定业务分类。
   string category = 1;
@@ -87,7 +87,7 @@ message ClosureBlocker {
   string owning_reference = 3;
 }
 
-// ClosureParticipantState 表示所属 bounded context 对 Account Closure 的当前处理状态。
+// ClosureParticipantState 表示所属 bounded context 对 User Deletion 的当前处理状态。
 message ClosureParticipantState {
   // app_id 限定 ClosureParticipantState 所属 App；UNSPECIFIED 不表示跨 App。
   common.v1.AppId app_id = 1;

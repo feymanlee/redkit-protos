@@ -22,8 +22,8 @@ service UserSecurityService {
   rpc GenerateRecoveryCodes(GenerateRecoveryCodesRequest) returns (GenerateRecoveryCodesResponse);
   // 查询 SecurityEvent 列表。
   rpc ListSecurityEvents(ListSecurityEventsRequest) returns (ListSecurityEventsResponse);
-  // 解锁 Account。
-  rpc UnlockAccount(UnlockAccountRequest) returns (google.protobuf.Empty);
+  // 解锁 User。
+  rpc UnlockUser(UnlockUserRequest) returns (google.protobuf.Empty);
   // 查询 AdminAction 列表。
   rpc ListAdminActions(ListAdminActionsRequest) returns (ListAdminActionsResponse);
   // ListSecurityNotices 返回 User 拥有的通知意图与 Support Message 引用，不复制投递尝试。
@@ -109,9 +109,9 @@ message ListSecurityEventsResponse {
   // total 表示当前查询条件下可见结果的总数。
   uint64 total = 2;
 }
-// UnlockAccountRequest 定义执行 UnlockAccount 的幂等管理命令参数。
-message UnlockAccountRequest {
-  // app_id 限定 UnlockAccount 所属 App；UNSPECIFIED 不表示跨 App。
+// UnlockUserRequest 定义执行 UnlockUser 的幂等管理命令参数。
+message UnlockUserRequest {
+  // app_id 限定 UnlockUser 所属 App；UNSPECIFIED 不表示跨 App。
   common.v1.AppId app_id = 1;
   // user_id 标识当前 App 内关联的 User。
   uint64 user_id = 2;
@@ -142,9 +142,9 @@ enum SecurityNoticeType {
   // 未提供有效取值；调用方不得据此推断业务状态。
   SECURITY_NOTICE_TYPE_UNSPECIFIED = 0;
   // 当前已暂停，恢复前不接受新的业务动作。
-  SECURITY_NOTICE_TYPE_ACCOUNT_SUSPENDED = 1;
-  // SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED 选择 ACCOUNT_REACTIVATED 业务类型。
-  SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED = 2;
+  SECURITY_NOTICE_TYPE_USER_SUSPENDED = 1;
+  // SECURITY_NOTICE_TYPE_USER_REACTIVATED 选择 USER_REACTIVATED 业务类型。
+  SECURITY_NOTICE_TYPE_USER_REACTIVATED = 2;
   // SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED 表示该业务条件为必需。
   SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED = 3;
   // 相关授权或凭据已撤销，不能继续使用。
@@ -165,16 +165,16 @@ enum SecurityNoticeType {
   SECURITY_NOTICE_TYPE_RECOVERY_REJECTED = 11;
   // 处理已成功完成。
   SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED = 12;
-  // SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED 选择 CLOSURE_REQUESTED 业务类型。
-  SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED = 13;
-  // SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED 选择 CLOSURE_IRREVERSIBLE_STARTED 业务类型。
-  SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED = 14;
+  // SECURITY_NOTICE_TYPE_DELETION_REQUESTED 选择 DELETION_REQUESTED 业务类型。
+  SECURITY_NOTICE_TYPE_DELETION_REQUESTED = 13;
+  // SECURITY_NOTICE_TYPE_DELETION_IRREVERSIBLE_STARTED 选择 DELETION_IRREVERSIBLE_STARTED 业务类型。
+  SECURITY_NOTICE_TYPE_DELETION_IRREVERSIBLE_STARTED = 14;
   // 处理已取消，不再继续推进。
-  SECURITY_NOTICE_TYPE_CLOSURE_CANCELED = 15;
+  SECURITY_NOTICE_TYPE_DELETION_CANCELED = 15;
   // 处理被阻塞，需要外部处置后才能继续。
-  SECURITY_NOTICE_TYPE_CLOSURE_STALLED = 16;
+  SECURITY_NOTICE_TYPE_DELETION_STALLED = 16;
   // 当前流程已关闭，不再接受新的处理动作。
-  SECURITY_NOTICE_TYPE_CLOSURE_CLOSED = 17;
+  SECURITY_NOTICE_TYPE_DELETION_COMPLETED = 17;
   // SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD 选择 PHONE_CHANGED_OLD 业务类型。
   SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD = 18;
   // SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW 选择 PHONE_CHANGED_NEW 业务类型。

@@ -23,6 +23,7 @@ const (
 	ConsumerProfileService_GetCurrentUser_FullMethodName   = "/user.consumer.v1.ConsumerProfileService/GetCurrentUser"
 	ConsumerProfileService_UpdateProfile_FullMethodName    = "/user.consumer.v1.ConsumerProfileService/UpdateProfile"
 	ConsumerProfileService_GetPublicProfile_FullMethodName = "/user.consumer.v1.ConsumerProfileService/GetPublicProfile"
+	ConsumerProfileService_ChangeUserCode_FullMethodName   = "/user.consumer.v1.ConsumerProfileService/ChangeUserCode"
 )
 
 // ConsumerProfileServiceClient is the client API for ConsumerProfileService service.
@@ -37,6 +38,8 @@ type ConsumerProfileServiceClient interface {
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*v1.Profile, error)
 	// 查询 PublicProfile。
 	GetPublicProfile(ctx context.Context, in *GetPublicProfileRequest, opts ...grpc.CallOption) (*v1.PublicProfile, error)
+	// 使用 step_up_token 幂等变更 UserCode，并返回更新后的 User 与 TokenPair。
+	ChangeUserCode(ctx context.Context, in *ChangeUserCodeRequest, opts ...grpc.CallOption) (*ChangeUserCodeResponse, error)
 }
 
 type consumerProfileServiceClient struct {
@@ -77,6 +80,16 @@ func (c *consumerProfileServiceClient) GetPublicProfile(ctx context.Context, in 
 	return out, nil
 }
 
+func (c *consumerProfileServiceClient) ChangeUserCode(ctx context.Context, in *ChangeUserCodeRequest, opts ...grpc.CallOption) (*ChangeUserCodeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangeUserCodeResponse)
+	err := c.cc.Invoke(ctx, ConsumerProfileService_ChangeUserCode_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConsumerProfileServiceServer is the server API for ConsumerProfileService service.
 // All implementations must embed UnimplementedConsumerProfileServiceServer
 // for forward compatibility.
@@ -89,6 +102,8 @@ type ConsumerProfileServiceServer interface {
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*v1.Profile, error)
 	// 查询 PublicProfile。
 	GetPublicProfile(context.Context, *GetPublicProfileRequest) (*v1.PublicProfile, error)
+	// 使用 step_up_token 幂等变更 UserCode，并返回更新后的 User 与 TokenPair。
+	ChangeUserCode(context.Context, *ChangeUserCodeRequest) (*ChangeUserCodeResponse, error)
 	mustEmbedUnimplementedConsumerProfileServiceServer()
 }
 
@@ -107,6 +122,9 @@ func (UnimplementedConsumerProfileServiceServer) UpdateProfile(context.Context, 
 }
 func (UnimplementedConsumerProfileServiceServer) GetPublicProfile(context.Context, *GetPublicProfileRequest) (*v1.PublicProfile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPublicProfile not implemented")
+}
+func (UnimplementedConsumerProfileServiceServer) ChangeUserCode(context.Context, *ChangeUserCodeRequest) (*ChangeUserCodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserCode not implemented")
 }
 func (UnimplementedConsumerProfileServiceServer) mustEmbedUnimplementedConsumerProfileServiceServer() {
 }
@@ -184,6 +202,24 @@ func _ConsumerProfileService_GetPublicProfile_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ConsumerProfileService_ChangeUserCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeUserCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConsumerProfileServiceServer).ChangeUserCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ConsumerProfileService_ChangeUserCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConsumerProfileServiceServer).ChangeUserCode(ctx, req.(*ChangeUserCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ConsumerProfileService_ServiceDesc is the grpc.ServiceDesc for ConsumerProfileService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -202,6 +238,10 @@ var ConsumerProfileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPublicProfile",
 			Handler:    _ConsumerProfileService_GetPublicProfile_Handler,
+		},
+		{
+			MethodName: "ChangeUserCode",
+			Handler:    _ConsumerProfileService_ChangeUserCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

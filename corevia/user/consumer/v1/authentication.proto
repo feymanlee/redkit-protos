@@ -107,39 +107,39 @@ message RegisterRequest {
 
 // AuthenticationResult 承载 CompleteRequiredPasswordReset 调用的返回结果。
 message AuthenticationResult {
-  // account 承载 AuthenticationResult 关联的 Account。
-  user.types.v1.Account account = 1;
+  // user 承载 AuthenticationResult 关联的 User。
+  user.types.v1.User user = 1;
   // session 承载 AuthenticationResult 关联的 Session。
   user.types.v1.Session session = 2;
   // tokens 承载 AuthenticationResult 关联的 TokenPair。
   user.types.v1.TokenPair tokens = 3;
 }
 
-// AccountActionType 区分对应资源的业务类型。
-enum AccountActionType {
+// UserActionType 区分对应资源的业务类型。
+enum UserActionType {
   // 未提供有效取值；调用方不得据此推断业务状态。
-  ACCOUNT_ACTION_TYPE_UNSPECIFIED = 0;
-  // ACCOUNT_ACTION_TYPE_PHONE_BINDING_REQUIRED 表示该业务条件为必需。
-  ACCOUNT_ACTION_TYPE_PHONE_BINDING_REQUIRED = 1;
-  // ACCOUNT_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED 表示该业务条件为必需。
-  ACCOUNT_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED = 2;
-  // ACCOUNT_ACTION_TYPE_PASSWORD_RESET_REQUIRED 表示该业务条件为必需。
-  ACCOUNT_ACTION_TYPE_PASSWORD_RESET_REQUIRED = 3;
-  // ACCOUNT_ACTION_TYPE_ACCOUNT_MERGE_IN_PROGRESS 选择 ACCOUNT_MERGE_IN_PROGRESS 业务类型。
-  ACCOUNT_ACTION_TYPE_ACCOUNT_MERGE_IN_PROGRESS = 4;
-  // ACCOUNT_ACTION_TYPE_ACCOUNT_CLOSURE_IN_PROGRESS 选择 ACCOUNT_CLOSURE_IN_PROGRESS 业务类型。
-  ACCOUNT_ACTION_TYPE_ACCOUNT_CLOSURE_IN_PROGRESS = 5;
+  USER_ACTION_TYPE_UNSPECIFIED = 0;
+  // USER_ACTION_TYPE_PHONE_BINDING_REQUIRED 表示该业务条件为必需。
+  USER_ACTION_TYPE_PHONE_BINDING_REQUIRED = 1;
+  // USER_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED 表示该业务条件为必需。
+  USER_ACTION_TYPE_TOTP_ENROLLMENT_REQUIRED = 2;
+  // USER_ACTION_TYPE_PASSWORD_RESET_REQUIRED 表示该业务条件为必需。
+  USER_ACTION_TYPE_PASSWORD_RESET_REQUIRED = 3;
+  // USER_ACTION_TYPE_USER_MERGE_IN_PROGRESS 选择 USER_MERGE_IN_PROGRESS 业务类型。
+  USER_ACTION_TYPE_USER_MERGE_IN_PROGRESS = 4;
+  // USER_ACTION_TYPE_USER_DELETION_IN_PROGRESS 选择 USER_DELETION_IN_PROGRESS 业务类型。
+  USER_ACTION_TYPE_USER_DELETION_IN_PROGRESS = 5;
 }
 
-// AccountAction 描述 Account 状态要求调用方继续执行的动作。
-message AccountAction {
-  // type 区分 AccountAction 的业务类型。
-  AccountActionType type = 1;
+// UserAction 描述 User 状态要求调用方继续执行的动作。
+message UserAction {
+  // type 区分 UserAction 的业务类型。
+  UserActionType type = 1;
   // action_token 承载敏感凭据或校验材料，不得写入普通日志。
   string action_token = 2;
-  // account 承载 AccountAction 关联的 Account。
-  user.types.v1.Account account = 3;
-  // expires_at 指定 AccountAction 失效的时间点。
+  // user 承载 UserAction 关联的 User。
+  user.types.v1.User user = 3;
+  // expires_at 指定 UserAction 失效的时间点。
   google.protobuf.Timestamp expires_at = 4;
 }
 
@@ -149,8 +149,8 @@ message RegisterResponse {
   oneof outcome {
     // authenticated 承载 Register 关联的 AuthenticationResult。
     AuthenticationResult authenticated = 1;
-    // action_required 承载 Register 关联的 AccountAction。
-    AccountAction action_required = 2;
+    // action_required 承载 Register 关联的 UserAction。
+    UserAction action_required = 2;
   }
 }
 
@@ -208,8 +208,8 @@ message LoginResponse {
     AuthenticationResult authenticated = 1;
     // challenge 承载 Login 关联的 LoginChallenge。
     LoginChallenge challenge = 2;
-    // action_required 承载 Login 关联的 AccountAction。
-    AccountAction action_required = 3;
+    // action_required 承载 Login 关联的 UserAction。
+    UserAction action_required = 3;
   }
 }
 

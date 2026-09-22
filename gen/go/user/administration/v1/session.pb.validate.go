@@ -446,7 +446,7 @@ func (m *CheckSessionResponse) validate(all bool) error {
 
 	// no validation rules for Valid
 
-	// no validation rules for AccountStatus
+	// no validation rules for UserStatus
 
 	// no validation rules for SessionStatus
 

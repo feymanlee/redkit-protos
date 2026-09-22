@@ -28,7 +28,7 @@ message UserReference {
   // user_code 提供 UserReference 对外稳定使用的业务编码。
   string user_code = 4;
   // status 表示 UserReference 当前可观察的生命周期状态。
-  user.types.v1.AccountStatus status = 5;
+  user.types.v1.UserStatus status = 5;
   // can_initiate_business 显式表示 UserReference 是否满足该条件。
   bool can_initiate_business = 6;
   // can_receive_business 显式表示 UserReference 是否满足该条件。

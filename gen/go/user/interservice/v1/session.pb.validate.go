@@ -40,7 +40,7 @@ var (
 
 	_ = commonpb.AppId(0)
 
-	_ = usertypespb.AccountStatus(0)
+	_ = usertypespb.UserStatus(0)
 )
 
 // Validate checks the field values on CheckSessionRequest with the rules
@@ -228,7 +228,7 @@ func (m *CheckSessionResponse) validate(all bool) error {
 
 	// no validation rules for Valid
 
-	// no validation rules for AccountStatus
+	// no validation rules for UserStatus
 
 	// no validation rules for SessionStatus
 

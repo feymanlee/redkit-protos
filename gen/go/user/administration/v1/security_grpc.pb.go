@@ -25,7 +25,7 @@ const (
 	UserSecurityService_DisableMFA_FullMethodName            = "/user.administration.v1.UserSecurityService/DisableMFA"
 	UserSecurityService_GenerateRecoveryCodes_FullMethodName = "/user.administration.v1.UserSecurityService/GenerateRecoveryCodes"
 	UserSecurityService_ListSecurityEvents_FullMethodName    = "/user.administration.v1.UserSecurityService/ListSecurityEvents"
-	UserSecurityService_UnlockAccount_FullMethodName         = "/user.administration.v1.UserSecurityService/UnlockAccount"
+	UserSecurityService_UnlockUser_FullMethodName            = "/user.administration.v1.UserSecurityService/UnlockUser"
 	UserSecurityService_ListAdminActions_FullMethodName      = "/user.administration.v1.UserSecurityService/ListAdminActions"
 	UserSecurityService_ListSecurityNotices_FullMethodName   = "/user.administration.v1.UserSecurityService/ListSecurityNotices"
 	UserSecurityService_ResendSecurityNotice_FullMethodName  = "/user.administration.v1.UserSecurityService/ResendSecurityNotice"
@@ -48,8 +48,8 @@ type UserSecurityServiceClient interface {
 	GenerateRecoveryCodes(ctx context.Context, in *GenerateRecoveryCodesRequest, opts ...grpc.CallOption) (*GenerateRecoveryCodesResponse, error)
 	// 查询 SecurityEvent 列表。
 	ListSecurityEvents(ctx context.Context, in *ListSecurityEventsRequest, opts ...grpc.CallOption) (*ListSecurityEventsResponse, error)
-	// 解锁 Account。
-	UnlockAccount(ctx context.Context, in *UnlockAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 解锁 User。
+	UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 查询 AdminAction 列表。
 	ListAdminActions(ctx context.Context, in *ListAdminActionsRequest, opts ...grpc.CallOption) (*ListAdminActionsResponse, error)
 	// ListSecurityNotices 返回 User 拥有的通知意图与 Support Message 引用，不复制投递尝试。
@@ -118,10 +118,10 @@ func (c *userSecurityServiceClient) ListSecurityEvents(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *userSecurityServiceClient) UnlockAccount(ctx context.Context, in *UnlockAccountRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *userSecurityServiceClient) UnlockUser(ctx context.Context, in *UnlockUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, UserSecurityService_UnlockAccount_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UserSecurityService_UnlockUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -184,8 +184,8 @@ type UserSecurityServiceServer interface {
 	GenerateRecoveryCodes(context.Context, *GenerateRecoveryCodesRequest) (*GenerateRecoveryCodesResponse, error)
 	// 查询 SecurityEvent 列表。
 	ListSecurityEvents(context.Context, *ListSecurityEventsRequest) (*ListSecurityEventsResponse, error)
-	// 解锁 Account。
-	UnlockAccount(context.Context, *UnlockAccountRequest) (*emptypb.Empty, error)
+	// 解锁 User。
+	UnlockUser(context.Context, *UnlockUserRequest) (*emptypb.Empty, error)
 	// 查询 AdminAction 列表。
 	ListAdminActions(context.Context, *ListAdminActionsRequest) (*ListAdminActionsResponse, error)
 	// ListSecurityNotices 返回 User 拥有的通知意图与 Support Message 引用，不复制投递尝试。
@@ -219,8 +219,8 @@ func (UnimplementedUserSecurityServiceServer) GenerateRecoveryCodes(context.Cont
 func (UnimplementedUserSecurityServiceServer) ListSecurityEvents(context.Context, *ListSecurityEventsRequest) (*ListSecurityEventsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSecurityEvents not implemented")
 }
-func (UnimplementedUserSecurityServiceServer) UnlockAccount(context.Context, *UnlockAccountRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UnlockAccount not implemented")
+func (UnimplementedUserSecurityServiceServer) UnlockUser(context.Context, *UnlockUserRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnlockUser not implemented")
 }
 func (UnimplementedUserSecurityServiceServer) ListAdminActions(context.Context, *ListAdminActionsRequest) (*ListAdminActionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAdminActions not implemented")
@@ -345,20 +345,20 @@ func _UserSecurityService_ListSecurityEvents_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserSecurityService_UnlockAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UnlockAccountRequest)
+func _UserSecurityService_UnlockUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnlockUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserSecurityServiceServer).UnlockAccount(ctx, in)
+		return srv.(UserSecurityServiceServer).UnlockUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserSecurityService_UnlockAccount_FullMethodName,
+		FullMethod: UserSecurityService_UnlockUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserSecurityServiceServer).UnlockAccount(ctx, req.(*UnlockAccountRequest))
+		return srv.(UserSecurityServiceServer).UnlockUser(ctx, req.(*UnlockUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -463,8 +463,8 @@ var UserSecurityService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserSecurityService_ListSecurityEvents_Handler,
 		},
 		{
-			MethodName: "UnlockAccount",
-			Handler:    _UserSecurityService_UnlockAccount_Handler,
+			MethodName: "UnlockUser",
+			Handler:    _UserSecurityService_UnlockUser_Handler,
 		},
 		{
 			MethodName: "ListAdminActions",

@@ -964,22 +964,22 @@ var _ interface {
 	ErrorName() string
 } = ListSecurityEventsResponseValidationError{}
 
-// Validate checks the field values on UnlockAccountRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UnlockAccountRequest) Validate() error {
+// Validate checks the field values on UnlockUserRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *UnlockUserRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UnlockAccountRequest with the rules
+// ValidateAll checks the field values on UnlockUserRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// UnlockAccountRequestMultiError, or nil if none found.
-func (m *UnlockAccountRequest) ValidateAll() error {
+// UnlockUserRequestMultiError, or nil if none found.
+func (m *UnlockUserRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UnlockAccountRequest) validate(all bool) error {
+func (m *UnlockUserRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -995,19 +995,19 @@ func (m *UnlockAccountRequest) validate(all bool) error {
 	// no validation rules for IdempotencyKey
 
 	if len(errors) > 0 {
-		return UnlockAccountRequestMultiError(errors)
+		return UnlockUserRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// UnlockAccountRequestMultiError is an error wrapping multiple validation
-// errors returned by UnlockAccountRequest.ValidateAll() if the designated
-// constraints aren't met.
-type UnlockAccountRequestMultiError []error
+// UnlockUserRequestMultiError is an error wrapping multiple validation errors
+// returned by UnlockUserRequest.ValidateAll() if the designated constraints
+// aren't met.
+type UnlockUserRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UnlockAccountRequestMultiError) Error() string {
+func (m UnlockUserRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1016,11 +1016,11 @@ func (m UnlockAccountRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UnlockAccountRequestMultiError) AllErrors() []error { return m }
+func (m UnlockUserRequestMultiError) AllErrors() []error { return m }
 
-// UnlockAccountRequestValidationError is the validation error returned by
-// UnlockAccountRequest.Validate if the designated constraints aren't met.
-type UnlockAccountRequestValidationError struct {
+// UnlockUserRequestValidationError is the validation error returned by
+// UnlockUserRequest.Validate if the designated constraints aren't met.
+type UnlockUserRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1028,24 +1028,24 @@ type UnlockAccountRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e UnlockAccountRequestValidationError) Field() string { return e.field }
+func (e UnlockUserRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UnlockAccountRequestValidationError) Reason() string { return e.reason }
+func (e UnlockUserRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UnlockAccountRequestValidationError) Cause() error { return e.cause }
+func (e UnlockUserRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UnlockAccountRequestValidationError) Key() bool { return e.key }
+func (e UnlockUserRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UnlockAccountRequestValidationError) ErrorName() string {
-	return "UnlockAccountRequestValidationError"
+func (e UnlockUserRequestValidationError) ErrorName() string {
+	return "UnlockUserRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UnlockAccountRequestValidationError) Error() string {
+func (e UnlockUserRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1057,14 +1057,14 @@ func (e UnlockAccountRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUnlockAccountRequest.%s: %s%s",
+		"invalid %sUnlockUserRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UnlockAccountRequestValidationError{}
+var _ error = UnlockUserRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1072,7 +1072,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UnlockAccountRequestValidationError{}
+} = UnlockUserRequestValidationError{}
 
 // Validate checks the field values on ListAdminActionsRequest with the rules
 // defined in the proto definition for this message. If any rules are

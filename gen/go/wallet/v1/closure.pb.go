@@ -350,7 +350,7 @@ func (x *GetClosureStatusRequest) GetClosureNo() string {
 	return ""
 }
 
-// ClosureBlocker 描述阻止所属 bounded context 完成 Account Closure 的条件。
+// ClosureBlocker 描述阻止所属 bounded context 完成 User Deletion 的条件。
 type ClosureBlocker struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// category 指定记录归属的稳定业务分类。
@@ -414,7 +414,7 @@ func (x *ClosureBlocker) GetOwningReference() string {
 	return ""
 }
 
-// ClosureParticipantState 表示所属 bounded context 对 Account Closure 的当前处理状态。
+// ClosureParticipantState 表示所属 bounded context 对 User Deletion 的当前处理状态。
 type ClosureParticipantState struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// app_id 限定 ClosureParticipantState 所属 App；UNSPECIFIED 不表示跨 App。

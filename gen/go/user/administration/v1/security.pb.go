@@ -34,9 +34,9 @@ const (
 	// 未提供有效取值；调用方不得据此推断业务状态。
 	SecurityNoticeType_SECURITY_NOTICE_TYPE_UNSPECIFIED SecurityNoticeType = 0
 	// 当前已暂停，恢复前不接受新的业务动作。
-	SecurityNoticeType_SECURITY_NOTICE_TYPE_ACCOUNT_SUSPENDED SecurityNoticeType = 1
-	// SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED 选择 ACCOUNT_REACTIVATED 业务类型。
-	SecurityNoticeType_SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED SecurityNoticeType = 2
+	SecurityNoticeType_SECURITY_NOTICE_TYPE_USER_SUSPENDED SecurityNoticeType = 1
+	// SECURITY_NOTICE_TYPE_USER_REACTIVATED 选择 USER_REACTIVATED 业务类型。
+	SecurityNoticeType_SECURITY_NOTICE_TYPE_USER_REACTIVATED SecurityNoticeType = 2
 	// SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED 表示该业务条件为必需。
 	SecurityNoticeType_SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED SecurityNoticeType = 3
 	// 相关授权或凭据已撤销，不能继续使用。
@@ -57,16 +57,16 @@ const (
 	SecurityNoticeType_SECURITY_NOTICE_TYPE_RECOVERY_REJECTED SecurityNoticeType = 11
 	// 处理已成功完成。
 	SecurityNoticeType_SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED SecurityNoticeType = 12
-	// SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED 选择 CLOSURE_REQUESTED 业务类型。
-	SecurityNoticeType_SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED SecurityNoticeType = 13
-	// SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED 选择 CLOSURE_IRREVERSIBLE_STARTED 业务类型。
-	SecurityNoticeType_SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED SecurityNoticeType = 14
+	// SECURITY_NOTICE_TYPE_DELETION_REQUESTED 选择 DELETION_REQUESTED 业务类型。
+	SecurityNoticeType_SECURITY_NOTICE_TYPE_DELETION_REQUESTED SecurityNoticeType = 13
+	// SECURITY_NOTICE_TYPE_DELETION_IRREVERSIBLE_STARTED 选择 DELETION_IRREVERSIBLE_STARTED 业务类型。
+	SecurityNoticeType_SECURITY_NOTICE_TYPE_DELETION_IRREVERSIBLE_STARTED SecurityNoticeType = 14
 	// 处理已取消，不再继续推进。
-	SecurityNoticeType_SECURITY_NOTICE_TYPE_CLOSURE_CANCELED SecurityNoticeType = 15
+	SecurityNoticeType_SECURITY_NOTICE_TYPE_DELETION_CANCELED SecurityNoticeType = 15
 	// 处理被阻塞，需要外部处置后才能继续。
-	SecurityNoticeType_SECURITY_NOTICE_TYPE_CLOSURE_STALLED SecurityNoticeType = 16
+	SecurityNoticeType_SECURITY_NOTICE_TYPE_DELETION_STALLED SecurityNoticeType = 16
 	// 当前流程已关闭，不再接受新的处理动作。
-	SecurityNoticeType_SECURITY_NOTICE_TYPE_CLOSURE_CLOSED SecurityNoticeType = 17
+	SecurityNoticeType_SECURITY_NOTICE_TYPE_DELETION_COMPLETED SecurityNoticeType = 17
 	// SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD 选择 PHONE_CHANGED_OLD 业务类型。
 	SecurityNoticeType_SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD SecurityNoticeType = 18
 	// SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW 选择 PHONE_CHANGED_NEW 业务类型。
@@ -77,8 +77,8 @@ const (
 var (
 	SecurityNoticeType_name = map[int32]string{
 		0:  "SECURITY_NOTICE_TYPE_UNSPECIFIED",
-		1:  "SECURITY_NOTICE_TYPE_ACCOUNT_SUSPENDED",
-		2:  "SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED",
+		1:  "SECURITY_NOTICE_TYPE_USER_SUSPENDED",
+		2:  "SECURITY_NOTICE_TYPE_USER_REACTIVATED",
 		3:  "SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED",
 		4:  "SECURITY_NOTICE_TYPE_CREDENTIAL_REVOKED",
 		5:  "SECURITY_NOTICE_TYPE_MFA_RESET",
@@ -89,35 +89,35 @@ var (
 		10: "SECURITY_NOTICE_TYPE_RECOVERY_APPROVED",
 		11: "SECURITY_NOTICE_TYPE_RECOVERY_REJECTED",
 		12: "SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED",
-		13: "SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED",
-		14: "SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED",
-		15: "SECURITY_NOTICE_TYPE_CLOSURE_CANCELED",
-		16: "SECURITY_NOTICE_TYPE_CLOSURE_STALLED",
-		17: "SECURITY_NOTICE_TYPE_CLOSURE_CLOSED",
+		13: "SECURITY_NOTICE_TYPE_DELETION_REQUESTED",
+		14: "SECURITY_NOTICE_TYPE_DELETION_IRREVERSIBLE_STARTED",
+		15: "SECURITY_NOTICE_TYPE_DELETION_CANCELED",
+		16: "SECURITY_NOTICE_TYPE_DELETION_STALLED",
+		17: "SECURITY_NOTICE_TYPE_DELETION_COMPLETED",
 		18: "SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD",
 		19: "SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW",
 	}
 	SecurityNoticeType_value = map[string]int32{
-		"SECURITY_NOTICE_TYPE_UNSPECIFIED":                  0,
-		"SECURITY_NOTICE_TYPE_ACCOUNT_SUSPENDED":            1,
-		"SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED":          2,
-		"SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED":      3,
-		"SECURITY_NOTICE_TYPE_CREDENTIAL_REVOKED":           4,
-		"SECURITY_NOTICE_TYPE_MFA_RESET":                    5,
-		"SECURITY_NOTICE_TYPE_DEVICE_TRUST_REVOKED":         6,
-		"SECURITY_NOTICE_TYPE_PROFILE_MODERATED":            7,
-		"SECURITY_NOTICE_TYPE_USER_CODE_RESET":              8,
-		"SECURITY_NOTICE_TYPE_RECOVERY_ACCEPTED":            9,
-		"SECURITY_NOTICE_TYPE_RECOVERY_APPROVED":            10,
-		"SECURITY_NOTICE_TYPE_RECOVERY_REJECTED":            11,
-		"SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED":           12,
-		"SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED":            13,
-		"SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED": 14,
-		"SECURITY_NOTICE_TYPE_CLOSURE_CANCELED":             15,
-		"SECURITY_NOTICE_TYPE_CLOSURE_STALLED":              16,
-		"SECURITY_NOTICE_TYPE_CLOSURE_CLOSED":               17,
-		"SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD":            18,
-		"SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW":            19,
+		"SECURITY_NOTICE_TYPE_UNSPECIFIED":                   0,
+		"SECURITY_NOTICE_TYPE_USER_SUSPENDED":                1,
+		"SECURITY_NOTICE_TYPE_USER_REACTIVATED":              2,
+		"SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED":       3,
+		"SECURITY_NOTICE_TYPE_CREDENTIAL_REVOKED":            4,
+		"SECURITY_NOTICE_TYPE_MFA_RESET":                     5,
+		"SECURITY_NOTICE_TYPE_DEVICE_TRUST_REVOKED":          6,
+		"SECURITY_NOTICE_TYPE_PROFILE_MODERATED":             7,
+		"SECURITY_NOTICE_TYPE_USER_CODE_RESET":               8,
+		"SECURITY_NOTICE_TYPE_RECOVERY_ACCEPTED":             9,
+		"SECURITY_NOTICE_TYPE_RECOVERY_APPROVED":             10,
+		"SECURITY_NOTICE_TYPE_RECOVERY_REJECTED":             11,
+		"SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED":            12,
+		"SECURITY_NOTICE_TYPE_DELETION_REQUESTED":            13,
+		"SECURITY_NOTICE_TYPE_DELETION_IRREVERSIBLE_STARTED": 14,
+		"SECURITY_NOTICE_TYPE_DELETION_CANCELED":             15,
+		"SECURITY_NOTICE_TYPE_DELETION_STALLED":              16,
+		"SECURITY_NOTICE_TYPE_DELETION_COMPLETED":            17,
+		"SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD":             18,
+		"SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW":             19,
 	}
 )
 
@@ -788,10 +788,10 @@ func (x *ListSecurityEventsResponse) GetTotal() uint64 {
 	return 0
 }
 
-// UnlockAccountRequest 定义执行 UnlockAccount 的幂等管理命令参数。
-type UnlockAccountRequest struct {
+// UnlockUserRequest 定义执行 UnlockUser 的幂等管理命令参数。
+type UnlockUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UnlockAccount 所属 App；UNSPECIFIED 不表示跨 App。
+	// app_id 限定 UnlockUser 所属 App；UNSPECIFIED 不表示跨 App。
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// user_id 标识当前 App 内关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -803,20 +803,20 @@ type UnlockAccountRequest struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *UnlockAccountRequest) Reset() {
-	*x = UnlockAccountRequest{}
+func (x *UnlockUserRequest) Reset() {
+	*x = UnlockUserRequest{}
 	mi := &file_user_administration_v1_security_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UnlockAccountRequest) String() string {
+func (x *UnlockUserRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UnlockAccountRequest) ProtoMessage() {}
+func (*UnlockUserRequest) ProtoMessage() {}
 
-func (x *UnlockAccountRequest) ProtoReflect() protoreflect.Message {
+func (x *UnlockUserRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_user_administration_v1_security_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -828,33 +828,33 @@ func (x *UnlockAccountRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UnlockAccountRequest.ProtoReflect.Descriptor instead.
-func (*UnlockAccountRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UnlockUserRequest.ProtoReflect.Descriptor instead.
+func (*UnlockUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *UnlockAccountRequest) GetAppId() v1.AppId {
+func (x *UnlockUserRequest) GetAppId() v1.AppId {
 	if x != nil {
 		return x.AppId
 	}
 	return v1.AppId(0)
 }
 
-func (x *UnlockAccountRequest) GetUserId() uint64 {
+func (x *UnlockUserRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-func (x *UnlockAccountRequest) GetReason() string {
+func (x *UnlockUserRequest) GetReason() string {
 	if x != nil {
 		return x.Reason
 	}
 	return ""
 }
 
-func (x *UnlockAccountRequest) GetIdempotencyKey() string {
+func (x *UnlockUserRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
 	}
@@ -1464,8 +1464,8 @@ const file_user_administration_v1_security_proto_rawDesc = "" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"o\n" +
 	"\x1aListSecurityEventsResponse\x12;\n" +
 	"\x05items\x18\x01 \x03(\v2%.user.administration.v1.SecurityEventR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x99\x01\n" +
-	"\x14UnlockAccountRequest\x12'\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x96\x01\n" +
+	"\x11UnlockUserRequest\x12'\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12'\n" +
@@ -1519,11 +1519,11 @@ const file_user_administration_v1_security_proto_rawDesc = "" +
 	"\x17GetSecurityStateRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId*\x86\a\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId*\x88\a\n" +
 	"\x12SecurityNoticeType\x12$\n" +
-	" SECURITY_NOTICE_TYPE_UNSPECIFIED\x10\x00\x12*\n" +
-	"&SECURITY_NOTICE_TYPE_ACCOUNT_SUSPENDED\x10\x01\x12,\n" +
-	"(SECURITY_NOTICE_TYPE_ACCOUNT_REACTIVATED\x10\x02\x120\n" +
+	" SECURITY_NOTICE_TYPE_UNSPECIFIED\x10\x00\x12'\n" +
+	"#SECURITY_NOTICE_TYPE_USER_SUSPENDED\x10\x01\x12)\n" +
+	"%SECURITY_NOTICE_TYPE_USER_REACTIVATED\x10\x02\x120\n" +
 	",SECURITY_NOTICE_TYPE_PASSWORD_RESET_REQUIRED\x10\x03\x12+\n" +
 	"'SECURITY_NOTICE_TYPE_CREDENTIAL_REVOKED\x10\x04\x12\"\n" +
 	"\x1eSECURITY_NOTICE_TYPE_MFA_RESET\x10\x05\x12-\n" +
@@ -1534,12 +1534,12 @@ const file_user_administration_v1_security_proto_rawDesc = "" +
 	"&SECURITY_NOTICE_TYPE_RECOVERY_APPROVED\x10\n" +
 	"\x12*\n" +
 	"&SECURITY_NOTICE_TYPE_RECOVERY_REJECTED\x10\v\x12+\n" +
-	"'SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED\x10\f\x12*\n" +
-	"&SECURITY_NOTICE_TYPE_CLOSURE_REQUESTED\x10\r\x125\n" +
-	"1SECURITY_NOTICE_TYPE_CLOSURE_IRREVERSIBLE_STARTED\x10\x0e\x12)\n" +
-	"%SECURITY_NOTICE_TYPE_CLOSURE_CANCELED\x10\x0f\x12(\n" +
-	"$SECURITY_NOTICE_TYPE_CLOSURE_STALLED\x10\x10\x12'\n" +
-	"#SECURITY_NOTICE_TYPE_CLOSURE_CLOSED\x10\x11\x12*\n" +
+	"'SECURITY_NOTICE_TYPE_RECOVERY_COMPLETED\x10\f\x12+\n" +
+	"'SECURITY_NOTICE_TYPE_DELETION_REQUESTED\x10\r\x126\n" +
+	"2SECURITY_NOTICE_TYPE_DELETION_IRREVERSIBLE_STARTED\x10\x0e\x12*\n" +
+	"&SECURITY_NOTICE_TYPE_DELETION_CANCELED\x10\x0f\x12)\n" +
+	"%SECURITY_NOTICE_TYPE_DELETION_STALLED\x10\x10\x12+\n" +
+	"'SECURITY_NOTICE_TYPE_DELETION_COMPLETED\x10\x11\x12*\n" +
 	"&SECURITY_NOTICE_TYPE_PHONE_CHANGED_OLD\x10\x12\x12*\n" +
 	"&SECURITY_NOTICE_TYPE_PHONE_CHANGED_NEW\x10\x13*\xb2\x01\n" +
 	"\x1bSecurityNoticeRecipientRole\x12.\n" +
@@ -1550,7 +1550,7 @@ const file_user_administration_v1_security_proto_rawDesc = "" +
 	"\"SECURITY_NOTICE_STATUS_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eSECURITY_NOTICE_STATUS_PENDING\x10\x01\x12\x1f\n" +
 	"\x1bSECURITY_NOTICE_STATUS_SENT\x10\x02\x12!\n" +
-	"\x1dSECURITY_NOTICE_STATUS_FAILED\x10\x032\xcc\b\n" +
+	"\x1dSECURITY_NOTICE_STATUS_FAILED\x10\x032\xc6\b\n" +
 	"\x13UserSecurityService\x12`\n" +
 	"\tEnrollMFA\x12(.user.administration.v1.EnrollMFARequest\x1a).user.administration.v1.EnrollMFAResponse\x12O\n" +
 	"\n" +
@@ -1558,8 +1558,9 @@ const file_user_administration_v1_security_proto_rawDesc = "" +
 	"\n" +
 	"DisableMFA\x12).user.administration.v1.DisableMFARequest\x1a\x16.google.protobuf.Empty\x12\x84\x01\n" +
 	"\x15GenerateRecoveryCodes\x124.user.administration.v1.GenerateRecoveryCodesRequest\x1a5.user.administration.v1.GenerateRecoveryCodesResponse\x12{\n" +
-	"\x12ListSecurityEvents\x121.user.administration.v1.ListSecurityEventsRequest\x1a2.user.administration.v1.ListSecurityEventsResponse\x12U\n" +
-	"\rUnlockAccount\x12,.user.administration.v1.UnlockAccountRequest\x1a\x16.google.protobuf.Empty\x12u\n" +
+	"\x12ListSecurityEvents\x121.user.administration.v1.ListSecurityEventsRequest\x1a2.user.administration.v1.ListSecurityEventsResponse\x12O\n" +
+	"\n" +
+	"UnlockUser\x12).user.administration.v1.UnlockUserRequest\x1a\x16.google.protobuf.Empty\x12u\n" +
 	"\x10ListAdminActions\x12/.user.administration.v1.ListAdminActionsRequest\x1a0.user.administration.v1.ListAdminActionsResponse\x12~\n" +
 	"\x13ListSecurityNotices\x122.user.administration.v1.ListSecurityNoticesRequest\x1a3.user.administration.v1.ListSecurityNoticesResponse\x12s\n" +
 	"\x14ResendSecurityNotice\x123.user.administration.v1.ResendSecurityNoticeRequest\x1a&.user.administration.v1.SecurityNotice\x12j\n" +
@@ -1592,7 +1593,7 @@ var file_user_administration_v1_security_proto_goTypes = []any{
 	(*GenerateRecoveryCodesResponse)(nil), // 8: user.administration.v1.GenerateRecoveryCodesResponse
 	(*ListSecurityEventsRequest)(nil),     // 9: user.administration.v1.ListSecurityEventsRequest
 	(*ListSecurityEventsResponse)(nil),    // 10: user.administration.v1.ListSecurityEventsResponse
-	(*UnlockAccountRequest)(nil),          // 11: user.administration.v1.UnlockAccountRequest
+	(*UnlockUserRequest)(nil),             // 11: user.administration.v1.UnlockUserRequest
 	(*ListAdminActionsRequest)(nil),       // 12: user.administration.v1.ListAdminActionsRequest
 	(*ListAdminActionsResponse)(nil),      // 13: user.administration.v1.ListAdminActionsResponse
 	(*SecurityNotice)(nil),                // 14: user.administration.v1.SecurityNotice
@@ -1616,7 +1617,7 @@ var file_user_administration_v1_security_proto_depIdxs = []int32{
 	19, // 4: user.administration.v1.ListSecurityEventsRequest.app_id:type_name -> common.v1.AppId
 	20, // 5: user.administration.v1.ListSecurityEventsRequest.paging:type_name -> common.pagination.v1.PagingRequest
 	21, // 6: user.administration.v1.ListSecurityEventsResponse.items:type_name -> user.administration.v1.SecurityEvent
-	19, // 7: user.administration.v1.UnlockAccountRequest.app_id:type_name -> common.v1.AppId
+	19, // 7: user.administration.v1.UnlockUserRequest.app_id:type_name -> common.v1.AppId
 	19, // 8: user.administration.v1.ListAdminActionsRequest.app_id:type_name -> common.v1.AppId
 	20, // 9: user.administration.v1.ListAdminActionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
 	22, // 10: user.administration.v1.ListAdminActionsResponse.items:type_name -> user.administration.v1.AdminAction
@@ -1637,7 +1638,7 @@ var file_user_administration_v1_security_proto_depIdxs = []int32{
 	6,  // 25: user.administration.v1.UserSecurityService.DisableMFA:input_type -> user.administration.v1.DisableMFARequest
 	7,  // 26: user.administration.v1.UserSecurityService.GenerateRecoveryCodes:input_type -> user.administration.v1.GenerateRecoveryCodesRequest
 	9,  // 27: user.administration.v1.UserSecurityService.ListSecurityEvents:input_type -> user.administration.v1.ListSecurityEventsRequest
-	11, // 28: user.administration.v1.UserSecurityService.UnlockAccount:input_type -> user.administration.v1.UnlockAccountRequest
+	11, // 28: user.administration.v1.UserSecurityService.UnlockUser:input_type -> user.administration.v1.UnlockUserRequest
 	12, // 29: user.administration.v1.UserSecurityService.ListAdminActions:input_type -> user.administration.v1.ListAdminActionsRequest
 	15, // 30: user.administration.v1.UserSecurityService.ListSecurityNotices:input_type -> user.administration.v1.ListSecurityNoticesRequest
 	17, // 31: user.administration.v1.UserSecurityService.ResendSecurityNotice:input_type -> user.administration.v1.ResendSecurityNoticeRequest
@@ -1647,7 +1648,7 @@ var file_user_administration_v1_security_proto_depIdxs = []int32{
 	24, // 35: user.administration.v1.UserSecurityService.DisableMFA:output_type -> google.protobuf.Empty
 	8,  // 36: user.administration.v1.UserSecurityService.GenerateRecoveryCodes:output_type -> user.administration.v1.GenerateRecoveryCodesResponse
 	10, // 37: user.administration.v1.UserSecurityService.ListSecurityEvents:output_type -> user.administration.v1.ListSecurityEventsResponse
-	24, // 38: user.administration.v1.UserSecurityService.UnlockAccount:output_type -> google.protobuf.Empty
+	24, // 38: user.administration.v1.UserSecurityService.UnlockUser:output_type -> google.protobuf.Empty
 	13, // 39: user.administration.v1.UserSecurityService.ListAdminActions:output_type -> user.administration.v1.ListAdminActionsResponse
 	16, // 40: user.administration.v1.UserSecurityService.ListSecurityNotices:output_type -> user.administration.v1.ListSecurityNoticesResponse
 	14, // 41: user.administration.v1.UserSecurityService.ResendSecurityNotice:output_type -> user.administration.v1.SecurityNotice

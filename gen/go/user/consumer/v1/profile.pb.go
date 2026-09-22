@@ -26,6 +26,134 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// ChangeUserCodeRequest 定义执行 ChangeUserCode 的幂等管理命令参数。
+type ChangeUserCodeRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// app_id 限定 ChangeUserCode 所属 App；UNSPECIFIED 不表示跨 App。
+	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	// user_code 提供 ChangeUserCode 对外稳定使用的业务编码。
+	UserCode string `protobuf:"bytes,2,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
+	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
+	StepUpToken string `protobuf:"bytes,3,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
+	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+	IdempotencyKey string `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ChangeUserCodeRequest) Reset() {
+	*x = ChangeUserCodeRequest{}
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeUserCodeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeUserCodeRequest) ProtoMessage() {}
+
+func (x *ChangeUserCodeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeUserCodeRequest.ProtoReflect.Descriptor instead.
+func (*ChangeUserCodeRequest) Descriptor() ([]byte, []int) {
+	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *ChangeUserCodeRequest) GetAppId() v1.AppId {
+	if x != nil {
+		return x.AppId
+	}
+	return v1.AppId(0)
+}
+
+func (x *ChangeUserCodeRequest) GetUserCode() string {
+	if x != nil {
+		return x.UserCode
+	}
+	return ""
+}
+
+func (x *ChangeUserCodeRequest) GetStepUpToken() string {
+	if x != nil {
+		return x.StepUpToken
+	}
+	return ""
+}
+
+func (x *ChangeUserCodeRequest) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
+// ChangeUserCodeResponse 承载 ChangeUserCode 的返回结果。
+type ChangeUserCodeResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// user 承载 ChangeUserCode 关联的 User。
+	User *v11.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	// tokens 承载 ChangeUserCode 关联的 TokenPair。
+	Tokens        *v11.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangeUserCodeResponse) Reset() {
+	*x = ChangeUserCodeResponse{}
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeUserCodeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeUserCodeResponse) ProtoMessage() {}
+
+func (x *ChangeUserCodeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeUserCodeResponse.ProtoReflect.Descriptor instead.
+func (*ChangeUserCodeResponse) Descriptor() ([]byte, []int) {
+	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ChangeUserCodeResponse) GetUser() *v11.User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+func (x *ChangeUserCodeResponse) GetTokens() *v11.TokenPair {
+	if x != nil {
+		return x.Tokens
+	}
+	return nil
+}
+
 // GetCurrentUserRequest 标识待查询的 CurrentUser。
 type GetCurrentUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -37,7 +165,7 @@ type GetCurrentUserRequest struct {
 
 func (x *GetCurrentUserRequest) Reset() {
 	*x = GetCurrentUserRequest{}
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[0]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -49,7 +177,7 @@ func (x *GetCurrentUserRequest) String() string {
 func (*GetCurrentUserRequest) ProtoMessage() {}
 
 func (x *GetCurrentUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[0]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +190,7 @@ func (x *GetCurrentUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCurrentUserRequest.ProtoReflect.Descriptor instead.
 func (*GetCurrentUserRequest) Descriptor() ([]byte, []int) {
-	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{0}
+	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetCurrentUserRequest) GetAppId() v1.AppId {
@@ -75,21 +203,21 @@ func (x *GetCurrentUserRequest) GetAppId() v1.AppId {
 // CurrentUser 承载 GetCurrentUser 调用的返回结果。
 type CurrentUser struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// account 承载 CurrentUser 关联的 Account。
-	Account *v11.Account `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	// user 承载 CurrentUser 关联的 User。
+	User *v11.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// profile 承载 CurrentUser 关联的 Profile。
 	Profile *v11.Profile `protobuf:"bytes,2,opt,name=profile,proto3" json:"profile,omitempty"`
 	// security 承载 CurrentUser 关联的 SecurityOverview。
 	Security *v11.SecurityOverview `protobuf:"bytes,3,opt,name=security,proto3" json:"security,omitempty"`
-	// capabilities 承载 CurrentUser 关联的 ConsumerAccountCapabilities。
-	Capabilities  *v11.ConsumerAccountCapabilities `protobuf:"bytes,4,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
+	// capabilities 承载 CurrentUser 关联的 ConsumerUserCapabilities。
+	Capabilities  *v11.ConsumerUserCapabilities `protobuf:"bytes,4,opt,name=capabilities,proto3" json:"capabilities,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CurrentUser) Reset() {
 	*x = CurrentUser{}
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[1]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -101,7 +229,7 @@ func (x *CurrentUser) String() string {
 func (*CurrentUser) ProtoMessage() {}
 
 func (x *CurrentUser) ProtoReflect() protoreflect.Message {
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[1]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -114,12 +242,12 @@ func (x *CurrentUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CurrentUser.ProtoReflect.Descriptor instead.
 func (*CurrentUser) Descriptor() ([]byte, []int) {
-	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{1}
+	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CurrentUser) GetAccount() *v11.Account {
+func (x *CurrentUser) GetUser() *v11.User {
 	if x != nil {
-		return x.Account
+		return x.User
 	}
 	return nil
 }
@@ -138,7 +266,7 @@ func (x *CurrentUser) GetSecurity() *v11.SecurityOverview {
 	return nil
 }
 
-func (x *CurrentUser) GetCapabilities() *v11.ConsumerAccountCapabilities {
+func (x *CurrentUser) GetCapabilities() *v11.ConsumerUserCapabilities {
 	if x != nil {
 		return x.Capabilities
 	}
@@ -164,7 +292,7 @@ type ProfilePatch struct {
 
 func (x *ProfilePatch) Reset() {
 	*x = ProfilePatch{}
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[2]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -176,7 +304,7 @@ func (x *ProfilePatch) String() string {
 func (*ProfilePatch) ProtoMessage() {}
 
 func (x *ProfilePatch) ProtoReflect() protoreflect.Message {
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[2]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -189,7 +317,7 @@ func (x *ProfilePatch) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ProfilePatch.ProtoReflect.Descriptor instead.
 func (*ProfilePatch) Descriptor() ([]byte, []int) {
-	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{2}
+	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ProfilePatch) GetNickname() string {
@@ -244,7 +372,7 @@ type UpdateProfileRequest struct {
 
 func (x *UpdateProfileRequest) Reset() {
 	*x = UpdateProfileRequest{}
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[3]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -256,7 +384,7 @@ func (x *UpdateProfileRequest) String() string {
 func (*UpdateProfileRequest) ProtoMessage() {}
 
 func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[3]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -269,7 +397,7 @@ func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateProfileRequest.ProtoReflect.Descriptor instead.
 func (*UpdateProfileRequest) Descriptor() ([]byte, []int) {
-	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{3}
+	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UpdateProfileRequest) GetAppId() v1.AppId {
@@ -318,7 +446,7 @@ type GetPublicProfileRequest struct {
 
 func (x *GetPublicProfileRequest) Reset() {
 	*x = GetPublicProfileRequest{}
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[4]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -330,7 +458,7 @@ func (x *GetPublicProfileRequest) String() string {
 func (*GetPublicProfileRequest) ProtoMessage() {}
 
 func (x *GetPublicProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_consumer_v1_profile_proto_msgTypes[4]
+	mi := &file_user_consumer_v1_profile_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -343,7 +471,7 @@ func (x *GetPublicProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPublicProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetPublicProfileRequest) Descriptor() ([]byte, []int) {
-	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{4}
+	return file_user_consumer_v1_profile_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetPublicProfileRequest) GetAppId() v1.AppId {
@@ -400,14 +528,22 @@ var File_user_consumer_v1_profile_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_profile_proto_rawDesc = "" +
 	"\n" +
-	"\x1euser/consumer/v1/profile.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a google/protobuf/field_mask.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"O\n" +
+	"\x1euser/consumer/v1/profile.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a google/protobuf/field_mask.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xe5\x01\n" +
+	"\x15ChangeUserCodeRequest\x126\n" +
+	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\tuser_code\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x03\x18\x14R\buserCode\x121\n" +
+	"\rstep_up_token\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"s\n" +
+	"\x16ChangeUserCodeResponse\x12'\n" +
+	"\x04user\x18\x01 \x01(\v2\x13.user.types.v1.UserR\x04user\x120\n" +
+	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"O\n" +
 	"\x15GetCurrentUserRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\"\xfe\x01\n" +
-	"\vCurrentUser\x120\n" +
-	"\aaccount\x18\x01 \x01(\v2\x16.user.types.v1.AccountR\aaccount\x120\n" +
+	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\"\xf2\x01\n" +
+	"\vCurrentUser\x12'\n" +
+	"\x04user\x18\x01 \x01(\v2\x13.user.types.v1.UserR\x04user\x120\n" +
 	"\aprofile\x18\x02 \x01(\v2\x16.user.types.v1.ProfileR\aprofile\x12;\n" +
-	"\bsecurity\x18\x03 \x01(\v2\x1f.user.types.v1.SecurityOverviewR\bsecurity\x12N\n" +
-	"\fcapabilities\x18\x04 \x01(\v2*.user.types.v1.ConsumerAccountCapabilitiesR\fcapabilities\"\xa2\x01\n" +
+	"\bsecurity\x18\x03 \x01(\v2\x1f.user.types.v1.SecurityOverviewR\bsecurity\x12K\n" +
+	"\fcapabilities\x18\x04 \x01(\v2'.user.types.v1.ConsumerUserCapabilitiesR\fcapabilities\"\xa2\x01\n" +
 	"\fProfilePatch\x12\x1a\n" +
 	"\bnickname\x18\x01 \x01(\tR\bnickname\x12$\n" +
 	"\x0eavatar_file_id\x18\x02 \x01(\x04R\favatarFileId\x12\x16\n" +
@@ -424,11 +560,12 @@ const file_user_consumer_v1_profile_proto_rawDesc = "" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12\"\n" +
 	"\auser_id\x18\x02 \x01(\x04B\a\xfaB\x042\x02 \x00H\x00R\x06userId\x12(\n" +
 	"\tuser_code\x18\x03 \x01(\tB\t\xfaB\x06r\x04\x10\x01\x18\x14H\x00R\buserCodeB\f\n" +
-	"\x05query\x12\x03\xf8B\x012\xa0\x02\n" +
+	"\x05query\x12\x03\xf8B\x012\x85\x03\n" +
 	"\x16ConsumerProfileService\x12X\n" +
 	"\x0eGetCurrentUser\x12'.user.consumer.v1.GetCurrentUserRequest\x1a\x1d.user.consumer.v1.CurrentUser\x12O\n" +
 	"\rUpdateProfile\x12&.user.consumer.v1.UpdateProfileRequest\x1a\x16.user.types.v1.Profile\x12[\n" +
-	"\x10GetPublicProfile\x12).user.consumer.v1.GetPublicProfileRequest\x1a\x1c.user.types.v1.PublicProfileB\xd1\x01\n" +
+	"\x10GetPublicProfile\x12).user.consumer.v1.GetPublicProfileRequest\x1a\x1c.user.types.v1.PublicProfile\x12c\n" +
+	"\x0eChangeUserCode\x12'.user.consumer.v1.ChangeUserCodeRequest\x1a(.user.consumer.v1.ChangeUserCodeResponseB\xd1\x01\n" +
 	"\x14com.user.consumer.v1B\fProfileProtoP\x01ZIgithub.com/feymanlee/redkit-protos/gen/go/user/consumer/v1;userconsumerpb\xa2\x02\x03UCX\xaa\x02\x10User.Consumer.V1\xca\x02\x10User\\Consumer\\V1\xe2\x02\x1cUser\\Consumer\\V1\\GPBMetadata\xea\x02\x12User::Consumer::V1b\x06proto3"
 
 var (
@@ -443,42 +580,50 @@ func file_user_consumer_v1_profile_proto_rawDescGZIP() []byte {
 	return file_user_consumer_v1_profile_proto_rawDescData
 }
 
-var file_user_consumer_v1_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_user_consumer_v1_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_user_consumer_v1_profile_proto_goTypes = []any{
-	(*GetCurrentUserRequest)(nil),           // 0: user.consumer.v1.GetCurrentUserRequest
-	(*CurrentUser)(nil),                     // 1: user.consumer.v1.CurrentUser
-	(*ProfilePatch)(nil),                    // 2: user.consumer.v1.ProfilePatch
-	(*UpdateProfileRequest)(nil),            // 3: user.consumer.v1.UpdateProfileRequest
-	(*GetPublicProfileRequest)(nil),         // 4: user.consumer.v1.GetPublicProfileRequest
-	(v1.AppId)(0),                           // 5: common.v1.AppId
-	(*v11.Account)(nil),                     // 6: user.types.v1.Account
-	(*v11.Profile)(nil),                     // 7: user.types.v1.Profile
-	(*v11.SecurityOverview)(nil),            // 8: user.types.v1.SecurityOverview
-	(*v11.ConsumerAccountCapabilities)(nil), // 9: user.types.v1.ConsumerAccountCapabilities
-	(*fieldmaskpb.FieldMask)(nil),           // 10: google.protobuf.FieldMask
-	(*v11.PublicProfile)(nil),               // 11: user.types.v1.PublicProfile
+	(*ChangeUserCodeRequest)(nil),        // 0: user.consumer.v1.ChangeUserCodeRequest
+	(*ChangeUserCodeResponse)(nil),       // 1: user.consumer.v1.ChangeUserCodeResponse
+	(*GetCurrentUserRequest)(nil),        // 2: user.consumer.v1.GetCurrentUserRequest
+	(*CurrentUser)(nil),                  // 3: user.consumer.v1.CurrentUser
+	(*ProfilePatch)(nil),                 // 4: user.consumer.v1.ProfilePatch
+	(*UpdateProfileRequest)(nil),         // 5: user.consumer.v1.UpdateProfileRequest
+	(*GetPublicProfileRequest)(nil),      // 6: user.consumer.v1.GetPublicProfileRequest
+	(v1.AppId)(0),                        // 7: common.v1.AppId
+	(*v11.User)(nil),                     // 8: user.types.v1.User
+	(*v11.TokenPair)(nil),                // 9: user.types.v1.TokenPair
+	(*v11.Profile)(nil),                  // 10: user.types.v1.Profile
+	(*v11.SecurityOverview)(nil),         // 11: user.types.v1.SecurityOverview
+	(*v11.ConsumerUserCapabilities)(nil), // 12: user.types.v1.ConsumerUserCapabilities
+	(*fieldmaskpb.FieldMask)(nil),        // 13: google.protobuf.FieldMask
+	(*v11.PublicProfile)(nil),            // 14: user.types.v1.PublicProfile
 }
 var file_user_consumer_v1_profile_proto_depIdxs = []int32{
-	5,  // 0: user.consumer.v1.GetCurrentUserRequest.app_id:type_name -> common.v1.AppId
-	6,  // 1: user.consumer.v1.CurrentUser.account:type_name -> user.types.v1.Account
-	7,  // 2: user.consumer.v1.CurrentUser.profile:type_name -> user.types.v1.Profile
-	8,  // 3: user.consumer.v1.CurrentUser.security:type_name -> user.types.v1.SecurityOverview
-	9,  // 4: user.consumer.v1.CurrentUser.capabilities:type_name -> user.types.v1.ConsumerAccountCapabilities
-	5,  // 5: user.consumer.v1.UpdateProfileRequest.app_id:type_name -> common.v1.AppId
-	2,  // 6: user.consumer.v1.UpdateProfileRequest.data:type_name -> user.consumer.v1.ProfilePatch
-	10, // 7: user.consumer.v1.UpdateProfileRequest.update_mask:type_name -> google.protobuf.FieldMask
-	5,  // 8: user.consumer.v1.GetPublicProfileRequest.app_id:type_name -> common.v1.AppId
-	0,  // 9: user.consumer.v1.ConsumerProfileService.GetCurrentUser:input_type -> user.consumer.v1.GetCurrentUserRequest
-	3,  // 10: user.consumer.v1.ConsumerProfileService.UpdateProfile:input_type -> user.consumer.v1.UpdateProfileRequest
-	4,  // 11: user.consumer.v1.ConsumerProfileService.GetPublicProfile:input_type -> user.consumer.v1.GetPublicProfileRequest
-	1,  // 12: user.consumer.v1.ConsumerProfileService.GetCurrentUser:output_type -> user.consumer.v1.CurrentUser
-	7,  // 13: user.consumer.v1.ConsumerProfileService.UpdateProfile:output_type -> user.types.v1.Profile
-	11, // 14: user.consumer.v1.ConsumerProfileService.GetPublicProfile:output_type -> user.types.v1.PublicProfile
-	12, // [12:15] is the sub-list for method output_type
-	9,  // [9:12] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	7,  // 0: user.consumer.v1.ChangeUserCodeRequest.app_id:type_name -> common.v1.AppId
+	8,  // 1: user.consumer.v1.ChangeUserCodeResponse.user:type_name -> user.types.v1.User
+	9,  // 2: user.consumer.v1.ChangeUserCodeResponse.tokens:type_name -> user.types.v1.TokenPair
+	7,  // 3: user.consumer.v1.GetCurrentUserRequest.app_id:type_name -> common.v1.AppId
+	8,  // 4: user.consumer.v1.CurrentUser.user:type_name -> user.types.v1.User
+	10, // 5: user.consumer.v1.CurrentUser.profile:type_name -> user.types.v1.Profile
+	11, // 6: user.consumer.v1.CurrentUser.security:type_name -> user.types.v1.SecurityOverview
+	12, // 7: user.consumer.v1.CurrentUser.capabilities:type_name -> user.types.v1.ConsumerUserCapabilities
+	7,  // 8: user.consumer.v1.UpdateProfileRequest.app_id:type_name -> common.v1.AppId
+	4,  // 9: user.consumer.v1.UpdateProfileRequest.data:type_name -> user.consumer.v1.ProfilePatch
+	13, // 10: user.consumer.v1.UpdateProfileRequest.update_mask:type_name -> google.protobuf.FieldMask
+	7,  // 11: user.consumer.v1.GetPublicProfileRequest.app_id:type_name -> common.v1.AppId
+	2,  // 12: user.consumer.v1.ConsumerProfileService.GetCurrentUser:input_type -> user.consumer.v1.GetCurrentUserRequest
+	5,  // 13: user.consumer.v1.ConsumerProfileService.UpdateProfile:input_type -> user.consumer.v1.UpdateProfileRequest
+	6,  // 14: user.consumer.v1.ConsumerProfileService.GetPublicProfile:input_type -> user.consumer.v1.GetPublicProfileRequest
+	0,  // 15: user.consumer.v1.ConsumerProfileService.ChangeUserCode:input_type -> user.consumer.v1.ChangeUserCodeRequest
+	3,  // 16: user.consumer.v1.ConsumerProfileService.GetCurrentUser:output_type -> user.consumer.v1.CurrentUser
+	10, // 17: user.consumer.v1.ConsumerProfileService.UpdateProfile:output_type -> user.types.v1.Profile
+	14, // 18: user.consumer.v1.ConsumerProfileService.GetPublicProfile:output_type -> user.types.v1.PublicProfile
+	1,  // 19: user.consumer.v1.ConsumerProfileService.ChangeUserCode:output_type -> user.consumer.v1.ChangeUserCodeResponse
+	16, // [16:20] is the sub-list for method output_type
+	12, // [12:16] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_user_consumer_v1_profile_proto_init() }
@@ -486,7 +631,7 @@ func file_user_consumer_v1_profile_proto_init() {
 	if File_user_consumer_v1_profile_proto != nil {
 		return
 	}
-	file_user_consumer_v1_profile_proto_msgTypes[4].OneofWrappers = []any{
+	file_user_consumer_v1_profile_proto_msgTypes[6].OneofWrappers = []any{
 		(*GetPublicProfileRequest_UserId)(nil),
 		(*GetPublicProfileRequest_UserCode)(nil),
 	}
@@ -496,7 +641,7 @@ func file_user_consumer_v1_profile_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_consumer_v1_profile_proto_rawDesc), len(file_user_consumer_v1_profile_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

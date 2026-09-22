@@ -26,7 +26,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// RecoveryRequestStatus 表示只允许前向推进的 Account Recovery 生命周期。
+// RecoveryRequestStatus 表示只允许前向推进的 User Recovery 生命周期。
 type RecoveryRequestStatus int32
 
 const (
@@ -1041,7 +1041,7 @@ func (x *SubmitRecoveryRequestRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-// SubmitRecoveryRequestResponse 对所有已通过手机号验证的提交返回同形态 opaque continuation，不表示 Account 或 Request 存在。
+// SubmitRecoveryRequestResponse 对所有已通过手机号验证的提交返回同形态 opaque continuation，不表示 User 或 Request 存在。
 type SubmitRecoveryRequestResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -1857,7 +1857,7 @@ func (x *ClaimRecoveryGrantRequest) GetContinuationToken() string {
 // ClaimRecoveryGrantResponse 承载 ClaimRecoveryGrant 的返回结果。
 type ClaimRecoveryGrantResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+	// grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
 	Grant string `protobuf:"bytes,1,opt,name=grant,proto3" json:"grant,omitempty"`
 	// expires_at 指定 ClaimRecoveryGrant 失效的时间点。
 	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
@@ -1914,7 +1914,7 @@ type CompleteRecoveryRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// app_id 限定 CompleteRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+	// grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
 	Grant string `protobuf:"bytes,2,opt,name=grant,proto3" json:"grant,omitempty"`
 	// new_phone 承载按约定地区规则规范化的手机号码。
 	NewPhone string `protobuf:"bytes,3,opt,name=new_phone,json=newPhone,proto3" json:"new_phone,omitempty"`

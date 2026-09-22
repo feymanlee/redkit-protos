@@ -77,7 +77,7 @@ type AdminListUsersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// search selects one explicit User lookup strategy.
 	Search *v1.UserSearchQuery `protobuf:"bytes,1,opt,name=search,proto3" json:"search,omitempty"`
-	// filter contains the supported Account and security filters.
+	// filter contains the supported User and security filters.
 	Filter *v1.UserSearchFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging controls the bounded result page.
 	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -146,7 +146,7 @@ type AdminSuspendUserRequest struct {
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,3,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	// reason_code 提供机器可判断的业务原因分类。
-	ReasonCode v1.AccountSuspensionReason `protobuf:"varint,4,opt,name=reason_code,json=reasonCode,proto3,enum=user.administration.v1.AccountSuspensionReason" json:"reason_code,omitempty"`
+	ReasonCode v1.UserSuspensionReason `protobuf:"varint,4,opt,name=reason_code,json=reasonCode,proto3,enum=user.administration.v1.UserSuspensionReason" json:"reason_code,omitempty"`
 	// internal_note 记录人工判断的补充说明，供审计与复核。
 	InternalNote  *string `protobuf:"bytes,5,opt,name=internal_note,json=internalNote,proto3,oneof" json:"internal_note,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -204,11 +204,11 @@ func (x *AdminSuspendUserRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-func (x *AdminSuspendUserRequest) GetReasonCode() v1.AccountSuspensionReason {
+func (x *AdminSuspendUserRequest) GetReasonCode() v1.UserSuspensionReason {
 	if x != nil {
 		return x.ReasonCode
 	}
-	return v1.AccountSuspensionReason(0)
+	return v1.UserSuspensionReason(0)
 }
 
 func (x *AdminSuspendUserRequest) GetInternalNote() string {
@@ -226,7 +226,7 @@ type AdminReactivateUserRequest struct {
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,2,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	// reason_code 提供机器可判断的业务原因分类。
-	ReasonCode v1.AccountReactivationReason `protobuf:"varint,3,opt,name=reason_code,json=reasonCode,proto3,enum=user.administration.v1.AccountReactivationReason" json:"reason_code,omitempty"`
+	ReasonCode v1.UserReactivationReason `protobuf:"varint,3,opt,name=reason_code,json=reasonCode,proto3,enum=user.administration.v1.UserReactivationReason" json:"reason_code,omitempty"`
 	// internal_note 记录人工判断的补充说明，供审计与复核。
 	InternalNote  *string `protobuf:"bytes,4,opt,name=internal_note,json=internalNote,proto3,oneof" json:"internal_note,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -277,11 +277,11 @@ func (x *AdminReactivateUserRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-func (x *AdminReactivateUserRequest) GetReasonCode() v1.AccountReactivationReason {
+func (x *AdminReactivateUserRequest) GetReasonCode() v1.UserReactivationReason {
 	if x != nil {
 		return x.ReasonCode
 	}
-	return v1.AccountReactivationReason(0)
+	return v1.UserReactivationReason(0)
 }
 
 func (x *AdminReactivateUserRequest) GetInternalNote() string {
@@ -437,8 +437,8 @@ func (x *AdminResetUserCodeRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-// AdminBeginAccountClosureRequest 定义开始 AccountClosure 的幂等管理命令参数。
-type AdminBeginAccountClosureRequest struct {
+// AdminBeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
+type AdminBeginUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// user_id 标识当前 App 内关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -450,20 +450,20 @@ type AdminBeginAccountClosureRequest struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *AdminBeginAccountClosureRequest) Reset() {
-	*x = AdminBeginAccountClosureRequest{}
+func (x *AdminBeginUserDeletionRequest) Reset() {
+	*x = AdminBeginUserDeletionRequest{}
 	mi := &file_admin_user_v1_user_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminBeginAccountClosureRequest) String() string {
+func (x *AdminBeginUserDeletionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminBeginAccountClosureRequest) ProtoMessage() {}
+func (*AdminBeginUserDeletionRequest) ProtoMessage() {}
 
-func (x *AdminBeginAccountClosureRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminBeginUserDeletionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_admin_user_v1_user_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -475,34 +475,34 @@ func (x *AdminBeginAccountClosureRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminBeginAccountClosureRequest.ProtoReflect.Descriptor instead.
-func (*AdminBeginAccountClosureRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminBeginUserDeletionRequest.ProtoReflect.Descriptor instead.
+func (*AdminBeginUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_admin_user_v1_user_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *AdminBeginAccountClosureRequest) GetUserId() uint64 {
+func (x *AdminBeginUserDeletionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-func (x *AdminBeginAccountClosureRequest) GetReason() string {
+func (x *AdminBeginUserDeletionRequest) GetReason() string {
 	if x != nil {
 		return x.Reason
 	}
 	return ""
 }
 
-func (x *AdminBeginAccountClosureRequest) GetIdempotencyKey() string {
+func (x *AdminBeginUserDeletionRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
 	}
 	return ""
 }
 
-// AdminCancelAccountClosureRequest 定义取消 AccountClosure 的幂等管理命令参数。
-type AdminCancelAccountClosureRequest struct {
+// AdminCancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
+type AdminCancelUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// user_id 标识当前 App 内关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -514,20 +514,20 @@ type AdminCancelAccountClosureRequest struct {
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *AdminCancelAccountClosureRequest) Reset() {
-	*x = AdminCancelAccountClosureRequest{}
+func (x *AdminCancelUserDeletionRequest) Reset() {
+	*x = AdminCancelUserDeletionRequest{}
 	mi := &file_admin_user_v1_user_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AdminCancelAccountClosureRequest) String() string {
+func (x *AdminCancelUserDeletionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AdminCancelAccountClosureRequest) ProtoMessage() {}
+func (*AdminCancelUserDeletionRequest) ProtoMessage() {}
 
-func (x *AdminCancelAccountClosureRequest) ProtoReflect() protoreflect.Message {
+func (x *AdminCancelUserDeletionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_admin_user_v1_user_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -539,26 +539,26 @@ func (x *AdminCancelAccountClosureRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AdminCancelAccountClosureRequest.ProtoReflect.Descriptor instead.
-func (*AdminCancelAccountClosureRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AdminCancelUserDeletionRequest.ProtoReflect.Descriptor instead.
+func (*AdminCancelUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_admin_user_v1_user_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *AdminCancelAccountClosureRequest) GetUserId() uint64 {
+func (x *AdminCancelUserDeletionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-func (x *AdminCancelAccountClosureRequest) GetReason() string {
+func (x *AdminCancelUserDeletionRequest) GetReason() string {
 	if x != nil {
 		return x.Reason
 	}
 	return ""
 }
 
-func (x *AdminCancelAccountClosureRequest) GetIdempotencyKey() string {
+func (x *AdminCancelUserDeletionRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
 	}
@@ -862,25 +862,25 @@ var File_admin_user_v1_user_proto protoreflect.FileDescriptor
 
 const file_admin_user_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x18admin/user/v1/user.proto\x12\radmin.user.v1\x1a%common/pagination/v1/pagination.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a$user/administration/v1/account.proto\x1a+user/administration/v1/administration.proto\x1a'user/administration/v1/credential.proto\x1a$user/administration/v1/profile.proto\x1a%user/administration/v1/security.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\".\n" +
+	"\x18admin/user/v1/user.proto\x12\radmin.user.v1\x1a%common/pagination/v1/pagination.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a+user/administration/v1/administration.proto\x1a'user/administration/v1/credential.proto\x1a$user/administration/v1/profile.proto\x1a%user/administration/v1/security.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\".\n" +
 	"\x13GetAdminUserRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x04R\x06userId\"\xd7\x01\n" +
 	"\x15AdminListUsersRequest\x12?\n" +
 	"\x06search\x18\x01 \x01(\v2'.user.administration.v1.UserSearchQueryR\x06search\x12@\n" +
 	"\x06filter\x18\x02 \x01(\v2(.user.administration.v1.UserSearchFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xc7\x02\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xc4\x02\n" +
 	"\x17AdminSuspendUserRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12C\n" +
 	"\x0fsuspended_until\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x0esuspendedUntil\x12'\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tR\x0eidempotencyKey\x12_\n" +
-	"\vreason_code\x18\x04 \x01(\x0e2/.user.administration.v1.AccountSuspensionReasonB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tR\x0eidempotencyKey\x12\\\n" +
+	"\vreason_code\x18\x04 \x01(\x0e2,.user.administration.v1.UserSuspensionReasonB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\n" +
 	"reasonCode\x122\n" +
 	"\rinternal_note\x18\x05 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x04H\x00R\finternalNote\x88\x01\x01B\x10\n" +
-	"\x0e_internal_note\"\x87\x02\n" +
+	"\x0e_internal_note\"\x84\x02\n" +
 	"\x1aAdminReactivateUserRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12'\n" +
-	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\x12a\n" +
-	"\vreason_code\x18\x03 \x01(\x0e21.user.administration.v1.AccountReactivationReasonB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\n" +
+	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\x12^\n" +
+	"\vreason_code\x18\x03 \x01(\x0e2..user.administration.v1.UserReactivationReasonB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\n" +
 	"reasonCode\x122\n" +
 	"\rinternal_note\x18\x04 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x04H\x00R\finternalNote\x88\x01\x01B\x10\n" +
 	"\x0e_internal_note\"\xe9\x02\n" +
@@ -893,13 +893,13 @@ const file_admin_user_v1_user_proto_rawDesc = "" +
 	"\x19AdminResetUserCodeRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12%\n" +
 	"\x06reason\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa5\x01\n" +
-	"\x1fAdminBeginAccountClosureRequest\x12#\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa3\x01\n" +
+	"\x1dAdminBeginUserDeletionRequest\x12#\n" +
 	"\auser_id\x18\x01 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12%\n" +
 	"\x06reason\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa6\x01\n" +
-	" AdminCancelAccountClosureRequest\x12#\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa4\x01\n" +
+	"\x1eAdminCancelUserDeletionRequest\x12#\n" +
 	"\auser_id\x18\x01 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12%\n" +
 	"\x06reason\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
@@ -921,18 +921,18 @@ const file_admin_user_v1_user_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12)\n" +
 	"\tnotice_no\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\bnoticeNo\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey2\x81\x12\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey2\xea\x11\n" +
 	"\vUserService\x12w\n" +
-	"\tListUsers\x12$.admin.user.v1.AdminListUsersRequest\x1a+.user.administration.v1.SearchUsersResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/admin/v1/users\x12q\n" +
-	"\aGetUser\x12\".admin.user.v1.GetAdminUserRequest\x1a\x1f.user.administration.v1.Account\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/admin/v1/users/{user_id}\x12\x80\x01\n" +
-	"\x0eGetUserProfile\x12\".admin.user.v1.GetAdminUserRequest\x1a\x1f.user.administration.v1.Profile\")\x82\xd3\xe4\x93\x02#\x12!/admin/v1/users/{user_id}/profile\x12\x84\x01\n" +
-	"\vSuspendUser\x12&.admin.user.v1.AdminSuspendUserRequest\x1a\x1f.user.administration.v1.Account\",\x82\xd3\xe4\x93\x02&:\x01*\"!/admin/v1/users/{user_id}:suspend\x12\x8d\x01\n" +
-	"\x0eReactivateUser\x12).admin.user.v1.AdminReactivateUserRequest\x1a\x1f.user.administration.v1.Account\"/\x82\xd3\xe4\x93\x02):\x01*\"$/admin/v1/users/{user_id}:reactivate\x12\x9d\x01\n" +
-	"\x13ModerateUserProfile\x12..admin.user.v1.AdminModerateUserProfileRequest\x1a\x1f.user.administration.v1.Profile\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/admin/v1/users/{user_id}/profile:moderate\x12\x8b\x01\n" +
-	"\rResetUserCode\x12(.admin.user.v1.AdminResetUserCodeRequest\x1a\x1f.user.administration.v1.Account\"/\x82\xd3\xe4\x93\x02):\x01*\"$/admin/v1/users/{user_id}:reset-code\x12\x9a\x01\n" +
-	"\x13BeginAccountClosure\x12..admin.user.v1.AdminBeginAccountClosureRequest\x1a\x1f.user.administration.v1.Account\"2\x82\xd3\xe4\x93\x02,:\x01*\"'/admin/v1/users/{user_id}:begin-closure\x12\x87\x01\n" +
-	"\x0eGetUserClosure\x12\".admin.user.v1.GetAdminUserRequest\x1a&.user.administration.v1.AccountClosure\")\x82\xd3\xe4\x93\x02#\x12!/admin/v1/users/{user_id}/closure\x12\xa4\x01\n" +
-	"\x14CancelAccountClosure\x12/.admin.user.v1.AdminCancelAccountClosureRequest\x1a&.user.administration.v1.AccountClosure\"3\x82\xd3\xe4\x93\x02-:\x01*\"(/admin/v1/users/{user_id}:cancel-closure\x12\xa5\x01\n" +
+	"\tListUsers\x12$.admin.user.v1.AdminListUsersRequest\x1a+.user.administration.v1.SearchUsersResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/admin/v1/users\x12n\n" +
+	"\aGetUser\x12\".admin.user.v1.GetAdminUserRequest\x1a\x1c.user.administration.v1.User\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/admin/v1/users/{user_id}\x12\x80\x01\n" +
+	"\x0eGetUserProfile\x12\".admin.user.v1.GetAdminUserRequest\x1a\x1f.user.administration.v1.Profile\")\x82\xd3\xe4\x93\x02#\x12!/admin/v1/users/{user_id}/profile\x12\x81\x01\n" +
+	"\vSuspendUser\x12&.admin.user.v1.AdminSuspendUserRequest\x1a\x1c.user.administration.v1.User\",\x82\xd3\xe4\x93\x02&:\x01*\"!/admin/v1/users/{user_id}:suspend\x12\x8a\x01\n" +
+	"\x0eReactivateUser\x12).admin.user.v1.AdminReactivateUserRequest\x1a\x1c.user.administration.v1.User\"/\x82\xd3\xe4\x93\x02):\x01*\"$/admin/v1/users/{user_id}:reactivate\x12\x9d\x01\n" +
+	"\x13ModerateUserProfile\x12..admin.user.v1.AdminModerateUserProfileRequest\x1a\x1f.user.administration.v1.Profile\"5\x82\xd3\xe4\x93\x02/:\x01*\"*/admin/v1/users/{user_id}/profile:moderate\x12\x88\x01\n" +
+	"\rResetUserCode\x12(.admin.user.v1.AdminResetUserCodeRequest\x1a\x1c.user.administration.v1.User\"/\x82\xd3\xe4\x93\x02):\x01*\"$/admin/v1/users/{user_id}:reset-code\x12\x94\x01\n" +
+	"\x11BeginUserDeletion\x12,.admin.user.v1.AdminBeginUserDeletionRequest\x1a\x1c.user.administration.v1.User\"3\x82\xd3\xe4\x93\x02-:\x01*\"(/admin/v1/users/{user_id}:begin-deletion\x12\x87\x01\n" +
+	"\x0fGetUserDeletion\x12\".admin.user.v1.GetAdminUserRequest\x1a$.user.administration.v1.UserDeletion\"*\x82\xd3\xe4\x93\x02$\x12\"/admin/v1/users/{user_id}/deletion\x12\x9f\x01\n" +
+	"\x12CancelUserDeletion\x12-.admin.user.v1.AdminCancelUserDeletionRequest\x1a$.user.administration.v1.UserDeletion\"4\x82\xd3\xe4\x93\x02.:\x01*\")/admin/v1/users/{user_id}:cancel-deletion\x12\xa5\x01\n" +
 	"\x13ListUserCredentials\x12..admin.user.v1.AdminListUserCredentialsRequest\x1a/.user.administration.v1.ListCredentialsResponse\"-\x82\xd3\xe4\x93\x02'\x12%/admin/v1/users/{user_id}/credentials\x12\x9d\x01\n" +
 	"\rRevealUserPII\x12(.admin.user.v1.AdminRevealUserPIIRequest\x1a1.user.administration.v1.ListCredentialPIIResponse\"/\x82\xd3\xe4\x93\x02):\x01*\"$/admin/v1/users/{user_id}:reveal-pii\x12\xaa\x01\n" +
 	"\x14ListUserAdminActions\x12/.admin.user.v1.AdminListUserAdminActionsRequest\x1a0.user.administration.v1.ListAdminActionsResponse\"/\x82\xd3\xe4\x93\x02)\x12'/admin/v1/users/{user_id}/admin-actions\x12\xb6\x01\n" +
@@ -960,8 +960,8 @@ var file_admin_user_v1_user_proto_goTypes = []any{
 	(*AdminReactivateUserRequest)(nil),           // 3: admin.user.v1.AdminReactivateUserRequest
 	(*AdminModerateUserProfileRequest)(nil),      // 4: admin.user.v1.AdminModerateUserProfileRequest
 	(*AdminResetUserCodeRequest)(nil),            // 5: admin.user.v1.AdminResetUserCodeRequest
-	(*AdminBeginAccountClosureRequest)(nil),      // 6: admin.user.v1.AdminBeginAccountClosureRequest
-	(*AdminCancelAccountClosureRequest)(nil),     // 7: admin.user.v1.AdminCancelAccountClosureRequest
+	(*AdminBeginUserDeletionRequest)(nil),        // 6: admin.user.v1.AdminBeginUserDeletionRequest
+	(*AdminCancelUserDeletionRequest)(nil),       // 7: admin.user.v1.AdminCancelUserDeletionRequest
 	(*AdminRevealUserPIIRequest)(nil),            // 8: admin.user.v1.AdminRevealUserPIIRequest
 	(*AdminListUserCredentialsRequest)(nil),      // 9: admin.user.v1.AdminListUserCredentialsRequest
 	(*AdminListUserAdminActionsRequest)(nil),     // 10: admin.user.v1.AdminListUserAdminActionsRequest
@@ -971,13 +971,13 @@ var file_admin_user_v1_user_proto_goTypes = []any{
 	(*v1.UserSearchFilter)(nil),                  // 14: user.administration.v1.UserSearchFilter
 	(*v11.PagingRequest)(nil),                    // 15: common.pagination.v1.PagingRequest
 	(*timestamppb.Timestamp)(nil),                // 16: google.protobuf.Timestamp
-	(v1.AccountSuspensionReason)(0),              // 17: user.administration.v1.AccountSuspensionReason
-	(v1.AccountReactivationReason)(0),            // 18: user.administration.v1.AccountReactivationReason
+	(v1.UserSuspensionReason)(0),                 // 17: user.administration.v1.UserSuspensionReason
+	(v1.UserReactivationReason)(0),               // 18: user.administration.v1.UserReactivationReason
 	(v1.ProfileModerationField)(0),               // 19: user.administration.v1.ProfileModerationField
 	(*v1.SearchUsersResponse)(nil),               // 20: user.administration.v1.SearchUsersResponse
-	(*v1.Account)(nil),                           // 21: user.administration.v1.Account
+	(*v1.User)(nil),                              // 21: user.administration.v1.User
 	(*v1.Profile)(nil),                           // 22: user.administration.v1.Profile
-	(*v1.AccountClosure)(nil),                    // 23: user.administration.v1.AccountClosure
+	(*v1.UserDeletion)(nil),                      // 23: user.administration.v1.UserDeletion
 	(*v1.ListCredentialsResponse)(nil),           // 24: user.administration.v1.ListCredentialsResponse
 	(*v1.ListCredentialPIIResponse)(nil),         // 25: user.administration.v1.ListCredentialPIIResponse
 	(*v1.ListAdminActionsResponse)(nil),          // 26: user.administration.v1.ListAdminActionsResponse
@@ -989,8 +989,8 @@ var file_admin_user_v1_user_proto_depIdxs = []int32{
 	14, // 1: admin.user.v1.AdminListUsersRequest.filter:type_name -> user.administration.v1.UserSearchFilter
 	15, // 2: admin.user.v1.AdminListUsersRequest.paging:type_name -> common.pagination.v1.PagingRequest
 	16, // 3: admin.user.v1.AdminSuspendUserRequest.suspended_until:type_name -> google.protobuf.Timestamp
-	17, // 4: admin.user.v1.AdminSuspendUserRequest.reason_code:type_name -> user.administration.v1.AccountSuspensionReason
-	18, // 5: admin.user.v1.AdminReactivateUserRequest.reason_code:type_name -> user.administration.v1.AccountReactivationReason
+	17, // 4: admin.user.v1.AdminSuspendUserRequest.reason_code:type_name -> user.administration.v1.UserSuspensionReason
+	18, // 5: admin.user.v1.AdminReactivateUserRequest.reason_code:type_name -> user.administration.v1.UserReactivationReason
 	19, // 6: admin.user.v1.AdminModerateUserProfileRequest.clear_fields:type_name -> user.administration.v1.ProfileModerationField
 	19, // 7: admin.user.v1.AdminModerateUserProfileRequest.reset_fields:type_name -> user.administration.v1.ProfileModerationField
 	15, // 8: admin.user.v1.AdminListUserCredentialsRequest.paging:type_name -> common.pagination.v1.PagingRequest
@@ -1003,24 +1003,24 @@ var file_admin_user_v1_user_proto_depIdxs = []int32{
 	3,  // 15: admin.user.v1.UserService.ReactivateUser:input_type -> admin.user.v1.AdminReactivateUserRequest
 	4,  // 16: admin.user.v1.UserService.ModerateUserProfile:input_type -> admin.user.v1.AdminModerateUserProfileRequest
 	5,  // 17: admin.user.v1.UserService.ResetUserCode:input_type -> admin.user.v1.AdminResetUserCodeRequest
-	6,  // 18: admin.user.v1.UserService.BeginAccountClosure:input_type -> admin.user.v1.AdminBeginAccountClosureRequest
-	0,  // 19: admin.user.v1.UserService.GetUserClosure:input_type -> admin.user.v1.GetAdminUserRequest
-	7,  // 20: admin.user.v1.UserService.CancelAccountClosure:input_type -> admin.user.v1.AdminCancelAccountClosureRequest
+	6,  // 18: admin.user.v1.UserService.BeginUserDeletion:input_type -> admin.user.v1.AdminBeginUserDeletionRequest
+	0,  // 19: admin.user.v1.UserService.GetUserDeletion:input_type -> admin.user.v1.GetAdminUserRequest
+	7,  // 20: admin.user.v1.UserService.CancelUserDeletion:input_type -> admin.user.v1.AdminCancelUserDeletionRequest
 	9,  // 21: admin.user.v1.UserService.ListUserCredentials:input_type -> admin.user.v1.AdminListUserCredentialsRequest
 	8,  // 22: admin.user.v1.UserService.RevealUserPII:input_type -> admin.user.v1.AdminRevealUserPIIRequest
 	10, // 23: admin.user.v1.UserService.ListUserAdminActions:input_type -> admin.user.v1.AdminListUserAdminActionsRequest
 	11, // 24: admin.user.v1.UserService.ListUserSecurityNotices:input_type -> admin.user.v1.AdminListUserSecurityNoticesRequest
 	12, // 25: admin.user.v1.UserService.ResendUserSecurityNotice:input_type -> admin.user.v1.AdminResendUserSecurityNoticeRequest
 	20, // 26: admin.user.v1.UserService.ListUsers:output_type -> user.administration.v1.SearchUsersResponse
-	21, // 27: admin.user.v1.UserService.GetUser:output_type -> user.administration.v1.Account
+	21, // 27: admin.user.v1.UserService.GetUser:output_type -> user.administration.v1.User
 	22, // 28: admin.user.v1.UserService.GetUserProfile:output_type -> user.administration.v1.Profile
-	21, // 29: admin.user.v1.UserService.SuspendUser:output_type -> user.administration.v1.Account
-	21, // 30: admin.user.v1.UserService.ReactivateUser:output_type -> user.administration.v1.Account
+	21, // 29: admin.user.v1.UserService.SuspendUser:output_type -> user.administration.v1.User
+	21, // 30: admin.user.v1.UserService.ReactivateUser:output_type -> user.administration.v1.User
 	22, // 31: admin.user.v1.UserService.ModerateUserProfile:output_type -> user.administration.v1.Profile
-	21, // 32: admin.user.v1.UserService.ResetUserCode:output_type -> user.administration.v1.Account
-	21, // 33: admin.user.v1.UserService.BeginAccountClosure:output_type -> user.administration.v1.Account
-	23, // 34: admin.user.v1.UserService.GetUserClosure:output_type -> user.administration.v1.AccountClosure
-	23, // 35: admin.user.v1.UserService.CancelAccountClosure:output_type -> user.administration.v1.AccountClosure
+	21, // 32: admin.user.v1.UserService.ResetUserCode:output_type -> user.administration.v1.User
+	21, // 33: admin.user.v1.UserService.BeginUserDeletion:output_type -> user.administration.v1.User
+	23, // 34: admin.user.v1.UserService.GetUserDeletion:output_type -> user.administration.v1.UserDeletion
+	23, // 35: admin.user.v1.UserService.CancelUserDeletion:output_type -> user.administration.v1.UserDeletion
 	24, // 36: admin.user.v1.UserService.ListUserCredentials:output_type -> user.administration.v1.ListCredentialsResponse
 	25, // 37: admin.user.v1.UserService.RevealUserPII:output_type -> user.administration.v1.ListCredentialPIIResponse
 	26, // 38: admin.user.v1.UserService.ListUserAdminActions:output_type -> user.administration.v1.ListAdminActionsResponse

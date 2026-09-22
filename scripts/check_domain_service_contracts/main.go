@@ -39,8 +39,8 @@ var businessContracts = map[string]serviceContract{
 		},
 	},
 	"user.consumer.v1": {
-		"ConsumerAccountService": {
-			"ChangeUserCode", "BeginAccountClosure", "GetAccountClosure", "CancelAccountClosure",
+		"ConsumerUserDeletionService": {
+			"BeginUserDeletion", "GetUserDeletion", "CancelUserDeletion",
 		},
 		"ConsumerAuthenticationService": {
 			"GetAuthenticationOptions", "Register", "Login", "ResendLoginChallenge", "CompleteLoginChallenge",
@@ -51,11 +51,11 @@ var businessContracts = map[string]serviceContract{
 			"ListCredentials", "BindPhone", "CompleteRequiredPhoneBinding", "ChangePhone", "UnbindPhone",
 			"SetPassword", "ChangePassword", "LinkExternalIdentity", "UnlinkExternalIdentity",
 		},
-		"ConsumerProfileService": {"GetCurrentUser", "UpdateProfile", "GetPublicProfile"},
+		"ConsumerProfileService": {"GetCurrentUser", "UpdateProfile", "GetPublicProfile", "ChangeUserCode"},
 		"ConsumerRecoveryService": {
-			"StartAccountRecovery", "GetAccountRecovery", "CancelAccountRecovery",
+			"StartUserRecovery", "GetUserRecovery", "CancelUserRecovery",
 			"CreateTrustedDeviceRecoveryChallenge", "VerifyTrustedDeviceRecoveryChallenge",
-			"SubmitPaymentRecoveryEvidence", "ClaimRecoveryGrant", "CompleteAccountRecovery",
+			"SubmitPaymentRecoveryEvidence", "ClaimRecoveryGrant", "CompleteUserRecovery",
 		},
 		"ConsumerSecurityService": {
 			"GetSecurityOverview", "StartStepUpAuthorization", "ResendStepUpChallenge",
@@ -73,15 +73,15 @@ var businessContracts = map[string]serviceContract{
 		"UserSessionIntrospectionService": {"CheckSession", "GetAccessTokenVerificationKeys"},
 	},
 	"user.administration.v1": {
-		"UserAccountService": {
-			"CreateAccount", "GetAccount", "ListAccounts", "BeginAccountClosure", "CancelAccountClosure",
-			"FinalizeAccountClosure", "ChangeUserCode",
-		},
 		"UserAdministrationService": {
-			"BeginAdministrativeAccountClosure",
-			"CancelAdministrativeAccountClosure",
-			"GetAccountClosure",
-			"RetryAdministrativeAccountClosure",
+			"ChangeUserCode",
+			"CreateUser",
+			"GetUser",
+			"GetUserDeletion",
+			"ListUsers",
+			"BeginAdministrativeUserDeletion",
+			"CancelAdministrativeUserDeletion",
+			"RetryAdministrativeUserDeletion",
 			"ModerateUserProfile",
 			"ReactivateUser",
 			"RequirePasswordReset",
@@ -109,7 +109,7 @@ var businessContracts = map[string]serviceContract{
 			"DisableMFA",
 			"GenerateRecoveryCodes",
 			"ListSecurityEvents",
-			"UnlockAccount",
+			"UnlockUser",
 			"ListAdminActions",
 			"ListSecurityNotices",
 			"ResendSecurityNotice",
@@ -130,7 +130,9 @@ var businessContracts = map[string]serviceContract{
 			"CompleteRecoveryRequest",
 		},
 		"UserExportService":    {"CreateUserExportJob", "ListUserExportJobs", "GetUserExportDownload"},
-		"UserLifecycleService": {"ListLifecycleOperations"},
+		"UserLifecycleService": {
+			"ListLifecycleOperations", "BeginUserDeletion", "CancelUserDeletion", "FinalizeUserDeletion",
+		},
 	},
 	"wallet.v1": {
 		"CoinRewardService":    {"PreflightCoinReward", "GrantCoinReward"},

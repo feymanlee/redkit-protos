@@ -25,14 +25,14 @@ enum ConsumerUserErrorReason {
   CREDENTIAL_ALREADY_BOUND = 600 [(errors.code) = 409];
   // 当前不可供业务流程选择或使用。
   USER_CODE_UNAVAILABLE = 601 [(errors.code) = 409];
-  // INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-  INVALID_ACCOUNT_STATE = 700 [(errors.code) = 412];
+  // INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+  INVALID_USER_STATE = 700 [(errors.code) = 412];
   // INVALID_RECOVERY_STATE 表示因 INVALID_RECOVERY_STATE 条件导致流程无法按原路径继续。
   INVALID_RECOVERY_STATE = 701 [(errors.code) = 412];
   // INVALID_MERGE_STATE 表示因 INVALID_MERGE_STATE 条件导致流程无法按原路径继续。
   INVALID_MERGE_STATE = 702 [(errors.code) = 412];
-  // INVALID_CLOSURE_STATE 表示因 INVALID_CLOSURE_STATE 条件导致流程无法按原路径继续。
-  INVALID_CLOSURE_STATE = 703 [(errors.code) = 412];
+  // INVALID_DELETION_STATE 表示因 INVALID_DELETION_STATE 条件导致流程无法按原路径继续。
+  INVALID_DELETION_STATE = 703 [(errors.code) = 412];
   // LAST_CREDENTIAL 表示因 LAST_CREDENTIAL 条件导致流程无法按原路径继续。
   LAST_CREDENTIAL = 704 [(errors.code) = 412];
   // POLICY_VIOLATION 表示因 POLICY_VIOLATION 条件导致流程无法按原路径继续。

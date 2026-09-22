@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// WalletClosureService 暴露 Account Closure 使用的窄 Wallet participant 契约。
+// WalletClosureService 暴露 User Deletion 使用的窄 Wallet participant 契约。
 type WalletClosureServiceClient interface {
 	// PrepareClosure 建立 Wallet fence，并报告余额、冻结和欠款阻断。
 	PrepareClosure(ctx context.Context, in *PrepareClosureRequest, opts ...grpc.CallOption) (*ClosureParticipantState, error)
@@ -93,7 +93,7 @@ func (c *walletClosureServiceClient) GetClosureStatus(ctx context.Context, in *G
 // All implementations must embed UnimplementedWalletClosureServiceServer
 // for forward compatibility.
 //
-// WalletClosureService 暴露 Account Closure 使用的窄 Wallet participant 契约。
+// WalletClosureService 暴露 User Deletion 使用的窄 Wallet participant 契约。
 type WalletClosureServiceServer interface {
 	// PrepareClosure 建立 Wallet fence，并报告余额、冻结和欠款阻断。
 	PrepareClosure(context.Context, *PrepareClosureRequest) (*ClosureParticipantState, error)

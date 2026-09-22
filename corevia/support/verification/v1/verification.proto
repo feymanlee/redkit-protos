@@ -23,7 +23,7 @@ enum VerificationPurpose {
   // 敏感操作二次确认。
   VERIFICATION_PURPOSE_SENSITIVE_OPERATION = 6;
   // 未登录账号恢复的新手机号验证。
-  VERIFICATION_PURPOSE_ACCOUNT_RECOVERY = 7;
+  VERIFICATION_PURPOSE_USER_RECOVERY = 7;
 }
 
 // VerificationAuditEvent identifies one observable verification lifecycle fact.

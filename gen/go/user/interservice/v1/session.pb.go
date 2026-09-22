@@ -157,8 +157,8 @@ type CheckSessionResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// valid 显式表示 CheckSession 是否满足该条件。
 	Valid bool `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
-	// account_status 表示 CheckSession 当前可观察的生命周期状态。
-	AccountStatus v11.AccountStatus `protobuf:"varint,2,opt,name=account_status,json=accountStatus,proto3,enum=user.types.v1.AccountStatus" json:"account_status,omitempty"`
+	// user_status 表示 CheckSession 当前可观察的生命周期状态。
+	UserStatus v11.UserStatus `protobuf:"varint,2,opt,name=user_status,json=userStatus,proto3,enum=user.types.v1.UserStatus" json:"user_status,omitempty"`
 	// session_status 表示 CheckSession 当前可观察的生命周期状态。
 	SessionStatus v11.SessionStatus `protobuf:"varint,3,opt,name=session_status,json=sessionStatus,proto3,enum=user.types.v1.SessionStatus" json:"session_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -202,11 +202,11 @@ func (x *CheckSessionResponse) GetValid() bool {
 	return false
 }
 
-func (x *CheckSessionResponse) GetAccountStatus() v11.AccountStatus {
+func (x *CheckSessionResponse) GetUserStatus() v11.UserStatus {
 	if x != nil {
-		return x.AccountStatus
+		return x.UserStatus
 	}
-	return v11.AccountStatus(0)
+	return v11.UserStatus(0)
 }
 
 func (x *CheckSessionResponse) GetSessionStatus() v11.SessionStatus {
@@ -420,10 +420,11 @@ const file_user_internal_v1_session_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x03 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\tsessionId\x12/\n" +
 	"\rtoken_version\x18\x04 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\ftokenVersion\"\xb6\x01\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\ftokenVersion\"\xad\x01\n" +
 	"\x14CheckSessionResponse\x12\x14\n" +
-	"\x05valid\x18\x01 \x01(\bR\x05valid\x12C\n" +
-	"\x0eaccount_status\x18\x02 \x01(\x0e2\x1c.user.types.v1.AccountStatusR\raccountStatus\x12C\n" +
+	"\x05valid\x18\x01 \x01(\bR\x05valid\x12:\n" +
+	"\vuser_status\x18\x02 \x01(\x0e2\x19.user.types.v1.UserStatusR\n" +
+	"userStatus\x12C\n" +
 	"\x0esession_status\x18\x03 \x01(\x0e2\x1c.user.types.v1.SessionStatusR\rsessionStatus\"\xae\x02\n" +
 	"\x1aAccessTokenVerificationKey\x12\x15\n" +
 	"\x06key_id\x18\x01 \x01(\tR\x05keyId\x12\x1c\n" +
@@ -471,13 +472,13 @@ var file_user_internal_v1_session_proto_goTypes = []any{
 	(*GetAccessTokenVerificationKeysRequest)(nil),  // 4: user.internal.v1.GetAccessTokenVerificationKeysRequest
 	(*GetAccessTokenVerificationKeysResponse)(nil), // 5: user.internal.v1.GetAccessTokenVerificationKeysResponse
 	(v1.AppId)(0),                 // 6: common.v1.AppId
-	(v11.AccountStatus)(0),        // 7: user.types.v1.AccountStatus
+	(v11.UserStatus)(0),           // 7: user.types.v1.UserStatus
 	(v11.SessionStatus)(0),        // 8: user.types.v1.SessionStatus
 	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
 }
 var file_user_internal_v1_session_proto_depIdxs = []int32{
 	6,  // 0: user.internal.v1.CheckSessionRequest.app_id:type_name -> common.v1.AppId
-	7,  // 1: user.internal.v1.CheckSessionResponse.account_status:type_name -> user.types.v1.AccountStatus
+	7,  // 1: user.internal.v1.CheckSessionResponse.user_status:type_name -> user.types.v1.UserStatus
 	8,  // 2: user.internal.v1.CheckSessionResponse.session_status:type_name -> user.types.v1.SessionStatus
 	0,  // 3: user.internal.v1.AccessTokenVerificationKey.status:type_name -> user.internal.v1.VerificationKeyStatus
 	9,  // 4: user.internal.v1.AccessTokenVerificationKey.not_before:type_name -> google.protobuf.Timestamp

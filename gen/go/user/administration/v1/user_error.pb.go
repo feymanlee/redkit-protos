@@ -42,8 +42,8 @@ const (
 	UserErrorReason_PASSWORD_RESET_REQUIRED UserErrorReason = 303
 	// NOT_FOUND 表示因 NOT_FOUND 条件导致流程无法按原路径继续。
 	UserErrorReason_NOT_FOUND UserErrorReason = 400
-	// ACCOUNT_NOT_FOUND 表示因 ACCOUNT_NOT_FOUND 条件导致流程无法按原路径继续。
-	UserErrorReason_ACCOUNT_NOT_FOUND UserErrorReason = 401
+	// USER_NOT_FOUND 表示因 USER_NOT_FOUND 条件导致流程无法按原路径继续。
+	UserErrorReason_USER_NOT_FOUND UserErrorReason = 401
 	// CREDENTIAL_NOT_FOUND 表示因 CREDENTIAL_NOT_FOUND 条件导致流程无法按原路径继续。
 	UserErrorReason_CREDENTIAL_NOT_FOUND UserErrorReason = 402
 	// SESSION_NOT_FOUND 表示因 SESSION_NOT_FOUND 条件导致流程无法按原路径继续。
@@ -54,8 +54,8 @@ const (
 	UserErrorReason_IDEMPOTENCY_CONFLICT UserErrorReason = 901
 	// CREDENTIAL_ALREADY_BOUND 表示因 CREDENTIAL_ALREADY_BOUND 条件导致流程无法按原路径继续。
 	UserErrorReason_CREDENTIAL_ALREADY_BOUND UserErrorReason = 902
-	// INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-	UserErrorReason_INVALID_ACCOUNT_STATE UserErrorReason = 903
+	// INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+	UserErrorReason_INVALID_USER_STATE UserErrorReason = 903
 	// 当前不可供业务流程选择或使用。
 	UserErrorReason_USER_CODE_UNAVAILABLE UserErrorReason = 904
 	// 正在处理中，尚未形成终态。
@@ -81,13 +81,13 @@ var (
 		302:  "STEP_UP_REQUIRED",
 		303:  "PASSWORD_RESET_REQUIRED",
 		400:  "NOT_FOUND",
-		401:  "ACCOUNT_NOT_FOUND",
+		401:  "USER_NOT_FOUND",
 		402:  "CREDENTIAL_NOT_FOUND",
 		403:  "SESSION_NOT_FOUND",
 		900:  "CONFLICT",
 		901:  "IDEMPOTENCY_CONFLICT",
 		902:  "CREDENTIAL_ALREADY_BOUND",
-		903:  "INVALID_ACCOUNT_STATE",
+		903:  "INVALID_USER_STATE",
 		904:  "USER_CODE_UNAVAILABLE",
 		905:  "OPERATION_PROCESSING",
 		906:  "INVALID_RECOVERY_STATE",
@@ -104,13 +104,13 @@ var (
 		"STEP_UP_REQUIRED":          302,
 		"PASSWORD_RESET_REQUIRED":   303,
 		"NOT_FOUND":                 400,
-		"ACCOUNT_NOT_FOUND":         401,
+		"USER_NOT_FOUND":            401,
 		"CREDENTIAL_NOT_FOUND":      402,
 		"SESSION_NOT_FOUND":         403,
 		"CONFLICT":                  900,
 		"IDEMPOTENCY_CONFLICT":      901,
 		"CREDENTIAL_ALREADY_BOUND":  902,
-		"INVALID_ACCOUNT_STATE":     903,
+		"INVALID_USER_STATE":        903,
 		"USER_CODE_UNAVAILABLE":     904,
 		"OPERATION_PROCESSING":      905,
 		"INVALID_RECOVERY_STATE":    906,
@@ -151,7 +151,7 @@ var File_user_administration_v1_user_error_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_user_error_proto_rawDesc = "" +
 	"\n" +
-	"'user/administration/v1/user_error.proto\x12\x16user.administration.v1\x1a\x13errors/errors.proto*\x91\x05\n" +
+	"'user/administration/v1/user_error.proto\x12\x16user.administration.v1\x1a\x13errors/errors.proto*\x8b\x05\n" +
 	"\x0fUserErrorReason\x12\x15\n" +
 	"\vBAD_REQUEST\x10\x00\x1a\x04\xa8E\x90\x03\x12#\n" +
 	"\x19EXPORT_ROW_LIMIT_EXCEEDED\x10\x01\x1a\x04\xa8E\x90\x03\x12\x16\n" +
@@ -160,14 +160,14 @@ const file_user_administration_v1_user_error_proto_rawDesc = "" +
 	"\fMFA_REQUIRED\x10\xad\x02\x1a\x04\xa8E\x93\x03\x12\x1b\n" +
 	"\x10STEP_UP_REQUIRED\x10\xae\x02\x1a\x04\xa8E\x93\x03\x12\"\n" +
 	"\x17PASSWORD_RESET_REQUIRED\x10\xaf\x02\x1a\x04\xa8E\x93\x03\x12\x14\n" +
-	"\tNOT_FOUND\x10\x90\x03\x1a\x04\xa8E\x94\x03\x12\x1c\n" +
-	"\x11ACCOUNT_NOT_FOUND\x10\x91\x03\x1a\x04\xa8E\x94\x03\x12\x1f\n" +
+	"\tNOT_FOUND\x10\x90\x03\x1a\x04\xa8E\x94\x03\x12\x19\n" +
+	"\x0eUSER_NOT_FOUND\x10\x91\x03\x1a\x04\xa8E\x94\x03\x12\x1f\n" +
 	"\x14CREDENTIAL_NOT_FOUND\x10\x92\x03\x1a\x04\xa8E\x94\x03\x12\x1c\n" +
 	"\x11SESSION_NOT_FOUND\x10\x93\x03\x1a\x04\xa8E\x94\x03\x12\x13\n" +
 	"\bCONFLICT\x10\x84\a\x1a\x04\xa8E\x99\x03\x12\x1f\n" +
 	"\x14IDEMPOTENCY_CONFLICT\x10\x85\a\x1a\x04\xa8E\x99\x03\x12#\n" +
-	"\x18CREDENTIAL_ALREADY_BOUND\x10\x86\a\x1a\x04\xa8E\x99\x03\x12 \n" +
-	"\x15INVALID_ACCOUNT_STATE\x10\x87\a\x1a\x04\xa8E\x99\x03\x12 \n" +
+	"\x18CREDENTIAL_ALREADY_BOUND\x10\x86\a\x1a\x04\xa8E\x99\x03\x12\x1d\n" +
+	"\x12INVALID_USER_STATE\x10\x87\a\x1a\x04\xa8E\x99\x03\x12 \n" +
 	"\x15USER_CODE_UNAVAILABLE\x10\x88\a\x1a\x04\xa8E\x99\x03\x12\x1f\n" +
 	"\x14OPERATION_PROCESSING\x10\x89\a\x1a\x04\xa8E\x99\x03\x12!\n" +
 	"\x16INVALID_RECOVERY_STATE\x10\x8a\a\x1a\x04\xa8E\x99\x03\x12\x1c\n" +

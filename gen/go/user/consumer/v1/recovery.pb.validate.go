@@ -176,22 +176,22 @@ var _ interface {
 	ErrorName() string
 } = RecoveryEvidenceValidationError{}
 
-// Validate checks the field values on AccountRecovery with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *AccountRecovery) Validate() error {
+// Validate checks the field values on UserRecovery with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UserRecovery) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on AccountRecovery with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// AccountRecoveryMultiError, or nil if none found.
-func (m *AccountRecovery) ValidateAll() error {
+// ValidateAll checks the field values on UserRecovery with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in UserRecoveryMultiError, or
+// nil if none found.
+func (m *UserRecovery) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *AccountRecovery) validate(all bool) error {
+func (m *UserRecovery) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -207,7 +207,7 @@ func (m *AccountRecovery) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, AccountRecoveryValidationError{
+					errors = append(errors, UserRecoveryValidationError{
 						field:  fmt.Sprintf("Evidences[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -215,7 +215,7 @@ func (m *AccountRecovery) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, AccountRecoveryValidationError{
+					errors = append(errors, UserRecoveryValidationError{
 						field:  fmt.Sprintf("Evidences[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -224,7 +224,7 @@ func (m *AccountRecovery) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return AccountRecoveryValidationError{
+				return UserRecoveryValidationError{
 					field:  fmt.Sprintf("Evidences[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -242,7 +242,7 @@ func (m *AccountRecovery) validate(all bool) error {
 		switch v := interface{}(m.GetSubmittedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountRecoveryValidationError{
+				errors = append(errors, UserRecoveryValidationError{
 					field:  "SubmittedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -250,7 +250,7 @@ func (m *AccountRecovery) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountRecoveryValidationError{
+				errors = append(errors, UserRecoveryValidationError{
 					field:  "SubmittedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -259,7 +259,7 @@ func (m *AccountRecovery) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetSubmittedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountRecoveryValidationError{
+			return UserRecoveryValidationError{
 				field:  "SubmittedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -271,7 +271,7 @@ func (m *AccountRecovery) validate(all bool) error {
 		switch v := interface{}(m.GetExpiresAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountRecoveryValidationError{
+				errors = append(errors, UserRecoveryValidationError{
 					field:  "ExpiresAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -279,7 +279,7 @@ func (m *AccountRecovery) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountRecoveryValidationError{
+				errors = append(errors, UserRecoveryValidationError{
 					field:  "ExpiresAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -288,7 +288,7 @@ func (m *AccountRecovery) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetExpiresAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountRecoveryValidationError{
+			return UserRecoveryValidationError{
 				field:  "ExpiresAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -300,7 +300,7 @@ func (m *AccountRecovery) validate(all bool) error {
 		switch v := interface{}(m.GetCompletedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountRecoveryValidationError{
+				errors = append(errors, UserRecoveryValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -308,7 +308,7 @@ func (m *AccountRecovery) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountRecoveryValidationError{
+				errors = append(errors, UserRecoveryValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -317,7 +317,7 @@ func (m *AccountRecovery) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCompletedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountRecoveryValidationError{
+			return UserRecoveryValidationError{
 				field:  "CompletedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -326,19 +326,18 @@ func (m *AccountRecovery) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return AccountRecoveryMultiError(errors)
+		return UserRecoveryMultiError(errors)
 	}
 
 	return nil
 }
 
-// AccountRecoveryMultiError is an error wrapping multiple validation errors
-// returned by AccountRecovery.ValidateAll() if the designated constraints
-// aren't met.
-type AccountRecoveryMultiError []error
+// UserRecoveryMultiError is an error wrapping multiple validation errors
+// returned by UserRecovery.ValidateAll() if the designated constraints aren't met.
+type UserRecoveryMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AccountRecoveryMultiError) Error() string {
+func (m UserRecoveryMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -347,11 +346,11 @@ func (m AccountRecoveryMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AccountRecoveryMultiError) AllErrors() []error { return m }
+func (m UserRecoveryMultiError) AllErrors() []error { return m }
 
-// AccountRecoveryValidationError is the validation error returned by
-// AccountRecovery.Validate if the designated constraints aren't met.
-type AccountRecoveryValidationError struct {
+// UserRecoveryValidationError is the validation error returned by
+// UserRecovery.Validate if the designated constraints aren't met.
+type UserRecoveryValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -359,22 +358,22 @@ type AccountRecoveryValidationError struct {
 }
 
 // Field function returns field value.
-func (e AccountRecoveryValidationError) Field() string { return e.field }
+func (e UserRecoveryValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AccountRecoveryValidationError) Reason() string { return e.reason }
+func (e UserRecoveryValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AccountRecoveryValidationError) Cause() error { return e.cause }
+func (e UserRecoveryValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AccountRecoveryValidationError) Key() bool { return e.key }
+func (e UserRecoveryValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AccountRecoveryValidationError) ErrorName() string { return "AccountRecoveryValidationError" }
+func (e UserRecoveryValidationError) ErrorName() string { return "UserRecoveryValidationError" }
 
 // Error satisfies the builtin error interface
-func (e AccountRecoveryValidationError) Error() string {
+func (e UserRecoveryValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -386,14 +385,14 @@ func (e AccountRecoveryValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAccountRecovery.%s: %s%s",
+		"invalid %sUserRecovery.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AccountRecoveryValidationError{}
+var _ error = UserRecoveryValidationError{}
 
 var _ interface {
 	Field() string
@@ -401,32 +400,32 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AccountRecoveryValidationError{}
+} = UserRecoveryValidationError{}
 
-// Validate checks the field values on StartAccountRecoveryRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on StartUserRecoveryRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *StartAccountRecoveryRequest) Validate() error {
+func (m *StartUserRecoveryRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on StartAccountRecoveryRequest with the
+// ValidateAll checks the field values on StartUserRecoveryRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// StartAccountRecoveryRequestMultiError, or nil if none found.
-func (m *StartAccountRecoveryRequest) ValidateAll() error {
+// StartUserRecoveryRequestMultiError, or nil if none found.
+func (m *StartUserRecoveryRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *StartAccountRecoveryRequest) validate(all bool) error {
+func (m *StartUserRecoveryRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _StartAccountRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := StartAccountRecoveryRequestValidationError{
+	if _, ok := _StartUserRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := StartUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
 		}
@@ -437,7 +436,7 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := StartAccountRecoveryRequestValidationError{
+		err := StartUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must be one of the defined enum values",
 		}
@@ -447,8 +446,8 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !_StartAccountRecoveryRequest_NewPhone_Pattern.MatchString(m.GetNewPhone()) {
-		err := StartAccountRecoveryRequestValidationError{
+	if !_StartUserRecoveryRequest_NewPhone_Pattern.MatchString(m.GetNewPhone()) {
+		err := StartUserRecoveryRequestValidationError{
 			field:  "NewPhone",
 			reason: "value does not match regex pattern \"^\\\\+[1-9][0-9]{7,14}$\"",
 		}
@@ -459,7 +458,7 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetVerificationTicket()); l < 16 || l > 2048 {
-		err := StartAccountRecoveryRequestValidationError{
+		err := StartUserRecoveryRequestValidationError{
 			field:  "VerificationTicket",
 			reason: "value length must be between 16 and 2048 runes, inclusive",
 		}
@@ -470,7 +469,7 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := StartAccountRecoveryRequestValidationError{
+		err := StartUserRecoveryRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -480,12 +479,12 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	oneofAccountLocatorPresent := false
-	switch v := m.AccountLocator.(type) {
-	case *StartAccountRecoveryRequest_UserCode:
+	oneofUserLocatorPresent := false
+	switch v := m.UserLocator.(type) {
+	case *StartUserRecoveryRequest_UserCode:
 		if v == nil {
-			err := StartAccountRecoveryRequestValidationError{
-				field:  "AccountLocator",
+			err := StartUserRecoveryRequestValidationError{
+				field:  "UserLocator",
 				reason: "oneof value cannot be a typed-nil",
 			}
 			if !all {
@@ -493,10 +492,10 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		oneofAccountLocatorPresent = true
+		oneofUserLocatorPresent = true
 
 		if l := utf8.RuneCountInString(m.GetUserCode()); l < 3 || l > 20 {
-			err := StartAccountRecoveryRequestValidationError{
+			err := StartUserRecoveryRequestValidationError{
 				field:  "UserCode",
 				reason: "value length must be between 3 and 20 runes, inclusive",
 			}
@@ -506,10 +505,10 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-	case *StartAccountRecoveryRequest_CurrentPhone:
+	case *StartUserRecoveryRequest_CurrentPhone:
 		if v == nil {
-			err := StartAccountRecoveryRequestValidationError{
-				field:  "AccountLocator",
+			err := StartUserRecoveryRequestValidationError{
+				field:  "UserLocator",
 				reason: "oneof value cannot be a typed-nil",
 			}
 			if !all {
@@ -517,10 +516,10 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-		oneofAccountLocatorPresent = true
+		oneofUserLocatorPresent = true
 
 		if utf8.RuneCountInString(m.GetCurrentPhone()) > 16 {
-			err := StartAccountRecoveryRequestValidationError{
+			err := StartUserRecoveryRequestValidationError{
 				field:  "CurrentPhone",
 				reason: "value length must be at most 16 runes",
 			}
@@ -530,8 +529,8 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if !_StartAccountRecoveryRequest_CurrentPhone_Pattern.MatchString(m.GetCurrentPhone()) {
-			err := StartAccountRecoveryRequestValidationError{
+		if !_StartUserRecoveryRequest_CurrentPhone_Pattern.MatchString(m.GetCurrentPhone()) {
+			err := StartUserRecoveryRequestValidationError{
 				field:  "CurrentPhone",
 				reason: "value does not match regex pattern \"^\\\\+[1-9][0-9]{7,14}$\"",
 			}
@@ -544,9 +543,9 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 	default:
 		_ = v // ensures v is used
 	}
-	if !oneofAccountLocatorPresent {
-		err := StartAccountRecoveryRequestValidationError{
-			field:  "AccountLocator",
+	if !oneofUserLocatorPresent {
+		err := StartUserRecoveryRequestValidationError{
+			field:  "UserLocator",
 			reason: "value is required",
 		}
 		if !all {
@@ -556,19 +555,19 @@ func (m *StartAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return StartAccountRecoveryRequestMultiError(errors)
+		return StartUserRecoveryRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// StartAccountRecoveryRequestMultiError is an error wrapping multiple
-// validation errors returned by StartAccountRecoveryRequest.ValidateAll() if
-// the designated constraints aren't met.
-type StartAccountRecoveryRequestMultiError []error
+// StartUserRecoveryRequestMultiError is an error wrapping multiple validation
+// errors returned by StartUserRecoveryRequest.ValidateAll() if the designated
+// constraints aren't met.
+type StartUserRecoveryRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m StartAccountRecoveryRequestMultiError) Error() string {
+func (m StartUserRecoveryRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -577,12 +576,11 @@ func (m StartAccountRecoveryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m StartAccountRecoveryRequestMultiError) AllErrors() []error { return m }
+func (m StartUserRecoveryRequestMultiError) AllErrors() []error { return m }
 
-// StartAccountRecoveryRequestValidationError is the validation error returned
-// by StartAccountRecoveryRequest.Validate if the designated constraints
-// aren't met.
-type StartAccountRecoveryRequestValidationError struct {
+// StartUserRecoveryRequestValidationError is the validation error returned by
+// StartUserRecoveryRequest.Validate if the designated constraints aren't met.
+type StartUserRecoveryRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -590,24 +588,24 @@ type StartAccountRecoveryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e StartAccountRecoveryRequestValidationError) Field() string { return e.field }
+func (e StartUserRecoveryRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e StartAccountRecoveryRequestValidationError) Reason() string { return e.reason }
+func (e StartUserRecoveryRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e StartAccountRecoveryRequestValidationError) Cause() error { return e.cause }
+func (e StartUserRecoveryRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e StartAccountRecoveryRequestValidationError) Key() bool { return e.key }
+func (e StartUserRecoveryRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e StartAccountRecoveryRequestValidationError) ErrorName() string {
-	return "StartAccountRecoveryRequestValidationError"
+func (e StartUserRecoveryRequestValidationError) ErrorName() string {
+	return "StartUserRecoveryRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e StartAccountRecoveryRequestValidationError) Error() string {
+func (e StartUserRecoveryRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -619,14 +617,14 @@ func (e StartAccountRecoveryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sStartAccountRecoveryRequest.%s: %s%s",
+		"invalid %sStartUserRecoveryRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = StartAccountRecoveryRequestValidationError{}
+var _ error = StartUserRecoveryRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -634,32 +632,32 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = StartAccountRecoveryRequestValidationError{}
+} = StartUserRecoveryRequestValidationError{}
 
-var _StartAccountRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+var _StartUserRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
-var _StartAccountRecoveryRequest_CurrentPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
+var _StartUserRecoveryRequest_CurrentPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
-var _StartAccountRecoveryRequest_NewPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
+var _StartUserRecoveryRequest_NewPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
-// Validate checks the field values on StartAccountRecoveryResponse with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on StartUserRecoveryResponse with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *StartAccountRecoveryResponse) Validate() error {
+func (m *StartUserRecoveryResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on StartAccountRecoveryResponse with the
+// ValidateAll checks the field values on StartUserRecoveryResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// StartAccountRecoveryResponseMultiError, or nil if none found.
-func (m *StartAccountRecoveryResponse) ValidateAll() error {
+// StartUserRecoveryResponseMultiError, or nil if none found.
+func (m *StartUserRecoveryResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *StartAccountRecoveryResponse) validate(all bool) error {
+func (m *StartUserRecoveryResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -672,7 +670,7 @@ func (m *StartAccountRecoveryResponse) validate(all bool) error {
 		switch v := interface{}(m.GetExpiresAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, StartAccountRecoveryResponseValidationError{
+				errors = append(errors, StartUserRecoveryResponseValidationError{
 					field:  "ExpiresAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -680,7 +678,7 @@ func (m *StartAccountRecoveryResponse) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, StartAccountRecoveryResponseValidationError{
+				errors = append(errors, StartUserRecoveryResponseValidationError{
 					field:  "ExpiresAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -689,7 +687,7 @@ func (m *StartAccountRecoveryResponse) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetExpiresAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return StartAccountRecoveryResponseValidationError{
+			return StartUserRecoveryResponseValidationError{
 				field:  "ExpiresAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -698,19 +696,19 @@ func (m *StartAccountRecoveryResponse) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return StartAccountRecoveryResponseMultiError(errors)
+		return StartUserRecoveryResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// StartAccountRecoveryResponseMultiError is an error wrapping multiple
-// validation errors returned by StartAccountRecoveryResponse.ValidateAll() if
-// the designated constraints aren't met.
-type StartAccountRecoveryResponseMultiError []error
+// StartUserRecoveryResponseMultiError is an error wrapping multiple validation
+// errors returned by StartUserRecoveryResponse.ValidateAll() if the
+// designated constraints aren't met.
+type StartUserRecoveryResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m StartAccountRecoveryResponseMultiError) Error() string {
+func (m StartUserRecoveryResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -719,12 +717,11 @@ func (m StartAccountRecoveryResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m StartAccountRecoveryResponseMultiError) AllErrors() []error { return m }
+func (m StartUserRecoveryResponseMultiError) AllErrors() []error { return m }
 
-// StartAccountRecoveryResponseValidationError is the validation error returned
-// by StartAccountRecoveryResponse.Validate if the designated constraints
-// aren't met.
-type StartAccountRecoveryResponseValidationError struct {
+// StartUserRecoveryResponseValidationError is the validation error returned by
+// StartUserRecoveryResponse.Validate if the designated constraints aren't met.
+type StartUserRecoveryResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -732,24 +729,24 @@ type StartAccountRecoveryResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e StartAccountRecoveryResponseValidationError) Field() string { return e.field }
+func (e StartUserRecoveryResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e StartAccountRecoveryResponseValidationError) Reason() string { return e.reason }
+func (e StartUserRecoveryResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e StartAccountRecoveryResponseValidationError) Cause() error { return e.cause }
+func (e StartUserRecoveryResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e StartAccountRecoveryResponseValidationError) Key() bool { return e.key }
+func (e StartUserRecoveryResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e StartAccountRecoveryResponseValidationError) ErrorName() string {
-	return "StartAccountRecoveryResponseValidationError"
+func (e StartUserRecoveryResponseValidationError) ErrorName() string {
+	return "StartUserRecoveryResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e StartAccountRecoveryResponseValidationError) Error() string {
+func (e StartUserRecoveryResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -761,14 +758,14 @@ func (e StartAccountRecoveryResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sStartAccountRecoveryResponse.%s: %s%s",
+		"invalid %sStartUserRecoveryResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = StartAccountRecoveryResponseValidationError{}
+var _ error = StartUserRecoveryResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -776,32 +773,32 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = StartAccountRecoveryResponseValidationError{}
+} = StartUserRecoveryResponseValidationError{}
 
-// Validate checks the field values on GetAccountRecoveryRequest with the rules
+// Validate checks the field values on GetUserRecoveryRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetAccountRecoveryRequest) Validate() error {
+func (m *GetUserRecoveryRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetAccountRecoveryRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on GetUserRecoveryRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetAccountRecoveryRequestMultiError, or nil if none found.
-func (m *GetAccountRecoveryRequest) ValidateAll() error {
+// GetUserRecoveryRequestMultiError, or nil if none found.
+func (m *GetUserRecoveryRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetAccountRecoveryRequest) validate(all bool) error {
+func (m *GetUserRecoveryRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _GetAccountRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetAccountRecoveryRequestValidationError{
+	if _, ok := _GetUserRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := GetUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
 		}
@@ -812,7 +809,7 @@ func (m *GetAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetAccountRecoveryRequestValidationError{
+		err := GetUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must be one of the defined enum values",
 		}
@@ -823,7 +820,7 @@ func (m *GetAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetRecoveryContinuation()); l < 32 || l > 512 {
-		err := GetAccountRecoveryRequestValidationError{
+		err := GetUserRecoveryRequestValidationError{
 			field:  "RecoveryContinuation",
 			reason: "value length must be between 32 and 512 runes, inclusive",
 		}
@@ -834,19 +831,19 @@ func (m *GetAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return GetAccountRecoveryRequestMultiError(errors)
+		return GetUserRecoveryRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetAccountRecoveryRequestMultiError is an error wrapping multiple validation
-// errors returned by GetAccountRecoveryRequest.ValidateAll() if the
-// designated constraints aren't met.
-type GetAccountRecoveryRequestMultiError []error
+// GetUserRecoveryRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUserRecoveryRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserRecoveryRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetAccountRecoveryRequestMultiError) Error() string {
+func (m GetUserRecoveryRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -855,11 +852,11 @@ func (m GetAccountRecoveryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetAccountRecoveryRequestMultiError) AllErrors() []error { return m }
+func (m GetUserRecoveryRequestMultiError) AllErrors() []error { return m }
 
-// GetAccountRecoveryRequestValidationError is the validation error returned by
-// GetAccountRecoveryRequest.Validate if the designated constraints aren't met.
-type GetAccountRecoveryRequestValidationError struct {
+// GetUserRecoveryRequestValidationError is the validation error returned by
+// GetUserRecoveryRequest.Validate if the designated constraints aren't met.
+type GetUserRecoveryRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -867,24 +864,24 @@ type GetAccountRecoveryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetAccountRecoveryRequestValidationError) Field() string { return e.field }
+func (e GetUserRecoveryRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetAccountRecoveryRequestValidationError) Reason() string { return e.reason }
+func (e GetUserRecoveryRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetAccountRecoveryRequestValidationError) Cause() error { return e.cause }
+func (e GetUserRecoveryRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetAccountRecoveryRequestValidationError) Key() bool { return e.key }
+func (e GetUserRecoveryRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetAccountRecoveryRequestValidationError) ErrorName() string {
-	return "GetAccountRecoveryRequestValidationError"
+func (e GetUserRecoveryRequestValidationError) ErrorName() string {
+	return "GetUserRecoveryRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e GetAccountRecoveryRequestValidationError) Error() string {
+func (e GetUserRecoveryRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -896,14 +893,14 @@ func (e GetAccountRecoveryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetAccountRecoveryRequest.%s: %s%s",
+		"invalid %sGetUserRecoveryRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetAccountRecoveryRequestValidationError{}
+var _ error = GetUserRecoveryRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -911,36 +908,36 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetAccountRecoveryRequestValidationError{}
+} = GetUserRecoveryRequestValidationError{}
 
-var _GetAccountRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+var _GetUserRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
-// Validate checks the field values on CancelAccountRecoveryRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on CancelUserRecoveryRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CancelAccountRecoveryRequest) Validate() error {
+func (m *CancelUserRecoveryRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CancelAccountRecoveryRequest with the
+// ValidateAll checks the field values on CancelUserRecoveryRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CancelAccountRecoveryRequestMultiError, or nil if none found.
-func (m *CancelAccountRecoveryRequest) ValidateAll() error {
+// CancelUserRecoveryRequestMultiError, or nil if none found.
+func (m *CancelUserRecoveryRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CancelAccountRecoveryRequest) validate(all bool) error {
+func (m *CancelUserRecoveryRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _CancelAccountRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CancelAccountRecoveryRequestValidationError{
+	if _, ok := _CancelUserRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := CancelUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
 		}
@@ -951,7 +948,7 @@ func (m *CancelAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CancelAccountRecoveryRequestValidationError{
+		err := CancelUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must be one of the defined enum values",
 		}
@@ -962,7 +959,7 @@ func (m *CancelAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetRecoveryContinuation()); l < 32 || l > 512 {
-		err := CancelAccountRecoveryRequestValidationError{
+		err := CancelUserRecoveryRequestValidationError{
 			field:  "RecoveryContinuation",
 			reason: "value length must be between 32 and 512 runes, inclusive",
 		}
@@ -973,7 +970,7 @@ func (m *CancelAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := CancelAccountRecoveryRequestValidationError{
+		err := CancelUserRecoveryRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -984,19 +981,19 @@ func (m *CancelAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CancelAccountRecoveryRequestMultiError(errors)
+		return CancelUserRecoveryRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// CancelAccountRecoveryRequestMultiError is an error wrapping multiple
-// validation errors returned by CancelAccountRecoveryRequest.ValidateAll() if
-// the designated constraints aren't met.
-type CancelAccountRecoveryRequestMultiError []error
+// CancelUserRecoveryRequestMultiError is an error wrapping multiple validation
+// errors returned by CancelUserRecoveryRequest.ValidateAll() if the
+// designated constraints aren't met.
+type CancelUserRecoveryRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CancelAccountRecoveryRequestMultiError) Error() string {
+func (m CancelUserRecoveryRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1005,12 +1002,11 @@ func (m CancelAccountRecoveryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CancelAccountRecoveryRequestMultiError) AllErrors() []error { return m }
+func (m CancelUserRecoveryRequestMultiError) AllErrors() []error { return m }
 
-// CancelAccountRecoveryRequestValidationError is the validation error returned
-// by CancelAccountRecoveryRequest.Validate if the designated constraints
-// aren't met.
-type CancelAccountRecoveryRequestValidationError struct {
+// CancelUserRecoveryRequestValidationError is the validation error returned by
+// CancelUserRecoveryRequest.Validate if the designated constraints aren't met.
+type CancelUserRecoveryRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1018,24 +1014,24 @@ type CancelAccountRecoveryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e CancelAccountRecoveryRequestValidationError) Field() string { return e.field }
+func (e CancelUserRecoveryRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CancelAccountRecoveryRequestValidationError) Reason() string { return e.reason }
+func (e CancelUserRecoveryRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CancelAccountRecoveryRequestValidationError) Cause() error { return e.cause }
+func (e CancelUserRecoveryRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CancelAccountRecoveryRequestValidationError) Key() bool { return e.key }
+func (e CancelUserRecoveryRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CancelAccountRecoveryRequestValidationError) ErrorName() string {
-	return "CancelAccountRecoveryRequestValidationError"
+func (e CancelUserRecoveryRequestValidationError) ErrorName() string {
+	return "CancelUserRecoveryRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CancelAccountRecoveryRequestValidationError) Error() string {
+func (e CancelUserRecoveryRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1047,14 +1043,14 @@ func (e CancelAccountRecoveryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCancelAccountRecoveryRequest.%s: %s%s",
+		"invalid %sCancelUserRecoveryRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CancelAccountRecoveryRequestValidationError{}
+var _ error = CancelUserRecoveryRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1062,9 +1058,9 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CancelAccountRecoveryRequestValidationError{}
+} = CancelUserRecoveryRequestValidationError{}
 
-var _CancelAccountRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+var _CancelUserRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
@@ -2038,30 +2034,30 @@ var _ interface {
 	ErrorName() string
 } = RecoveryGrantValidationError{}
 
-// Validate checks the field values on CompleteAccountRecoveryRequest with the
+// Validate checks the field values on CompleteUserRecoveryRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CompleteAccountRecoveryRequest) Validate() error {
+func (m *CompleteUserRecoveryRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CompleteAccountRecoveryRequest with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// CompleteAccountRecoveryRequestMultiError, or nil if none found.
-func (m *CompleteAccountRecoveryRequest) ValidateAll() error {
+// ValidateAll checks the field values on CompleteUserRecoveryRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompleteUserRecoveryRequestMultiError, or nil if none found.
+func (m *CompleteUserRecoveryRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
+func (m *CompleteUserRecoveryRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _CompleteAccountRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompleteAccountRecoveryRequestValidationError{
+	if _, ok := _CompleteUserRecoveryRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := CompleteUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
 		}
@@ -2072,7 +2068,7 @@ func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompleteAccountRecoveryRequestValidationError{
+		err := CompleteUserRecoveryRequestValidationError{
 			field:  "AppId",
 			reason: "value must be one of the defined enum values",
 		}
@@ -2083,7 +2079,7 @@ func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetGrant()); l < 32 || l > 512 {
-		err := CompleteAccountRecoveryRequestValidationError{
+		err := CompleteUserRecoveryRequestValidationError{
 			field:  "Grant",
 			reason: "value length must be between 32 and 512 runes, inclusive",
 		}
@@ -2094,7 +2090,7 @@ func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if utf8.RuneCountInString(m.GetNewPhone()) > 16 {
-		err := CompleteAccountRecoveryRequestValidationError{
+		err := CompleteUserRecoveryRequestValidationError{
 			field:  "NewPhone",
 			reason: "value length must be at most 16 runes",
 		}
@@ -2104,8 +2100,8 @@ func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !_CompleteAccountRecoveryRequest_NewPhone_Pattern.MatchString(m.GetNewPhone()) {
-		err := CompleteAccountRecoveryRequestValidationError{
+	if !_CompleteUserRecoveryRequest_NewPhone_Pattern.MatchString(m.GetNewPhone()) {
+		err := CompleteUserRecoveryRequestValidationError{
 			field:  "NewPhone",
 			reason: "value does not match regex pattern \"^\\\\+[1-9][0-9]{7,14}$\"",
 		}
@@ -2116,7 +2112,7 @@ func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetVerificationTicket()); l < 16 || l > 2048 {
-		err := CompleteAccountRecoveryRequestValidationError{
+		err := CompleteUserRecoveryRequestValidationError{
 			field:  "VerificationTicket",
 			reason: "value length must be between 16 and 2048 runes, inclusive",
 		}
@@ -2127,7 +2123,7 @@ func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := CompleteAccountRecoveryRequestValidationError{
+		err := CompleteUserRecoveryRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -2138,19 +2134,19 @@ func (m *CompleteAccountRecoveryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CompleteAccountRecoveryRequestMultiError(errors)
+		return CompleteUserRecoveryRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// CompleteAccountRecoveryRequestMultiError is an error wrapping multiple
-// validation errors returned by CompleteAccountRecoveryRequest.ValidateAll()
-// if the designated constraints aren't met.
-type CompleteAccountRecoveryRequestMultiError []error
+// CompleteUserRecoveryRequestMultiError is an error wrapping multiple
+// validation errors returned by CompleteUserRecoveryRequest.ValidateAll() if
+// the designated constraints aren't met.
+type CompleteUserRecoveryRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CompleteAccountRecoveryRequestMultiError) Error() string {
+func (m CompleteUserRecoveryRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2159,12 +2155,12 @@ func (m CompleteAccountRecoveryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CompleteAccountRecoveryRequestMultiError) AllErrors() []error { return m }
+func (m CompleteUserRecoveryRequestMultiError) AllErrors() []error { return m }
 
-// CompleteAccountRecoveryRequestValidationError is the validation error
-// returned by CompleteAccountRecoveryRequest.Validate if the designated
-// constraints aren't met.
-type CompleteAccountRecoveryRequestValidationError struct {
+// CompleteUserRecoveryRequestValidationError is the validation error returned
+// by CompleteUserRecoveryRequest.Validate if the designated constraints
+// aren't met.
+type CompleteUserRecoveryRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2172,24 +2168,24 @@ type CompleteAccountRecoveryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e CompleteAccountRecoveryRequestValidationError) Field() string { return e.field }
+func (e CompleteUserRecoveryRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CompleteAccountRecoveryRequestValidationError) Reason() string { return e.reason }
+func (e CompleteUserRecoveryRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CompleteAccountRecoveryRequestValidationError) Cause() error { return e.cause }
+func (e CompleteUserRecoveryRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CompleteAccountRecoveryRequestValidationError) Key() bool { return e.key }
+func (e CompleteUserRecoveryRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CompleteAccountRecoveryRequestValidationError) ErrorName() string {
-	return "CompleteAccountRecoveryRequestValidationError"
+func (e CompleteUserRecoveryRequestValidationError) ErrorName() string {
+	return "CompleteUserRecoveryRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CompleteAccountRecoveryRequestValidationError) Error() string {
+func (e CompleteUserRecoveryRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2201,14 +2197,14 @@ func (e CompleteAccountRecoveryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCompleteAccountRecoveryRequest.%s: %s%s",
+		"invalid %sCompleteUserRecoveryRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CompleteAccountRecoveryRequestValidationError{}
+var _ error = CompleteUserRecoveryRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -2216,30 +2212,30 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CompleteAccountRecoveryRequestValidationError{}
+} = CompleteUserRecoveryRequestValidationError{}
 
-var _CompleteAccountRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+var _CompleteUserRecoveryRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
-var _CompleteAccountRecoveryRequest_NewPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
+var _CompleteUserRecoveryRequest_NewPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
-// Validate checks the field values on CompleteAccountRecoveryResponse with the
+// Validate checks the field values on CompleteUserRecoveryResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CompleteAccountRecoveryResponse) Validate() error {
+func (m *CompleteUserRecoveryResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CompleteAccountRecoveryResponse with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// CompleteAccountRecoveryResponseMultiError, or nil if none found.
-func (m *CompleteAccountRecoveryResponse) ValidateAll() error {
+// ValidateAll checks the field values on CompleteUserRecoveryResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompleteUserRecoveryResponseMultiError, or nil if none found.
+func (m *CompleteUserRecoveryResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CompleteAccountRecoveryResponse) validate(all bool) error {
+func (m *CompleteUserRecoveryResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2252,7 +2248,7 @@ func (m *CompleteAccountRecoveryResponse) validate(all bool) error {
 		switch v := interface{}(m.GetCompletedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CompleteAccountRecoveryResponseValidationError{
+				errors = append(errors, CompleteUserRecoveryResponseValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2260,7 +2256,7 @@ func (m *CompleteAccountRecoveryResponse) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, CompleteAccountRecoveryResponseValidationError{
+				errors = append(errors, CompleteUserRecoveryResponseValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2269,7 +2265,7 @@ func (m *CompleteAccountRecoveryResponse) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCompletedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return CompleteAccountRecoveryResponseValidationError{
+			return CompleteUserRecoveryResponseValidationError{
 				field:  "CompletedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2278,19 +2274,19 @@ func (m *CompleteAccountRecoveryResponse) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CompleteAccountRecoveryResponseMultiError(errors)
+		return CompleteUserRecoveryResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// CompleteAccountRecoveryResponseMultiError is an error wrapping multiple
-// validation errors returned by CompleteAccountRecoveryResponse.ValidateAll()
-// if the designated constraints aren't met.
-type CompleteAccountRecoveryResponseMultiError []error
+// CompleteUserRecoveryResponseMultiError is an error wrapping multiple
+// validation errors returned by CompleteUserRecoveryResponse.ValidateAll() if
+// the designated constraints aren't met.
+type CompleteUserRecoveryResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CompleteAccountRecoveryResponseMultiError) Error() string {
+func (m CompleteUserRecoveryResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2299,12 +2295,12 @@ func (m CompleteAccountRecoveryResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CompleteAccountRecoveryResponseMultiError) AllErrors() []error { return m }
+func (m CompleteUserRecoveryResponseMultiError) AllErrors() []error { return m }
 
-// CompleteAccountRecoveryResponseValidationError is the validation error
-// returned by CompleteAccountRecoveryResponse.Validate if the designated
-// constraints aren't met.
-type CompleteAccountRecoveryResponseValidationError struct {
+// CompleteUserRecoveryResponseValidationError is the validation error returned
+// by CompleteUserRecoveryResponse.Validate if the designated constraints
+// aren't met.
+type CompleteUserRecoveryResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2312,24 +2308,24 @@ type CompleteAccountRecoveryResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e CompleteAccountRecoveryResponseValidationError) Field() string { return e.field }
+func (e CompleteUserRecoveryResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CompleteAccountRecoveryResponseValidationError) Reason() string { return e.reason }
+func (e CompleteUserRecoveryResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CompleteAccountRecoveryResponseValidationError) Cause() error { return e.cause }
+func (e CompleteUserRecoveryResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CompleteAccountRecoveryResponseValidationError) Key() bool { return e.key }
+func (e CompleteUserRecoveryResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CompleteAccountRecoveryResponseValidationError) ErrorName() string {
-	return "CompleteAccountRecoveryResponseValidationError"
+func (e CompleteUserRecoveryResponseValidationError) ErrorName() string {
+	return "CompleteUserRecoveryResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CompleteAccountRecoveryResponseValidationError) Error() string {
+func (e CompleteUserRecoveryResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2341,14 +2337,14 @@ func (e CompleteAccountRecoveryResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCompleteAccountRecoveryResponse.%s: %s%s",
+		"invalid %sCompleteUserRecoveryResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CompleteAccountRecoveryResponseValidationError{}
+var _ error = CompleteUserRecoveryResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -2356,4 +2352,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CompleteAccountRecoveryResponseValidationError{}
+} = CompleteUserRecoveryResponseValidationError{}

@@ -44,14 +44,14 @@ const (
 	ConsumerUserErrorReason_CREDENTIAL_ALREADY_BOUND ConsumerUserErrorReason = 600
 	// 当前不可供业务流程选择或使用。
 	ConsumerUserErrorReason_USER_CODE_UNAVAILABLE ConsumerUserErrorReason = 601
-	// INVALID_ACCOUNT_STATE 表示因 INVALID_ACCOUNT_STATE 条件导致流程无法按原路径继续。
-	ConsumerUserErrorReason_INVALID_ACCOUNT_STATE ConsumerUserErrorReason = 700
+	// INVALID_USER_STATE 表示因 INVALID_USER_STATE 条件导致流程无法按原路径继续。
+	ConsumerUserErrorReason_INVALID_USER_STATE ConsumerUserErrorReason = 700
 	// INVALID_RECOVERY_STATE 表示因 INVALID_RECOVERY_STATE 条件导致流程无法按原路径继续。
 	ConsumerUserErrorReason_INVALID_RECOVERY_STATE ConsumerUserErrorReason = 701
 	// INVALID_MERGE_STATE 表示因 INVALID_MERGE_STATE 条件导致流程无法按原路径继续。
 	ConsumerUserErrorReason_INVALID_MERGE_STATE ConsumerUserErrorReason = 702
-	// INVALID_CLOSURE_STATE 表示因 INVALID_CLOSURE_STATE 条件导致流程无法按原路径继续。
-	ConsumerUserErrorReason_INVALID_CLOSURE_STATE ConsumerUserErrorReason = 703
+	// INVALID_DELETION_STATE 表示因 INVALID_DELETION_STATE 条件导致流程无法按原路径继续。
+	ConsumerUserErrorReason_INVALID_DELETION_STATE ConsumerUserErrorReason = 703
 	// LAST_CREDENTIAL 表示因 LAST_CREDENTIAL 条件导致流程无法按原路径继续。
 	ConsumerUserErrorReason_LAST_CREDENTIAL ConsumerUserErrorReason = 704
 	// POLICY_VIOLATION 表示因 POLICY_VIOLATION 条件导致流程无法按原路径继续。
@@ -82,10 +82,10 @@ var (
 		403:  "DEVICE_NOT_FOUND",
 		600:  "CREDENTIAL_ALREADY_BOUND",
 		601:  "USER_CODE_UNAVAILABLE",
-		700:  "INVALID_ACCOUNT_STATE",
+		700:  "INVALID_USER_STATE",
 		701:  "INVALID_RECOVERY_STATE",
 		702:  "INVALID_MERGE_STATE",
-		703:  "INVALID_CLOSURE_STATE",
+		703:  "INVALID_DELETION_STATE",
 		704:  "LAST_CREDENTIAL",
 		705:  "POLICY_VIOLATION",
 		900:  "IDEMPOTENCY_CONFLICT",
@@ -105,10 +105,10 @@ var (
 		"DEVICE_NOT_FOUND":         403,
 		"CREDENTIAL_ALREADY_BOUND": 600,
 		"USER_CODE_UNAVAILABLE":    601,
-		"INVALID_ACCOUNT_STATE":    700,
+		"INVALID_USER_STATE":       700,
 		"INVALID_RECOVERY_STATE":   701,
 		"INVALID_MERGE_STATE":      702,
-		"INVALID_CLOSURE_STATE":    703,
+		"INVALID_DELETION_STATE":   703,
 		"LAST_CREDENTIAL":          704,
 		"POLICY_VIOLATION":         705,
 		"IDEMPOTENCY_CONFLICT":     900,
@@ -151,7 +151,7 @@ var File_user_consumer_v1_consumer_error_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_consumer_error_proto_rawDesc = "" +
 	"\n" +
-	"%user/consumer/v1/consumer_error.proto\x12\x10user.consumer.v1\x1a\x13errors/errors.proto*\xb5\x05\n" +
+	"%user/consumer/v1/consumer_error.proto\x12\x10user.consumer.v1\x1a\x13errors/errors.proto*\xb3\x05\n" +
 	"\x17ConsumerUserErrorReason\x12\x1a\n" +
 	"\x10INVALID_ARGUMENT\x10\x00\x1a\x04\xa8E\x90\x03\x12\x1f\n" +
 	"\x15AUTHENTICATION_FAILED\x10d\x1a\x04\xa8E\x91\x03\x12\x1b\n" +
@@ -161,11 +161,11 @@ const file_user_consumer_v1_consumer_error_proto_rawDesc = "" +
 	"\x11SESSION_NOT_FOUND\x10\x92\x03\x1a\x04\xa8E\x94\x03\x12\x1b\n" +
 	"\x10DEVICE_NOT_FOUND\x10\x93\x03\x1a\x04\xa8E\x94\x03\x12#\n" +
 	"\x18CREDENTIAL_ALREADY_BOUND\x10\xd8\x04\x1a\x04\xa8E\x99\x03\x12 \n" +
-	"\x15USER_CODE_UNAVAILABLE\x10\xd9\x04\x1a\x04\xa8E\x99\x03\x12 \n" +
-	"\x15INVALID_ACCOUNT_STATE\x10\xbc\x05\x1a\x04\xa8E\x9c\x03\x12!\n" +
+	"\x15USER_CODE_UNAVAILABLE\x10\xd9\x04\x1a\x04\xa8E\x99\x03\x12\x1d\n" +
+	"\x12INVALID_USER_STATE\x10\xbc\x05\x1a\x04\xa8E\x9c\x03\x12!\n" +
 	"\x16INVALID_RECOVERY_STATE\x10\xbd\x05\x1a\x04\xa8E\x9c\x03\x12\x1e\n" +
-	"\x13INVALID_MERGE_STATE\x10\xbe\x05\x1a\x04\xa8E\x9c\x03\x12 \n" +
-	"\x15INVALID_CLOSURE_STATE\x10\xbf\x05\x1a\x04\xa8E\x9c\x03\x12\x1a\n" +
+	"\x13INVALID_MERGE_STATE\x10\xbe\x05\x1a\x04\xa8E\x9c\x03\x12!\n" +
+	"\x16INVALID_DELETION_STATE\x10\xbf\x05\x1a\x04\xa8E\x9c\x03\x12\x1a\n" +
 	"\x0fLAST_CREDENTIAL\x10\xc0\x05\x1a\x04\xa8E\x9c\x03\x12\x1b\n" +
 	"\x10POLICY_VIOLATION\x10\xc1\x05\x1a\x04\xa8E\x9c\x03\x12\x1f\n" +
 	"\x14IDEMPOTENCY_CONFLICT\x10\x84\a\x1a\x04\xa8E\x99\x03\x12\x1f\n" +

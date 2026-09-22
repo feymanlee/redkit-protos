@@ -11,7 +11,7 @@ import "validate/validate.proto";
 
 // RecoveryService 管理未登录恢复申请提交和可信后台初审。
 service RecoveryService {
-  // SubmitRecoveryRequest 仅为恰有一个活动 Credential 的 Account 建立申请；所有验证通过的提交返回同形态 opaque continuation，验证或依赖失败保持可重试错误。
+  // SubmitRecoveryRequest 仅为恰有一个活动 Credential 的 User 建立申请；所有验证通过的提交返回同形态 opaque continuation，验证或依赖失败保持可重试错误。
   rpc SubmitRecoveryRequest(SubmitRecoveryRequestRequest) returns (SubmitRecoveryRequestResponse);
   // CreateTrustedDeviceRecoveryChallenge 为 Request 所属 User 的显式登记可信设备创建短时 Challenge；只持久化摘要。
   rpc CreateTrustedDeviceRecoveryChallenge(CreateTrustedDeviceRecoveryChallengeRequest) returns (TrustedDeviceRecoveryChallenge);
@@ -35,7 +35,7 @@ service RecoveryService {
   rpc CompleteRecoveryRequest(CompleteRecoveryRequestRequest) returns (CompleteRecoveryRequestResponse);
 }
 
-// RecoveryRequestStatus 表示只允许前向推进的 Account Recovery 生命周期。
+// RecoveryRequestStatus 表示只允许前向推进的 User Recovery 生命周期。
 enum RecoveryRequestStatus {
   // 未提供有效取值；调用方不得据此推断业务状态。
   RECOVERY_REQUEST_STATUS_UNSPECIFIED = 0;
@@ -241,7 +241,7 @@ message SubmitRecoveryRequestRequest {
   string idempotency_key = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
 }
 
-// SubmitRecoveryRequestResponse 对所有已通过手机号验证的提交返回同形态 opaque continuation，不表示 Account 或 Request 存在。
+// SubmitRecoveryRequestResponse 对所有已通过手机号验证的提交返回同形态 opaque continuation，不表示 User 或 Request 存在。
 message SubmitRecoveryRequestResponse {
   // continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
   string continuation_token = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
@@ -373,7 +373,7 @@ message ClaimRecoveryGrantRequest {
 
 // ClaimRecoveryGrantResponse 承载 ClaimRecoveryGrant 的返回结果。
 message ClaimRecoveryGrantResponse {
-  // grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+  // grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
   string grant = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
   // expires_at 指定 ClaimRecoveryGrant 失效的时间点。
   google.protobuf.Timestamp expires_at = 2 [(google.api.field_behavior) = REQUIRED];
@@ -383,7 +383,7 @@ message ClaimRecoveryGrantResponse {
 message CompleteRecoveryRequestRequest {
   // app_id 限定 CompleteRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
   common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // grant 承载完成 Account Recovery 所需的一次性授权凭据，不得写入普通日志。
+  // grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
   string grant = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
   // new_phone 承载按约定地区规则规范化的手机号码。
   string new_phone = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {pattern: "^\\+[1-9][0-9]{7,14}$", max_len: 16}];

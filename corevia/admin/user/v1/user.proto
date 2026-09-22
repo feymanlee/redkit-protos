@@ -6,7 +6,6 @@ import "common/pagination/v1/pagination.proto";
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
-import "user/administration/v1/account.proto";
 import "user/administration/v1/administration.proto";
 import "user/administration/v1/credential.proto";
 import "user/administration/v1/profile.proto";
@@ -21,7 +20,7 @@ service UserService {
     option (google.api.http) = {get: "/admin/v1/users"};
   }
   // 获取当前 App 的一个 C 端用户。
-  rpc GetUser(GetAdminUserRequest) returns (.user.administration.v1.Account) {
+  rpc GetUser(GetAdminUserRequest) returns (.user.administration.v1.User) {
     option (google.api.http) = {get: "/admin/v1/users/{user_id}"};
   }
   // 获取当前 App 的一个 C 端用户公开资料。
@@ -29,14 +28,14 @@ service UserService {
     option (google.api.http) = {get: "/admin/v1/users/{user_id}/profile"};
   }
   // 暂停一个 C 端账号。
-  rpc SuspendUser(AdminSuspendUserRequest) returns (.user.administration.v1.Account) {
+  rpc SuspendUser(AdminSuspendUserRequest) returns (.user.administration.v1.User) {
     option (google.api.http) = {
       post: "/admin/v1/users/{user_id}:suspend"
       body: "*"
     };
   }
   // 恢复一个已暂停的 C 端账号。
-  rpc ReactivateUser(AdminReactivateUserRequest) returns (.user.administration.v1.Account) {
+  rpc ReactivateUser(AdminReactivateUserRequest) returns (.user.administration.v1.User) {
     option (google.api.http) = {
       post: "/admin/v1/users/{user_id}:reactivate"
       body: "*"
@@ -50,27 +49,27 @@ service UserService {
     };
   }
   // 由系统生成新的 User Code。
-  rpc ResetUserCode(AdminResetUserCodeRequest) returns (.user.administration.v1.Account) {
+  rpc ResetUserCode(AdminResetUserCodeRequest) returns (.user.administration.v1.User) {
     option (google.api.http) = {
       post: "/admin/v1/users/{user_id}:reset-code"
       body: "*"
     };
   }
-  // 为一个 ACTIVE Account 发起保留冷静期的后台注销流程。
-  rpc BeginAccountClosure(AdminBeginAccountClosureRequest) returns (.user.administration.v1.Account) {
+  // 为一个 ACTIVE User 发起保留冷静期的后台注销流程。
+  rpc BeginUserDeletion(AdminBeginUserDeletionRequest) returns (.user.administration.v1.User) {
     option (google.api.http) = {
-      post: "/admin/v1/users/{user_id}:begin-closure"
+      post: "/admin/v1/users/{user_id}:begin-deletion"
       body: "*"
     };
   }
-  // 获取 User-owned Account Closure Saga 及 participant 进度。
-  rpc GetUserClosure(GetAdminUserRequest) returns (.user.administration.v1.AccountClosure) {
-    option (google.api.http) = {get: "/admin/v1/users/{user_id}/closure"};
+  // 获取 User-owned User Deletion Saga 及 participant 进度。
+  rpc GetUserDeletion(GetAdminUserRequest) returns (.user.administration.v1.UserDeletion) {
+    option (google.api.http) = {get: "/admin/v1/users/{user_id}/deletion"};
   }
-  // 在首个不可逆 Apply 前请求取消 Account Closure。
-  rpc CancelAccountClosure(AdminCancelAccountClosureRequest) returns (.user.administration.v1.AccountClosure) {
+  // 在首个不可逆 Apply 前请求取消 User Deletion。
+  rpc CancelUserDeletion(AdminCancelUserDeletionRequest) returns (.user.administration.v1.UserDeletion) {
     option (google.api.http) = {
-      post: "/admin/v1/users/{user_id}:cancel-closure"
+      post: "/admin/v1/users/{user_id}:cancel-deletion"
       body: "*"
     };
   }
@@ -111,7 +110,7 @@ message GetAdminUserRequest {
 message AdminListUsersRequest {
   // search selects one explicit User lookup strategy.
   .user.administration.v1.UserSearchQuery search = 1;
-  // filter contains the supported Account and security filters.
+  // filter contains the supported User and security filters.
   .user.administration.v1.UserSearchFilter filter = 2;
   // paging controls the bounded result page.
   .common.pagination.v1.PagingRequest paging = 3;
@@ -125,7 +124,7 @@ message AdminSuspendUserRequest {
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 3;
   // reason_code 提供机器可判断的业务原因分类。
-  .user.administration.v1.AccountSuspensionReason reason_code = 4 [
+  .user.administration.v1.UserSuspensionReason reason_code = 4 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).enum = {
       defined_only: true
@@ -142,7 +141,7 @@ message AdminReactivateUserRequest {
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 2;
   // reason_code 提供机器可判断的业务原因分类。
-  .user.administration.v1.AccountReactivationReason reason_code = 3 [
+  .user.administration.v1.UserReactivationReason reason_code = 3 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).enum = {
       defined_only: true
@@ -216,8 +215,8 @@ message AdminResetUserCodeRequest {
     }
   ];
 }
-// AdminBeginAccountClosureRequest 定义开始 AccountClosure 的幂等管理命令参数。
-message AdminBeginAccountClosureRequest {
+// AdminBeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
+message AdminBeginUserDeletionRequest {
   // user_id 标识当前 App 内关联的 User。
   uint64 user_id = 1 [
     (google.api.field_behavior) = REQUIRED,
@@ -240,8 +239,8 @@ message AdminBeginAccountClosureRequest {
     }
   ];
 }
-// AdminCancelAccountClosureRequest 定义取消 AccountClosure 的幂等管理命令参数。
-message AdminCancelAccountClosureRequest {
+// AdminCancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
+message AdminCancelUserDeletionRequest {
   // user_id 标识当前 App 内关联的 User。
   uint64 user_id = 1 [
     (google.api.field_behavior) = REQUIRED,

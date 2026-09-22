@@ -20,10 +20,10 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationUserServiceBeginAccountClosure = "/admin.user.v1.UserService/BeginAccountClosure"
-const OperationUserServiceCancelAccountClosure = "/admin.user.v1.UserService/CancelAccountClosure"
+const OperationUserServiceBeginUserDeletion = "/admin.user.v1.UserService/BeginUserDeletion"
+const OperationUserServiceCancelUserDeletion = "/admin.user.v1.UserService/CancelUserDeletion"
 const OperationUserServiceGetUser = "/admin.user.v1.UserService/GetUser"
-const OperationUserServiceGetUserClosure = "/admin.user.v1.UserService/GetUserClosure"
+const OperationUserServiceGetUserDeletion = "/admin.user.v1.UserService/GetUserDeletion"
 const OperationUserServiceGetUserProfile = "/admin.user.v1.UserService/GetUserProfile"
 const OperationUserServiceListUserAdminActions = "/admin.user.v1.UserService/ListUserAdminActions"
 const OperationUserServiceListUserCredentials = "/admin.user.v1.UserService/ListUserCredentials"
@@ -37,14 +37,14 @@ const OperationUserServiceRevealUserPII = "/admin.user.v1.UserService/RevealUser
 const OperationUserServiceSuspendUser = "/admin.user.v1.UserService/SuspendUser"
 
 type UserServiceHTTPServer interface {
-	// BeginAccountClosure 为一个 ACTIVE Account 发起保留冷静期的后台注销流程。
-	BeginAccountClosure(context.Context, *AdminBeginAccountClosureRequest) (*v1.Account, error)
-	// CancelAccountClosure 在首个不可逆 Apply 前请求取消 Account Closure。
-	CancelAccountClosure(context.Context, *AdminCancelAccountClosureRequest) (*v1.AccountClosure, error)
+	// BeginUserDeletion 为一个 ACTIVE User 发起保留冷静期的后台注销流程。
+	BeginUserDeletion(context.Context, *AdminBeginUserDeletionRequest) (*v1.User, error)
+	// CancelUserDeletion 在首个不可逆 Apply 前请求取消 User Deletion。
+	CancelUserDeletion(context.Context, *AdminCancelUserDeletionRequest) (*v1.UserDeletion, error)
 	// GetUser 获取当前 App 的一个 C 端用户。
-	GetUser(context.Context, *GetAdminUserRequest) (*v1.Account, error)
-	// GetUserClosure 获取 User-owned Account Closure Saga 及 participant 进度。
-	GetUserClosure(context.Context, *GetAdminUserRequest) (*v1.AccountClosure, error)
+	GetUser(context.Context, *GetAdminUserRequest) (*v1.User, error)
+	// GetUserDeletion 获取 User-owned User Deletion Saga 及 participant 进度。
+	GetUserDeletion(context.Context, *GetAdminUserRequest) (*v1.UserDeletion, error)
 	// GetUserProfile 获取当前 App 的一个 C 端用户公开资料。
 	GetUserProfile(context.Context, *GetAdminUserRequest) (*v1.Profile, error)
 	// ListUserAdminActions 查询后台对该用户执行的高风险操作审计。
@@ -58,15 +58,15 @@ type UserServiceHTTPServer interface {
 	// ModerateUserProfile 清理或重置允许处置的公开资料字段。
 	ModerateUserProfile(context.Context, *AdminModerateUserProfileRequest) (*v1.Profile, error)
 	// ReactivateUser 恢复一个已暂停的 C 端账号。
-	ReactivateUser(context.Context, *AdminReactivateUserRequest) (*v1.Account, error)
+	ReactivateUser(context.Context, *AdminReactivateUserRequest) (*v1.User, error)
 	// ResendUserSecurityNotice 为当前 User 的最新 FAILED Security Notice 创建新的投递 attempt。
 	ResendUserSecurityNotice(context.Context, *AdminResendUserSecurityNoticeRequest) (*v1.SecurityNotice, error)
 	// ResetUserCode 由系统生成新的 User Code。
-	ResetUserCode(context.Context, *AdminResetUserCodeRequest) (*v1.Account, error)
+	ResetUserCode(context.Context, *AdminResetUserCodeRequest) (*v1.User, error)
 	// RevealUserPII 在独立权限校验后按审计原因查看完整手机号或邮箱。
 	RevealUserPII(context.Context, *AdminRevealUserPIIRequest) (*v1.ListCredentialPIIResponse, error)
 	// SuspendUser 暂停一个 C 端账号。
-	SuspendUser(context.Context, *AdminSuspendUserRequest) (*v1.Account, error)
+	SuspendUser(context.Context, *AdminSuspendUserRequest) (*v1.User, error)
 }
 
 func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
@@ -78,9 +78,9 @@ func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r.POST("/admin/v1/users/{user_id}:reactivate", _UserService_ReactivateUser0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/{user_id}/profile:moderate", _UserService_ModerateUserProfile0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/{user_id}:reset-code", _UserService_ResetUserCode0_HTTP_Handler(srv))
-	r.POST("/admin/v1/users/{user_id}:begin-closure", _UserService_BeginAccountClosure0_HTTP_Handler(srv))
-	r.GET("/admin/v1/users/{user_id}/closure", _UserService_GetUserClosure0_HTTP_Handler(srv))
-	r.POST("/admin/v1/users/{user_id}:cancel-closure", _UserService_CancelAccountClosure0_HTTP_Handler(srv))
+	r.POST("/admin/v1/users/{user_id}:begin-deletion", _UserService_BeginUserDeletion0_HTTP_Handler(srv))
+	r.GET("/admin/v1/users/{user_id}/deletion", _UserService_GetUserDeletion0_HTTP_Handler(srv))
+	r.POST("/admin/v1/users/{user_id}:cancel-deletion", _UserService_CancelUserDeletion0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/{user_id}/credentials", _UserService_ListUserCredentials0_HTTP_Handler(srv))
 	r.POST("/admin/v1/users/{user_id}:reveal-pii", _UserService_RevealUserPII0_HTTP_Handler(srv))
 	r.GET("/admin/v1/users/{user_id}/admin-actions", _UserService_ListUserAdminActions0_HTTP_Handler(srv))
@@ -124,7 +124,7 @@ func _UserService_GetUser0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Account)
+		reply := out.(*v1.User)
 		return ctx.Result(200, reply)
 	}
 }
@@ -171,7 +171,7 @@ func _UserService_SuspendUser0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx 
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Account)
+		reply := out.(*v1.User)
 		return ctx.Result(200, reply)
 	}
 }
@@ -196,7 +196,7 @@ func _UserService_ReactivateUser0_HTTP_Handler(srv UserServiceHTTPServer) func(c
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Account)
+		reply := out.(*v1.User)
 		return ctx.Result(200, reply)
 	}
 }
@@ -246,14 +246,14 @@ func _UserService_ResetUserCode0_HTTP_Handler(srv UserServiceHTTPServer) func(ct
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Account)
+		reply := out.(*v1.User)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _UserService_BeginAccountClosure0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+func _UserService_BeginUserDeletion0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AdminBeginAccountClosureRequest
+		var in AdminBeginUserDeletionRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -263,20 +263,20 @@ func _UserService_BeginAccountClosure0_HTTP_Handler(srv UserServiceHTTPServer) f
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserServiceBeginAccountClosure)
+		http.SetOperation(ctx, OperationUserServiceBeginUserDeletion)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.BeginAccountClosure(ctx, req.(*AdminBeginAccountClosureRequest))
+			return srv.BeginUserDeletion(ctx, req.(*AdminBeginUserDeletionRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.Account)
+		reply := out.(*v1.User)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _UserService_GetUserClosure0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+func _UserService_GetUserDeletion0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetAdminUserRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -285,22 +285,22 @@ func _UserService_GetUserClosure0_HTTP_Handler(srv UserServiceHTTPServer) func(c
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserServiceGetUserClosure)
+		http.SetOperation(ctx, OperationUserServiceGetUserDeletion)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetUserClosure(ctx, req.(*GetAdminUserRequest))
+			return srv.GetUserDeletion(ctx, req.(*GetAdminUserRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.AccountClosure)
+		reply := out.(*v1.UserDeletion)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _UserService_CancelAccountClosure0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+func _UserService_CancelUserDeletion0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AdminCancelAccountClosureRequest
+		var in AdminCancelUserDeletionRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -310,15 +310,15 @@ func _UserService_CancelAccountClosure0_HTTP_Handler(srv UserServiceHTTPServer) 
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserServiceCancelAccountClosure)
+		http.SetOperation(ctx, OperationUserServiceCancelUserDeletion)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CancelAccountClosure(ctx, req.(*AdminCancelAccountClosureRequest))
+			return srv.CancelUserDeletion(ctx, req.(*AdminCancelUserDeletionRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*v1.AccountClosure)
+		reply := out.(*v1.UserDeletion)
 		return ctx.Result(200, reply)
 	}
 }
@@ -440,14 +440,14 @@ func _UserService_ResendUserSecurityNotice0_HTTP_Handler(srv UserServiceHTTPServ
 }
 
 type UserServiceHTTPClient interface {
-	// BeginAccountClosure 为一个 ACTIVE Account 发起保留冷静期的后台注销流程。
-	BeginAccountClosure(ctx context.Context, req *AdminBeginAccountClosureRequest, opts ...http.CallOption) (rsp *v1.Account, err error)
-	// CancelAccountClosure 在首个不可逆 Apply 前请求取消 Account Closure。
-	CancelAccountClosure(ctx context.Context, req *AdminCancelAccountClosureRequest, opts ...http.CallOption) (rsp *v1.AccountClosure, err error)
+	// BeginUserDeletion 为一个 ACTIVE User 发起保留冷静期的后台注销流程。
+	BeginUserDeletion(ctx context.Context, req *AdminBeginUserDeletionRequest, opts ...http.CallOption) (rsp *v1.User, err error)
+	// CancelUserDeletion 在首个不可逆 Apply 前请求取消 User Deletion。
+	CancelUserDeletion(ctx context.Context, req *AdminCancelUserDeletionRequest, opts ...http.CallOption) (rsp *v1.UserDeletion, err error)
 	// GetUser 获取当前 App 的一个 C 端用户。
-	GetUser(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.Account, err error)
-	// GetUserClosure 获取 User-owned Account Closure Saga 及 participant 进度。
-	GetUserClosure(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.AccountClosure, err error)
+	GetUser(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.User, err error)
+	// GetUserDeletion 获取 User-owned User Deletion Saga 及 participant 进度。
+	GetUserDeletion(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.UserDeletion, err error)
 	// GetUserProfile 获取当前 App 的一个 C 端用户公开资料。
 	GetUserProfile(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.Profile, err error)
 	// ListUserAdminActions 查询后台对该用户执行的高风险操作审计。
@@ -461,15 +461,15 @@ type UserServiceHTTPClient interface {
 	// ModerateUserProfile 清理或重置允许处置的公开资料字段。
 	ModerateUserProfile(ctx context.Context, req *AdminModerateUserProfileRequest, opts ...http.CallOption) (rsp *v1.Profile, err error)
 	// ReactivateUser 恢复一个已暂停的 C 端账号。
-	ReactivateUser(ctx context.Context, req *AdminReactivateUserRequest, opts ...http.CallOption) (rsp *v1.Account, err error)
+	ReactivateUser(ctx context.Context, req *AdminReactivateUserRequest, opts ...http.CallOption) (rsp *v1.User, err error)
 	// ResendUserSecurityNotice 为当前 User 的最新 FAILED Security Notice 创建新的投递 attempt。
 	ResendUserSecurityNotice(ctx context.Context, req *AdminResendUserSecurityNoticeRequest, opts ...http.CallOption) (rsp *v1.SecurityNotice, err error)
 	// ResetUserCode 由系统生成新的 User Code。
-	ResetUserCode(ctx context.Context, req *AdminResetUserCodeRequest, opts ...http.CallOption) (rsp *v1.Account, err error)
+	ResetUserCode(ctx context.Context, req *AdminResetUserCodeRequest, opts ...http.CallOption) (rsp *v1.User, err error)
 	// RevealUserPII 在独立权限校验后按审计原因查看完整手机号或邮箱。
 	RevealUserPII(ctx context.Context, req *AdminRevealUserPIIRequest, opts ...http.CallOption) (rsp *v1.ListCredentialPIIResponse, err error)
 	// SuspendUser 暂停一个 C 端账号。
-	SuspendUser(ctx context.Context, req *AdminSuspendUserRequest, opts ...http.CallOption) (rsp *v1.Account, err error)
+	SuspendUser(ctx context.Context, req *AdminSuspendUserRequest, opts ...http.CallOption) (rsp *v1.User, err error)
 }
 
 type UserServiceHTTPClientImpl struct {
@@ -480,12 +480,12 @@ func NewUserServiceHTTPClient(client *http.Client) UserServiceHTTPClient {
 	return &UserServiceHTTPClientImpl{client}
 }
 
-// BeginAccountClosure 为一个 ACTIVE Account 发起保留冷静期的后台注销流程。
-func (c *UserServiceHTTPClientImpl) BeginAccountClosure(ctx context.Context, in *AdminBeginAccountClosureRequest, opts ...http.CallOption) (*v1.Account, error) {
-	var out v1.Account
-	pattern := "/admin/v1/users/{user_id}:begin-closure"
+// BeginUserDeletion 为一个 ACTIVE User 发起保留冷静期的后台注销流程。
+func (c *UserServiceHTTPClientImpl) BeginUserDeletion(ctx context.Context, in *AdminBeginUserDeletionRequest, opts ...http.CallOption) (*v1.User, error) {
+	var out v1.User
+	pattern := "/admin/v1/users/{user_id}:begin-deletion"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUserServiceBeginAccountClosure))
+	opts = append(opts, http.Operation(OperationUserServiceBeginUserDeletion))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -494,12 +494,12 @@ func (c *UserServiceHTTPClientImpl) BeginAccountClosure(ctx context.Context, in 
 	return &out, nil
 }
 
-// CancelAccountClosure 在首个不可逆 Apply 前请求取消 Account Closure。
-func (c *UserServiceHTTPClientImpl) CancelAccountClosure(ctx context.Context, in *AdminCancelAccountClosureRequest, opts ...http.CallOption) (*v1.AccountClosure, error) {
-	var out v1.AccountClosure
-	pattern := "/admin/v1/users/{user_id}:cancel-closure"
+// CancelUserDeletion 在首个不可逆 Apply 前请求取消 User Deletion。
+func (c *UserServiceHTTPClientImpl) CancelUserDeletion(ctx context.Context, in *AdminCancelUserDeletionRequest, opts ...http.CallOption) (*v1.UserDeletion, error) {
+	var out v1.UserDeletion
+	pattern := "/admin/v1/users/{user_id}:cancel-deletion"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUserServiceCancelAccountClosure))
+	opts = append(opts, http.Operation(OperationUserServiceCancelUserDeletion))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -509,8 +509,8 @@ func (c *UserServiceHTTPClientImpl) CancelAccountClosure(ctx context.Context, in
 }
 
 // GetUser 获取当前 App 的一个 C 端用户。
-func (c *UserServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetAdminUserRequest, opts ...http.CallOption) (*v1.Account, error) {
-	var out v1.Account
+func (c *UserServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetAdminUserRequest, opts ...http.CallOption) (*v1.User, error) {
+	var out v1.User
 	pattern := "/admin/v1/users/{user_id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserServiceGetUser))
@@ -522,12 +522,12 @@ func (c *UserServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetAdminUse
 	return &out, nil
 }
 
-// GetUserClosure 获取 User-owned Account Closure Saga 及 participant 进度。
-func (c *UserServiceHTTPClientImpl) GetUserClosure(ctx context.Context, in *GetAdminUserRequest, opts ...http.CallOption) (*v1.AccountClosure, error) {
-	var out v1.AccountClosure
-	pattern := "/admin/v1/users/{user_id}/closure"
+// GetUserDeletion 获取 User-owned User Deletion Saga 及 participant 进度。
+func (c *UserServiceHTTPClientImpl) GetUserDeletion(ctx context.Context, in *GetAdminUserRequest, opts ...http.CallOption) (*v1.UserDeletion, error) {
+	var out v1.UserDeletion
+	pattern := "/admin/v1/users/{user_id}/deletion"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationUserServiceGetUserClosure))
+	opts = append(opts, http.Operation(OperationUserServiceGetUserDeletion))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -621,8 +621,8 @@ func (c *UserServiceHTTPClientImpl) ModerateUserProfile(ctx context.Context, in 
 }
 
 // ReactivateUser 恢复一个已暂停的 C 端账号。
-func (c *UserServiceHTTPClientImpl) ReactivateUser(ctx context.Context, in *AdminReactivateUserRequest, opts ...http.CallOption) (*v1.Account, error) {
-	var out v1.Account
+func (c *UserServiceHTTPClientImpl) ReactivateUser(ctx context.Context, in *AdminReactivateUserRequest, opts ...http.CallOption) (*v1.User, error) {
+	var out v1.User
 	pattern := "/admin/v1/users/{user_id}:reactivate"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceReactivateUser))
@@ -649,8 +649,8 @@ func (c *UserServiceHTTPClientImpl) ResendUserSecurityNotice(ctx context.Context
 }
 
 // ResetUserCode 由系统生成新的 User Code。
-func (c *UserServiceHTTPClientImpl) ResetUserCode(ctx context.Context, in *AdminResetUserCodeRequest, opts ...http.CallOption) (*v1.Account, error) {
-	var out v1.Account
+func (c *UserServiceHTTPClientImpl) ResetUserCode(ctx context.Context, in *AdminResetUserCodeRequest, opts ...http.CallOption) (*v1.User, error) {
+	var out v1.User
 	pattern := "/admin/v1/users/{user_id}:reset-code"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceResetUserCode))
@@ -677,8 +677,8 @@ func (c *UserServiceHTTPClientImpl) RevealUserPII(ctx context.Context, in *Admin
 }
 
 // SuspendUser 暂停一个 C 端账号。
-func (c *UserServiceHTTPClientImpl) SuspendUser(ctx context.Context, in *AdminSuspendUserRequest, opts ...http.CallOption) (*v1.Account, error) {
-	var out v1.Account
+func (c *UserServiceHTTPClientImpl) SuspendUser(ctx context.Context, in *AdminSuspendUserRequest, opts ...http.CallOption) (*v1.User, error) {
+	var out v1.User
 	pattern := "/admin/v1/users/{user_id}:suspend"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceSuspendUser))

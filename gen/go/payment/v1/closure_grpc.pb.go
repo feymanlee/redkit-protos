@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// PaymentClosureService 暴露 Account Closure 使用的窄 Payment participant 契约。
+// PaymentClosureService 暴露 User Deletion 使用的窄 Payment participant 契约。
 type PaymentClosureServiceClient interface {
 	// PrepareClosure 建立 Payment fence，取消未来续费并报告安全 blocker。
 	PrepareClosure(ctx context.Context, in *PrepareClosureRequest, opts ...grpc.CallOption) (*ClosureParticipantState, error)
@@ -93,7 +93,7 @@ func (c *paymentClosureServiceClient) GetClosureStatus(ctx context.Context, in *
 // All implementations must embed UnimplementedPaymentClosureServiceServer
 // for forward compatibility.
 //
-// PaymentClosureService 暴露 Account Closure 使用的窄 Payment participant 契约。
+// PaymentClosureService 暴露 User Deletion 使用的窄 Payment participant 契约。
 type PaymentClosureServiceServer interface {
 	// PrepareClosure 建立 Payment fence，取消未来续费并报告安全 blocker。
 	PrepareClosure(context.Context, *PrepareClosureRequest) (*ClosureParticipantState, error)

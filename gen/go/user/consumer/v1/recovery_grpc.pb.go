@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ConsumerRecoveryService_StartAccountRecovery_FullMethodName                 = "/user.consumer.v1.ConsumerRecoveryService/StartAccountRecovery"
-	ConsumerRecoveryService_GetAccountRecovery_FullMethodName                   = "/user.consumer.v1.ConsumerRecoveryService/GetAccountRecovery"
-	ConsumerRecoveryService_CancelAccountRecovery_FullMethodName                = "/user.consumer.v1.ConsumerRecoveryService/CancelAccountRecovery"
+	ConsumerRecoveryService_StartUserRecovery_FullMethodName                    = "/user.consumer.v1.ConsumerRecoveryService/StartUserRecovery"
+	ConsumerRecoveryService_GetUserRecovery_FullMethodName                      = "/user.consumer.v1.ConsumerRecoveryService/GetUserRecovery"
+	ConsumerRecoveryService_CancelUserRecovery_FullMethodName                   = "/user.consumer.v1.ConsumerRecoveryService/CancelUserRecovery"
 	ConsumerRecoveryService_CreateTrustedDeviceRecoveryChallenge_FullMethodName = "/user.consumer.v1.ConsumerRecoveryService/CreateTrustedDeviceRecoveryChallenge"
 	ConsumerRecoveryService_VerifyTrustedDeviceRecoveryChallenge_FullMethodName = "/user.consumer.v1.ConsumerRecoveryService/VerifyTrustedDeviceRecoveryChallenge"
 	ConsumerRecoveryService_SubmitPaymentRecoveryEvidence_FullMethodName        = "/user.consumer.v1.ConsumerRecoveryService/SubmitPaymentRecoveryEvidence"
 	ConsumerRecoveryService_ClaimRecoveryGrant_FullMethodName                   = "/user.consumer.v1.ConsumerRecoveryService/ClaimRecoveryGrant"
-	ConsumerRecoveryService_CompleteAccountRecovery_FullMethodName              = "/user.consumer.v1.ConsumerRecoveryService/CompleteAccountRecovery"
+	ConsumerRecoveryService_CompleteUserRecovery_FullMethodName                 = "/user.consumer.v1.ConsumerRecoveryService/CompleteUserRecovery"
 )
 
 // ConsumerRecoveryServiceClient is the client API for ConsumerRecoveryService service.
@@ -35,12 +35,12 @@ const (
 //
 // C 端账号恢复服务，通过短期 continuation、恢复证据和一次性 grant 推进账号恢复。
 type ConsumerRecoveryServiceClient interface {
-	// 使用账号定位信息、新手机号验证票据和幂等键发起 AccountRecovery，返回不透明 continuation。
-	StartAccountRecovery(ctx context.Context, in *StartAccountRecoveryRequest, opts ...grpc.CallOption) (*StartAccountRecoveryResponse, error)
+	// 使用账号定位信息、新手机号验证票据和幂等键发起 UserRecovery，返回不透明 continuation。
+	StartUserRecovery(ctx context.Context, in *StartUserRecoveryRequest, opts ...grpc.CallOption) (*StartUserRecoveryResponse, error)
 	// 使用 recovery_continuation 查询恢复状态和所需证据，不暴露账号敏感详情。
-	GetAccountRecovery(ctx context.Context, in *GetAccountRecoveryRequest, opts ...grpc.CallOption) (*AccountRecovery, error)
-	// 使用 recovery_continuation 幂等取消仍可取消的 AccountRecovery。
-	CancelAccountRecovery(ctx context.Context, in *CancelAccountRecoveryRequest, opts ...grpc.CallOption) (*AccountRecovery, error)
+	GetUserRecovery(ctx context.Context, in *GetUserRecoveryRequest, opts ...grpc.CallOption) (*UserRecovery, error)
+	// 使用 recovery_continuation 幂等取消仍可取消的 UserRecovery。
+	CancelUserRecovery(ctx context.Context, in *CancelUserRecoveryRequest, opts ...grpc.CallOption) (*UserRecovery, error)
 	// 为当前恢复流程中的受信设备幂等创建短期签名挑战。
 	CreateTrustedDeviceRecoveryChallenge(ctx context.Context, in *CreateTrustedDeviceRecoveryChallengeRequest, opts ...grpc.CallOption) (*TrustedDeviceRecoveryChallenge, error)
 	// 验证受信设备对指定 challenge 的签名，并记录恢复证据结果。
@@ -50,7 +50,7 @@ type ConsumerRecoveryServiceClient interface {
 	// 在恢复流程已满足证据要求时幂等领取短期一次性 RecoveryGrant。
 	ClaimRecoveryGrant(ctx context.Context, in *ClaimRecoveryGrantRequest, opts ...grpc.CallOption) (*RecoveryGrant, error)
 	// 使用 RecoveryGrant 和新手机号验证票据幂等完成账号恢复。
-	CompleteAccountRecovery(ctx context.Context, in *CompleteAccountRecoveryRequest, opts ...grpc.CallOption) (*CompleteAccountRecoveryResponse, error)
+	CompleteUserRecovery(ctx context.Context, in *CompleteUserRecoveryRequest, opts ...grpc.CallOption) (*CompleteUserRecoveryResponse, error)
 }
 
 type consumerRecoveryServiceClient struct {
@@ -61,30 +61,30 @@ func NewConsumerRecoveryServiceClient(cc grpc.ClientConnInterface) ConsumerRecov
 	return &consumerRecoveryServiceClient{cc}
 }
 
-func (c *consumerRecoveryServiceClient) StartAccountRecovery(ctx context.Context, in *StartAccountRecoveryRequest, opts ...grpc.CallOption) (*StartAccountRecoveryResponse, error) {
+func (c *consumerRecoveryServiceClient) StartUserRecovery(ctx context.Context, in *StartUserRecoveryRequest, opts ...grpc.CallOption) (*StartUserRecoveryResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(StartAccountRecoveryResponse)
-	err := c.cc.Invoke(ctx, ConsumerRecoveryService_StartAccountRecovery_FullMethodName, in, out, cOpts...)
+	out := new(StartUserRecoveryResponse)
+	err := c.cc.Invoke(ctx, ConsumerRecoveryService_StartUserRecovery_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *consumerRecoveryServiceClient) GetAccountRecovery(ctx context.Context, in *GetAccountRecoveryRequest, opts ...grpc.CallOption) (*AccountRecovery, error) {
+func (c *consumerRecoveryServiceClient) GetUserRecovery(ctx context.Context, in *GetUserRecoveryRequest, opts ...grpc.CallOption) (*UserRecovery, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AccountRecovery)
-	err := c.cc.Invoke(ctx, ConsumerRecoveryService_GetAccountRecovery_FullMethodName, in, out, cOpts...)
+	out := new(UserRecovery)
+	err := c.cc.Invoke(ctx, ConsumerRecoveryService_GetUserRecovery_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *consumerRecoveryServiceClient) CancelAccountRecovery(ctx context.Context, in *CancelAccountRecoveryRequest, opts ...grpc.CallOption) (*AccountRecovery, error) {
+func (c *consumerRecoveryServiceClient) CancelUserRecovery(ctx context.Context, in *CancelUserRecoveryRequest, opts ...grpc.CallOption) (*UserRecovery, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AccountRecovery)
-	err := c.cc.Invoke(ctx, ConsumerRecoveryService_CancelAccountRecovery_FullMethodName, in, out, cOpts...)
+	out := new(UserRecovery)
+	err := c.cc.Invoke(ctx, ConsumerRecoveryService_CancelUserRecovery_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -131,10 +131,10 @@ func (c *consumerRecoveryServiceClient) ClaimRecoveryGrant(ctx context.Context, 
 	return out, nil
 }
 
-func (c *consumerRecoveryServiceClient) CompleteAccountRecovery(ctx context.Context, in *CompleteAccountRecoveryRequest, opts ...grpc.CallOption) (*CompleteAccountRecoveryResponse, error) {
+func (c *consumerRecoveryServiceClient) CompleteUserRecovery(ctx context.Context, in *CompleteUserRecoveryRequest, opts ...grpc.CallOption) (*CompleteUserRecoveryResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CompleteAccountRecoveryResponse)
-	err := c.cc.Invoke(ctx, ConsumerRecoveryService_CompleteAccountRecovery_FullMethodName, in, out, cOpts...)
+	out := new(CompleteUserRecoveryResponse)
+	err := c.cc.Invoke(ctx, ConsumerRecoveryService_CompleteUserRecovery_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -147,12 +147,12 @@ func (c *consumerRecoveryServiceClient) CompleteAccountRecovery(ctx context.Cont
 //
 // C 端账号恢复服务，通过短期 continuation、恢复证据和一次性 grant 推进账号恢复。
 type ConsumerRecoveryServiceServer interface {
-	// 使用账号定位信息、新手机号验证票据和幂等键发起 AccountRecovery，返回不透明 continuation。
-	StartAccountRecovery(context.Context, *StartAccountRecoveryRequest) (*StartAccountRecoveryResponse, error)
+	// 使用账号定位信息、新手机号验证票据和幂等键发起 UserRecovery，返回不透明 continuation。
+	StartUserRecovery(context.Context, *StartUserRecoveryRequest) (*StartUserRecoveryResponse, error)
 	// 使用 recovery_continuation 查询恢复状态和所需证据，不暴露账号敏感详情。
-	GetAccountRecovery(context.Context, *GetAccountRecoveryRequest) (*AccountRecovery, error)
-	// 使用 recovery_continuation 幂等取消仍可取消的 AccountRecovery。
-	CancelAccountRecovery(context.Context, *CancelAccountRecoveryRequest) (*AccountRecovery, error)
+	GetUserRecovery(context.Context, *GetUserRecoveryRequest) (*UserRecovery, error)
+	// 使用 recovery_continuation 幂等取消仍可取消的 UserRecovery。
+	CancelUserRecovery(context.Context, *CancelUserRecoveryRequest) (*UserRecovery, error)
 	// 为当前恢复流程中的受信设备幂等创建短期签名挑战。
 	CreateTrustedDeviceRecoveryChallenge(context.Context, *CreateTrustedDeviceRecoveryChallengeRequest) (*TrustedDeviceRecoveryChallenge, error)
 	// 验证受信设备对指定 challenge 的签名，并记录恢复证据结果。
@@ -162,7 +162,7 @@ type ConsumerRecoveryServiceServer interface {
 	// 在恢复流程已满足证据要求时幂等领取短期一次性 RecoveryGrant。
 	ClaimRecoveryGrant(context.Context, *ClaimRecoveryGrantRequest) (*RecoveryGrant, error)
 	// 使用 RecoveryGrant 和新手机号验证票据幂等完成账号恢复。
-	CompleteAccountRecovery(context.Context, *CompleteAccountRecoveryRequest) (*CompleteAccountRecoveryResponse, error)
+	CompleteUserRecovery(context.Context, *CompleteUserRecoveryRequest) (*CompleteUserRecoveryResponse, error)
 	mustEmbedUnimplementedConsumerRecoveryServiceServer()
 }
 
@@ -173,14 +173,14 @@ type ConsumerRecoveryServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedConsumerRecoveryServiceServer struct{}
 
-func (UnimplementedConsumerRecoveryServiceServer) StartAccountRecovery(context.Context, *StartAccountRecoveryRequest) (*StartAccountRecoveryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method StartAccountRecovery not implemented")
+func (UnimplementedConsumerRecoveryServiceServer) StartUserRecovery(context.Context, *StartUserRecoveryRequest) (*StartUserRecoveryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartUserRecovery not implemented")
 }
-func (UnimplementedConsumerRecoveryServiceServer) GetAccountRecovery(context.Context, *GetAccountRecoveryRequest) (*AccountRecovery, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAccountRecovery not implemented")
+func (UnimplementedConsumerRecoveryServiceServer) GetUserRecovery(context.Context, *GetUserRecoveryRequest) (*UserRecovery, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserRecovery not implemented")
 }
-func (UnimplementedConsumerRecoveryServiceServer) CancelAccountRecovery(context.Context, *CancelAccountRecoveryRequest) (*AccountRecovery, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CancelAccountRecovery not implemented")
+func (UnimplementedConsumerRecoveryServiceServer) CancelUserRecovery(context.Context, *CancelUserRecoveryRequest) (*UserRecovery, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelUserRecovery not implemented")
 }
 func (UnimplementedConsumerRecoveryServiceServer) CreateTrustedDeviceRecoveryChallenge(context.Context, *CreateTrustedDeviceRecoveryChallengeRequest) (*TrustedDeviceRecoveryChallenge, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTrustedDeviceRecoveryChallenge not implemented")
@@ -194,8 +194,8 @@ func (UnimplementedConsumerRecoveryServiceServer) SubmitPaymentRecoveryEvidence(
 func (UnimplementedConsumerRecoveryServiceServer) ClaimRecoveryGrant(context.Context, *ClaimRecoveryGrantRequest) (*RecoveryGrant, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ClaimRecoveryGrant not implemented")
 }
-func (UnimplementedConsumerRecoveryServiceServer) CompleteAccountRecovery(context.Context, *CompleteAccountRecoveryRequest) (*CompleteAccountRecoveryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CompleteAccountRecovery not implemented")
+func (UnimplementedConsumerRecoveryServiceServer) CompleteUserRecovery(context.Context, *CompleteUserRecoveryRequest) (*CompleteUserRecoveryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompleteUserRecovery not implemented")
 }
 func (UnimplementedConsumerRecoveryServiceServer) mustEmbedUnimplementedConsumerRecoveryServiceServer() {
 }
@@ -219,56 +219,56 @@ func RegisterConsumerRecoveryServiceServer(s grpc.ServiceRegistrar, srv Consumer
 	s.RegisterService(&ConsumerRecoveryService_ServiceDesc, srv)
 }
 
-func _ConsumerRecoveryService_StartAccountRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StartAccountRecoveryRequest)
+func _ConsumerRecoveryService_StartUserRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartUserRecoveryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConsumerRecoveryServiceServer).StartAccountRecovery(ctx, in)
+		return srv.(ConsumerRecoveryServiceServer).StartUserRecovery(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ConsumerRecoveryService_StartAccountRecovery_FullMethodName,
+		FullMethod: ConsumerRecoveryService_StartUserRecovery_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConsumerRecoveryServiceServer).StartAccountRecovery(ctx, req.(*StartAccountRecoveryRequest))
+		return srv.(ConsumerRecoveryServiceServer).StartUserRecovery(ctx, req.(*StartUserRecoveryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ConsumerRecoveryService_GetAccountRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAccountRecoveryRequest)
+func _ConsumerRecoveryService_GetUserRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRecoveryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConsumerRecoveryServiceServer).GetAccountRecovery(ctx, in)
+		return srv.(ConsumerRecoveryServiceServer).GetUserRecovery(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ConsumerRecoveryService_GetAccountRecovery_FullMethodName,
+		FullMethod: ConsumerRecoveryService_GetUserRecovery_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConsumerRecoveryServiceServer).GetAccountRecovery(ctx, req.(*GetAccountRecoveryRequest))
+		return srv.(ConsumerRecoveryServiceServer).GetUserRecovery(ctx, req.(*GetUserRecoveryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ConsumerRecoveryService_CancelAccountRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CancelAccountRecoveryRequest)
+func _ConsumerRecoveryService_CancelUserRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelUserRecoveryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConsumerRecoveryServiceServer).CancelAccountRecovery(ctx, in)
+		return srv.(ConsumerRecoveryServiceServer).CancelUserRecovery(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ConsumerRecoveryService_CancelAccountRecovery_FullMethodName,
+		FullMethod: ConsumerRecoveryService_CancelUserRecovery_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConsumerRecoveryServiceServer).CancelAccountRecovery(ctx, req.(*CancelAccountRecoveryRequest))
+		return srv.(ConsumerRecoveryServiceServer).CancelUserRecovery(ctx, req.(*CancelUserRecoveryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -345,20 +345,20 @@ func _ConsumerRecoveryService_ClaimRecoveryGrant_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ConsumerRecoveryService_CompleteAccountRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CompleteAccountRecoveryRequest)
+func _ConsumerRecoveryService_CompleteUserRecovery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteUserRecoveryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConsumerRecoveryServiceServer).CompleteAccountRecovery(ctx, in)
+		return srv.(ConsumerRecoveryServiceServer).CompleteUserRecovery(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ConsumerRecoveryService_CompleteAccountRecovery_FullMethodName,
+		FullMethod: ConsumerRecoveryService_CompleteUserRecovery_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConsumerRecoveryServiceServer).CompleteAccountRecovery(ctx, req.(*CompleteAccountRecoveryRequest))
+		return srv.(ConsumerRecoveryServiceServer).CompleteUserRecovery(ctx, req.(*CompleteUserRecoveryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -371,16 +371,16 @@ var ConsumerRecoveryService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ConsumerRecoveryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "StartAccountRecovery",
-			Handler:    _ConsumerRecoveryService_StartAccountRecovery_Handler,
+			MethodName: "StartUserRecovery",
+			Handler:    _ConsumerRecoveryService_StartUserRecovery_Handler,
 		},
 		{
-			MethodName: "GetAccountRecovery",
-			Handler:    _ConsumerRecoveryService_GetAccountRecovery_Handler,
+			MethodName: "GetUserRecovery",
+			Handler:    _ConsumerRecoveryService_GetUserRecovery_Handler,
 		},
 		{
-			MethodName: "CancelAccountRecovery",
-			Handler:    _ConsumerRecoveryService_CancelAccountRecovery_Handler,
+			MethodName: "CancelUserRecovery",
+			Handler:    _ConsumerRecoveryService_CancelUserRecovery_Handler,
 		},
 		{
 			MethodName: "CreateTrustedDeviceRecoveryChallenge",
@@ -399,8 +399,8 @@ var ConsumerRecoveryService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ConsumerRecoveryService_ClaimRecoveryGrant_Handler,
 		},
 		{
-			MethodName: "CompleteAccountRecovery",
-			Handler:    _ConsumerRecoveryService_CompleteAccountRecovery_Handler,
+			MethodName: "CompleteUserRecovery",
+			Handler:    _ConsumerRecoveryService_CompleteUserRecovery_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

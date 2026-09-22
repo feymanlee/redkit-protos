@@ -20,19 +20,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserAdministrationService_SearchUsers_FullMethodName                        = "/user.administration.v1.UserAdministrationService/SearchUsers"
-	UserAdministrationService_SuspendUser_FullMethodName                        = "/user.administration.v1.UserAdministrationService/SuspendUser"
-	UserAdministrationService_ReactivateUser_FullMethodName                     = "/user.administration.v1.UserAdministrationService/ReactivateUser"
-	UserAdministrationService_ModerateUserProfile_FullMethodName                = "/user.administration.v1.UserAdministrationService/ModerateUserProfile"
-	UserAdministrationService_ResetUserCode_FullMethodName                      = "/user.administration.v1.UserAdministrationService/ResetUserCode"
-	UserAdministrationService_BeginAdministrativeAccountClosure_FullMethodName  = "/user.administration.v1.UserAdministrationService/BeginAdministrativeAccountClosure"
-	UserAdministrationService_GetAccountClosure_FullMethodName                  = "/user.administration.v1.UserAdministrationService/GetAccountClosure"
-	UserAdministrationService_CancelAdministrativeAccountClosure_FullMethodName = "/user.administration.v1.UserAdministrationService/CancelAdministrativeAccountClosure"
-	UserAdministrationService_RetryAdministrativeAccountClosure_FullMethodName  = "/user.administration.v1.UserAdministrationService/RetryAdministrativeAccountClosure"
-	UserAdministrationService_RequirePasswordReset_FullMethodName               = "/user.administration.v1.UserAdministrationService/RequirePasswordReset"
-	UserAdministrationService_RevokeCredential_FullMethodName                   = "/user.administration.v1.UserAdministrationService/RevokeCredential"
-	UserAdministrationService_ResetMFA_FullMethodName                           = "/user.administration.v1.UserAdministrationService/ResetMFA"
-	UserAdministrationService_RevokeDeviceTrust_FullMethodName                  = "/user.administration.v1.UserAdministrationService/RevokeDeviceTrust"
+	UserAdministrationService_SearchUsers_FullMethodName                      = "/user.administration.v1.UserAdministrationService/SearchUsers"
+	UserAdministrationService_CreateUser_FullMethodName                       = "/user.administration.v1.UserAdministrationService/CreateUser"
+	UserAdministrationService_GetUser_FullMethodName                          = "/user.administration.v1.UserAdministrationService/GetUser"
+	UserAdministrationService_ListUsers_FullMethodName                        = "/user.administration.v1.UserAdministrationService/ListUsers"
+	UserAdministrationService_ChangeUserCode_FullMethodName                   = "/user.administration.v1.UserAdministrationService/ChangeUserCode"
+	UserAdministrationService_SuspendUser_FullMethodName                      = "/user.administration.v1.UserAdministrationService/SuspendUser"
+	UserAdministrationService_ReactivateUser_FullMethodName                   = "/user.administration.v1.UserAdministrationService/ReactivateUser"
+	UserAdministrationService_ModerateUserProfile_FullMethodName              = "/user.administration.v1.UserAdministrationService/ModerateUserProfile"
+	UserAdministrationService_ResetUserCode_FullMethodName                    = "/user.administration.v1.UserAdministrationService/ResetUserCode"
+	UserAdministrationService_BeginAdministrativeUserDeletion_FullMethodName  = "/user.administration.v1.UserAdministrationService/BeginAdministrativeUserDeletion"
+	UserAdministrationService_GetUserDeletion_FullMethodName                  = "/user.administration.v1.UserAdministrationService/GetUserDeletion"
+	UserAdministrationService_CancelAdministrativeUserDeletion_FullMethodName = "/user.administration.v1.UserAdministrationService/CancelAdministrativeUserDeletion"
+	UserAdministrationService_RetryAdministrativeUserDeletion_FullMethodName  = "/user.administration.v1.UserAdministrationService/RetryAdministrativeUserDeletion"
+	UserAdministrationService_RequirePasswordReset_FullMethodName             = "/user.administration.v1.UserAdministrationService/RequirePasswordReset"
+	UserAdministrationService_RevokeCredential_FullMethodName                 = "/user.administration.v1.UserAdministrationService/RevokeCredential"
+	UserAdministrationService_ResetMFA_FullMethodName                         = "/user.administration.v1.UserAdministrationService/ResetMFA"
+	UserAdministrationService_RevokeDeviceTrust_FullMethodName                = "/user.administration.v1.UserAdministrationService/RevokeDeviceTrust"
 )
 
 // UserAdministrationServiceClient is the client API for UserAdministrationService service.
@@ -43,22 +47,30 @@ const (
 type UserAdministrationServiceClient interface {
 	// SearchUsers 在具体 App 内执行结构化用户搜索和筛选。
 	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error)
-	// SuspendUser 执行后台专用的限时或无限期 Account Suspension。
-	SuspendUser(ctx context.Context, in *SuspendUserRequest, opts ...grpc.CallOption) (*Account, error)
-	// ReactivateUser 执行后台专用的人工 Account 恢复。
-	ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*Account, error)
+	// CreateUser 创建一个 PENDING User，不建立任何 Credential。
+	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*User, error)
+	// GetUser 按 user_id 或 user_code 查询 User。
+	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
+	// ListUsers 分页查询具体 App 内的 Users。
+	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	// ChangeUserCode 校验 verification_ticket 后变更 UserCode。
+	ChangeUserCode(ctx context.Context, in *ChangeUserCodeRequest, opts ...grpc.CallOption) (*User, error)
+	// SuspendUser 执行后台专用的限时或无限期 User Suspension。
+	SuspendUser(ctx context.Context, in *SuspendUserRequest, opts ...grpc.CallOption) (*User, error)
+	// ReactivateUser 执行后台专用的人工 User 恢复。
+	ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*User, error)
 	// ModerateUserProfile 清理违规公开资料，不允许 Operator 写入替代内容。
 	ModerateUserProfile(ctx context.Context, in *ModerateUserProfileRequest, opts ...grpc.CallOption) (*Profile, error)
 	// ResetUserCode 使用系统生成器替换公开身份并永久保留旧 Code。
-	ResetUserCode(ctx context.Context, in *ResetUserCodeRequest, opts ...grpc.CallOption) (*Account, error)
-	// BeginAdministrativeAccountClosure 由可信 Operator 发起现有 Account Closure 冷静期。
-	BeginAdministrativeAccountClosure(ctx context.Context, in *BeginAdministrativeAccountClosureRequest, opts ...grpc.CallOption) (*Account, error)
-	// GetAccountClosure 返回 User-owned Saga 与 participant 进度，不复制 Reward 明细。
-	GetAccountClosure(ctx context.Context, in *GetAccountClosureRequest, opts ...grpc.CallOption) (*AccountClosure, error)
-	// CancelAdministrativeAccountClosure 在冷静期直接恢复 Account，或请求 Worker 撤销首个 Apply 前的可逆 preparation。
-	CancelAdministrativeAccountClosure(ctx context.Context, in *CancelAdministrativeAccountClosureRequest, opts ...grpc.CallOption) (*AccountClosure, error)
-	// RetryAdministrativeAccountClosure 只重新排队明确 STALLED 的 Closure Saga。
-	RetryAdministrativeAccountClosure(ctx context.Context, in *RetryAdministrativeAccountClosureRequest, opts ...grpc.CallOption) (*AccountClosure, error)
+	ResetUserCode(ctx context.Context, in *ResetUserCodeRequest, opts ...grpc.CallOption) (*User, error)
+	// BeginAdministrativeUserDeletion 由可信 Operator 发起现有 User Deletion 冷静期。
+	BeginAdministrativeUserDeletion(ctx context.Context, in *BeginAdministrativeUserDeletionRequest, opts ...grpc.CallOption) (*User, error)
+	// GetUserDeletion 返回 User-owned Saga 与 participant 进度，不复制 Reward 明细。
+	GetUserDeletion(ctx context.Context, in *GetUserDeletionRequest, opts ...grpc.CallOption) (*UserDeletion, error)
+	// CancelAdministrativeUserDeletion 在冷静期直接恢复 User，或请求 Worker 撤销首个 Apply 前的可逆 preparation。
+	CancelAdministrativeUserDeletion(ctx context.Context, in *CancelAdministrativeUserDeletionRequest, opts ...grpc.CallOption) (*UserDeletion, error)
+	// RetryAdministrativeUserDeletion 只重新排队明确 STALLED 的 Deletion Saga。
+	RetryAdministrativeUserDeletion(ctx context.Context, in *RetryAdministrativeUserDeletionRequest, opts ...grpc.CallOption) (*UserDeletion, error)
 	// RequirePasswordReset 撤销现有认证状态并要求 User 自行更换密码。
 	RequirePasswordReset(ctx context.Context, in *RequirePasswordResetRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// RevokeCredential 撤销一个已失陷的登录方式，但保留至少一个可用 Credential。
@@ -87,9 +99,49 @@ func (c *userAdministrationServiceClient) SearchUsers(ctx context.Context, in *S
 	return out, nil
 }
 
-func (c *userAdministrationServiceClient) SuspendUser(ctx context.Context, in *SuspendUserRequest, opts ...grpc.CallOption) (*Account, error) {
+func (c *userAdministrationServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Account)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserAdministrationService_CreateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userAdministrationServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserAdministrationService_GetUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userAdministrationServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUsersResponse)
+	err := c.cc.Invoke(ctx, UserAdministrationService_ListUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userAdministrationServiceClient) ChangeUserCode(ctx context.Context, in *ChangeUserCodeRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserAdministrationService_ChangeUserCode_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userAdministrationServiceClient) SuspendUser(ctx context.Context, in *SuspendUserRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
 	err := c.cc.Invoke(ctx, UserAdministrationService_SuspendUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -97,9 +149,9 @@ func (c *userAdministrationServiceClient) SuspendUser(ctx context.Context, in *S
 	return out, nil
 }
 
-func (c *userAdministrationServiceClient) ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*Account, error) {
+func (c *userAdministrationServiceClient) ReactivateUser(ctx context.Context, in *ReactivateUserRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Account)
+	out := new(User)
 	err := c.cc.Invoke(ctx, UserAdministrationService_ReactivateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -117,9 +169,9 @@ func (c *userAdministrationServiceClient) ModerateUserProfile(ctx context.Contex
 	return out, nil
 }
 
-func (c *userAdministrationServiceClient) ResetUserCode(ctx context.Context, in *ResetUserCodeRequest, opts ...grpc.CallOption) (*Account, error) {
+func (c *userAdministrationServiceClient) ResetUserCode(ctx context.Context, in *ResetUserCodeRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Account)
+	out := new(User)
 	err := c.cc.Invoke(ctx, UserAdministrationService_ResetUserCode_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -127,40 +179,40 @@ func (c *userAdministrationServiceClient) ResetUserCode(ctx context.Context, in 
 	return out, nil
 }
 
-func (c *userAdministrationServiceClient) BeginAdministrativeAccountClosure(ctx context.Context, in *BeginAdministrativeAccountClosureRequest, opts ...grpc.CallOption) (*Account, error) {
+func (c *userAdministrationServiceClient) BeginAdministrativeUserDeletion(ctx context.Context, in *BeginAdministrativeUserDeletionRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Account)
-	err := c.cc.Invoke(ctx, UserAdministrationService_BeginAdministrativeAccountClosure_FullMethodName, in, out, cOpts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserAdministrationService_BeginAdministrativeUserDeletion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userAdministrationServiceClient) GetAccountClosure(ctx context.Context, in *GetAccountClosureRequest, opts ...grpc.CallOption) (*AccountClosure, error) {
+func (c *userAdministrationServiceClient) GetUserDeletion(ctx context.Context, in *GetUserDeletionRequest, opts ...grpc.CallOption) (*UserDeletion, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AccountClosure)
-	err := c.cc.Invoke(ctx, UserAdministrationService_GetAccountClosure_FullMethodName, in, out, cOpts...)
+	out := new(UserDeletion)
+	err := c.cc.Invoke(ctx, UserAdministrationService_GetUserDeletion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userAdministrationServiceClient) CancelAdministrativeAccountClosure(ctx context.Context, in *CancelAdministrativeAccountClosureRequest, opts ...grpc.CallOption) (*AccountClosure, error) {
+func (c *userAdministrationServiceClient) CancelAdministrativeUserDeletion(ctx context.Context, in *CancelAdministrativeUserDeletionRequest, opts ...grpc.CallOption) (*UserDeletion, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AccountClosure)
-	err := c.cc.Invoke(ctx, UserAdministrationService_CancelAdministrativeAccountClosure_FullMethodName, in, out, cOpts...)
+	out := new(UserDeletion)
+	err := c.cc.Invoke(ctx, UserAdministrationService_CancelAdministrativeUserDeletion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userAdministrationServiceClient) RetryAdministrativeAccountClosure(ctx context.Context, in *RetryAdministrativeAccountClosureRequest, opts ...grpc.CallOption) (*AccountClosure, error) {
+func (c *userAdministrationServiceClient) RetryAdministrativeUserDeletion(ctx context.Context, in *RetryAdministrativeUserDeletionRequest, opts ...grpc.CallOption) (*UserDeletion, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AccountClosure)
-	err := c.cc.Invoke(ctx, UserAdministrationService_RetryAdministrativeAccountClosure_FullMethodName, in, out, cOpts...)
+	out := new(UserDeletion)
+	err := c.cc.Invoke(ctx, UserAdministrationService_RetryAdministrativeUserDeletion_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -215,22 +267,30 @@ func (c *userAdministrationServiceClient) RevokeDeviceTrust(ctx context.Context,
 type UserAdministrationServiceServer interface {
 	// SearchUsers 在具体 App 内执行结构化用户搜索和筛选。
 	SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error)
-	// SuspendUser 执行后台专用的限时或无限期 Account Suspension。
-	SuspendUser(context.Context, *SuspendUserRequest) (*Account, error)
-	// ReactivateUser 执行后台专用的人工 Account 恢复。
-	ReactivateUser(context.Context, *ReactivateUserRequest) (*Account, error)
+	// CreateUser 创建一个 PENDING User，不建立任何 Credential。
+	CreateUser(context.Context, *CreateUserRequest) (*User, error)
+	// GetUser 按 user_id 或 user_code 查询 User。
+	GetUser(context.Context, *GetUserRequest) (*User, error)
+	// ListUsers 分页查询具体 App 内的 Users。
+	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	// ChangeUserCode 校验 verification_ticket 后变更 UserCode。
+	ChangeUserCode(context.Context, *ChangeUserCodeRequest) (*User, error)
+	// SuspendUser 执行后台专用的限时或无限期 User Suspension。
+	SuspendUser(context.Context, *SuspendUserRequest) (*User, error)
+	// ReactivateUser 执行后台专用的人工 User 恢复。
+	ReactivateUser(context.Context, *ReactivateUserRequest) (*User, error)
 	// ModerateUserProfile 清理违规公开资料，不允许 Operator 写入替代内容。
 	ModerateUserProfile(context.Context, *ModerateUserProfileRequest) (*Profile, error)
 	// ResetUserCode 使用系统生成器替换公开身份并永久保留旧 Code。
-	ResetUserCode(context.Context, *ResetUserCodeRequest) (*Account, error)
-	// BeginAdministrativeAccountClosure 由可信 Operator 发起现有 Account Closure 冷静期。
-	BeginAdministrativeAccountClosure(context.Context, *BeginAdministrativeAccountClosureRequest) (*Account, error)
-	// GetAccountClosure 返回 User-owned Saga 与 participant 进度，不复制 Reward 明细。
-	GetAccountClosure(context.Context, *GetAccountClosureRequest) (*AccountClosure, error)
-	// CancelAdministrativeAccountClosure 在冷静期直接恢复 Account，或请求 Worker 撤销首个 Apply 前的可逆 preparation。
-	CancelAdministrativeAccountClosure(context.Context, *CancelAdministrativeAccountClosureRequest) (*AccountClosure, error)
-	// RetryAdministrativeAccountClosure 只重新排队明确 STALLED 的 Closure Saga。
-	RetryAdministrativeAccountClosure(context.Context, *RetryAdministrativeAccountClosureRequest) (*AccountClosure, error)
+	ResetUserCode(context.Context, *ResetUserCodeRequest) (*User, error)
+	// BeginAdministrativeUserDeletion 由可信 Operator 发起现有 User Deletion 冷静期。
+	BeginAdministrativeUserDeletion(context.Context, *BeginAdministrativeUserDeletionRequest) (*User, error)
+	// GetUserDeletion 返回 User-owned Saga 与 participant 进度，不复制 Reward 明细。
+	GetUserDeletion(context.Context, *GetUserDeletionRequest) (*UserDeletion, error)
+	// CancelAdministrativeUserDeletion 在冷静期直接恢复 User，或请求 Worker 撤销首个 Apply 前的可逆 preparation。
+	CancelAdministrativeUserDeletion(context.Context, *CancelAdministrativeUserDeletionRequest) (*UserDeletion, error)
+	// RetryAdministrativeUserDeletion 只重新排队明确 STALLED 的 Deletion Saga。
+	RetryAdministrativeUserDeletion(context.Context, *RetryAdministrativeUserDeletionRequest) (*UserDeletion, error)
 	// RequirePasswordReset 撤销现有认证状态并要求 User 自行更换密码。
 	RequirePasswordReset(context.Context, *RequirePasswordResetRequest) (*emptypb.Empty, error)
 	// RevokeCredential 撤销一个已失陷的登录方式，但保留至少一个可用 Credential。
@@ -252,29 +312,41 @@ type UnimplementedUserAdministrationServiceServer struct{}
 func (UnimplementedUserAdministrationServiceServer) SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchUsers not implemented")
 }
-func (UnimplementedUserAdministrationServiceServer) SuspendUser(context.Context, *SuspendUserRequest) (*Account, error) {
+func (UnimplementedUserAdministrationServiceServer) CreateUser(context.Context, *CreateUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (UnimplementedUserAdministrationServiceServer) GetUser(context.Context, *GetUserRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedUserAdministrationServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
+}
+func (UnimplementedUserAdministrationServiceServer) ChangeUserCode(context.Context, *ChangeUserCodeRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeUserCode not implemented")
+}
+func (UnimplementedUserAdministrationServiceServer) SuspendUser(context.Context, *SuspendUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SuspendUser not implemented")
 }
-func (UnimplementedUserAdministrationServiceServer) ReactivateUser(context.Context, *ReactivateUserRequest) (*Account, error) {
+func (UnimplementedUserAdministrationServiceServer) ReactivateUser(context.Context, *ReactivateUserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReactivateUser not implemented")
 }
 func (UnimplementedUserAdministrationServiceServer) ModerateUserProfile(context.Context, *ModerateUserProfileRequest) (*Profile, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ModerateUserProfile not implemented")
 }
-func (UnimplementedUserAdministrationServiceServer) ResetUserCode(context.Context, *ResetUserCodeRequest) (*Account, error) {
+func (UnimplementedUserAdministrationServiceServer) ResetUserCode(context.Context, *ResetUserCodeRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetUserCode not implemented")
 }
-func (UnimplementedUserAdministrationServiceServer) BeginAdministrativeAccountClosure(context.Context, *BeginAdministrativeAccountClosureRequest) (*Account, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BeginAdministrativeAccountClosure not implemented")
+func (UnimplementedUserAdministrationServiceServer) BeginAdministrativeUserDeletion(context.Context, *BeginAdministrativeUserDeletionRequest) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BeginAdministrativeUserDeletion not implemented")
 }
-func (UnimplementedUserAdministrationServiceServer) GetAccountClosure(context.Context, *GetAccountClosureRequest) (*AccountClosure, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAccountClosure not implemented")
+func (UnimplementedUserAdministrationServiceServer) GetUserDeletion(context.Context, *GetUserDeletionRequest) (*UserDeletion, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserDeletion not implemented")
 }
-func (UnimplementedUserAdministrationServiceServer) CancelAdministrativeAccountClosure(context.Context, *CancelAdministrativeAccountClosureRequest) (*AccountClosure, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CancelAdministrativeAccountClosure not implemented")
+func (UnimplementedUserAdministrationServiceServer) CancelAdministrativeUserDeletion(context.Context, *CancelAdministrativeUserDeletionRequest) (*UserDeletion, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelAdministrativeUserDeletion not implemented")
 }
-func (UnimplementedUserAdministrationServiceServer) RetryAdministrativeAccountClosure(context.Context, *RetryAdministrativeAccountClosureRequest) (*AccountClosure, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RetryAdministrativeAccountClosure not implemented")
+func (UnimplementedUserAdministrationServiceServer) RetryAdministrativeUserDeletion(context.Context, *RetryAdministrativeUserDeletionRequest) (*UserDeletion, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetryAdministrativeUserDeletion not implemented")
 }
 func (UnimplementedUserAdministrationServiceServer) RequirePasswordReset(context.Context, *RequirePasswordResetRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequirePasswordReset not implemented")
@@ -324,6 +396,78 @@ func _UserAdministrationService_SearchUsers_Handler(srv interface{}, ctx context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserAdministrationServiceServer).SearchUsers(ctx, req.(*SearchUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserAdministrationService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAdministrationServiceServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserAdministrationService_CreateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAdministrationServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserAdministrationService_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAdministrationServiceServer).GetUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserAdministrationService_GetUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAdministrationServiceServer).GetUser(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserAdministrationService_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAdministrationServiceServer).ListUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserAdministrationService_ListUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAdministrationServiceServer).ListUsers(ctx, req.(*ListUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserAdministrationService_ChangeUserCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeUserCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAdministrationServiceServer).ChangeUserCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserAdministrationService_ChangeUserCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAdministrationServiceServer).ChangeUserCode(ctx, req.(*ChangeUserCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -400,74 +544,74 @@ func _UserAdministrationService_ResetUserCode_Handler(srv interface{}, ctx conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserAdministrationService_BeginAdministrativeAccountClosure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BeginAdministrativeAccountClosureRequest)
+func _UserAdministrationService_BeginAdministrativeUserDeletion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BeginAdministrativeUserDeletionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserAdministrationServiceServer).BeginAdministrativeAccountClosure(ctx, in)
+		return srv.(UserAdministrationServiceServer).BeginAdministrativeUserDeletion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserAdministrationService_BeginAdministrativeAccountClosure_FullMethodName,
+		FullMethod: UserAdministrationService_BeginAdministrativeUserDeletion_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserAdministrationServiceServer).BeginAdministrativeAccountClosure(ctx, req.(*BeginAdministrativeAccountClosureRequest))
+		return srv.(UserAdministrationServiceServer).BeginAdministrativeUserDeletion(ctx, req.(*BeginAdministrativeUserDeletionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserAdministrationService_GetAccountClosure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAccountClosureRequest)
+func _UserAdministrationService_GetUserDeletion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserDeletionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserAdministrationServiceServer).GetAccountClosure(ctx, in)
+		return srv.(UserAdministrationServiceServer).GetUserDeletion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserAdministrationService_GetAccountClosure_FullMethodName,
+		FullMethod: UserAdministrationService_GetUserDeletion_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserAdministrationServiceServer).GetAccountClosure(ctx, req.(*GetAccountClosureRequest))
+		return srv.(UserAdministrationServiceServer).GetUserDeletion(ctx, req.(*GetUserDeletionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserAdministrationService_CancelAdministrativeAccountClosure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CancelAdministrativeAccountClosureRequest)
+func _UserAdministrationService_CancelAdministrativeUserDeletion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CancelAdministrativeUserDeletionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserAdministrationServiceServer).CancelAdministrativeAccountClosure(ctx, in)
+		return srv.(UserAdministrationServiceServer).CancelAdministrativeUserDeletion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserAdministrationService_CancelAdministrativeAccountClosure_FullMethodName,
+		FullMethod: UserAdministrationService_CancelAdministrativeUserDeletion_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserAdministrationServiceServer).CancelAdministrativeAccountClosure(ctx, req.(*CancelAdministrativeAccountClosureRequest))
+		return srv.(UserAdministrationServiceServer).CancelAdministrativeUserDeletion(ctx, req.(*CancelAdministrativeUserDeletionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserAdministrationService_RetryAdministrativeAccountClosure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RetryAdministrativeAccountClosureRequest)
+func _UserAdministrationService_RetryAdministrativeUserDeletion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RetryAdministrativeUserDeletionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserAdministrationServiceServer).RetryAdministrativeAccountClosure(ctx, in)
+		return srv.(UserAdministrationServiceServer).RetryAdministrativeUserDeletion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserAdministrationService_RetryAdministrativeAccountClosure_FullMethodName,
+		FullMethod: UserAdministrationService_RetryAdministrativeUserDeletion_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserAdministrationServiceServer).RetryAdministrativeAccountClosure(ctx, req.(*RetryAdministrativeAccountClosureRequest))
+		return srv.(UserAdministrationServiceServer).RetryAdministrativeUserDeletion(ctx, req.(*RetryAdministrativeUserDeletionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -556,6 +700,22 @@ var UserAdministrationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserAdministrationService_SearchUsers_Handler,
 		},
 		{
+			MethodName: "CreateUser",
+			Handler:    _UserAdministrationService_CreateUser_Handler,
+		},
+		{
+			MethodName: "GetUser",
+			Handler:    _UserAdministrationService_GetUser_Handler,
+		},
+		{
+			MethodName: "ListUsers",
+			Handler:    _UserAdministrationService_ListUsers_Handler,
+		},
+		{
+			MethodName: "ChangeUserCode",
+			Handler:    _UserAdministrationService_ChangeUserCode_Handler,
+		},
+		{
 			MethodName: "SuspendUser",
 			Handler:    _UserAdministrationService_SuspendUser_Handler,
 		},
@@ -572,20 +732,20 @@ var UserAdministrationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserAdministrationService_ResetUserCode_Handler,
 		},
 		{
-			MethodName: "BeginAdministrativeAccountClosure",
-			Handler:    _UserAdministrationService_BeginAdministrativeAccountClosure_Handler,
+			MethodName: "BeginAdministrativeUserDeletion",
+			Handler:    _UserAdministrationService_BeginAdministrativeUserDeletion_Handler,
 		},
 		{
-			MethodName: "GetAccountClosure",
-			Handler:    _UserAdministrationService_GetAccountClosure_Handler,
+			MethodName: "GetUserDeletion",
+			Handler:    _UserAdministrationService_GetUserDeletion_Handler,
 		},
 		{
-			MethodName: "CancelAdministrativeAccountClosure",
-			Handler:    _UserAdministrationService_CancelAdministrativeAccountClosure_Handler,
+			MethodName: "CancelAdministrativeUserDeletion",
+			Handler:    _UserAdministrationService_CancelAdministrativeUserDeletion_Handler,
 		},
 		{
-			MethodName: "RetryAdministrativeAccountClosure",
-			Handler:    _UserAdministrationService_RetryAdministrativeAccountClosure_Handler,
+			MethodName: "RetryAdministrativeUserDeletion",
+			Handler:    _UserAdministrationService_RetryAdministrativeUserDeletion_Handler,
 		},
 		{
 			MethodName: "RequirePasswordReset",

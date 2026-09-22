@@ -26,64 +26,68 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AccountStatus 刻画对应资源的生命周期状态。
-type AccountStatus int32
+// UserStatus 刻画对应资源的生命周期状态。
+type UserStatus int32
 
 const (
 	// 未提供有效取值；调用方不得据此推断业务状态。
-	AccountStatus_ACCOUNT_STATUS_UNSPECIFIED AccountStatus = 0
+	UserStatus_USER_STATUS_UNSPECIFIED UserStatus = 0
 	// 当前已生效并可用于业务处理。
-	AccountStatus_ACCOUNT_STATUS_ACTIVE AccountStatus = 1
+	UserStatus_USER_STATUS_ACTIVE UserStatus = 1
 	// 当前已暂停，恢复前不接受新的业务动作。
-	AccountStatus_ACCOUNT_STATUS_SUSPENDED AccountStatus = 2
+	UserStatus_USER_STATUS_SUSPENDED UserStatus = 2
 	// 关闭流程正在执行，尚未形成关闭终态。
-	AccountStatus_ACCOUNT_STATUS_CLOSING AccountStatus = 3
+	UserStatus_USER_STATUS_DELETING UserStatus = 3
 	// 当前流程已关闭，不再接受新的处理动作。
-	AccountStatus_ACCOUNT_STATUS_CLOSED AccountStatus = 4
+	UserStatus_USER_STATUS_DELETED UserStatus = 4
+	// 已完成注册受理但尚未建立 Credential，业务动作仍受限。
+	UserStatus_USER_STATUS_PENDING UserStatus = 5
 )
 
-// Enum value maps for AccountStatus.
+// Enum value maps for UserStatus.
 var (
-	AccountStatus_name = map[int32]string{
-		0: "ACCOUNT_STATUS_UNSPECIFIED",
-		1: "ACCOUNT_STATUS_ACTIVE",
-		2: "ACCOUNT_STATUS_SUSPENDED",
-		3: "ACCOUNT_STATUS_CLOSING",
-		4: "ACCOUNT_STATUS_CLOSED",
+	UserStatus_name = map[int32]string{
+		0: "USER_STATUS_UNSPECIFIED",
+		1: "USER_STATUS_ACTIVE",
+		2: "USER_STATUS_SUSPENDED",
+		3: "USER_STATUS_DELETING",
+		4: "USER_STATUS_DELETED",
+		5: "USER_STATUS_PENDING",
 	}
-	AccountStatus_value = map[string]int32{
-		"ACCOUNT_STATUS_UNSPECIFIED": 0,
-		"ACCOUNT_STATUS_ACTIVE":      1,
-		"ACCOUNT_STATUS_SUSPENDED":   2,
-		"ACCOUNT_STATUS_CLOSING":     3,
-		"ACCOUNT_STATUS_CLOSED":      4,
+	UserStatus_value = map[string]int32{
+		"USER_STATUS_UNSPECIFIED": 0,
+		"USER_STATUS_ACTIVE":      1,
+		"USER_STATUS_SUSPENDED":   2,
+		"USER_STATUS_DELETING":    3,
+		"USER_STATUS_DELETED":     4,
+		"USER_STATUS_PENDING":     5,
 	}
 )
 
-func (x AccountStatus) Enum() *AccountStatus {
-	p := new(AccountStatus)
+func (x UserStatus) Enum() *UserStatus {
+	p := new(UserStatus)
 	*p = x
 	return p
 }
 
-func (x AccountStatus) String() string {
+func (x UserStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (AccountStatus) Descriptor() protoreflect.EnumDescriptor {
+func (UserStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_user_types_v1_types_proto_enumTypes[0].Descriptor()
 }
 
-func (AccountStatus) Type() protoreflect.EnumType {
+func (UserStatus) Type() protoreflect.EnumType {
 	return &file_user_types_v1_types_proto_enumTypes[0]
 }
 
-func (x AccountStatus) Number() protoreflect.EnumNumber {
+func (x UserStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use AccountStatus.Descriptor instead.
-func (AccountStatus) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use UserStatus.Descriptor instead.
+func (UserStatus) EnumDescriptor() ([]byte, []int) {
 	return file_user_types_v1_types_proto_rawDescGZIP(), []int{0}
 }
 
@@ -618,12 +622,12 @@ const (
 	SecurityActivityType_SECURITY_ACTIVITY_TYPE_SESSION_REVOKED SecurityActivityType = 7
 	// 相关授权或凭据已撤销，不能继续使用。
 	SecurityActivityType_SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED SecurityActivityType = 8
-	// SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY 选择 ACCOUNT_RECOVERY 业务类型。
-	SecurityActivityType_SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY SecurityActivityType = 9
-	// SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE 选择 ACCOUNT_MERGE 业务类型。
-	SecurityActivityType_SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE SecurityActivityType = 10
-	// SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE 选择 ACCOUNT_CLOSURE 业务类型。
-	SecurityActivityType_SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE SecurityActivityType = 11
+	// SECURITY_ACTIVITY_TYPE_USER_RECOVERY 选择 USER_RECOVERY 业务类型。
+	SecurityActivityType_SECURITY_ACTIVITY_TYPE_USER_RECOVERY SecurityActivityType = 9
+	// SECURITY_ACTIVITY_TYPE_USER_MERGE 选择 USER_MERGE 业务类型。
+	SecurityActivityType_SECURITY_ACTIVITY_TYPE_USER_MERGE SecurityActivityType = 10
+	// SECURITY_ACTIVITY_TYPE_USER_DELETION 选择 USER_DELETION 业务类型。
+	SecurityActivityType_SECURITY_ACTIVITY_TYPE_USER_DELETION SecurityActivityType = 11
 )
 
 // Enum value maps for SecurityActivityType.
@@ -638,9 +642,9 @@ var (
 		6:  "SECURITY_ACTIVITY_TYPE_TOTP_CHANGED",
 		7:  "SECURITY_ACTIVITY_TYPE_SESSION_REVOKED",
 		8:  "SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED",
-		9:  "SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY",
-		10: "SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE",
-		11: "SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE",
+		9:  "SECURITY_ACTIVITY_TYPE_USER_RECOVERY",
+		10: "SECURITY_ACTIVITY_TYPE_USER_MERGE",
+		11: "SECURITY_ACTIVITY_TYPE_USER_DELETION",
 	}
 	SecurityActivityType_value = map[string]int32{
 		"SECURITY_ACTIVITY_TYPE_UNSPECIFIED":               0,
@@ -652,9 +656,9 @@ var (
 		"SECURITY_ACTIVITY_TYPE_TOTP_CHANGED":              6,
 		"SECURITY_ACTIVITY_TYPE_SESSION_REVOKED":           7,
 		"SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED":            8,
-		"SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY":          9,
-		"SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE":             10,
-		"SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE":           11,
+		"SECURITY_ACTIVITY_TYPE_USER_RECOVERY":             9,
+		"SECURITY_ACTIVITY_TYPE_USER_MERGE":                10,
+		"SECURITY_ACTIVITY_TYPE_USER_DELETION":             11,
 	}
 )
 
@@ -685,47 +689,47 @@ func (SecurityActivityType) EnumDescriptor() ([]byte, []int) {
 	return file_user_types_v1_types_proto_rawDescGZIP(), []int{10}
 }
 
-// Account 表示当前 App 内 User Account 的身份与生命周期快照。
-type Account struct {
+// User 表示当前 App 内 User 的身份与生命周期快照。
+type User struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// user_id 标识当前 App 内关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// app_id 限定 Account 所属 App；UNSPECIFIED 不表示跨 App。
+	// app_id 限定 User 所属 App；UNSPECIFIED 不表示跨 App。
 	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_code 提供 Account 对外稳定使用的业务编码。
+	// user_code 提供 User 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,3,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
-	// status 表示 Account 当前可观察的生命周期状态。
-	Status AccountStatus `protobuf:"varint,4,opt,name=status,proto3,enum=user.types.v1.AccountStatus" json:"status,omitempty"`
+	// status 表示 User 当前可观察的生命周期状态。
+	Status UserStatus `protobuf:"varint,4,opt,name=status,proto3,enum=user.types.v1.UserStatus" json:"status,omitempty"`
 	// canonical_user_id 标识当前 App 内关联的 User。
 	CanonicalUserId uint64 `protobuf:"varint,5,opt,name=canonical_user_id,json=canonicalUserId,proto3" json:"canonical_user_id,omitempty"`
-	// suspended_until 指定 Account 查询或生效区间的结束边界。
+	// suspended_until 指定 User 查询或生效区间的结束边界。
 	SuspendedUntil *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=suspended_until,json=suspendedUntil,proto3" json:"suspended_until,omitempty"`
-	// closing_at 记录 Account 对应业务阶段的时间点。
-	ClosingAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=closing_at,json=closingAt,proto3" json:"closing_at,omitempty"`
-	// closed_at 记录 Account 对应业务阶段的时间点。
-	ClosedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=closed_at,json=closedAt,proto3" json:"closed_at,omitempty"`
-	// created_at 记录 Account 的创建时间。
+	// deleting_at 记录 User 对应业务阶段的时间点。
+	DeletingAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=deleting_at,json=deletingAt,proto3" json:"deleting_at,omitempty"`
+	// deleted_at 记录 User 对应业务阶段的时间点。
+	DeletedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	// created_at 记录 User 的创建时间。
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	// updated_at 记录 Account 最近一次更新的时间。
+	// updated_at 记录 User 最近一次更新的时间。
 	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Account) Reset() {
-	*x = Account{}
+func (x *User) Reset() {
+	*x = User{}
 	mi := &file_user_types_v1_types_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Account) String() string {
+func (x *User) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Account) ProtoMessage() {}
+func (*User) ProtoMessage() {}
 
-func (x *Account) ProtoReflect() protoreflect.Message {
+func (x *User) ProtoReflect() protoreflect.Message {
 	mi := &file_user_types_v1_types_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -737,75 +741,75 @@ func (x *Account) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Account.ProtoReflect.Descriptor instead.
-func (*Account) Descriptor() ([]byte, []int) {
+// Deprecated: Use User.ProtoReflect.Descriptor instead.
+func (*User) Descriptor() ([]byte, []int) {
 	return file_user_types_v1_types_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Account) GetUserId() uint64 {
+func (x *User) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-func (x *Account) GetAppId() v1.AppId {
+func (x *User) GetAppId() v1.AppId {
 	if x != nil {
 		return x.AppId
 	}
 	return v1.AppId(0)
 }
 
-func (x *Account) GetUserCode() string {
+func (x *User) GetUserCode() string {
 	if x != nil {
 		return x.UserCode
 	}
 	return ""
 }
 
-func (x *Account) GetStatus() AccountStatus {
+func (x *User) GetStatus() UserStatus {
 	if x != nil {
 		return x.Status
 	}
-	return AccountStatus_ACCOUNT_STATUS_UNSPECIFIED
+	return UserStatus_USER_STATUS_UNSPECIFIED
 }
 
-func (x *Account) GetCanonicalUserId() uint64 {
+func (x *User) GetCanonicalUserId() uint64 {
 	if x != nil {
 		return x.CanonicalUserId
 	}
 	return 0
 }
 
-func (x *Account) GetSuspendedUntil() *timestamppb.Timestamp {
+func (x *User) GetSuspendedUntil() *timestamppb.Timestamp {
 	if x != nil {
 		return x.SuspendedUntil
 	}
 	return nil
 }
 
-func (x *Account) GetClosingAt() *timestamppb.Timestamp {
+func (x *User) GetDeletingAt() *timestamppb.Timestamp {
 	if x != nil {
-		return x.ClosingAt
+		return x.DeletingAt
 	}
 	return nil
 }
 
-func (x *Account) GetClosedAt() *timestamppb.Timestamp {
+func (x *User) GetDeletedAt() *timestamppb.Timestamp {
 	if x != nil {
-		return x.ClosedAt
+		return x.DeletedAt
 	}
 	return nil
 }
 
-func (x *Account) GetCreatedAt() *timestamppb.Timestamp {
+func (x *User) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
 	}
 	return nil
 }
 
-func (x *Account) GetUpdatedAt() *timestamppb.Timestamp {
+func (x *User) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdatedAt
 	}
@@ -1584,45 +1588,45 @@ func (x *Device) GetLastSeenAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// ConsumerAccountCapabilities 汇总当前 User Account 允许执行的消费端能力。
-type ConsumerAccountCapabilities struct {
+// ConsumerUserCapabilities 汇总当前 User 允许执行的消费端能力。
+type ConsumerUserCapabilities struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// can_update_profile 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+	// can_update_profile 显式表示 ConsumerUserCapabilities 是否满足该条件。
 	CanUpdateProfile bool `protobuf:"varint,1,opt,name=can_update_profile,json=canUpdateProfile,proto3" json:"can_update_profile,omitempty"`
-	// can_manage_credentials 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+	// can_manage_credentials 显式表示 ConsumerUserCapabilities 是否满足该条件。
 	CanManageCredentials bool `protobuf:"varint,2,opt,name=can_manage_credentials,json=canManageCredentials,proto3" json:"can_manage_credentials,omitempty"`
-	// can_manage_sessions 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+	// can_manage_sessions 显式表示 ConsumerUserCapabilities 是否满足该条件。
 	CanManageSessions bool `protobuf:"varint,3,opt,name=can_manage_sessions,json=canManageSessions,proto3" json:"can_manage_sessions,omitempty"`
-	// can_manage_mfa 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+	// can_manage_mfa 显式表示 ConsumerUserCapabilities 是否满足该条件。
 	CanManageMfa bool `protobuf:"varint,4,opt,name=can_manage_mfa,json=canManageMfa,proto3" json:"can_manage_mfa,omitempty"`
 	// can_change_user_code 表示当前 User 是否允许变更 User Code。
 	CanChangeUserCode bool `protobuf:"varint,5,opt,name=can_change_user_code,json=canChangeUserCode,proto3" json:"can_change_user_code,omitempty"`
-	// user_code_change_available_at 记录 ConsumerAccountCapabilities 对应业务阶段的时间点。
+	// user_code_change_available_at 记录 ConsumerUserCapabilities 对应业务阶段的时间点。
 	UserCodeChangeAvailableAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=user_code_change_available_at,json=userCodeChangeAvailableAt,proto3" json:"user_code_change_available_at,omitempty"`
-	// can_start_merge 显式表示 ConsumerAccountCapabilities 是否满足该条件。
+	// can_start_merge 显式表示 ConsumerUserCapabilities 是否满足该条件。
 	CanStartMerge bool `protobuf:"varint,7,opt,name=can_start_merge,json=canStartMerge,proto3" json:"can_start_merge,omitempty"`
-	// can_start_closure 显式表示 ConsumerAccountCapabilities 是否满足该条件。
-	CanStartClosure bool `protobuf:"varint,8,opt,name=can_start_closure,json=canStartClosure,proto3" json:"can_start_closure,omitempty"`
-	// active_lifecycle_operation_type 区分 ConsumerAccountCapabilities 的业务类型。
+	// can_start_deletion 显式表示 ConsumerUserCapabilities 是否满足该条件。
+	CanStartDeletion bool `protobuf:"varint,8,opt,name=can_start_deletion,json=canStartDeletion,proto3" json:"can_start_deletion,omitempty"`
+	// active_lifecycle_operation_type 区分 ConsumerUserCapabilities 的业务类型。
 	ActiveLifecycleOperationType string `protobuf:"bytes,9,opt,name=active_lifecycle_operation_type,json=activeLifecycleOperationType,proto3" json:"active_lifecycle_operation_type,omitempty"`
 	unknownFields                protoimpl.UnknownFields
 	sizeCache                    protoimpl.SizeCache
 }
 
-func (x *ConsumerAccountCapabilities) Reset() {
-	*x = ConsumerAccountCapabilities{}
+func (x *ConsumerUserCapabilities) Reset() {
+	*x = ConsumerUserCapabilities{}
 	mi := &file_user_types_v1_types_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ConsumerAccountCapabilities) String() string {
+func (x *ConsumerUserCapabilities) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ConsumerAccountCapabilities) ProtoMessage() {}
+func (*ConsumerUserCapabilities) ProtoMessage() {}
 
-func (x *ConsumerAccountCapabilities) ProtoReflect() protoreflect.Message {
+func (x *ConsumerUserCapabilities) ProtoReflect() protoreflect.Message {
 	mi := &file_user_types_v1_types_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1634,68 +1638,68 @@ func (x *ConsumerAccountCapabilities) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ConsumerAccountCapabilities.ProtoReflect.Descriptor instead.
-func (*ConsumerAccountCapabilities) Descriptor() ([]byte, []int) {
+// Deprecated: Use ConsumerUserCapabilities.ProtoReflect.Descriptor instead.
+func (*ConsumerUserCapabilities) Descriptor() ([]byte, []int) {
 	return file_user_types_v1_types_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ConsumerAccountCapabilities) GetCanUpdateProfile() bool {
+func (x *ConsumerUserCapabilities) GetCanUpdateProfile() bool {
 	if x != nil {
 		return x.CanUpdateProfile
 	}
 	return false
 }
 
-func (x *ConsumerAccountCapabilities) GetCanManageCredentials() bool {
+func (x *ConsumerUserCapabilities) GetCanManageCredentials() bool {
 	if x != nil {
 		return x.CanManageCredentials
 	}
 	return false
 }
 
-func (x *ConsumerAccountCapabilities) GetCanManageSessions() bool {
+func (x *ConsumerUserCapabilities) GetCanManageSessions() bool {
 	if x != nil {
 		return x.CanManageSessions
 	}
 	return false
 }
 
-func (x *ConsumerAccountCapabilities) GetCanManageMfa() bool {
+func (x *ConsumerUserCapabilities) GetCanManageMfa() bool {
 	if x != nil {
 		return x.CanManageMfa
 	}
 	return false
 }
 
-func (x *ConsumerAccountCapabilities) GetCanChangeUserCode() bool {
+func (x *ConsumerUserCapabilities) GetCanChangeUserCode() bool {
 	if x != nil {
 		return x.CanChangeUserCode
 	}
 	return false
 }
 
-func (x *ConsumerAccountCapabilities) GetUserCodeChangeAvailableAt() *timestamppb.Timestamp {
+func (x *ConsumerUserCapabilities) GetUserCodeChangeAvailableAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UserCodeChangeAvailableAt
 	}
 	return nil
 }
 
-func (x *ConsumerAccountCapabilities) GetCanStartMerge() bool {
+func (x *ConsumerUserCapabilities) GetCanStartMerge() bool {
 	if x != nil {
 		return x.CanStartMerge
 	}
 	return false
 }
 
-func (x *ConsumerAccountCapabilities) GetCanStartClosure() bool {
+func (x *ConsumerUserCapabilities) GetCanStartDeletion() bool {
 	if x != nil {
-		return x.CanStartClosure
+		return x.CanStartDeletion
 	}
 	return false
 }
 
-func (x *ConsumerAccountCapabilities) GetActiveLifecycleOperationType() string {
+func (x *ConsumerUserCapabilities) GetActiveLifecycleOperationType() string {
 	if x != nil {
 		return x.ActiveLifecycleOperationType
 	}
@@ -1802,7 +1806,7 @@ func (x *SecurityOverview) GetLockedUntil() *timestamppb.Timestamp {
 	return nil
 }
 
-// SecurityActivity 记录 User Account 上可供本人查看的安全活动。
+// SecurityActivity 记录 User 上可供本人查看的安全活动。
 type SecurityActivity struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// activity_id 标识关联的 Activity。
@@ -2025,17 +2029,18 @@ var File_user_types_v1_types_proto protoreflect.FileDescriptor
 
 const file_user_types_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x19user/types/v1/types.proto\x12\ruser.types.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xf9\x03\n" +
-	"\aAccount\x12\x17\n" +
+	"\x19user/types/v1/types.proto\x12\ruser.types.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xf7\x03\n" +
+	"\x04User\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12'\n" +
 	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1b\n" +
-	"\tuser_code\x18\x03 \x01(\tR\buserCode\x124\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x1c.user.types.v1.AccountStatusR\x06status\x12*\n" +
+	"\tuser_code\x18\x03 \x01(\tR\buserCode\x121\n" +
+	"\x06status\x18\x04 \x01(\x0e2\x19.user.types.v1.UserStatusR\x06status\x12*\n" +
 	"\x11canonical_user_id\x18\x05 \x01(\x04R\x0fcanonicalUserId\x12C\n" +
-	"\x0fsuspended_until\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x0esuspendedUntil\x129\n" +
+	"\x0fsuspended_until\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x0esuspendedUntil\x12;\n" +
+	"\vdeleting_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"deletingAt\x129\n" +
 	"\n" +
-	"closing_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tclosingAt\x127\n" +
-	"\tclosed_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\bclosedAt\x129\n" +
+	"deleted_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x129\n" +
 	"\n" +
 	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
@@ -2119,16 +2124,16 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"\rfirst_seen_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\vfirstSeenAt\x12<\n" +
 	"\flast_seen_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"lastSeenAt\"\x81\x04\n" +
-	"\x1bConsumerAccountCapabilities\x12,\n" +
+	"lastSeenAt\"\x80\x04\n" +
+	"\x18ConsumerUserCapabilities\x12,\n" +
 	"\x12can_update_profile\x18\x01 \x01(\bR\x10canUpdateProfile\x124\n" +
 	"\x16can_manage_credentials\x18\x02 \x01(\bR\x14canManageCredentials\x12.\n" +
 	"\x13can_manage_sessions\x18\x03 \x01(\bR\x11canManageSessions\x12$\n" +
 	"\x0ecan_manage_mfa\x18\x04 \x01(\bR\fcanManageMfa\x12/\n" +
 	"\x14can_change_user_code\x18\x05 \x01(\bR\x11canChangeUserCode\x12\\\n" +
 	"\x1duser_code_change_available_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x19userCodeChangeAvailableAt\x12&\n" +
-	"\x0fcan_start_merge\x18\a \x01(\bR\rcanStartMerge\x12*\n" +
-	"\x11can_start_closure\x18\b \x01(\bR\x0fcanStartClosure\x12E\n" +
+	"\x0fcan_start_merge\x18\a \x01(\bR\rcanStartMerge\x12,\n" +
+	"\x12can_start_deletion\x18\b \x01(\bR\x10canStartDeletion\x12E\n" +
 	"\x1factive_lifecycle_operation_type\x18\t \x01(\tR\x1cactiveLifecycleOperationType\"\x85\x03\n" +
 	"\x10SecurityOverview\x12!\n" +
 	"\ftotp_enabled\x18\x01 \x01(\bR\vtotpEnabled\x12;\n" +
@@ -2156,13 +2161,15 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"\n" +
 	"page_token\x18\x02 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x10R\tpageToken\"<\n" +
 	"\x12CursorPageResponse\x12&\n" +
-	"\x0fnext_page_token\x18\x01 \x01(\tR\rnextPageToken*\x9f\x01\n" +
-	"\rAccountStatus\x12\x1e\n" +
-	"\x1aACCOUNT_STATUS_UNSPECIFIED\x10\x00\x12\x19\n" +
-	"\x15ACCOUNT_STATUS_ACTIVE\x10\x01\x12\x1c\n" +
-	"\x18ACCOUNT_STATUS_SUSPENDED\x10\x02\x12\x1a\n" +
-	"\x16ACCOUNT_STATUS_CLOSING\x10\x03\x12\x19\n" +
-	"\x15ACCOUNT_STATUS_CLOSED\x10\x04*\xbc\x01\n" +
+	"\x0fnext_page_token\x18\x01 \x01(\tR\rnextPageToken*\xa8\x01\n" +
+	"\n" +
+	"UserStatus\x12\x1b\n" +
+	"\x17USER_STATUS_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12USER_STATUS_ACTIVE\x10\x01\x12\x19\n" +
+	"\x15USER_STATUS_SUSPENDED\x10\x02\x12\x18\n" +
+	"\x14USER_STATUS_DELETING\x10\x03\x12\x17\n" +
+	"\x13USER_STATUS_DELETED\x10\x04\x12\x17\n" +
+	"\x13USER_STATUS_PENDING\x10\x05*\xbc\x01\n" +
 	"\x0eCredentialType\x12\x1f\n" +
 	"\x1bCREDENTIAL_TYPE_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15CREDENTIAL_TYPE_PHONE\x10\x01\x12\x1c\n" +
@@ -2206,7 +2213,7 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"\x1bDEVICE_TRUST_STATUS_REVOKED\x10\x03*v\n" +
 	"\x1aRecoveryDeviceKeyAlgorithm\x12-\n" +
 	")RECOVERY_DEVICE_KEY_ALGORITHM_UNSPECIFIED\x10\x00\x12)\n" +
-	"%RECOVERY_DEVICE_KEY_ALGORITHM_ED25519\x10\x01*\x97\x04\n" +
+	"%RECOVERY_DEVICE_KEY_ALGORITHM_ED25519\x10\x01*\x8f\x04\n" +
 	"\x14SecurityActivityType\x12&\n" +
 	"\"SECURITY_ACTIVITY_TYPE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cSECURITY_ACTIVITY_TYPE_LOGIN\x10\x01\x12%\n" +
@@ -2216,11 +2223,11 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"0SECURITY_ACTIVITY_TYPE_EXTERNAL_IDENTITY_CHANGED\x10\x05\x12'\n" +
 	"#SECURITY_ACTIVITY_TYPE_TOTP_CHANGED\x10\x06\x12*\n" +
 	"&SECURITY_ACTIVITY_TYPE_SESSION_REVOKED\x10\a\x12)\n" +
-	"%SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED\x10\b\x12+\n" +
-	"'SECURITY_ACTIVITY_TYPE_ACCOUNT_RECOVERY\x10\t\x12(\n" +
-	"$SECURITY_ACTIVITY_TYPE_ACCOUNT_MERGE\x10\n" +
-	"\x12*\n" +
-	"&SECURITY_ACTIVITY_TYPE_ACCOUNT_CLOSURE\x10\vB\xba\x01\n" +
+	"%SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED\x10\b\x12(\n" +
+	"$SECURITY_ACTIVITY_TYPE_USER_RECOVERY\x10\t\x12%\n" +
+	"!SECURITY_ACTIVITY_TYPE_USER_MERGE\x10\n" +
+	"\x12(\n" +
+	"$SECURITY_ACTIVITY_TYPE_USER_DELETION\x10\vB\xba\x01\n" +
 	"\x11com.user.types.v1B\n" +
 	"TypesProtoP\x01ZCgithub.com/feymanlee/redkit-protos/gen/go/user/types/v1;usertypespb\xa2\x02\x03UTX\xaa\x02\rUser.Types.V1\xca\x02\rUser\\Types\\V1\xe2\x02\x19User\\Types\\V1\\GPBMetadata\xea\x02\x0fUser::Types::V1b\x06proto3"
 
@@ -2239,42 +2246,42 @@ func file_user_types_v1_types_proto_rawDescGZIP() []byte {
 var file_user_types_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_user_types_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_user_types_v1_types_proto_goTypes = []any{
-	(AccountStatus)(0),                  // 0: user.types.v1.AccountStatus
-	(CredentialType)(0),                 // 1: user.types.v1.CredentialType
-	(CredentialStatus)(0),               // 2: user.types.v1.CredentialStatus
-	(AuthenticationMethod)(0),           // 3: user.types.v1.AuthenticationMethod
-	(ExternalIdentityProvider)(0),       // 4: user.types.v1.ExternalIdentityProvider
-	(ConsumerPlatform)(0),               // 5: user.types.v1.ConsumerPlatform
-	(PhoneBindingRequirement)(0),        // 6: user.types.v1.PhoneBindingRequirement
-	(SessionStatus)(0),                  // 7: user.types.v1.SessionStatus
-	(DeviceTrustStatus)(0),              // 8: user.types.v1.DeviceTrustStatus
-	(RecoveryDeviceKeyAlgorithm)(0),     // 9: user.types.v1.RecoveryDeviceKeyAlgorithm
-	(SecurityActivityType)(0),           // 10: user.types.v1.SecurityActivityType
-	(*Account)(nil),                     // 11: user.types.v1.Account
-	(*Profile)(nil),                     // 12: user.types.v1.Profile
-	(*PublicProfile)(nil),               // 13: user.types.v1.PublicProfile
-	(*Credential)(nil),                  // 14: user.types.v1.Credential
-	(*TokenPair)(nil),                   // 15: user.types.v1.TokenPair
-	(*ConsumerClientContext)(nil),       // 16: user.types.v1.ConsumerClientContext
-	(*Session)(nil),                     // 17: user.types.v1.Session
-	(*Device)(nil),                      // 18: user.types.v1.Device
-	(*ConsumerAccountCapabilities)(nil), // 19: user.types.v1.ConsumerAccountCapabilities
-	(*SecurityOverview)(nil),            // 20: user.types.v1.SecurityOverview
-	(*SecurityActivity)(nil),            // 21: user.types.v1.SecurityActivity
-	(*CursorPageRequest)(nil),           // 22: user.types.v1.CursorPageRequest
-	(*CursorPageResponse)(nil),          // 23: user.types.v1.CursorPageResponse
-	(v1.AppId)(0),                       // 24: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),       // 25: google.protobuf.Timestamp
-	(*v11.FileView)(nil),                // 26: common.file.v1.FileView
+	(UserStatus)(0),                  // 0: user.types.v1.UserStatus
+	(CredentialType)(0),              // 1: user.types.v1.CredentialType
+	(CredentialStatus)(0),            // 2: user.types.v1.CredentialStatus
+	(AuthenticationMethod)(0),        // 3: user.types.v1.AuthenticationMethod
+	(ExternalIdentityProvider)(0),    // 4: user.types.v1.ExternalIdentityProvider
+	(ConsumerPlatform)(0),            // 5: user.types.v1.ConsumerPlatform
+	(PhoneBindingRequirement)(0),     // 6: user.types.v1.PhoneBindingRequirement
+	(SessionStatus)(0),               // 7: user.types.v1.SessionStatus
+	(DeviceTrustStatus)(0),           // 8: user.types.v1.DeviceTrustStatus
+	(RecoveryDeviceKeyAlgorithm)(0),  // 9: user.types.v1.RecoveryDeviceKeyAlgorithm
+	(SecurityActivityType)(0),        // 10: user.types.v1.SecurityActivityType
+	(*User)(nil),                     // 11: user.types.v1.User
+	(*Profile)(nil),                  // 12: user.types.v1.Profile
+	(*PublicProfile)(nil),            // 13: user.types.v1.PublicProfile
+	(*Credential)(nil),               // 14: user.types.v1.Credential
+	(*TokenPair)(nil),                // 15: user.types.v1.TokenPair
+	(*ConsumerClientContext)(nil),    // 16: user.types.v1.ConsumerClientContext
+	(*Session)(nil),                  // 17: user.types.v1.Session
+	(*Device)(nil),                   // 18: user.types.v1.Device
+	(*ConsumerUserCapabilities)(nil), // 19: user.types.v1.ConsumerUserCapabilities
+	(*SecurityOverview)(nil),         // 20: user.types.v1.SecurityOverview
+	(*SecurityActivity)(nil),         // 21: user.types.v1.SecurityActivity
+	(*CursorPageRequest)(nil),        // 22: user.types.v1.CursorPageRequest
+	(*CursorPageResponse)(nil),       // 23: user.types.v1.CursorPageResponse
+	(v1.AppId)(0),                    // 24: common.v1.AppId
+	(*timestamppb.Timestamp)(nil),    // 25: google.protobuf.Timestamp
+	(*v11.FileView)(nil),             // 26: common.file.v1.FileView
 }
 var file_user_types_v1_types_proto_depIdxs = []int32{
-	24, // 0: user.types.v1.Account.app_id:type_name -> common.v1.AppId
-	0,  // 1: user.types.v1.Account.status:type_name -> user.types.v1.AccountStatus
-	25, // 2: user.types.v1.Account.suspended_until:type_name -> google.protobuf.Timestamp
-	25, // 3: user.types.v1.Account.closing_at:type_name -> google.protobuf.Timestamp
-	25, // 4: user.types.v1.Account.closed_at:type_name -> google.protobuf.Timestamp
-	25, // 5: user.types.v1.Account.created_at:type_name -> google.protobuf.Timestamp
-	25, // 6: user.types.v1.Account.updated_at:type_name -> google.protobuf.Timestamp
+	24, // 0: user.types.v1.User.app_id:type_name -> common.v1.AppId
+	0,  // 1: user.types.v1.User.status:type_name -> user.types.v1.UserStatus
+	25, // 2: user.types.v1.User.suspended_until:type_name -> google.protobuf.Timestamp
+	25, // 3: user.types.v1.User.deleting_at:type_name -> google.protobuf.Timestamp
+	25, // 4: user.types.v1.User.deleted_at:type_name -> google.protobuf.Timestamp
+	25, // 5: user.types.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	25, // 6: user.types.v1.User.updated_at:type_name -> google.protobuf.Timestamp
 	24, // 7: user.types.v1.Profile.app_id:type_name -> common.v1.AppId
 	26, // 8: user.types.v1.Profile.avatar:type_name -> common.file.v1.FileView
 	25, // 9: user.types.v1.Profile.updated_at:type_name -> google.protobuf.Timestamp
@@ -2299,7 +2306,7 @@ var file_user_types_v1_types_proto_depIdxs = []int32{
 	25, // 28: user.types.v1.Device.recovery_key_registered_at:type_name -> google.protobuf.Timestamp
 	25, // 29: user.types.v1.Device.first_seen_at:type_name -> google.protobuf.Timestamp
 	25, // 30: user.types.v1.Device.last_seen_at:type_name -> google.protobuf.Timestamp
-	25, // 31: user.types.v1.ConsumerAccountCapabilities.user_code_change_available_at:type_name -> google.protobuf.Timestamp
+	25, // 31: user.types.v1.ConsumerUserCapabilities.user_code_change_available_at:type_name -> google.protobuf.Timestamp
 	25, // 32: user.types.v1.SecurityOverview.password_changed_at:type_name -> google.protobuf.Timestamp
 	25, // 33: user.types.v1.SecurityOverview.locked_until:type_name -> google.protobuf.Timestamp
 	10, // 34: user.types.v1.SecurityActivity.type:type_name -> user.types.v1.SecurityActivityType

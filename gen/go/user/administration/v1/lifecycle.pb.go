@@ -34,8 +34,8 @@ const (
 	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_UNSPECIFIED LifecycleOperationType = 0
 	// LIFECYCLE_OPERATION_TYPE_RECOVERY 选择 RECOVERY 业务类型。
 	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_RECOVERY LifecycleOperationType = 1
-	// LIFECYCLE_OPERATION_TYPE_CLOSURE 选择 CLOSURE 业务类型。
-	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_CLOSURE LifecycleOperationType = 2
+	// LIFECYCLE_OPERATION_TYPE_DELETION 选择 DELETION 业务类型。
+	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_DELETION LifecycleOperationType = 2
 	// LIFECYCLE_OPERATION_TYPE_MERGE 选择 MERGE 业务类型。
 	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_MERGE LifecycleOperationType = 3
 )
@@ -45,13 +45,13 @@ var (
 	LifecycleOperationType_name = map[int32]string{
 		0: "LIFECYCLE_OPERATION_TYPE_UNSPECIFIED",
 		1: "LIFECYCLE_OPERATION_TYPE_RECOVERY",
-		2: "LIFECYCLE_OPERATION_TYPE_CLOSURE",
+		2: "LIFECYCLE_OPERATION_TYPE_DELETION",
 		3: "LIFECYCLE_OPERATION_TYPE_MERGE",
 	}
 	LifecycleOperationType_value = map[string]int32{
 		"LIFECYCLE_OPERATION_TYPE_UNSPECIFIED": 0,
 		"LIFECYCLE_OPERATION_TYPE_RECOVERY":    1,
-		"LIFECYCLE_OPERATION_TYPE_CLOSURE":     2,
+		"LIFECYCLE_OPERATION_TYPE_DELETION":    2,
 		"LIFECYCLE_OPERATION_TYPE_MERGE":       3,
 	}
 )
@@ -213,6 +213,216 @@ func (LifecycleSlaState) EnumDescriptor() ([]byte, []int) {
 	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{2}
 }
 
+// BeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
+type BeginUserDeletionRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// app_id 限定 BeginUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
+	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	// user_id 标识当前 App 内关联的 User。
+	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+	VerificationTicket string `protobuf:"bytes,3,opt,name=verification_ticket,json=verificationTicket,proto3" json:"verification_ticket,omitempty"`
+	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+	IdempotencyKey string `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *BeginUserDeletionRequest) Reset() {
+	*x = BeginUserDeletionRequest{}
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BeginUserDeletionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BeginUserDeletionRequest) ProtoMessage() {}
+
+func (x *BeginUserDeletionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BeginUserDeletionRequest.ProtoReflect.Descriptor instead.
+func (*BeginUserDeletionRequest) Descriptor() ([]byte, []int) {
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *BeginUserDeletionRequest) GetAppId() v1.AppId {
+	if x != nil {
+		return x.AppId
+	}
+	return v1.AppId(0)
+}
+
+func (x *BeginUserDeletionRequest) GetUserId() uint64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *BeginUserDeletionRequest) GetVerificationTicket() string {
+	if x != nil {
+		return x.VerificationTicket
+	}
+	return ""
+}
+
+func (x *BeginUserDeletionRequest) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
+// CancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
+type CancelUserDeletionRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// app_id 限定 CancelUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
+	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	// user_id 标识当前 App 内关联的 User。
+	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
+	VerificationTicket string `protobuf:"bytes,3,opt,name=verification_ticket,json=verificationTicket,proto3" json:"verification_ticket,omitempty"`
+	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+	IdempotencyKey string `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CancelUserDeletionRequest) Reset() {
+	*x = CancelUserDeletionRequest{}
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CancelUserDeletionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CancelUserDeletionRequest) ProtoMessage() {}
+
+func (x *CancelUserDeletionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CancelUserDeletionRequest.ProtoReflect.Descriptor instead.
+func (*CancelUserDeletionRequest) Descriptor() ([]byte, []int) {
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CancelUserDeletionRequest) GetAppId() v1.AppId {
+	if x != nil {
+		return x.AppId
+	}
+	return v1.AppId(0)
+}
+
+func (x *CancelUserDeletionRequest) GetUserId() uint64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *CancelUserDeletionRequest) GetVerificationTicket() string {
+	if x != nil {
+		return x.VerificationTicket
+	}
+	return ""
+}
+
+func (x *CancelUserDeletionRequest) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
+// FinalizeUserDeletionRequest 定义执行 FinalizeUserDeletion 的幂等管理命令参数。
+type FinalizeUserDeletionRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// app_id 限定 FinalizeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
+	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	// user_id 标识当前 App 内关联的 User。
+	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+	IdempotencyKey string `protobuf:"bytes,3,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *FinalizeUserDeletionRequest) Reset() {
+	*x = FinalizeUserDeletionRequest{}
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FinalizeUserDeletionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FinalizeUserDeletionRequest) ProtoMessage() {}
+
+func (x *FinalizeUserDeletionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FinalizeUserDeletionRequest.ProtoReflect.Descriptor instead.
+func (*FinalizeUserDeletionRequest) Descriptor() ([]byte, []int) {
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *FinalizeUserDeletionRequest) GetAppId() v1.AppId {
+	if x != nil {
+		return x.AppId
+	}
+	return v1.AppId(0)
+}
+
+func (x *FinalizeUserDeletionRequest) GetUserId() uint64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *FinalizeUserDeletionRequest) GetIdempotencyKey() string {
+	if x != nil {
+		return x.IdempotencyKey
+	}
+	return ""
+}
+
 // LifecycleOperationFilter 定义可组合的查询筛选条件。
 type LifecycleOperationFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -240,7 +450,7 @@ type LifecycleOperationFilter struct {
 
 func (x *LifecycleOperationFilter) Reset() {
 	*x = LifecycleOperationFilter{}
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[0]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -252,7 +462,7 @@ func (x *LifecycleOperationFilter) String() string {
 func (*LifecycleOperationFilter) ProtoMessage() {}
 
 func (x *LifecycleOperationFilter) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[0]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -265,7 +475,7 @@ func (x *LifecycleOperationFilter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LifecycleOperationFilter.ProtoReflect.Descriptor instead.
 func (*LifecycleOperationFilter) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{0}
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *LifecycleOperationFilter) GetOperationType() LifecycleOperationType {
@@ -346,7 +556,7 @@ type ListLifecycleOperationsRequest struct {
 
 func (x *ListLifecycleOperationsRequest) Reset() {
 	*x = ListLifecycleOperationsRequest{}
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[1]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -358,7 +568,7 @@ func (x *ListLifecycleOperationsRequest) String() string {
 func (*ListLifecycleOperationsRequest) ProtoMessage() {}
 
 func (x *ListLifecycleOperationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[1]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,7 +581,7 @@ func (x *ListLifecycleOperationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLifecycleOperationsRequest.ProtoReflect.Descriptor instead.
 func (*ListLifecycleOperationsRequest) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{1}
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListLifecycleOperationsRequest) GetAppId() v1.AppId {
@@ -408,7 +618,7 @@ type LifecycleOperationLink struct {
 
 func (x *LifecycleOperationLink) Reset() {
 	*x = LifecycleOperationLink{}
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[2]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -420,7 +630,7 @@ func (x *LifecycleOperationLink) String() string {
 func (*LifecycleOperationLink) ProtoMessage() {}
 
 func (x *LifecycleOperationLink) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[2]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -433,7 +643,7 @@ func (x *LifecycleOperationLink) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LifecycleOperationLink.ProtoReflect.Descriptor instead.
 func (*LifecycleOperationLink) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{2}
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *LifecycleOperationLink) GetRelation() string {
@@ -489,7 +699,7 @@ type LifecycleOperation struct {
 
 func (x *LifecycleOperation) Reset() {
 	*x = LifecycleOperation{}
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[3]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -501,7 +711,7 @@ func (x *LifecycleOperation) String() string {
 func (*LifecycleOperation) ProtoMessage() {}
 
 func (x *LifecycleOperation) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[3]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -514,7 +724,7 @@ func (x *LifecycleOperation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LifecycleOperation.ProtoReflect.Descriptor instead.
 func (*LifecycleOperation) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{3}
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LifecycleOperation) GetOperationNo() string {
@@ -641,7 +851,7 @@ type LifecycleOperationSummary struct {
 
 func (x *LifecycleOperationSummary) Reset() {
 	*x = LifecycleOperationSummary{}
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[4]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -653,7 +863,7 @@ func (x *LifecycleOperationSummary) String() string {
 func (*LifecycleOperationSummary) ProtoMessage() {}
 
 func (x *LifecycleOperationSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[4]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -666,7 +876,7 @@ func (x *LifecycleOperationSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LifecycleOperationSummary.ProtoReflect.Descriptor instead.
 func (*LifecycleOperationSummary) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{4}
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *LifecycleOperationSummary) GetOperationType() LifecycleOperationType {
@@ -719,7 +929,7 @@ type ListLifecycleOperationsResponse struct {
 
 func (x *ListLifecycleOperationsResponse) Reset() {
 	*x = ListLifecycleOperationsResponse{}
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[5]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -731,7 +941,7 @@ func (x *ListLifecycleOperationsResponse) String() string {
 func (*ListLifecycleOperationsResponse) ProtoMessage() {}
 
 func (x *ListLifecycleOperationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[5]
+	mi := &file_user_administration_v1_lifecycle_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -744,7 +954,7 @@ func (x *ListLifecycleOperationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListLifecycleOperationsResponse.ProtoReflect.Descriptor instead.
 func (*ListLifecycleOperationsResponse) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{5}
+	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListLifecycleOperationsResponse) GetItems() []*LifecycleOperation {
@@ -772,7 +982,21 @@ var File_user_administration_v1_lifecycle_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_lifecycle_proto_rawDesc = "" +
 	"\n" +
-	"&user/administration/v1/lifecycle.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xd1\x04\n" +
+	"&user/administration/v1/lifecycle.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"\xb6\x01\n" +
+	"\x18BeginUserDeletionRequest\x12'\n" +
+	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12/\n" +
+	"\x13verification_ticket\x18\x03 \x01(\tR\x12verificationTicket\x12'\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\xb7\x01\n" +
+	"\x19CancelUserDeletionRequest\x12'\n" +
+	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12/\n" +
+	"\x13verification_ticket\x18\x03 \x01(\tR\x12verificationTicket\x12'\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\x88\x01\n" +
+	"\x1bFinalizeUserDeletionRequest\x12'\n" +
+	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12'\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tR\x0eidempotencyKey\"\xd1\x04\n" +
 	"\x18LifecycleOperationFilter\x12f\n" +
 	"\x0eoperation_type\x18\x01 \x01(\x0e2..user.administration.v1.LifecycleOperationTypeB\n" +
 	"\xfaB\a\x82\x01\x04\x10\x01 \x00H\x00R\roperationType\x88\x01\x01\x12&\n" +
@@ -827,11 +1051,11 @@ const file_user_administration_v1_lifecycle_proto_rawDesc = "" +
 	"\x1fListLifecycleOperationsResponse\x12@\n" +
 	"\x05items\x18\x01 \x03(\v2*.user.administration.v1.LifecycleOperationR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\x12K\n" +
-	"\asummary\x18\x03 \x03(\v21.user.administration.v1.LifecycleOperationSummaryR\asummary*\xb3\x01\n" +
+	"\asummary\x18\x03 \x03(\v21.user.administration.v1.LifecycleOperationSummaryR\asummary*\xb4\x01\n" +
 	"\x16LifecycleOperationType\x12(\n" +
 	"$LIFECYCLE_OPERATION_TYPE_UNSPECIFIED\x10\x00\x12%\n" +
-	"!LIFECYCLE_OPERATION_TYPE_RECOVERY\x10\x01\x12$\n" +
-	" LIFECYCLE_OPERATION_TYPE_CLOSURE\x10\x02\x12\"\n" +
+	"!LIFECYCLE_OPERATION_TYPE_RECOVERY\x10\x01\x12%\n" +
+	"!LIFECYCLE_OPERATION_TYPE_DELETION\x10\x02\x12\"\n" +
 	"\x1eLIFECYCLE_OPERATION_TYPE_MERGE\x10\x03*\xe2\x01\n" +
 	"\x12LifecycleSlaFilter\x12$\n" +
 	" LIFECYCLE_SLA_FILTER_UNSPECIFIED\x10\x00\x12!\n" +
@@ -846,9 +1070,12 @@ const file_user_administration_v1_lifecycle_proto_rawDesc = "" +
 	"\x17LIFECYCLE_SLA_STATE_DUE\x10\x02\x12 \n" +
 	"\x1cLIFECYCLE_SLA_STATE_BREACHED\x10\x03\x12\x1f\n" +
 	"\x1bLIFECYCLE_SLA_STATE_EXPIRED\x10\x04\x12\x1f\n" +
-	"\x1bLIFECYCLE_SLA_STATE_STALLED\x10\x052\xa3\x01\n" +
+	"\x1bLIFECYCLE_SLA_STATE_STALLED\x10\x052\xda\x03\n" +
 	"\x14UserLifecycleService\x12\x8a\x01\n" +
-	"\x17ListLifecycleOperations\x126.user.administration.v1.ListLifecycleOperationsRequest\x1a7.user.administration.v1.ListLifecycleOperationsResponseB\xfd\x01\n" +
+	"\x17ListLifecycleOperations\x126.user.administration.v1.ListLifecycleOperationsRequest\x1a7.user.administration.v1.ListLifecycleOperationsResponse\x12c\n" +
+	"\x11BeginUserDeletion\x120.user.administration.v1.BeginUserDeletionRequest\x1a\x1c.user.administration.v1.User\x12e\n" +
+	"\x12CancelUserDeletion\x121.user.administration.v1.CancelUserDeletionRequest\x1a\x1c.user.administration.v1.User\x12i\n" +
+	"\x14FinalizeUserDeletion\x123.user.administration.v1.FinalizeUserDeletionRequest\x1a\x1c.user.administration.v1.UserB\xfd\x01\n" +
 	"\x1acom.user.administration.v1B\x0eLifecycleProtoP\x01ZUgithub.com/feymanlee/redkit-protos/gen/go/user/administration/v1;useradministrationpb\xa2\x02\x03UAX\xaa\x02\x16User.Administration.V1\xca\x02\x16User\\Administration\\V1\xe2\x02\"User\\Administration\\V1\\GPBMetadata\xea\x02\x18User::Administration::V1b\x06proto3"
 
 var (
@@ -864,48 +1091,61 @@ func file_user_administration_v1_lifecycle_proto_rawDescGZIP() []byte {
 }
 
 var file_user_administration_v1_lifecycle_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_user_administration_v1_lifecycle_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_user_administration_v1_lifecycle_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_user_administration_v1_lifecycle_proto_goTypes = []any{
 	(LifecycleOperationType)(0),             // 0: user.administration.v1.LifecycleOperationType
 	(LifecycleSlaFilter)(0),                 // 1: user.administration.v1.LifecycleSlaFilter
 	(LifecycleSlaState)(0),                  // 2: user.administration.v1.LifecycleSlaState
-	(*LifecycleOperationFilter)(nil),        // 3: user.administration.v1.LifecycleOperationFilter
-	(*ListLifecycleOperationsRequest)(nil),  // 4: user.administration.v1.ListLifecycleOperationsRequest
-	(*LifecycleOperationLink)(nil),          // 5: user.administration.v1.LifecycleOperationLink
-	(*LifecycleOperation)(nil),              // 6: user.administration.v1.LifecycleOperation
-	(*LifecycleOperationSummary)(nil),       // 7: user.administration.v1.LifecycleOperationSummary
-	(*ListLifecycleOperationsResponse)(nil), // 8: user.administration.v1.ListLifecycleOperationsResponse
-	(*timestamppb.Timestamp)(nil),           // 9: google.protobuf.Timestamp
-	(v1.AppId)(0),                           // 10: common.v1.AppId
-	(*v11.PagingRequest)(nil),               // 11: common.pagination.v1.PagingRequest
+	(*BeginUserDeletionRequest)(nil),        // 3: user.administration.v1.BeginUserDeletionRequest
+	(*CancelUserDeletionRequest)(nil),       // 4: user.administration.v1.CancelUserDeletionRequest
+	(*FinalizeUserDeletionRequest)(nil),     // 5: user.administration.v1.FinalizeUserDeletionRequest
+	(*LifecycleOperationFilter)(nil),        // 6: user.administration.v1.LifecycleOperationFilter
+	(*ListLifecycleOperationsRequest)(nil),  // 7: user.administration.v1.ListLifecycleOperationsRequest
+	(*LifecycleOperationLink)(nil),          // 8: user.administration.v1.LifecycleOperationLink
+	(*LifecycleOperation)(nil),              // 9: user.administration.v1.LifecycleOperation
+	(*LifecycleOperationSummary)(nil),       // 10: user.administration.v1.LifecycleOperationSummary
+	(*ListLifecycleOperationsResponse)(nil), // 11: user.administration.v1.ListLifecycleOperationsResponse
+	(v1.AppId)(0),                           // 12: common.v1.AppId
+	(*timestamppb.Timestamp)(nil),           // 13: google.protobuf.Timestamp
+	(*v11.PagingRequest)(nil),               // 14: common.pagination.v1.PagingRequest
+	(*User)(nil),                            // 15: user.administration.v1.User
 }
 var file_user_administration_v1_lifecycle_proto_depIdxs = []int32{
-	0,  // 0: user.administration.v1.LifecycleOperationFilter.operation_type:type_name -> user.administration.v1.LifecycleOperationType
-	9,  // 1: user.administration.v1.LifecycleOperationFilter.created_from:type_name -> google.protobuf.Timestamp
-	9,  // 2: user.administration.v1.LifecycleOperationFilter.created_to:type_name -> google.protobuf.Timestamp
-	9,  // 3: user.administration.v1.LifecycleOperationFilter.updated_from:type_name -> google.protobuf.Timestamp
-	9,  // 4: user.administration.v1.LifecycleOperationFilter.updated_to:type_name -> google.protobuf.Timestamp
-	1,  // 5: user.administration.v1.LifecycleOperationFilter.sla:type_name -> user.administration.v1.LifecycleSlaFilter
-	10, // 6: user.administration.v1.ListLifecycleOperationsRequest.app_id:type_name -> common.v1.AppId
-	11, // 7: user.administration.v1.ListLifecycleOperationsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	3,  // 8: user.administration.v1.ListLifecycleOperationsRequest.filter:type_name -> user.administration.v1.LifecycleOperationFilter
-	10, // 9: user.administration.v1.LifecycleOperation.app_id:type_name -> common.v1.AppId
-	0,  // 10: user.administration.v1.LifecycleOperation.operation_type:type_name -> user.administration.v1.LifecycleOperationType
-	9,  // 11: user.administration.v1.LifecycleOperation.created_at:type_name -> google.protobuf.Timestamp
-	9,  // 12: user.administration.v1.LifecycleOperation.updated_at:type_name -> google.protobuf.Timestamp
-	9,  // 13: user.administration.v1.LifecycleOperation.sla_due_at:type_name -> google.protobuf.Timestamp
-	2,  // 14: user.administration.v1.LifecycleOperation.sla_state:type_name -> user.administration.v1.LifecycleSlaState
-	5,  // 15: user.administration.v1.LifecycleOperation.links:type_name -> user.administration.v1.LifecycleOperationLink
-	0,  // 16: user.administration.v1.LifecycleOperationSummary.operation_type:type_name -> user.administration.v1.LifecycleOperationType
-	6,  // 17: user.administration.v1.ListLifecycleOperationsResponse.items:type_name -> user.administration.v1.LifecycleOperation
-	7,  // 18: user.administration.v1.ListLifecycleOperationsResponse.summary:type_name -> user.administration.v1.LifecycleOperationSummary
-	4,  // 19: user.administration.v1.UserLifecycleService.ListLifecycleOperations:input_type -> user.administration.v1.ListLifecycleOperationsRequest
-	8,  // 20: user.administration.v1.UserLifecycleService.ListLifecycleOperations:output_type -> user.administration.v1.ListLifecycleOperationsResponse
-	20, // [20:21] is the sub-list for method output_type
-	19, // [19:20] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	12, // 0: user.administration.v1.BeginUserDeletionRequest.app_id:type_name -> common.v1.AppId
+	12, // 1: user.administration.v1.CancelUserDeletionRequest.app_id:type_name -> common.v1.AppId
+	12, // 2: user.administration.v1.FinalizeUserDeletionRequest.app_id:type_name -> common.v1.AppId
+	0,  // 3: user.administration.v1.LifecycleOperationFilter.operation_type:type_name -> user.administration.v1.LifecycleOperationType
+	13, // 4: user.administration.v1.LifecycleOperationFilter.created_from:type_name -> google.protobuf.Timestamp
+	13, // 5: user.administration.v1.LifecycleOperationFilter.created_to:type_name -> google.protobuf.Timestamp
+	13, // 6: user.administration.v1.LifecycleOperationFilter.updated_from:type_name -> google.protobuf.Timestamp
+	13, // 7: user.administration.v1.LifecycleOperationFilter.updated_to:type_name -> google.protobuf.Timestamp
+	1,  // 8: user.administration.v1.LifecycleOperationFilter.sla:type_name -> user.administration.v1.LifecycleSlaFilter
+	12, // 9: user.administration.v1.ListLifecycleOperationsRequest.app_id:type_name -> common.v1.AppId
+	14, // 10: user.administration.v1.ListLifecycleOperationsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	6,  // 11: user.administration.v1.ListLifecycleOperationsRequest.filter:type_name -> user.administration.v1.LifecycleOperationFilter
+	12, // 12: user.administration.v1.LifecycleOperation.app_id:type_name -> common.v1.AppId
+	0,  // 13: user.administration.v1.LifecycleOperation.operation_type:type_name -> user.administration.v1.LifecycleOperationType
+	13, // 14: user.administration.v1.LifecycleOperation.created_at:type_name -> google.protobuf.Timestamp
+	13, // 15: user.administration.v1.LifecycleOperation.updated_at:type_name -> google.protobuf.Timestamp
+	13, // 16: user.administration.v1.LifecycleOperation.sla_due_at:type_name -> google.protobuf.Timestamp
+	2,  // 17: user.administration.v1.LifecycleOperation.sla_state:type_name -> user.administration.v1.LifecycleSlaState
+	8,  // 18: user.administration.v1.LifecycleOperation.links:type_name -> user.administration.v1.LifecycleOperationLink
+	0,  // 19: user.administration.v1.LifecycleOperationSummary.operation_type:type_name -> user.administration.v1.LifecycleOperationType
+	9,  // 20: user.administration.v1.ListLifecycleOperationsResponse.items:type_name -> user.administration.v1.LifecycleOperation
+	10, // 21: user.administration.v1.ListLifecycleOperationsResponse.summary:type_name -> user.administration.v1.LifecycleOperationSummary
+	7,  // 22: user.administration.v1.UserLifecycleService.ListLifecycleOperations:input_type -> user.administration.v1.ListLifecycleOperationsRequest
+	3,  // 23: user.administration.v1.UserLifecycleService.BeginUserDeletion:input_type -> user.administration.v1.BeginUserDeletionRequest
+	4,  // 24: user.administration.v1.UserLifecycleService.CancelUserDeletion:input_type -> user.administration.v1.CancelUserDeletionRequest
+	5,  // 25: user.administration.v1.UserLifecycleService.FinalizeUserDeletion:input_type -> user.administration.v1.FinalizeUserDeletionRequest
+	11, // 26: user.administration.v1.UserLifecycleService.ListLifecycleOperations:output_type -> user.administration.v1.ListLifecycleOperationsResponse
+	15, // 27: user.administration.v1.UserLifecycleService.BeginUserDeletion:output_type -> user.administration.v1.User
+	15, // 28: user.administration.v1.UserLifecycleService.CancelUserDeletion:output_type -> user.administration.v1.User
+	15, // 29: user.administration.v1.UserLifecycleService.FinalizeUserDeletion:output_type -> user.administration.v1.User
+	26, // [26:30] is the sub-list for method output_type
+	22, // [22:26] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_lifecycle_proto_init() }
@@ -913,14 +1153,15 @@ func file_user_administration_v1_lifecycle_proto_init() {
 	if File_user_administration_v1_lifecycle_proto != nil {
 		return
 	}
-	file_user_administration_v1_lifecycle_proto_msgTypes[0].OneofWrappers = []any{}
+	file_user_administration_v1_types_proto_init()
+	file_user_administration_v1_lifecycle_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_administration_v1_lifecycle_proto_rawDesc), len(file_user_administration_v1_lifecycle_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   6,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

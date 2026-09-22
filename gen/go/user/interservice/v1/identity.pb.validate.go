@@ -40,7 +40,7 @@ var (
 
 	_ = commonpb.AppId(0)
 
-	_ = usertypespb.AccountStatus(0)
+	_ = usertypespb.UserStatus(0)
 )
 
 // Validate checks the field values on UserReference with the rules defined in

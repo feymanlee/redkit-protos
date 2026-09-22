@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package user.consumer.v1;
+
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "user/consumer/v1/authentication.proto";
+
+// C 端用户注销服务，负责当前 App 内需要 step-up 证明的带冷静期注销流程。
+service ConsumerUserDeletionService {
+  // 使用 step_up_token 幂等发起带冷静期的 UserDeletion。
+  rpc BeginUserDeletion(BeginUserDeletionRequest) returns (UserDeletionAccess);
+  // 查询当前 User 可见的 UserDeletion 状态、阻塞原因及参与方进度。
+  rpc GetUserDeletion(GetUserDeletionRequest) returns (UserDeletion);
+  // 使用 deletion_access_token 和强证明幂等取消尚未进入不可逆阶段的 UserDeletion。
+  rpc CancelUserDeletion(CancelUserDeletionRequest) returns (UserDeletion);
+}
+
+// UserDeletionStatus 刻画对应资源的生命周期状态。
+enum UserDeletionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  USER_DELETION_STATUS_UNSPECIFIED = 0;
+  // USER_DELETION_STATUS_COOLING 表示资源处于对应业务阶段。
+  USER_DELETION_STATUS_COOLING = 1;
+  // 正在处理中，尚未形成终态。
+  USER_DELETION_STATUS_PREPARING = 2;
+  // USER_DELETION_STATUS_CANCELING 表示资源处于对应业务阶段。
+  USER_DELETION_STATUS_CANCELING = 3;
+  // 正在处理中，尚未形成终态。
+  USER_DELETION_STATUS_RUNNING = 4;
+  // 处理被阻塞，需要外部处置后才能继续。
+  USER_DELETION_STATUS_BLOCKED = 5;
+  // 处理被阻塞，需要外部处置后才能继续。
+  USER_DELETION_STATUS_STALLED = 6;
+  // 处理已成功完成。
+  USER_DELETION_STATUS_COMPLETED = 7;
+  // 处理已取消，不再继续推进。
+  USER_DELETION_STATUS_CANCELED = 8;
+}
+
+// UserDeletionParticipantType 区分对应资源的业务类型。
+enum UserDeletionParticipantType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  USER_DELETION_PARTICIPANT_TYPE_UNSPECIFIED = 0;
+  // USER_DELETION_PARTICIPANT_TYPE_ENGAGEMENT 选择 ENGAGEMENT 业务类型。
+  USER_DELETION_PARTICIPANT_TYPE_ENGAGEMENT = 1;
+  // USER_DELETION_PARTICIPANT_TYPE_WALLET 选择 WALLET 业务类型。
+  USER_DELETION_PARTICIPANT_TYPE_WALLET = 2;
+  // USER_DELETION_PARTICIPANT_TYPE_GIFT 选择 GIFT 业务类型。
+  USER_DELETION_PARTICIPANT_TYPE_GIFT = 3;
+  // USER_DELETION_PARTICIPANT_TYPE_PAYMENT 选择 PAYMENT 业务类型。
+  USER_DELETION_PARTICIPANT_TYPE_PAYMENT = 4;
+}
+
+// UserDeletionParticipantStatus 刻画对应资源的生命周期状态。
+enum UserDeletionParticipantStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  USER_DELETION_PARTICIPANT_STATUS_UNSPECIFIED = 0;
+  // 已受理并等待后续处理。
+  USER_DELETION_PARTICIPANT_STATUS_PENDING = 1;
+  // USER_DELETION_PARTICIPANT_STATUS_PREPARED 表示资源处于对应业务阶段。
+  USER_DELETION_PARTICIPANT_STATUS_PREPARED = 2;
+  // 正在处理中，尚未形成终态。
+  USER_DELETION_PARTICIPANT_STATUS_APPLYING = 3;
+  // 处理已成功完成。
+  USER_DELETION_PARTICIPANT_STATUS_SUCCEEDED = 4;
+  // 处理被阻塞，需要外部处置后才能继续。
+  USER_DELETION_PARTICIPANT_STATUS_BLOCKED = 5;
+  // 处理失败；是否可重试由具体失败原因决定。
+  USER_DELETION_PARTICIPANT_STATUS_FAILED = 6;
+  // 处理已取消，不再继续推进。
+  USER_DELETION_PARTICIPANT_STATUS_CANCELED = 7;
+}
+
+// UserDeletionBlockerCode 区分调用方可判断的业务原因。
+enum UserDeletionBlockerCode {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  USER_DELETION_BLOCKER_CODE_UNSPECIFIED = 0;
+  // USER_DELETION_BLOCKER_CODE_OUTSTANDING_DEBT 表示 OUTSTANDING_DEBT 条件阻止当前流程继续。
+  USER_DELETION_BLOCKER_CODE_OUTSTANDING_DEBT = 1;
+  // USER_DELETION_BLOCKER_CODE_ACTIVE_SUBSCRIPTION 表示 ACTIVE_SUBSCRIPTION 条件阻止当前流程继续。
+  USER_DELETION_BLOCKER_CODE_ACTIVE_SUBSCRIPTION = 2;
+  // USER_DELETION_BLOCKER_CODE_PENDING_SETTLEMENT 表示 PENDING_SETTLEMENT 条件阻止当前流程继续。
+  USER_DELETION_BLOCKER_CODE_PENDING_SETTLEMENT = 3;
+  // USER_DELETION_BLOCKER_CODE_PENDING_REWARD 表示 PENDING_REWARD 条件阻止当前流程继续。
+  USER_DELETION_BLOCKER_CODE_PENDING_REWARD = 4;
+  // USER_DELETION_BLOCKER_CODE_ACTIVE_BENEFIT 表示 ACTIVE_BENEFIT 条件阻止当前流程继续。
+  USER_DELETION_BLOCKER_CODE_ACTIVE_BENEFIT = 5;
+}
+
+// UserDeletionParticipant 记录一个 bounded context 对 User Deletion 的处理状态。
+message UserDeletionParticipant {
+  // type 区分 UserDeletionParticipant 的业务类型。
+  UserDeletionParticipantType type = 1;
+  // status 表示 UserDeletionParticipant 当前可观察的生命周期状态。
+  UserDeletionParticipantStatus status = 2;
+  // blocker_codes 列出 UserDeletionParticipant 关联的 UserDeletionBlockerCode。
+  repeated UserDeletionBlockerCode blocker_codes = 3;
+}
+
+// UserDeletion 表示一次 User Deletion 流程及其参与者状态。
+message UserDeletion {
+  // deletion_no 是 UserDeletion 对外关联与审计使用的业务编号。
+  string deletion_no = 1;
+  // status 表示 UserDeletion 当前可观察的生命周期状态。
+  UserDeletionStatus status = 2;
+  // cancelable 显式表示 UserDeletion 是否满足该条件。
+  bool cancelable = 3;
+  // irreversible_started 显式表示 UserDeletion 是否满足该条件。
+  bool irreversible_started = 4;
+  // cooling_until 指定 UserDeletion 查询或生效区间的结束边界。
+  google.protobuf.Timestamp cooling_until = 5;
+  // participants 列出 UserDeletion 关联的 UserDeletionParticipant。
+  repeated UserDeletionParticipant participants = 6;
+  // created_at 记录 UserDeletion 的创建时间。
+  google.protobuf.Timestamp created_at = 7;
+  // updated_at 记录 UserDeletion 最近一次更新的时间。
+  google.protobuf.Timestamp updated_at = 8;
+  // completed_at 记录 UserDeletion 对应业务阶段的时间点。
+  google.protobuf.Timestamp completed_at = 9;
+}
+
+// BeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
+message BeginUserDeletionRequest {
+  // app_id 限定 BeginUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// UserDeletionAccess 承载 BeginUserDeletion 调用的返回结果。
+message UserDeletionAccess {
+  // deletion 承载 UserDeletionAccess 关联的 UserDeletion。
+  UserDeletion deletion = 1;
+  // deletion_access_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string deletion_access_token = 2;
+  // expires_at 指定 UserDeletionAccess 失效的时间点。
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+// GetUserDeletionRequest 标识待查询的 UserDeletion。
+message GetUserDeletionRequest {
+  // app_id 限定 GetUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // deletion_no 是 GetUserDeletion 对外关联与审计使用的业务编号。
+  string deletion_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // deletion_access_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string deletion_access_token = 3 [(validate.rules).string.max_len = 512];
+}
+
+// CancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
+message CancelUserDeletionRequest {
+  // app_id 限定 CancelUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // deletion_no 是 CancelUserDeletion 对外关联与审计使用的业务编号。
+  string deletion_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // deletion_access_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string deletion_access_token = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+  // CancelUserDeletionRequest 在以下身份或安全证明中选择一种。
+  oneof strong_proof {
+    option (validate.required) = true;
+    // password 承载敏感凭据或校验材料，不得写入普通日志。
+    string password = 5 [(validate.rules).string = {min_len: 1, max_len: 256}];
+    // totp_code 承载一次性认证因子，不得写入普通日志。
+    string totp_code = 6 [(validate.rules).string = {pattern: "^[0-9]{6}$"}];
+    // recovery_code 承载一次性认证因子，不得写入普通日志。
+    string recovery_code = 7 [(validate.rules).string = {min_len: 8, max_len: 128}];
+    // external_identity 记录外部或上游系统用于稳定关联 CancelUserDeletion 的身份。
+    ExternalIdentityProof external_identity = 8 [(validate.rules).message = {required: true}];
+  }
+}

@@ -39,75 +39,46 @@ var (
 	_ = commonpb.AppId(0)
 )
 
-// Validate checks the field values on GetAccountClosureRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetAccountClosureRequest) Validate() error {
+// Validate checks the field values on CreateUserRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *CreateUserRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetAccountClosureRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on CreateUserRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetAccountClosureRequestMultiError, or nil if none found.
-func (m *GetAccountClosureRequest) ValidateAll() error {
+// CreateUserRequestMultiError, or nil if none found.
+func (m *CreateUserRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetAccountClosureRequest) validate(all bool) error {
+func (m *CreateUserRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _GetAccountClosureRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetAccountClosureRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for AppId
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetAccountClosureRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetUserId() <= 0 {
-		err := GetAccountClosureRequestValidationError{
-			field:  "UserId",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for IdempotencyKey
 
 	if len(errors) > 0 {
-		return GetAccountClosureRequestMultiError(errors)
+		return CreateUserRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetAccountClosureRequestMultiError is an error wrapping multiple validation
-// errors returned by GetAccountClosureRequest.ValidateAll() if the designated
-// constraints aren't met.
-type GetAccountClosureRequestMultiError []error
+// CreateUserRequestMultiError is an error wrapping multiple validation errors
+// returned by CreateUserRequest.ValidateAll() if the designated constraints
+// aren't met.
+type CreateUserRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetAccountClosureRequestMultiError) Error() string {
+func (m CreateUserRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -116,11 +87,11 @@ func (m GetAccountClosureRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetAccountClosureRequestMultiError) AllErrors() []error { return m }
+func (m CreateUserRequestMultiError) AllErrors() []error { return m }
 
-// GetAccountClosureRequestValidationError is the validation error returned by
-// GetAccountClosureRequest.Validate if the designated constraints aren't met.
-type GetAccountClosureRequestValidationError struct {
+// CreateUserRequestValidationError is the validation error returned by
+// CreateUserRequest.Validate if the designated constraints aren't met.
+type CreateUserRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -128,24 +99,24 @@ type GetAccountClosureRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetAccountClosureRequestValidationError) Field() string { return e.field }
+func (e CreateUserRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetAccountClosureRequestValidationError) Reason() string { return e.reason }
+func (e CreateUserRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetAccountClosureRequestValidationError) Cause() error { return e.cause }
+func (e CreateUserRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetAccountClosureRequestValidationError) Key() bool { return e.key }
+func (e CreateUserRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetAccountClosureRequestValidationError) ErrorName() string {
-	return "GetAccountClosureRequestValidationError"
+func (e CreateUserRequestValidationError) ErrorName() string {
+	return "CreateUserRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e GetAccountClosureRequestValidationError) Error() string {
+func (e CreateUserRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -157,14 +128,14 @@ func (e GetAccountClosureRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetAccountClosureRequest.%s: %s%s",
+		"invalid %sCreateUserRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetAccountClosureRequestValidationError{}
+var _ error = CreateUserRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -172,28 +143,675 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetAccountClosureRequestValidationError{}
+} = CreateUserRequestValidationError{}
 
-var _GetAccountClosureRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
-// Validate checks the field values on AccountClosureParticipant with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *AccountClosureParticipant) Validate() error {
+// Validate checks the field values on GetUserRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GetUserRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on AccountClosureParticipant with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// AccountClosureParticipantMultiError, or nil if none found.
-func (m *AccountClosureParticipant) ValidateAll() error {
+// ValidateAll checks the field values on GetUserRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GetUserRequestMultiError,
+// or nil if none found.
+func (m *GetUserRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *AccountClosureParticipant) validate(all bool) error {
+func (m *GetUserRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AppId
+
+	switch v := m.Query.(type) {
+	case *GetUserRequest_UserId:
+		if v == nil {
+			err := GetUserRequestValidationError{
+				field:  "Query",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for UserId
+	case *GetUserRequest_UserCode:
+		if v == nil {
+			err := GetUserRequestValidationError{
+				field:  "Query",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		// no validation rules for UserCode
+	default:
+		_ = v // ensures v is used
+	}
+
+	if len(errors) > 0 {
+		return GetUserRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserRequestMultiError is an error wrapping multiple validation errors
+// returned by GetUserRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetUserRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserRequestMultiError) AllErrors() []error { return m }
+
+// GetUserRequestValidationError is the validation error returned by
+// GetUserRequest.Validate if the designated constraints aren't met.
+type GetUserRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserRequestValidationError) ErrorName() string { return "GetUserRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetUserRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserRequestValidationError{}
+
+// Validate checks the field values on ListUsersRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListUsersRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListUsersRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListUsersRequestMultiError, or nil if none found.
+func (m *ListUsersRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUsersRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AppId
+
+	if all {
+		switch v := interface{}(m.GetPaging()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, ListUsersRequestValidationError{
+					field:  "Paging",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, ListUsersRequestValidationError{
+					field:  "Paging",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetPaging()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListUsersRequestValidationError{
+				field:  "Paging",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return ListUsersRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListUsersRequestMultiError is an error wrapping multiple validation errors
+// returned by ListUsersRequest.ValidateAll() if the designated constraints
+// aren't met.
+type ListUsersRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUsersRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUsersRequestMultiError) AllErrors() []error { return m }
+
+// ListUsersRequestValidationError is the validation error returned by
+// ListUsersRequest.Validate if the designated constraints aren't met.
+type ListUsersRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListUsersRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListUsersRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListUsersRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListUsersRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListUsersRequestValidationError) ErrorName() string { return "ListUsersRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ListUsersRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListUsersRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListUsersRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListUsersRequestValidationError{}
+
+// Validate checks the field values on ListUsersResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListUsersResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListUsersResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListUsersResponseMultiError, or nil if none found.
+func (m *ListUsersResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListUsersResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListUsersResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListUsersResponseValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListUsersResponseValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for Total
+
+	if len(errors) > 0 {
+		return ListUsersResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListUsersResponseMultiError is an error wrapping multiple validation errors
+// returned by ListUsersResponse.ValidateAll() if the designated constraints
+// aren't met.
+type ListUsersResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListUsersResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListUsersResponseMultiError) AllErrors() []error { return m }
+
+// ListUsersResponseValidationError is the validation error returned by
+// ListUsersResponse.Validate if the designated constraints aren't met.
+type ListUsersResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListUsersResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListUsersResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListUsersResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListUsersResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListUsersResponseValidationError) ErrorName() string {
+	return "ListUsersResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListUsersResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListUsersResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListUsersResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListUsersResponseValidationError{}
+
+// Validate checks the field values on ChangeUserCodeRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ChangeUserCodeRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ChangeUserCodeRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ChangeUserCodeRequestMultiError, or nil if none found.
+func (m *ChangeUserCodeRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ChangeUserCodeRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AppId
+
+	// no validation rules for UserId
+
+	// no validation rules for UserCode
+
+	// no validation rules for VerificationTicket
+
+	// no validation rules for IdempotencyKey
+
+	if len(errors) > 0 {
+		return ChangeUserCodeRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ChangeUserCodeRequestMultiError is an error wrapping multiple validation
+// errors returned by ChangeUserCodeRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ChangeUserCodeRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ChangeUserCodeRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ChangeUserCodeRequestMultiError) AllErrors() []error { return m }
+
+// ChangeUserCodeRequestValidationError is the validation error returned by
+// ChangeUserCodeRequest.Validate if the designated constraints aren't met.
+type ChangeUserCodeRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ChangeUserCodeRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ChangeUserCodeRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ChangeUserCodeRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ChangeUserCodeRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ChangeUserCodeRequestValidationError) ErrorName() string {
+	return "ChangeUserCodeRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ChangeUserCodeRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sChangeUserCodeRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ChangeUserCodeRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ChangeUserCodeRequestValidationError{}
+
+// Validate checks the field values on GetUserDeletionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserDeletionRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserDeletionRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserDeletionRequestMultiError, or nil if none found.
+func (m *GetUserDeletionRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserDeletionRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if _, ok := _GetUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := GetUserDeletionRequestValidationError{
+			field:  "AppId",
+			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
+		err := GetUserDeletionRequestValidationError{
+			field:  "AppId",
+			reason: "value must be one of the defined enum values",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetUserId() <= 0 {
+		err := GetUserDeletionRequestValidationError{
+			field:  "UserId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetUserDeletionRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserDeletionRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUserDeletionRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserDeletionRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserDeletionRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserDeletionRequestMultiError) AllErrors() []error { return m }
+
+// GetUserDeletionRequestValidationError is the validation error returned by
+// GetUserDeletionRequest.Validate if the designated constraints aren't met.
+type GetUserDeletionRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserDeletionRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserDeletionRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserDeletionRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserDeletionRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserDeletionRequestValidationError) ErrorName() string {
+	return "GetUserDeletionRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserDeletionRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserDeletionRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserDeletionRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserDeletionRequestValidationError{}
+
+var _GetUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+	0: {},
+}
+
+// Validate checks the field values on UserDeletionParticipant with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UserDeletionParticipant) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UserDeletionParticipant with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UserDeletionParticipantMultiError, or nil if none found.
+func (m *UserDeletionParticipant) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UserDeletionParticipant) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -218,7 +836,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 		switch v := interface{}(m.GetLeaseUntil()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureParticipantValidationError{
+				errors = append(errors, UserDeletionParticipantValidationError{
 					field:  "LeaseUntil",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -226,7 +844,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureParticipantValidationError{
+				errors = append(errors, UserDeletionParticipantValidationError{
 					field:  "LeaseUntil",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -235,7 +853,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetLeaseUntil()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureParticipantValidationError{
+			return UserDeletionParticipantValidationError{
 				field:  "LeaseUntil",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -247,7 +865,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 		switch v := interface{}(m.GetCompletedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureParticipantValidationError{
+				errors = append(errors, UserDeletionParticipantValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -255,7 +873,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureParticipantValidationError{
+				errors = append(errors, UserDeletionParticipantValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -264,7 +882,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCompletedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureParticipantValidationError{
+			return UserDeletionParticipantValidationError{
 				field:  "CompletedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -276,7 +894,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 		switch v := interface{}(m.GetUpdatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureParticipantValidationError{
+				errors = append(errors, UserDeletionParticipantValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -284,7 +902,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureParticipantValidationError{
+				errors = append(errors, UserDeletionParticipantValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -293,7 +911,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureParticipantValidationError{
+			return UserDeletionParticipantValidationError{
 				field:  "UpdatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -308,7 +926,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, AccountClosureParticipantValidationError{
+					errors = append(errors, UserDeletionParticipantValidationError{
 						field:  fmt.Sprintf("Blockers[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -316,7 +934,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, AccountClosureParticipantValidationError{
+					errors = append(errors, UserDeletionParticipantValidationError{
 						field:  fmt.Sprintf("Blockers[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -325,7 +943,7 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return AccountClosureParticipantValidationError{
+				return UserDeletionParticipantValidationError{
 					field:  fmt.Sprintf("Blockers[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -338,19 +956,19 @@ func (m *AccountClosureParticipant) validate(all bool) error {
 	// no validation rules for Order
 
 	if len(errors) > 0 {
-		return AccountClosureParticipantMultiError(errors)
+		return UserDeletionParticipantMultiError(errors)
 	}
 
 	return nil
 }
 
-// AccountClosureParticipantMultiError is an error wrapping multiple validation
-// errors returned by AccountClosureParticipant.ValidateAll() if the
-// designated constraints aren't met.
-type AccountClosureParticipantMultiError []error
+// UserDeletionParticipantMultiError is an error wrapping multiple validation
+// errors returned by UserDeletionParticipant.ValidateAll() if the designated
+// constraints aren't met.
+type UserDeletionParticipantMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AccountClosureParticipantMultiError) Error() string {
+func (m UserDeletionParticipantMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -359,11 +977,11 @@ func (m AccountClosureParticipantMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AccountClosureParticipantMultiError) AllErrors() []error { return m }
+func (m UserDeletionParticipantMultiError) AllErrors() []error { return m }
 
-// AccountClosureParticipantValidationError is the validation error returned by
-// AccountClosureParticipant.Validate if the designated constraints aren't met.
-type AccountClosureParticipantValidationError struct {
+// UserDeletionParticipantValidationError is the validation error returned by
+// UserDeletionParticipant.Validate if the designated constraints aren't met.
+type UserDeletionParticipantValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -371,24 +989,24 @@ type AccountClosureParticipantValidationError struct {
 }
 
 // Field function returns field value.
-func (e AccountClosureParticipantValidationError) Field() string { return e.field }
+func (e UserDeletionParticipantValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AccountClosureParticipantValidationError) Reason() string { return e.reason }
+func (e UserDeletionParticipantValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AccountClosureParticipantValidationError) Cause() error { return e.cause }
+func (e UserDeletionParticipantValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AccountClosureParticipantValidationError) Key() bool { return e.key }
+func (e UserDeletionParticipantValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AccountClosureParticipantValidationError) ErrorName() string {
-	return "AccountClosureParticipantValidationError"
+func (e UserDeletionParticipantValidationError) ErrorName() string {
+	return "UserDeletionParticipantValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e AccountClosureParticipantValidationError) Error() string {
+func (e UserDeletionParticipantValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -400,14 +1018,14 @@ func (e AccountClosureParticipantValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAccountClosureParticipant.%s: %s%s",
+		"invalid %sUserDeletionParticipant.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AccountClosureParticipantValidationError{}
+var _ error = UserDeletionParticipantValidationError{}
 
 var _ interface {
 	Field() string
@@ -415,25 +1033,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AccountClosureParticipantValidationError{}
+} = UserDeletionParticipantValidationError{}
 
-// Validate checks the field values on AccountClosureParticipantBlocker with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the first error encountered is returned, or nil if there are
-// no violations.
-func (m *AccountClosureParticipantBlocker) Validate() error {
+// Validate checks the field values on UserDeletionParticipantBlocker with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UserDeletionParticipantBlocker) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on AccountClosureParticipantBlocker with
+// ValidateAll checks the field values on UserDeletionParticipantBlocker with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the result is a list of violation errors wrapped in
-// AccountClosureParticipantBlockerMultiError, or nil if none found.
-func (m *AccountClosureParticipantBlocker) ValidateAll() error {
+// UserDeletionParticipantBlockerMultiError, or nil if none found.
+func (m *UserDeletionParticipantBlocker) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *AccountClosureParticipantBlocker) validate(all bool) error {
+func (m *UserDeletionParticipantBlocker) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -447,20 +1064,19 @@ func (m *AccountClosureParticipantBlocker) validate(all bool) error {
 	// no validation rules for OwningReference
 
 	if len(errors) > 0 {
-		return AccountClosureParticipantBlockerMultiError(errors)
+		return UserDeletionParticipantBlockerMultiError(errors)
 	}
 
 	return nil
 }
 
-// AccountClosureParticipantBlockerMultiError is an error wrapping multiple
-// validation errors returned by
-// AccountClosureParticipantBlocker.ValidateAll() if the designated
-// constraints aren't met.
-type AccountClosureParticipantBlockerMultiError []error
+// UserDeletionParticipantBlockerMultiError is an error wrapping multiple
+// validation errors returned by UserDeletionParticipantBlocker.ValidateAll()
+// if the designated constraints aren't met.
+type UserDeletionParticipantBlockerMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AccountClosureParticipantBlockerMultiError) Error() string {
+func (m UserDeletionParticipantBlockerMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -469,12 +1085,12 @@ func (m AccountClosureParticipantBlockerMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AccountClosureParticipantBlockerMultiError) AllErrors() []error { return m }
+func (m UserDeletionParticipantBlockerMultiError) AllErrors() []error { return m }
 
-// AccountClosureParticipantBlockerValidationError is the validation error
-// returned by AccountClosureParticipantBlocker.Validate if the designated
+// UserDeletionParticipantBlockerValidationError is the validation error
+// returned by UserDeletionParticipantBlocker.Validate if the designated
 // constraints aren't met.
-type AccountClosureParticipantBlockerValidationError struct {
+type UserDeletionParticipantBlockerValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -482,24 +1098,24 @@ type AccountClosureParticipantBlockerValidationError struct {
 }
 
 // Field function returns field value.
-func (e AccountClosureParticipantBlockerValidationError) Field() string { return e.field }
+func (e UserDeletionParticipantBlockerValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AccountClosureParticipantBlockerValidationError) Reason() string { return e.reason }
+func (e UserDeletionParticipantBlockerValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AccountClosureParticipantBlockerValidationError) Cause() error { return e.cause }
+func (e UserDeletionParticipantBlockerValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AccountClosureParticipantBlockerValidationError) Key() bool { return e.key }
+func (e UserDeletionParticipantBlockerValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AccountClosureParticipantBlockerValidationError) ErrorName() string {
-	return "AccountClosureParticipantBlockerValidationError"
+func (e UserDeletionParticipantBlockerValidationError) ErrorName() string {
+	return "UserDeletionParticipantBlockerValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e AccountClosureParticipantBlockerValidationError) Error() string {
+func (e UserDeletionParticipantBlockerValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -511,14 +1127,14 @@ func (e AccountClosureParticipantBlockerValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAccountClosureParticipantBlocker.%s: %s%s",
+		"invalid %sUserDeletionParticipantBlocker.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AccountClosureParticipantBlockerValidationError{}
+var _ error = UserDeletionParticipantBlockerValidationError{}
 
 var _ interface {
 	Field() string
@@ -526,31 +1142,31 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AccountClosureParticipantBlockerValidationError{}
+} = UserDeletionParticipantBlockerValidationError{}
 
-// Validate checks the field values on AccountClosure with the rules defined in
+// Validate checks the field values on UserDeletion with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *AccountClosure) Validate() error {
+func (m *UserDeletion) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on AccountClosure with the rules defined
+// ValidateAll checks the field values on UserDeletion with the rules defined
 // in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in AccountClosureMultiError,
-// or nil if none found.
-func (m *AccountClosure) ValidateAll() error {
+// result is a list of violation errors wrapped in UserDeletionMultiError, or
+// nil if none found.
+func (m *UserDeletion) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *AccountClosure) validate(all bool) error {
+func (m *UserDeletion) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for ClosureNo
+	// no validation rules for DeletionNo
 
 	// no validation rules for AppId
 
@@ -571,7 +1187,7 @@ func (m *AccountClosure) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, AccountClosureValidationError{
+					errors = append(errors, UserDeletionValidationError{
 						field:  fmt.Sprintf("Participants[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -579,7 +1195,7 @@ func (m *AccountClosure) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, AccountClosureValidationError{
+					errors = append(errors, UserDeletionValidationError{
 						field:  fmt.Sprintf("Participants[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -588,7 +1204,7 @@ func (m *AccountClosure) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return AccountClosureValidationError{
+				return UserDeletionValidationError{
 					field:  fmt.Sprintf("Participants[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -602,7 +1218,7 @@ func (m *AccountClosure) validate(all bool) error {
 		switch v := interface{}(m.GetCompletedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -610,7 +1226,7 @@ func (m *AccountClosure) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "CompletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -619,7 +1235,7 @@ func (m *AccountClosure) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCompletedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureValidationError{
+			return UserDeletionValidationError{
 				field:  "CompletedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -631,7 +1247,7 @@ func (m *AccountClosure) validate(all bool) error {
 		switch v := interface{}(m.GetCreatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -639,7 +1255,7 @@ func (m *AccountClosure) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "CreatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -648,7 +1264,7 @@ func (m *AccountClosure) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureValidationError{
+			return UserDeletionValidationError{
 				field:  "CreatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -660,7 +1276,7 @@ func (m *AccountClosure) validate(all bool) error {
 		switch v := interface{}(m.GetUpdatedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -668,7 +1284,7 @@ func (m *AccountClosure) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "UpdatedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -677,7 +1293,7 @@ func (m *AccountClosure) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdatedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureValidationError{
+			return UserDeletionValidationError{
 				field:  "UpdatedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -691,7 +1307,7 @@ func (m *AccountClosure) validate(all bool) error {
 		switch v := interface{}(m.GetIrreversibleStartedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "IrreversibleStartedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -699,7 +1315,7 @@ func (m *AccountClosure) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "IrreversibleStartedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -708,7 +1324,7 @@ func (m *AccountClosure) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetIrreversibleStartedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureValidationError{
+			return UserDeletionValidationError{
 				field:  "IrreversibleStartedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -720,7 +1336,7 @@ func (m *AccountClosure) validate(all bool) error {
 		switch v := interface{}(m.GetCanceledAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "CanceledAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -728,7 +1344,7 @@ func (m *AccountClosure) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
+				errors = append(errors, UserDeletionValidationError{
 					field:  "CanceledAt",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -737,7 +1353,7 @@ func (m *AccountClosure) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCanceledAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureValidationError{
+			return UserDeletionValidationError{
 				field:  "CanceledAt",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -746,28 +1362,28 @@ func (m *AccountClosure) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetClosedAt()).(type) {
+		switch v := interface{}(m.GetDeletedAt()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
-					field:  "ClosedAt",
+				errors = append(errors, UserDeletionValidationError{
+					field:  "DeletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, AccountClosureValidationError{
-					field:  "ClosedAt",
+				errors = append(errors, UserDeletionValidationError{
+					field:  "DeletedAt",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetClosedAt()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetDeletedAt()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return AccountClosureValidationError{
-				field:  "ClosedAt",
+			return UserDeletionValidationError{
+				field:  "DeletedAt",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -775,19 +1391,18 @@ func (m *AccountClosure) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return AccountClosureMultiError(errors)
+		return UserDeletionMultiError(errors)
 	}
 
 	return nil
 }
 
-// AccountClosureMultiError is an error wrapping multiple validation errors
-// returned by AccountClosure.ValidateAll() if the designated constraints
-// aren't met.
-type AccountClosureMultiError []error
+// UserDeletionMultiError is an error wrapping multiple validation errors
+// returned by UserDeletion.ValidateAll() if the designated constraints aren't met.
+type UserDeletionMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AccountClosureMultiError) Error() string {
+func (m UserDeletionMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -796,11 +1411,11 @@ func (m AccountClosureMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AccountClosureMultiError) AllErrors() []error { return m }
+func (m UserDeletionMultiError) AllErrors() []error { return m }
 
-// AccountClosureValidationError is the validation error returned by
-// AccountClosure.Validate if the designated constraints aren't met.
-type AccountClosureValidationError struct {
+// UserDeletionValidationError is the validation error returned by
+// UserDeletion.Validate if the designated constraints aren't met.
+type UserDeletionValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -808,22 +1423,22 @@ type AccountClosureValidationError struct {
 }
 
 // Field function returns field value.
-func (e AccountClosureValidationError) Field() string { return e.field }
+func (e UserDeletionValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AccountClosureValidationError) Reason() string { return e.reason }
+func (e UserDeletionValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AccountClosureValidationError) Cause() error { return e.cause }
+func (e UserDeletionValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AccountClosureValidationError) Key() bool { return e.key }
+func (e UserDeletionValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AccountClosureValidationError) ErrorName() string { return "AccountClosureValidationError" }
+func (e UserDeletionValidationError) ErrorName() string { return "UserDeletionValidationError" }
 
 // Error satisfies the builtin error interface
-func (e AccountClosureValidationError) Error() string {
+func (e UserDeletionValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -835,14 +1450,14 @@ func (e AccountClosureValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAccountClosure.%s: %s%s",
+		"invalid %sUserDeletion.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AccountClosureValidationError{}
+var _ error = UserDeletionValidationError{}
 
 var _ interface {
 	Field() string
@@ -850,34 +1465,34 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AccountClosureValidationError{}
+} = UserDeletionValidationError{}
 
-// Validate checks the field values on
-// CancelAdministrativeAccountClosureRequest with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *CancelAdministrativeAccountClosureRequest) Validate() error {
+// Validate checks the field values on CancelAdministrativeUserDeletionRequest
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *CancelAdministrativeUserDeletionRequest) Validate() error {
 	return m.validate(false)
 }
 
 // ValidateAll checks the field values on
-// CancelAdministrativeAccountClosureRequest with the rules defined in the
-// proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in
-// CancelAdministrativeAccountClosureRequestMultiError, or nil if none found.
-func (m *CancelAdministrativeAccountClosureRequest) ValidateAll() error {
+// CancelAdministrativeUserDeletionRequest with the rules defined in the proto
+// definition for this message. If any rules are violated, the result is a
+// list of violation errors wrapped in
+// CancelAdministrativeUserDeletionRequestMultiError, or nil if none found.
+func (m *CancelAdministrativeUserDeletionRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CancelAdministrativeAccountClosureRequest) validate(all bool) error {
+func (m *CancelAdministrativeUserDeletionRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _CancelAdministrativeAccountClosureRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CancelAdministrativeAccountClosureRequestValidationError{
+	if _, ok := _CancelAdministrativeUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := CancelAdministrativeUserDeletionRequestValidationError{
 			field:  "AppId",
 			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
 		}
@@ -888,7 +1503,7 @@ func (m *CancelAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CancelAdministrativeAccountClosureRequestValidationError{
+		err := CancelAdministrativeUserDeletionRequestValidationError{
 			field:  "AppId",
 			reason: "value must be one of the defined enum values",
 		}
@@ -899,7 +1514,7 @@ func (m *CancelAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if m.GetUserId() <= 0 {
-		err := CancelAdministrativeAccountClosureRequestValidationError{
+		err := CancelAdministrativeUserDeletionRequestValidationError{
 			field:  "UserId",
 			reason: "value must be greater than 0",
 		}
@@ -910,7 +1525,7 @@ func (m *CancelAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetReason()); l < 1 || l > 512 {
-		err := CancelAdministrativeAccountClosureRequestValidationError{
+		err := CancelAdministrativeUserDeletionRequestValidationError{
 			field:  "Reason",
 			reason: "value length must be between 1 and 512 runes, inclusive",
 		}
@@ -921,7 +1536,7 @@ func (m *CancelAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := CancelAdministrativeAccountClosureRequestValidationError{
+		err := CancelAdministrativeUserDeletionRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -932,20 +1547,20 @@ func (m *CancelAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CancelAdministrativeAccountClosureRequestMultiError(errors)
+		return CancelAdministrativeUserDeletionRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// CancelAdministrativeAccountClosureRequestMultiError is an error wrapping
+// CancelAdministrativeUserDeletionRequestMultiError is an error wrapping
 // multiple validation errors returned by
-// CancelAdministrativeAccountClosureRequest.ValidateAll() if the designated
+// CancelAdministrativeUserDeletionRequest.ValidateAll() if the designated
 // constraints aren't met.
-type CancelAdministrativeAccountClosureRequestMultiError []error
+type CancelAdministrativeUserDeletionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CancelAdministrativeAccountClosureRequestMultiError) Error() string {
+func (m CancelAdministrativeUserDeletionRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -954,12 +1569,12 @@ func (m CancelAdministrativeAccountClosureRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CancelAdministrativeAccountClosureRequestMultiError) AllErrors() []error { return m }
+func (m CancelAdministrativeUserDeletionRequestMultiError) AllErrors() []error { return m }
 
-// CancelAdministrativeAccountClosureRequestValidationError is the validation
-// error returned by CancelAdministrativeAccountClosureRequest.Validate if the
+// CancelAdministrativeUserDeletionRequestValidationError is the validation
+// error returned by CancelAdministrativeUserDeletionRequest.Validate if the
 // designated constraints aren't met.
-type CancelAdministrativeAccountClosureRequestValidationError struct {
+type CancelAdministrativeUserDeletionRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -967,24 +1582,24 @@ type CancelAdministrativeAccountClosureRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e CancelAdministrativeAccountClosureRequestValidationError) Field() string { return e.field }
+func (e CancelAdministrativeUserDeletionRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CancelAdministrativeAccountClosureRequestValidationError) Reason() string { return e.reason }
+func (e CancelAdministrativeUserDeletionRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CancelAdministrativeAccountClosureRequestValidationError) Cause() error { return e.cause }
+func (e CancelAdministrativeUserDeletionRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CancelAdministrativeAccountClosureRequestValidationError) Key() bool { return e.key }
+func (e CancelAdministrativeUserDeletionRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CancelAdministrativeAccountClosureRequestValidationError) ErrorName() string {
-	return "CancelAdministrativeAccountClosureRequestValidationError"
+func (e CancelAdministrativeUserDeletionRequestValidationError) ErrorName() string {
+	return "CancelAdministrativeUserDeletionRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CancelAdministrativeAccountClosureRequestValidationError) Error() string {
+func (e CancelAdministrativeUserDeletionRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -996,14 +1611,14 @@ func (e CancelAdministrativeAccountClosureRequestValidationError) Error() string
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCancelAdministrativeAccountClosureRequest.%s: %s%s",
+		"invalid %sCancelAdministrativeUserDeletionRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CancelAdministrativeAccountClosureRequestValidationError{}
+var _ error = CancelAdministrativeUserDeletionRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1011,38 +1626,38 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CancelAdministrativeAccountClosureRequestValidationError{}
+} = CancelAdministrativeUserDeletionRequestValidationError{}
 
-var _CancelAdministrativeAccountClosureRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+var _CancelAdministrativeUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
-// Validate checks the field values on RetryAdministrativeAccountClosureRequest
+// Validate checks the field values on RetryAdministrativeUserDeletionRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
 // there are no violations.
-func (m *RetryAdministrativeAccountClosureRequest) Validate() error {
+func (m *RetryAdministrativeUserDeletionRequest) Validate() error {
 	return m.validate(false)
 }
 
 // ValidateAll checks the field values on
-// RetryAdministrativeAccountClosureRequest with the rules defined in the
-// proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in
-// RetryAdministrativeAccountClosureRequestMultiError, or nil if none found.
-func (m *RetryAdministrativeAccountClosureRequest) ValidateAll() error {
+// RetryAdministrativeUserDeletionRequest with the rules defined in the proto
+// definition for this message. If any rules are violated, the result is a
+// list of violation errors wrapped in
+// RetryAdministrativeUserDeletionRequestMultiError, or nil if none found.
+func (m *RetryAdministrativeUserDeletionRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RetryAdministrativeAccountClosureRequest) validate(all bool) error {
+func (m *RetryAdministrativeUserDeletionRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _RetryAdministrativeAccountClosureRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RetryAdministrativeAccountClosureRequestValidationError{
+	if _, ok := _RetryAdministrativeUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := RetryAdministrativeUserDeletionRequestValidationError{
 			field:  "AppId",
 			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
 		}
@@ -1053,7 +1668,7 @@ func (m *RetryAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RetryAdministrativeAccountClosureRequestValidationError{
+		err := RetryAdministrativeUserDeletionRequestValidationError{
 			field:  "AppId",
 			reason: "value must be one of the defined enum values",
 		}
@@ -1063,9 +1678,9 @@ func (m *RetryAdministrativeAccountClosureRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetClosureNo()); l < 1 || l > 128 {
-		err := RetryAdministrativeAccountClosureRequestValidationError{
-			field:  "ClosureNo",
+	if l := utf8.RuneCountInString(m.GetDeletionNo()); l < 1 || l > 128 {
+		err := RetryAdministrativeUserDeletionRequestValidationError{
+			field:  "DeletionNo",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
 		if !all {
@@ -1075,7 +1690,7 @@ func (m *RetryAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetReason()); l < 1 || l > 512 {
-		err := RetryAdministrativeAccountClosureRequestValidationError{
+		err := RetryAdministrativeUserDeletionRequestValidationError{
 			field:  "Reason",
 			reason: "value length must be between 1 and 512 runes, inclusive",
 		}
@@ -1086,7 +1701,7 @@ func (m *RetryAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := RetryAdministrativeAccountClosureRequestValidationError{
+		err := RetryAdministrativeUserDeletionRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -1097,20 +1712,20 @@ func (m *RetryAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return RetryAdministrativeAccountClosureRequestMultiError(errors)
+		return RetryAdministrativeUserDeletionRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// RetryAdministrativeAccountClosureRequestMultiError is an error wrapping
+// RetryAdministrativeUserDeletionRequestMultiError is an error wrapping
 // multiple validation errors returned by
-// RetryAdministrativeAccountClosureRequest.ValidateAll() if the designated
+// RetryAdministrativeUserDeletionRequest.ValidateAll() if the designated
 // constraints aren't met.
-type RetryAdministrativeAccountClosureRequestMultiError []error
+type RetryAdministrativeUserDeletionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RetryAdministrativeAccountClosureRequestMultiError) Error() string {
+func (m RetryAdministrativeUserDeletionRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1119,12 +1734,12 @@ func (m RetryAdministrativeAccountClosureRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RetryAdministrativeAccountClosureRequestMultiError) AllErrors() []error { return m }
+func (m RetryAdministrativeUserDeletionRequestMultiError) AllErrors() []error { return m }
 
-// RetryAdministrativeAccountClosureRequestValidationError is the validation
-// error returned by RetryAdministrativeAccountClosureRequest.Validate if the
+// RetryAdministrativeUserDeletionRequestValidationError is the validation
+// error returned by RetryAdministrativeUserDeletionRequest.Validate if the
 // designated constraints aren't met.
-type RetryAdministrativeAccountClosureRequestValidationError struct {
+type RetryAdministrativeUserDeletionRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1132,24 +1747,24 @@ type RetryAdministrativeAccountClosureRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e RetryAdministrativeAccountClosureRequestValidationError) Field() string { return e.field }
+func (e RetryAdministrativeUserDeletionRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RetryAdministrativeAccountClosureRequestValidationError) Reason() string { return e.reason }
+func (e RetryAdministrativeUserDeletionRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RetryAdministrativeAccountClosureRequestValidationError) Cause() error { return e.cause }
+func (e RetryAdministrativeUserDeletionRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RetryAdministrativeAccountClosureRequestValidationError) Key() bool { return e.key }
+func (e RetryAdministrativeUserDeletionRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RetryAdministrativeAccountClosureRequestValidationError) ErrorName() string {
-	return "RetryAdministrativeAccountClosureRequestValidationError"
+func (e RetryAdministrativeUserDeletionRequestValidationError) ErrorName() string {
+	return "RetryAdministrativeUserDeletionRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e RetryAdministrativeAccountClosureRequestValidationError) Error() string {
+func (e RetryAdministrativeUserDeletionRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1161,14 +1776,14 @@ func (e RetryAdministrativeAccountClosureRequestValidationError) Error() string 
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRetryAdministrativeAccountClosureRequest.%s: %s%s",
+		"invalid %sRetryAdministrativeUserDeletionRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RetryAdministrativeAccountClosureRequestValidationError{}
+var _ error = RetryAdministrativeUserDeletionRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1176,9 +1791,9 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RetryAdministrativeAccountClosureRequestValidationError{}
+} = RetryAdministrativeUserDeletionRequestValidationError{}
 
-var _RetryAdministrativeAccountClosureRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+var _RetryAdministrativeUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
@@ -1618,32 +2233,32 @@ var _ResetUserCodeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
-// Validate checks the field values on BeginAdministrativeAccountClosureRequest
+// Validate checks the field values on BeginAdministrativeUserDeletionRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
 // there are no violations.
-func (m *BeginAdministrativeAccountClosureRequest) Validate() error {
+func (m *BeginAdministrativeUserDeletionRequest) Validate() error {
 	return m.validate(false)
 }
 
 // ValidateAll checks the field values on
-// BeginAdministrativeAccountClosureRequest with the rules defined in the
-// proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in
-// BeginAdministrativeAccountClosureRequestMultiError, or nil if none found.
-func (m *BeginAdministrativeAccountClosureRequest) ValidateAll() error {
+// BeginAdministrativeUserDeletionRequest with the rules defined in the proto
+// definition for this message. If any rules are violated, the result is a
+// list of violation errors wrapped in
+// BeginAdministrativeUserDeletionRequestMultiError, or nil if none found.
+func (m *BeginAdministrativeUserDeletionRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *BeginAdministrativeAccountClosureRequest) validate(all bool) error {
+func (m *BeginAdministrativeUserDeletionRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if _, ok := _BeginAdministrativeAccountClosureRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BeginAdministrativeAccountClosureRequestValidationError{
+	if _, ok := _BeginAdministrativeUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
+		err := BeginAdministrativeUserDeletionRequestValidationError{
 			field:  "AppId",
 			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
 		}
@@ -1654,7 +2269,7 @@ func (m *BeginAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BeginAdministrativeAccountClosureRequestValidationError{
+		err := BeginAdministrativeUserDeletionRequestValidationError{
 			field:  "AppId",
 			reason: "value must be one of the defined enum values",
 		}
@@ -1665,7 +2280,7 @@ func (m *BeginAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if m.GetUserId() <= 0 {
-		err := BeginAdministrativeAccountClosureRequestValidationError{
+		err := BeginAdministrativeUserDeletionRequestValidationError{
 			field:  "UserId",
 			reason: "value must be greater than 0",
 		}
@@ -1676,7 +2291,7 @@ func (m *BeginAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetReason()); l < 1 || l > 512 {
-		err := BeginAdministrativeAccountClosureRequestValidationError{
+		err := BeginAdministrativeUserDeletionRequestValidationError{
 			field:  "Reason",
 			reason: "value length must be between 1 and 512 runes, inclusive",
 		}
@@ -1687,7 +2302,7 @@ func (m *BeginAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
-		err := BeginAdministrativeAccountClosureRequestValidationError{
+		err := BeginAdministrativeUserDeletionRequestValidationError{
 			field:  "IdempotencyKey",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
@@ -1698,20 +2313,20 @@ func (m *BeginAdministrativeAccountClosureRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return BeginAdministrativeAccountClosureRequestMultiError(errors)
+		return BeginAdministrativeUserDeletionRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// BeginAdministrativeAccountClosureRequestMultiError is an error wrapping
+// BeginAdministrativeUserDeletionRequestMultiError is an error wrapping
 // multiple validation errors returned by
-// BeginAdministrativeAccountClosureRequest.ValidateAll() if the designated
+// BeginAdministrativeUserDeletionRequest.ValidateAll() if the designated
 // constraints aren't met.
-type BeginAdministrativeAccountClosureRequestMultiError []error
+type BeginAdministrativeUserDeletionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m BeginAdministrativeAccountClosureRequestMultiError) Error() string {
+func (m BeginAdministrativeUserDeletionRequestMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1720,12 +2335,12 @@ func (m BeginAdministrativeAccountClosureRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m BeginAdministrativeAccountClosureRequestMultiError) AllErrors() []error { return m }
+func (m BeginAdministrativeUserDeletionRequestMultiError) AllErrors() []error { return m }
 
-// BeginAdministrativeAccountClosureRequestValidationError is the validation
-// error returned by BeginAdministrativeAccountClosureRequest.Validate if the
+// BeginAdministrativeUserDeletionRequestValidationError is the validation
+// error returned by BeginAdministrativeUserDeletionRequest.Validate if the
 // designated constraints aren't met.
-type BeginAdministrativeAccountClosureRequestValidationError struct {
+type BeginAdministrativeUserDeletionRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1733,24 +2348,24 @@ type BeginAdministrativeAccountClosureRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e BeginAdministrativeAccountClosureRequestValidationError) Field() string { return e.field }
+func (e BeginAdministrativeUserDeletionRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e BeginAdministrativeAccountClosureRequestValidationError) Reason() string { return e.reason }
+func (e BeginAdministrativeUserDeletionRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e BeginAdministrativeAccountClosureRequestValidationError) Cause() error { return e.cause }
+func (e BeginAdministrativeUserDeletionRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e BeginAdministrativeAccountClosureRequestValidationError) Key() bool { return e.key }
+func (e BeginAdministrativeUserDeletionRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e BeginAdministrativeAccountClosureRequestValidationError) ErrorName() string {
-	return "BeginAdministrativeAccountClosureRequestValidationError"
+func (e BeginAdministrativeUserDeletionRequestValidationError) ErrorName() string {
+	return "BeginAdministrativeUserDeletionRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e BeginAdministrativeAccountClosureRequestValidationError) Error() string {
+func (e BeginAdministrativeUserDeletionRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1762,14 +2377,14 @@ func (e BeginAdministrativeAccountClosureRequestValidationError) Error() string 
 	}
 
 	return fmt.Sprintf(
-		"invalid %sBeginAdministrativeAccountClosureRequest.%s: %s%s",
+		"invalid %sBeginAdministrativeUserDeletionRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = BeginAdministrativeAccountClosureRequestValidationError{}
+var _ error = BeginAdministrativeUserDeletionRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1777,9 +2392,9 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = BeginAdministrativeAccountClosureRequestValidationError{}
+} = BeginAdministrativeUserDeletionRequestValidationError{}
 
-var _BeginAdministrativeAccountClosureRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
+var _BeginAdministrativeUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
@@ -2506,7 +3121,7 @@ func (m *SuspendUserRequest) validate(all bool) error {
 	if _, ok := _SuspendUserRequest_ReasonCode_NotInLookup[m.GetReasonCode()]; ok {
 		err := SuspendUserRequestValidationError{
 			field:  "ReasonCode",
-			reason: "value must not be in list [ACCOUNT_SUSPENSION_REASON_UNSPECIFIED]",
+			reason: "value must not be in list [USER_SUSPENSION_REASON_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -2514,7 +3129,7 @@ func (m *SuspendUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := AccountSuspensionReason_name[int32(m.GetReasonCode())]; !ok {
+	if _, ok := UserSuspensionReason_name[int32(m.GetReasonCode())]; !ok {
 		err := SuspendUserRequestValidationError{
 			field:  "ReasonCode",
 			reason: "value must be one of the defined enum values",
@@ -2664,7 +3279,7 @@ var _SuspendUserRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
-var _SuspendUserRequest_ReasonCode_NotInLookup = map[AccountSuspensionReason]struct{}{
+var _SuspendUserRequest_ReasonCode_NotInLookup = map[UserSuspensionReason]struct{}{
 	0: {},
 }
 
@@ -2726,7 +3341,7 @@ func (m *ReactivateUserRequest) validate(all bool) error {
 	if _, ok := _ReactivateUserRequest_ReasonCode_NotInLookup[m.GetReasonCode()]; ok {
 		err := ReactivateUserRequestValidationError{
 			field:  "ReasonCode",
-			reason: "value must not be in list [ACCOUNT_REACTIVATION_REASON_UNSPECIFIED]",
+			reason: "value must not be in list [USER_REACTIVATION_REASON_UNSPECIFIED]",
 		}
 		if !all {
 			return err
@@ -2734,7 +3349,7 @@ func (m *ReactivateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if _, ok := AccountReactivationReason_name[int32(m.GetReasonCode())]; !ok {
+	if _, ok := UserReactivationReason_name[int32(m.GetReasonCode())]; !ok {
 		err := ReactivateUserRequestValidationError{
 			field:  "ReasonCode",
 			reason: "value must be one of the defined enum values",
@@ -2855,7 +3470,7 @@ var _ReactivateUserRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
 	0: {},
 }
 
-var _ReactivateUserRequest_ReasonCode_NotInLookup = map[AccountReactivationReason]struct{}{
+var _ReactivateUserRequest_ReasonCode_NotInLookup = map[UserReactivationReason]struct{}{
 	0: {},
 }
 
@@ -3168,8 +3783,8 @@ func (m *UserSearchFilter) validate(all bool) error {
 		}
 	}
 
-	if m.AccountStatus != nil {
-		// no validation rules for AccountStatus
+	if m.UserStatus != nil {
+		// no validation rules for UserStatus
 	}
 
 	if m.RegistrationType != nil {
@@ -3468,11 +4083,11 @@ func (m *UserSearchProjection) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetAccount()).(type) {
+		switch v := interface{}(m.GetUser()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, UserSearchProjectionValidationError{
-					field:  "Account",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -3480,16 +4095,16 @@ func (m *UserSearchProjection) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, UserSearchProjectionValidationError{
-					field:  "Account",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetAccount()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return UserSearchProjectionValidationError{
-				field:  "Account",
+				field:  "User",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

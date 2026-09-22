@@ -16,6 +16,28 @@ service ConsumerProfileService {
   rpc UpdateProfile(UpdateProfileRequest) returns (user.types.v1.Profile);
   // 查询 PublicProfile。
   rpc GetPublicProfile(GetPublicProfileRequest) returns (user.types.v1.PublicProfile);
+  // 使用 step_up_token 幂等变更 UserCode，并返回更新后的 User 与 TokenPair。
+  rpc ChangeUserCode(ChangeUserCodeRequest) returns (ChangeUserCodeResponse);
+}
+
+// ChangeUserCodeRequest 定义执行 ChangeUserCode 的幂等管理命令参数。
+message ChangeUserCodeRequest {
+  // app_id 限定 ChangeUserCode 所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // user_code 提供 ChangeUserCode 对外稳定使用的业务编码。
+  string user_code = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 20}];
+  // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
+  string step_up_token = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ChangeUserCodeResponse 承载 ChangeUserCode 的返回结果。
+message ChangeUserCodeResponse {
+  // user 承载 ChangeUserCode 关联的 User。
+  user.types.v1.User user = 1;
+  // tokens 承载 ChangeUserCode 关联的 TokenPair。
+  user.types.v1.TokenPair tokens = 2;
 }
 
 // GetCurrentUserRequest 标识待查询的 CurrentUser。
@@ -26,14 +48,14 @@ message GetCurrentUserRequest {
 
 // CurrentUser 承载 GetCurrentUser 调用的返回结果。
 message CurrentUser {
-  // account 承载 CurrentUser 关联的 Account。
-  user.types.v1.Account account = 1;
+  // user 承载 CurrentUser 关联的 User。
+  user.types.v1.User user = 1;
   // profile 承载 CurrentUser 关联的 Profile。
   user.types.v1.Profile profile = 2;
   // security 承载 CurrentUser 关联的 SecurityOverview。
   user.types.v1.SecurityOverview security = 3;
-  // capabilities 承载 CurrentUser 关联的 ConsumerAccountCapabilities。
-  user.types.v1.ConsumerAccountCapabilities capabilities = 4;
+  // capabilities 承载 CurrentUser 关联的 ConsumerUserCapabilities。
+  user.types.v1.ConsumerUserCapabilities capabilities = 4;
 }
 
 // ProfilePatch 承载 User Profile 的局部更新；presence 表示是否修改。

@@ -32,8 +32,8 @@ message CheckSessionRequest {
 message CheckSessionResponse {
   // valid 显式表示 CheckSession 是否满足该条件。
   bool valid = 1;
-  // account_status 表示 CheckSession 当前可观察的生命周期状态。
-  user.types.v1.AccountStatus account_status = 2;
+  // user_status 表示 CheckSession 当前可观察的生命周期状态。
+  user.types.v1.UserStatus user_status = 2;
   // session_status 表示 CheckSession 当前可观察的生命周期状态。
   user.types.v1.SessionStatus session_status = 3;
 }
