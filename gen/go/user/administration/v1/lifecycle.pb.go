@@ -36,8 +36,6 @@ const (
 	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_RECOVERY LifecycleOperationType = 1
 	// LIFECYCLE_OPERATION_TYPE_DELETION 选择 DELETION 业务类型。
 	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_DELETION LifecycleOperationType = 2
-	// LIFECYCLE_OPERATION_TYPE_MERGE 选择 MERGE 业务类型。
-	LifecycleOperationType_LIFECYCLE_OPERATION_TYPE_MERGE LifecycleOperationType = 3
 )
 
 // Enum value maps for LifecycleOperationType.
@@ -46,13 +44,11 @@ var (
 		0: "LIFECYCLE_OPERATION_TYPE_UNSPECIFIED",
 		1: "LIFECYCLE_OPERATION_TYPE_RECOVERY",
 		2: "LIFECYCLE_OPERATION_TYPE_DELETION",
-		3: "LIFECYCLE_OPERATION_TYPE_MERGE",
 	}
 	LifecycleOperationType_value = map[string]int32{
 		"LIFECYCLE_OPERATION_TYPE_UNSPECIFIED": 0,
 		"LIFECYCLE_OPERATION_TYPE_RECOVERY":    1,
 		"LIFECYCLE_OPERATION_TYPE_DELETION":    2,
-		"LIFECYCLE_OPERATION_TYPE_MERGE":       3,
 	}
 )
 
@@ -1051,12 +1047,11 @@ const file_user_administration_v1_lifecycle_proto_rawDesc = "" +
 	"\x1fListLifecycleOperationsResponse\x12@\n" +
 	"\x05items\x18\x01 \x03(\v2*.user.administration.v1.LifecycleOperationR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\x12K\n" +
-	"\asummary\x18\x03 \x03(\v21.user.administration.v1.LifecycleOperationSummaryR\asummary*\xb4\x01\n" +
+	"\asummary\x18\x03 \x03(\v21.user.administration.v1.LifecycleOperationSummaryR\asummary*\xb6\x01\n" +
 	"\x16LifecycleOperationType\x12(\n" +
 	"$LIFECYCLE_OPERATION_TYPE_UNSPECIFIED\x10\x00\x12%\n" +
 	"!LIFECYCLE_OPERATION_TYPE_RECOVERY\x10\x01\x12%\n" +
-	"!LIFECYCLE_OPERATION_TYPE_DELETION\x10\x02\x12\"\n" +
-	"\x1eLIFECYCLE_OPERATION_TYPE_MERGE\x10\x03*\xe2\x01\n" +
+	"!LIFECYCLE_OPERATION_TYPE_DELETION\x10\x02\"\x04\b\x03\x10\x03*\x1eLIFECYCLE_OPERATION_TYPE_MERGE*\xe2\x01\n" +
 	"\x12LifecycleSlaFilter\x12$\n" +
 	" LIFECYCLE_SLA_FILTER_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dLIFECYCLE_SLA_FILTER_ON_TRACK\x10\x01\x12\x1c\n" +

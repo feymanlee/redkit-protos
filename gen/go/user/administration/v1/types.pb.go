@@ -504,8 +504,6 @@ type UserReference struct {
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// user_id 标识当前 App 内关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// canonical_user_id 标识当前 App 内关联的 User。
-	CanonicalUserId uint64 `protobuf:"varint,3,opt,name=canonical_user_id,json=canonicalUserId,proto3" json:"canonical_user_id,omitempty"`
 	// user_code 提供 UserReference 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,4,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
 	// status 表示 UserReference 当前可观察的生命周期状态。
@@ -558,13 +556,6 @@ func (x *UserReference) GetAppId() v1.AppId {
 func (x *UserReference) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
-	}
-	return 0
-}
-
-func (x *UserReference) GetCanonicalUserId() uint64 {
-	if x != nil {
-		return x.CanonicalUserId
 	}
 	return 0
 }
@@ -1915,15 +1906,14 @@ const file_user_administration_v1_types_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xbc\x02\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xa9\x02\n" +
 	"\rUserReference\x12'\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12*\n" +
-	"\x11canonical_user_id\x18\x03 \x01(\x04R\x0fcanonicalUserId\x12\x1b\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tuser_code\x18\x04 \x01(\tR\buserCode\x12:\n" +
 	"\x06status\x18\x05 \x01(\x0e2\".user.administration.v1.UserStatusR\x06status\x122\n" +
 	"\x15can_initiate_business\x18\x06 \x01(\bR\x13canInitiateBusiness\x120\n" +
-	"\x14can_receive_business\x18\a \x01(\bR\x12canReceiveBusiness\"\xcc\x02\n" +
+	"\x14can_receive_business\x18\a \x01(\bR\x12canReceiveBusinessJ\x04\b\x03\x10\x04R\x11canonical_user_id\"\xcc\x02\n" +
 	"\aProfile\x12'\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1a\n" +

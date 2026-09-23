@@ -624,8 +624,6 @@ const (
 	SecurityActivityType_SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED SecurityActivityType = 8
 	// SECURITY_ACTIVITY_TYPE_USER_RECOVERY 选择 USER_RECOVERY 业务类型。
 	SecurityActivityType_SECURITY_ACTIVITY_TYPE_USER_RECOVERY SecurityActivityType = 9
-	// SECURITY_ACTIVITY_TYPE_USER_MERGE 选择 USER_MERGE 业务类型。
-	SecurityActivityType_SECURITY_ACTIVITY_TYPE_USER_MERGE SecurityActivityType = 10
 	// SECURITY_ACTIVITY_TYPE_USER_DELETION 选择 USER_DELETION 业务类型。
 	SecurityActivityType_SECURITY_ACTIVITY_TYPE_USER_DELETION SecurityActivityType = 11
 )
@@ -643,7 +641,6 @@ var (
 		7:  "SECURITY_ACTIVITY_TYPE_SESSION_REVOKED",
 		8:  "SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED",
 		9:  "SECURITY_ACTIVITY_TYPE_USER_RECOVERY",
-		10: "SECURITY_ACTIVITY_TYPE_USER_MERGE",
 		11: "SECURITY_ACTIVITY_TYPE_USER_DELETION",
 	}
 	SecurityActivityType_value = map[string]int32{
@@ -657,7 +654,6 @@ var (
 		"SECURITY_ACTIVITY_TYPE_SESSION_REVOKED":           7,
 		"SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED":            8,
 		"SECURITY_ACTIVITY_TYPE_USER_RECOVERY":             9,
-		"SECURITY_ACTIVITY_TYPE_USER_MERGE":                10,
 		"SECURITY_ACTIVITY_TYPE_USER_DELETION":             11,
 	}
 )
@@ -700,8 +696,6 @@ type User struct {
 	UserCode string `protobuf:"bytes,3,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
 	// status 表示 User 当前可观察的生命周期状态。
 	Status UserStatus `protobuf:"varint,4,opt,name=status,proto3,enum=user.types.v1.UserStatus" json:"status,omitempty"`
-	// canonical_user_id 标识当前 App 内关联的 User。
-	CanonicalUserId uint64 `protobuf:"varint,5,opt,name=canonical_user_id,json=canonicalUserId,proto3" json:"canonical_user_id,omitempty"`
 	// suspended_until 指定 User 查询或生效区间的结束边界。
 	SuspendedUntil *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=suspended_until,json=suspendedUntil,proto3" json:"suspended_until,omitempty"`
 	// deleting_at 记录 User 对应业务阶段的时间点。
@@ -772,13 +766,6 @@ func (x *User) GetStatus() UserStatus {
 		return x.Status
 	}
 	return UserStatus_USER_STATUS_UNSPECIFIED
-}
-
-func (x *User) GetCanonicalUserId() uint64 {
-	if x != nil {
-		return x.CanonicalUserId
-	}
-	return 0
 }
 
 func (x *User) GetSuspendedUntil() *timestamppb.Timestamp {
@@ -1603,8 +1590,6 @@ type ConsumerUserCapabilities struct {
 	CanChangeUserCode bool `protobuf:"varint,5,opt,name=can_change_user_code,json=canChangeUserCode,proto3" json:"can_change_user_code,omitempty"`
 	// user_code_change_available_at 记录 ConsumerUserCapabilities 对应业务阶段的时间点。
 	UserCodeChangeAvailableAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=user_code_change_available_at,json=userCodeChangeAvailableAt,proto3" json:"user_code_change_available_at,omitempty"`
-	// can_start_merge 显式表示 ConsumerUserCapabilities 是否满足该条件。
-	CanStartMerge bool `protobuf:"varint,7,opt,name=can_start_merge,json=canStartMerge,proto3" json:"can_start_merge,omitempty"`
 	// can_start_deletion 显式表示 ConsumerUserCapabilities 是否满足该条件。
 	CanStartDeletion bool `protobuf:"varint,8,opt,name=can_start_deletion,json=canStartDeletion,proto3" json:"can_start_deletion,omitempty"`
 	// active_lifecycle_operation_type 区分 ConsumerUserCapabilities 的业务类型。
@@ -1683,13 +1668,6 @@ func (x *ConsumerUserCapabilities) GetUserCodeChangeAvailableAt() *timestamppb.T
 		return x.UserCodeChangeAvailableAt
 	}
 	return nil
-}
-
-func (x *ConsumerUserCapabilities) GetCanStartMerge() bool {
-	if x != nil {
-		return x.CanStartMerge
-	}
-	return false
 }
 
 func (x *ConsumerUserCapabilities) GetCanStartDeletion() bool {
@@ -2029,13 +2007,12 @@ var File_user_types_v1_types_proto protoreflect.FileDescriptor
 
 const file_user_types_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x19user/types/v1/types.proto\x12\ruser.types.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xf7\x03\n" +
+	"\x19user/types/v1/types.proto\x12\ruser.types.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xe4\x03\n" +
 	"\x04User\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12'\n" +
 	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1b\n" +
 	"\tuser_code\x18\x03 \x01(\tR\buserCode\x121\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x19.user.types.v1.UserStatusR\x06status\x12*\n" +
-	"\x11canonical_user_id\x18\x05 \x01(\x04R\x0fcanonicalUserId\x12C\n" +
+	"\x06status\x18\x04 \x01(\x0e2\x19.user.types.v1.UserStatusR\x06status\x12C\n" +
 	"\x0fsuspended_until\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x0esuspendedUntil\x12;\n" +
 	"\vdeleting_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"deletingAt\x129\n" +
@@ -2045,7 +2022,7 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
 	"updated_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xcc\x02\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtJ\x04\b\x05\x10\x06R\x11canonical_user_id\"\xcc\x02\n" +
 	"\aProfile\x12'\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1a\n" +
@@ -2124,17 +2101,16 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"\rfirst_seen_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\vfirstSeenAt\x12<\n" +
 	"\flast_seen_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"lastSeenAt\"\x80\x04\n" +
+	"lastSeenAt\"\xef\x03\n" +
 	"\x18ConsumerUserCapabilities\x12,\n" +
 	"\x12can_update_profile\x18\x01 \x01(\bR\x10canUpdateProfile\x124\n" +
 	"\x16can_manage_credentials\x18\x02 \x01(\bR\x14canManageCredentials\x12.\n" +
 	"\x13can_manage_sessions\x18\x03 \x01(\bR\x11canManageSessions\x12$\n" +
 	"\x0ecan_manage_mfa\x18\x04 \x01(\bR\fcanManageMfa\x12/\n" +
 	"\x14can_change_user_code\x18\x05 \x01(\bR\x11canChangeUserCode\x12\\\n" +
-	"\x1duser_code_change_available_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x19userCodeChangeAvailableAt\x12&\n" +
-	"\x0fcan_start_merge\x18\a \x01(\bR\rcanStartMerge\x12,\n" +
+	"\x1duser_code_change_available_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x19userCodeChangeAvailableAt\x12,\n" +
 	"\x12can_start_deletion\x18\b \x01(\bR\x10canStartDeletion\x12E\n" +
-	"\x1factive_lifecycle_operation_type\x18\t \x01(\tR\x1cactiveLifecycleOperationType\"\x85\x03\n" +
+	"\x1factive_lifecycle_operation_type\x18\t \x01(\tR\x1cactiveLifecycleOperationTypeJ\x04\b\a\x10\bR\x0fcan_start_merge\"\x85\x03\n" +
 	"\x10SecurityOverview\x12!\n" +
 	"\ftotp_enabled\x18\x01 \x01(\bR\vtotpEnabled\x12;\n" +
 	"\x1aunused_recovery_code_count\x18\x02 \x01(\rR\x17unusedRecoveryCodeCount\x12)\n" +
@@ -2213,7 +2189,7 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"\x1bDEVICE_TRUST_STATUS_REVOKED\x10\x03*v\n" +
 	"\x1aRecoveryDeviceKeyAlgorithm\x12-\n" +
 	")RECOVERY_DEVICE_KEY_ALGORITHM_UNSPECIFIED\x10\x00\x12)\n" +
-	"%RECOVERY_DEVICE_KEY_ALGORITHM_ED25519\x10\x01*\x8f\x04\n" +
+	"%RECOVERY_DEVICE_KEY_ALGORITHM_ED25519\x10\x01*\x91\x04\n" +
 	"\x14SecurityActivityType\x12&\n" +
 	"\"SECURITY_ACTIVITY_TYPE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cSECURITY_ACTIVITY_TYPE_LOGIN\x10\x01\x12%\n" +
@@ -2224,10 +2200,10 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"#SECURITY_ACTIVITY_TYPE_TOTP_CHANGED\x10\x06\x12*\n" +
 	"&SECURITY_ACTIVITY_TYPE_SESSION_REVOKED\x10\a\x12)\n" +
 	"%SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED\x10\b\x12(\n" +
-	"$SECURITY_ACTIVITY_TYPE_USER_RECOVERY\x10\t\x12%\n" +
-	"!SECURITY_ACTIVITY_TYPE_USER_MERGE\x10\n" +
-	"\x12(\n" +
-	"$SECURITY_ACTIVITY_TYPE_USER_DELETION\x10\vB\xba\x01\n" +
+	"$SECURITY_ACTIVITY_TYPE_USER_RECOVERY\x10\t\x12(\n" +
+	"$SECURITY_ACTIVITY_TYPE_USER_DELETION\x10\v\"\x04\b\n" +
+	"\x10\n" +
+	"*!SECURITY_ACTIVITY_TYPE_USER_MERGEB\xba\x01\n" +
 	"\x11com.user.types.v1B\n" +
 	"TypesProtoP\x01ZCgithub.com/feymanlee/redkit-protos/gen/go/user/types/v1;usertypespb\xa2\x02\x03UTX\xaa\x02\rUser.Types.V1\xca\x02\rUser\\Types\\V1\xe2\x02\x19User\\Types\\V1\\GPBMetadata\xea\x02\x0fUser::Types::V1b\x06proto3"
 

@@ -29,8 +29,9 @@ enum ConsumerUserErrorReason {
   INVALID_USER_STATE = 700 [(errors.code) = 412];
   // INVALID_RECOVERY_STATE 表示因 INVALID_RECOVERY_STATE 条件导致流程无法按原路径继续。
   INVALID_RECOVERY_STATE = 701 [(errors.code) = 412];
-  // INVALID_MERGE_STATE 表示因 INVALID_MERGE_STATE 条件导致流程无法按原路径继续。
-  INVALID_MERGE_STATE = 702 [(errors.code) = 412];
+  // 702 曾是 INVALID_MERGE_STATE；账号合并已下线，编号与名称保持保留，不得复用。
+  reserved 702;
+  reserved "INVALID_MERGE_STATE";
   // INVALID_DELETION_STATE 表示因 INVALID_DELETION_STATE 条件导致流程无法按原路径继续。
   INVALID_DELETION_STATE = 703 [(errors.code) = 412];
   // LAST_CREDENTIAL 表示因 LAST_CREDENTIAL 条件导致流程无法按原路径继续。

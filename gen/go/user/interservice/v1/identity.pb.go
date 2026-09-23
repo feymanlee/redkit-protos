@@ -32,8 +32,6 @@ type UserReference struct {
 	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// user_id 标识当前 App 内关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// canonical_user_id 标识当前 App 内关联的 User。
-	CanonicalUserId uint64 `protobuf:"varint,3,opt,name=canonical_user_id,json=canonicalUserId,proto3" json:"canonical_user_id,omitempty"`
 	// user_code 提供 UserReference 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,4,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
 	// status 表示 UserReference 当前可观察的生命周期状态。
@@ -86,13 +84,6 @@ func (x *UserReference) GetAppId() v1.AppId {
 func (x *UserReference) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
-	}
-	return 0
-}
-
-func (x *UserReference) GetCanonicalUserId() uint64 {
-	if x != nil {
-		return x.CanonicalUserId
 	}
 	return 0
 }
@@ -183,8 +174,8 @@ func (x *ResolveUserIdentityRequest) GetUserId() uint64 {
 // ResolveUserIdentityResponse 承载 ResolveUserIdentity 的返回结果。
 type ResolveUserIdentityResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// canonical_user 承载 ResolveUserIdentity 关联的 UserReference。
-	CanonicalUser *UserReference `protobuf:"bytes,1,opt,name=canonical_user,json=canonicalUser,proto3" json:"canonical_user,omitempty"`
+	// user 承载 ResolveUserIdentity 关联的 UserReference。
+	User          *UserReference `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -219,9 +210,9 @@ func (*ResolveUserIdentityResponse) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_identity_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ResolveUserIdentityResponse) GetCanonicalUser() *UserReference {
+func (x *ResolveUserIdentityResponse) GetUser() *UserReference {
 	if x != nil {
-		return x.CanonicalUser
+		return x.User
 	}
 	return nil
 }
@@ -432,21 +423,20 @@ var File_user_internal_v1_identity_proto protoreflect.FileDescriptor
 
 const file_user_internal_v1_identity_proto_rawDesc = "" +
 	"\n" +
-	"\x1fuser/internal/v1/identity.proto\x12\x10user.internal.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xb3\x02\n" +
+	"\x1fuser/internal/v1/identity.proto\x12\x10user.internal.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xa0\x02\n" +
 	"\rUserReference\x12'\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12*\n" +
-	"\x11canonical_user_id\x18\x03 \x01(\x04R\x0fcanonicalUserId\x12\x1b\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tuser_code\x18\x04 \x01(\tR\buserCode\x121\n" +
 	"\x06status\x18\x05 \x01(\x0e2\x19.user.types.v1.UserStatusR\x06status\x122\n" +
 	"\x15can_initiate_business\x18\x06 \x01(\bR\x13canInitiateBusiness\x120\n" +
-	"\x14can_receive_business\x18\a \x01(\bR\x12canReceiveBusiness\"y\n" +
+	"\x14can_receive_business\x18\a \x01(\bR\x12canReceiveBusinessJ\x04\b\x03\x10\x04R\x11canonical_user_id\"y\n" +
 	"\x1aResolveUserIdentityRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"e\n" +
-	"\x1bResolveUserIdentityResponse\x12F\n" +
-	"\x0ecanonical_user\x18\x01 \x01(\v2\x1f.user.internal.v1.UserReferenceR\rcanonicalUser\"\x85\x01\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"R\n" +
+	"\x1bResolveUserIdentityResponse\x123\n" +
+	"\x04user\x18\x01 \x01(\v2\x1f.user.internal.v1.UserReferenceR\x04user\"\x85\x01\n" +
 	"\x18BatchResolveUsersRequest\x126\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
 	"\buser_ids\x18\x02 \x03(\x04B\x16\xe0A\x02\xfaB\x10\x92\x01\r\b\x01\x10\xc8\x01\x18\x01\"\x042\x02 \x00R\auserIds\"R\n" +
@@ -492,7 +482,7 @@ var file_user_internal_v1_identity_proto_depIdxs = []int32{
 	7,  // 0: user.internal.v1.UserReference.app_id:type_name -> common.v1.AppId
 	8,  // 1: user.internal.v1.UserReference.status:type_name -> user.types.v1.UserStatus
 	7,  // 2: user.internal.v1.ResolveUserIdentityRequest.app_id:type_name -> common.v1.AppId
-	0,  // 3: user.internal.v1.ResolveUserIdentityResponse.canonical_user:type_name -> user.internal.v1.UserReference
+	0,  // 3: user.internal.v1.ResolveUserIdentityResponse.user:type_name -> user.internal.v1.UserReference
 	7,  // 4: user.internal.v1.BatchResolveUsersRequest.app_id:type_name -> common.v1.AppId
 	0,  // 5: user.internal.v1.BatchResolveUsersResponse.items:type_name -> user.internal.v1.UserReference
 	7,  // 6: user.internal.v1.BatchGetPublicProfilesRequest.app_id:type_name -> common.v1.AppId

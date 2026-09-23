@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 import "user/administration/v1/types.proto";
 import "validate/validate.proto";
 
-// UserLifecycleService 暴露 User 拥有的 Recovery、Deletion 和 Merge 只读强类型投影，
+// UserLifecycleService 暴露 User 拥有的 Recovery 与 Deletion 只读强类型投影，
 // 不引入通用任务状态机。
 service UserLifecycleService {
   // 查询 LifecycleOperation 列表。
@@ -64,8 +64,9 @@ enum LifecycleOperationType {
   LIFECYCLE_OPERATION_TYPE_RECOVERY = 1;
   // LIFECYCLE_OPERATION_TYPE_DELETION 选择 DELETION 业务类型。
   LIFECYCLE_OPERATION_TYPE_DELETION = 2;
-  // LIFECYCLE_OPERATION_TYPE_MERGE 选择 MERGE 业务类型。
-  LIFECYCLE_OPERATION_TYPE_MERGE = 3;
+  // 3 曾是 LIFECYCLE_OPERATION_TYPE_MERGE；账号合并已下线，编号与名称保持保留，不得复用。
+  reserved 3;
+  reserved "LIFECYCLE_OPERATION_TYPE_MERGE";
 }
 
 // LifecycleSlaFilter 定义对应业务维度允许使用的离散取值。

@@ -152,8 +152,9 @@ enum SecurityActivityType {
   SECURITY_ACTIVITY_TYPE_DEVICE_REVOKED = 8;
   // SECURITY_ACTIVITY_TYPE_USER_RECOVERY 选择 USER_RECOVERY 业务类型。
   SECURITY_ACTIVITY_TYPE_USER_RECOVERY = 9;
-  // SECURITY_ACTIVITY_TYPE_USER_MERGE 选择 USER_MERGE 业务类型。
-  SECURITY_ACTIVITY_TYPE_USER_MERGE = 10;
+  // 10 曾是 SECURITY_ACTIVITY_TYPE_USER_MERGE；账号合并已下线，编号与名称保持保留，不得复用。
+  reserved 10;
+  reserved "SECURITY_ACTIVITY_TYPE_USER_MERGE";
   // SECURITY_ACTIVITY_TYPE_USER_DELETION 选择 USER_DELETION 业务类型。
   SECURITY_ACTIVITY_TYPE_USER_DELETION = 11;
 }
@@ -168,8 +169,9 @@ message User {
   string user_code = 3;
   // status 表示 User 当前可观察的生命周期状态。
   UserStatus status = 4;
-  // canonical_user_id 标识当前 App 内关联的 User。
-  uint64 canonical_user_id = 5;
+  // 5 曾是 canonical_user_id；账号合并别名已下线，编号与名称保持保留，不得复用。
+  reserved 5;
+  reserved "canonical_user_id";
   // suspended_until 指定 User 查询或生效区间的结束边界。
   google.protobuf.Timestamp suspended_until = 6;
   // deleting_at 记录 User 对应业务阶段的时间点。
@@ -338,8 +340,9 @@ message ConsumerUserCapabilities {
   bool can_change_user_code = 5;
   // user_code_change_available_at 记录 ConsumerUserCapabilities 对应业务阶段的时间点。
   google.protobuf.Timestamp user_code_change_available_at = 6;
-  // can_start_merge 显式表示 ConsumerUserCapabilities 是否满足该条件。
-  bool can_start_merge = 7;
+  // 7 曾是 can_start_merge；账号合并已下线，编号与名称保持保留，不得复用。
+  reserved 7;
+  reserved "can_start_merge";
   // can_start_deletion 显式表示 ConsumerUserCapabilities 是否满足该条件。
   bool can_start_deletion = 8;
   // active_lifecycle_operation_type 区分 ConsumerUserCapabilities 的业务类型。

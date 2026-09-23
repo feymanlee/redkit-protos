@@ -147,7 +147,7 @@ enum UserDeletionParticipantStatus {
 
 // UserDeletionParticipant 记录一个 bounded context 对 User Deletion 的处理状态。
 message UserDeletionParticipant {
-  // participant 标识参与 User Merge 或 User Deletion 的 bounded context。
+  // participant 标识参与 User Deletion 的 bounded context。
   string participant = 1;
   // status 表示 UserDeletionParticipant 当前可观察的生命周期状态。
   UserDeletionParticipantStatus status = 2;

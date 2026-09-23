@@ -60,10 +60,6 @@ const (
 	StepUpPurpose_STEP_UP_PURPOSE_REGENERATE_RECOVERY_CODES StepUpPurpose = 13
 	// STEP_UP_PURPOSE_DISABLE_TOTP 允许校验结果用于 DISABLE_TOTP 敏感操作。
 	StepUpPurpose_STEP_UP_PURPOSE_DISABLE_TOTP StepUpPurpose = 14
-	// STEP_UP_PURPOSE_START_USER_MERGE 允许校验结果用于 START_USER_MERGE 敏感操作。
-	StepUpPurpose_STEP_UP_PURPOSE_START_USER_MERGE StepUpPurpose = 15
-	// STEP_UP_PURPOSE_MERGE_AS_TARGET 允许校验结果用于 MERGE_AS_TARGET 敏感操作。
-	StepUpPurpose_STEP_UP_PURPOSE_MERGE_AS_TARGET StepUpPurpose = 16
 	// STEP_UP_PURPOSE_BEGIN_USER_DELETION 允许校验结果用于 BEGIN_USER_DELETION 敏感操作。
 	StepUpPurpose_STEP_UP_PURPOSE_BEGIN_USER_DELETION StepUpPurpose = 17
 )
@@ -86,8 +82,6 @@ var (
 		12: "STEP_UP_PURPOSE_ENROLL_TOTP",
 		13: "STEP_UP_PURPOSE_REGENERATE_RECOVERY_CODES",
 		14: "STEP_UP_PURPOSE_DISABLE_TOTP",
-		15: "STEP_UP_PURPOSE_START_USER_MERGE",
-		16: "STEP_UP_PURPOSE_MERGE_AS_TARGET",
 		17: "STEP_UP_PURPOSE_BEGIN_USER_DELETION",
 	}
 	StepUpPurpose_value = map[string]int32{
@@ -106,8 +100,6 @@ var (
 		"STEP_UP_PURPOSE_ENROLL_TOTP":                12,
 		"STEP_UP_PURPOSE_REGENERATE_RECOVERY_CODES":  13,
 		"STEP_UP_PURPOSE_DISABLE_TOTP":               14,
-		"STEP_UP_PURPOSE_START_USER_MERGE":           15,
-		"STEP_UP_PURPOSE_MERGE_AS_TARGET":            16,
 		"STEP_UP_PURPOSE_BEGIN_USER_DELETION":        17,
 	}
 )
@@ -1759,7 +1751,7 @@ const file_user_consumer_v1_security_proto_rawDesc = "" +
 	"\x04page\x18\x02 \x01(\v2 .user.types.v1.CursorPageRequestR\x04page\"\x8e\x01\n" +
 	"\x1eListSecurityActivitiesResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.user.types.v1.SecurityActivityR\x05items\x125\n" +
-	"\x04page\x18\x02 \x01(\v2!.user.types.v1.CursorPageResponseR\x04page*\xb9\x05\n" +
+	"\x04page\x18\x02 \x01(\v2!.user.types.v1.CursorPageResponseR\x04page*\xbd\x05\n" +
 	"\rStepUpPurpose\x12\x1f\n" +
 	"\x1bSTEP_UP_PURPOSE_UNSPECIFIED\x10\x00\x12$\n" +
 	" STEP_UP_PURPOSE_CHANGE_USER_CODE\x10\x01\x12\x1e\n" +
@@ -1776,10 +1768,8 @@ const file_user_consumer_v1_security_proto_rawDesc = "" +
 	"*STEP_UP_PURPOSE_MANAGE_RECOVERY_DEVICE_KEY\x10\v\x12\x1f\n" +
 	"\x1bSTEP_UP_PURPOSE_ENROLL_TOTP\x10\f\x12-\n" +
 	")STEP_UP_PURPOSE_REGENERATE_RECOVERY_CODES\x10\r\x12 \n" +
-	"\x1cSTEP_UP_PURPOSE_DISABLE_TOTP\x10\x0e\x12$\n" +
-	" STEP_UP_PURPOSE_START_USER_MERGE\x10\x0f\x12#\n" +
-	"\x1fSTEP_UP_PURPOSE_MERGE_AS_TARGET\x10\x10\x12'\n" +
-	"#STEP_UP_PURPOSE_BEGIN_USER_DELETION\x10\x11*\xd9\x01\n" +
+	"\x1cSTEP_UP_PURPOSE_DISABLE_TOTP\x10\x0e\x12'\n" +
+	"#STEP_UP_PURPOSE_BEGIN_USER_DELETION\x10\x11\"\x04\b\x0f\x10\x0f\"\x04\b\x10\x10\x10* STEP_UP_PURPOSE_START_USER_MERGE*\x1fSTEP_UP_PURPOSE_MERGE_AS_TARGET*\xd9\x01\n" +
 	"\fStepUpFactor\x12\x1e\n" +
 	"\x1aSTEP_UP_FACTOR_UNSPECIFIED\x10\x00\x12\x1c\n" +
 	"\x18STEP_UP_FACTOR_PHONE_OTP\x10\x01\x12\x1b\n" +

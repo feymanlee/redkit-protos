@@ -48,8 +48,6 @@ const (
 	ConsumerUserErrorReason_INVALID_USER_STATE ConsumerUserErrorReason = 700
 	// INVALID_RECOVERY_STATE 表示因 INVALID_RECOVERY_STATE 条件导致流程无法按原路径继续。
 	ConsumerUserErrorReason_INVALID_RECOVERY_STATE ConsumerUserErrorReason = 701
-	// INVALID_MERGE_STATE 表示因 INVALID_MERGE_STATE 条件导致流程无法按原路径继续。
-	ConsumerUserErrorReason_INVALID_MERGE_STATE ConsumerUserErrorReason = 702
 	// INVALID_DELETION_STATE 表示因 INVALID_DELETION_STATE 条件导致流程无法按原路径继续。
 	ConsumerUserErrorReason_INVALID_DELETION_STATE ConsumerUserErrorReason = 703
 	// LAST_CREDENTIAL 表示因 LAST_CREDENTIAL 条件导致流程无法按原路径继续。
@@ -84,7 +82,6 @@ var (
 		601:  "USER_CODE_UNAVAILABLE",
 		700:  "INVALID_USER_STATE",
 		701:  "INVALID_RECOVERY_STATE",
-		702:  "INVALID_MERGE_STATE",
 		703:  "INVALID_DELETION_STATE",
 		704:  "LAST_CREDENTIAL",
 		705:  "POLICY_VIOLATION",
@@ -107,7 +104,6 @@ var (
 		"USER_CODE_UNAVAILABLE":    601,
 		"INVALID_USER_STATE":       700,
 		"INVALID_RECOVERY_STATE":   701,
-		"INVALID_MERGE_STATE":      702,
 		"INVALID_DELETION_STATE":   703,
 		"LAST_CREDENTIAL":          704,
 		"POLICY_VIOLATION":         705,
@@ -151,7 +147,7 @@ var File_user_consumer_v1_consumer_error_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_consumer_error_proto_rawDesc = "" +
 	"\n" +
-	"%user/consumer/v1/consumer_error.proto\x12\x10user.consumer.v1\x1a\x13errors/errors.proto*\xb3\x05\n" +
+	"%user/consumer/v1/consumer_error.proto\x12\x10user.consumer.v1\x1a\x13errors/errors.proto*\xb0\x05\n" +
 	"\x17ConsumerUserErrorReason\x12\x1a\n" +
 	"\x10INVALID_ARGUMENT\x10\x00\x1a\x04\xa8E\x90\x03\x12\x1f\n" +
 	"\x15AUTHENTICATION_FAILED\x10d\x1a\x04\xa8E\x91\x03\x12\x1b\n" +
@@ -163,8 +159,7 @@ const file_user_consumer_v1_consumer_error_proto_rawDesc = "" +
 	"\x18CREDENTIAL_ALREADY_BOUND\x10\xd8\x04\x1a\x04\xa8E\x99\x03\x12 \n" +
 	"\x15USER_CODE_UNAVAILABLE\x10\xd9\x04\x1a\x04\xa8E\x99\x03\x12\x1d\n" +
 	"\x12INVALID_USER_STATE\x10\xbc\x05\x1a\x04\xa8E\x9c\x03\x12!\n" +
-	"\x16INVALID_RECOVERY_STATE\x10\xbd\x05\x1a\x04\xa8E\x9c\x03\x12\x1e\n" +
-	"\x13INVALID_MERGE_STATE\x10\xbe\x05\x1a\x04\xa8E\x9c\x03\x12!\n" +
+	"\x16INVALID_RECOVERY_STATE\x10\xbd\x05\x1a\x04\xa8E\x9c\x03\x12!\n" +
 	"\x16INVALID_DELETION_STATE\x10\xbf\x05\x1a\x04\xa8E\x9c\x03\x12\x1a\n" +
 	"\x0fLAST_CREDENTIAL\x10\xc0\x05\x1a\x04\xa8E\x9c\x03\x12\x1b\n" +
 	"\x10POLICY_VIOLATION\x10\xc1\x05\x1a\x04\xa8E\x9c\x03\x12\x1f\n" +
@@ -173,7 +168,7 @@ const file_user_consumer_v1_consumer_error_proto_rawDesc = "" +
 	"\fRATE_LIMITED\x10\xb0\t\x1a\x04\xa8E\xad\x03\x12\x18\n" +
 	"\rSESSION_LIMIT\x10\xb1\t\x1a\x04\xa8E\xad\x03\x12 \n" +
 	"\x15INTERNAL_SERVER_ERROR\x10\xd0\x0f\x1a\x04\xa8E\xf4\x03\x12!\n" +
-	"\x16DEPENDENCY_UNAVAILABLE\x10\xfc\x11\x1a\x04\xa8E\xf7\x03\x1a\x04\xa0E\xf4\x03B\xd7\x01\n" +
+	"\x16DEPENDENCY_UNAVAILABLE\x10\xfc\x11\x1a\x04\xa8E\xf7\x03\x1a\x04\xa0E\xf4\x03\"\x06\b\xbe\x05\x10\xbe\x05*\x13INVALID_MERGE_STATEB\xd7\x01\n" +
 	"\x14com.user.consumer.v1B\x12ConsumerErrorProtoP\x01ZIgithub.com/feymanlee/redkit-protos/gen/go/user/consumer/v1;userconsumerpb\xa2\x02\x03UCX\xaa\x02\x10User.Consumer.V1\xca\x02\x10User\\Consumer\\V1\xe2\x02\x1cUser\\Consumer\\V1\\GPBMetadata\xea\x02\x12User::Consumer::V1b\x06proto3"
 
 var (

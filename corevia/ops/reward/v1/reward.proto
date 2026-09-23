@@ -283,8 +283,9 @@ message ActionRequiredRewardItem {
   string package_code = 5;
   // business_identity 记录外部或上游系统用于稳定关联 ActionRequiredRewardItem 的身份。
   RewardBusinessIdentity business_identity = 6;
-  // canonical_user_id 标识当前 App 内关联的 User。
-  uint64 canonical_user_id = 7;
+  // 7 曾是 canonical_user_id；账号合并别名已下线，编号与名称保持保留，不得复用。
+  reserved 7;
+  reserved "canonical_user_id";
   // failure_classification 对失败进行稳定分类，供调用方决定重试或终止。
   RewardGrantFailureClassification failure_classification = 8;
   // failure_code 提供机器可判断的处理结果或失败分类。
@@ -403,8 +404,9 @@ message RewardGrant {
   string package_code = 4;
   // requested_user_id 标识当前 App 内关联的 User。
   uint64 requested_user_id = 5;
-  // canonical_user_id 标识当前 App 内关联的 User。
-  uint64 canonical_user_id = 6;
+  // 6 曾是 canonical_user_id；账号合并别名已下线，编号与名称保持保留，不得复用。
+  reserved 6;
+  reserved "canonical_user_id";
   // business_date 记录 RewardGrant 对应业务阶段的时间点。
   string business_date = 7;
   // status 表示 RewardGrant 当前可观察的生命周期状态。

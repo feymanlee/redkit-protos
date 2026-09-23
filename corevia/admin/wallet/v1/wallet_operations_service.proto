@@ -179,8 +179,8 @@ message GetWalletUserWorkbenchRequest {
 
 // WalletUserWorkbench 承载 GetUserWorkbench 调用的返回结果。
 message WalletUserWorkbench {
-  // canonical_user 承载 WalletUserWorkbench 关联的 UserReference。
-  .user.internal.v1.UserReference canonical_user = 1;
+  // user 承载 WalletUserWorkbench 关联的 UserReference。
+  .user.internal.v1.UserReference user = 1;
   // wallet 承载 WalletUserWorkbench 关联的 Wallet。
   optional .wallet.v1.Wallet wallet = 3;
 }

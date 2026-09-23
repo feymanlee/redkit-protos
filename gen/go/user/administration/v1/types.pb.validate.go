@@ -318,8 +318,6 @@ func (m *UserReference) validate(all bool) error {
 
 	// no validation rules for UserId
 
-	// no validation rules for CanonicalUserId
-
 	// no validation rules for UserCode
 
 	// no validation rules for Status

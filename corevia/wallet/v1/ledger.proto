@@ -34,8 +34,9 @@ message WalletTransaction {
     REFUND_DEBIT = 10;
     // 欠款偿还。
     DEBT_REPAY = 11;
-    // 账号合并资产迁移。
-    ACCOUNT_MERGE = 12;
+    // 12 曾是 ACCOUNT_MERGE；账号合并已下线，编号与名称保持保留，不得复用。
+    reserved 12;
+    reserved "ACCOUNT_MERGE";
     // Ops Reward 发放。
     REWARD = 13;
   }

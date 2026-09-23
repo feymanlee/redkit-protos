@@ -165,20 +165,6 @@ func ErrorInvalidRecoveryState(format string, args ...interface{}) *errors.Error
 	return errors.New(412, ConsumerUserErrorReason_INVALID_RECOVERY_STATE.String(), fmt.Sprintf(format, args...))
 }
 
-// INVALID_MERGE_STATE 表示因 INVALID_MERGE_STATE 条件导致流程无法按原路径继续。
-func IsInvalidMergeState(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ConsumerUserErrorReason_INVALID_MERGE_STATE.String() && e.Code == 412
-}
-
-// INVALID_MERGE_STATE 表示因 INVALID_MERGE_STATE 条件导致流程无法按原路径继续。
-func ErrorInvalidMergeState(format string, args ...interface{}) *errors.Error {
-	return errors.New(412, ConsumerUserErrorReason_INVALID_MERGE_STATE.String(), fmt.Sprintf(format, args...))
-}
-
 // INVALID_DELETION_STATE 表示因 INVALID_DELETION_STATE 条件导致流程无法按原路径继续。
 func IsInvalidDeletionState(err error) bool {
 	if err == nil {

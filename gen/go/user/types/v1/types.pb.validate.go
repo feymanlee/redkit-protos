@@ -68,8 +68,6 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Status
 
-	// no validation rules for CanonicalUserId
-
 	if all {
 		switch v := interface{}(m.GetSuspendedUntil()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1598,8 +1596,6 @@ func (m *ConsumerUserCapabilities) validate(all bool) error {
 			}
 		}
 	}
-
-	// no validation rules for CanStartMerge
 
 	// no validation rules for CanStartDeletion
 

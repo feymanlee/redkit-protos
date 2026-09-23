@@ -2229,8 +2229,6 @@ func (m *ActionRequiredRewardItem) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for CanonicalUserId
-
 	// no validation rules for FailureClassification
 
 	// no validation rules for FailureCode
@@ -3308,8 +3306,6 @@ func (m *RewardGrant) validate(all bool) error {
 	// no validation rules for PackageCode
 
 	// no validation rules for RequestedUserId
-
-	// no validation rules for CanonicalUserId
 
 	// no validation rules for BusinessDate
 

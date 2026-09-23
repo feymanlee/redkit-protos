@@ -814,7 +814,7 @@ func (x *GetUserDeletionRequest) GetUserId() uint64 {
 // UserDeletionParticipant 记录一个 bounded context 对 User Deletion 的处理状态。
 type UserDeletionParticipant struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// participant 标识参与 User Merge 或 User Deletion 的 bounded context。
+	// participant 标识参与 User Deletion 的 bounded context。
 	Participant string `protobuf:"bytes,1,opt,name=participant,proto3" json:"participant,omitempty"`
 	// status 表示 UserDeletionParticipant 当前可观察的生命周期状态。
 	Status UserDeletionParticipantStatus `protobuf:"varint,2,opt,name=status,proto3,enum=user.administration.v1.UserDeletionParticipantStatus" json:"status,omitempty"`

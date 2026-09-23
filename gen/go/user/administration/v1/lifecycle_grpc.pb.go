@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// UserLifecycleService 暴露 User 拥有的 Recovery、Deletion 和 Merge 只读强类型投影，
+// UserLifecycleService 暴露 User 拥有的 Recovery 与 Deletion 只读强类型投影，
 // 不引入通用任务状态机。
 type UserLifecycleServiceClient interface {
 	// 查询 LifecycleOperation 列表。
@@ -94,7 +94,7 @@ func (c *userLifecycleServiceClient) FinalizeUserDeletion(ctx context.Context, i
 // All implementations must embed UnimplementedUserLifecycleServiceServer
 // for forward compatibility.
 //
-// UserLifecycleService 暴露 User 拥有的 Recovery、Deletion 和 Merge 只读强类型投影，
+// UserLifecycleService 暴露 User 拥有的 Recovery 与 Deletion 只读强类型投影，
 // 不引入通用任务状态机。
 type UserLifecycleServiceServer interface {
 	// 查询 LifecycleOperation 列表。

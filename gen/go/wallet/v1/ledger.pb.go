@@ -51,8 +51,6 @@ const (
 	WalletTransaction_REFUND_DEBIT WalletTransaction_Type = 10
 	// 欠款偿还。
 	WalletTransaction_DEBT_REPAY WalletTransaction_Type = 11
-	// 账号合并资产迁移。
-	WalletTransaction_ACCOUNT_MERGE WalletTransaction_Type = 12
 	// Ops Reward 发放。
 	WalletTransaction_REWARD WalletTransaction_Type = 13
 )
@@ -72,7 +70,6 @@ var (
 		9:  "REVERSAL",
 		10: "REFUND_DEBIT",
 		11: "DEBT_REPAY",
-		12: "ACCOUNT_MERGE",
 		13: "REWARD",
 	}
 	WalletTransaction_Type_value = map[string]int32{
@@ -88,7 +85,6 @@ var (
 		"REVERSAL":         9,
 		"REFUND_DEBIT":     10,
 		"DEBT_REPAY":       11,
-		"ACCOUNT_MERGE":    12,
 		"REWARD":           13,
 	}
 )
@@ -1399,7 +1395,7 @@ var File_wallet_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x16wallet/v1/ledger.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xee\r\n" +
+	"\x16wallet/v1/ledger.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xf0\r\n" +
 	"\x11WalletTransaction\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
 	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
@@ -1431,7 +1427,7 @@ const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\adiamond\x18\x17 \x01(\x03H\x16R\adiamond\x88\x01\x01\x12\x17\n" +
 	"\x04coin\x18\x18 \x01(\x03H\x17R\x04coin\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tcreatedAt\x88\x01\x01\"\xe5\x01\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tcreatedAt\x88\x01\x01\"\xe7\x01\n" +
 	"\x04Type\x12\x14\n" +
 	"\x10TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
 	"\bRECHARGE\x10\x01\x12\r\n" +
@@ -1449,10 +1445,9 @@ const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\fREFUND_DEBIT\x10\n" +
 	"\x12\x0e\n" +
 	"\n" +
-	"DEBT_REPAY\x10\v\x12\x11\n" +
-	"\rACCOUNT_MERGE\x10\f\x12\n" +
+	"DEBT_REPAY\x10\v\x12\n" +
 	"\n" +
-	"\x06REWARD\x10\r\"7\n" +
+	"\x06REWARD\x10\r\"\x04\b\f\x10\f*\rACCOUNT_MERGE\"7\n" +
 	"\tDirection\x12\x19\n" +
 	"\x15DIRECTION_UNSPECIFIED\x10\x00\x12\x06\n" +
 	"\x02IN\x10\x01\x12\a\n" +

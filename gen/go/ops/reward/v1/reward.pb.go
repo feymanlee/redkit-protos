@@ -1330,8 +1330,6 @@ type ActionRequiredRewardItem struct {
 	PackageCode string `protobuf:"bytes,5,opt,name=package_code,json=packageCode,proto3" json:"package_code,omitempty"`
 	// business_identity 记录外部或上游系统用于稳定关联 ActionRequiredRewardItem 的身份。
 	BusinessIdentity *RewardBusinessIdentity `protobuf:"bytes,6,opt,name=business_identity,json=businessIdentity,proto3" json:"business_identity,omitempty"`
-	// canonical_user_id 标识当前 App 内关联的 User。
-	CanonicalUserId uint64 `protobuf:"varint,7,opt,name=canonical_user_id,json=canonicalUserId,proto3" json:"canonical_user_id,omitempty"`
 	// failure_classification 对失败进行稳定分类，供调用方决定重试或终止。
 	FailureClassification RewardGrantFailureClassification `protobuf:"varint,8,opt,name=failure_classification,json=failureClassification,proto3,enum=ops.reward.v1.RewardGrantFailureClassification" json:"failure_classification,omitempty"`
 	// failure_code 提供机器可判断的处理结果或失败分类。
@@ -1422,13 +1420,6 @@ func (x *ActionRequiredRewardItem) GetBusinessIdentity() *RewardBusinessIdentity
 		return x.BusinessIdentity
 	}
 	return nil
-}
-
-func (x *ActionRequiredRewardItem) GetCanonicalUserId() uint64 {
-	if x != nil {
-		return x.CanonicalUserId
-	}
-	return 0
 }
 
 func (x *ActionRequiredRewardItem) GetFailureClassification() RewardGrantFailureClassification {
@@ -1991,8 +1982,6 @@ type RewardGrant struct {
 	PackageCode string `protobuf:"bytes,4,opt,name=package_code,json=packageCode,proto3" json:"package_code,omitempty"`
 	// requested_user_id 标识当前 App 内关联的 User。
 	RequestedUserId uint64 `protobuf:"varint,5,opt,name=requested_user_id,json=requestedUserId,proto3" json:"requested_user_id,omitempty"`
-	// canonical_user_id 标识当前 App 内关联的 User。
-	CanonicalUserId uint64 `protobuf:"varint,6,opt,name=canonical_user_id,json=canonicalUserId,proto3" json:"canonical_user_id,omitempty"`
 	// business_date 记录 RewardGrant 对应业务阶段的时间点。
 	BusinessDate string `protobuf:"bytes,7,opt,name=business_date,json=businessDate,proto3" json:"business_date,omitempty"`
 	// status 表示 RewardGrant 当前可观察的生命周期状态。
@@ -2070,13 +2059,6 @@ func (x *RewardGrant) GetPackageCode() string {
 func (x *RewardGrant) GetRequestedUserId() uint64 {
 	if x != nil {
 		return x.RequestedUserId
-	}
-	return 0
-}
-
-func (x *RewardGrant) GetCanonicalUserId() uint64 {
-	if x != nil {
-		return x.CanonicalUserId
 	}
 	return 0
 }
@@ -2861,15 +2843,14 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xa8\x01\n" +
 	"%ListActionRequiredRewardItemsResponse\x12=\n" +
 	"\x05items\x18\x01 \x03(\v2'.ops.reward.v1.ActionRequiredRewardItemR\x05items\x12@\n" +
-	"\x04meta\x18\x02 \x01(\v2,.common.pagination.v1.PaginationResponseMetaR\x04meta\"\xe4\x06\n" +
+	"\x04meta\x18\x02 \x01(\v2,.common.pagination.v1.PaginationResponseMetaR\x04meta\"\xd1\x06\n" +
 	"\x18ActionRequiredRewardItem\x12\x17\n" +
 	"\aitem_id\x18\x01 \x01(\x04R\x06itemId\x12\x19\n" +
 	"\bgrant_id\x18\x02 \x01(\x04R\agrantId\x12\x17\n" +
 	"\aitem_no\x18\x03 \x01(\rR\x06itemNo\x12\x1b\n" +
 	"\titem_type\x18\x04 \x01(\tR\bitemType\x12!\n" +
 	"\fpackage_code\x18\x05 \x01(\tR\vpackageCode\x12R\n" +
-	"\x11business_identity\x18\x06 \x01(\v2%.ops.reward.v1.RewardBusinessIdentityR\x10businessIdentity\x12*\n" +
-	"\x11canonical_user_id\x18\a \x01(\x04R\x0fcanonicalUserId\x12f\n" +
+	"\x11business_identity\x18\x06 \x01(\v2%.ops.reward.v1.RewardBusinessIdentityR\x10businessIdentity\x12f\n" +
 	"\x16failure_classification\x18\b \x01(\x0e2/.ops.reward.v1.RewardGrantFailureClassificationR\x15failureClassification\x12!\n" +
 	"\ffailure_code\x18\t \x01(\tR\vfailureCode\x12#\n" +
 	"\rattempt_count\x18\n" +
@@ -2881,7 +2862,7 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\x1cgift_backpack_transaction_id\x18\x0f \x01(\x04H\x02R\x19giftBackpackTransactionId\x88\x01\x01B\x18\n" +
 	"\x16_wallet_transaction_idB\x19\n" +
 	"\x17_gift_backpack_batch_idB\x1f\n" +
-	"\x1d_gift_backpack_transaction_id\"\xfa\x01\n" +
+	"\x1d_gift_backpack_transaction_idJ\x04\b\a\x10\bR\x11canonical_user_id\"\xfa\x01\n" +
 	"\x17ReplayRewardItemRequest\x124\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12#\n" +
 	"\aitem_id\x18\x02 \x01(\x04B\n" +
@@ -2937,14 +2918,13 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\x11daily_grant_limit\x18\a \x01(\rR\x0fdailyGrantLimit\x124\n" +
 	"\x05items\x18\b \x03(\v2\x1e.ops.reward.v1.RewardGrantItemR\x05items\x129\n" +
 	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x81\x05\n" +
+	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xee\x04\n" +
 	"\vRewardGrant\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
 	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12R\n" +
 	"\x11business_identity\x18\x03 \x01(\v2%.ops.reward.v1.RewardBusinessIdentityR\x10businessIdentity\x12!\n" +
 	"\fpackage_code\x18\x04 \x01(\tR\vpackageCode\x12*\n" +
-	"\x11requested_user_id\x18\x05 \x01(\x04R\x0frequestedUserId\x12*\n" +
-	"\x11canonical_user_id\x18\x06 \x01(\x04R\x0fcanonicalUserId\x12#\n" +
+	"\x11requested_user_id\x18\x05 \x01(\x04R\x0frequestedUserId\x12#\n" +
 	"\rbusiness_date\x18\a \x01(\tR\fbusinessDate\x128\n" +
 	"\x06status\x18\b \x01(\x0e2 .ops.reward.v1.RewardGrantStatusR\x06status\x12>\n" +
 	"\bsnapshot\x18\t \x01(\v2\".ops.reward.v1.RewardGrantSnapshotR\bsnapshot\x12;\n" +
@@ -2954,7 +2934,7 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12B\n" +
 	"\ffulfilled_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vfulfilledAt\x88\x01\x01B\x0f\n" +
-	"\r_fulfilled_at\"\xbf\x02\n" +
+	"\r_fulfilled_atJ\x04\b\x06\x10\aR\x11canonical_user_id\"\xbf\x02\n" +
 	"\x1eCreateManualRewardGrantRequest\x124\n" +
 	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
 	"\n" +

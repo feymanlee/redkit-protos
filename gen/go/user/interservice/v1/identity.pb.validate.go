@@ -69,8 +69,6 @@ func (m *UserReference) validate(all bool) error {
 
 	// no validation rules for UserId
 
-	// no validation rules for CanonicalUserId
-
 	// no validation rules for UserCode
 
 	// no validation rules for Status
@@ -319,11 +317,11 @@ func (m *ResolveUserIdentityResponse) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetCanonicalUser()).(type) {
+		switch v := interface{}(m.GetUser()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ResolveUserIdentityResponseValidationError{
-					field:  "CanonicalUser",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -331,16 +329,16 @@ func (m *ResolveUserIdentityResponse) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ResolveUserIdentityResponseValidationError{
-					field:  "CanonicalUser",
+					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetCanonicalUser()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ResolveUserIdentityResponseValidationError{
-				field:  "CanonicalUser",
+				field:  "User",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

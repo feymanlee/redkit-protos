@@ -849,8 +849,8 @@ func (x *GetWalletUserWorkbenchRequest) GetUserId() uint64 {
 // WalletUserWorkbench 承载 GetUserWorkbench 调用的返回结果。
 type WalletUserWorkbench struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// canonical_user 承载 WalletUserWorkbench 关联的 UserReference。
-	CanonicalUser *v12.UserReference `protobuf:"bytes,1,opt,name=canonical_user,json=canonicalUser,proto3" json:"canonical_user,omitempty"`
+	// user 承载 WalletUserWorkbench 关联的 UserReference。
+	User *v12.UserReference `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// wallet 承载 WalletUserWorkbench 关联的 Wallet。
 	Wallet        *v1.Wallet `protobuf:"bytes,3,opt,name=wallet,proto3,oneof" json:"wallet,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -887,9 +887,9 @@ func (*WalletUserWorkbench) Descriptor() ([]byte, []int) {
 	return file_admin_wallet_v1_wallet_operations_service_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *WalletUserWorkbench) GetCanonicalUser() *v12.UserReference {
+func (x *WalletUserWorkbench) GetUser() *v12.UserReference {
 	if x != nil {
-		return x.CanonicalUser
+		return x.User
 	}
 	return nil
 }
@@ -1262,9 +1262,9 @@ const file_admin_wallet_v1_wallet_operations_service_proto_rawDesc = "" +
 	"\fgenerated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\vgeneratedAt\"D\n" +
 	"\x1dGetWalletUserWorkbenchRequest\x12#\n" +
 	"\auser_id\x18\x01 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\x98\x01\n" +
-	"\x13WalletUserWorkbench\x12F\n" +
-	"\x0ecanonical_user\x18\x01 \x01(\v2\x1f.user.internal.v1.UserReferenceR\rcanonicalUser\x12.\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\x85\x01\n" +
+	"\x13WalletUserWorkbench\x123\n" +
+	"\x04user\x18\x01 \x01(\v2\x1f.user.internal.v1.UserReferenceR\x04user\x12.\n" +
 	"\x06wallet\x18\x03 \x01(\v2\x11.wallet.v1.WalletH\x00R\x06wallet\x88\x01\x01B\t\n" +
 	"\a_wallet\"O\n" +
 	"#GetWalletRechargeOrderDetailRequest\x12(\n" +
@@ -1437,7 +1437,7 @@ var file_admin_wallet_v1_wallet_operations_service_proto_depIdxs = []int32{
 	7,  // 10: admin.wallet.v1.WalletOperationsOverview.long_running_freezes:type_name -> admin.wallet.v1.WalletOperationsMetric
 	7,  // 11: admin.wallet.v1.WalletOperationsOverview.high_risk_events:type_name -> admin.wallet.v1.WalletOperationsMetric
 	20, // 12: admin.wallet.v1.WalletOperationsOverview.generated_at:type_name -> google.protobuf.Timestamp
-	21, // 13: admin.wallet.v1.WalletUserWorkbench.canonical_user:type_name -> user.internal.v1.UserReference
+	21, // 13: admin.wallet.v1.WalletUserWorkbench.user:type_name -> user.internal.v1.UserReference
 	22, // 14: admin.wallet.v1.WalletUserWorkbench.wallet:type_name -> wallet.v1.Wallet
 	23, // 15: admin.wallet.v1.WalletRechargeOrderDetail.recharge_order:type_name -> wallet.v1.RechargeOrder
 	24, // 16: admin.wallet.v1.WalletRechargeOrderDetail.payment:type_name -> payment.v1.Payment
