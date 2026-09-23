@@ -230,7 +230,7 @@ type GiftSendRecord struct {
 	Status *GiftSendRecord_Status `protobuf:"varint,11,opt,name=status,proto3,enum=gift.v1.GiftSendRecord_Status,oneof" json:"status,omitempty"`
 	// 错误信息。
 	ErrorMessage *string `protobuf:"bytes,12,opt,name=error_message,json=errorMessage,proto3,oneof" json:"error_message,omitempty"`
-	// 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+	// 通用场景类型，例如 ROOM、CHAT、CONTENT。房内送礼使用 ROOM，scene_id 为 Room Session ID。
 	SceneType *string `protobuf:"bytes,13,opt,name=scene_type,json=sceneType,proto3,oneof" json:"scene_type,omitempty"`
 	// 通用场景 ID。
 	SceneId *string `protobuf:"bytes,14,opt,name=scene_id,json=sceneId,proto3,oneof" json:"scene_id,omitempty"`
@@ -1136,7 +1136,7 @@ type SendGiftRequest struct {
 	RecipientId string `protobuf:"bytes,5,opt,name=recipient_id,json=recipientId,proto3" json:"recipient_id,omitempty"`
 	// 数量。
 	Quantity *uint32 `protobuf:"varint,6,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`
-	// 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+	// 通用场景类型，例如 ROOM、CHAT、CONTENT。房内送礼使用 ROOM，scene_id 为 Room Session ID。
 	SceneType *string `protobuf:"bytes,7,opt,name=scene_type,json=sceneType,proto3,oneof" json:"scene_type,omitempty"`
 	// 通用场景 ID。
 	SceneId *string `protobuf:"bytes,8,opt,name=scene_id,json=sceneId,proto3,oneof" json:"scene_id,omitempty"`
@@ -1281,7 +1281,7 @@ type SendBackpackGiftRequest struct {
 	RecipientId string `protobuf:"bytes,5,opt,name=recipient_id,json=recipientId,proto3" json:"recipient_id,omitempty"`
 	// 数量。
 	Quantity *uint32 `protobuf:"varint,6,opt,name=quantity,proto3,oneof" json:"quantity,omitempty"`
-	// 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+	// 通用场景类型，例如 ROOM、CHAT、CONTENT。房内送礼使用 ROOM，scene_id 为 Room Session ID。
 	SceneType *string `protobuf:"bytes,7,opt,name=scene_type,json=sceneType,proto3,oneof" json:"scene_type,omitempty"`
 	// 通用场景 ID。
 	SceneId *string `protobuf:"bytes,8,opt,name=scene_id,json=sceneId,proto3,oneof" json:"scene_id,omitempty"`

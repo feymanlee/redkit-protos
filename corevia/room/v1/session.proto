@@ -1,0 +1,286 @@
+syntax = "proto3";
+
+package room.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "room/v1/types.proto";
+import "validate/validate.proto";
+
+// RoomSession 是一次连续的开房互动事实；Gift Scene ID 使用 session_id。
+message RoomSession {
+  // id 标识场次稳定身份；Gift Scene Type=ROOM 时 Scene ID 即该值的字符串形式。
+  uint64 id = 1;
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // room_id 标识所属房间。
+  uint64 room_id = 3;
+  // status 是场次生命周期阶段。
+  SessionStatus status = 4;
+  // owner_user_id 是房主。
+  uint64 owner_user_id = 5;
+  // live_group 是三方直播群绑定；消息内容不在 Room。
+  LiveGroupBinding live_group = 6;
+  // rtc 是 RTC 频道绑定。
+  RtcChannelBinding rtc = 7;
+  // member_count 是在场成员数（含麦上）。
+  uint32 member_count = 8;
+  // opened_at 是开场时间。
+  google.protobuf.Timestamp opened_at = 9;
+  // ended_at 结束前为空。
+  optional google.protobuf.Timestamp ended_at = 10;
+  // ended_reason 是结束原因稳定分类，例如 OWNER_CLOSE、IDLE_TIMEOUT、OPERATOR_FORCE。
+  string ended_reason = 11;
+}
+
+// SessionSnapshot 是进入/查询场次时的聚合投影。
+message SessionSnapshot {
+  // session 是场次事实。
+  RoomSession session = 1;
+  // seats 是麦位表。
+  repeated Seat seats = 2;
+  // members 是在场成员。
+  repeated SessionMember members = 3;
+  // mic_requests 是排麦队列。
+  repeated MicRequest mic_requests = 4;
+  // me 是调用方视角成员；未在场时为空。
+  optional SessionMember me = 5;
+  // rtc_token 是进入 RTC 频道的短时令牌；仅 Join/Rejoin 返回。
+  optional string rtc_token = 6;
+}
+
+// ListSessionMembersRequest 查询在场成员。
+message ListSessionMembersRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // paging 指定分页。
+  common.pagination.v1.PagingRequest paging = 3;
+}
+
+// ListSessionMembersResponse 是成员列表响应。
+message ListSessionMembersResponse {
+  // items 是成员列表。
+  repeated SessionMember items = 1;
+  // total 是匹配总数。
+  uint64 total = 2;
+}
+
+// OpenSessionRequest 开场。
+message OpenSessionRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // room_id 标识房间。
+  uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // owner_user_id 必须是房主；同一 User 同时仅允许一个进行中场次。
+  uint64 owner_user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// JoinSessionRequest 进入场次（含房主/房管/听众）。
+message JoinSessionRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // user_id 是进入者；同一 User 同场次仅一个在场会话，后进踢前会话。
+  uint64 user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
+  string idempotency_key = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// LeaveSessionRequest 离场。
+message LeaveSessionRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // user_id 是离场者；若占麦则释放麦位并取消排麦。
+  uint64 user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// EndSessionRequest 结束场次。
+message EndSessionRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // actor_user_id 是房主；Operator 强制关房走 Admin 契约。
+  uint64 actor_user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录结束原因。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+}
+
+// GetSessionRequest 查询场次快照。
+message GetSessionRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // viewer_user_id 是视角 User，用于填充 me。
+  optional uint64 viewer_user_id = 3 [(validate.rules).uint64.gt = 0];
+}
+
+// RequestMicRequest 进入排麦队列。
+message RequestMicRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // user_id 是申请人。
+  uint64 user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// CancelMicRequestRequest 取消本人排麦。
+message CancelMicRequestRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // user_id 是取消人。
+  uint64 user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// ApproveMicRequestRequest 批准上麦并占用空位。
+message ApproveMicRequestRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // actor_user_id 是房主或房管。
+  uint64 actor_user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // target_user_id 是被批准成员。
+  uint64 target_user_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // seat_index 可指定空位；为空由系统分配。
+  optional uint32 seat_index = 5;
+}
+
+// RejectMicRequestRequest 拒绝排麦。
+message RejectMicRequestRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // actor_user_id 是房主或房管。
+  uint64 actor_user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // target_user_id 是被拒绝成员。
+  uint64 target_user_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// SeatActionRequest 是对麦位的操作（占位/下麦/静音/解除静音/抱下麦）。
+message SeatActionRequest {
+  // SeatAction 是麦位操作种类。
+  enum SeatAction {
+    // 未提供有效取值；调用方不得据此推断业务状态。
+    SEAT_ACTION_UNSPECIFIED = 0;
+    // 成员坐上空位（需已被批准或规则允许）。
+    SEAT_ACTION_TAKE = 1;
+    // 成员主动下麦。
+    SEAT_ACTION_VACATE = 2;
+    // 静音（房主/房管）。
+    SEAT_ACTION_MUTE = 3;
+    // 解除静音（房主/房管）。
+    SEAT_ACTION_UNMUTE = 4;
+    // 抱下麦（房主/房管）。
+    SEAT_ACTION_FORCE_VACATE = 5;
+  }
+
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // seat_index 标识麦位。
+  uint32 seat_index = 3;
+  // action 是操作种类。
+  SeatAction action = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // actor_user_id 是发起人；TAKE/VACATE 为本人，其余为房主/房管/Operator。
+  uint64 actor_user_id = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// KickMemberRequest 将成员移出本场次（必下麦、同步直播群与 RTC）。
+message KickMemberRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // actor_user_id 是房主/房管/Operator。
+  uint64 actor_user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // target_user_id 是被踢成员。
+  uint64 target_user_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录原因，供审计。
+  string reason = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // actor_type 为 OPERATOR 时跳过房主/房管校验，仅限 Admin 强制路径。
+  optional RestrictionActorType actor_type = 6;
+}
+
+// ForceEndSessionRequest 是 Operator 强制关场命令。
+message ForceEndSessionRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // session_id 标识场次。
+  uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // operator_id 是平台 Operator。
+  uint64 operator_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录原因，供审计。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// ListSessionsRequest 按房间/状态查询场次。
+message ListSessionsRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // room_id 可选限定房间。
+  optional uint64 room_id = 2 [(validate.rules).uint64.gt = 0];
+  // owner_user_id 可选限定房主。
+  optional uint64 owner_user_id = 3 [(validate.rules).uint64.gt = 0];
+  // statuses 限定场次状态。
+  repeated SessionStatus statuses = 4;
+  // paging 指定分页。
+  common.pagination.v1.PagingRequest paging = 5;
+}
+
+// ListSessionsResponse 是场次列表响应。
+message ListSessionsResponse {
+  // items 是场次列表。
+  repeated RoomSession items = 1;
+  // total 是匹配总数。
+  uint64 total = 2;
+}
+
+// RoomSessionService 拥有场次、在场成员、麦位与排麦。
+service RoomSessionService {
+  // OpenSession 开场并建立直播群绑定与 RTC 频道绑定。
+  rpc OpenSession(OpenSessionRequest) returns (SessionSnapshot) {}
+  // JoinSession 进场；同 User 踢前会话；返回快照与 RTC Token。
+  rpc JoinSession(JoinSessionRequest) returns (SessionSnapshot) {}
+  // LeaveSession 离场并释放麦位/排麦。
+  rpc LeaveSession(LeaveSessionRequest) returns (RoomSession) {}
+  // EndSession 房主关房结束场次，解散直播群并关闭 RTC 频道。
+  rpc EndSession(EndSessionRequest) returns (RoomSession) {}
+  // ForceEndSession Operator 强制关场。
+  rpc ForceEndSession(ForceEndSessionRequest) returns (RoomSession) {}
+  // GetSession 查询场次快照。
+  rpc GetSession(GetSessionRequest) returns (SessionSnapshot) {}
+  // ListSessions 按房间/状态查询场次。
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse) {}
+  // ListSessionMembers 查询在场成员。
+  rpc ListSessionMembers(ListSessionMembersRequest) returns (ListSessionMembersResponse) {}
+  // RequestMic 进入排麦队列。
+  rpc RequestMic(RequestMicRequest) returns (SessionSnapshot) {}
+  // CancelMicRequest 取消本人排麦。
+  rpc CancelMicRequest(CancelMicRequestRequest) returns (SessionSnapshot) {}
+  // ApproveMicRequest 批准上麦。
+  rpc ApproveMicRequest(ApproveMicRequestRequest) returns (SessionSnapshot) {}
+  // RejectMicRequest 拒绝排麦。
+  rpc RejectMicRequest(RejectMicRequestRequest) returns (SessionSnapshot) {}
+  // SeatAction 处理占位/下麦/静音/抱下麦。
+  rpc SeatAction(SeatActionRequest) returns (SessionSnapshot) {}
+  // KickMember 踢出本场次成员；actor_type=OPERATOR 时为 Admin 强制踢出。
+  rpc KickMember(KickMemberRequest) returns (SessionSnapshot) {}
+}

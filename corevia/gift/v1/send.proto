@@ -48,7 +48,7 @@ message GiftSendRecord {
   optional Status status = 11;
   // 错误信息。
   optional string error_message = 12;
-  // 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+  // 通用场景类型，例如 ROOM、CHAT、CONTENT。房内送礼使用 ROOM，scene_id 为 Room Session ID。
   optional string scene_type = 13;
   // 通用场景 ID。
   optional string scene_id = 14;
@@ -224,7 +224,7 @@ message SendGiftRequest {
   string recipient_id = 5;
   // 数量。
   optional uint32 quantity = 6;
-  // 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+  // 通用场景类型，例如 ROOM、CHAT、CONTENT。房内送礼使用 ROOM，scene_id 为 Room Session ID。
   optional string scene_type = 7;
   // 通用场景 ID。
   optional string scene_id = 8;
@@ -252,7 +252,7 @@ message SendBackpackGiftRequest {
   string recipient_id = 5;
   // 数量。
   optional uint32 quantity = 6;
-  // 通用场景类型，例如 LIVE_ROOM、CHAT、CONTENT。
+  // 通用场景类型，例如 ROOM、CHAT、CONTENT。房内送礼使用 ROOM，scene_id 为 Room Session ID。
   optional string scene_type = 7;
   // 通用场景 ID。
   optional string scene_id = 8;

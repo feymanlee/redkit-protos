@@ -35,6 +35,7 @@ message CallbackEvent {
   map<string, string> attributes = 12;
   // amount_min / currency 为通用金额字段；非资金事件可不填。
   optional int64 amount_min = 13;
+  // currency 为金额币种代码；与 amount_min 配套。
   optional string currency = 14;
   // payment 为支付/退款/订阅/争议扩展事实；非支付来源可不填。
   optional PaymentCallbackFacts payment = 15;
@@ -46,14 +47,23 @@ message PaymentCallbackFacts {
   PaymentCallbackKind kind = 1;
   // channel_revision_id 为验签成功后绑定的 Channel Revision。
   uint64 channel_revision_id = 2;
+  // payment_no 为平台支付单号。
   optional string payment_no = 3;
+  // provider_trade_no 为渠道交易号。
   optional string provider_trade_no = 4;
+  // refund_no 为平台退款单号。
   optional string refund_no = 5;
+  // provider_refund_no 为渠道退款号。
   optional string provider_refund_no = 6;
+  // refund_amount_min 为退款金额，最小货币单位。
   optional int64 refund_amount_min = 7;
+  // dispute_id 为争议标识。
   optional string dispute_id = 8;
+  // dispute_status 为渠道侧争议状态。
   optional string dispute_status = 9;
+  // dispute_reason_code 为争议原因码。
   optional string dispute_reason_code = 10;
+  // dispute_provider_case_id 为渠道争议案件号。
   optional string dispute_provider_case_id = 11;
 }
 

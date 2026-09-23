@@ -1,0 +1,226 @@
+syntax = "proto3";
+
+package admin.room.v1;
+
+import "common/pagination/v1/pagination.proto";
+import "common/v1/common.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "room/v1/room.proto";
+import "room/v1/session.proto";
+import "room/v1/types.proto";
+import "validate/validate.proto";
+
+// RoomAdministrationService 是 Operator 治理 Room 的 Admin REST 契约。
+// Admin 是视图聚合与强处置入口，不拥有 Room 业务事实之外的 User/Gift/Wallet 数据。
+service RoomAdministrationService {
+  // GetRoom 查询房间。
+  rpc GetRoom (AdminGetRoomRequest) returns (.room.v1.Room) {
+    option (google.api.http) = {get: "/admin/v1/rooms/{room_id}"};
+  }
+  // ListRooms 查询房间列表。
+  rpc ListRooms (AdminListRoomsRequest) returns (.room.v1.ListRoomsResponse) {
+    option (google.api.http) = {get: "/admin/v1/rooms"};
+  }
+  // GetSession 查询场次快照。
+  rpc GetSession (AdminGetSessionRequest) returns (.room.v1.SessionSnapshot) {
+    option (google.api.http) = {get: "/admin/v1/room-sessions/{session_id}"};
+  }
+  // ListSessions 按房间/状态查询场次历史。
+  rpc ListSessions (AdminListSessionsRequest) returns (AdminListSessionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/room-sessions"};
+  }
+  // ListSessionMembers 查询在场成员。
+  rpc ListSessionMembers (AdminListSessionMembersRequest) returns (AdminListSessionMembersResponse) {
+    option (google.api.http) = {get: "/admin/v1/room-sessions/{session_id}/members"};
+  }
+  // ListRoomRestrictions 查询房间处置。
+  rpc ListRoomRestrictions (AdminListRoomRestrictionsRequest) returns (.room.v1.ListRoomRestrictionsResponse) {
+    option (google.api.http) = {get: "/admin/v1/room-restrictions"};
+  }
+  // TakeDownRoom 平台下架房间，阻止再开场。
+  rpc TakeDownRoom (AdminTakeDownRoomRequest) returns (.room.v1.Room) {
+    option (google.api.http) = {
+      post: "/admin/v1/rooms/{room_id}:take-down"
+      body: "*"
+    };
+  }
+  // RestoreRoom 恢复已下架房间。
+  rpc RestoreRoom (AdminRestoreRoomRequest) returns (.room.v1.Room) {
+    option (google.api.http) = {
+      post: "/admin/v1/rooms/{room_id}:restore"
+      body: "*"
+    };
+  }
+  // ForceEndSession 强制关场。
+  rpc ForceEndSession (AdminForceEndSessionRequest) returns (.room.v1.RoomSession) {
+    option (google.api.http) = {
+      post: "/admin/v1/room-sessions/{session_id}:force-end"
+      body: "*"
+    };
+  }
+  // ForceKickMember 强制踢出。
+  rpc ForceKickMember (AdminForceKickMemberRequest) returns (.room.v1.SessionSnapshot) {
+    option (google.api.http) = {
+      post: "/admin/v1/room-sessions/{session_id}/members/{target_user_id}:force-kick"
+      body: "*"
+    };
+  }
+  // CreateRoomRestriction Operator 创建场次/房间处置。
+  rpc CreateRoomRestriction (AdminCreateRoomRestrictionRequest) returns (.room.v1.RoomRestriction) {
+    option (google.api.http) = {
+      post: "/admin/v1/room-restrictions"
+      body: "*"
+    };
+  }
+  // RevokeRoomRestriction Operator 撤销处置。
+  rpc RevokeRoomRestriction (AdminRevokeRoomRestrictionRequest) returns (.room.v1.RoomRestriction) {
+    option (google.api.http) = {
+      post: "/admin/v1/room-restrictions/{restriction_id}:revoke"
+      body: "*"
+    };
+  }
+}
+
+// AdminGetRoomRequest 标识待查询房间。
+message AdminGetRoomRequest {
+  // room_id 标识房间。
+  uint64 room_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminListRoomsRequest 定义房间筛选与分页。
+message AdminListRoomsRequest {
+  // filter 限定查询条件。
+  .room.v1.RoomFilter filter = 1;
+  // paging 指定分页。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminGetSessionRequest 标识待查询场次。
+message AdminGetSessionRequest {
+  // session_id 标识场次。
+  uint64 session_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+}
+
+// AdminListSessionsRequest 按房间与状态查询场次。
+message AdminListSessionsRequest {
+  // room_id 可选限定房间。
+  optional uint64 room_id = 1 [(validate.rules).uint64.gt = 0];
+  // statuses 限定场次状态。
+  repeated .room.v1.SessionStatus statuses = 2;
+  // owner_user_id 可选限定房主。
+  optional uint64 owner_user_id = 3 [(validate.rules).uint64.gt = 0];
+  // paging 指定分页。
+  .common.pagination.v1.PagingRequest paging = 4;
+}
+
+// AdminListSessionsResponse 是场次列表响应。
+message AdminListSessionsResponse {
+  // items 是场次列表。
+  repeated .room.v1.RoomSession items = 1;
+  // total 是匹配总数。
+  uint64 total = 2;
+}
+
+// AdminListSessionMembersRequest 查询成员。
+message AdminListSessionMembersRequest {
+  // session_id 标识场次。
+  uint64 session_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // paging 指定分页。
+  .common.pagination.v1.PagingRequest paging = 2;
+}
+
+// AdminListSessionMembersResponse 是成员列表响应。
+message AdminListSessionMembersResponse {
+  // items 是成员列表。
+  repeated .room.v1.SessionMember items = 1;
+  // total 是匹配总数。
+  uint64 total = 2;
+}
+
+// AdminListRoomRestrictionsRequest 查询处置。
+message AdminListRoomRestrictionsRequest {
+  // room_id 可选限定房间。
+  optional uint64 room_id = 1 [(validate.rules).uint64.gt = 0];
+  // user_id 可选限定用户。
+  optional uint64 user_id = 2 [(validate.rules).uint64.gt = 0];
+  // only_active 为 true 时仅返回仍生效处置。
+  optional bool only_active = 3;
+  // paging 指定分页。
+  .common.pagination.v1.PagingRequest paging = 4;
+}
+
+// AdminTakeDownRoomRequest 下架房间。
+message AdminTakeDownRoomRequest {
+  // room_id 标识房间。
+  uint64 room_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录原因，供审计。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminRestoreRoomRequest 恢复房间。
+message AdminRestoreRoomRequest {
+  // room_id 标识房间。
+  uint64 room_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录原因，供审计。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminForceEndSessionRequest 强制关场。
+message AdminForceEndSessionRequest {
+  // session_id 标识场次。
+  uint64 session_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录原因，供审计。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminForceKickMemberRequest 强制踢出。
+message AdminForceKickMemberRequest {
+  // session_id 标识场次。
+  uint64 session_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // target_user_id 是被踢成员。
+  uint64 target_user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录原因，供审计。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminCreateRoomRestrictionRequest Operator 创建处置。
+message AdminCreateRoomRestrictionRequest {
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  .common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // room_id 标识房间。
+  uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // session_id 在 scope=SESSION 时必填。
+  optional uint64 session_id = 3 [(validate.rules).uint64.gt = 0];
+  // target_user_id 是被处置 User。
+  uint64 target_user_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // scope 是处置作用域。
+  .room.v1.RestrictionScope scope = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // kind 是处置种类。
+  .room.v1.RestrictionKind kind = 6 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
+  // reason 记录原因，供审计。
+  string reason = 7 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // expires_at 仅房间级限时处置使用。
+  optional google.protobuf.Timestamp expires_at = 8;
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 9 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+// AdminRevokeRoomRestrictionRequest Operator 撤销处置。
+message AdminRevokeRoomRestrictionRequest {
+  // restriction_id 标识处置。
+  uint64 restriction_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
+  // reason 记录原因，供审计。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 1000}];
+  // operation_no 为审计与幂等重放稳定标识本次管理操作。
+  string operation_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
+}

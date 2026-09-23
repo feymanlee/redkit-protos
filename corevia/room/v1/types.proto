@@ -1,0 +1,222 @@
+syntax = "proto3";
+
+package room.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// RoomType 是房间稳定身份上的业务形态。
+enum RoomType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ROOM_TYPE_UNSPECIFIED = 0;
+  // 多人聊天/交友。一期唯一实现的类型能力。
+  ROOM_TYPE_CHAT = 1;
+  // 开黑/游戏搭子。仅枚举预留，一期不实现类型能力。
+  ROOM_TYPE_GAMING = 2;
+  // 点唱/歌房。仅枚举预留，一期不实现类型能力。
+  ROOM_TYPE_KTV = 3;
+  // 单人秀场直播。仅枚举预留，一期不实现类型能力。
+  ROOM_TYPE_SHOW = 4;
+}
+
+// RoomVisibility 决定房间是否可被大厅发现及进入方式。
+enum RoomVisibility {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ROOM_VISIBILITY_UNSPECIFIED = 0;
+  // 可发现、可进入。
+  ROOM_VISIBILITY_PUBLIC = 1;
+  // 不可发现，仅邀请进入。
+  ROOM_VISIBILITY_PRIVATE = 2;
+}
+
+// RoomStatus 是房间稳定身份的可用性。
+enum RoomStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  ROOM_STATUS_UNSPECIFIED = 0;
+  // 正常，可开场。
+  ROOM_STATUS_ACTIVE = 1;
+  // 平台下架，不可开场。
+  ROOM_STATUS_TAKEN_DOWN = 2;
+}
+
+// SessionStatus 是 Room Session 的生命周期阶段。
+enum SessionStatus {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SESSION_STATUS_UNSPECIFIED = 0;
+  // 进行中，可进出与互动。
+  SESSION_STATUS_OPEN = 1;
+  // 已结束，事实只读。
+  SESSION_STATUS_ENDED = 2;
+}
+
+// MemberRole 刻画 Session Member 在本场次内的角色。
+enum MemberRole {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  MEMBER_ROLE_UNSPECIFIED = 0;
+  // 普通成员（含听众）。
+  MEMBER_ROLE_MEMBER = 1;
+  // 房管：场次内秩序角色，不能关房或转让房主。
+  MEMBER_ROLE_MODERATOR = 2;
+  // 房主：房间稳定身份所有者，默认占主麦位。
+  MEMBER_ROLE_OWNER = 3;
+}
+
+// SeatState 是麦位占用与静音状态。
+enum SeatState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  SEAT_STATE_UNSPECIFIED = 0;
+  // 空位。
+  SEAT_STATE_EMPTY = 1;
+  // 已占用且未静音。
+  SEAT_STATE_OCCUPIED = 2;
+  // 已占用且静音。
+  SEAT_STATE_MUTED = 3;
+}
+
+// MicRequestState 是排麦请求状态。
+enum MicRequestState {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  MIC_REQUEST_STATE_UNSPECIFIED = 0;
+  // 队列中等待批准。
+  MIC_REQUEST_STATE_QUEUED = 1;
+  // 已批准并上麦。
+  MIC_REQUEST_STATE_APPROVED = 2;
+  // 被拒绝。
+  MIC_REQUEST_STATE_REJECTED = 3;
+  // 成员主动取消。
+  MIC_REQUEST_STATE_CANCELED = 4;
+}
+
+// RestrictionScope 是房间处置的作用域。
+enum RestrictionScope {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RESTRICTION_SCOPE_UNSPECIFIED = 0;
+  // 仅当前场次，场次结束失效。
+  RESTRICTION_SCOPE_SESSION = 1;
+  // 房间级，不随场次结束。
+  RESTRICTION_SCOPE_ROOM = 2;
+}
+
+// RestrictionKind 是房间处置的种类。
+enum RestrictionKind {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RESTRICTION_KIND_UNSPECIFIED = 0;
+  // 禁言（含公屏由三方直播群侧生效）。
+  RESTRICTION_KIND_MUTE = 1;
+  // 禁入。
+  RESTRICTION_KIND_BAN = 2;
+}
+
+// RestrictionActorType 标识处置发起方类型。
+enum RestrictionActorType {
+  // 未提供有效取值；调用方不得据此推断业务状态。
+  RESTRICTION_ACTOR_TYPE_UNSPECIFIED = 0;
+  // 房主。
+  RESTRICTION_ACTOR_TYPE_OWNER = 1;
+  // 房管。
+  RESTRICTION_ACTOR_TYPE_MODERATOR = 2;
+  // 平台 Operator。
+  RESTRICTION_ACTOR_TYPE_OPERATOR = 3;
+  // 系统自动（如超时下麦）。
+  RESTRICTION_ACTOR_TYPE_SYSTEM = 4;
+}
+
+// Seat 是房间场次内的可发声槽位。
+message Seat {
+  // seat_index 是房间内麦位序号，0 为房主固定主麦位。
+  uint32 seat_index = 1;
+  // state 是麦位占用与静音状态。
+  SeatState state = 2;
+  // occupant_user_id 在空位时为 0。
+  uint64 occupant_user_id = 3;
+  // occupant_nickname 为占用者展示昵称快照，便于投影。
+  string occupant_nickname = 4;
+  // occupant_avatar 为占用者头像展示地址快照。
+  string occupant_avatar = 5;
+  // updated_at 是麦位最近一次变化时间。
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+// MicRequest 是排麦队列条目。
+message MicRequest {
+  // user_id 标识请求上麦的 Session Member。
+  uint64 user_id = 1;
+  // state 是排麦请求状态。
+  MicRequestState state = 2;
+  // requested_at 是进入队列的时间。
+  google.protobuf.Timestamp requested_at = 3;
+  // updated_at 是最近一次状态变化时间。
+  google.protobuf.Timestamp updated_at = 4;
+  // nickname 为请求人展示昵称快照。
+  string nickname = 5;
+  // avatar 为请求人头像展示地址快照。
+  string avatar = 6;
+}
+
+// SessionMember 是进行中场次的在场成员投影。
+message SessionMember {
+  // user_id 标识在场 User。
+  uint64 user_id = 1;
+  // role 刻画本场次角色。
+  MemberRole role = 2;
+  // seat_index 未上麦时为空。
+  optional uint32 seat_index = 3;
+  // muted 表示成员是否处于麦上静音或场次禁言。
+  bool muted = 4;
+  // joined_at 是本次进场时间。
+  google.protobuf.Timestamp joined_at = 5;
+  // nickname 为展示昵称快照。
+  string nickname = 6;
+  // avatar 为头像展示地址快照。
+  string avatar = 7;
+  // user_code 为对外稳定用户码快照。
+  string user_code = 8;
+}
+
+// LiveGroupBinding 是 Room Session 与三方直播群的关联；Room 不拥有消息内容。
+message LiveGroupBinding {
+  // provider 标识三方直播群提供方稳定代码，实现期填入。
+  string provider = 1;
+  // group_id 是三方直播群稳定标识。
+  string group_id = 2;
+  // created_at 是绑定建立时间。
+  google.protobuf.Timestamp created_at = 3;
+}
+
+// RtcChannelBinding 是 Room Session 与 RTC 频道的关联；厂商可替换。
+message RtcChannelBinding {
+  // provider 标识 RTC 提供方稳定代码，一期实现可先写 PORT。
+  string provider = 1;
+  // channel_id 是 RTC 频道稳定标识。
+  string channel_id = 2;
+}
+
+// RoomRestriction 是房主/房管或 Operator 对 User 施加的限制。
+message RoomRestriction {
+  // id 标识处置事实。
+  uint64 id = 1;
+  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
+  common.v1.AppId app_id = 2;
+  // room_id 标识房间。
+  uint64 room_id = 3;
+  // session_id 在房间级处置时为空。
+  optional uint64 session_id = 4;
+  // user_id 标识被处置 User。
+  uint64 user_id = 5;
+  // scope 是处置作用域。
+  RestrictionScope scope = 6;
+  // kind 是处置种类。
+  RestrictionKind kind = 7;
+  // actor_type 标识发起方类型。
+  RestrictionActorType actor_type = 8;
+  // actor_id 是 Operator ID 或 User ID。
+  uint64 actor_id = 9;
+  // reason 记录处置原因，供审计。
+  string reason = 10;
+  // expires_at 为空表示随场次结束或永久，取决于 scope。
+  optional google.protobuf.Timestamp expires_at = 11;
+  // revoked_at 为空表示仍生效。
+  optional google.protobuf.Timestamp revoked_at = 12;
+  // created_at 是处置创建时间。
+  google.protobuf.Timestamp created_at = 13;
+}

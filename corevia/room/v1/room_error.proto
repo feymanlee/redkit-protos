@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package room.v1;
+
+import "errors/errors.proto";
+
+// RoomErrorReason 是 Room 域稳定错误原因。
+enum RoomErrorReason {
+  option (errors.default_code) = 500;
+
+  // bad 请求。
+  BAD_REQUEST = 0 [(errors.code) = 400];
+  // unauthorized。
+  UNAUTHORIZED = 100 [(errors.code) = 401];
+  // forbidden。
+  FORBIDDEN = 300 [(errors.code) = 403];
+  // not found。
+  NOT_FOUND = 400 [(errors.code) = 404];
+  // 房间不存在或不在当前 App。
+  ROOM_NOT_FOUND = 401 [(errors.code) = 404];
+  // 场次不存在或不在当前 App。
+  SESSION_NOT_FOUND = 402 [(errors.code) = 404];
+  // 麦位不存在或状态不允许该操作。
+  SEAT_NOT_AVAILABLE = 403 [(errors.code) = 409];
+  // 排麦请求不存在或状态不允许。
+  MIC_REQUEST_INVALID = 404 [(errors.code) = 409];
+  // 同一 User 已有进行中场次。
+  ACTIVE_SESSION_EXISTS = 405 [(errors.code) = 409];
+  // 同一 User 同场次已有在场会话被替换后的残留冲突。
+  DUPLICATE_PRESENCE = 406 [(errors.code) = 409];
+  // 被禁入或禁言，不得进入/发言/收礼。
+  RESTRICTED = 407 [(errors.code) = 403];
+  // 幂等键与既有业务意图冲突。
+  IDEMPOTENCY_CONFLICT = 408 [(errors.code) = 409];
+  // 房间已下架或场次已结束。
+  ROOM_OR_SESSION_CLOSED = 409 [(errors.code) = 409];
+  // 在场人数已达上限。
+  SESSION_FULL = 410 [(errors.code) = 409];
+  // conflict。
+  CONFLICT = 900 [(errors.code) = 409];
+  // 站内 server 错误。
+  INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];
+  // service unavailable。
+  SERVICE_UNAVAILABLE = 2300 [(errors.code) = 503];
+}

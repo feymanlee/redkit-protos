@@ -114,6 +114,18 @@ managed:
     - file_option: go_package
       path: gamoji/user/v1
       value: github.com/feymanlee/redkit-protos/gen/go/gamoji/user/v1;gamojiuserpb
+    - file_option: go_package
+      path: gamoji/room/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/gamoji/room/v1;gamojiroompb
+    - file_option: go_package
+      path: room/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/room/v1;roompb
+    - file_option: go_package
+      path: room/internal/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/room/interservice/v1;roominternalpb
+    - file_option: go_package
+      path: admin/room/v1
+      value: github.com/feymanlee/redkit-protos/gen/go/admin/room/v1;adminroompb
 
 plugins:
   - local: protoc-gen-go

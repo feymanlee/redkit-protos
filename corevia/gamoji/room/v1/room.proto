@@ -1,0 +1,493 @@
+syntax = "proto3";
+
+package gamoji.room.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// RoomService 是 Gamoji C 端语聊房入口 REST 契约（路径以本 proto 的 google.api.http 为唯一事实源）。
+// App 由 gamoji-bff 部署配置固定注入；客户端不自报 app_id。送礼仍调用既有 Gift 接口（scene_type=ROOM）。
+service RoomService {
+  // CreateRoom 创建房间。
+  rpc CreateRoom (CreateRoomRequest) returns (RoomView) {
+    option (google.api.http) = {
+      post: "/api/v1/rooms"
+      body: "*"
+    };
+  }
+  // GetRoom 查询房间。
+  rpc GetRoom (GetRoomRequest) returns (RoomView) {
+    option (google.api.http) = {
+      get: "/api/v1/rooms/{room_id}"
+    };
+  }
+  // UpdateRoom 更新房间资料（仅房主）。
+  rpc UpdateRoom (UpdateRoomRequest) returns (RoomView) {
+    option (google.api.http) = {
+      patch: "/api/v1/rooms/{room_id}"
+      body: "*"
+    };
+  }
+  // ListDiscoverableRooms 大厅公开房列表。
+  rpc ListDiscoverableRooms (ListDiscoverableRoomsRequest) returns (ListRoomsResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/rooms:discover"
+      body: "*"
+    };
+  }
+  // ListMyRooms 我拥有的房间。
+  rpc ListMyRooms (ListMyRoomsRequest) returns (ListRoomsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/me/rooms"
+    };
+  }
+  // OpenSession 开场。
+  rpc OpenSession (OpenSessionRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      post: "/api/v1/rooms/{room_id}/sessions"
+      body: "*"
+    };
+  }
+  // JoinSession 进入场次，返回快照与 RTC Token、直播群绑定。
+  rpc JoinSession (JoinSessionRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}:join"
+      body: "*"
+    };
+  }
+  // LeaveSession 离场。
+  rpc LeaveSession (LeaveSessionRequest) returns (RoomSessionView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}:leave"
+      body: "*"
+    };
+  }
+  // EndSession 房主关房结束场次。
+  rpc EndSession (EndSessionRequest) returns (RoomSessionView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}:end"
+      body: "*"
+    };
+  }
+  // GetSession 场次快照。
+  rpc GetSession (GetSessionRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      get: "/api/v1/room-sessions/{session_id}"
+    };
+  }
+  // RequestMic 排麦。
+  rpc RequestMic (RequestMicRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}/mic-requests"
+      body: "*"
+    };
+  }
+  // CancelMicRequest 取消排麦。
+  rpc CancelMicRequest (CancelMicRequestRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      delete: "/api/v1/room-sessions/{session_id}/mic-requests"
+    };
+  }
+  // ApproveMicRequest 批准上麦。
+  rpc ApproveMicRequest (MicModerationRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}/mic-requests/{target_user_id}:approve"
+      body: "*"
+    };
+  }
+  // RejectMicRequest 拒绝排麦。
+  rpc RejectMicRequest (MicModerationRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}/mic-requests/{target_user_id}:reject"
+      body: "*"
+    };
+  }
+  // SeatAction 麦位操作。
+  rpc SeatAction (SeatActionRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}/seats:action"
+      body: "*"
+    };
+  }
+  // KickMember 踢出成员。
+  rpc KickMember (KickMemberRequest) returns (SessionSnapshotView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}/members/{target_user_id}:kick"
+      body: "*"
+    };
+  }
+  // RestrictMember 场次禁言/禁入。
+  rpc RestrictMember (RestrictMemberRequest) returns (RestrictionView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-sessions/{session_id}/members/{target_user_id}:restrict"
+      body: "*"
+    };
+  }
+  // BanRoomMember 房间级禁入。
+  rpc BanRoomMember (BanRoomMemberRequest) returns (RestrictionView) {
+    option (google.api.http) = {
+      post: "/api/v1/rooms/{room_id}/bans"
+      body: "*"
+    };
+  }
+  // RevokeRestriction 撤销处置。
+  rpc RevokeRestriction (RevokeRestrictionRequest) returns (RestrictionView) {
+    option (google.api.http) = {
+      post: "/api/v1/room-restrictions/{restriction_id}:revoke"
+      body: "*"
+    };
+  }
+  // AppointModerator 任命房管。
+  rpc AppointModerator (ModeratorRequest) returns (RoomView) {
+    option (google.api.http) = {
+      post: "/api/v1/rooms/{room_id}/moderators/{target_user_id}"
+      body: "*"
+    };
+  }
+  // RemoveModerator 撤销房管。
+  rpc RemoveModerator (ModeratorRequest) returns (RoomView) {
+    option (google.api.http) = {
+      delete: "/api/v1/rooms/{room_id}/moderators/{target_user_id}"
+    };
+  }
+}
+
+// RoomView 是 C 端房间投影。
+message RoomView {
+  // room_id 为房间 ID 字符串。
+  string room_id = 1;
+  // room_type 为 ROOM_TYPE_CHAT 等。
+  string room_type = 2;
+  // visibility 为 PUBLIC 或 PRIVATE。
+  string visibility = 3;
+  // status 为 ACTIVE 或 TAKEN_DOWN。
+  string status = 4;
+  // owner_user_id 为房主 User ID 字符串。
+  string owner_user_id = 5;
+  // name 为房间名称。
+  string name = 6;
+  // description 为简介。
+  string description = 7;
+  // cover_url 为封面展示地址。
+  string cover_url = 8;
+  // cover_file_id 为封面 File ID 字符串。
+  string cover_file_id = 9;
+  // seat_count 为麦位数。
+  uint32 seat_count = 10;
+  // audience_limit 为听众上限。
+  uint32 audience_limit = 11;
+  // active_session_id 进行中场次 ID 字符串，可空。
+  string active_session_id = 12;
+  // created_at 为创建时间 RFC3339。
+  string created_at = 13;
+  // updated_at 为更新时间 RFC3339。
+  string updated_at = 14;
+}
+
+// RoomSessionView 是 C 端场次投影。
+message RoomSessionView {
+  // session_id 为场次 ID 字符串，即 Gift Scene ID。
+  string session_id = 1;
+  // room_id 为房间 ID 字符串。
+  string room_id = 2;
+  // status 为 OPEN 或 ENDED。
+  string status = 3;
+  // member_count 为在场人数。
+  uint32 member_count = 4;
+  // opened_at 为开场时间 RFC3339。
+  string opened_at = 5;
+  // ended_at 结束前为空。
+  string ended_at = 6;
+  // ended_reason 为结束原因稳定分类。
+  string ended_reason = 7;
+}
+
+// SeatView 是 C 端麦位投影。
+message SeatView {
+  // seat_index 为麦位序号。
+  uint32 seat_index = 1;
+  // state 为 EMPTY / OCCUPIED / MUTED。
+  string state = 2;
+  // occupant_user_id 空位为空。
+  string occupant_user_id = 3;
+  // occupant_nickname 为占用者昵称。
+  string occupant_nickname = 4;
+  // occupant_avatar 为占用者头像地址。
+  string occupant_avatar = 5;
+}
+
+// MemberView 是 C 端在场成员投影。
+message MemberView {
+  // user_id 为 User ID 字符串。
+  string user_id = 1;
+  // user_code 为对外用户码。
+  string user_code = 2;
+  // nickname 为昵称。
+  string nickname = 3;
+  // avatar 为头像地址。
+  string avatar = 4;
+  // role 为 MEMBER / MODERATOR / OWNER。
+  string role = 5;
+  // seat_index 未上麦为空。
+  optional uint32 seat_index = 6;
+  // muted 表示静音或禁言。
+  bool muted = 7;
+  // joined_at 为进场时间 RFC3339。
+  string joined_at = 8;
+}
+
+// MicRequestView 是排麦投影。
+message MicRequestView {
+  // user_id 为 User ID 字符串。
+  string user_id = 1;
+  // state 为 QUEUED / APPROVED / REJECTED / CANCELED。
+  string state = 2;
+  // nickname 为昵称。
+  string nickname = 3;
+  // avatar 为头像地址。
+  string avatar = 4;
+  // requested_at 为申请时间 RFC3339。
+  string requested_at = 5;
+}
+
+// LiveGroupView 是直播群绑定投影；不含消息内容。
+message LiveGroupView {
+  // provider 为三方直播群提供方代码。
+  string provider = 1;
+  // group_id 为直播群 ID。
+  string group_id = 2;
+}
+
+// SessionSnapshotView 是进房/操作后的聚合投影。
+message SessionSnapshotView {
+  // session 为场次。
+  RoomSessionView session = 1;
+  // seats 为麦位表。
+  repeated SeatView seats = 2;
+  // members 为在场成员。
+  repeated MemberView members = 3;
+  // mic_requests 为排麦队列。
+  repeated MicRequestView mic_requests = 4;
+  // me 为当前用户视角成员。
+  MemberView me = 5;
+  // rtc_token 为进入 RTC 的短时令牌，仅 join/open 返回。
+  string rtc_token = 6;
+  // rtc_channel_id 为 RTC 频道 ID。
+  string rtc_channel_id = 7;
+  // live_group 为三方直播群绑定。
+  LiveGroupView live_group = 8;
+}
+
+// RestrictionView 是处置投影。
+message RestrictionView {
+  // restriction_id 为处置 ID 字符串。
+  string restriction_id = 1;
+  // room_id 为房间 ID 字符串。
+  string room_id = 2;
+  // session_id 房间级处置为空。
+  string session_id = 3;
+  // user_id 为被处置 User ID 字符串。
+  string user_id = 4;
+  // scope 为 SESSION 或 ROOM。
+  string scope = 5;
+  // kind 为 MUTE 或 BAN。
+  string kind = 6;
+  // reason 为原因。
+  string reason = 7;
+  // expires_at 为空表示随场次结束或永久。
+  string expires_at = 8;
+  // created_at 为创建时间 RFC3339。
+  string created_at = 9;
+}
+
+// ListRoomsResponse 是房间列表。
+message ListRoomsResponse {
+  // items 为房间列表。
+  repeated RoomView items = 1;
+  // total 为匹配总数。
+  uint64 total = 2;
+}
+
+// CreateRoomRequest 创建房间。
+message CreateRoomRequest {
+  // room_type 一期仅支持 ROOM_TYPE_CHAT。
+  string room_type = 1 [(google.api.field_behavior) = REQUIRED];
+  // visibility 为 PUBLIC 或 PRIVATE。
+  string visibility = 2 [(google.api.field_behavior) = REQUIRED];
+  // name 为房间名称。
+  string name = 3 [(google.api.field_behavior) = REQUIRED];
+  // description 为简介。
+  string description = 4;
+  // cover_file_id 为封面 File ID 字符串。
+  string cover_file_id = 5;
+  // seat_count 可空，空则用 App 默认。
+  optional uint32 seat_count = 6;
+  // audience_limit 可空，空则用 App 默认。
+  optional uint32 audience_limit = 7;
+  // idempotency_key 幂等键。
+  string idempotency_key = 8 [(google.api.field_behavior) = REQUIRED];
+}
+
+// GetRoomRequest 查询房间。
+message GetRoomRequest {
+  // room_id 为房间 ID 字符串。
+  string room_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// UpdateRoomRequest 更新房间资料。
+message UpdateRoomRequest {
+  // room_id 为房间 ID 字符串。
+  string room_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // name 为房间名称。
+  string name = 2;
+  // description 为简介。
+  string description = 3;
+  // cover_file_id 为封面 File ID 字符串。
+  string cover_file_id = 4;
+  // visibility 为 PUBLIC 或 PRIVATE。
+  string visibility = 5;
+  // seat_count 为麦位数。
+  optional uint32 seat_count = 6;
+  // audience_limit 为听众上限。
+  optional uint32 audience_limit = 7;
+}
+
+// ListDiscoverableRoomsRequest 大厅筛选。
+message ListDiscoverableRoomsRequest {
+  // room_type 可空。
+  string room_type = 1;
+  // keyword 为名称关键字。
+  string keyword = 2;
+  // page 为页码，从 1 开始。
+  uint32 page = 3;
+  // page_size 为页大小。
+  uint32 page_size = 4;
+}
+
+// ListMyRoomsRequest 我的房间。
+message ListMyRoomsRequest {
+  // page 为页码，从 1 开始。
+  uint32 page = 1;
+  // page_size 为页大小。
+  uint32 page_size = 2;
+}
+
+// OpenSessionRequest 开场。
+message OpenSessionRequest {
+  // room_id 为房间 ID 字符串。
+  string room_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // idempotency_key 幂等键。
+  string idempotency_key = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// JoinSessionRequest 进入场次。
+message JoinSessionRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // idempotency_key 幂等键。
+  string idempotency_key = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// LeaveSessionRequest 离场。
+message LeaveSessionRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// EndSessionRequest 关房结束场次。
+message EndSessionRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 为原因。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// GetSessionRequest 场次快照。
+message GetSessionRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// RequestMicRequest 排麦。
+message RequestMicRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// CancelMicRequestRequest 取消排麦。
+message CancelMicRequestRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+// MicModerationRequest 批准/拒绝排麦。
+message MicModerationRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // target_user_id 为目标 User ID 字符串。
+  string target_user_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // seat_index 可选指定空位。
+  optional uint32 seat_index = 3;
+}
+
+// SeatActionRequest 麦位操作。
+message SeatActionRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // seat_index 为麦位序号。
+  uint32 seat_index = 2 [(google.api.field_behavior) = REQUIRED];
+  // action 为 take / vacate / mute / unmute / force_vacate。
+  string action = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+// KickMemberRequest 踢人。
+message KickMemberRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // target_user_id 为目标 User ID 字符串。
+  string target_user_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // reason 为原因。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+// RestrictMemberRequest 场次处置。
+message RestrictMemberRequest {
+  // session_id 为场次 ID 字符串。
+  string session_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // target_user_id 为目标 User ID 字符串。
+  string target_user_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // kind 为 mute 或 ban。
+  string kind = 3 [(google.api.field_behavior) = REQUIRED];
+  // reason 为原因。
+  string reason = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// BanRoomMemberRequest 房间级禁入。
+message BanRoomMemberRequest {
+  // room_id 为房间 ID 字符串。
+  string room_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // target_user_id 为目标 User ID 字符串。
+  string target_user_id = 2 [(google.api.field_behavior) = REQUIRED];
+  // reason 为原因。
+  string reason = 3 [(google.api.field_behavior) = REQUIRED];
+  // expires_at RFC3339，空表示永久。
+  string expires_at = 4;
+}
+
+// RevokeRestrictionRequest 撤销处置。
+message RevokeRestrictionRequest {
+  // restriction_id 为处置 ID 字符串。
+  string restriction_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // reason 为原因。
+  string reason = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// ModeratorRequest 任命/撤销房管。
+message ModeratorRequest {
+  // room_id 为房间 ID 字符串。
+  string room_id = 1 [(google.api.field_behavior) = REQUIRED];
+  // target_user_id 为目标 User ID 字符串。
+  string target_user_id = 2 [(google.api.field_behavior) = REQUIRED];
+}

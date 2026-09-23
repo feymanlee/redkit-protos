@@ -179,8 +179,9 @@ type CallbackEvent struct {
 	// attributes 为来源特有的结构化字段。
 	Attributes map[string]string `protobuf:"bytes,12,rep,name=attributes,proto3" json:"attributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// amount_min / currency 为通用金额字段；非资金事件可不填。
-	AmountMin *int64  `protobuf:"varint,13,opt,name=amount_min,json=amountMin,proto3,oneof" json:"amount_min,omitempty"`
-	Currency  *string `protobuf:"bytes,14,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
+	AmountMin *int64 `protobuf:"varint,13,opt,name=amount_min,json=amountMin,proto3,oneof" json:"amount_min,omitempty"`
+	// currency 为金额币种代码；与 amount_min 配套。
+	Currency *string `protobuf:"bytes,14,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
 	// payment 为支付/退款/订阅/争议扩展事实；非支付来源可不填。
 	Payment       *PaymentCallbackFacts `protobuf:"bytes,15,opt,name=payment,proto3,oneof" json:"payment,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -328,15 +329,24 @@ type PaymentCallbackFacts struct {
 	// kind 为支付域事件类别。
 	Kind PaymentCallbackKind `protobuf:"varint,1,opt,name=kind,proto3,enum=callback.v1.PaymentCallbackKind" json:"kind,omitempty"`
 	// channel_revision_id 为验签成功后绑定的 Channel Revision。
-	ChannelRevisionId     uint64  `protobuf:"varint,2,opt,name=channel_revision_id,json=channelRevisionId,proto3" json:"channel_revision_id,omitempty"`
-	PaymentNo             *string `protobuf:"bytes,3,opt,name=payment_no,json=paymentNo,proto3,oneof" json:"payment_no,omitempty"`
-	ProviderTradeNo       *string `protobuf:"bytes,4,opt,name=provider_trade_no,json=providerTradeNo,proto3,oneof" json:"provider_trade_no,omitempty"`
-	RefundNo              *string `protobuf:"bytes,5,opt,name=refund_no,json=refundNo,proto3,oneof" json:"refund_no,omitempty"`
-	ProviderRefundNo      *string `protobuf:"bytes,6,opt,name=provider_refund_no,json=providerRefundNo,proto3,oneof" json:"provider_refund_no,omitempty"`
-	RefundAmountMin       *int64  `protobuf:"varint,7,opt,name=refund_amount_min,json=refundAmountMin,proto3,oneof" json:"refund_amount_min,omitempty"`
-	DisputeId             *string `protobuf:"bytes,8,opt,name=dispute_id,json=disputeId,proto3,oneof" json:"dispute_id,omitempty"`
-	DisputeStatus         *string `protobuf:"bytes,9,opt,name=dispute_status,json=disputeStatus,proto3,oneof" json:"dispute_status,omitempty"`
-	DisputeReasonCode     *string `protobuf:"bytes,10,opt,name=dispute_reason_code,json=disputeReasonCode,proto3,oneof" json:"dispute_reason_code,omitempty"`
+	ChannelRevisionId uint64 `protobuf:"varint,2,opt,name=channel_revision_id,json=channelRevisionId,proto3" json:"channel_revision_id,omitempty"`
+	// payment_no 为平台支付单号。
+	PaymentNo *string `protobuf:"bytes,3,opt,name=payment_no,json=paymentNo,proto3,oneof" json:"payment_no,omitempty"`
+	// provider_trade_no 为渠道交易号。
+	ProviderTradeNo *string `protobuf:"bytes,4,opt,name=provider_trade_no,json=providerTradeNo,proto3,oneof" json:"provider_trade_no,omitempty"`
+	// refund_no 为平台退款单号。
+	RefundNo *string `protobuf:"bytes,5,opt,name=refund_no,json=refundNo,proto3,oneof" json:"refund_no,omitempty"`
+	// provider_refund_no 为渠道退款号。
+	ProviderRefundNo *string `protobuf:"bytes,6,opt,name=provider_refund_no,json=providerRefundNo,proto3,oneof" json:"provider_refund_no,omitempty"`
+	// refund_amount_min 为退款金额，最小货币单位。
+	RefundAmountMin *int64 `protobuf:"varint,7,opt,name=refund_amount_min,json=refundAmountMin,proto3,oneof" json:"refund_amount_min,omitempty"`
+	// dispute_id 为争议标识。
+	DisputeId *string `protobuf:"bytes,8,opt,name=dispute_id,json=disputeId,proto3,oneof" json:"dispute_id,omitempty"`
+	// dispute_status 为渠道侧争议状态。
+	DisputeStatus *string `protobuf:"bytes,9,opt,name=dispute_status,json=disputeStatus,proto3,oneof" json:"dispute_status,omitempty"`
+	// dispute_reason_code 为争议原因码。
+	DisputeReasonCode *string `protobuf:"bytes,10,opt,name=dispute_reason_code,json=disputeReasonCode,proto3,oneof" json:"dispute_reason_code,omitempty"`
+	// dispute_provider_case_id 为渠道争议案件号。
 	DisputeProviderCaseId *string `protobuf:"bytes,11,opt,name=dispute_provider_case_id,json=disputeProviderCaseId,proto3,oneof" json:"dispute_provider_case_id,omitempty"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
