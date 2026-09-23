@@ -21,5 +21,7 @@ sed "s|PLUGIN_PATH_PLACEHOLDER|${PLUGIN}|" "${ROOT}/buf.gen.admin.ts.yaml" >"$TM
 
 mkdir -p "${ROOT}/dist/admin-ts"
 cd "${ROOT}/corevia"
-buf generate --template "$TMP_TPL" --output "${ROOT}/dist/admin-ts"
+# buf.gen.admin.ts.yaml 已声明 out: ../dist/admin-ts；这里再传 --output 会把产物
+# 落到 dist/dist/admin-ts，使 publish-artifacts 复制到陈旧文件。
+buf generate --template "$TMP_TPL"
 echo "ts → ${ROOT}/dist/admin-ts"
