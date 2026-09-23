@@ -7,6 +7,7 @@
 package paymentpb
 
 import (
+	v11 "github.com/feymanlee/redkit-protos/gen/go/callback/v1"
 	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -669,6 +670,7 @@ func (x *ListPaymentCallbackResponse) GetTotal() uint64 {
 }
 
 // 处理渠道回调请求。
+// Deprecated: 渠道原始入口迁至 callback-bff（ADR 0068）；迁移期仅供双路径兼容。
 type HandleProviderCallbackRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 支付渠道。
@@ -732,6 +734,98 @@ func (x *HandleProviderCallbackRequest) GetHeaders() string {
 	return ""
 }
 
+// HandleCallbackEventRequest 是 Callback BFF 同步 Invoke 的统一事件入参。
+type HandleCallbackEventRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// event 为已验签、已入口去重的统一回调事件。
+	Event         *v11.CallbackEvent `protobuf:"bytes,1,opt,name=event,proto3" json:"event,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HandleCallbackEventRequest) Reset() {
+	*x = HandleCallbackEventRequest{}
+	mi := &file_payment_v1_callback_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HandleCallbackEventRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HandleCallbackEventRequest) ProtoMessage() {}
+
+func (x *HandleCallbackEventRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_v1_callback_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HandleCallbackEventRequest.ProtoReflect.Descriptor instead.
+func (*HandleCallbackEventRequest) Descriptor() ([]byte, []int) {
+	return file_payment_v1_callback_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *HandleCallbackEventRequest) GetEvent() *v11.CallbackEvent {
+	if x != nil {
+		return x.Event
+	}
+	return nil
+}
+
+// HandleCallbackEventResponse 是领域幂等应用结果。
+type HandleCallbackEventResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// invoke 为可编程结局。
+	Invoke        *v11.CallbackInvokeResult `protobuf:"bytes,1,opt,name=invoke,proto3" json:"invoke,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HandleCallbackEventResponse) Reset() {
+	*x = HandleCallbackEventResponse{}
+	mi := &file_payment_v1_callback_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HandleCallbackEventResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HandleCallbackEventResponse) ProtoMessage() {}
+
+func (x *HandleCallbackEventResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_v1_callback_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HandleCallbackEventResponse.ProtoReflect.Descriptor instead.
+func (*HandleCallbackEventResponse) Descriptor() ([]byte, []int) {
+	return file_payment_v1_callback_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *HandleCallbackEventResponse) GetInvoke() *v11.CallbackInvokeResult {
+	if x != nil {
+		return x.Invoke
+	}
+	return nil
+}
+
 // 处理渠道回调响应。
 type HandleProviderCallbackResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -747,7 +841,7 @@ type HandleProviderCallbackResponse struct {
 
 func (x *HandleProviderCallbackResponse) Reset() {
 	*x = HandleProviderCallbackResponse{}
-	mi := &file_payment_v1_callback_proto_msgTypes[7]
+	mi := &file_payment_v1_callback_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -759,7 +853,7 @@ func (x *HandleProviderCallbackResponse) String() string {
 func (*HandleProviderCallbackResponse) ProtoMessage() {}
 
 func (x *HandleProviderCallbackResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_payment_v1_callback_proto_msgTypes[7]
+	mi := &file_payment_v1_callback_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -772,7 +866,7 @@ func (x *HandleProviderCallbackResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HandleProviderCallbackResponse.ProtoReflect.Descriptor instead.
 func (*HandleProviderCallbackResponse) Descriptor() ([]byte, []int) {
-	return file_payment_v1_callback_proto_rawDescGZIP(), []int{7}
+	return file_payment_v1_callback_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *HandleProviderCallbackResponse) GetSuccess() bool {
@@ -801,7 +895,7 @@ var File_payment_v1_callback_proto protoreflect.FileDescriptor
 const file_payment_v1_callback_proto_rawDesc = "" +
 	"\n" +
 	"\x19payment/v1/callback.proto\x12\n" +
-	"payment.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bpayment/v1/governance.proto\x1a\x1epayment/v1/payment_types.proto\"\xe5\b\n" +
+	"payment.v1\x1a\x17callback/v1/event.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bpayment/v1/governance.proto\x1a\x1epayment/v1/payment_types.proto\"\xe5\b\n" +
 	"\x0fPaymentCallback\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
 	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12<\n" +
@@ -900,7 +994,11 @@ const file_payment_v1_callback_proto_rawDesc = "" +
 	"\braw_body\x18\x02 \x01(\tR\arawBody\x12\x1d\n" +
 	"\aheaders\x18\x03 \x01(\tH\x00R\aheaders\x88\x01\x01B\n" +
 	"\n" +
-	"\b_headers\"\x98\x01\n" +
+	"\b_headers\"N\n" +
+	"\x1aHandleCallbackEventRequest\x120\n" +
+	"\x05event\x18\x01 \x01(\v2\x1a.callback.v1.CallbackEventR\x05event\"X\n" +
+	"\x1bHandleCallbackEventResponse\x129\n" +
+	"\x06invoke\x18\x01 \x01(\v2!.callback.v1.CallbackInvokeResultR\x06invoke\"\x98\x01\n" +
 	"\x1eHandleProviderCallbackResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\"\n" +
 	"\n" +
@@ -925,7 +1023,7 @@ func file_payment_v1_callback_proto_rawDescGZIP() []byte {
 	return file_payment_v1_callback_proto_rawDescData
 }
 
-var file_payment_v1_callback_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_payment_v1_callback_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_payment_v1_callback_proto_goTypes = []any{
 	(*PaymentCallback)(nil),                  // 0: payment.v1.PaymentCallback
 	(*CallbackVerificationCandidate)(nil),    // 1: payment.v1.CallbackVerificationCandidate
@@ -934,34 +1032,40 @@ var file_payment_v1_callback_proto_goTypes = []any{
 	(*ReprocessPaymentCallbackResponse)(nil), // 4: payment.v1.ReprocessPaymentCallbackResponse
 	(*ListPaymentCallbackResponse)(nil),      // 5: payment.v1.ListPaymentCallbackResponse
 	(*HandleProviderCallbackRequest)(nil),    // 6: payment.v1.HandleProviderCallbackRequest
-	(*HandleProviderCallbackResponse)(nil),   // 7: payment.v1.HandleProviderCallbackResponse
-	(PaymentProvider)(0),                     // 8: payment.v1.PaymentProvider
-	(*MaskedDiagnosticData)(nil),             // 9: payment.v1.MaskedDiagnosticData
-	(*timestamppb.Timestamp)(nil),            // 10: google.protobuf.Timestamp
-	(v1.AppId)(0),                            // 11: common.v1.AppId
+	(*HandleCallbackEventRequest)(nil),       // 7: payment.v1.HandleCallbackEventRequest
+	(*HandleCallbackEventResponse)(nil),      // 8: payment.v1.HandleCallbackEventResponse
+	(*HandleProviderCallbackResponse)(nil),   // 9: payment.v1.HandleProviderCallbackResponse
+	(PaymentProvider)(0),                     // 10: payment.v1.PaymentProvider
+	(*MaskedDiagnosticData)(nil),             // 11: payment.v1.MaskedDiagnosticData
+	(*timestamppb.Timestamp)(nil),            // 12: google.protobuf.Timestamp
+	(v1.AppId)(0),                            // 13: common.v1.AppId
+	(*v11.CallbackEvent)(nil),                // 14: callback.v1.CallbackEvent
+	(*v11.CallbackInvokeResult)(nil),         // 15: callback.v1.CallbackInvokeResult
 }
 var file_payment_v1_callback_proto_depIdxs = []int32{
-	8,  // 0: payment.v1.PaymentCallback.provider:type_name -> payment.v1.PaymentProvider
-	9,  // 1: payment.v1.PaymentCallback.masked_diagnostic:type_name -> payment.v1.MaskedDiagnosticData
+	10, // 0: payment.v1.PaymentCallback.provider:type_name -> payment.v1.PaymentProvider
+	11, // 1: payment.v1.PaymentCallback.masked_diagnostic:type_name -> payment.v1.MaskedDiagnosticData
 	1,  // 2: payment.v1.PaymentCallback.candidate_revisions:type_name -> payment.v1.CallbackVerificationCandidate
 	2,  // 3: payment.v1.PaymentCallback.reprocess_attempts:type_name -> payment.v1.CallbackReprocessAttempt
-	10, // 4: payment.v1.PaymentCallback.created_at:type_name -> google.protobuf.Timestamp
-	10, // 5: payment.v1.PaymentCallback.updated_at:type_name -> google.protobuf.Timestamp
-	8,  // 6: payment.v1.CallbackVerificationCandidate.provider:type_name -> payment.v1.PaymentProvider
-	10, // 7: payment.v1.CallbackVerificationCandidate.effective_from:type_name -> google.protobuf.Timestamp
-	10, // 8: payment.v1.CallbackVerificationCandidate.effective_until:type_name -> google.protobuf.Timestamp
-	10, // 9: payment.v1.CallbackVerificationCandidate.captured_at:type_name -> google.protobuf.Timestamp
-	10, // 10: payment.v1.CallbackReprocessAttempt.created_at:type_name -> google.protobuf.Timestamp
-	11, // 11: payment.v1.ReprocessPaymentCallbackRequest.app_id:type_name -> common.v1.AppId
+	12, // 4: payment.v1.PaymentCallback.created_at:type_name -> google.protobuf.Timestamp
+	12, // 5: payment.v1.PaymentCallback.updated_at:type_name -> google.protobuf.Timestamp
+	10, // 6: payment.v1.CallbackVerificationCandidate.provider:type_name -> payment.v1.PaymentProvider
+	12, // 7: payment.v1.CallbackVerificationCandidate.effective_from:type_name -> google.protobuf.Timestamp
+	12, // 8: payment.v1.CallbackVerificationCandidate.effective_until:type_name -> google.protobuf.Timestamp
+	12, // 9: payment.v1.CallbackVerificationCandidate.captured_at:type_name -> google.protobuf.Timestamp
+	12, // 10: payment.v1.CallbackReprocessAttempt.created_at:type_name -> google.protobuf.Timestamp
+	13, // 11: payment.v1.ReprocessPaymentCallbackRequest.app_id:type_name -> common.v1.AppId
 	0,  // 12: payment.v1.ReprocessPaymentCallbackResponse.callback:type_name -> payment.v1.PaymentCallback
 	2,  // 13: payment.v1.ReprocessPaymentCallbackResponse.attempt:type_name -> payment.v1.CallbackReprocessAttempt
 	0,  // 14: payment.v1.ListPaymentCallbackResponse.items:type_name -> payment.v1.PaymentCallback
-	8,  // 15: payment.v1.HandleProviderCallbackRequest.provider:type_name -> payment.v1.PaymentProvider
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	10, // 15: payment.v1.HandleProviderCallbackRequest.provider:type_name -> payment.v1.PaymentProvider
+	14, // 16: payment.v1.HandleCallbackEventRequest.event:type_name -> callback.v1.CallbackEvent
+	15, // 17: payment.v1.HandleCallbackEventResponse.invoke:type_name -> callback.v1.CallbackInvokeResult
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_callback_proto_init() }
@@ -976,14 +1080,14 @@ func file_payment_v1_callback_proto_init() {
 	file_payment_v1_callback_proto_msgTypes[2].OneofWrappers = []any{}
 	file_payment_v1_callback_proto_msgTypes[3].OneofWrappers = []any{}
 	file_payment_v1_callback_proto_msgTypes[6].OneofWrappers = []any{}
-	file_payment_v1_callback_proto_msgTypes[7].OneofWrappers = []any{}
+	file_payment_v1_callback_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_payment_v1_callback_proto_rawDesc), len(file_payment_v1_callback_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

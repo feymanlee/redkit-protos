@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package callback.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// CallbackLedgerEntry 是 Callback Ledger 的治理投影，不是支付业务事实。
+message CallbackLedgerEntry {
+  // id 为 Ledger 行身份。
+  uint64 id = 1;
+  // provider 为渠道短名（如 wechat_pay、alipay、simulated）。
+  string provider = 2;
+  // idempotency_key 为入口幂等键。
+  string idempotency_key = 3;
+  // verified 表示入口协议验签是否通过。
+  bool verified = 4;
+  // channel_revision_id 为验签成功后绑定的 Channel Revision。
+  optional uint64 channel_revision_id = 5;
+  // matched_revision_key 为验签候选命中的稳定 Revision Key。
+  optional string matched_revision_key = 6;
+  // event_kind 为解析出的统一事件类别。
+  string event_kind = 7;
+  // invoke_status 为同步 Invoke 状态短名。
+  string invoke_status = 8;
+  // invoke_result_code 为 Payment 返回的稳定结果码。
+  optional string invoke_result_code = 9;
+  // reprocess_eligible 表示当前是否仍允许重处理。
+  bool reprocess_eligible = 10;
+  // masked_payload 为脱敏诊断摘要。
+  string masked_payload = 11;
+  // created_at 为入口接收时间。
+  google.protobuf.Timestamp created_at = 12;
+  // updated_at 为最后状态变更时间。
+  google.protobuf.Timestamp updated_at = 13;
+}
+
+// CallbackRawPayload 是原始回调正文的敏感投影，需独立权限查看。
+message CallbackRawPayload {
+  // ledger_id 关联 Callback Ledger 行。
+  uint64 ledger_id = 1;
+  // raw_body 为渠道原始报文；诊断数据治理见 ADR 0063。
+  string raw_body = 2;
+  // headers_json 为请求头 JSON 表示。
+  optional string headers_json = 3;
+}
+
+// CallbackReprocessAttempt 是一次不可变重处理记录。
+message CallbackReprocessAttempt {
+  // id 为本次 Attempt 身份。
+  uint64 id = 1;
+  // ledger_id 关联 Callback Ledger 行。
+  uint64 ledger_id = 2;
+  // operator_id 为发起的后台 Operator。
+  uint32 operator_id = 3;
+  // operation_no 为审计与幂等重放稳定标识。
+  string operation_no = 4;
+  // status 为可观察生命周期状态短名。
+  string status = 5;
+  // error_class 对失败稳定分类。
+  optional string error_class = 6;
+  // message 为面向操作者的说明。
+  optional string message = 7;
+  // matched_revision_key 为本次重验签命中的 Revision Key。
+  optional string matched_revision_key = 8;
+  // created_at 为创建时间。
+  google.protobuf.Timestamp created_at = 9;
+}

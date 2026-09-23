@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package callback.v1;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+// CallbackEntryService 是外部回调统一入口：每个回调独立 path，不聚合、不抽象 Adapter。
+// 路径以本文件 google.api.http 为唯一事实源。
+service CallbackEntryService {
+  // 微信支付回调（渠道原文 XML）。
+  rpc WechatPayCallback (RawCallbackRequest) returns (RawCallbackAck) {
+    option (google.api.http) = {
+      post: "/callback/v1/payment/wechat"
+      body: "*"
+    };
+  }
+  // 支付宝回调（渠道原文 form）。
+  rpc AlipayCallback (RawCallbackRequest) returns (RawCallbackAck) {
+    option (google.api.http) = {
+      post: "/callback/v1/payment/alipay"
+      body: "*"
+    };
+  }
+  // 模拟渠道回调（测试用 JSON）。
+  rpc SimulatedCallback (RawCallbackRequest) returns (RawCallbackAck) {
+    option (google.api.http) = {
+      post: "/callback/v1/payment/simulated"
+      body: "*"
+    };
+  }
+  // 历史路径别名：/payment/v1/callbacks/wechat_pay 等，由 server 做 raw 转发时兼容。
+}
+
+// RawCallbackRequest 是原文回调入参；server 对非 JSON 信封使用 raw 绑定填充 raw_body。
+message RawCallbackRequest {
+  // raw_body 为来源原始报文。
+  string raw_body = 1 [(google.api.field_behavior) = REQUIRED];
+  // headers_json 为请求头 JSON，可空。
+  optional string headers_json = 2;
+}
+
+// RawCallbackAck 是机器可读应答；对方看到的方言 Ack 由 server 按 path 写出。
+message RawCallbackAck {
+  // accepted 表示下游已接收/幂等应用。
+  bool accepted = 1;
+  // retryable 为 true 表示临时失败，来源方可重试。
+  bool retryable = 2;
+  // message 为诊断说明。
+  optional string message = 3;
+}

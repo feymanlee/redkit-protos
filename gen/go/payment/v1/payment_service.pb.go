@@ -26,7 +26,7 @@ var File_payment_v1_payment_service_proto protoreflect.FileDescriptor
 const file_payment_v1_payment_service_proto_rawDesc = "" +
 	"\n" +
 	" payment/v1/payment_service.proto\x12\n" +
-	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x19payment/v1/callback.proto\x1a\x18payment/v1/channel.proto\x1a\"payment/v1/consumer_purchase.proto\x1a'payment/v1/payment_administration.proto\x1a!payment/v1/payment_contract.proto\x1a\x1bpayment/v1/operations.proto\x1a\x15payment/v1/risk.proto2\x99$\n" +
+	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x19payment/v1/callback.proto\x1a\x18payment/v1/channel.proto\x1a\"payment/v1/consumer_purchase.proto\x1a'payment/v1/payment_administration.proto\x1a!payment/v1/payment_contract.proto\x1a\x1bpayment/v1/operations.proto\x1a\x15payment/v1/risk.proto2\x83%\n" +
 	"\x0ePaymentService\x12q\n" +
 	"\x16ListSubscriptionOffers\x12).payment.v1.ListSubscriptionOffersRequest\x1a*.payment.v1.ListSubscriptionOffersResponse\"\x00\x12w\n" +
 	"\"StartFixedTermSubscriptionCheckout\x125.payment.v1.StartFixedTermSubscriptionCheckoutRequest\x1a\x18.payment.v1.PurchaseView\"\x00\x12]\n" +
@@ -70,7 +70,8 @@ const file_payment_v1_payment_service_proto_rawDesc = "" +
 	"\x11ListPaymentEvents\x12#.common.pagination.v1.PagingRequest\x1a$.payment.v1.ListPaymentEventResponse\"\x00\x12f\n" +
 	"\x14ListPaymentCallbacks\x12#.common.pagination.v1.PagingRequest\x1a'.payment.v1.ListPaymentCallbackResponse\"\x00\x12w\n" +
 	"\x18ReprocessPaymentCallback\x12+.payment.v1.ReprocessPaymentCallbackRequest\x1a,.payment.v1.ReprocessPaymentCallbackResponse\"\x00\x12q\n" +
-	"\x16HandleProviderCallback\x12).payment.v1.HandleProviderCallbackRequest\x1a*.payment.v1.HandleProviderCallbackResponse\"\x00B\xae\x01\n" +
+	"\x16HandleProviderCallback\x12).payment.v1.HandleProviderCallbackRequest\x1a*.payment.v1.HandleProviderCallbackResponse\"\x00\x12h\n" +
+	"\x13HandleCallbackEvent\x12&.payment.v1.HandleCallbackEventRequest\x1a'.payment.v1.HandleCallbackEventResponse\"\x00B\xae\x01\n" +
 	"\x0ecom.payment.v1B\x13PaymentServiceProtoP\x01Z>github.com/feymanlee/redkit-protos/gen/go/payment/v1;paymentpb\xa2\x02\x03PXX\xaa\x02\n" +
 	"Payment.V1\xca\x02\n" +
 	"Payment\\V1\xe2\x02\x16Payment\\V1\\GPBMetadata\xea\x02\vPayment::V1b\x06proto3"
@@ -115,34 +116,36 @@ var file_payment_v1_payment_service_proto_goTypes = []any{
 	(*v1.PagingRequest)(nil),                              // 36: common.pagination.v1.PagingRequest
 	(*ReprocessPaymentCallbackRequest)(nil),               // 37: payment.v1.ReprocessPaymentCallbackRequest
 	(*HandleProviderCallbackRequest)(nil),                 // 38: payment.v1.HandleProviderCallbackRequest
-	(*ListSubscriptionOffersResponse)(nil),                // 39: payment.v1.ListSubscriptionOffersResponse
-	(*PurchaseView)(nil),                                  // 40: payment.v1.PurchaseView
-	(*StoreRechargePurchaseAction)(nil),                   // 41: payment.v1.StoreRechargePurchaseAction
-	(*AppleSubscriptionPurchaseAction)(nil),               // 42: payment.v1.AppleSubscriptionPurchaseAction
-	(*AppleSubscriptionManagementAction)(nil),             // 43: payment.v1.AppleSubscriptionManagementAction
-	(*GoogleSubscriptionPurchaseAction)(nil),              // 44: payment.v1.GoogleSubscriptionPurchaseAction
-	(*GoogleSubscriptionManagementAction)(nil),            // 45: payment.v1.GoogleSubscriptionManagementAction
-	(*RestoreStorePurchasesResponse)(nil),                 // 46: payment.v1.RestoreStorePurchasesResponse
-	(*ListMyPurchasesResponse)(nil),                       // 47: payment.v1.ListMyPurchasesResponse
-	(*GetMySubscriptionResponse)(nil),                     // 48: payment.v1.GetMySubscriptionResponse
-	(*ListPurchaseOptionsResponse)(nil),                   // 49: payment.v1.ListPurchaseOptionsResponse
-	(*Payment)(nil),                                       // 50: payment.v1.Payment
-	(*RefreshPaymentProviderStateResponse)(nil),           // 51: payment.v1.RefreshPaymentProviderStateResponse
-	(*ListPaymentResponse)(nil),                           // 52: payment.v1.ListPaymentResponse
-	(*PaymentDetail)(nil),                                 // 53: payment.v1.PaymentDetail
-	(*UserPaymentSummary)(nil),                            // 54: payment.v1.UserPaymentSummary
-	(*PaymentOperationsSummary)(nil),                      // 55: payment.v1.PaymentOperationsSummary
-	(*ListPaymentWorkQueueResponse)(nil),                  // 56: payment.v1.ListPaymentWorkQueueResponse
-	(*PaymentWorkQueueItem)(nil),                          // 57: payment.v1.PaymentWorkQueueItem
-	(*PaymentRiskPolicyRevision)(nil),                     // 58: payment.v1.PaymentRiskPolicyRevision
-	(*ListPaymentRiskPolicyRevisionsResponse)(nil),        // 59: payment.v1.ListPaymentRiskPolicyRevisionsResponse
-	(*PaymentRiskDecision)(nil),                           // 60: payment.v1.PaymentRiskDecision
-	(*ListPaymentRiskReviewsResponse)(nil),                // 61: payment.v1.ListPaymentRiskReviewsResponse
-	(*GetPaymentAnalyticsResponse)(nil),                   // 62: payment.v1.GetPaymentAnalyticsResponse
-	(*ListPaymentEventResponse)(nil),                      // 63: payment.v1.ListPaymentEventResponse
-	(*ListPaymentCallbackResponse)(nil),                   // 64: payment.v1.ListPaymentCallbackResponse
-	(*ReprocessPaymentCallbackResponse)(nil),              // 65: payment.v1.ReprocessPaymentCallbackResponse
-	(*HandleProviderCallbackResponse)(nil),                // 66: payment.v1.HandleProviderCallbackResponse
+	(*HandleCallbackEventRequest)(nil),                    // 39: payment.v1.HandleCallbackEventRequest
+	(*ListSubscriptionOffersResponse)(nil),                // 40: payment.v1.ListSubscriptionOffersResponse
+	(*PurchaseView)(nil),                                  // 41: payment.v1.PurchaseView
+	(*StoreRechargePurchaseAction)(nil),                   // 42: payment.v1.StoreRechargePurchaseAction
+	(*AppleSubscriptionPurchaseAction)(nil),               // 43: payment.v1.AppleSubscriptionPurchaseAction
+	(*AppleSubscriptionManagementAction)(nil),             // 44: payment.v1.AppleSubscriptionManagementAction
+	(*GoogleSubscriptionPurchaseAction)(nil),              // 45: payment.v1.GoogleSubscriptionPurchaseAction
+	(*GoogleSubscriptionManagementAction)(nil),            // 46: payment.v1.GoogleSubscriptionManagementAction
+	(*RestoreStorePurchasesResponse)(nil),                 // 47: payment.v1.RestoreStorePurchasesResponse
+	(*ListMyPurchasesResponse)(nil),                       // 48: payment.v1.ListMyPurchasesResponse
+	(*GetMySubscriptionResponse)(nil),                     // 49: payment.v1.GetMySubscriptionResponse
+	(*ListPurchaseOptionsResponse)(nil),                   // 50: payment.v1.ListPurchaseOptionsResponse
+	(*Payment)(nil),                                       // 51: payment.v1.Payment
+	(*RefreshPaymentProviderStateResponse)(nil),           // 52: payment.v1.RefreshPaymentProviderStateResponse
+	(*ListPaymentResponse)(nil),                           // 53: payment.v1.ListPaymentResponse
+	(*PaymentDetail)(nil),                                 // 54: payment.v1.PaymentDetail
+	(*UserPaymentSummary)(nil),                            // 55: payment.v1.UserPaymentSummary
+	(*PaymentOperationsSummary)(nil),                      // 56: payment.v1.PaymentOperationsSummary
+	(*ListPaymentWorkQueueResponse)(nil),                  // 57: payment.v1.ListPaymentWorkQueueResponse
+	(*PaymentWorkQueueItem)(nil),                          // 58: payment.v1.PaymentWorkQueueItem
+	(*PaymentRiskPolicyRevision)(nil),                     // 59: payment.v1.PaymentRiskPolicyRevision
+	(*ListPaymentRiskPolicyRevisionsResponse)(nil),        // 60: payment.v1.ListPaymentRiskPolicyRevisionsResponse
+	(*PaymentRiskDecision)(nil),                           // 61: payment.v1.PaymentRiskDecision
+	(*ListPaymentRiskReviewsResponse)(nil),                // 62: payment.v1.ListPaymentRiskReviewsResponse
+	(*GetPaymentAnalyticsResponse)(nil),                   // 63: payment.v1.GetPaymentAnalyticsResponse
+	(*ListPaymentEventResponse)(nil),                      // 64: payment.v1.ListPaymentEventResponse
+	(*ListPaymentCallbackResponse)(nil),                   // 65: payment.v1.ListPaymentCallbackResponse
+	(*ReprocessPaymentCallbackResponse)(nil),              // 66: payment.v1.ReprocessPaymentCallbackResponse
+	(*HandleProviderCallbackResponse)(nil),                // 67: payment.v1.HandleProviderCallbackResponse
+	(*HandleCallbackEventResponse)(nil),                   // 68: payment.v1.HandleCallbackEventResponse
 }
 var file_payment_v1_payment_service_proto_depIdxs = []int32{
 	0,  // 0: payment.v1.PaymentService.ListSubscriptionOffers:input_type -> payment.v1.ListSubscriptionOffersRequest
@@ -187,50 +190,52 @@ var file_payment_v1_payment_service_proto_depIdxs = []int32{
 	36, // 39: payment.v1.PaymentService.ListPaymentCallbacks:input_type -> common.pagination.v1.PagingRequest
 	37, // 40: payment.v1.PaymentService.ReprocessPaymentCallback:input_type -> payment.v1.ReprocessPaymentCallbackRequest
 	38, // 41: payment.v1.PaymentService.HandleProviderCallback:input_type -> payment.v1.HandleProviderCallbackRequest
-	39, // 42: payment.v1.PaymentService.ListSubscriptionOffers:output_type -> payment.v1.ListSubscriptionOffersResponse
-	40, // 43: payment.v1.PaymentService.StartFixedTermSubscriptionCheckout:output_type -> payment.v1.PurchaseView
-	40, // 44: payment.v1.PaymentService.StartRechargeCheckout:output_type -> payment.v1.PurchaseView
-	41, // 45: payment.v1.PaymentService.PrepareStoreRechargePurchase:output_type -> payment.v1.StoreRechargePurchaseAction
-	40, // 46: payment.v1.PaymentService.VerifyStoreRechargePurchase:output_type -> payment.v1.PurchaseView
-	40, // 47: payment.v1.PaymentService.ConfirmStoreRechargePurchaseCompletion:output_type -> payment.v1.PurchaseView
-	42, // 48: payment.v1.PaymentService.PrepareAppleSubscriptionPurchase:output_type -> payment.v1.AppleSubscriptionPurchaseAction
-	40, // 49: payment.v1.PaymentService.VerifyAppleSubscriptionPurchase:output_type -> payment.v1.PurchaseView
-	43, // 50: payment.v1.PaymentService.GetAppleSubscriptionManagementAction:output_type -> payment.v1.AppleSubscriptionManagementAction
-	44, // 51: payment.v1.PaymentService.PrepareGoogleSubscriptionPurchase:output_type -> payment.v1.GoogleSubscriptionPurchaseAction
-	40, // 52: payment.v1.PaymentService.VerifyGoogleSubscriptionPurchase:output_type -> payment.v1.PurchaseView
-	45, // 53: payment.v1.PaymentService.GetGoogleSubscriptionManagementAction:output_type -> payment.v1.GoogleSubscriptionManagementAction
-	46, // 54: payment.v1.PaymentService.RestoreStorePurchases:output_type -> payment.v1.RestoreStorePurchasesResponse
-	40, // 55: payment.v1.PaymentService.GetMyPurchase:output_type -> payment.v1.PurchaseView
-	47, // 56: payment.v1.PaymentService.ListMyPurchases:output_type -> payment.v1.ListMyPurchasesResponse
-	48, // 57: payment.v1.PaymentService.GetMySubscription:output_type -> payment.v1.GetMySubscriptionResponse
-	40, // 58: payment.v1.PaymentService.RetryMyPurchase:output_type -> payment.v1.PurchaseView
-	49, // 59: payment.v1.PaymentService.ListPurchaseOptions:output_type -> payment.v1.ListPurchaseOptionsResponse
-	50, // 60: payment.v1.PaymentService.CreatePayment:output_type -> payment.v1.Payment
-	50, // 61: payment.v1.PaymentService.GetPayment:output_type -> payment.v1.Payment
-	50, // 62: payment.v1.PaymentService.ClosePayment:output_type -> payment.v1.Payment
-	51, // 63: payment.v1.PaymentService.RefreshPaymentProviderState:output_type -> payment.v1.RefreshPaymentProviderStateResponse
-	50, // 64: payment.v1.PaymentService.SimulatePaymentSuccess:output_type -> payment.v1.Payment
-	52, // 65: payment.v1.PaymentService.ListPayments:output_type -> payment.v1.ListPaymentResponse
-	53, // 66: payment.v1.PaymentService.GetPaymentDetail:output_type -> payment.v1.PaymentDetail
-	54, // 67: payment.v1.PaymentService.GetUserPaymentSummary:output_type -> payment.v1.UserPaymentSummary
-	55, // 68: payment.v1.PaymentService.GetPaymentOperationsSummary:output_type -> payment.v1.PaymentOperationsSummary
-	56, // 69: payment.v1.PaymentService.ListPaymentWorkQueue:output_type -> payment.v1.ListPaymentWorkQueueResponse
-	57, // 70: payment.v1.PaymentService.ClaimPaymentWorkQueueItem:output_type -> payment.v1.PaymentWorkQueueItem
-	57, // 71: payment.v1.PaymentService.ReassignPaymentWorkQueueItem:output_type -> payment.v1.PaymentWorkQueueItem
-	57, // 72: payment.v1.PaymentService.CompletePaymentWorkQueueItem:output_type -> payment.v1.PaymentWorkQueueItem
-	58, // 73: payment.v1.PaymentService.CreatePaymentRiskPolicyRevision:output_type -> payment.v1.PaymentRiskPolicyRevision
-	58, // 74: payment.v1.PaymentService.PublishPaymentRiskPolicyRevision:output_type -> payment.v1.PaymentRiskPolicyRevision
-	59, // 75: payment.v1.PaymentService.ListPaymentRiskPolicyRevisions:output_type -> payment.v1.ListPaymentRiskPolicyRevisionsResponse
-	60, // 76: payment.v1.PaymentService.GetPaymentRiskDecision:output_type -> payment.v1.PaymentRiskDecision
-	61, // 77: payment.v1.PaymentService.ListPaymentRiskReviews:output_type -> payment.v1.ListPaymentRiskReviewsResponse
-	60, // 78: payment.v1.PaymentService.DecidePaymentRiskReview:output_type -> payment.v1.PaymentRiskDecision
-	62, // 79: payment.v1.PaymentService.GetPaymentAnalytics:output_type -> payment.v1.GetPaymentAnalyticsResponse
-	63, // 80: payment.v1.PaymentService.ListPaymentEvents:output_type -> payment.v1.ListPaymentEventResponse
-	64, // 81: payment.v1.PaymentService.ListPaymentCallbacks:output_type -> payment.v1.ListPaymentCallbackResponse
-	65, // 82: payment.v1.PaymentService.ReprocessPaymentCallback:output_type -> payment.v1.ReprocessPaymentCallbackResponse
-	66, // 83: payment.v1.PaymentService.HandleProviderCallback:output_type -> payment.v1.HandleProviderCallbackResponse
-	42, // [42:84] is the sub-list for method output_type
-	0,  // [0:42] is the sub-list for method input_type
+	39, // 42: payment.v1.PaymentService.HandleCallbackEvent:input_type -> payment.v1.HandleCallbackEventRequest
+	40, // 43: payment.v1.PaymentService.ListSubscriptionOffers:output_type -> payment.v1.ListSubscriptionOffersResponse
+	41, // 44: payment.v1.PaymentService.StartFixedTermSubscriptionCheckout:output_type -> payment.v1.PurchaseView
+	41, // 45: payment.v1.PaymentService.StartRechargeCheckout:output_type -> payment.v1.PurchaseView
+	42, // 46: payment.v1.PaymentService.PrepareStoreRechargePurchase:output_type -> payment.v1.StoreRechargePurchaseAction
+	41, // 47: payment.v1.PaymentService.VerifyStoreRechargePurchase:output_type -> payment.v1.PurchaseView
+	41, // 48: payment.v1.PaymentService.ConfirmStoreRechargePurchaseCompletion:output_type -> payment.v1.PurchaseView
+	43, // 49: payment.v1.PaymentService.PrepareAppleSubscriptionPurchase:output_type -> payment.v1.AppleSubscriptionPurchaseAction
+	41, // 50: payment.v1.PaymentService.VerifyAppleSubscriptionPurchase:output_type -> payment.v1.PurchaseView
+	44, // 51: payment.v1.PaymentService.GetAppleSubscriptionManagementAction:output_type -> payment.v1.AppleSubscriptionManagementAction
+	45, // 52: payment.v1.PaymentService.PrepareGoogleSubscriptionPurchase:output_type -> payment.v1.GoogleSubscriptionPurchaseAction
+	41, // 53: payment.v1.PaymentService.VerifyGoogleSubscriptionPurchase:output_type -> payment.v1.PurchaseView
+	46, // 54: payment.v1.PaymentService.GetGoogleSubscriptionManagementAction:output_type -> payment.v1.GoogleSubscriptionManagementAction
+	47, // 55: payment.v1.PaymentService.RestoreStorePurchases:output_type -> payment.v1.RestoreStorePurchasesResponse
+	41, // 56: payment.v1.PaymentService.GetMyPurchase:output_type -> payment.v1.PurchaseView
+	48, // 57: payment.v1.PaymentService.ListMyPurchases:output_type -> payment.v1.ListMyPurchasesResponse
+	49, // 58: payment.v1.PaymentService.GetMySubscription:output_type -> payment.v1.GetMySubscriptionResponse
+	41, // 59: payment.v1.PaymentService.RetryMyPurchase:output_type -> payment.v1.PurchaseView
+	50, // 60: payment.v1.PaymentService.ListPurchaseOptions:output_type -> payment.v1.ListPurchaseOptionsResponse
+	51, // 61: payment.v1.PaymentService.CreatePayment:output_type -> payment.v1.Payment
+	51, // 62: payment.v1.PaymentService.GetPayment:output_type -> payment.v1.Payment
+	51, // 63: payment.v1.PaymentService.ClosePayment:output_type -> payment.v1.Payment
+	52, // 64: payment.v1.PaymentService.RefreshPaymentProviderState:output_type -> payment.v1.RefreshPaymentProviderStateResponse
+	51, // 65: payment.v1.PaymentService.SimulatePaymentSuccess:output_type -> payment.v1.Payment
+	53, // 66: payment.v1.PaymentService.ListPayments:output_type -> payment.v1.ListPaymentResponse
+	54, // 67: payment.v1.PaymentService.GetPaymentDetail:output_type -> payment.v1.PaymentDetail
+	55, // 68: payment.v1.PaymentService.GetUserPaymentSummary:output_type -> payment.v1.UserPaymentSummary
+	56, // 69: payment.v1.PaymentService.GetPaymentOperationsSummary:output_type -> payment.v1.PaymentOperationsSummary
+	57, // 70: payment.v1.PaymentService.ListPaymentWorkQueue:output_type -> payment.v1.ListPaymentWorkQueueResponse
+	58, // 71: payment.v1.PaymentService.ClaimPaymentWorkQueueItem:output_type -> payment.v1.PaymentWorkQueueItem
+	58, // 72: payment.v1.PaymentService.ReassignPaymentWorkQueueItem:output_type -> payment.v1.PaymentWorkQueueItem
+	58, // 73: payment.v1.PaymentService.CompletePaymentWorkQueueItem:output_type -> payment.v1.PaymentWorkQueueItem
+	59, // 74: payment.v1.PaymentService.CreatePaymentRiskPolicyRevision:output_type -> payment.v1.PaymentRiskPolicyRevision
+	59, // 75: payment.v1.PaymentService.PublishPaymentRiskPolicyRevision:output_type -> payment.v1.PaymentRiskPolicyRevision
+	60, // 76: payment.v1.PaymentService.ListPaymentRiskPolicyRevisions:output_type -> payment.v1.ListPaymentRiskPolicyRevisionsResponse
+	61, // 77: payment.v1.PaymentService.GetPaymentRiskDecision:output_type -> payment.v1.PaymentRiskDecision
+	62, // 78: payment.v1.PaymentService.ListPaymentRiskReviews:output_type -> payment.v1.ListPaymentRiskReviewsResponse
+	61, // 79: payment.v1.PaymentService.DecidePaymentRiskReview:output_type -> payment.v1.PaymentRiskDecision
+	63, // 80: payment.v1.PaymentService.GetPaymentAnalytics:output_type -> payment.v1.GetPaymentAnalyticsResponse
+	64, // 81: payment.v1.PaymentService.ListPaymentEvents:output_type -> payment.v1.ListPaymentEventResponse
+	65, // 82: payment.v1.PaymentService.ListPaymentCallbacks:output_type -> payment.v1.ListPaymentCallbackResponse
+	66, // 83: payment.v1.PaymentService.ReprocessPaymentCallback:output_type -> payment.v1.ReprocessPaymentCallbackResponse
+	67, // 84: payment.v1.PaymentService.HandleProviderCallback:output_type -> payment.v1.HandleProviderCallbackResponse
+	68, // 85: payment.v1.PaymentService.HandleCallbackEvent:output_type -> payment.v1.HandleCallbackEventResponse
+	43, // [43:86] is the sub-list for method output_type
+	0,  // [0:43] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

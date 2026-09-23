@@ -96,5 +96,8 @@ service PaymentService {
   // 使用原始回调和自动候选 Revision 重新验签及幂等处理。
   rpc ReprocessPaymentCallback(ReprocessPaymentCallbackRequest) returns (ReprocessPaymentCallbackResponse) {}
   // 处理渠道回调。
+  // Deprecated: 由 HandleCallbackEvent 替代；迁移期保留（ADR 0068）。
   rpc HandleProviderCallback(HandleProviderCallbackRequest) returns (HandleProviderCallbackResponse) {}
+  // 幂等应用 Callback BFF 同步投递的统一回调事件。
+  rpc HandleCallbackEvent(HandleCallbackEventRequest) returns (HandleCallbackEventResponse) {}
 }

@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package callback.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// CallbackEvent 是任意外部系统回调的统一内部事件（全项目归口，不限支付）。
+// BFF 完成解析、验签与入口幂等后同步 Invoke 业务消费者；不是渠道原始报文。
+message CallbackEvent {
+  // event_id 为 BFF 侧稳定事件身份。
+  string event_id = 1;
+  // idempotency_key 为入口幂等键，约定 source + notify_id/tx_id。
+  string idempotency_key = 2;
+  // source 为外部系统短名，与入口路径 {source} 一致。
+  // 例：wechat_pay、alipay、apple_assn、google_rtdn、stripe、risk_vendor、logistics_x。
+  string source = 3;
+  // event_type 为点分规范事件类型，不限支付。
+  // 例：payment.succeeded、refund.result、subscription.renewed、dispute.opened、risk.alert、kyc.result。
+  string event_type = 4;
+  // app_id 为业务归属 App；由验签通过的配置或载荷解析，不接受调用方自报。
+  uint32 app_id = 5;
+  // occurred_at 为来源侧发生时间；未知时由 BFF 收到时间填充。
+  google.protobuf.Timestamp occurred_at = 6;
+  // verified_at 为入口验签通过时间。
+  google.protobuf.Timestamp verified_at = 7;
+  // masked_payload 为脱敏诊断摘要，不含原文或凭据。
+  string masked_payload = 8;
+  // raw_ref 为原始报文引用标识（可空；不落库时仅作追踪线索）。
+  string raw_ref = 9;
+  // raw_payload 为方言原文；部分领域 Apply 仍需原文时使用。不写入普通日志。
+  optional string raw_payload = 10;
+  // correlation_ids 为跨领域关联键（payment_no、order_no、user_id、dispute_id…）。
+  map<string, string> correlation_ids = 11;
+  // attributes 为来源特有的结构化字段。
+  map<string, string> attributes = 12;
+  // amount_min / currency 为通用金额字段；非资金事件可不填。
+  optional int64 amount_min = 13;
+  optional string currency = 14;
+  // payment 为支付/退款/订阅/争议扩展事实；非支付来源可不填。
+  optional PaymentCallbackFacts payment = 15;
+}
+
+// PaymentCallbackFacts 是支付域回调扩展，挂在通用信封下。
+message PaymentCallbackFacts {
+  // kind 为支付域事件类别。
+  PaymentCallbackKind kind = 1;
+  // channel_revision_id 为验签成功后绑定的 Channel Revision。
+  uint64 channel_revision_id = 2;
+  optional string payment_no = 3;
+  optional string provider_trade_no = 4;
+  optional string refund_no = 5;
+  optional string provider_refund_no = 6;
+  optional int64 refund_amount_min = 7;
+  optional string dispute_id = 8;
+  optional string dispute_status = 9;
+  optional string dispute_reason_code = 10;
+  optional string dispute_provider_case_id = 11;
+}
+
+// PaymentCallbackKind 是支付域统一事件类别。
+enum PaymentCallbackKind {
+  // 未指定。
+  PAYMENT_CALLBACK_KIND_UNSPECIFIED = 0;
+  // 支付成功通知。
+  PAYMENT_SUCCEEDED = 1;
+  // 支付失败或关闭通知。
+  PAYMENT_FAILED = 2;
+  // 退款结果通知。
+  REFUND_RESULT = 3;
+  // 订阅生命周期通知。
+  SUBSCRIPTION_LIFECYCLE = 4;
+  // 争议/拒付通知。
+  DISPUTE = 5;
+}
+
+// CallbackInvokeResult 是消费者幂等应用后的同步结果（任意领域）。
+message CallbackInvokeResult {
+  // outcome 为可编程结论；BFF 据此选择成功或失败 Notify Ack。
+  CallbackInvokeOutcome outcome = 1;
+  // result_code 为稳定机器可读结果码。
+  optional string result_code = 2;
+  // message 为面向操作者的说明，不作为程序分支依据。
+  optional string message = 3;
+  // correlation_ids 为消费者回写的关联键（如 payment_no）。
+  map<string, string> correlation_ids = 4;
+}
+
+// CallbackInvokeOutcome 是同步 Invoke 的可判定结局。
+enum CallbackInvokeOutcome {
+  // 未指定。
+  CALLBACK_INVOKE_OUTCOME_UNSPECIFIED = 0;
+  // 领域已幂等应用成功。
+  APPLIED = 1;
+  // 重复事件命中业务幂等，视同成功。
+  IDEMPOTENT_REPLAY = 2;
+  // 临时失败，来源方可重试。
+  RETRYABLE_FAILURE = 3;
+  // 永久失败，不应经重试变成功。
+  PERMANENT_FAILURE = 4;
+}

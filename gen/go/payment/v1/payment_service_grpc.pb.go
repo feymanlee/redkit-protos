@@ -62,6 +62,7 @@ const (
 	PaymentService_ListPaymentCallbacks_FullMethodName                   = "/payment.v1.PaymentService/ListPaymentCallbacks"
 	PaymentService_ReprocessPaymentCallback_FullMethodName               = "/payment.v1.PaymentService/ReprocessPaymentCallback"
 	PaymentService_HandleProviderCallback_FullMethodName                 = "/payment.v1.PaymentService/HandleProviderCallback"
+	PaymentService_HandleCallbackEvent_FullMethodName                    = "/payment.v1.PaymentService/HandleCallbackEvent"
 )
 
 // PaymentServiceClient is the client API for PaymentService service.
@@ -153,7 +154,10 @@ type PaymentServiceClient interface {
 	// 使用原始回调和自动候选 Revision 重新验签及幂等处理。
 	ReprocessPaymentCallback(ctx context.Context, in *ReprocessPaymentCallbackRequest, opts ...grpc.CallOption) (*ReprocessPaymentCallbackResponse, error)
 	// 处理渠道回调。
+	// Deprecated: 由 HandleCallbackEvent 替代；迁移期保留（ADR 0068）。
 	HandleProviderCallback(ctx context.Context, in *HandleProviderCallbackRequest, opts ...grpc.CallOption) (*HandleProviderCallbackResponse, error)
+	// 幂等应用 Callback BFF 同步投递的统一回调事件。
+	HandleCallbackEvent(ctx context.Context, in *HandleCallbackEventRequest, opts ...grpc.CallOption) (*HandleCallbackEventResponse, error)
 }
 
 type paymentServiceClient struct {
@@ -584,6 +588,16 @@ func (c *paymentServiceClient) HandleProviderCallback(ctx context.Context, in *H
 	return out, nil
 }
 
+func (c *paymentServiceClient) HandleCallbackEvent(ctx context.Context, in *HandleCallbackEventRequest, opts ...grpc.CallOption) (*HandleCallbackEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HandleCallbackEventResponse)
+	err := c.cc.Invoke(ctx, PaymentService_HandleCallbackEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PaymentServiceServer is the server API for PaymentService service.
 // All implementations must embed UnimplementedPaymentServiceServer
 // for forward compatibility.
@@ -673,7 +687,10 @@ type PaymentServiceServer interface {
 	// 使用原始回调和自动候选 Revision 重新验签及幂等处理。
 	ReprocessPaymentCallback(context.Context, *ReprocessPaymentCallbackRequest) (*ReprocessPaymentCallbackResponse, error)
 	// 处理渠道回调。
+	// Deprecated: 由 HandleCallbackEvent 替代；迁移期保留（ADR 0068）。
 	HandleProviderCallback(context.Context, *HandleProviderCallbackRequest) (*HandleProviderCallbackResponse, error)
+	// 幂等应用 Callback BFF 同步投递的统一回调事件。
+	HandleCallbackEvent(context.Context, *HandleCallbackEventRequest) (*HandleCallbackEventResponse, error)
 	mustEmbedUnimplementedPaymentServiceServer()
 }
 
@@ -809,6 +826,9 @@ func (UnimplementedPaymentServiceServer) ReprocessPaymentCallback(context.Contex
 }
 func (UnimplementedPaymentServiceServer) HandleProviderCallback(context.Context, *HandleProviderCallbackRequest) (*HandleProviderCallbackResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HandleProviderCallback not implemented")
+}
+func (UnimplementedPaymentServiceServer) HandleCallbackEvent(context.Context, *HandleCallbackEventRequest) (*HandleCallbackEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleCallbackEvent not implemented")
 }
 func (UnimplementedPaymentServiceServer) mustEmbedUnimplementedPaymentServiceServer() {}
 func (UnimplementedPaymentServiceServer) testEmbeddedByValue()                        {}
@@ -1587,6 +1607,24 @@ func _PaymentService_HandleProviderCallback_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PaymentService_HandleCallbackEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleCallbackEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).HandleCallbackEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_HandleCallbackEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).HandleCallbackEvent(ctx, req.(*HandleCallbackEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PaymentService_ServiceDesc is the grpc.ServiceDesc for PaymentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1761,6 +1799,10 @@ var PaymentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HandleProviderCallback",
 			Handler:    _PaymentService_HandleProviderCallback_Handler,
+		},
+		{
+			MethodName: "HandleCallbackEvent",
+			Handler:    _PaymentService_HandleCallbackEvent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

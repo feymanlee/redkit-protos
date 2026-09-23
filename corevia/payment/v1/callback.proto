@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package payment.v1;
 
+import "callback/v1/event.proto";
 import "common/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 import "payment/v1/governance.proto";
@@ -125,6 +126,7 @@ message ListPaymentCallbackResponse {
   uint64 total = 2;
 }
 // 处理渠道回调请求。
+// Deprecated: 渠道原始入口迁至 callback-bff（ADR 0068）；迁移期仅供双路径兼容。
 message HandleProviderCallbackRequest {
   // 支付渠道。
   PaymentProvider provider = 1;
@@ -132,6 +134,18 @@ message HandleProviderCallbackRequest {
   string raw_body = 2;
   // 请求头 JSON。
   optional string headers = 3;
+}
+
+// HandleCallbackEventRequest 是 Callback BFF 同步 Invoke 的统一事件入参。
+message HandleCallbackEventRequest {
+  // event 为已验签、已入口去重的统一回调事件。
+  callback.v1.CallbackEvent event = 1;
+}
+
+// HandleCallbackEventResponse 是领域幂等应用结果。
+message HandleCallbackEventResponse {
+  // invoke 为可编程结局。
+  callback.v1.CallbackInvokeResult invoke = 1;
 }
 
 // 处理渠道回调响应。

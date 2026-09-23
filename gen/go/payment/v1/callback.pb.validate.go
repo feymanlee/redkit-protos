@@ -1247,6 +1247,269 @@ var _ interface {
 	ErrorName() string
 } = HandleProviderCallbackRequestValidationError{}
 
+// Validate checks the field values on HandleCallbackEventRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleCallbackEventRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleCallbackEventRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleCallbackEventRequestMultiError, or nil if none found.
+func (m *HandleCallbackEventRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleCallbackEventRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetEvent()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleCallbackEventRequestValidationError{
+					field:  "Event",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleCallbackEventRequestValidationError{
+					field:  "Event",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEvent()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleCallbackEventRequestValidationError{
+				field:  "Event",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleCallbackEventRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleCallbackEventRequestMultiError is an error wrapping multiple
+// validation errors returned by HandleCallbackEventRequest.ValidateAll() if
+// the designated constraints aren't met.
+type HandleCallbackEventRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleCallbackEventRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleCallbackEventRequestMultiError) AllErrors() []error { return m }
+
+// HandleCallbackEventRequestValidationError is the validation error returned
+// by HandleCallbackEventRequest.Validate if the designated constraints aren't met.
+type HandleCallbackEventRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleCallbackEventRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleCallbackEventRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleCallbackEventRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleCallbackEventRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleCallbackEventRequestValidationError) ErrorName() string {
+	return "HandleCallbackEventRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleCallbackEventRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleCallbackEventRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleCallbackEventRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleCallbackEventRequestValidationError{}
+
+// Validate checks the field values on HandleCallbackEventResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HandleCallbackEventResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HandleCallbackEventResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HandleCallbackEventResponseMultiError, or nil if none found.
+func (m *HandleCallbackEventResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HandleCallbackEventResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetInvoke()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, HandleCallbackEventResponseValidationError{
+					field:  "Invoke",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, HandleCallbackEventResponseValidationError{
+					field:  "Invoke",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetInvoke()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return HandleCallbackEventResponseValidationError{
+				field:  "Invoke",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return HandleCallbackEventResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// HandleCallbackEventResponseMultiError is an error wrapping multiple
+// validation errors returned by HandleCallbackEventResponse.ValidateAll() if
+// the designated constraints aren't met.
+type HandleCallbackEventResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HandleCallbackEventResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HandleCallbackEventResponseMultiError) AllErrors() []error { return m }
+
+// HandleCallbackEventResponseValidationError is the validation error returned
+// by HandleCallbackEventResponse.Validate if the designated constraints
+// aren't met.
+type HandleCallbackEventResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HandleCallbackEventResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HandleCallbackEventResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HandleCallbackEventResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HandleCallbackEventResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HandleCallbackEventResponseValidationError) ErrorName() string {
+	return "HandleCallbackEventResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HandleCallbackEventResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHandleCallbackEventResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HandleCallbackEventResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HandleCallbackEventResponseValidationError{}
+
 // Validate checks the field values on HandleProviderCallbackResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

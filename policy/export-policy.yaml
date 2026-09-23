@@ -28,6 +28,7 @@ external:
     - user/internal/v1
     - wallet/v1
     - payment/v1
+    - callback/v1
     - ops/v1
     - ops/reward/v1
     - gamoji/common/v1
