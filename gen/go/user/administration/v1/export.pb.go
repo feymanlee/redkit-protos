@@ -8,8 +8,8 @@ package useradministrationpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -92,8 +92,6 @@ type UserExportJob struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 UserExportJob。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 UserExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// export_no 是 UserExportJob 对外关联与审计使用的业务编号。
@@ -159,13 +157,6 @@ func (x *UserExportJob) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *UserExportJob) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *UserExportJob) GetOperatorId() uint32 {
@@ -262,8 +253,6 @@ func (x *UserExportJob) GetResultExpiresAt() *timestamppb.Timestamp {
 // CreateUserExportJobRequest 定义创建 UserExportJob 的幂等命令参数。
 type CreateUserExportJobRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateUserExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -310,13 +299,6 @@ func (x *CreateUserExportJobRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateUserExportJobRequest.ProtoReflect.Descriptor instead.
 func (*CreateUserExportJobRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_export_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *CreateUserExportJobRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateUserExportJobRequest) GetOperatorId() uint32 {
@@ -371,10 +353,8 @@ func (x *CreateUserExportJobRequest) GetIpHash() string {
 // ListUserExportJobsRequest 定义 UserExportJobs 的筛选与分页参数。
 type ListUserExportJobsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListUserExportJobs 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -409,14 +389,7 @@ func (*ListUserExportJobsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_export_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ListUserExportJobsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListUserExportJobsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListUserExportJobsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -481,8 +454,6 @@ func (x *ListUserExportJobsResponse) GetTotal() uint64 {
 // GetUserExportDownloadRequest 标识待查询的 UserExportDownload。
 type GetUserExportDownloadRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetUserExportDownload 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// job_id 标识关联的 Job。
 	JobId uint64 `protobuf:"varint,2,opt,name=job_id,json=jobId,proto3" json:"job_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -523,13 +494,6 @@ func (x *GetUserExportDownloadRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetUserExportDownloadRequest.ProtoReflect.Descriptor instead.
 func (*GetUserExportDownloadRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_export_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *GetUserExportDownloadRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetUserExportDownloadRequest) GetJobId() uint64 {
@@ -619,10 +583,9 @@ var File_user_administration_v1_export_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_export_proto_rawDesc = "" +
 	"\n" +
-	"#user/administration/v1/export.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a+user/administration/v1/administration.proto\x1a\x17validate/validate.proto\"\xcd\x05\n" +
+	"#user/administration/v1/export.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a+user/administration/v1/administration.proto\x1a\x17validate/validate.proto\"\xa4\x05\n" +
 	"\rUserExportJob\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x1b\n" +
 	"\texport_no\x18\x04 \x01(\tR\bexportNo\x12\x16\n" +
@@ -639,9 +602,8 @@ const file_user_administration_v1_export_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12>\n" +
 	"\fcompleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\x12G\n" +
-	"\x11result_expires_at\x18\xcb\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x0fresultExpiresAt\"\xb9\x03\n" +
-	"\x1aCreateUserExportJobRequest\x12;\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00H\x00R\x05appId\x88\x01\x01\x12+\n" +
+	"\x11result_expires_at\x18\xcb\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x0fresultExpiresAt\"\xf1\x02\n" +
+	"\x1aCreateUserExportJobRequest\x12+\n" +
 	"\voperator_id\x18\x02 \x01(\rB\n" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
 	"operatorId\x12%\n" +
@@ -651,17 +613,13 @@ const file_user_administration_v1_export_proto_rawDesc = "" +
 	"request_id\x18\x05 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x01R\trequestId\x12?\n" +
 	"\x06search\x18\x06 \x01(\v2'.user.administration.v1.UserSearchQueryR\x06search\x12@\n" +
 	"\x06filter\x18\a \x01(\v2(.user.administration.v1.UserSearchFilterR\x06filter\x12!\n" +
-	"\aip_hash\x18\b \x01(\tB\b\xfaB\x05r\x03\x18\x80\x01R\x06ipHashB\t\n" +
-	"\a_app_id\"\xa0\x01\n" +
+	"\aip_hash\x18\b \x01(\tB\b\xfaB\x05r\x03\x18\x80\x01R\x06ipHash\"X\n" +
 	"\x19ListUserExportJobsRequest\x12;\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00H\x00R\x05appId\x88\x01\x01\x12;\n" +
-	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"o\n" +
+	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"o\n" +
 	"\x1aListUserExportJobsResponse\x12;\n" +
 	"\x05items\x18\x01 \x03(\v2%.user.administration.v1.UserExportJobR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x87\x02\n" +
-	"\x1cGetUserExportDownloadRequest\x12;\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00H\x00R\x05appId\x88\x01\x01\x12!\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xbf\x01\n" +
+	"\x1cGetUserExportDownloadRequest\x12!\n" +
 	"\x06job_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x05jobId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\rB\n" +
@@ -669,8 +627,7 @@ const file_user_administration_v1_export_proto_rawDesc = "" +
 	"operatorId\x12,\n" +
 	"\n" +
 	"request_id\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\trequestId\x12!\n" +
-	"\aip_hash\x18\x05 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x01R\x06ipHashB\t\n" +
-	"\a_app_id\"a\n" +
+	"\aip_hash\x18\x05 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x01R\x06ipHash\"a\n" +
 	"\x12UserExportDownload\x12\x10\n" +
 	"\x03url\x18\x01 \x01(\tR\x03url\x129\n" +
 	"\n" +
@@ -705,34 +662,29 @@ var file_user_administration_v1_export_proto_goTypes = []any{
 	(*ListUserExportJobsResponse)(nil),   // 4: user.administration.v1.ListUserExportJobsResponse
 	(*GetUserExportDownloadRequest)(nil), // 5: user.administration.v1.GetUserExportDownloadRequest
 	(*UserExportDownload)(nil),           // 6: user.administration.v1.UserExportDownload
-	(v1.AppId)(0),                        // 7: common.v1.AppId
-	(*UserSearchQuery)(nil),              // 8: user.administration.v1.UserSearchQuery
-	(*UserSearchFilter)(nil),             // 9: user.administration.v1.UserSearchFilter
-	(*timestamppb.Timestamp)(nil),        // 10: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),            // 11: common.pagination.v1.PagingRequest
+	(*UserSearchQuery)(nil),              // 7: user.administration.v1.UserSearchQuery
+	(*UserSearchFilter)(nil),             // 8: user.administration.v1.UserSearchFilter
+	(*timestamppb.Timestamp)(nil),        // 9: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),             // 10: common.pagination.v1.PagingRequest
 }
 var file_user_administration_v1_export_proto_depIdxs = []int32{
-	7,  // 0: user.administration.v1.UserExportJob.app_id:type_name -> common.v1.AppId
-	8,  // 1: user.administration.v1.UserExportJob.search:type_name -> user.administration.v1.UserSearchQuery
-	9,  // 2: user.administration.v1.UserExportJob.filter:type_name -> user.administration.v1.UserSearchFilter
-	0,  // 3: user.administration.v1.UserExportJob.status:type_name -> user.administration.v1.UserExportStatus
-	10, // 4: user.administration.v1.UserExportJob.created_at:type_name -> google.protobuf.Timestamp
-	10, // 5: user.administration.v1.UserExportJob.updated_at:type_name -> google.protobuf.Timestamp
-	10, // 6: user.administration.v1.UserExportJob.completed_at:type_name -> google.protobuf.Timestamp
-	10, // 7: user.administration.v1.UserExportJob.result_expires_at:type_name -> google.protobuf.Timestamp
-	7,  // 8: user.administration.v1.CreateUserExportJobRequest.app_id:type_name -> common.v1.AppId
-	8,  // 9: user.administration.v1.CreateUserExportJobRequest.search:type_name -> user.administration.v1.UserSearchQuery
-	9,  // 10: user.administration.v1.CreateUserExportJobRequest.filter:type_name -> user.administration.v1.UserSearchFilter
-	7,  // 11: user.administration.v1.ListUserExportJobsRequest.app_id:type_name -> common.v1.AppId
-	11, // 12: user.administration.v1.ListUserExportJobsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	1,  // 13: user.administration.v1.ListUserExportJobsResponse.items:type_name -> user.administration.v1.UserExportJob
-	7,  // 14: user.administration.v1.GetUserExportDownloadRequest.app_id:type_name -> common.v1.AppId
-	10, // 15: user.administration.v1.UserExportDownload.expires_at:type_name -> google.protobuf.Timestamp
-	16, // [16:16] is the sub-list for method output_type
-	16, // [16:16] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	7,  // 0: user.administration.v1.UserExportJob.search:type_name -> user.administration.v1.UserSearchQuery
+	8,  // 1: user.administration.v1.UserExportJob.filter:type_name -> user.administration.v1.UserSearchFilter
+	0,  // 2: user.administration.v1.UserExportJob.status:type_name -> user.administration.v1.UserExportStatus
+	9,  // 3: user.administration.v1.UserExportJob.created_at:type_name -> google.protobuf.Timestamp
+	9,  // 4: user.administration.v1.UserExportJob.updated_at:type_name -> google.protobuf.Timestamp
+	9,  // 5: user.administration.v1.UserExportJob.completed_at:type_name -> google.protobuf.Timestamp
+	9,  // 6: user.administration.v1.UserExportJob.result_expires_at:type_name -> google.protobuf.Timestamp
+	7,  // 7: user.administration.v1.CreateUserExportJobRequest.search:type_name -> user.administration.v1.UserSearchQuery
+	8,  // 8: user.administration.v1.CreateUserExportJobRequest.filter:type_name -> user.administration.v1.UserSearchFilter
+	10, // 9: user.administration.v1.ListUserExportJobsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	1,  // 10: user.administration.v1.ListUserExportJobsResponse.items:type_name -> user.administration.v1.UserExportJob
+	9,  // 11: user.administration.v1.UserExportDownload.expires_at:type_name -> google.protobuf.Timestamp
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_export_proto_init() }
@@ -741,9 +693,6 @@ func file_user_administration_v1_export_proto_init() {
 		return
 	}
 	file_user_administration_v1_administration_proto_init()
-	file_user_administration_v1_export_proto_msgTypes[1].OneofWrappers = []any{}
-	file_user_administration_v1_export_proto_msgTypes[2].OneofWrappers = []any{}
-	file_user_administration_v1_export_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

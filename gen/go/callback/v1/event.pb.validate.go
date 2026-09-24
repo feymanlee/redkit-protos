@@ -65,8 +65,6 @@ func (m *CallbackEvent) validate(all bool) error {
 
 	// no validation rules for EventType
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetOccurredAt()).(type) {
 		case interface{ ValidateAll() error }:

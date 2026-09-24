@@ -8,7 +8,7 @@ package paymentpb
 
 import (
 	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -146,7 +146,7 @@ func (ProviderStateRefreshResult) EnumDescriptor() ([]byte, []int) {
 	return file_payment_v1_payment_administration_proto_rawDescGZIP(), []int{1}
 }
 
-// PaymentSearchFilter is the typed, App-scoped administration search contract.
+// PaymentSearchFilter is the typed administration search contract.
 type PaymentSearchFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// payment_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
@@ -157,7 +157,7 @@ type PaymentSearchFilter struct {
 	RefundNo *string `protobuf:"bytes,3,opt,name=refund_no,json=refundNo,proto3,oneof" json:"refund_no,omitempty"`
 	// provider_trade_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
 	ProviderTradeNo *string `protobuf:"bytes,4,opt,name=provider_trade_no,json=providerTradeNo,proto3,oneof" json:"provider_trade_no,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,5,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// created_from 指定 PaymentSearchFilter 查询或生效区间的起始边界。
 	CreatedFrom *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_from,json=createdFrom,proto3,oneof" json:"created_from,omitempty"`
@@ -423,9 +423,7 @@ func (x *PaymentDetailSectionState) GetReason() string {
 type GetPaymentDetailRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// payment_no 是 GetPaymentDetail 对外关联与审计使用的业务编号。
-	PaymentNo string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
-	// app_id 限定 GetPaymentDetail 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	PaymentNo     string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -465,13 +463,6 @@ func (x *GetPaymentDetailRequest) GetPaymentNo() string {
 		return x.PaymentNo
 	}
 	return ""
-}
-
-func (x *GetPaymentDetailRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // ChannelCapabilitySnapshot 区分 Revision 声明、Provider 实现上限与两者交集。
@@ -670,8 +661,6 @@ type RefreshPaymentProviderStateRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// payment_no 是 RefreshPaymentProviderState 对外关联与审计使用的业务编号。
 	PaymentNo string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
-	// app_id 限定 RefreshPaymentProviderState 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
@@ -717,13 +706,6 @@ func (x *RefreshPaymentProviderStateRequest) GetPaymentNo() string {
 		return x.PaymentNo
 	}
 	return ""
-}
-
-func (x *RefreshPaymentProviderStateRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 func (x *RefreshPaymentProviderStateRequest) GetOperatorId() uint32 {
@@ -807,8 +789,6 @@ type RefreshRefundProviderStateRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// refund_no 是 RefreshRefundProviderState 对外关联与审计使用的业务编号。
 	RefundNo string `protobuf:"bytes,1,opt,name=refund_no,json=refundNo,proto3" json:"refund_no,omitempty"`
-	// app_id 限定 RefreshRefundProviderState 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
@@ -854,13 +834,6 @@ func (x *RefreshRefundProviderStateRequest) GetRefundNo() string {
 		return x.RefundNo
 	}
 	return ""
-}
-
-func (x *RefreshRefundProviderStateRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 func (x *RefreshRefundProviderStateRequest) GetOperatorId() uint32 {
@@ -1222,10 +1195,8 @@ func (x *PaymentDetail) GetRiskDecisionState() *PaymentDetailSectionState {
 // GetUserPaymentSummaryRequest 标识待查询的 UserPaymentSummary。
 type GetUserPaymentSummaryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
-	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// app_id 限定 GetUserPaymentSummary 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	// user_id 标识关联的 User。
+	UserId        uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1265,13 +1236,6 @@ func (x *GetUserPaymentSummaryRequest) GetUserId() uint64 {
 		return x.UserId
 	}
 	return 0
-}
-
-func (x *GetUserPaymentSummaryRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // UserPaymentCurrencySummary 表示面向查询的汇总投影。
@@ -1592,12 +1556,10 @@ const file_payment_v1_payment_administration_proto_rawDesc = "" +
 	"\x19PaymentDetailSectionState\x12P\n" +
 	"\favailability\x18\x01 \x01(\x0e2,.payment.v1.PaymentDetailSectionAvailabilityR\favailability\x12\x1b\n" +
 	"\x06reason\x18\x02 \x01(\tH\x00R\x06reason\x88\x01\x01B\t\n" +
-	"\a_reason\"q\n" +
+	"\a_reason\"8\n" +
 	"\x17GetPaymentDetailRequest\x12\x1d\n" +
 	"\n" +
-	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xe6\x03\n" +
+	"payment_no\x18\x01 \x01(\tR\tpaymentNo\"\xe6\x03\n" +
 	"\x19ChannelCapabilitySnapshot\x12R\n" +
 	"\x15declared_capabilities\x18\x01 \x03(\x0e2\x1d.payment.v1.ChannelCapabilityR\x14declaredCapabilities\x12e\n" +
 	"\x1fprovider_supported_capabilities\x18\x02 \x03(\x0e2\x1d.payment.v1.ChannelCapabilityR\x1dproviderSupportedCapabilities\x12T\n" +
@@ -1616,29 +1578,25 @@ const file_payment_v1_payment_administration_proto_rawDesc = "" +
 	"\tnext_step\x18\x05 \x01(\tR\bnextStep\x12!\n" +
 	"\foperation_no\x18\x06 \x01(\tR\voperationNo\x12=\n" +
 	"\frefreshed_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\vrefreshedAtB\x12\n" +
-	"\x10_provider_status\"\xdf\x01\n" +
+	"\x10_provider_status\"\xa6\x01\n" +
 	"\"RefreshPaymentProviderStateRequest\x12\x1d\n" +
 	"\n" +
-	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x04 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\x05 \x01(\tR\voperationNoB\t\n" +
-	"\a_app_id\"\x90\x01\n" +
+	"\foperation_no\x18\x05 \x01(\tR\voperationNo\"\x90\x01\n" +
 	"#RefreshPaymentProviderStateResponse\x12-\n" +
 	"\apayment\x18\x01 \x01(\v2\x13.payment.v1.PaymentR\apayment\x12:\n" +
-	"\arefresh\x18\x02 \x01(\v2 .payment.v1.ProviderStateRefreshR\arefresh\"\xdc\x01\n" +
+	"\arefresh\x18\x02 \x01(\v2 .payment.v1.ProviderStateRefreshR\arefresh\"\xa3\x01\n" +
 	"!RefreshRefundProviderStateRequest\x12\x1b\n" +
-	"\trefund_no\x18\x01 \x01(\tR\brefundNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"\trefund_no\x18\x01 \x01(\tR\brefundNo\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x04 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\x05 \x01(\tR\voperationNoB\t\n" +
-	"\a_app_id\"\x8c\x01\n" +
+	"\foperation_no\x18\x05 \x01(\tR\voperationNo\"\x8c\x01\n" +
 	"\"RefreshRefundProviderStateResponse\x12*\n" +
 	"\x06refund\x18\x01 \x01(\v2\x12.payment.v1.RefundR\x06refund\x12:\n" +
 	"\arefresh\x18\x02 \x01(\v2 .payment.v1.ProviderStateRefreshR\arefresh\"\xa4\x10\n" +
@@ -1671,11 +1629,9 @@ const file_payment_v1_payment_administration_proto_rawDesc = "" +
 	"\x0edisputes_state\x18\x1c \x01(\v2%.payment.v1.PaymentDetailSectionStateR\rdisputesState\x12R\n" +
 	"\x11settlements_state\x18\x1d \x01(\v2%.payment.v1.PaymentDetailSectionStateR\x10settlementsState\x12U\n" +
 	"\x13risk_decision_state\x18\x1e \x01(\v2%.payment.v1.PaymentDetailSectionStateR\x11riskDecisionStateB\x10\n" +
-	"\x0e_risk_decision\"p\n" +
+	"\x0e_risk_decision\"7\n" +
 	"\x1cGetUserPaymentSummaryRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xe6\x01\n" +
+	"\auser_id\x18\x01 \x01(\x04R\x06userId\"\xe6\x01\n" +
 	"\x1aUserPaymentCurrencySummary\x12\x1a\n" +
 	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x128\n" +
 	"\x18successful_payment_count\x18\x02 \x01(\x04R\x16successfulPaymentCount\x124\n" +
@@ -1754,22 +1710,21 @@ var file_payment_v1_payment_administration_proto_goTypes = []any{
 	(Payment_Status)(0),                          // 21: payment.v1.Payment.Status
 	(Payment_FulfillmentStatus)(0),               // 22: payment.v1.Payment.FulfillmentStatus
 	(*v1.PagingRequest)(nil),                     // 23: common.pagination.v1.PagingRequest
-	(v11.AppId)(0),                               // 24: common.v1.AppId
-	(ChannelCapability)(0),                       // 25: payment.v1.ChannelCapability
-	(*Payment)(nil),                              // 26: payment.v1.Payment
-	(*Refund)(nil),                               // 27: payment.v1.Refund
-	(*PaymentCallback)(nil),                      // 28: payment.v1.PaymentCallback
-	(*PaymentEvent)(nil),                         // 29: payment.v1.PaymentEvent
-	(*PaymentOutboxEvent)(nil),                   // 30: payment.v1.PaymentOutboxEvent
-	(*PaymentGovernanceEvent)(nil),               // 31: payment.v1.PaymentGovernanceEvent
-	(*UserSubscription)(nil),                     // 32: payment.v1.UserSubscription
-	(*ReconciliationItem)(nil),                   // 33: payment.v1.ReconciliationItem
-	(*RefundRequest)(nil),                        // 34: payment.v1.RefundRequest
-	(*RefundAvailability)(nil),                   // 35: payment.v1.RefundAvailability
-	(*DeliveryFailure)(nil),                      // 36: payment.v1.DeliveryFailure
-	(*Dispute)(nil),                              // 37: payment.v1.Dispute
-	(*SettlementStatement)(nil),                  // 38: payment.v1.SettlementStatement
-	(*PaymentRiskDecision)(nil),                  // 39: payment.v1.PaymentRiskDecision
+	(ChannelCapability)(0),                       // 24: payment.v1.ChannelCapability
+	(*Payment)(nil),                              // 25: payment.v1.Payment
+	(*Refund)(nil),                               // 26: payment.v1.Refund
+	(*PaymentCallback)(nil),                      // 27: payment.v1.PaymentCallback
+	(*PaymentEvent)(nil),                         // 28: payment.v1.PaymentEvent
+	(*PaymentOutboxEvent)(nil),                   // 29: payment.v1.PaymentOutboxEvent
+	(*PaymentGovernanceEvent)(nil),               // 30: payment.v1.PaymentGovernanceEvent
+	(*UserSubscription)(nil),                     // 31: payment.v1.UserSubscription
+	(*ReconciliationItem)(nil),                   // 32: payment.v1.ReconciliationItem
+	(*RefundRequest)(nil),                        // 33: payment.v1.RefundRequest
+	(*RefundAvailability)(nil),                   // 34: payment.v1.RefundAvailability
+	(*DeliveryFailure)(nil),                      // 35: payment.v1.DeliveryFailure
+	(*Dispute)(nil),                              // 36: payment.v1.Dispute
+	(*SettlementStatement)(nil),                  // 37: payment.v1.SettlementStatement
+	(*PaymentRiskDecision)(nil),                  // 38: payment.v1.PaymentRiskDecision
 }
 var file_payment_v1_payment_administration_proto_depIdxs = []int32{
 	18, // 0: payment.v1.PaymentSearchFilter.created_from:type_name -> google.protobuf.Timestamp
@@ -1781,57 +1736,53 @@ var file_payment_v1_payment_administration_proto_depIdxs = []int32{
 	23, // 6: payment.v1.ListPaymentsRequest.paging:type_name -> common.pagination.v1.PagingRequest
 	2,  // 7: payment.v1.ListPaymentsRequest.filter:type_name -> payment.v1.PaymentSearchFilter
 	0,  // 8: payment.v1.PaymentDetailSectionState.availability:type_name -> payment.v1.PaymentDetailSectionAvailability
-	24, // 9: payment.v1.GetPaymentDetailRequest.app_id:type_name -> common.v1.AppId
-	25, // 10: payment.v1.ChannelCapabilitySnapshot.declared_capabilities:type_name -> payment.v1.ChannelCapability
-	25, // 11: payment.v1.ChannelCapabilitySnapshot.provider_supported_capabilities:type_name -> payment.v1.ChannelCapability
-	25, // 12: payment.v1.ChannelCapabilitySnapshot.effective_capabilities:type_name -> payment.v1.ChannelCapability
-	1,  // 13: payment.v1.ProviderStateRefresh.result:type_name -> payment.v1.ProviderStateRefreshResult
-	18, // 14: payment.v1.ProviderStateRefresh.refreshed_at:type_name -> google.protobuf.Timestamp
-	24, // 15: payment.v1.RefreshPaymentProviderStateRequest.app_id:type_name -> common.v1.AppId
-	26, // 16: payment.v1.RefreshPaymentProviderStateResponse.payment:type_name -> payment.v1.Payment
-	7,  // 17: payment.v1.RefreshPaymentProviderStateResponse.refresh:type_name -> payment.v1.ProviderStateRefresh
-	24, // 18: payment.v1.RefreshRefundProviderStateRequest.app_id:type_name -> common.v1.AppId
-	27, // 19: payment.v1.RefreshRefundProviderStateResponse.refund:type_name -> payment.v1.Refund
-	7,  // 20: payment.v1.RefreshRefundProviderStateResponse.refresh:type_name -> payment.v1.ProviderStateRefresh
-	26, // 21: payment.v1.PaymentDetail.payment:type_name -> payment.v1.Payment
-	27, // 22: payment.v1.PaymentDetail.refunds:type_name -> payment.v1.Refund
-	28, // 23: payment.v1.PaymentDetail.callbacks:type_name -> payment.v1.PaymentCallback
-	29, // 24: payment.v1.PaymentDetail.events:type_name -> payment.v1.PaymentEvent
-	30, // 25: payment.v1.PaymentDetail.delivery_failures:type_name -> payment.v1.PaymentOutboxEvent
-	31, // 26: payment.v1.PaymentDetail.governance_events:type_name -> payment.v1.PaymentGovernanceEvent
-	32, // 27: payment.v1.PaymentDetail.subscriptions:type_name -> payment.v1.UserSubscription
-	33, // 28: payment.v1.PaymentDetail.reconciliation_findings:type_name -> payment.v1.ReconciliationItem
-	34, // 29: payment.v1.PaymentDetail.refund_requests:type_name -> payment.v1.RefundRequest
-	35, // 30: payment.v1.PaymentDetail.refund_availability:type_name -> payment.v1.RefundAvailability
-	6,  // 31: payment.v1.PaymentDetail.channel_capabilities:type_name -> payment.v1.ChannelCapabilitySnapshot
-	7,  // 32: payment.v1.PaymentDetail.latest_provider_refreshes:type_name -> payment.v1.ProviderStateRefresh
-	36, // 33: payment.v1.PaymentDetail.typed_delivery_failures:type_name -> payment.v1.DeliveryFailure
-	37, // 34: payment.v1.PaymentDetail.disputes:type_name -> payment.v1.Dispute
-	38, // 35: payment.v1.PaymentDetail.settlements:type_name -> payment.v1.SettlementStatement
-	39, // 36: payment.v1.PaymentDetail.risk_decision:type_name -> payment.v1.PaymentRiskDecision
-	4,  // 37: payment.v1.PaymentDetail.refunds_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 38: payment.v1.PaymentDetail.callbacks_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 39: payment.v1.PaymentDetail.events_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 40: payment.v1.PaymentDetail.delivery_failures_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 41: payment.v1.PaymentDetail.governance_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 42: payment.v1.PaymentDetail.subscriptions_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 43: payment.v1.PaymentDetail.reconciliation_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 44: payment.v1.PaymentDetail.refund_requests_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 45: payment.v1.PaymentDetail.disputes_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 46: payment.v1.PaymentDetail.settlements_state:type_name -> payment.v1.PaymentDetailSectionState
-	4,  // 47: payment.v1.PaymentDetail.risk_decision_state:type_name -> payment.v1.PaymentDetailSectionState
-	24, // 48: payment.v1.GetUserPaymentSummaryRequest.app_id:type_name -> common.v1.AppId
-	21, // 49: payment.v1.UserPaymentLatestPaymentSummary.status:type_name -> payment.v1.Payment.Status
-	18, // 50: payment.v1.UserPaymentLatestPaymentSummary.occurred_at:type_name -> google.protobuf.Timestamp
-	18, // 51: payment.v1.UserPaymentActiveSubscriptionSummary.expired_at:type_name -> google.protobuf.Timestamp
-	14, // 52: payment.v1.UserPaymentSummary.currency_summaries:type_name -> payment.v1.UserPaymentCurrencySummary
-	15, // 53: payment.v1.UserPaymentSummary.latest_payment_summary:type_name -> payment.v1.UserPaymentLatestPaymentSummary
-	16, // 54: payment.v1.UserPaymentSummary.active_subscription_summaries:type_name -> payment.v1.UserPaymentActiveSubscriptionSummary
-	55, // [55:55] is the sub-list for method output_type
-	55, // [55:55] is the sub-list for method input_type
-	55, // [55:55] is the sub-list for extension type_name
-	55, // [55:55] is the sub-list for extension extendee
-	0,  // [0:55] is the sub-list for field type_name
+	24, // 9: payment.v1.ChannelCapabilitySnapshot.declared_capabilities:type_name -> payment.v1.ChannelCapability
+	24, // 10: payment.v1.ChannelCapabilitySnapshot.provider_supported_capabilities:type_name -> payment.v1.ChannelCapability
+	24, // 11: payment.v1.ChannelCapabilitySnapshot.effective_capabilities:type_name -> payment.v1.ChannelCapability
+	1,  // 12: payment.v1.ProviderStateRefresh.result:type_name -> payment.v1.ProviderStateRefreshResult
+	18, // 13: payment.v1.ProviderStateRefresh.refreshed_at:type_name -> google.protobuf.Timestamp
+	25, // 14: payment.v1.RefreshPaymentProviderStateResponse.payment:type_name -> payment.v1.Payment
+	7,  // 15: payment.v1.RefreshPaymentProviderStateResponse.refresh:type_name -> payment.v1.ProviderStateRefresh
+	26, // 16: payment.v1.RefreshRefundProviderStateResponse.refund:type_name -> payment.v1.Refund
+	7,  // 17: payment.v1.RefreshRefundProviderStateResponse.refresh:type_name -> payment.v1.ProviderStateRefresh
+	25, // 18: payment.v1.PaymentDetail.payment:type_name -> payment.v1.Payment
+	26, // 19: payment.v1.PaymentDetail.refunds:type_name -> payment.v1.Refund
+	27, // 20: payment.v1.PaymentDetail.callbacks:type_name -> payment.v1.PaymentCallback
+	28, // 21: payment.v1.PaymentDetail.events:type_name -> payment.v1.PaymentEvent
+	29, // 22: payment.v1.PaymentDetail.delivery_failures:type_name -> payment.v1.PaymentOutboxEvent
+	30, // 23: payment.v1.PaymentDetail.governance_events:type_name -> payment.v1.PaymentGovernanceEvent
+	31, // 24: payment.v1.PaymentDetail.subscriptions:type_name -> payment.v1.UserSubscription
+	32, // 25: payment.v1.PaymentDetail.reconciliation_findings:type_name -> payment.v1.ReconciliationItem
+	33, // 26: payment.v1.PaymentDetail.refund_requests:type_name -> payment.v1.RefundRequest
+	34, // 27: payment.v1.PaymentDetail.refund_availability:type_name -> payment.v1.RefundAvailability
+	6,  // 28: payment.v1.PaymentDetail.channel_capabilities:type_name -> payment.v1.ChannelCapabilitySnapshot
+	7,  // 29: payment.v1.PaymentDetail.latest_provider_refreshes:type_name -> payment.v1.ProviderStateRefresh
+	35, // 30: payment.v1.PaymentDetail.typed_delivery_failures:type_name -> payment.v1.DeliveryFailure
+	36, // 31: payment.v1.PaymentDetail.disputes:type_name -> payment.v1.Dispute
+	37, // 32: payment.v1.PaymentDetail.settlements:type_name -> payment.v1.SettlementStatement
+	38, // 33: payment.v1.PaymentDetail.risk_decision:type_name -> payment.v1.PaymentRiskDecision
+	4,  // 34: payment.v1.PaymentDetail.refunds_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 35: payment.v1.PaymentDetail.callbacks_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 36: payment.v1.PaymentDetail.events_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 37: payment.v1.PaymentDetail.delivery_failures_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 38: payment.v1.PaymentDetail.governance_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 39: payment.v1.PaymentDetail.subscriptions_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 40: payment.v1.PaymentDetail.reconciliation_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 41: payment.v1.PaymentDetail.refund_requests_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 42: payment.v1.PaymentDetail.disputes_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 43: payment.v1.PaymentDetail.settlements_state:type_name -> payment.v1.PaymentDetailSectionState
+	4,  // 44: payment.v1.PaymentDetail.risk_decision_state:type_name -> payment.v1.PaymentDetailSectionState
+	21, // 45: payment.v1.UserPaymentLatestPaymentSummary.status:type_name -> payment.v1.Payment.Status
+	18, // 46: payment.v1.UserPaymentLatestPaymentSummary.occurred_at:type_name -> google.protobuf.Timestamp
+	18, // 47: payment.v1.UserPaymentActiveSubscriptionSummary.expired_at:type_name -> google.protobuf.Timestamp
+	14, // 48: payment.v1.UserPaymentSummary.currency_summaries:type_name -> payment.v1.UserPaymentCurrencySummary
+	15, // 49: payment.v1.UserPaymentSummary.latest_payment_summary:type_name -> payment.v1.UserPaymentLatestPaymentSummary
+	16, // 50: payment.v1.UserPaymentSummary.active_subscription_summaries:type_name -> payment.v1.UserPaymentActiveSubscriptionSummary
+	51, // [51:51] is the sub-list for method output_type
+	51, // [51:51] is the sub-list for method input_type
+	51, // [51:51] is the sub-list for extension type_name
+	51, // [51:51] is the sub-list for extension extendee
+	0,  // [0:51] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_payment_administration_proto_init() }
@@ -1851,13 +1802,9 @@ func file_payment_v1_payment_administration_proto_init() {
 	file_payment_v1_subscription_proto_init()
 	file_payment_v1_payment_administration_proto_msgTypes[0].OneofWrappers = []any{}
 	file_payment_v1_payment_administration_proto_msgTypes[2].OneofWrappers = []any{}
-	file_payment_v1_payment_administration_proto_msgTypes[3].OneofWrappers = []any{}
 	file_payment_v1_payment_administration_proto_msgTypes[4].OneofWrappers = []any{}
 	file_payment_v1_payment_administration_proto_msgTypes[5].OneofWrappers = []any{}
-	file_payment_v1_payment_administration_proto_msgTypes[6].OneofWrappers = []any{}
-	file_payment_v1_payment_administration_proto_msgTypes[8].OneofWrappers = []any{}
 	file_payment_v1_payment_administration_proto_msgTypes[10].OneofWrappers = []any{}
-	file_payment_v1_payment_administration_proto_msgTypes[11].OneofWrappers = []any{}
 	file_payment_v1_payment_administration_proto_msgTypes[14].OneofWrappers = []any{}
 	file_payment_v1_payment_administration_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}

@@ -11,8 +11,6 @@ import "wallet/v1/wallet_types.proto";
 message WalletRiskRule {
   // id 标识关联的 WalletRiskRule。
   optional uint32 id = 1;
-  // app_id 限定 WalletRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // currency 指定相关金额使用的币种或计量单位。
   optional WalletCurrency currency = 3;
   // active_revision_id 标识关联的 ActiveRevision。
@@ -43,8 +41,6 @@ message WalletRiskRuleRevision {
 
   // id 标识关联的 WalletRiskRuleRevision。
   optional uint64 id = 1;
-  // app_id 限定 WalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // rule_id 标识关联的 Rule。
   optional uint32 rule_id = 3;
   // revision_no 是 WalletRiskRuleRevision 对外关联与审计使用的业务编号。
@@ -97,8 +93,6 @@ message WalletRiskRuleRevisionPatch {
 
 // CreateWalletRiskRuleRevisionRequest 定义创建 WalletRiskRuleRevision 的命令参数。
 message CreateWalletRiskRuleRevisionRequest {
-  // app_id 限定 CreateWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // data 承载 CreateWalletRiskRuleRevision 对应阶段的结构化业务内容。
   WalletRiskRuleRevisionPatch data = 2;
   // governance 承载 CreateWalletRiskRuleRevision 关联的 WalletGovernanceIdentity。
@@ -107,8 +101,6 @@ message CreateWalletRiskRuleRevisionRequest {
 
 // ApproveWalletRiskRuleRevisionRequest 定义批准 WalletRiskRuleRevision 的命令参数。
 message ApproveWalletRiskRuleRevisionRequest {
-  // app_id 限定 ApproveWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2;
   // effective_at 记录 ApproveWalletRiskRuleRevision 对应业务阶段的时间点。
@@ -127,8 +119,6 @@ message ListWalletRiskRuleResponse {
 
 // ListWalletRiskRuleRevisionRequest 定义 WalletRiskRuleRevision 的筛选与分页参数。
 message ListWalletRiskRuleRevisionRequest {
-  // app_id 限定 ListWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // rule_id 标识关联的 Rule。
   optional uint32 rule_id = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -171,11 +161,9 @@ enum EmergencyWalletBlockStatus {
 message EmergencyWalletBlock {
   // id 标识关联的 EmergencyWalletBlock。
   optional uint64 id = 1;
-  // app_id 限定 EmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // currency 指定相关金额使用的币种或计量单位。
   optional WalletCurrency currency = 3;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 4;
   // operation_scope 限定 EmergencyWalletBlock 的生效或授权范围。
   optional EmergencyWalletBlockScope operation_scope = 5;
@@ -203,11 +191,9 @@ message EmergencyWalletBlock {
 
 // CreateEmergencyWalletBlockRequest 定义创建 EmergencyWalletBlock 的命令参数。
 message CreateEmergencyWalletBlockRequest {
-  // app_id 限定 CreateEmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // currency 指定相关金额使用的币种或计量单位。
   WalletCurrency currency = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3;
   // operation_scope 限定 CreateEmergencyWalletBlock 的生效或授权范围。
   EmergencyWalletBlockScope operation_scope = 4;
@@ -219,8 +205,6 @@ message CreateEmergencyWalletBlockRequest {
 
 // EndEmergencyWalletBlockRequest 定义执行 EndEmergencyWalletBlock 的命令参数。
 message EndEmergencyWalletBlockRequest {
-  // app_id 限定 EndEmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // block_id 标识关联的 Block。
   uint64 block_id = 2;
   // governance 承载 EndEmergencyWalletBlock 关联的 WalletGovernanceIdentity。

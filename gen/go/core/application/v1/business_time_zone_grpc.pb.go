@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -26,10 +27,10 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// BusinessTimeZoneService exposes the fixed business calendar for one App.
+// BusinessTimeZoneService 暴露平台唯一的固定业务日历。
 type BusinessTimeZoneServiceClient interface {
-	// Get returns the IANA time zone owned by the requested App.
-	Get(ctx context.Context, in *GetBusinessTimeZoneRequest, opts ...grpc.CallOption) (*AppBusinessTimeZone, error)
+	// Get 返回平台拥有的 IANA 业务时区。
+	Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*BusinessTimeZone, error)
 }
 
 type businessTimeZoneServiceClient struct {
@@ -40,9 +41,9 @@ func NewBusinessTimeZoneServiceClient(cc grpc.ClientConnInterface) BusinessTimeZ
 	return &businessTimeZoneServiceClient{cc}
 }
 
-func (c *businessTimeZoneServiceClient) Get(ctx context.Context, in *GetBusinessTimeZoneRequest, opts ...grpc.CallOption) (*AppBusinessTimeZone, error) {
+func (c *businessTimeZoneServiceClient) Get(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*BusinessTimeZone, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AppBusinessTimeZone)
+	out := new(BusinessTimeZone)
 	err := c.cc.Invoke(ctx, BusinessTimeZoneService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -54,10 +55,10 @@ func (c *businessTimeZoneServiceClient) Get(ctx context.Context, in *GetBusiness
 // All implementations must embed UnimplementedBusinessTimeZoneServiceServer
 // for forward compatibility.
 //
-// BusinessTimeZoneService exposes the fixed business calendar for one App.
+// BusinessTimeZoneService 暴露平台唯一的固定业务日历。
 type BusinessTimeZoneServiceServer interface {
-	// Get returns the IANA time zone owned by the requested App.
-	Get(context.Context, *GetBusinessTimeZoneRequest) (*AppBusinessTimeZone, error)
+	// Get 返回平台拥有的 IANA 业务时区。
+	Get(context.Context, *emptypb.Empty) (*BusinessTimeZone, error)
 	mustEmbedUnimplementedBusinessTimeZoneServiceServer()
 }
 
@@ -68,7 +69,7 @@ type BusinessTimeZoneServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBusinessTimeZoneServiceServer struct{}
 
-func (UnimplementedBusinessTimeZoneServiceServer) Get(context.Context, *GetBusinessTimeZoneRequest) (*AppBusinessTimeZone, error) {
+func (UnimplementedBusinessTimeZoneServiceServer) Get(context.Context, *emptypb.Empty) (*BusinessTimeZone, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedBusinessTimeZoneServiceServer) mustEmbedUnimplementedBusinessTimeZoneServiceServer() {
@@ -94,7 +95,7 @@ func RegisterBusinessTimeZoneServiceServer(s grpc.ServiceRegistrar, srv Business
 }
 
 func _BusinessTimeZoneService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetBusinessTimeZoneRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -106,7 +107,7 @@ func _BusinessTimeZoneService_Get_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: BusinessTimeZoneService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BusinessTimeZoneServiceServer).Get(ctx, req.(*GetBusinessTimeZoneRequest))
+		return srv.(BusinessTimeZoneServiceServer).Get(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

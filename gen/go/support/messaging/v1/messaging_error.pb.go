@@ -32,13 +32,13 @@ const (
 	MessagingErrorReason_NOT_FOUND MessagingErrorReason = 1
 	// 状态或幂等冲突。
 	MessagingErrorReason_CONFLICT MessagingErrorReason = 2
-	// Recipient Phone 无法按 App 默认区域规范化为有效 E.164。
+	// Recipient Phone 无法按平台默认区域规范化为有效 E.164。
 	MessagingErrorReason_INVALID_RECIPIENT_PHONE MessagingErrorReason = 3
 	// 服务内部错误。
 	MessagingErrorReason_INTERNAL_SERVER_ERROR MessagingErrorReason = 2000
 	// 短信渠道不可用。
 	MessagingErrorReason_SERVICE_UNAVAILABLE MessagingErrorReason = 2300
-	// 当前 App 没有可用于新发送的 Active Configuration Release。
+	// 没有可用于新发送的 Active Configuration Release。
 	MessagingErrorReason_SUPPORT_CONFIGURATION_NOT_READY MessagingErrorReason = 2301
 )
 

@@ -42,7 +42,7 @@ const (
 	FileErrorReason_VERIFICATION_FAILED FileErrorReason = 6
 	// File 尚未达到 READY 状态。
 	FileErrorReason_FILE_NOT_READY FileErrorReason = 7
-	// App、Purpose 或 Owner 与业务预期不匹配。
+	// Purpose 或 Owner 与业务预期不匹配。
 	FileErrorReason_FILE_BINDING_MISMATCH FileErrorReason = 8
 	// 上传请求或字节额度已耗尽。
 	FileErrorReason_UPLOAD_QUOTA_EXCEEDED FileErrorReason = 9
@@ -50,7 +50,7 @@ const (
 	FileErrorReason_STALE_REFERENCE_VERSION FileErrorReason = 10
 	// 当前调用没有执行操作所需权限。
 	FileErrorReason_FORBIDDEN FileErrorReason = 11
-	// 当前 App/Purpose 缺少可用的 Active File Policy Revision。
+	// 当前 Purpose 缺少可用的 Active File Policy Revision。
 	FileErrorReason_FILE_CONFIGURATION_NOT_READY FileErrorReason = 12
 	// Support 内部错误。
 	FileErrorReason_INTERNAL_SERVER_ERROR FileErrorReason = 2000

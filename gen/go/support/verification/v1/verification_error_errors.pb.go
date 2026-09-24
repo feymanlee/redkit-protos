@@ -109,7 +109,7 @@ func ErrorConflict(format string, args ...interface{}) *errors.Error {
 	return errors.New(409, VerificationErrorReason_CONFLICT.String(), fmt.Sprintf(format, args...))
 }
 
-// Recipient Phone 无法按 App 默认区域规范化为有效 E.164。
+// Recipient Phone 无法按平台默认区域规范化为有效 E.164。
 func IsInvalidRecipientPhone(err error) bool {
 	if err == nil {
 		return false
@@ -118,12 +118,12 @@ func IsInvalidRecipientPhone(err error) bool {
 	return e.Reason == VerificationErrorReason_INVALID_RECIPIENT_PHONE.String() && e.Code == 400
 }
 
-// Recipient Phone 无法按 App 默认区域规范化为有效 E.164。
+// Recipient Phone 无法按平台默认区域规范化为有效 E.164。
 func ErrorInvalidRecipientPhone(format string, args ...interface{}) *errors.Error {
 	return errors.New(400, VerificationErrorReason_INVALID_RECIPIENT_PHONE.String(), fmt.Sprintf(format, args...))
 }
 
-// 当前 App 没有可用于 Verification Runtime 的完整 Active Release。
+// 没有可用于 Verification Runtime 的完整 Active Release。
 func IsSupportConfigurationNotReady(err error) bool {
 	if err == nil {
 		return false
@@ -132,7 +132,7 @@ func IsSupportConfigurationNotReady(err error) bool {
 	return e.Reason == VerificationErrorReason_SUPPORT_CONFIGURATION_NOT_READY.String() && e.Code == 503
 }
 
-// 当前 App 没有可用于 Verification Runtime 的完整 Active Release。
+// 没有可用于 Verification Runtime 的完整 Active Release。
 func ErrorSupportConfigurationNotReady(format string, args ...interface{}) *errors.Error {
 	return errors.New(503, VerificationErrorReason_SUPPORT_CONFIGURATION_NOT_READY.String(), fmt.Sprintf(format, args...))
 }

@@ -8,8 +8,8 @@ package useradministrationpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -29,12 +29,10 @@ const (
 // ListDevicesRequest 定义 Devices 的筛选与分页参数。
 type ListDevicesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListDevices 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -69,13 +67,6 @@ func (*ListDevicesRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_device_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListDevicesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListDevicesRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -83,7 +74,7 @@ func (x *ListDevicesRequest) GetUserId() uint64 {
 	return 0
 }
 
-func (x *ListDevicesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListDevicesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -148,9 +139,7 @@ func (x *ListDevicesResponse) GetTotal() uint64 {
 // TrustDeviceRequest 定义执行 TrustDevice 的幂等管理命令参数。
 type TrustDeviceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 TrustDevice 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// device_id 标识关联的 Device。
 	DeviceId uint64 `protobuf:"varint,3,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
@@ -192,13 +181,6 @@ func (*TrustDeviceRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_device_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *TrustDeviceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *TrustDeviceRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -230,16 +212,14 @@ func (x *TrustDeviceRequest) GetIdempotencyKey() string {
 // RegisterRecoveryDeviceKeyRequest 定义执行 RegisterRecoveryDeviceKey 的幂等管理命令参数。
 type RegisterRecoveryDeviceKeyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RegisterRecoveryDeviceKey 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// device_id 标识关联的 Device。
 	DeviceId uint64 `protobuf:"varint,3,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
 	// public_key 在约定作用域内稳定定位 RegisterRecoveryDeviceKey。
 	PublicKey []byte `protobuf:"bytes,4,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty"`
 	// proof_signature 是 Ed25519 对以下 UTF-8 规范消息的签名（字段间使用单个 LF，末尾无换行）：
-	// corevia:user:recovery-device-key:v1\napp_id=<decimal>\nuser_id=<decimal>\ndevice_id=<decimal>\nidempotency_key=<value>
+	// corevia:user:recovery-device-key:v1\nuser_id=<decimal>\ndevice_id=<decimal>\nidempotency_key=<value>
 	// 签名不得写入日志或持久化。
 	ProofSignature []byte `protobuf:"bytes,5,opt,name=proof_signature,json=proofSignature,proto3" json:"proof_signature,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
@@ -278,13 +258,6 @@ func (x *RegisterRecoveryDeviceKeyRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RegisterRecoveryDeviceKeyRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRecoveryDeviceKeyRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_device_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *RegisterRecoveryDeviceKeyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RegisterRecoveryDeviceKeyRequest) GetUserId() uint64 {
@@ -332,9 +305,7 @@ func (x *RegisterRecoveryDeviceKeyRequest) GetIdempotencyKey() string {
 // RevokeDeviceSessionsRequest 定义撤销 DeviceSessions 的幂等管理命令参数。
 type RevokeDeviceSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeDeviceSessions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// device_id 标识关联的 Device。
 	DeviceId uint64 `protobuf:"varint,3,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
@@ -376,13 +347,6 @@ func (*RevokeDeviceSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_device_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *RevokeDeviceSessionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeDeviceSessionsRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -415,22 +379,19 @@ var File_user_administration_v1_device_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_device_proto_rawDesc = "" +
 	"\n" +
-	"#user/administration/v1/device.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"\x93\x01\n" +
-	"\x12ListDevicesRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"#user/administration/v1/device.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"j\n" +
+	"\x12ListDevicesRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"a\n" +
 	"\x13ListDevicesResponse\x124\n" +
 	"\x05items\x18\x01 \x03(\v2\x1e.user.administration.v1.DeviceR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xcd\x01\n" +
-	"\x12TrustDeviceRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa4\x01\n" +
+	"\x12TrustDeviceRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tdevice_id\x18\x03 \x01(\x04R\bdeviceId\x12/\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tR\x12verificationTicket\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\x84\x03\n" +
-	" RegisterRecoveryDeviceKeyRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\xcc\x02\n" +
+	" RegisterRecoveryDeviceKeyRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12'\n" +
 	"\tdevice_id\x18\x03 \x01(\x04B\n" +
@@ -439,9 +400,8 @@ const file_user_administration_v1_device_proto_rawDesc = "" +
 	"public_key\x18\x04 \x01(\fB\f\xe0A\x02\xfaB\x06z\x04\x10 \x18 R\tpublicKey\x125\n" +
 	"\x0fproof_signature\x18\x05 \x01(\fB\f\xe0A\x02\xfaB\x06z\x04\x10@\x18@R\x0eproofSignature\x12>\n" +
 	"\x13verification_ticket\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x10R\x12verificationTicket\x126\n" +
-	"\x0fidempotency_key\x18\a \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xbd\x01\n" +
-	"\x1bRevokeDeviceSessionsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\a \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x94\x01\n" +
+	"\x1bRevokeDeviceSessionsRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tdevice_id\x18\x03 \x01(\x04R\bdeviceId\x12\x16\n" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12'\n" +
@@ -472,31 +432,26 @@ var file_user_administration_v1_device_proto_goTypes = []any{
 	(*TrustDeviceRequest)(nil),               // 2: user.administration.v1.TrustDeviceRequest
 	(*RegisterRecoveryDeviceKeyRequest)(nil), // 3: user.administration.v1.RegisterRecoveryDeviceKeyRequest
 	(*RevokeDeviceSessionsRequest)(nil),      // 4: user.administration.v1.RevokeDeviceSessionsRequest
-	(v1.AppId)(0),                            // 5: common.v1.AppId
-	(*v11.PagingRequest)(nil),                // 6: common.pagination.v1.PagingRequest
-	(*Device)(nil),                           // 7: user.administration.v1.Device
-	(*emptypb.Empty)(nil),                    // 8: google.protobuf.Empty
+	(*v1.PagingRequest)(nil),                 // 5: common.pagination.v1.PagingRequest
+	(*Device)(nil),                           // 6: user.administration.v1.Device
+	(*emptypb.Empty)(nil),                    // 7: google.protobuf.Empty
 }
 var file_user_administration_v1_device_proto_depIdxs = []int32{
-	5,  // 0: user.administration.v1.ListDevicesRequest.app_id:type_name -> common.v1.AppId
-	6,  // 1: user.administration.v1.ListDevicesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	7,  // 2: user.administration.v1.ListDevicesResponse.items:type_name -> user.administration.v1.Device
-	5,  // 3: user.administration.v1.TrustDeviceRequest.app_id:type_name -> common.v1.AppId
-	5,  // 4: user.administration.v1.RegisterRecoveryDeviceKeyRequest.app_id:type_name -> common.v1.AppId
-	5,  // 5: user.administration.v1.RevokeDeviceSessionsRequest.app_id:type_name -> common.v1.AppId
-	0,  // 6: user.administration.v1.UserDeviceService.ListDevices:input_type -> user.administration.v1.ListDevicesRequest
-	2,  // 7: user.administration.v1.UserDeviceService.TrustDevice:input_type -> user.administration.v1.TrustDeviceRequest
-	3,  // 8: user.administration.v1.UserDeviceService.RegisterRecoveryDeviceKey:input_type -> user.administration.v1.RegisterRecoveryDeviceKeyRequest
-	4,  // 9: user.administration.v1.UserDeviceService.RevokeDeviceSessions:input_type -> user.administration.v1.RevokeDeviceSessionsRequest
-	1,  // 10: user.administration.v1.UserDeviceService.ListDevices:output_type -> user.administration.v1.ListDevicesResponse
-	7,  // 11: user.administration.v1.UserDeviceService.TrustDevice:output_type -> user.administration.v1.Device
-	7,  // 12: user.administration.v1.UserDeviceService.RegisterRecoveryDeviceKey:output_type -> user.administration.v1.Device
-	8,  // 13: user.administration.v1.UserDeviceService.RevokeDeviceSessions:output_type -> google.protobuf.Empty
-	10, // [10:14] is the sub-list for method output_type
-	6,  // [6:10] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	5, // 0: user.administration.v1.ListDevicesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	6, // 1: user.administration.v1.ListDevicesResponse.items:type_name -> user.administration.v1.Device
+	0, // 2: user.administration.v1.UserDeviceService.ListDevices:input_type -> user.administration.v1.ListDevicesRequest
+	2, // 3: user.administration.v1.UserDeviceService.TrustDevice:input_type -> user.administration.v1.TrustDeviceRequest
+	3, // 4: user.administration.v1.UserDeviceService.RegisterRecoveryDeviceKey:input_type -> user.administration.v1.RegisterRecoveryDeviceKeyRequest
+	4, // 5: user.administration.v1.UserDeviceService.RevokeDeviceSessions:input_type -> user.administration.v1.RevokeDeviceSessionsRequest
+	1, // 6: user.administration.v1.UserDeviceService.ListDevices:output_type -> user.administration.v1.ListDevicesResponse
+	6, // 7: user.administration.v1.UserDeviceService.TrustDevice:output_type -> user.administration.v1.Device
+	6, // 8: user.administration.v1.UserDeviceService.RegisterRecoveryDeviceKey:output_type -> user.administration.v1.Device
+	7, // 9: user.administration.v1.UserDeviceService.RevokeDeviceSessions:output_type -> google.protobuf.Empty
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_device_proto_init() }

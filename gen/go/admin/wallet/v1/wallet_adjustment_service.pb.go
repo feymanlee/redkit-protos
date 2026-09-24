@@ -28,7 +28,7 @@ const (
 // AdminCreateWalletAdjustmentRequest 定义创建 WalletAdjustment 的幂等命令参数。
 type AdminCreateWalletAdjustmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency *v1.WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
@@ -315,7 +315,7 @@ type AdminWalletAdjustmentFilter struct {
 	Status *v1.WalletAdjustment_Status `protobuf:"varint,1,opt,name=status,proto3,enum=wallet.v1.WalletAdjustment_Status,oneof" json:"status,omitempty"`
 	// requester_id 标识关联的 Requester。
 	RequesterId *uint32 `protobuf:"varint,2,opt,name=requester_id,json=requesterId,proto3,oneof" json:"requester_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// minimum_age_seconds 以秒表示对应流程的持续时间或上限。
 	MinimumAgeSeconds *uint64 `protobuf:"varint,4,opt,name=minimum_age_seconds,json=minimumAgeSeconds,proto3,oneof" json:"minimum_age_seconds,omitempty"`

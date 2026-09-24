@@ -23,59 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// 平台固定 App 标识。
-type AppId int32
-
-const (
-	// 未指定 App。
-	AppId_APP_ID_UNSPECIFIED AppId = 0
-	// Gamoji App。
-	AppId_APP_ID_GAMOJI AppId = 1
-	// Pincp App。
-	AppId_APP_ID_PINCP AppId = 2
-)
-
-// Enum value maps for AppId.
-var (
-	AppId_name = map[int32]string{
-		0: "APP_ID_UNSPECIFIED",
-		1: "APP_ID_GAMOJI",
-		2: "APP_ID_PINCP",
-	}
-	AppId_value = map[string]int32{
-		"APP_ID_UNSPECIFIED": 0,
-		"APP_ID_GAMOJI":      1,
-		"APP_ID_PINCP":       2,
-	}
-)
-
-func (x AppId) Enum() *AppId {
-	p := new(AppId)
-	*p = x
-	return p
-}
-
-func (x AppId) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (AppId) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_common_proto_enumTypes[0].Descriptor()
-}
-
-func (AppId) Type() protoreflect.EnumType {
-	return &file_common_v1_common_proto_enumTypes[0]
-}
-
-func (x AppId) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use AppId.Descriptor instead.
-func (AppId) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_common_proto_rawDescGZIP(), []int{0}
-}
-
+// 平台固定 App 标识（enum AppId，编号 0-2）已随平台收敛为单一 App 删除，见 ADR 0075；不得复用这些编号或名称。
 // 用户引用。
 type UserRef struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -355,11 +303,7 @@ const file_common_v1_common_proto_rawDesc = "" +
 	"\bcurrency\x18\x02 \x01(\tB\x13\xbaG\x10\x92\x02\rCurrency codeR\bcurrency\"\x8e\x01\n" +
 	"\vVirtualCoin\x12F\n" +
 	"\x06amount\x18\x01 \x01(\x03B.\xbaG+\x92\x02(Virtual coin amount in the smallest unitR\x06amount\x127\n" +
-	"\bcurrency\x18\x02 \x01(\tB\x1b\xbaG\x18\x92\x02\x15Virtual currency codeR\bcurrency*D\n" +
-	"\x05AppId\x12\x16\n" +
-	"\x12APP_ID_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rAPP_ID_GAMOJI\x10\x01\x12\x10\n" +
-	"\fAPP_ID_PINCP\x10\x02B\x9f\x01\n" +
+	"\bcurrency\x18\x02 \x01(\tB\x1b\xbaG\x18\x92\x02\x15Virtual currency codeR\bcurrencyB\x9f\x01\n" +
 	"\rcom.common.v1B\vCommonProtoP\x01Z<github.com/feymanlee/redkit-protos/gen/go/common/v1;commonpb\xa2\x02\x03CXX\xaa\x02\tCommon.V1\xca\x02\tCommon\\V1\xe2\x02\x15Common\\V1\\GPBMetadata\xea\x02\n" +
 	"Common::V1b\x06proto3"
 
@@ -375,20 +319,18 @@ func file_common_v1_common_proto_rawDescGZIP() []byte {
 	return file_common_v1_common_proto_rawDescData
 }
 
-var file_common_v1_common_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_common_v1_common_proto_goTypes = []any{
-	(AppId)(0),                    // 0: common.v1.AppId
-	(*UserRef)(nil),               // 1: common.v1.UserRef
-	(*AuditFields)(nil),           // 2: common.v1.AuditFields
-	(*Money)(nil),                 // 3: common.v1.Money
-	(*VirtualCoin)(nil),           // 4: common.v1.VirtualCoin
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
+	(*UserRef)(nil),               // 0: common.v1.UserRef
+	(*AuditFields)(nil),           // 1: common.v1.AuditFields
+	(*Money)(nil),                 // 2: common.v1.Money
+	(*VirtualCoin)(nil),           // 3: common.v1.VirtualCoin
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_common_v1_common_proto_depIdxs = []int32{
-	5, // 0: common.v1.AuditFields.created_at:type_name -> google.protobuf.Timestamp
-	5, // 1: common.v1.AuditFields.updated_at:type_name -> google.protobuf.Timestamp
-	5, // 2: common.v1.AuditFields.deleted_at:type_name -> google.protobuf.Timestamp
+	4, // 0: common.v1.AuditFields.created_at:type_name -> google.protobuf.Timestamp
+	4, // 1: common.v1.AuditFields.updated_at:type_name -> google.protobuf.Timestamp
+	4, // 2: common.v1.AuditFields.deleted_at:type_name -> google.protobuf.Timestamp
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -407,14 +349,13 @@ func file_common_v1_common_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_common_proto_rawDesc), len(file_common_v1_common_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_common_v1_common_proto_goTypes,
 		DependencyIndexes: file_common_v1_common_proto_depIdxs,
-		EnumInfos:         file_common_v1_common_proto_enumTypes,
 		MessageInfos:      file_common_v1_common_proto_msgTypes,
 	}.Build()
 	File_common_v1_common_proto = out.File

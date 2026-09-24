@@ -35,7 +35,7 @@ const (
 //
 // 礼物分账管理服务。
 type GiftSettlementServiceClient interface {
-	// 按 typed filter 分页查询当前 App 的 Settlement Record；只读，不提供编辑或覆盖。
+	// 按 typed filter 分页查询 Settlement Record；只读，不提供编辑或覆盖。
 	ListGiftSettlementRecords(ctx context.Context, in *AdminListGiftSettlementRecordsRequest, opts ...grpc.CallOption) (*v1.ListGiftSettlementRecordResponse, error)
 	// 查询 Settlement Reconciliation Issue 工作台。
 	ListGiftReconciliationIssues(ctx context.Context, in *AdminListGiftReconciliationIssuesRequest, opts ...grpc.CallOption) (*v1.ListGiftReconciliationIssuesResponse, error)
@@ -135,7 +135,7 @@ func (c *giftSettlementServiceClient) ReconcileGiftSettlement(ctx context.Contex
 //
 // 礼物分账管理服务。
 type GiftSettlementServiceServer interface {
-	// 按 typed filter 分页查询当前 App 的 Settlement Record；只读，不提供编辑或覆盖。
+	// 按 typed filter 分页查询 Settlement Record；只读，不提供编辑或覆盖。
 	ListGiftSettlementRecords(context.Context, *AdminListGiftSettlementRecordsRequest) (*v1.ListGiftSettlementRecordResponse, error)
 	// 查询 Settlement Reconciliation Issue 工作台。
 	ListGiftReconciliationIssues(context.Context, *AdminListGiftReconciliationIssuesRequest) (*v1.ListGiftReconciliationIssuesResponse, error)

@@ -8,7 +8,6 @@ package userconsumerpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -463,8 +462,6 @@ func (x *UserRecovery) GetCompletedAt() *timestamppb.Timestamp {
 // StartUserRecoveryRequest 定义启动 UserRecovery 的幂等管理命令参数。
 type StartUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 StartUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// StartUserRecoveryRequest 使用以下一种方式定位目标资源。
 	//
 	// Types that are valid to be assigned to UserLocator:
@@ -510,13 +507,6 @@ func (x *StartUserRecoveryRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use StartUserRecoveryRequest.ProtoReflect.Descriptor instead.
 func (*StartUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *StartUserRecoveryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *StartUserRecoveryRequest) GetUserLocator() isStartUserRecoveryRequest_UserLocator {
@@ -641,8 +631,6 @@ func (x *StartUserRecoveryResponse) GetExpiresAt() *timestamppb.Timestamp {
 // GetUserRecoveryRequest 标识待查询的 UserRecovery。
 type GetUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
 	unknownFields        protoimpl.UnknownFields
@@ -679,13 +667,6 @@ func (*GetUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetUserRecoveryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetUserRecoveryRequest) GetRecoveryContinuation() string {
 	if x != nil {
 		return x.RecoveryContinuation
@@ -696,8 +677,6 @@ func (x *GetUserRecoveryRequest) GetRecoveryContinuation() string {
 // CancelUserRecoveryRequest 定义取消 UserRecovery 的幂等管理命令参数。
 type CancelUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CancelUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -736,13 +715,6 @@ func (*CancelUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CancelUserRecoveryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CancelUserRecoveryRequest) GetRecoveryContinuation() string {
 	if x != nil {
 		return x.RecoveryContinuation
@@ -760,8 +732,6 @@ func (x *CancelUserRecoveryRequest) GetIdempotencyKey() string {
 // CreateTrustedDeviceRecoveryChallengeRequest 定义创建 TrustedDeviceRecoveryChallenge 的幂等命令参数。
 type CreateTrustedDeviceRecoveryChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
 	// device_id 标识关联的 Device。
@@ -800,13 +770,6 @@ func (x *CreateTrustedDeviceRecoveryChallengeRequest) ProtoReflect() protoreflec
 // Deprecated: Use CreateTrustedDeviceRecoveryChallengeRequest.ProtoReflect.Descriptor instead.
 func (*CreateTrustedDeviceRecoveryChallengeRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *CreateTrustedDeviceRecoveryChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateTrustedDeviceRecoveryChallengeRequest) GetRecoveryContinuation() string {
@@ -897,8 +860,6 @@ func (x *TrustedDeviceRecoveryChallenge) GetExpiresAt() *timestamppb.Timestamp {
 // VerifyTrustedDeviceRecoveryChallengeRequest 定义校验 TrustedDeviceRecoveryChallenge 的幂等管理命令参数。
 type VerifyTrustedDeviceRecoveryChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 VerifyTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
 	// device_id 标识关联的 Device。
@@ -943,13 +904,6 @@ func (x *VerifyTrustedDeviceRecoveryChallengeRequest) ProtoReflect() protoreflec
 // Deprecated: Use VerifyTrustedDeviceRecoveryChallengeRequest.ProtoReflect.Descriptor instead.
 func (*VerifyTrustedDeviceRecoveryChallengeRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *VerifyTrustedDeviceRecoveryChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *VerifyTrustedDeviceRecoveryChallengeRequest) GetRecoveryContinuation() string {
@@ -997,8 +951,6 @@ func (x *VerifyTrustedDeviceRecoveryChallengeRequest) GetIdempotencyKey() string
 // SubmitPaymentRecoveryEvidenceRequest 定义提交 PaymentRecoveryEvidence 的幂等管理命令参数。
 type SubmitPaymentRecoveryEvidenceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 SubmitPaymentRecoveryEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
@@ -1041,13 +993,6 @@ func (*SubmitPaymentRecoveryEvidenceRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *SubmitPaymentRecoveryEvidenceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *SubmitPaymentRecoveryEvidenceRequest) GetRecoveryContinuation() string {
 	if x != nil {
 		return x.RecoveryContinuation
@@ -1079,8 +1024,6 @@ func (x *SubmitPaymentRecoveryEvidenceRequest) GetIdempotencyKey() string {
 // ClaimRecoveryGrantRequest 定义执行 ClaimRecoveryGrant 的幂等管理命令参数。
 type ClaimRecoveryGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ClaimRecoveryGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	RecoveryContinuation string `protobuf:"bytes,2,opt,name=recovery_continuation,json=recoveryContinuation,proto3" json:"recovery_continuation,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -1117,13 +1060,6 @@ func (x *ClaimRecoveryGrantRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ClaimRecoveryGrantRequest.ProtoReflect.Descriptor instead.
 func (*ClaimRecoveryGrantRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *ClaimRecoveryGrantRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ClaimRecoveryGrantRequest) GetRecoveryContinuation() string {
@@ -1198,8 +1134,6 @@ func (x *RecoveryGrant) GetExpiresAt() *timestamppb.Timestamp {
 // CompleteUserRecoveryRequest 定义完成 UserRecovery 的幂等管理命令参数。
 type CompleteUserRecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompleteUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
 	Grant string `protobuf:"bytes,2,opt,name=grant,proto3" json:"grant,omitempty"`
 	// new_phone 承载按约定地区规则规范化的手机号码。
@@ -1240,13 +1174,6 @@ func (x *CompleteUserRecoveryRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CompleteUserRecoveryRequest.ProtoReflect.Descriptor instead.
 func (*CompleteUserRecoveryRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_recovery_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *CompleteUserRecoveryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CompleteUserRecoveryRequest) GetGrant() string {
@@ -1336,7 +1263,7 @@ var File_user_consumer_v1_recovery_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"\n" +
-	"\x1fuser/consumer/v1/recovery.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xa2\x02\n" +
+	"\x1fuser/consumer/v1/recovery.proto\x12\x10user.consumer.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xa2\x02\n" +
 	"\x10RecoveryEvidence\x12:\n" +
 	"\x04type\x18\x01 \x01(\x0e2&.user.consumer.v1.RecoveryEvidenceTypeR\x04type\x12@\n" +
 	"\x06status\x18\x02 \x01(\x0e2(.user.consumer.v1.RecoveryEvidenceStatusR\x06status\x12\x1b\n" +
@@ -1354,9 +1281,8 @@ const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"\fsubmitted_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\vsubmittedAt\x129\n" +
 	"\n" +
 	"expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12=\n" +
-	"\fcompleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"\x8c\x03\n" +
-	"\x18StartUserRecoveryRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12(\n" +
+	"\fcompleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"\xd4\x02\n" +
+	"\x18StartUserRecoveryRequest\x12(\n" +
 	"\tuser_code\x18\x02 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14H\x00R\buserCode\x12D\n" +
 	"\rcurrent_phone\x18\x03 \x01(\tB\x1d\xfaB\x1ar\x18\x18\x102\x14^\\+[1-9][0-9]{7,14}$H\x00R\fcurrentPhone\x12;\n" +
 	"\tnew_phone\x18\x04 \x01(\tB\x1e\xe0A\x02\xfaB\x18r\x162\x14^\\+[1-9][0-9]{7,14}$R\bnewPhone\x12>\n" +
@@ -1366,16 +1292,13 @@ const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"\x19StartUserRecoveryResponse\x123\n" +
 	"\x15recovery_continuation\x18\x01 \x01(\tR\x14recoveryContinuation\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x94\x01\n" +
-	"\x16GetUserRecoveryRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
-	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\"\xcf\x01\n" +
-	"\x19CancelUserRecoveryRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\\\n" +
+	"\x16GetUserRecoveryRequest\x12B\n" +
+	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\"\x97\x01\n" +
+	"\x19CancelUserRecoveryRequest\x12B\n" +
 	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x8a\x02\n" +
-	"+CreateTrustedDeviceRecoveryChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xd2\x01\n" +
+	"+CreateTrustedDeviceRecoveryChallengeRequest\x12B\n" +
 	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\x12'\n" +
 	"\tdevice_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\bdeviceId\x126\n" +
@@ -1384,32 +1307,28 @@ const file_user_consumer_v1_recovery_proto_rawDesc = "" +
 	"\fchallenge_no\x18\x01 \x01(\tR\vchallengeNo\x12\x1c\n" +
 	"\tchallenge\x18\x02 \x01(\tR\tchallenge\x129\n" +
 	"\n" +
-	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x94\x03\n" +
-	"+VerifyTrustedDeviceRecoveryChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
+	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xdc\x02\n" +
+	"+VerifyTrustedDeviceRecoveryChallengeRequest\x12B\n" +
 	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\x12'\n" +
 	"\tdevice_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\bdeviceId\x12/\n" +
 	"\fchallenge_no\x18\x04 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\vchallengeNo\x12+\n" +
 	"\tchallenge\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x10R\tchallenge\x12*\n" +
 	"\tsignature\x18\x06 \x01(\fB\f\xe0A\x02\xfaB\x06z\x04\x10@\x18@R\tsignature\x126\n" +
-	"\x0fidempotency_key\x18\a \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xda\x02\n" +
-	"$SubmitPaymentRecoveryEvidenceRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
+	"\x0fidempotency_key\x18\a \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa2\x02\n" +
+	"$SubmitPaymentRecoveryEvidenceRequest\x12B\n" +
 	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\x12T\n" +
 	"\bprovider\x18\x03 \x01(\x0e2).user.consumer.v1.RecoveryPaymentProviderB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\bprovider\x12(\n" +
 	"\areceipt\x18\x04 \x01(\tB\x0e\xe0A\x02\xfaB\br\x06\x10\x01\x18\x80\x80\bR\areceipt\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xcf\x01\n" +
-	"\x19ClaimRecoveryGrantRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12B\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x97\x01\n" +
+	"\x19ClaimRecoveryGrantRequest\x12B\n" +
 	"\x15recovery_continuation\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x14recoveryContinuation\x126\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"`\n" +
 	"\rRecoveryGrant\x12\x14\n" +
 	"\x05grant\x18\x01 \x01(\tR\x05grant\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xb1\x02\n" +
-	"\x1bCompleteUserRecoveryRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xf9\x01\n" +
+	"\x1bCompleteUserRecoveryRequest\x12#\n" +
 	"\x05grant\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x05grant\x12=\n" +
 	"\tnew_phone\x18\x03 \x01(\tB \xe0A\x02\xfaB\x1ar\x18\x18\x102\x14^\\+[1-9][0-9]{7,14}$R\bnewPhone\x12>\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x10R\x12verificationTicket\x126\n" +
@@ -1488,7 +1407,6 @@ var file_user_consumer_v1_recovery_proto_goTypes = []any{
 	(*CompleteUserRecoveryRequest)(nil),                 // 16: user.consumer.v1.CompleteUserRecoveryRequest
 	(*CompleteUserRecoveryResponse)(nil),                // 17: user.consumer.v1.CompleteUserRecoveryResponse
 	(*timestamppb.Timestamp)(nil),                       // 18: google.protobuf.Timestamp
-	(v1.AppId)(0),                                       // 19: common.v1.AppId
 }
 var file_user_consumer_v1_recovery_proto_depIdxs = []int32{
 	1,  // 0: user.consumer.v1.RecoveryEvidence.type:type_name -> user.consumer.v1.RecoveryEvidenceType
@@ -1499,41 +1417,33 @@ var file_user_consumer_v1_recovery_proto_depIdxs = []int32{
 	18, // 5: user.consumer.v1.UserRecovery.submitted_at:type_name -> google.protobuf.Timestamp
 	18, // 6: user.consumer.v1.UserRecovery.expires_at:type_name -> google.protobuf.Timestamp
 	18, // 7: user.consumer.v1.UserRecovery.completed_at:type_name -> google.protobuf.Timestamp
-	19, // 8: user.consumer.v1.StartUserRecoveryRequest.app_id:type_name -> common.v1.AppId
-	18, // 9: user.consumer.v1.StartUserRecoveryResponse.expires_at:type_name -> google.protobuf.Timestamp
-	19, // 10: user.consumer.v1.GetUserRecoveryRequest.app_id:type_name -> common.v1.AppId
-	19, // 11: user.consumer.v1.CancelUserRecoveryRequest.app_id:type_name -> common.v1.AppId
-	19, // 12: user.consumer.v1.CreateTrustedDeviceRecoveryChallengeRequest.app_id:type_name -> common.v1.AppId
-	18, // 13: user.consumer.v1.TrustedDeviceRecoveryChallenge.expires_at:type_name -> google.protobuf.Timestamp
-	19, // 14: user.consumer.v1.VerifyTrustedDeviceRecoveryChallengeRequest.app_id:type_name -> common.v1.AppId
-	19, // 15: user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest.app_id:type_name -> common.v1.AppId
-	3,  // 16: user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest.provider:type_name -> user.consumer.v1.RecoveryPaymentProvider
-	19, // 17: user.consumer.v1.ClaimRecoveryGrantRequest.app_id:type_name -> common.v1.AppId
-	18, // 18: user.consumer.v1.RecoveryGrant.expires_at:type_name -> google.protobuf.Timestamp
-	19, // 19: user.consumer.v1.CompleteUserRecoveryRequest.app_id:type_name -> common.v1.AppId
-	0,  // 20: user.consumer.v1.CompleteUserRecoveryResponse.status:type_name -> user.consumer.v1.UserRecoveryStatus
-	18, // 21: user.consumer.v1.CompleteUserRecoveryResponse.completed_at:type_name -> google.protobuf.Timestamp
-	6,  // 22: user.consumer.v1.ConsumerRecoveryService.StartUserRecovery:input_type -> user.consumer.v1.StartUserRecoveryRequest
-	8,  // 23: user.consumer.v1.ConsumerRecoveryService.GetUserRecovery:input_type -> user.consumer.v1.GetUserRecoveryRequest
-	9,  // 24: user.consumer.v1.ConsumerRecoveryService.CancelUserRecovery:input_type -> user.consumer.v1.CancelUserRecoveryRequest
-	10, // 25: user.consumer.v1.ConsumerRecoveryService.CreateTrustedDeviceRecoveryChallenge:input_type -> user.consumer.v1.CreateTrustedDeviceRecoveryChallengeRequest
-	12, // 26: user.consumer.v1.ConsumerRecoveryService.VerifyTrustedDeviceRecoveryChallenge:input_type -> user.consumer.v1.VerifyTrustedDeviceRecoveryChallengeRequest
-	13, // 27: user.consumer.v1.ConsumerRecoveryService.SubmitPaymentRecoveryEvidence:input_type -> user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest
-	14, // 28: user.consumer.v1.ConsumerRecoveryService.ClaimRecoveryGrant:input_type -> user.consumer.v1.ClaimRecoveryGrantRequest
-	16, // 29: user.consumer.v1.ConsumerRecoveryService.CompleteUserRecovery:input_type -> user.consumer.v1.CompleteUserRecoveryRequest
-	7,  // 30: user.consumer.v1.ConsumerRecoveryService.StartUserRecovery:output_type -> user.consumer.v1.StartUserRecoveryResponse
-	5,  // 31: user.consumer.v1.ConsumerRecoveryService.GetUserRecovery:output_type -> user.consumer.v1.UserRecovery
-	5,  // 32: user.consumer.v1.ConsumerRecoveryService.CancelUserRecovery:output_type -> user.consumer.v1.UserRecovery
-	11, // 33: user.consumer.v1.ConsumerRecoveryService.CreateTrustedDeviceRecoveryChallenge:output_type -> user.consumer.v1.TrustedDeviceRecoveryChallenge
-	4,  // 34: user.consumer.v1.ConsumerRecoveryService.VerifyTrustedDeviceRecoveryChallenge:output_type -> user.consumer.v1.RecoveryEvidence
-	4,  // 35: user.consumer.v1.ConsumerRecoveryService.SubmitPaymentRecoveryEvidence:output_type -> user.consumer.v1.RecoveryEvidence
-	15, // 36: user.consumer.v1.ConsumerRecoveryService.ClaimRecoveryGrant:output_type -> user.consumer.v1.RecoveryGrant
-	17, // 37: user.consumer.v1.ConsumerRecoveryService.CompleteUserRecovery:output_type -> user.consumer.v1.CompleteUserRecoveryResponse
-	30, // [30:38] is the sub-list for method output_type
-	22, // [22:30] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	18, // 8: user.consumer.v1.StartUserRecoveryResponse.expires_at:type_name -> google.protobuf.Timestamp
+	18, // 9: user.consumer.v1.TrustedDeviceRecoveryChallenge.expires_at:type_name -> google.protobuf.Timestamp
+	3,  // 10: user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest.provider:type_name -> user.consumer.v1.RecoveryPaymentProvider
+	18, // 11: user.consumer.v1.RecoveryGrant.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 12: user.consumer.v1.CompleteUserRecoveryResponse.status:type_name -> user.consumer.v1.UserRecoveryStatus
+	18, // 13: user.consumer.v1.CompleteUserRecoveryResponse.completed_at:type_name -> google.protobuf.Timestamp
+	6,  // 14: user.consumer.v1.ConsumerRecoveryService.StartUserRecovery:input_type -> user.consumer.v1.StartUserRecoveryRequest
+	8,  // 15: user.consumer.v1.ConsumerRecoveryService.GetUserRecovery:input_type -> user.consumer.v1.GetUserRecoveryRequest
+	9,  // 16: user.consumer.v1.ConsumerRecoveryService.CancelUserRecovery:input_type -> user.consumer.v1.CancelUserRecoveryRequest
+	10, // 17: user.consumer.v1.ConsumerRecoveryService.CreateTrustedDeviceRecoveryChallenge:input_type -> user.consumer.v1.CreateTrustedDeviceRecoveryChallengeRequest
+	12, // 18: user.consumer.v1.ConsumerRecoveryService.VerifyTrustedDeviceRecoveryChallenge:input_type -> user.consumer.v1.VerifyTrustedDeviceRecoveryChallengeRequest
+	13, // 19: user.consumer.v1.ConsumerRecoveryService.SubmitPaymentRecoveryEvidence:input_type -> user.consumer.v1.SubmitPaymentRecoveryEvidenceRequest
+	14, // 20: user.consumer.v1.ConsumerRecoveryService.ClaimRecoveryGrant:input_type -> user.consumer.v1.ClaimRecoveryGrantRequest
+	16, // 21: user.consumer.v1.ConsumerRecoveryService.CompleteUserRecovery:input_type -> user.consumer.v1.CompleteUserRecoveryRequest
+	7,  // 22: user.consumer.v1.ConsumerRecoveryService.StartUserRecovery:output_type -> user.consumer.v1.StartUserRecoveryResponse
+	5,  // 23: user.consumer.v1.ConsumerRecoveryService.GetUserRecovery:output_type -> user.consumer.v1.UserRecovery
+	5,  // 24: user.consumer.v1.ConsumerRecoveryService.CancelUserRecovery:output_type -> user.consumer.v1.UserRecovery
+	11, // 25: user.consumer.v1.ConsumerRecoveryService.CreateTrustedDeviceRecoveryChallenge:output_type -> user.consumer.v1.TrustedDeviceRecoveryChallenge
+	4,  // 26: user.consumer.v1.ConsumerRecoveryService.VerifyTrustedDeviceRecoveryChallenge:output_type -> user.consumer.v1.RecoveryEvidence
+	4,  // 27: user.consumer.v1.ConsumerRecoveryService.SubmitPaymentRecoveryEvidence:output_type -> user.consumer.v1.RecoveryEvidence
+	15, // 28: user.consumer.v1.ConsumerRecoveryService.ClaimRecoveryGrant:output_type -> user.consumer.v1.RecoveryGrant
+	17, // 29: user.consumer.v1.ConsumerRecoveryService.CompleteUserRecovery:output_type -> user.consumer.v1.CompleteUserRecoveryResponse
+	22, // [22:30] is the sub-list for method output_type
+	14, // [14:22] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_user_consumer_v1_recovery_proto_init() }

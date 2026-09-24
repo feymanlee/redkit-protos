@@ -7,8 +7,8 @@
 package walletpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -144,9 +144,7 @@ type WalletIntervention struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 WalletIntervention。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 WalletIntervention 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// type 区分 WalletIntervention 的业务类型。
 	Type *WalletIntervention_Type `protobuf:"varint,4,opt,name=type,proto3,enum=wallet.v1.WalletIntervention_Type,oneof" json:"type,omitempty"`
@@ -215,13 +213,6 @@ func (*WalletIntervention) Descriptor() ([]byte, []int) {
 func (x *WalletIntervention) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletIntervention) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -341,8 +332,6 @@ func (x *WalletIntervention) GetUpdatedAt() *timestamppb.Timestamp {
 // CreateWalletInterventionRequest 定义创建 WalletIntervention 的幂等命令参数。
 type CreateWalletInterventionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateWalletIntervention 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// type 区分 CreateWalletIntervention 的业务类型。
 	Type WalletIntervention_Type `protobuf:"varint,2,opt,name=type,proto3,enum=wallet.v1.WalletIntervention_Type" json:"type,omitempty"`
 	// target_freeze_no 是 CreateWalletIntervention 对外关联与审计使用的业务编号。
@@ -389,13 +378,6 @@ func (x *CreateWalletInterventionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateWalletInterventionRequest.ProtoReflect.Descriptor instead.
 func (*CreateWalletInterventionRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_intervention_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *CreateWalletInterventionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateWalletInterventionRequest) GetType() WalletIntervention_Type {
@@ -456,8 +438,6 @@ type ReviewWalletInterventionRequest struct {
 	ReviewerId uint32 `protobuf:"varint,2,opt,name=reviewer_id,json=reviewerId,proto3" json:"reviewer_id,omitempty"`
 	// review_note 记录人工判断的补充说明，供审计与复核。
 	ReviewNote *string `protobuf:"bytes,3,opt,name=review_note,json=reviewNote,proto3,oneof" json:"review_note,omitempty"`
-	// app_id 限定 ReviewWalletIntervention 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// governance 承载 ReviewWalletIntervention 关联的 WalletGovernanceIdentity。
 	Governance    *WalletGovernanceIdentity `protobuf:"bytes,5,opt,name=governance,proto3,oneof" json:"governance,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -515,13 +495,6 @@ func (x *ReviewWalletInterventionRequest) GetReviewNote() string {
 	return ""
 }
 
-func (x *ReviewWalletInterventionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ReviewWalletInterventionRequest) GetGovernance() *WalletGovernanceIdentity {
 	if x != nil {
 		return x.Governance
@@ -538,7 +511,7 @@ type WalletInterventionFilter struct {
 	Status *WalletIntervention_Status `protobuf:"varint,2,opt,name=status,proto3,enum=wallet.v1.WalletIntervention_Status,oneof" json:"status,omitempty"`
 	// requester_id 标识关联的 Requester。
 	RequesterId *uint32 `protobuf:"varint,3,opt,name=requester_id,json=requesterId,proto3,oneof" json:"requester_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// minimum_age_seconds 以秒表示对应流程的持续时间或上限。
 	MinimumAgeSeconds *uint64 `protobuf:"varint,5,opt,name=minimum_age_seconds,json=minimumAgeSeconds,proto3,oneof" json:"minimum_age_seconds,omitempty"`
@@ -614,10 +587,8 @@ func (x *WalletInterventionFilter) GetMinimumAgeSeconds() uint64 {
 // ListWalletInterventionsRequest 定义 WalletInterventions 的筛选与分页参数。
 type ListWalletInterventionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListWalletInterventions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter        *WalletInterventionFilter `protobuf:"bytes,3,opt,name=filter,proto3,oneof" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -654,14 +625,7 @@ func (*ListWalletInterventionsRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_intervention_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ListWalletInterventionsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListWalletInterventionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListWalletInterventionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -734,36 +698,35 @@ var File_wallet_v1_intervention_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_intervention_proto_rawDesc = "" +
 	"\n" +
-	"\x1cwallet/v1/intervention.proto\x12\twallet.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xc2\n" +
+	"\x1cwallet/v1/intervention.proto\x12\twallet.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\x9b\n" +
 	"\n" +
 	"\x12WalletIntervention\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12;\n" +
-	"\x04type\x18\x04 \x01(\x0e2\".wallet.v1.WalletIntervention.TypeH\x03R\x04type\x88\x01\x01\x12A\n" +
-	"\x06status\x18\x05 \x01(\x0e2$.wallet.v1.WalletIntervention.StatusH\x04R\x06status\x88\x01\x01\x12\x1b\n" +
-	"\x06reason\x18\x06 \x01(\tH\x05R\x06reason\x88\x01\x01\x12&\n" +
-	"\frequester_id\x18\a \x01(\rH\x06R\vrequesterId\x88\x01\x01\x12$\n" +
-	"\vreviewer_id\x18\b \x01(\rH\aR\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12;\n" +
+	"\x04type\x18\x04 \x01(\x0e2\".wallet.v1.WalletIntervention.TypeH\x02R\x04type\x88\x01\x01\x12A\n" +
+	"\x06status\x18\x05 \x01(\x0e2$.wallet.v1.WalletIntervention.StatusH\x03R\x06status\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x06 \x01(\tH\x04R\x06reason\x88\x01\x01\x12&\n" +
+	"\frequester_id\x18\a \x01(\rH\x05R\vrequesterId\x88\x01\x01\x12$\n" +
+	"\vreviewer_id\x18\b \x01(\rH\x06R\n" +
 	"reviewerId\x88\x01\x01\x12$\n" +
-	"\vreview_note\x18\t \x01(\tH\bR\n" +
+	"\vreview_note\x18\t \x01(\tH\aR\n" +
 	"reviewNote\x88\x01\x01\x12,\n" +
 	"\x0fidempotency_key\x18\n" +
-	" \x01(\tH\tR\x0eidempotencyKey\x88\x01\x01\x12-\n" +
-	"\x10target_freeze_no\x18\v \x01(\tH\n" +
-	"R\x0etargetFreezeNo\x88\x01\x01\x127\n" +
-	"\x15target_transaction_id\x18\f \x01(\x04H\vR\x13targetTransactionId\x88\x01\x01\x127\n" +
-	"\x15result_transaction_id\x18\r \x01(\x04H\fR\x13resultTransactionId\x88\x01\x01\x12>\n" +
+	" \x01(\tH\bR\x0eidempotencyKey\x88\x01\x01\x12-\n" +
+	"\x10target_freeze_no\x18\v \x01(\tH\tR\x0etargetFreezeNo\x88\x01\x01\x127\n" +
+	"\x15target_transaction_id\x18\f \x01(\x04H\n" +
+	"R\x13targetTransactionId\x88\x01\x01\x127\n" +
+	"\x15result_transaction_id\x18\r \x01(\x04H\vR\x13resultTransactionId\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expires_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\rR\texpiresAt\x88\x01\x01\x12@\n" +
-	"\vreviewed_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\n" +
+	"expires_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\fR\texpiresAt\x88\x01\x01\x12@\n" +
+	"\vreviewed_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\n" +
 	"reviewedAt\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expired_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\texpiredAt\x88\x01\x01\x12?\n" +
+	"expired_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\texpiredAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01\"K\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tupdatedAt\x88\x01\x01\"K\n" +
 	"\x04Type\x12\x14\n" +
 	"\x10TYPE_UNSPECIFIED\x10\x00\x12\x13\n" +
 	"\x0fMANUAL_UNFREEZE\x10\x01\x12\x18\n" +
@@ -774,8 +737,7 @@ const file_wallet_v1_intervention_proto_rawDesc = "" +
 	"\aAPPLIED\x10\x02\x12\f\n" +
 	"\bREJECTED\x10\x03\x12\v\n" +
 	"\aEXPIRED\x10\x04B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\a\n" +
 	"\x05_typeB\t\n" +
@@ -792,9 +754,8 @@ const file_wallet_v1_intervention_proto_rawDesc = "" +
 	"\f_reviewed_atB\r\n" +
 	"\v_expired_atB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xef\x03\n" +
-	"\x1fCreateWalletInterventionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12;\n" +
+	"\v_updated_at\"\xc1\x03\n" +
+	"\x1fCreateWalletInterventionRequest\x12;\n" +
 	"\x04type\x18\x02 \x01(\x0e2\".wallet.v1.WalletIntervention.TypeB\x03\xe0A\x02R\x04type\x12-\n" +
 	"\x10target_freeze_no\x18\x03 \x01(\tH\x00R\x0etargetFreezeNo\x88\x01\x01\x127\n" +
 	"\x15target_transaction_id\x18\x04 \x01(\x04H\x01R\x13targetTransactionId\x88\x01\x01\x12\x1b\n" +
@@ -806,19 +767,17 @@ const file_wallet_v1_intervention_proto_rawDesc = "" +
 	"governance\x88\x01\x01B\x13\n" +
 	"\x11_target_freeze_noB\x18\n" +
 	"\x16_target_transaction_idB\r\n" +
-	"\v_governance\"\xbd\x02\n" +
+	"\v_governance\"\x84\x02\n" +
 	"\x1fReviewWalletInterventionRequest\x12,\n" +
 	"\x0fintervention_id\x18\x01 \x01(\x04B\x03\xe0A\x02R\x0einterventionId\x12$\n" +
 	"\vreviewer_id\x18\x02 \x01(\rB\x03\xe0A\x02R\n" +
 	"reviewerId\x12$\n" +
 	"\vreview_note\x18\x03 \x01(\tH\x00R\n" +
-	"reviewNote\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01\x12H\n" +
+	"reviewNote\x88\x01\x01\x12H\n" +
 	"\n" +
-	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x02R\n" +
+	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
 	"governance\x88\x01\x01B\x0e\n" +
-	"\f_review_noteB\t\n" +
-	"\a_app_idB\r\n" +
+	"\f_review_noteB\r\n" +
 	"\v_governance\"\xde\x02\n" +
 	"\x18WalletInterventionFilter\x12;\n" +
 	"\x04type\x18\x01 \x01(\x0e2\".wallet.v1.WalletIntervention.TypeH\x00R\x04type\x88\x01\x01\x12A\n" +
@@ -831,12 +790,10 @@ const file_wallet_v1_intervention_proto_rawDesc = "" +
 	"\r_requester_idB\n" +
 	"\n" +
 	"\b_user_idB\x16\n" +
-	"\x14_minimum_age_seconds\"\xe3\x01\n" +
-	"\x1eListWalletInterventionsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
+	"\x14_minimum_age_seconds\"\xaa\x01\n" +
+	"\x1eListWalletInterventionsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12@\n" +
-	"\x06filter\x18\x03 \x01(\v2#.wallet.v1.WalletInterventionFilterH\x01R\x06filter\x88\x01\x01B\t\n" +
-	"\a_app_idB\t\n" +
+	"\x06filter\x18\x03 \x01(\v2#.wallet.v1.WalletInterventionFilterH\x00R\x06filter\x88\x01\x01B\t\n" +
 	"\a_filter\"k\n" +
 	"\x1eListWalletInterventionResponse\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.wallet.v1.WalletInterventionR\x05items\x12\x14\n" +
@@ -868,9 +825,8 @@ var file_wallet_v1_intervention_proto_goTypes = []any{
 	(*ListWalletInterventionsRequest)(nil),  // 6: wallet.v1.ListWalletInterventionsRequest
 	(*ListWalletInterventionResponse)(nil),  // 7: wallet.v1.ListWalletInterventionResponse
 	(*timestamppb.Timestamp)(nil),           // 8: google.protobuf.Timestamp
-	(v1.AppId)(0),                           // 9: common.v1.AppId
-	(*WalletGovernanceIdentity)(nil),        // 10: wallet.v1.WalletGovernanceIdentity
-	(*v11.PagingRequest)(nil),               // 11: common.pagination.v1.PagingRequest
+	(*WalletGovernanceIdentity)(nil),        // 9: wallet.v1.WalletGovernanceIdentity
+	(*v1.PagingRequest)(nil),                // 10: common.pagination.v1.PagingRequest
 }
 var file_wallet_v1_intervention_proto_depIdxs = []int32{
 	0,  // 0: wallet.v1.WalletIntervention.type:type_name -> wallet.v1.WalletIntervention.Type
@@ -880,22 +836,19 @@ var file_wallet_v1_intervention_proto_depIdxs = []int32{
 	8,  // 4: wallet.v1.WalletIntervention.expired_at:type_name -> google.protobuf.Timestamp
 	8,  // 5: wallet.v1.WalletIntervention.created_at:type_name -> google.protobuf.Timestamp
 	8,  // 6: wallet.v1.WalletIntervention.updated_at:type_name -> google.protobuf.Timestamp
-	9,  // 7: wallet.v1.CreateWalletInterventionRequest.app_id:type_name -> common.v1.AppId
-	0,  // 8: wallet.v1.CreateWalletInterventionRequest.type:type_name -> wallet.v1.WalletIntervention.Type
-	10, // 9: wallet.v1.CreateWalletInterventionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	9,  // 10: wallet.v1.ReviewWalletInterventionRequest.app_id:type_name -> common.v1.AppId
-	10, // 11: wallet.v1.ReviewWalletInterventionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	0,  // 12: wallet.v1.WalletInterventionFilter.type:type_name -> wallet.v1.WalletIntervention.Type
-	1,  // 13: wallet.v1.WalletInterventionFilter.status:type_name -> wallet.v1.WalletIntervention.Status
-	9,  // 14: wallet.v1.ListWalletInterventionsRequest.app_id:type_name -> common.v1.AppId
-	11, // 15: wallet.v1.ListWalletInterventionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	5,  // 16: wallet.v1.ListWalletInterventionsRequest.filter:type_name -> wallet.v1.WalletInterventionFilter
-	2,  // 17: wallet.v1.ListWalletInterventionResponse.items:type_name -> wallet.v1.WalletIntervention
-	18, // [18:18] is the sub-list for method output_type
-	18, // [18:18] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	0,  // 7: wallet.v1.CreateWalletInterventionRequest.type:type_name -> wallet.v1.WalletIntervention.Type
+	9,  // 8: wallet.v1.CreateWalletInterventionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	9,  // 9: wallet.v1.ReviewWalletInterventionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	0,  // 10: wallet.v1.WalletInterventionFilter.type:type_name -> wallet.v1.WalletIntervention.Type
+	1,  // 11: wallet.v1.WalletInterventionFilter.status:type_name -> wallet.v1.WalletIntervention.Status
+	10, // 12: wallet.v1.ListWalletInterventionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	5,  // 13: wallet.v1.ListWalletInterventionsRequest.filter:type_name -> wallet.v1.WalletInterventionFilter
+	2,  // 14: wallet.v1.ListWalletInterventionResponse.items:type_name -> wallet.v1.WalletIntervention
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_intervention_proto_init() }

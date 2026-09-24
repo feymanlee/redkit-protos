@@ -28,11 +28,6 @@ type OperatorTokenPayload struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 后台人员ID。
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 后台人员ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
-	// App that owns the user identity. Unlike app_id, this is not changed when
-	// a platform operator establishes an App Selection.
-	OperatorAppId *uint32 `protobuf:"varint,22,opt,name=operator_app_id,json=operatorAppId,proto3,oneof" json:"operator_app_id,omitempty"`
 	// 客户端ID。
 	ClientId *string `protobuf:"bytes,3,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"` // 客户端ID
 	// 设备ID。
@@ -45,8 +40,6 @@ type OperatorTokenPayload struct {
 	DataScope *v1.DataScope `protobuf:"varint,11,opt,name=data_scope,json=dataScope,proto3,enum=core.operator.v1.DataScope,oneof" json:"data_scope,omitempty"` // 数据权限范围
 	// 是否平台超级管理员。
 	IsPlatformAdmin *bool `protobuf:"varint,20,opt,name=is_platform_admin,json=isPlatformAdmin,proto3,oneof" json:"is_platform_admin,omitempty"` // 是否平台超级管理员
-	// 是否App管理员。
-	IsAppAdmin *bool `protobuf:"varint,21,opt,name=is_app_admin,json=isAppAdmin,proto3,oneof" json:"is_app_admin,omitempty"` // 是否App管理员
 	// 令牌唯一标识(JWT ID)。
 	Jti           *string `protobuf:"bytes,100,opt,name=jti,proto3,oneof" json:"jti,omitempty"` // 令牌唯一标识(JWT ID)
 	unknownFields protoimpl.UnknownFields
@@ -86,20 +79,6 @@ func (*OperatorTokenPayload) Descriptor() ([]byte, []int) {
 func (x *OperatorTokenPayload) GetOperatorId() uint32 {
 	if x != nil {
 		return x.OperatorId
-	}
-	return 0
-}
-
-func (x *OperatorTokenPayload) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *OperatorTokenPayload) GetOperatorAppId() uint32 {
-	if x != nil && x.OperatorAppId != nil {
-		return *x.OperatorAppId
 	}
 	return 0
 }
@@ -146,13 +125,6 @@ func (x *OperatorTokenPayload) GetIsPlatformAdmin() bool {
 	return false
 }
 
-func (x *OperatorTokenPayload) GetIsAppAdmin() bool {
-	if x != nil && x.IsAppAdmin != nil {
-		return *x.IsAppAdmin
-	}
-	return false
-}
-
 func (x *OperatorTokenPayload) GetJti() string {
 	if x != nil && x.Jti != nil {
 		return *x.Jti
@@ -164,33 +136,26 @@ var File_core_authentication_v1_operator_token_proto protoreflect.FileDescriptor
 
 const file_core_authentication_v1_operator_token_proto_rawDesc = "" +
 	"\n" +
-	"+core/authentication/v1/operator_token.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1ccore/operator/v1/types.proto\"\xc3\x06\n" +
+	"+core/authentication/v1/operator_token.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1ccore/operator/v1/types.proto\"\xd7\x04\n" +
 	"\x14OperatorTokenPayload\x125\n" +
 	"\voperator_id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDR\n" +
-	"operatorId\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x00R\x05appId\x88\x01\x01\x12P\n" +
-	"\x0foperator_app_id\x18\x16 \x01(\rB#\xbaG \x92\x02\x1d后台人员身份所属AppIDH\x01R\roperatorAppId\x88\x01\x01\x123\n" +
-	"\tclient_id\x18\x03 \x01(\tB\x11\xbaG\x0e\x92\x02\v客户端IDH\x02R\bclientId\x88\x01\x01\x120\n" +
-	"\tdevice_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b设备IDH\x03R\bdeviceId\x88\x01\x01\x120\n" +
-	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t用户名H\x04R\busername\x88\x01\x01\x121\n" +
+	"operatorId\x123\n" +
+	"\tclient_id\x18\x03 \x01(\tB\x11\xbaG\x0e\x92\x02\v客户端IDH\x00R\bclientId\x88\x01\x01\x120\n" +
+	"\tdevice_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b设备IDH\x01R\bdeviceId\x88\x01\x01\x120\n" +
+	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t用户名H\x02R\busername\x88\x01\x01\x121\n" +
 	"\x05roles\x18\n" +
 	" \x03(\tB\x1b\xbaG\x18\x92\x02\x15用户角色码列表R\x05roles\x12Y\n" +
 	"\n" +
-	"data_scope\x18\v \x01(\x0e2\x1b.core.operator.v1.DataScopeB\x18\xbaG\x15\x92\x02\x12数据权限范围H\x05R\tdataScope\x88\x01\x01\x12R\n" +
-	"\x11is_platform_admin\x18\x14 \x01(\bB!\xbaG\x1e\x92\x02\x1b是否平台超级管理员H\x06R\x0fisPlatformAdmin\x88\x01\x01\x12?\n" +
-	"\fis_app_admin\x18\x15 \x01(\bB\x18\xbaG\x15\x92\x02\x12是否App管理员H\aR\n" +
-	"isAppAdmin\x88\x01\x01\x127\n" +
-	"\x03jti\x18d \x01(\tB \xbaG\x1d\x92\x02\x1a令牌唯一标识(JWT ID)H\bR\x03jti\x88\x01\x01B\t\n" +
-	"\a_app_idB\x12\n" +
-	"\x10_operator_app_idB\f\n" +
+	"data_scope\x18\v \x01(\x0e2\x1b.core.operator.v1.DataScopeB\x18\xbaG\x15\x92\x02\x12数据权限范围H\x03R\tdataScope\x88\x01\x01\x12R\n" +
+	"\x11is_platform_admin\x18\x14 \x01(\bB!\xbaG\x1e\x92\x02\x1b是否平台超级管理员H\x04R\x0fisPlatformAdmin\x88\x01\x01\x127\n" +
+	"\x03jti\x18d \x01(\tB \xbaG\x1d\x92\x02\x1a令牌唯一标识(JWT ID)H\x05R\x03jti\x88\x01\x01B\f\n" +
 	"\n" +
 	"_client_idB\f\n" +
 	"\n" +
 	"_device_idB\v\n" +
 	"\t_usernameB\r\n" +
 	"\v_data_scopeB\x14\n" +
-	"\x12_is_platform_adminB\x0f\n" +
-	"\r_is_app_adminB\x06\n" +
+	"\x12_is_platform_adminB\x06\n" +
 	"\x04_jtiB\xfd\x01\n" +
 	"\x1acom.core.authentication.v1B\x12OperatorTokenProtoP\x01ZQgithub.com/feymanlee/redkit-protos/gen/go/core/authentication/v1;authenticationpb\xa2\x02\x03CAX\xaa\x02\x16Core.Authentication.V1\xca\x02\x16Core\\Authentication\\V1\xe2\x02\"Core\\Authentication\\V1\\GPBMetadata\xea\x02\x18Core::Authentication::V1b\x06proto3"
 

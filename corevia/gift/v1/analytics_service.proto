@@ -7,12 +7,12 @@ import "gift/v1/user_summary.proto";
 
 // 礼物分析服务。
 service GiftAnalyticsService {
-  // 查询当前 App 在 Asia/Shanghai 业务日范围内的运营概览。
+  // 查询 Asia/Shanghai 业务日范围内的运营概览。
   rpc GetGiftOverview(GetGiftOverviewRequest) returns (GiftOverviewResponse) {}
   // 查询 User Overview 使用的 Gift 聚合摘要。
   rpc GetUserGiftSummary(GetUserGiftSummaryRequest) returns (UserGiftSummary) {}
-  // 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+  // 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
   rpc ListGiftEvents(ListGiftEventsRequest) returns (ListGiftEventResponse) {}
-  // 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+  // 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
   rpc ListGiftStats(ListGiftStatsRequest) returns (ListGiftStatResponse) {}
 }

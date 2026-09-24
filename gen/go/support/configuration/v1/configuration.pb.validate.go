@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	messagingpb "github.com/feymanlee/redkit-protos/gen/go/support/messaging/v1"
 
 	verificationpb "github.com/feymanlee/redkit-protos/gen/go/support/verification/v1"
@@ -39,8 +37,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = messagingpb.SmsProvider(0)
 
@@ -201,7 +197,7 @@ func (m *DeliveryProbeOptions) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetApps() {
+	for idx, item := range m.GetTargets() {
 		_, _ = idx, item
 
 		if all {
@@ -209,7 +205,7 @@ func (m *DeliveryProbeOptions) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, DeliveryProbeOptionsValidationError{
-						field:  fmt.Sprintf("Apps[%v]", idx),
+						field:  fmt.Sprintf("Targets[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -217,7 +213,7 @@ func (m *DeliveryProbeOptions) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, DeliveryProbeOptionsValidationError{
-						field:  fmt.Sprintf("Apps[%v]", idx),
+						field:  fmt.Sprintf("Targets[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -226,7 +222,7 @@ func (m *DeliveryProbeOptions) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return DeliveryProbeOptionsValidationError{
-					field:  fmt.Sprintf("Apps[%v]", idx),
+					field:  fmt.Sprintf("Targets[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -314,144 +310,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeliveryProbeOptionsValidationError{}
-
-// Validate checks the field values on AppDeliveryProbeOptions with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *AppDeliveryProbeOptions) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on AppDeliveryProbeOptions with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// AppDeliveryProbeOptionsMultiError, or nil if none found.
-func (m *AppDeliveryProbeOptions) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *AppDeliveryProbeOptions) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for AppId
-
-	for idx, item := range m.GetTargets() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, AppDeliveryProbeOptionsValidationError{
-						field:  fmt.Sprintf("Targets[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, AppDeliveryProbeOptionsValidationError{
-						field:  fmt.Sprintf("Targets[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return AppDeliveryProbeOptionsValidationError{
-					field:  fmt.Sprintf("Targets[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return AppDeliveryProbeOptionsMultiError(errors)
-	}
-
-	return nil
-}
-
-// AppDeliveryProbeOptionsMultiError is an error wrapping multiple validation
-// errors returned by AppDeliveryProbeOptions.ValidateAll() if the designated
-// constraints aren't met.
-type AppDeliveryProbeOptionsMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m AppDeliveryProbeOptionsMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m AppDeliveryProbeOptionsMultiError) AllErrors() []error { return m }
-
-// AppDeliveryProbeOptionsValidationError is the validation error returned by
-// AppDeliveryProbeOptions.Validate if the designated constraints aren't met.
-type AppDeliveryProbeOptionsValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e AppDeliveryProbeOptionsValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e AppDeliveryProbeOptionsValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e AppDeliveryProbeOptionsValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e AppDeliveryProbeOptionsValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e AppDeliveryProbeOptionsValidationError) ErrorName() string {
-	return "AppDeliveryProbeOptionsValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e AppDeliveryProbeOptionsValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sAppDeliveryProbeOptions.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = AppDeliveryProbeOptionsValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = AppDeliveryProbeOptionsValidationError{}
 
 // Validate checks the field values on DeliveryProbeDeploymentTarget with the
 // rules defined in the proto definition for this message. If any rules are
@@ -1590,8 +1448,6 @@ func (m *CreateConfigurationDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DefaultLocale
 
 	// no validation rules for DefaultPhoneRegion
@@ -1706,8 +1562,6 @@ func (m *CreateSmsChannelRevisionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DraftId
 
@@ -1843,8 +1697,6 @@ func (m *CreateSmsTemplateRevisionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DraftId
 
 	// no validation rules for TemplateCode
@@ -1975,8 +1827,6 @@ func (m *UpdateVerificationPolicyDraftRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DraftId
 
@@ -2164,8 +2014,6 @@ func (m *PreflightConfigurationDraftRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DraftId
 
@@ -2923,8 +2771,6 @@ func (m *GetDeliveryProbeReadinessRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DraftId
 
 	if len(errors) > 0 {
@@ -3209,8 +3055,6 @@ func (m *ExecuteDeliveryProbeRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DraftId
 
 	// no validation rules for TargetKey
@@ -3332,8 +3176,6 @@ func (m *DiscardConfigurationDraftRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DraftId
 
@@ -3898,8 +3740,6 @@ func (m *ListConfigurationReleasesRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if len(errors) > 0 {
 		return ListConfigurationReleasesRequestMultiError(errors)
 	}
@@ -4144,8 +3984,6 @@ func (m *ActivateConfigurationDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DraftId
 
 	// no validation rules for OperatorId
@@ -4261,8 +4099,6 @@ func (m *RollbackConfigurationReleaseRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for ReleaseId
 
 	// no validation rules for OperatorId
@@ -4376,8 +4212,6 @@ func (m *ConfigurationReadiness) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for MigrationStatus
 
@@ -4607,7 +4441,7 @@ func (m *ConfigurationReadiness) validate(all bool) error {
 
 	// no validation rules for RuntimeModel
 
-	// no validation rules for AllAppsReady
+	// no validation rules for PlatformReleaseReady
 
 	// no validation rules for CutoverFailureCategory
 
@@ -4744,8 +4578,6 @@ func (m *GetConfigurationReadinessRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if len(errors) > 0 {
 		return GetConfigurationReadinessRequestMultiError(errors)

@@ -7,7 +7,6 @@
 package useradministrationpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -27,9 +26,7 @@ const (
 // GetCurrentUserRequest 标识待查询的 CurrentUser。
 type GetCurrentUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetCurrentUser 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -65,13 +62,6 @@ func (*GetCurrentUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_profile_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetCurrentUserRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetCurrentUserRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -82,8 +72,6 @@ func (x *GetCurrentUserRequest) GetUserId() uint64 {
 // GetPublicProfileRequest 标识待查询的 PublicProfile。
 type GetPublicProfileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetPublicProfile 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// GetPublicProfileRequest 使用以下一种查询表达式。
 	//
 	// Types that are valid to be assigned to Query:
@@ -125,13 +113,6 @@ func (*GetPublicProfileRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_profile_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetPublicProfileRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetPublicProfileRequest) GetQuery() isGetPublicProfileRequest_Query {
 	if x != nil {
 		return x.Query
@@ -162,7 +143,7 @@ type isGetPublicProfileRequest_Query interface {
 }
 
 type GetPublicProfileRequest_UserId struct {
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3,oneof"`
 }
 
@@ -178,8 +159,6 @@ func (*GetPublicProfileRequest_UserCode) isGetPublicProfileRequest_Query() {}
 // BatchGetPublicProfilesRequest 定义执行 BatchGetPublicProfiles 的命令参数。
 type BatchGetPublicProfilesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BatchGetPublicProfiles 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// user_ids 列出本次请求关联的 User 标识。
 	UserIds       []uint64 `protobuf:"varint,2,rep,packed,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -214,13 +193,6 @@ func (x *BatchGetPublicProfilesRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use BatchGetPublicProfilesRequest.ProtoReflect.Descriptor instead.
 func (*BatchGetPublicProfilesRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_profile_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *BatchGetPublicProfilesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *BatchGetPublicProfilesRequest) GetUserIds() []uint64 {
@@ -361,9 +333,7 @@ func (x *ProfilePatch) GetDescription() string {
 // UpdateProfileRequest 定义更新 Profile 的命令参数。
 type UpdateProfileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UpdateProfile 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// data 承载 UpdateProfile 对应阶段的结构化业务内容。
 	Data *ProfilePatch `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
@@ -405,13 +375,6 @@ func (*UpdateProfileRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_profile_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *UpdateProfileRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UpdateProfileRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -444,17 +407,14 @@ var File_user_administration_v1_profile_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_profile_proto_rawDesc = "" +
 	"\n" +
-	"$user/administration/v1/profile.proto\x12\x16user.administration.v1\x1a\x16common/v1/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\"user/administration/v1/types.proto\"Y\n" +
-	"\x15GetCurrentUserRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x04R\x06userId\"\x85\x01\n" +
-	"\x17GetPublicProfileRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"$user/administration/v1/profile.proto\x12\x16user.administration.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\"user/administration/v1/types.proto\"0\n" +
+	"\x15GetCurrentUserRequest\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\"\\\n" +
+	"\x17GetPublicProfileRequest\x12\x19\n" +
 	"\auser_id\x18\x02 \x01(\x04H\x00R\x06userId\x12\x1d\n" +
 	"\tuser_code\x18\x03 \x01(\tH\x00R\buserCodeB\a\n" +
-	"\x05query\"c\n" +
-	"\x1dBatchGetPublicProfilesRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\x05query\":\n" +
+	"\x1dBatchGetPublicProfilesRequest\x12\x19\n" +
 	"\buser_ids\x18\x02 \x03(\x04R\auserIds\"W\n" +
 	"\x1eBatchGetPublicProfilesResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.user.administration.v1.ProfileR\x05items\"\xa2\x01\n" +
@@ -463,9 +423,8 @@ const file_user_administration_v1_profile_proto_rawDesc = "" +
 	"\x0eavatar_file_id\x18\x02 \x01(\x04R\favatarFileId\x12\x16\n" +
 	"\x06gender\x18\x03 \x01(\tR\x06gender\x12\x16\n" +
 	"\x06region\x18\x04 \x01(\tR\x06region\x12 \n" +
-	"\vdescription\x18\x05 \x01(\tR\vdescription\"\xf8\x01\n" +
-	"\x14UpdateProfileRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\"\xcf\x01\n" +
+	"\x14UpdateProfileRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x128\n" +
 	"\x04data\x18\x03 \x01(\v2$.user.administration.v1.ProfilePatchR\x04data\x12;\n" +
 	"\vupdate_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
@@ -498,33 +457,28 @@ var file_user_administration_v1_profile_proto_goTypes = []any{
 	(*BatchGetPublicProfilesResponse)(nil), // 3: user.administration.v1.BatchGetPublicProfilesResponse
 	(*ProfilePatch)(nil),                   // 4: user.administration.v1.ProfilePatch
 	(*UpdateProfileRequest)(nil),           // 5: user.administration.v1.UpdateProfileRequest
-	(v1.AppId)(0),                          // 6: common.v1.AppId
-	(*Profile)(nil),                        // 7: user.administration.v1.Profile
-	(*fieldmaskpb.FieldMask)(nil),          // 8: google.protobuf.FieldMask
-	(*CurrentUser)(nil),                    // 9: user.administration.v1.CurrentUser
-	(*emptypb.Empty)(nil),                  // 10: google.protobuf.Empty
+	(*Profile)(nil),                        // 6: user.administration.v1.Profile
+	(*fieldmaskpb.FieldMask)(nil),          // 7: google.protobuf.FieldMask
+	(*CurrentUser)(nil),                    // 8: user.administration.v1.CurrentUser
+	(*emptypb.Empty)(nil),                  // 9: google.protobuf.Empty
 }
 var file_user_administration_v1_profile_proto_depIdxs = []int32{
-	6,  // 0: user.administration.v1.GetCurrentUserRequest.app_id:type_name -> common.v1.AppId
-	6,  // 1: user.administration.v1.GetPublicProfileRequest.app_id:type_name -> common.v1.AppId
-	6,  // 2: user.administration.v1.BatchGetPublicProfilesRequest.app_id:type_name -> common.v1.AppId
-	7,  // 3: user.administration.v1.BatchGetPublicProfilesResponse.items:type_name -> user.administration.v1.Profile
-	6,  // 4: user.administration.v1.UpdateProfileRequest.app_id:type_name -> common.v1.AppId
-	4,  // 5: user.administration.v1.UpdateProfileRequest.data:type_name -> user.administration.v1.ProfilePatch
-	8,  // 6: user.administration.v1.UpdateProfileRequest.update_mask:type_name -> google.protobuf.FieldMask
-	0,  // 7: user.administration.v1.UserProfileService.GetCurrentUser:input_type -> user.administration.v1.GetCurrentUserRequest
-	1,  // 8: user.administration.v1.UserProfileService.GetPublicProfile:input_type -> user.administration.v1.GetPublicProfileRequest
-	2,  // 9: user.administration.v1.UserProfileService.BatchGetPublicProfiles:input_type -> user.administration.v1.BatchGetPublicProfilesRequest
-	5,  // 10: user.administration.v1.UserProfileService.UpdateProfile:input_type -> user.administration.v1.UpdateProfileRequest
-	9,  // 11: user.administration.v1.UserProfileService.GetCurrentUser:output_type -> user.administration.v1.CurrentUser
-	7,  // 12: user.administration.v1.UserProfileService.GetPublicProfile:output_type -> user.administration.v1.Profile
-	3,  // 13: user.administration.v1.UserProfileService.BatchGetPublicProfiles:output_type -> user.administration.v1.BatchGetPublicProfilesResponse
-	10, // 14: user.administration.v1.UserProfileService.UpdateProfile:output_type -> google.protobuf.Empty
-	11, // [11:15] is the sub-list for method output_type
-	7,  // [7:11] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	6, // 0: user.administration.v1.BatchGetPublicProfilesResponse.items:type_name -> user.administration.v1.Profile
+	4, // 1: user.administration.v1.UpdateProfileRequest.data:type_name -> user.administration.v1.ProfilePatch
+	7, // 2: user.administration.v1.UpdateProfileRequest.update_mask:type_name -> google.protobuf.FieldMask
+	0, // 3: user.administration.v1.UserProfileService.GetCurrentUser:input_type -> user.administration.v1.GetCurrentUserRequest
+	1, // 4: user.administration.v1.UserProfileService.GetPublicProfile:input_type -> user.administration.v1.GetPublicProfileRequest
+	2, // 5: user.administration.v1.UserProfileService.BatchGetPublicProfiles:input_type -> user.administration.v1.BatchGetPublicProfilesRequest
+	5, // 6: user.administration.v1.UserProfileService.UpdateProfile:input_type -> user.administration.v1.UpdateProfileRequest
+	8, // 7: user.administration.v1.UserProfileService.GetCurrentUser:output_type -> user.administration.v1.CurrentUser
+	6, // 8: user.administration.v1.UserProfileService.GetPublicProfile:output_type -> user.administration.v1.Profile
+	3, // 9: user.administration.v1.UserProfileService.BatchGetPublicProfiles:output_type -> user.administration.v1.BatchGetPublicProfilesResponse
+	9, // 10: user.administration.v1.UserProfileService.UpdateProfile:output_type -> google.protobuf.Empty
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_profile_proto_init() }

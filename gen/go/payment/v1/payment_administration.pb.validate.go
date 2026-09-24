@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on PaymentSearchFilter with the rules
@@ -531,10 +527,6 @@ func (m *GetPaymentDetailRequest) validate(all bool) error {
 
 	// no validation rules for PaymentNo
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return GetPaymentDetailRequestMultiError(errors)
 	}
@@ -901,10 +893,6 @@ func (m *RefreshPaymentProviderStateRequest) validate(all bool) error {
 
 	// no validation rules for OperationNo
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return RefreshPaymentProviderStateRequestMultiError(errors)
 	}
@@ -1180,10 +1168,6 @@ func (m *RefreshRefundProviderStateRequest) validate(all bool) error {
 	// no validation rules for RequestId
 
 	// no validation rules for OperationNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return RefreshRefundProviderStateRequestMultiError(errors)
@@ -2400,10 +2384,6 @@ func (m *GetUserPaymentSummaryRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for UserId
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetUserPaymentSummaryRequestMultiError(errors)

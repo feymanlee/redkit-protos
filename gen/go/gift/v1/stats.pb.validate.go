@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on GiftEvent with the rules defined in the
@@ -63,10 +59,6 @@ func (m *GiftEvent) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.EventType != nil {
@@ -235,10 +227,6 @@ func (m *GiftStat) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Day != nil {
@@ -953,10 +941,6 @@ func (m *ListGiftEventsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListGiftEventsRequestMultiError(errors)
 	}
@@ -1263,10 +1247,6 @@ func (m *ListGiftStatsRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -2371,10 +2351,6 @@ func (m *GetGiftOverviewRequest) validate(all bool) error {
 	// no validation rules for StartDay
 
 	// no validation rules for EndDay
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetGiftOverviewRequestMultiError(errors)

@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on RechargeStoreProduct with the rules
@@ -175,10 +171,6 @@ func (m *RechargeStoreProductMapping) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.ProductRevisionId != nil {
@@ -541,10 +533,6 @@ func (m *RechargeProduct) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Name != nil {
 		// no validation rules for Name
 	}
@@ -792,10 +780,6 @@ func (m *RechargeProductRevision) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.ProductId != nil {
@@ -1148,10 +1132,6 @@ func (m *RechargeOrder) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -2685,8 +2665,6 @@ func (m *RechargeOrderPaymentFact) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for PurchaseRequestId
@@ -3063,10 +3041,6 @@ func (m *ListRechargeProductRevisionRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.ProductId != nil {
@@ -3458,10 +3432,6 @@ func (m *GetRechargeOrderRequest) validate(all bool) error {
 
 	// no validation rules for OrderNo
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return GetRechargeOrderRequestMultiError(errors)
 	}
@@ -3605,10 +3575,6 @@ func (m *CreateRechargeProductRevisionRequest) validate(all bool) error {
 			}
 		}
 
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.ProductId != nil {
@@ -3829,10 +3795,6 @@ func (m *ApproveRechargeProductRevisionRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Governance != nil {
 
 		if all {
@@ -3970,8 +3932,6 @@ func (m *CreateRechargeOrderRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for ProductId
@@ -4079,10 +4039,6 @@ func (m *CloseRechargeOrderRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for OrderNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if m.Governance != nil {
 
@@ -4220,8 +4176,6 @@ func (m *CreditRechargeRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for EventId
-
-	// no validation rules for AppId
 
 	// no validation rules for OrderNo
 

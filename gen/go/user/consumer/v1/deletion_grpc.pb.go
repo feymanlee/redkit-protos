@@ -28,7 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// C 端用户注销服务，负责当前 App 内需要 step-up 证明的带冷静期注销流程。
+// C 端用户注销服务，负责需要 step-up 证明的带冷静期注销流程。
 type ConsumerUserDeletionServiceClient interface {
 	// 使用 step_up_token 幂等发起带冷静期的 UserDeletion。
 	BeginUserDeletion(ctx context.Context, in *BeginUserDeletionRequest, opts ...grpc.CallOption) (*UserDeletionAccess, error)
@@ -80,7 +80,7 @@ func (c *consumerUserDeletionServiceClient) CancelUserDeletion(ctx context.Conte
 // All implementations must embed UnimplementedConsumerUserDeletionServiceServer
 // for forward compatibility.
 //
-// C 端用户注销服务，负责当前 App 内需要 step-up 证明的带冷静期注销流程。
+// C 端用户注销服务，负责需要 step-up 证明的带冷静期注销流程。
 type ConsumerUserDeletionServiceServer interface {
 	// 使用 step_up_token 幂等发起带冷静期的 UserDeletion。
 	BeginUserDeletion(context.Context, *BeginUserDeletionRequest) (*UserDeletionAccess, error)

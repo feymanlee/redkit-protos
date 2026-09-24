@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	roompb "github.com/feymanlee/redkit-protos/gen/go/room/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = roompb.SessionStatus(0)
 )
@@ -1754,28 +1750,6 @@ func (m *AdminCreateRoomRestrictionRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _AdminCreateRoomRestrictionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := AdminCreateRoomRestrictionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := AdminCreateRoomRestrictionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetRoomId() <= 0 {
 		err := AdminCreateRoomRestrictionRequestValidationError{
 			field:  "RoomId",
@@ -1993,10 +1967,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = AdminCreateRoomRestrictionRequestValidationError{}
-
-var _AdminCreateRoomRestrictionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _AdminCreateRoomRestrictionRequest_Scope_NotInLookup = map[roompb.RestrictionScope]struct{}{
 	0: {},

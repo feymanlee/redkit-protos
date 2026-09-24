@@ -87,11 +87,6 @@ message PermissionPolicy {
     }
   ]; // 结果缓存秒数（0=不缓存）
 
-  // AppID。
-  optional uint32 app_id = 8 [
-    (gnostic.openapi.v3.property) = {description: "AppID"}
-  ];  // AppID
-
   // 状态。
   optional Status status = 9 [(gnostic.openapi.v3.property) = {description: "状态"}]; // 状态
 

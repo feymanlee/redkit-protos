@@ -7,8 +7,8 @@
 package giftpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -139,8 +139,6 @@ type GiftBackpackBalance struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 余额 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 礼物 ID。
@@ -200,13 +198,6 @@ func (*GiftBackpackBalance) Descriptor() ([]byte, []int) {
 func (x *GiftBackpackBalance) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftBackpackBalance) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -293,8 +284,6 @@ type GiftBackpackBatch struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 批次 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 礼物 ID。
@@ -380,13 +369,6 @@ func (*GiftBackpackBatch) Descriptor() ([]byte, []int) {
 func (x *GiftBackpackBatch) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftBackpackBatch) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -564,8 +546,6 @@ type GiftBackpackTransaction struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 流水 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 礼物 ID。
@@ -649,13 +629,6 @@ func (*GiftBackpackTransaction) Descriptor() ([]byte, []int) {
 func (x *GiftBackpackTransaction) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftBackpackTransaction) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -826,8 +799,6 @@ type GiftBackpackTransactionItem struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 明细 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 背包流水 ID。
 	TransactionId *uint64 `protobuf:"varint,3,opt,name=transaction_id,json=transactionId,proto3,oneof" json:"transaction_id,omitempty"`
 	// 批次 ID。
@@ -897,13 +868,6 @@ func (*GiftBackpackTransactionItem) Descriptor() ([]byte, []int) {
 func (x *GiftBackpackTransactionItem) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftBackpackTransactionItem) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1240,10 +1204,10 @@ func (x *ListGiftBackpackTransactionItemResponse) GetTotal() uint64 {
 	return 0
 }
 
-// BackpackBalanceFilter requires an exact User identity inside the selected App.
+// BackpackBalanceFilter requires an exact User identity.
 type BackpackBalanceFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId        *uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3,oneof" json:"gift_id,omitempty"`
@@ -1298,7 +1262,7 @@ func (x *BackpackBalanceFilter) GetGiftId() uint32 {
 // BackpackBatchFilter contains bounded, typed workbench filters.
 type BackpackBatchFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId *uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3,oneof" json:"gift_id,omitempty"`
@@ -1390,7 +1354,7 @@ func (x *BackpackBatchFilter) GetExpireTo() *timestamppb.Timestamp {
 // user_id=0 selects all Users in the already-scoped App; non-zero selects one exact User.
 type BackpackTransactionFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId *uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3,oneof" json:"gift_id,omitempty"`
@@ -1472,12 +1436,10 @@ func (x *BackpackTransactionFilter) GetOccurredTo() *timestamppb.Timestamp {
 // ListBackpackBalancesRequest 定义 BackpackBalances 的筛选与分页参数。
 type ListBackpackBalancesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListBackpackBalances 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *BackpackBalanceFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1512,13 +1474,6 @@ func (*ListBackpackBalancesRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ListBackpackBalancesRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListBackpackBalancesRequest) GetFilter() *BackpackBalanceFilter {
 	if x != nil {
 		return x.Filter
@@ -1526,7 +1481,7 @@ func (x *ListBackpackBalancesRequest) GetFilter() *BackpackBalanceFilter {
 	return nil
 }
 
-func (x *ListBackpackBalancesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListBackpackBalancesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1536,12 +1491,10 @@ func (x *ListBackpackBalancesRequest) GetPaging() *v11.PagingRequest {
 // ListBackpackBatchesRequest 定义 BackpackBatches 的筛选与分页参数。
 type ListBackpackBatchesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListBackpackBatches 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *BackpackBatchFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1576,13 +1529,6 @@ func (*ListBackpackBatchesRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ListBackpackBatchesRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListBackpackBatchesRequest) GetFilter() *BackpackBatchFilter {
 	if x != nil {
 		return x.Filter
@@ -1590,7 +1536,7 @@ func (x *ListBackpackBatchesRequest) GetFilter() *BackpackBatchFilter {
 	return nil
 }
 
-func (x *ListBackpackBatchesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListBackpackBatchesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1600,12 +1546,10 @@ func (x *ListBackpackBatchesRequest) GetPaging() *v11.PagingRequest {
 // ListBackpackTransactionsRequest 定义 BackpackTransactions 的筛选与分页参数。
 type ListBackpackTransactionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListBackpackTransactions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *BackpackTransactionFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1640,13 +1584,6 @@ func (*ListBackpackTransactionsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *ListBackpackTransactionsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListBackpackTransactionsRequest) GetFilter() *BackpackTransactionFilter {
 	if x != nil {
 		return x.Filter
@@ -1654,7 +1591,7 @@ func (x *ListBackpackTransactionsRequest) GetFilter() *BackpackTransactionFilter
 	return nil
 }
 
-func (x *ListBackpackTransactionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListBackpackTransactionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1664,12 +1601,10 @@ func (x *ListBackpackTransactionsRequest) GetPaging() *v11.PagingRequest {
 // ListBackpackTransactionItemsRequest 定义 BackpackTransactionItems 的筛选与分页参数。
 type ListBackpackTransactionItemsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListBackpackTransactionItems 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// transaction_id 标识关联的 Transaction。
 	TransactionId uint64 `protobuf:"varint,2,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1704,13 +1639,6 @@ func (*ListBackpackTransactionItemsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *ListBackpackTransactionItemsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListBackpackTransactionItemsRequest) GetTransactionId() uint64 {
 	if x != nil {
 		return x.TransactionId
@@ -1718,7 +1646,7 @@ func (x *ListBackpackTransactionItemsRequest) GetTransactionId() uint64 {
 	return 0
 }
 
-func (x *ListBackpackTransactionItemsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListBackpackTransactionItemsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1728,9 +1656,7 @@ func (x *ListBackpackTransactionItemsRequest) GetPaging() *v11.PagingRequest {
 // AdjustBackpackGiftRequest performs one single-User, single-Gift corrective command.
 type AdjustBackpackGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AdjustBackpackGift 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,3,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
@@ -1782,13 +1708,6 @@ func (x *AdjustBackpackGiftRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use AdjustBackpackGiftRequest.ProtoReflect.Descriptor instead.
 func (*AdjustBackpackGiftRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *AdjustBackpackGiftRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *AdjustBackpackGiftRequest) GetUserId() uint64 {
@@ -1937,8 +1856,6 @@ func (x *AdjustBackpackGiftResponse) GetReplayed() bool {
 // 发放背包礼物请求。
 type GrantBackpackGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 礼物 ID。
@@ -1995,13 +1912,6 @@ func (x *GrantBackpackGiftRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GrantBackpackGiftRequest.ProtoReflect.Descriptor instead.
 func (*GrantBackpackGiftRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *GrantBackpackGiftRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GrantBackpackGiftRequest) GetUserId() uint64 {
@@ -2091,8 +2001,6 @@ func (x *GrantBackpackGiftRequest) GetMetadata() string {
 // 扣回背包礼物请求。
 type RevokeBackpackGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 礼物 ID。
@@ -2147,13 +2055,6 @@ func (x *RevokeBackpackGiftRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RevokeBackpackGiftRequest.ProtoReflect.Descriptor instead.
 func (*RevokeBackpackGiftRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *RevokeBackpackGiftRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RevokeBackpackGiftRequest) GetUserId() uint64 {
@@ -2236,8 +2137,6 @@ func (x *RevokeBackpackGiftRequest) GetMetadata() string {
 // 处理过期背包礼物请求。
 type ExpireBackpackItemsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID；同步调用使用具体 App，省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 用户 ID，0 表示全部用户。
 	UserId *uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 礼物 ID，0 表示全部礼物。
@@ -2282,13 +2181,6 @@ func (x *ExpireBackpackItemsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ExpireBackpackItemsRequest.ProtoReflect.Descriptor instead.
 func (*ExpireBackpackItemsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_backpack_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *ExpireBackpackItemsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ExpireBackpackItemsRequest) GetUserId() uint64 {
@@ -2392,27 +2284,25 @@ var File_gift_v1_backpack_proto protoreflect.FileDescriptor
 
 const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\n" +
-	"\x16gift/v1/backpack.proto\x12\agift.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x15gift/v1/catalog.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc6\x06\n" +
+	"\x16gift/v1/backpack.proto\x12\agift.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x15gift/v1/catalog.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9f\x06\n" +
 	"\x13GiftBackpackBalance\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x04 \x01(\rH\x03R\x06giftId\x88\x01\x01\x12*\n" +
-	"\x0etotal_quantity\x18\x05 \x01(\x04H\x04R\rtotalQuantity\x88\x01\x01\x122\n" +
-	"\x12available_quantity\x18\x06 \x01(\x04H\x05R\x11availableQuantity\x88\x01\x01\x12,\n" +
-	"\x0flocked_quantity\x18\a \x01(\x04H\x06R\x0elockedQuantity\x88\x01\x01\x12(\n" +
-	"\rused_quantity\x18\b \x01(\x04H\aR\fusedQuantity\x88\x01\x01\x12.\n" +
-	"\x10expired_quantity\x18\t \x01(\x04H\bR\x0fexpiredQuantity\x88\x01\x01\x12.\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x04 \x01(\rH\x02R\x06giftId\x88\x01\x01\x12*\n" +
+	"\x0etotal_quantity\x18\x05 \x01(\x04H\x03R\rtotalQuantity\x88\x01\x01\x122\n" +
+	"\x12available_quantity\x18\x06 \x01(\x04H\x04R\x11availableQuantity\x88\x01\x01\x12,\n" +
+	"\x0flocked_quantity\x18\a \x01(\x04H\x05R\x0elockedQuantity\x88\x01\x01\x12(\n" +
+	"\rused_quantity\x18\b \x01(\x04H\x06R\fusedQuantity\x88\x01\x01\x12.\n" +
+	"\x10expired_quantity\x18\t \x01(\x04H\aR\x0fexpiredQuantity\x88\x01\x01\x12.\n" +
 	"\x10revoked_quantity\x18\n" +
-	" \x01(\x04H\tR\x0frevokedQuantity\x88\x01\x01\x12E\n" +
-	"\x1ceffective_available_quantity\x18\v \x01(\x04H\n" +
-	"R\x1aeffectiveAvailableQuantity\x88\x01\x01\x12?\n" +
+	" \x01(\x04H\bR\x0frevokedQuantity\x88\x01\x01\x12E\n" +
+	"\x1ceffective_available_quantity\x18\v \x01(\x04H\tR\x1aeffectiveAvailableQuantity\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
+	"R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\n" +
 	"\n" +
@@ -2425,45 +2315,43 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\x11_revoked_quantityB\x1f\n" +
 	"\x1d_effective_available_quantityB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xd9\v\n" +
+	"\v_updated_at\"\xb2\v\n" +
 	"\x11GiftBackpackBatch\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x04 \x01(\rH\x03R\x06giftId\x88\x01\x01\x12$\n" +
-	"\vsource_type\x18\x05 \x01(\tH\x04R\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x04 \x01(\rH\x02R\x06giftId\x88\x01\x01\x12$\n" +
+	"\vsource_type\x18\x05 \x01(\tH\x03R\n" +
 	"sourceType\x88\x01\x01\x12 \n" +
-	"\tsource_id\x18\x06 \x01(\tH\x05R\bsourceId\x88\x01\x01\x12\x1f\n" +
-	"\bquantity\x18\a \x01(\x04H\x06R\bquantity\x88\x01\x01\x122\n" +
-	"\x12available_quantity\x18\b \x01(\x04H\aR\x11availableQuantity\x88\x01\x01\x12(\n" +
-	"\rused_quantity\x18\t \x01(\x04H\bR\fusedQuantity\x88\x01\x01\x12.\n" +
+	"\tsource_id\x18\x06 \x01(\tH\x04R\bsourceId\x88\x01\x01\x12\x1f\n" +
+	"\bquantity\x18\a \x01(\x04H\x05R\bquantity\x88\x01\x01\x122\n" +
+	"\x12available_quantity\x18\b \x01(\x04H\x06R\x11availableQuantity\x88\x01\x01\x12(\n" +
+	"\rused_quantity\x18\t \x01(\x04H\aR\fusedQuantity\x88\x01\x01\x12.\n" +
 	"\x10expired_quantity\x18\n" +
-	" \x01(\x04H\tR\x0fexpiredQuantity\x88\x01\x01\x12.\n" +
-	"\x10revoked_quantity\x18\v \x01(\x04H\n" +
-	"R\x0frevokedQuantity\x88\x01\x01\x12\"\n" +
+	" \x01(\x04H\bR\x0fexpiredQuantity\x88\x01\x01\x12.\n" +
+	"\x10revoked_quantity\x18\v \x01(\x04H\tR\x0frevokedQuantity\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"unit_price\x18\f \x01(\x03H\vR\tunitPrice\x88\x01\x01\x12$\n" +
-	"\vtotal_price\x18\r \x01(\x03H\fR\n" +
+	"unit_price\x18\f \x01(\x03H\n" +
+	"R\tunitPrice\x88\x01\x01\x12$\n" +
+	"\vtotal_price\x18\r \x01(\x03H\vR\n" +
 	"totalPrice\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\x0e \x01(\tH\rR\x06status\x88\x01\x01\x12<\n" +
-	"\texpire_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\bexpireAt\x88\x01\x01\x12\"\n" +
+	"\x06status\x18\x0e \x01(\tH\fR\x06status\x88\x01\x01\x12<\n" +
+	"\texpire_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\bexpireAt\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"granted_by\x18\x10 \x01(\rH\x0fR\tgrantedBy\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\x11 \x01(\tH\x10R\voperationNo\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\x12 \x01(\tH\x11R\x0eidempotencyKey\x88\x01\x01\x12*\n" +
-	"\x0esource_service\x18\x13 \x01(\tH\x12R\rsourceService\x88\x01\x01\x12\"\n" +
+	"granted_by\x18\x10 \x01(\rH\x0eR\tgrantedBy\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\x11 \x01(\tH\x0fR\voperationNo\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\x12 \x01(\tH\x10R\x0eidempotencyKey\x88\x01\x01\x12*\n" +
+	"\x0esource_service\x18\x13 \x01(\tH\x11R\rsourceService\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\x14 \x01(\tH\x13R\trequestId\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\x15 \x01(\tH\x14R\bmetadata\x88\x01\x01\x12-\n" +
-	"\x10gift_revision_id\x18\x16 \x01(\x04H\x15R\x0egiftRevisionId\x88\x01\x01\x12(\n" +
-	"\rplatform_rate\x18\x17 \x01(\rH\x16R\fplatformRate\x88\x01\x01\x12*\n" +
-	"\x0erecipient_rate\x18\x18 \x01(\rH\x17R\rrecipientRate\x88\x01\x01\x12?\n" +
+	"request_id\x18\x14 \x01(\tH\x12R\trequestId\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\x15 \x01(\tH\x13R\bmetadata\x88\x01\x01\x12-\n" +
+	"\x10gift_revision_id\x18\x16 \x01(\x04H\x14R\x0egiftRevisionId\x88\x01\x01\x12(\n" +
+	"\rplatform_rate\x18\x17 \x01(\rH\x15R\fplatformRate\x88\x01\x01\x12*\n" +
+	"\x0erecipient_rate\x18\x18 \x01(\rH\x16R\rrecipientRate\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x17R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x19R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\n" +
 	"\n" +
@@ -2491,45 +2379,43 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\x0e_platform_rateB\x11\n" +
 	"\x0f_recipient_rateB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xf1\n" +
+	"\v_updated_at\"\xca\n" +
 	"\n" +
 	"\x17GiftBackpackTransaction\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x04 \x01(\rH\x03R\x06giftId\x88\x01\x01\x12\x1e\n" +
-	"\bbatch_id\x18\x05 \x01(\x04H\x04R\abatchId\x88\x01\x01\x12)\n" +
-	"\x0esend_record_id\x18\x06 \x01(\x04H\x05R\fsendRecordId\x88\x01\x01\x12.\n" +
-	"\x10transaction_type\x18\a \x01(\tH\x06R\x0ftransactionType\x88\x01\x01\x12\x1f\n" +
-	"\bquantity\x18\b \x01(\x04H\aR\bquantity\x88\x01\x01\x12,\n" +
-	"\x0fbefore_quantity\x18\t \x01(\x04H\bR\x0ebeforeQuantity\x88\x01\x01\x12*\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x04 \x01(\rH\x02R\x06giftId\x88\x01\x01\x12\x1e\n" +
+	"\bbatch_id\x18\x05 \x01(\x04H\x03R\abatchId\x88\x01\x01\x12)\n" +
+	"\x0esend_record_id\x18\x06 \x01(\x04H\x04R\fsendRecordId\x88\x01\x01\x12.\n" +
+	"\x10transaction_type\x18\a \x01(\tH\x05R\x0ftransactionType\x88\x01\x01\x12\x1f\n" +
+	"\bquantity\x18\b \x01(\x04H\x06R\bquantity\x88\x01\x01\x12,\n" +
+	"\x0fbefore_quantity\x18\t \x01(\x04H\aR\x0ebeforeQuantity\x88\x01\x01\x12*\n" +
 	"\x0eafter_quantity\x18\n" +
-	" \x01(\x04H\tR\rafterQuantity\x88\x01\x01\x12\"\n" +
+	" \x01(\x04H\bR\rafterQuantity\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"unit_price\x18\v \x01(\x03H\n" +
-	"R\tunitPrice\x88\x01\x01\x12$\n" +
-	"\vtotal_price\x18\f \x01(\x03H\vR\n" +
+	"unit_price\x18\v \x01(\x03H\tR\tunitPrice\x88\x01\x01\x12$\n" +
+	"\vtotal_price\x18\f \x01(\x03H\n" +
+	"R\n" +
 	"totalPrice\x88\x01\x01\x12$\n" +
-	"\vsource_type\x18\r \x01(\tH\fR\n" +
+	"\vsource_type\x18\r \x01(\tH\vR\n" +
 	"sourceType\x88\x01\x01\x12 \n" +
-	"\tsource_id\x18\x0e \x01(\tH\rR\bsourceId\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\x0f \x01(\tH\x0eR\voperationNo\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\x10 \x01(\tH\x0fR\x0eidempotencyKey\x88\x01\x01\x12*\n" +
-	"\x0esource_service\x18\x11 \x01(\tH\x10R\rsourceService\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\x12 \x01(\rH\x11R\n" +
+	"\tsource_id\x18\x0e \x01(\tH\fR\bsourceId\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\x0f \x01(\tH\rR\voperationNo\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\x10 \x01(\tH\x0eR\x0eidempotencyKey\x88\x01\x01\x12*\n" +
+	"\x0esource_service\x18\x11 \x01(\tH\x0fR\rsourceService\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\x12 \x01(\rH\x10R\n" +
 	"operatorId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\x13 \x01(\tH\x12R\trequestId\x88\x01\x01\x12\"\n" +
+	"request_id\x18\x13 \x01(\tH\x11R\trequestId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"audit_note\x18\x14 \x01(\tH\x13R\tauditNote\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\x15 \x01(\tH\x14R\bmetadata\x88\x01\x01\x12-\n" +
-	"\x10gift_revision_id\x18\x16 \x01(\x04H\x15R\x0egiftRevisionId\x88\x01\x01\x12(\n" +
-	"\rplatform_rate\x18\x17 \x01(\rH\x16R\fplatformRate\x88\x01\x01\x12*\n" +
-	"\x0erecipient_rate\x18\x18 \x01(\rH\x17R\rrecipientRate\x88\x01\x01\x12?\n" +
+	"audit_note\x18\x14 \x01(\tH\x12R\tauditNote\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\x15 \x01(\tH\x13R\bmetadata\x88\x01\x01\x12-\n" +
+	"\x10gift_revision_id\x18\x16 \x01(\x04H\x14R\x0egiftRevisionId\x88\x01\x01\x12(\n" +
+	"\rplatform_rate\x18\x17 \x01(\rH\x15R\fplatformRate\x88\x01\x01\x12*\n" +
+	"\x0erecipient_rate\x18\x18 \x01(\rH\x16R\rrecipientRate\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x17R\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\n" +
 	"\n" +
@@ -2555,33 +2441,31 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\x11_gift_revision_idB\x10\n" +
 	"\x0e_platform_rateB\x11\n" +
 	"\x0f_recipient_rateB\r\n" +
-	"\v_created_at\"\x93\b\n" +
+	"\v_created_at\"\xec\a\n" +
 	"\x1bGiftBackpackTransactionItem\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12*\n" +
-	"\x0etransaction_id\x18\x03 \x01(\x04H\x02R\rtransactionId\x88\x01\x01\x12\x1e\n" +
-	"\bbatch_id\x18\x04 \x01(\x04H\x03R\abatchId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x05 \x01(\x04H\x04R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x06 \x01(\rH\x05R\x06giftId\x88\x01\x01\x12.\n" +
-	"\x10transaction_type\x18\a \x01(\tH\x06R\x0ftransactionType\x88\x01\x01\x12\x1f\n" +
-	"\bquantity\x18\b \x01(\x04H\aR\bquantity\x88\x01\x01\x12,\n" +
-	"\x0fbefore_quantity\x18\t \x01(\x04H\bR\x0ebeforeQuantity\x88\x01\x01\x12*\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12*\n" +
+	"\x0etransaction_id\x18\x03 \x01(\x04H\x01R\rtransactionId\x88\x01\x01\x12\x1e\n" +
+	"\bbatch_id\x18\x04 \x01(\x04H\x02R\abatchId\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x05 \x01(\x04H\x03R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x06 \x01(\rH\x04R\x06giftId\x88\x01\x01\x12.\n" +
+	"\x10transaction_type\x18\a \x01(\tH\x05R\x0ftransactionType\x88\x01\x01\x12\x1f\n" +
+	"\bquantity\x18\b \x01(\x04H\x06R\bquantity\x88\x01\x01\x12,\n" +
+	"\x0fbefore_quantity\x18\t \x01(\x04H\aR\x0ebeforeQuantity\x88\x01\x01\x12*\n" +
 	"\x0eafter_quantity\x18\n" +
-	" \x01(\x04H\tR\rafterQuantity\x88\x01\x01\x12\"\n" +
+	" \x01(\x04H\bR\rafterQuantity\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"unit_price\x18\v \x01(\x03H\n" +
-	"R\tunitPrice\x88\x01\x01\x12$\n" +
-	"\vtotal_price\x18\f \x01(\x03H\vR\n" +
+	"unit_price\x18\v \x01(\x03H\tR\tunitPrice\x88\x01\x01\x12$\n" +
+	"\vtotal_price\x18\f \x01(\x03H\n" +
+	"R\n" +
 	"totalPrice\x88\x01\x01\x12-\n" +
-	"\x10gift_revision_id\x18\r \x01(\x04H\fR\x0egiftRevisionId\x88\x01\x01\x12(\n" +
-	"\rplatform_rate\x18\x0e \x01(\rH\rR\fplatformRate\x88\x01\x01\x12*\n" +
-	"\x0erecipient_rate\x18\x0f \x01(\rH\x0eR\rrecipientRate\x88\x01\x01\x12,\n" +
-	"\x0fplatform_amount\x18\x10 \x01(\x03H\x0fR\x0eplatformAmount\x88\x01\x01\x12.\n" +
-	"\x10recipient_amount\x18\x11 \x01(\x03H\x10R\x0frecipientAmount\x88\x01\x01\x12?\n" +
+	"\x10gift_revision_id\x18\r \x01(\x04H\vR\x0egiftRevisionId\x88\x01\x01\x12(\n" +
+	"\rplatform_rate\x18\x0e \x01(\rH\fR\fplatformRate\x88\x01\x01\x12*\n" +
+	"\x0erecipient_rate\x18\x0f \x01(\rH\rR\rrecipientRate\x88\x01\x01\x12,\n" +
+	"\x0fplatform_amount\x18\x10 \x01(\x03H\x0eR\x0eplatformAmount\x88\x01\x01\x12.\n" +
+	"\x10recipient_amount\x18\x11 \x01(\x03H\x0fR\x0frecipientAmount\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x11\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x11\n" +
 	"\x0f_transaction_idB\v\n" +
 	"\t_batch_idB\n" +
 	"\n" +
@@ -2640,29 +2524,20 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\n" +
 	"\b_gift_idB\x10\n" +
 	"\x0e_occurred_fromB\x0e\n" +
-	"\f_occurred_to\"\xcb\x01\n" +
-	"\x1bListBackpackBalancesRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x126\n" +
+	"\f_occurred_to\"\x92\x01\n" +
+	"\x1bListBackpackBalancesRequest\x126\n" +
 	"\x06filter\x18\x02 \x01(\v2\x1e.gift.v1.BackpackBalanceFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"\xc8\x01\n" +
-	"\x1aListBackpackBatchesRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x124\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\x8f\x01\n" +
+	"\x1aListBackpackBatchesRequest\x124\n" +
 	"\x06filter\x18\x02 \x01(\v2\x1c.gift.v1.BackpackBatchFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"\xd3\x01\n" +
-	"\x1fListBackpackTransactionsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12:\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\x9a\x01\n" +
+	"\x1fListBackpackTransactionsRequest\x12:\n" +
 	"\x06filter\x18\x02 \x01(\v2\".gift.v1.BackpackTransactionFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"\xc2\x01\n" +
-	"#ListBackpackTransactionItemsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12%\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\x89\x01\n" +
+	"#ListBackpackTransactionItemsRequest\x12%\n" +
 	"\x0etransaction_id\x18\x02 \x01(\x04R\rtransactionId\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"\xf0\x03\n" +
-	"\x19AdjustBackpackGiftRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x17\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xb7\x03\n" +
+	"\x19AdjustBackpackGiftRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x17\n" +
 	"\agift_id\x18\x03 \x01(\rR\x06giftId\x12B\n" +
 	"\tdirection\x18\x04 \x01(\x0e2$.gift.v1.BackpackAdjustmentDirectionR\tdirection\x12\x1a\n" +
@@ -2671,12 +2546,11 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\x12external_reference\x18\a \x01(\tR\x11externalReference\x12!\n" +
 	"\foperation_no\x18\b \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\t \x01(\tH\x01R\trequestId\x88\x01\x01\x12<\n" +
+	"request_id\x18\t \x01(\tH\x00R\trequestId\x88\x01\x01\x12<\n" +
 	"\texpire_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampH\x02R\bexpireAt\x88\x01\x01\x12\x1f\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampH\x01R\bexpireAt\x88\x01\x01\x12\x1f\n" +
 	"\voperator_id\x18\v \x01(\rR\n" +
-	"operatorIdB\t\n" +
-	"\a_app_idB\r\n" +
+	"operatorIdB\r\n" +
 	"\v_request_idB\f\n" +
 	"\n" +
 	"_expire_at\"\xef\x01\n" +
@@ -2685,27 +2559,25 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\x05batch\x18\x02 \x01(\v2\x1a.gift.v1.GiftBackpackBatchH\x00R\x05batch\x88\x01\x01\x120\n" +
 	"\x05audit\x18\x03 \x01(\v2\x1a.gift.v1.GiftOperatorAuditR\x05audit\x12\x1a\n" +
 	"\breplayed\x18\x04 \x01(\bR\breplayedB\b\n" +
-	"\x06_batch\"\xf0\x04\n" +
-	"\x18GrantBackpackGiftRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x17\n" +
+	"\x06_batch\"\xb7\x04\n" +
+	"\x18GrantBackpackGiftRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x17\n" +
 	"\agift_id\x18\x03 \x01(\rR\x06giftId\x12\x1a\n" +
 	"\bquantity\x18\x04 \x01(\x04R\bquantity\x12\x1f\n" +
 	"\vsource_type\x18\x05 \x01(\tR\n" +
 	"sourceType\x12 \n" +
-	"\tsource_id\x18\x06 \x01(\tH\x01R\bsourceId\x88\x01\x01\x12<\n" +
-	"\texpire_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x02R\bexpireAt\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\b \x01(\rH\x03R\n" +
+	"\tsource_id\x18\x06 \x01(\tH\x00R\bsourceId\x88\x01\x01\x12<\n" +
+	"\texpire_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x01R\bexpireAt\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\b \x01(\rH\x02R\n" +
 	"operatorId\x88\x01\x01\x12'\n" +
 	"\x0fidempotency_key\x18\t \x01(\tR\x0eidempotencyKey\x12*\n" +
 	"\x0esource_service\x18\n" +
-	" \x01(\tH\x04R\rsourceService\x88\x01\x01\x12\"\n" +
+	" \x01(\tH\x03R\rsourceService\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\v \x01(\tH\x05R\trequestId\x88\x01\x01\x12\"\n" +
+	"request_id\x18\v \x01(\tH\x04R\trequestId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"audit_note\x18\f \x01(\tH\x06R\tauditNote\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\r \x01(\tH\aR\bmetadata\x88\x01\x01B\t\n" +
-	"\a_app_idB\f\n" +
+	"audit_note\x18\f \x01(\tH\x05R\tauditNote\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\r \x01(\tH\x06R\bmetadata\x88\x01\x01B\f\n" +
 	"\n" +
 	"_source_idB\f\n" +
 	"\n" +
@@ -2714,26 +2586,24 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\x0f_source_serviceB\r\n" +
 	"\v_request_idB\r\n" +
 	"\v_audit_noteB\v\n" +
-	"\t_metadata\"\xba\x04\n" +
-	"\x19RevokeBackpackGiftRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x17\n" +
+	"\t_metadata\"\x81\x04\n" +
+	"\x19RevokeBackpackGiftRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x17\n" +
 	"\agift_id\x18\x03 \x01(\rR\x06giftId\x12\x1a\n" +
 	"\bquantity\x18\x04 \x01(\x04R\bquantity\x12$\n" +
-	"\vsource_type\x18\x05 \x01(\tH\x01R\n" +
+	"\vsource_type\x18\x05 \x01(\tH\x00R\n" +
 	"sourceType\x88\x01\x01\x12 \n" +
-	"\tsource_id\x18\x06 \x01(\tH\x02R\bsourceId\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\a \x01(\rH\x03R\n" +
+	"\tsource_id\x18\x06 \x01(\tH\x01R\bsourceId\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\a \x01(\rH\x02R\n" +
 	"operatorId\x88\x01\x01\x12'\n" +
 	"\x0fidempotency_key\x18\b \x01(\tR\x0eidempotencyKey\x12*\n" +
-	"\x0esource_service\x18\t \x01(\tH\x04R\rsourceService\x88\x01\x01\x12\"\n" +
+	"\x0esource_service\x18\t \x01(\tH\x03R\rsourceService\x88\x01\x01\x12\"\n" +
 	"\n" +
 	"request_id\x18\n" +
-	" \x01(\tH\x05R\trequestId\x88\x01\x01\x12\"\n" +
+	" \x01(\tH\x04R\trequestId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"audit_note\x18\v \x01(\tH\x06R\tauditNote\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\f \x01(\tH\aR\bmetadata\x88\x01\x01B\t\n" +
-	"\a_app_idB\x0e\n" +
+	"audit_note\x18\v \x01(\tH\x05R\tauditNote\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\f \x01(\tH\x06R\bmetadata\x88\x01\x01B\x0e\n" +
 	"\f_source_typeB\f\n" +
 	"\n" +
 	"_source_idB\x0e\n" +
@@ -2741,18 +2611,16 @@ const file_gift_v1_backpack_proto_rawDesc = "" +
 	"\x0f_source_serviceB\r\n" +
 	"\v_request_idB\r\n" +
 	"\v_audit_noteB\v\n" +
-	"\t_metadata\"\x81\x03\n" +
-	"\x1aExpireBackpackItemsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x02 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x03 \x01(\rH\x02R\x06giftId\x88\x01\x01\x12\x1e\n" +
-	"\bbatch_id\x18\x04 \x01(\x04H\x03R\abatchId\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\x05 \x01(\rH\x04R\n" +
+	"\t_metadata\"\xc8\x02\n" +
+	"\x1aExpireBackpackItemsRequest\x12\x1c\n" +
+	"\auser_id\x18\x02 \x01(\x04H\x00R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x03 \x01(\rH\x01R\x06giftId\x88\x01\x01\x12\x1e\n" +
+	"\bbatch_id\x18\x04 \x01(\x04H\x02R\abatchId\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\x05 \x01(\rH\x03R\n" +
 	"operatorId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x05R\trequestId\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\a \x01(\tH\x06R\x0eidempotencyKey\x88\x01\x01B\t\n" +
-	"\a_app_idB\n" +
+	"request_id\x18\x06 \x01(\tH\x04R\trequestId\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\a \x01(\tH\x05R\x0eidempotencyKey\x88\x01\x01B\n" +
 	"\n" +
 	"\b_user_idB\n" +
 	"\n" +
@@ -2814,9 +2682,8 @@ var file_gift_v1_backpack_proto_goTypes = []any{
 	(*ExpireBackpackItemsRequest)(nil),              // 21: gift.v1.ExpireBackpackItemsRequest
 	(*ExpireBackpackItemsResponse)(nil),             // 22: gift.v1.ExpireBackpackItemsResponse
 	(*timestamppb.Timestamp)(nil),                   // 23: google.protobuf.Timestamp
-	(v1.AppId)(0),                                   // 24: common.v1.AppId
-	(*v11.PagingRequest)(nil),                       // 25: common.pagination.v1.PagingRequest
-	(*GiftOperatorAudit)(nil),                       // 26: gift.v1.GiftOperatorAudit
+	(*v1.PagingRequest)(nil),                        // 24: common.pagination.v1.PagingRequest
+	(*GiftOperatorAudit)(nil),                       // 25: gift.v1.GiftOperatorAudit
 }
 var file_gift_v1_backpack_proto_depIdxs = []int32{
 	23, // 0: gift.v1.GiftBackpackBalance.created_at:type_name -> google.protobuf.Timestamp
@@ -2835,32 +2702,24 @@ var file_gift_v1_backpack_proto_depIdxs = []int32{
 	23, // 13: gift.v1.BackpackBatchFilter.expire_to:type_name -> google.protobuf.Timestamp
 	23, // 14: gift.v1.BackpackTransactionFilter.occurred_from:type_name -> google.protobuf.Timestamp
 	23, // 15: gift.v1.BackpackTransactionFilter.occurred_to:type_name -> google.protobuf.Timestamp
-	24, // 16: gift.v1.ListBackpackBalancesRequest.app_id:type_name -> common.v1.AppId
-	10, // 17: gift.v1.ListBackpackBalancesRequest.filter:type_name -> gift.v1.BackpackBalanceFilter
-	25, // 18: gift.v1.ListBackpackBalancesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	24, // 19: gift.v1.ListBackpackBatchesRequest.app_id:type_name -> common.v1.AppId
-	11, // 20: gift.v1.ListBackpackBatchesRequest.filter:type_name -> gift.v1.BackpackBatchFilter
-	25, // 21: gift.v1.ListBackpackBatchesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	24, // 22: gift.v1.ListBackpackTransactionsRequest.app_id:type_name -> common.v1.AppId
-	12, // 23: gift.v1.ListBackpackTransactionsRequest.filter:type_name -> gift.v1.BackpackTransactionFilter
-	25, // 24: gift.v1.ListBackpackTransactionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	24, // 25: gift.v1.ListBackpackTransactionItemsRequest.app_id:type_name -> common.v1.AppId
-	25, // 26: gift.v1.ListBackpackTransactionItemsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	24, // 27: gift.v1.AdjustBackpackGiftRequest.app_id:type_name -> common.v1.AppId
-	1,  // 28: gift.v1.AdjustBackpackGiftRequest.direction:type_name -> gift.v1.BackpackAdjustmentDirection
-	23, // 29: gift.v1.AdjustBackpackGiftRequest.expire_at:type_name -> google.protobuf.Timestamp
-	4,  // 30: gift.v1.AdjustBackpackGiftResponse.transaction:type_name -> gift.v1.GiftBackpackTransaction
-	3,  // 31: gift.v1.AdjustBackpackGiftResponse.batch:type_name -> gift.v1.GiftBackpackBatch
-	26, // 32: gift.v1.AdjustBackpackGiftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	24, // 33: gift.v1.GrantBackpackGiftRequest.app_id:type_name -> common.v1.AppId
-	23, // 34: gift.v1.GrantBackpackGiftRequest.expire_at:type_name -> google.protobuf.Timestamp
-	24, // 35: gift.v1.RevokeBackpackGiftRequest.app_id:type_name -> common.v1.AppId
-	24, // 36: gift.v1.ExpireBackpackItemsRequest.app_id:type_name -> common.v1.AppId
-	37, // [37:37] is the sub-list for method output_type
-	37, // [37:37] is the sub-list for method input_type
-	37, // [37:37] is the sub-list for extension type_name
-	37, // [37:37] is the sub-list for extension extendee
-	0,  // [0:37] is the sub-list for field type_name
+	10, // 16: gift.v1.ListBackpackBalancesRequest.filter:type_name -> gift.v1.BackpackBalanceFilter
+	24, // 17: gift.v1.ListBackpackBalancesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	11, // 18: gift.v1.ListBackpackBatchesRequest.filter:type_name -> gift.v1.BackpackBatchFilter
+	24, // 19: gift.v1.ListBackpackBatchesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	12, // 20: gift.v1.ListBackpackTransactionsRequest.filter:type_name -> gift.v1.BackpackTransactionFilter
+	24, // 21: gift.v1.ListBackpackTransactionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	24, // 22: gift.v1.ListBackpackTransactionItemsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	1,  // 23: gift.v1.AdjustBackpackGiftRequest.direction:type_name -> gift.v1.BackpackAdjustmentDirection
+	23, // 24: gift.v1.AdjustBackpackGiftRequest.expire_at:type_name -> google.protobuf.Timestamp
+	4,  // 25: gift.v1.AdjustBackpackGiftResponse.transaction:type_name -> gift.v1.GiftBackpackTransaction
+	3,  // 26: gift.v1.AdjustBackpackGiftResponse.batch:type_name -> gift.v1.GiftBackpackBatch
+	25, // 27: gift.v1.AdjustBackpackGiftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	23, // 28: gift.v1.GrantBackpackGiftRequest.expire_at:type_name -> google.protobuf.Timestamp
+	29, // [29:29] is the sub-list for method output_type
+	29, // [29:29] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_gift_v1_backpack_proto_init() }
@@ -2876,10 +2735,6 @@ func file_gift_v1_backpack_proto_init() {
 	file_gift_v1_backpack_proto_msgTypes[8].OneofWrappers = []any{}
 	file_gift_v1_backpack_proto_msgTypes[9].OneofWrappers = []any{}
 	file_gift_v1_backpack_proto_msgTypes[10].OneofWrappers = []any{}
-	file_gift_v1_backpack_proto_msgTypes[11].OneofWrappers = []any{}
-	file_gift_v1_backpack_proto_msgTypes[12].OneofWrappers = []any{}
-	file_gift_v1_backpack_proto_msgTypes[13].OneofWrappers = []any{}
-	file_gift_v1_backpack_proto_msgTypes[14].OneofWrappers = []any{}
 	file_gift_v1_backpack_proto_msgTypes[15].OneofWrappers = []any{}
 	file_gift_v1_backpack_proto_msgTypes[16].OneofWrappers = []any{}
 	file_gift_v1_backpack_proto_msgTypes[17].OneofWrappers = []any{}

@@ -34,9 +34,9 @@ const (
 	RoomErrorReason_FORBIDDEN RoomErrorReason = 300
 	// not found。
 	RoomErrorReason_NOT_FOUND RoomErrorReason = 400
-	// 房间不存在或不在当前 App。
+	// 房间不存在。
 	RoomErrorReason_ROOM_NOT_FOUND RoomErrorReason = 401
-	// 场次不存在或不在当前 App。
+	// 场次不存在。
 	RoomErrorReason_SESSION_NOT_FOUND RoomErrorReason = 402
 	// 麦位不存在或状态不允许该操作。
 	RoomErrorReason_SEAT_NOT_AVAILABLE RoomErrorReason = 403

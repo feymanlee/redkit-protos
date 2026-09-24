@@ -33,7 +33,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// 钱包风险服务，管理 App/币种级规则 Revision 和立即生效的紧急写入阻断。
+// 钱包风险服务，管理币种级规则 Revision 和立即生效的紧急写入阻断。
 type WalletRiskServiceClient interface {
 	// 查询 RiskRule 列表。
 	ListRiskRules(ctx context.Context, in *v1.PagingRequest, opts ...grpc.CallOption) (*ListWalletRiskRuleResponse, error)
@@ -45,7 +45,7 @@ type WalletRiskServiceClient interface {
 	ApproveRiskRuleRevision(ctx context.Context, in *ApproveWalletRiskRuleRevisionRequest, opts ...grpc.CallOption) (*WalletRiskRuleRevision, error)
 	// 查询 EmergencyWalletBlock 列表。
 	ListEmergencyWalletBlocks(ctx context.Context, in *v1.PagingRequest, opts ...grpc.CallOption) (*ListEmergencyWalletBlockResponse, error)
-	// 幂等创建并立即启用有截止时间的 App 级或 User 级 EmergencyWalletBlock。
+	// 幂等创建并立即启用有截止时间的 User 级 EmergencyWalletBlock。
 	CreateEmergencyWalletBlock(ctx context.Context, in *CreateEmergencyWalletBlockRequest, opts ...grpc.CallOption) (*EmergencyWalletBlock, error)
 	// 使用 governance operation 幂等结束仍处于 ACTIVE 的 EmergencyWalletBlock。
 	EndEmergencyWalletBlock(ctx context.Context, in *EndEmergencyWalletBlockRequest, opts ...grpc.CallOption) (*EmergencyWalletBlock, error)
@@ -133,7 +133,7 @@ func (c *walletRiskServiceClient) EndEmergencyWalletBlock(ctx context.Context, i
 // All implementations must embed UnimplementedWalletRiskServiceServer
 // for forward compatibility.
 //
-// 钱包风险服务，管理 App/币种级规则 Revision 和立即生效的紧急写入阻断。
+// 钱包风险服务，管理币种级规则 Revision 和立即生效的紧急写入阻断。
 type WalletRiskServiceServer interface {
 	// 查询 RiskRule 列表。
 	ListRiskRules(context.Context, *v1.PagingRequest) (*ListWalletRiskRuleResponse, error)
@@ -145,7 +145,7 @@ type WalletRiskServiceServer interface {
 	ApproveRiskRuleRevision(context.Context, *ApproveWalletRiskRuleRevisionRequest) (*WalletRiskRuleRevision, error)
 	// 查询 EmergencyWalletBlock 列表。
 	ListEmergencyWalletBlocks(context.Context, *v1.PagingRequest) (*ListEmergencyWalletBlockResponse, error)
-	// 幂等创建并立即启用有截止时间的 App 级或 User 级 EmergencyWalletBlock。
+	// 幂等创建并立即启用有截止时间的 User 级 EmergencyWalletBlock。
 	CreateEmergencyWalletBlock(context.Context, *CreateEmergencyWalletBlockRequest) (*EmergencyWalletBlock, error)
 	// 使用 governance operation 幂等结束仍处于 ACTIVE 的 EmergencyWalletBlock。
 	EndEmergencyWalletBlock(context.Context, *EndEmergencyWalletBlockRequest) (*EmergencyWalletBlock, error)

@@ -7,7 +7,6 @@
 package walletpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -27,8 +26,6 @@ const (
 // GetWalletOperationsSummaryRequest 标识待查询的 WalletOperationsSummary。
 type GetWalletOperationsSummaryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetWalletOperationsSummary 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// long_running_freeze_before 指定 GetWalletOperationsSummary 查询或生效区间的结束边界。
 	LongRunningFreezeBefore *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=long_running_freeze_before,json=longRunningFreezeBefore,proto3" json:"long_running_freeze_before,omitempty"`
 	unknownFields           protoimpl.UnknownFields
@@ -63,13 +60,6 @@ func (x *GetWalletOperationsSummaryRequest) ProtoReflect() protoreflect.Message 
 // Deprecated: Use GetWalletOperationsSummaryRequest.ProtoReflect.Descriptor instead.
 func (*GetWalletOperationsSummaryRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_operations_query_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GetWalletOperationsSummaryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetWalletOperationsSummaryRequest) GetLongRunningFreezeBefore() *timestamppb.Timestamp {
@@ -284,9 +274,8 @@ var File_wallet_v1_operations_query_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_operations_query_proto_rawDesc = "" +
 	"\n" +
-	" wallet/v1/operations_query.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xaf\x01\n" +
-	"!GetWalletOperationsSummaryRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12\\\n" +
+	" wallet/v1/operations_query.proto\x12\twallet.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x81\x01\n" +
+	"!GetWalletOperationsSummaryRequest\x12\\\n" +
 	"\x1along_running_freeze_before\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\x17longRunningFreezeBefore\"L\n" +
 	"\x16WalletOperationsAmount\x12\x1a\n" +
 	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x12\x16\n" +
@@ -327,26 +316,24 @@ var file_wallet_v1_operations_query_proto_goTypes = []any{
 	(*WalletOperationsAmount)(nil),            // 1: wallet.v1.WalletOperationsAmount
 	(*WalletOperationsMetric)(nil),            // 2: wallet.v1.WalletOperationsMetric
 	(*WalletOperationsSummary)(nil),           // 3: wallet.v1.WalletOperationsSummary
-	(v1.AppId)(0),                             // 4: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),             // 5: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),             // 4: google.protobuf.Timestamp
 }
 var file_wallet_v1_operations_query_proto_depIdxs = []int32{
-	4,  // 0: wallet.v1.GetWalletOperationsSummaryRequest.app_id:type_name -> common.v1.AppId
-	5,  // 1: wallet.v1.GetWalletOperationsSummaryRequest.long_running_freeze_before:type_name -> google.protobuf.Timestamp
-	1,  // 2: wallet.v1.WalletOperationsMetric.amounts:type_name -> wallet.v1.WalletOperationsAmount
-	5,  // 3: wallet.v1.WalletOperationsMetric.oldest_at:type_name -> google.protobuf.Timestamp
-	2,  // 4: wallet.v1.WalletOperationsSummary.pending_approvals:type_name -> wallet.v1.WalletOperationsMetric
-	2,  // 5: wallet.v1.WalletOperationsSummary.open_debts:type_name -> wallet.v1.WalletOperationsMetric
-	2,  // 6: wallet.v1.WalletOperationsSummary.reconciliation_differences:type_name -> wallet.v1.WalletOperationsMetric
-	2,  // 7: wallet.v1.WalletOperationsSummary.long_running_freezes:type_name -> wallet.v1.WalletOperationsMetric
-	2,  // 8: wallet.v1.WalletOperationsSummary.high_risk_events:type_name -> wallet.v1.WalletOperationsMetric
-	0,  // 9: wallet.v1.WalletOperationsQueryService.GetOperationsSummary:input_type -> wallet.v1.GetWalletOperationsSummaryRequest
-	3,  // 10: wallet.v1.WalletOperationsQueryService.GetOperationsSummary:output_type -> wallet.v1.WalletOperationsSummary
-	10, // [10:11] is the sub-list for method output_type
-	9,  // [9:10] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	4, // 0: wallet.v1.GetWalletOperationsSummaryRequest.long_running_freeze_before:type_name -> google.protobuf.Timestamp
+	1, // 1: wallet.v1.WalletOperationsMetric.amounts:type_name -> wallet.v1.WalletOperationsAmount
+	4, // 2: wallet.v1.WalletOperationsMetric.oldest_at:type_name -> google.protobuf.Timestamp
+	2, // 3: wallet.v1.WalletOperationsSummary.pending_approvals:type_name -> wallet.v1.WalletOperationsMetric
+	2, // 4: wallet.v1.WalletOperationsSummary.open_debts:type_name -> wallet.v1.WalletOperationsMetric
+	2, // 5: wallet.v1.WalletOperationsSummary.reconciliation_differences:type_name -> wallet.v1.WalletOperationsMetric
+	2, // 6: wallet.v1.WalletOperationsSummary.long_running_freezes:type_name -> wallet.v1.WalletOperationsMetric
+	2, // 7: wallet.v1.WalletOperationsSummary.high_risk_events:type_name -> wallet.v1.WalletOperationsMetric
+	0, // 8: wallet.v1.WalletOperationsQueryService.GetOperationsSummary:input_type -> wallet.v1.GetWalletOperationsSummaryRequest
+	3, // 9: wallet.v1.WalletOperationsQueryService.GetOperationsSummary:output_type -> wallet.v1.WalletOperationsSummary
+	9, // [9:10] is the sub-list for method output_type
+	8, // [8:9] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_operations_query_proto_init() }

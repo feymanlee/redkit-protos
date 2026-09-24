@@ -70,9 +70,9 @@ func (x *ConsumerPurchaseOptionsWrapper) GetPaymentConsumer() *ConsumerPurchaseO
 // ConsumerPurchaseOptions 保存 Payment Consumer Purchase 的部署配置。
 type ConsumerPurchaseOptions struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 按 App 和稳定 code 注册的 Return Target JSON，不接受请求侧 URL。
+	// 按稳定 code 注册的 Return Target JSON，不接受请求侧 URL。
 	ReturnTargetsJson string `protobuf:"bytes,1,opt,name=return_targets_json,json=returnTargetsJson,proto3" json:"return_targets_json,omitempty"`
-	// Consumer BFF issuer 到固定 App ID 与 Ed25519 公钥数组的 JSON allowlist；私钥只属于外部 BFF 部署。
+	// Consumer BFF issuer 到 Ed25519 公钥数组的 JSON allowlist；私钥只属于外部 BFF 部署。
 	RiskTrustedIssuersJson string `protobuf:"bytes,2,opt,name=risk_trusted_issuers_json,json=riskTrustedIssuersJson,proto3" json:"risk_trusted_issuers_json,omitempty"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache

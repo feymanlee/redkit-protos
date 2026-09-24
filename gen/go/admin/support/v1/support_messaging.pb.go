@@ -24,7 +24,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AdminListSmsMessagesRequest selects the authenticated App's SMS observations.
+// AdminListSmsMessagesRequest selects the SMS observations.
 type AdminListSmsMessagesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// filter 限定本次查询采用的筛选条件。

@@ -10,7 +10,6 @@ import "support/file/v1/types.proto";
 // GetFileViewRequest 解析一个可安全对外返回的 File View。
 message GetFileViewRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // File ID。
   uint64 file_id = 2;
 }
@@ -18,7 +17,6 @@ message GetFileViewRequest {
 // BatchGetFileViewsRequest 批量解析最多一百个 File View。
 message BatchGetFileViewsRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // File ID 列表。
   repeated uint64 file_ids = 2;
 }
@@ -44,7 +42,6 @@ message BatchGetFileViewsResponse {
 // ValidateFileRequest 校验业务字段能否绑定指定 File。
 message ValidateFileRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // File ID。
   uint64 file_id = 2;
   // 业务字段要求的 Purpose。
@@ -71,8 +68,6 @@ message FileValidationItem {
 message BatchValidateFilesRequest {
   // 校验项。
   repeated FileValidationItem items = 1;
-  // 具体业务 App。
-  common.v1.AppId app_id = 2;
 }
 
 // FileValidationResult 表示一个 File 的独立校验结果。
@@ -97,8 +92,6 @@ message BatchValidateFilesResponse {
 
 // CreateFileDownloadAuthorizationRequest requests one short-lived protected-file URL.
 message CreateFileDownloadAuthorizationRequest {
-  // app_id 限定 CreateFileDownloadAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // file_id 标识关联的 File。
   uint64 file_id = 2;
   // expected_purpose 指定 CreateFileDownloadAuthorization 数据或能力的预期用途。
@@ -117,8 +110,6 @@ message FileDownloadAuthorization {
 
 // IssueProtectedDownloadRequest 为一个已知绑定的受保护 File 签发短期下载地址。
 message IssueProtectedDownloadRequest {
-  // app_id 限定 IssueProtectedDownload 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // file_id 标识关联的 File。
   uint64 file_id = 2;
   // expected_purpose 指定 IssueProtectedDownload 数据或能力的预期用途。
@@ -153,6 +144,6 @@ service FileAccessService {
   rpc BatchValidateFiles(BatchValidateFilesRequest) returns (BatchValidateFilesResponse);
   // 为受保护文件签发短期下载地址。
   rpc CreateDownloadAuthorization(CreateFileDownloadAuthorizationRequest) returns (FileDownloadAuthorization);
-  // 校验 App、Purpose、Owner 与状态后签发短期受保护下载地址。
+  // 校验 Purpose、Owner 与状态后签发短期受保护下载地址。
   rpc IssueProtectedDownload(IssueProtectedDownloadRequest) returns (IssueProtectedDownloadResponse);
 }

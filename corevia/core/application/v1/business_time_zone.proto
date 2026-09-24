@@ -2,24 +2,16 @@ syntax = "proto3";
 
 package core.application.v1;
 
-import "common/v1/common.proto";
+import "google/protobuf/empty.proto";
 
-// BusinessTimeZoneService exposes the fixed business calendar for one App.
+// BusinessTimeZoneService 暴露平台唯一的固定业务日历。
 service BusinessTimeZoneService {
-  // Get returns the IANA time zone owned by the requested App.
-  rpc Get(GetBusinessTimeZoneRequest) returns (AppBusinessTimeZone) {}
+  // Get 返回平台拥有的 IANA 业务时区。
+  rpc Get(google.protobuf.Empty) returns (BusinessTimeZone) {}
 }
 
-// GetBusinessTimeZoneRequest identifies one concrete App.
-message GetBusinessTimeZoneRequest {
-  // App must match the trusted App Scope metadata.
-  common.v1.AppId app_id = 1;
-}
-
-// AppBusinessTimeZone describes an App's fixed business calendar.
-message AppBusinessTimeZone {
-  // Concrete App identity.
-  common.v1.AppId app_id = 1;
+// BusinessTimeZone 描述平台的固定业务日历。
+message BusinessTimeZone {
   // Canonical IANA time zone name.
-  string iana_name = 2;
+  string iana_name = 1;
 }

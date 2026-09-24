@@ -12,8 +12,6 @@ import "wallet/v1/wallet_types.proto";
 message RechargeRefund {
   // 退款记录 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 充值订单号。
@@ -48,8 +46,6 @@ message RechargeRefund {
 message WalletUserDebt {
   // 欠款 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 欠款单号。
@@ -86,7 +82,7 @@ message WalletUserDebt {
 
 // WalletUserDebtFilter 定义可组合的查询筛选条件。
 message WalletUserDebtFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1;
   // status 表示 WalletUserDebtFilter 当前可观察的生命周期状态。
   optional string status = 2;
@@ -104,8 +100,6 @@ message WalletUserDebtFilter {
 
 // ListWalletUserDebtsRequest 定义 WalletUserDebts 的筛选与分页参数。
 message ListWalletUserDebtsRequest {
-  // app_id 限定 ListWalletUserDebts 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
   // filter 限定本次查询采用的筛选条件。
@@ -119,16 +113,12 @@ message PrepareRechargeRefundRequest {
   string refund_no = 2;
   // 现金退款金额，分。
   int64 refund_amount = 3;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 4;
 }
 
 // 确认充值退款请求。
 message ConfirmRechargeRefundRequest {
   // 退款单号。
   string refund_no = 1;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 2;
 }
 
 // 应用充值退款请求。
@@ -141,14 +131,10 @@ message ApplyRechargeRefundRequest {
   int64 refund_amount = 3;
   // 是否渠道强制退款；为 true 时余额不足会记录欠款。
   bool force = 4;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 5;
 }
 
 // 取消充值退款请求。
 message CancelRechargeRefundRequest {
   // 退款单号。
   string refund_no = 1;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 2;
 }

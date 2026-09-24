@@ -2,30 +2,21 @@ syntax = "proto3";
 
 package user.administration.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/duration.proto";
 
-// ExternalIdentityOptionsWrapper exposes App-specific OIDC provider settings
-// through the bootstrap custom-config loader.
+// ExternalIdentityOptionsWrapper exposes trusted OIDC provider settings through
+// the bootstrap custom-config loader.
 message ExternalIdentityOptionsWrapper {
   // external_identity 记录外部或上游系统用于稳定关联 ExternalIdentityOptionsWrapper 的身份。
   ExternalIdentityOptions external_identity = 1;
 }
 
-// ExternalIdentityOptions contains trusted deployment configuration for all Apps.
+// ExternalIdentityOptions contains trusted deployment configuration for OIDC providers.
 message ExternalIdentityOptions {
-  // apps 列出 ExternalIdentityOptions 关联的 AppExternalIdentityOptions。
-  repeated AppExternalIdentityOptions apps = 1;
-}
-
-// AppExternalIdentityOptions binds provider audiences to one concrete App.
-message AppExternalIdentityOptions {
-  // app_id 限定 AppExternalIdentityOptions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // apple 承载 AppExternalIdentityOptions 关联的 OIDCProviderOptions。
-  OIDCProviderOptions apple = 2;
-  // google 承载 AppExternalIdentityOptions 关联的 OIDCProviderOptions。
-  OIDCProviderOptions google = 3;
+  // apple 承载 ExternalIdentityOptions 关联的 OIDCProviderOptions。
+  OIDCProviderOptions apple = 1;
+  // google 承载 ExternalIdentityOptions 关联的 OIDCProviderOptions。
+  OIDCProviderOptions google = 2;
 }
 
 // OIDCProviderOptions configures ID-token verification. Secrets are not needed

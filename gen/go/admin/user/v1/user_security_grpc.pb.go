@@ -40,7 +40,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // C 端用户安全管理服务。
-// App 与 Operator 只从已认证上下文派生；请求中的 user_id 始终表示被处置的 C 端 User。
+// Operator 只从已认证上下文派生；请求中的 user_id 始终表示被处置的 C 端 User。
 type UserSecurityAdminServiceClient interface {
 	// 查询 Session 列表。
 	ListSessions(ctx context.Context, in *AdminListUserSessionsRequest, opts ...grpc.CallOption) (*v1.ListSessionsResponse, error)
@@ -201,7 +201,7 @@ func (c *userSecurityAdminServiceClient) RevokeDeviceTrust(ctx context.Context, 
 // for forward compatibility.
 //
 // C 端用户安全管理服务。
-// App 与 Operator 只从已认证上下文派生；请求中的 user_id 始终表示被处置的 C 端 User。
+// Operator 只从已认证上下文派生；请求中的 user_id 始终表示被处置的 C 端 User。
 type UserSecurityAdminServiceServer interface {
 	// 查询 Session 列表。
 	ListSessions(context.Context, *AdminListUserSessionsRequest) (*v1.ListSessionsResponse, error)

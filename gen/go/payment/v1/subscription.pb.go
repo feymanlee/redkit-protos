@@ -7,8 +7,8 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
@@ -696,8 +696,6 @@ type SubscriptionPlan struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 计划 ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 计划名称。
 	Name *string `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// 计划编码。
@@ -755,13 +753,6 @@ func (*SubscriptionPlan) Descriptor() ([]byte, []int) {
 func (x *SubscriptionPlan) GetId() uint32 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *SubscriptionPlan) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -841,8 +832,6 @@ type SubscriptionPlanRevision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 SubscriptionPlanRevision。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 SubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// plan_id 标识关联的 Plan。
 	PlanId *uint32 `protobuf:"varint,3,opt,name=plan_id,json=planId,proto3,oneof" json:"plan_id,omitempty"`
 	// revision_no 是 SubscriptionPlanRevision 对外关联与审计使用的业务编号。
@@ -904,13 +893,6 @@ func (*SubscriptionPlanRevision) Descriptor() ([]byte, []int) {
 func (x *SubscriptionPlanRevision) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *SubscriptionPlanRevision) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1004,8 +986,6 @@ type UserSubscription struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 订阅 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 计划 ID。
@@ -1063,13 +1043,6 @@ func (*UserSubscription) Descriptor() ([]byte, []int) {
 func (x *UserSubscription) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *UserSubscription) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1149,8 +1122,6 @@ type UserSubscriptionDetail struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 明细 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 用户订阅 ID。
@@ -1250,13 +1221,6 @@ func (*UserSubscriptionDetail) Descriptor() ([]byte, []int) {
 func (x *UserSubscriptionDetail) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *UserSubscriptionDetail) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1481,8 +1445,6 @@ func (x *UserSubscriptionDetail) GetUpdatedAt() *timestamppb.Timestamp {
 // 创建订阅请求。
 type CreateSubscriptionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 计划 ID。
@@ -1521,13 +1483,6 @@ func (x *CreateSubscriptionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateSubscriptionRequest.ProtoReflect.Descriptor instead.
 func (*CreateSubscriptionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_subscription_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *CreateSubscriptionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateSubscriptionRequest) GetUserId() uint64 {
@@ -1610,9 +1565,7 @@ func (x *ListUserSubscriptionResponse) GetTotal() uint64 {
 type GetUserSubscriptionDetailRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 用户订阅 ID。
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Id            uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1652,13 +1605,6 @@ func (x *GetUserSubscriptionDetailRequest) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *GetUserSubscriptionDetailRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // 用户订阅详情响应。
@@ -1784,11 +1730,9 @@ type ProviderSubscription struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ProviderSubscription。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 ProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
-	// original_user_id 标识当前 App 内关联的 User。
+	// original_user_id 标识关联的 User。
 	OriginalUserId *uint64 `protobuf:"varint,4,opt,name=original_user_id,json=originalUserId,proto3,oneof" json:"original_user_id,omitempty"`
 	// user_subscription_id 标识关联的 UserSubscription。
 	UserSubscriptionId *uint64 `protobuf:"varint,5,opt,name=user_subscription_id,json=userSubscriptionId,proto3,oneof" json:"user_subscription_id,omitempty"`
@@ -1871,13 +1815,6 @@ func (*ProviderSubscription) Descriptor() ([]byte, []int) {
 func (x *ProviderSubscription) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *ProviderSubscription) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -2055,8 +1992,6 @@ type ProviderSubscriptionPeriod struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ProviderSubscriptionPeriod。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 ProviderSubscriptionPeriod 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// provider_subscription_record_id 标识关联的 ProviderSubscriptionRecord。
 	ProviderSubscriptionRecordId *uint64 `protobuf:"varint,3,opt,name=provider_subscription_record_id,json=providerSubscriptionRecordId,proto3,oneof" json:"provider_subscription_record_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
@@ -2065,7 +2000,7 @@ type ProviderSubscriptionPeriod struct {
 	ProviderTransactionId *string `protobuf:"bytes,5,opt,name=provider_transaction_id,json=providerTransactionId,proto3,oneof" json:"provider_transaction_id,omitempty"`
 	// product_sku 是外部商店或商品目录使用的稳定商品编码。
 	ProductSku *string `protobuf:"bytes,6,opt,name=product_sku,json=productSku,proto3,oneof" json:"product_sku,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,7,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// plan_revision_id 标识关联的 PlanRevision。
 	PlanRevisionId *uint64 `protobuf:"varint,8,opt,name=plan_revision_id,json=planRevisionId,proto3,oneof" json:"plan_revision_id,omitempty"`
@@ -2128,13 +2063,6 @@ func (*ProviderSubscriptionPeriod) Descriptor() ([]byte, []int) {
 func (x *ProviderSubscriptionPeriod) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *ProviderSubscriptionPeriod) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -2263,8 +2191,6 @@ type ProviderSubscriptionEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ProviderSubscriptionEvent。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 ProviderSubscriptionEvent 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// provider_subscription_record_id 标识关联的 ProviderSubscriptionRecord。
 	ProviderSubscriptionRecordId *uint64 `protobuf:"varint,3,opt,name=provider_subscription_record_id,json=providerSubscriptionRecordId,proto3,oneof" json:"provider_subscription_record_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
@@ -2334,13 +2260,6 @@ func (*ProviderSubscriptionEvent) Descriptor() ([]byte, []int) {
 func (x *ProviderSubscriptionEvent) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *ProviderSubscriptionEvent) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -2552,19 +2471,17 @@ func (x *ProviderSubscriptionDetail) GetPayments() []*Payment {
 type ListProviderSubscriptionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	// providers 列出 ListProviderSubscriptions 关联的 PaymentProvider。
 	Providers []PaymentProvider `protobuf:"varint,2,rep,packed,name=providers,proto3,enum=payment.v1.PaymentProvider" json:"providers,omitempty"`
 	// statuses 列出 ListProviderSubscriptions 关联的 ProviderSubscriptionStatus。
 	Statuses []ProviderSubscriptionStatus `protobuf:"varint,3,rep,packed,name=statuses,proto3,enum=payment.v1.ProviderSubscriptionStatus" json:"statuses,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// plan_revision_id 标识关联的 PlanRevision。
 	PlanRevisionId *uint64 `protobuf:"varint,5,opt,name=plan_revision_id,json=planRevisionId,proto3,oneof" json:"plan_revision_id,omitempty"`
-	// app_id 限定 ListProviderSubscriptions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ListProviderSubscriptionsRequest) Reset() {
@@ -2597,7 +2514,7 @@ func (*ListProviderSubscriptionsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_subscription_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *ListProviderSubscriptionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListProviderSubscriptionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -2630,13 +2547,6 @@ func (x *ListProviderSubscriptionsRequest) GetPlanRevisionId() uint64 {
 		return *x.PlanRevisionId
 	}
 	return 0
-}
-
-func (x *ListProviderSubscriptionsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListProviderSubscriptionsResponse 返回 ProviderSubscriptions 结果集合及分页信息。
@@ -2698,9 +2608,7 @@ func (x *ListProviderSubscriptionsResponse) GetTotal() uint64 {
 type GetProviderSubscriptionDetailRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GetProviderSubscriptionDetail。
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GetProviderSubscriptionDetail 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Id            uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2742,19 +2650,12 @@ func (x *GetProviderSubscriptionDetailRequest) GetId() uint64 {
 	return 0
 }
 
-func (x *GetProviderSubscriptionDetailRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // VerifyProviderSubscriptionPurchaseRequest 定义校验 ProviderSubscriptionPurchase 的幂等管理命令参数。
 type VerifyProviderSubscriptionPurchaseRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,1,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// channel_revision_id 标识关联的 ChannelRevision。
 	ChannelRevisionId uint64 `protobuf:"varint,3,opt,name=channel_revision_id,json=channelRevisionId,proto3" json:"channel_revision_id,omitempty"`
@@ -2762,10 +2663,8 @@ type VerifyProviderSubscriptionPurchaseRequest struct {
 	SignedPurchase string `protobuf:"bytes,4,opt,name=signed_purchase,json=signedPurchase,proto3" json:"signed_purchase,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,5,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
-	// app_id 限定 VerifyProviderSubscriptionPurchase 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *VerifyProviderSubscriptionPurchaseRequest) Reset() {
@@ -2833,20 +2732,11 @@ func (x *VerifyProviderSubscriptionPurchaseRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-func (x *VerifyProviderSubscriptionPurchaseRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // ProcessProviderSubscriptionCallbackRequest 定义执行 ProcessProviderSubscriptionCallback 的命令参数。
 type ProcessProviderSubscriptionCallbackRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// callback_id 标识关联的 Callback。
-	CallbackId uint64 `protobuf:"varint,1,opt,name=callback_id,json=callbackId,proto3" json:"callback_id,omitempty"`
-	// app_id 限定 ProcessProviderSubscriptionCallback 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	CallbackId    uint64 `protobuf:"varint,1,opt,name=callback_id,json=callbackId,proto3" json:"callback_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2888,13 +2778,6 @@ func (x *ProcessProviderSubscriptionCallbackRequest) GetCallbackId() uint64 {
 	return 0
 }
 
-func (x *ProcessProviderSubscriptionCallbackRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // CancelProviderSubscriptionRequest 定义取消 ProviderSubscription 的幂等管理命令参数。
 type CancelProviderSubscriptionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2905,9 +2788,7 @@ type CancelProviderSubscriptionRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,3,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 CancelProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,5,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2970,13 +2851,6 @@ func (x *CancelProviderSubscriptionRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *CancelProviderSubscriptionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // RefreshProviderSubscriptionRequest 定义执行 RefreshProviderSubscription 的幂等管理命令参数。
 type RefreshProviderSubscriptionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2987,9 +2861,7 @@ type RefreshProviderSubscriptionRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,3,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 RefreshProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,5,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3050,13 +2922,6 @@ func (x *RefreshProviderSubscriptionRequest) GetRequestId() string {
 		return *x.RequestId
 	}
 	return ""
-}
-
-func (x *RefreshProviderSubscriptionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ProviderSubscriptionAnalyticsGroup 按 Provider 与 Plan Revision 汇总 Subscription 指标。
@@ -3156,9 +3021,7 @@ type GetProviderSubscriptionAnalyticsRequest struct {
 	// started_at 指定 GetProviderSubscriptionAnalytics 生效或查询区间的起始时间。
 	StartedAt *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
 	// ended_at 指定 GetProviderSubscriptionAnalytics 生效或查询区间的结束时间。
-	EndedAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=ended_at,json=endedAt,proto3" json:"ended_at,omitempty"`
-	// app_id 限定 GetProviderSubscriptionAnalytics 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	EndedAt       *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=ended_at,json=endedAt,proto3" json:"ended_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3205,13 +3068,6 @@ func (x *GetProviderSubscriptionAnalyticsRequest) GetEndedAt() *timestamppb.Time
 		return x.EndedAt
 	}
 	return nil
-}
-
-func (x *GetProviderSubscriptionAnalyticsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // GetProviderSubscriptionAnalyticsResponse 承载 GetProviderSubscriptionAnalytics 的返回结果。
@@ -3502,8 +3358,6 @@ type CreateSubscriptionPlanRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 数据。
 	Data *SubscriptionPlanPatch `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 创建稳定 Plan 时同时创建的初始草稿版本。
 	InitialRevision *SubscriptionPlanRevisionDraft `protobuf:"bytes,3,opt,name=initial_revision,json=initialRevision,proto3" json:"initial_revision,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3555,13 +3409,6 @@ func (x *CreateSubscriptionPlanRequest) GetData() *SubscriptionPlanPatch {
 	return nil
 }
 
-func (x *CreateSubscriptionPlanRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateSubscriptionPlanRequest) GetInitialRevision() *SubscriptionPlanRevisionDraft {
 	if x != nil {
 		return x.InitialRevision
@@ -3603,9 +3450,7 @@ type ListSubscriptionPlanRevisionsRequest struct {
 	// plan_id 标识关联的 Plan。
 	PlanId uint32 `protobuf:"varint,1,opt,name=plan_id,json=planId,proto3" json:"plan_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
-	// app_id 限定 ListSubscriptionPlanRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3647,18 +3492,11 @@ func (x *ListSubscriptionPlanRevisionsRequest) GetPlanId() uint32 {
 	return 0
 }
 
-func (x *ListSubscriptionPlanRevisionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSubscriptionPlanRevisionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
-}
-
-func (x *ListSubscriptionPlanRevisionsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListSubscriptionPlanRevisionsResponse 返回 SubscriptionPlanRevisions 结果集合及分页信息。
@@ -3730,9 +3568,7 @@ type CreateSubscriptionPlanRevisionRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,5,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 CreateSubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,7,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3809,13 +3645,6 @@ func (x *CreateSubscriptionPlanRevisionRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *CreateSubscriptionPlanRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // PublishSubscriptionPlanRevisionRequest 定义发布 SubscriptionPlanRevision 的幂等管理命令参数。
 type PublishSubscriptionPlanRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -3828,9 +3657,7 @@ type PublishSubscriptionPlanRevisionRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 PublishSubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3900,20 +3727,11 @@ func (x *PublishSubscriptionPlanRevisionRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *PublishSubscriptionPlanRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // 一次幂等、可复核的人工订阅权益处置。
 type SubscriptionAdjustment struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 SubscriptionAdjustment。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 SubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo *string `protobuf:"bytes,3,opt,name=operation_no,json=operationNo,proto3,oneof" json:"operation_no,omitempty"`
 	// type 区分 SubscriptionAdjustment 的业务类型。
@@ -3922,7 +3740,7 @@ type SubscriptionAdjustment struct {
 	Status *SubscriptionAdjustmentStatus `protobuf:"varint,5,opt,name=status,proto3,enum=payment.v1.SubscriptionAdjustmentStatus,oneof" json:"status,omitempty"`
 	// subscription_id 标识关联的 Subscription。
 	SubscriptionId *uint64 `protobuf:"varint,6,opt,name=subscription_id,json=subscriptionId,proto3,oneof" json:"subscription_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,7,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// plan_id 标识关联的 Plan。
 	PlanId *uint32 `protobuf:"varint,8,opt,name=plan_id,json=planId,proto3,oneof" json:"plan_id,omitempty"`
@@ -3997,13 +3815,6 @@ func (*SubscriptionAdjustment) Descriptor() ([]byte, []int) {
 func (x *SubscriptionAdjustment) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *SubscriptionAdjustment) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -4176,7 +3987,7 @@ type SubmitSubscriptionAdjustmentRequest struct {
 	Type SubscriptionAdjustmentType `protobuf:"varint,1,opt,name=type,proto3,enum=payment.v1.SubscriptionAdjustmentType" json:"type,omitempty"`
 	// subscription_id 标识关联的 Subscription。
 	SubscriptionId *uint64 `protobuf:"varint,2,opt,name=subscription_id,json=subscriptionId,proto3,oneof" json:"subscription_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// plan_revision_id 标识关联的 PlanRevision。
 	PlanRevisionId *uint64 `protobuf:"varint,4,opt,name=plan_revision_id,json=planRevisionId,proto3,oneof" json:"plan_revision_id,omitempty"`
@@ -4193,9 +4004,7 @@ type SubmitSubscriptionAdjustmentRequest struct {
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,10,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,11,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 SubmitSubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,12,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,11,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4307,13 +4116,6 @@ func (x *SubmitSubscriptionAdjustmentRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *SubmitSubscriptionAdjustmentRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // ReviewSubscriptionAdjustmentRequest 定义审核 SubscriptionAdjustment 的幂等管理命令参数。
 type ReviewSubscriptionAdjustmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -4324,9 +4126,7 @@ type ReviewSubscriptionAdjustmentRequest struct {
 	// review_note 记录人工判断的补充说明，供审计与复核。
 	ReviewNote *string `protobuf:"bytes,3,opt,name=review_note,json=reviewNote,proto3,oneof" json:"review_note,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 ReviewSubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,5,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4389,26 +4189,17 @@ func (x *ReviewSubscriptionAdjustmentRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *ReviewSubscriptionAdjustmentRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // ListSubscriptionAdjustmentsRequest 定义 SubscriptionAdjustments 的筛选与分页参数。
 type ListSubscriptionAdjustmentsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	// statuses 列出 ListSubscriptionAdjustments 关联的 SubscriptionAdjustmentStatus。
 	Statuses []SubscriptionAdjustmentStatus `protobuf:"varint,2,rep,packed,name=statuses,proto3,enum=payment.v1.SubscriptionAdjustmentStatus" json:"statuses,omitempty"`
 	// subscription_id 标识关联的 Subscription。
 	SubscriptionId *uint64 `protobuf:"varint,3,opt,name=subscription_id,json=subscriptionId,proto3,oneof" json:"subscription_id,omitempty"`
-	// app_id 限定 ListSubscriptionAdjustments 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ListSubscriptionAdjustmentsRequest) Reset() {
@@ -4441,7 +4232,7 @@ func (*ListSubscriptionAdjustmentsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_subscription_proto_rawDescGZIP(), []int{34}
 }
 
-func (x *ListSubscriptionAdjustmentsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSubscriptionAdjustmentsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -4460,13 +4251,6 @@ func (x *ListSubscriptionAdjustmentsRequest) GetSubscriptionId() uint64 {
 		return *x.SubscriptionId
 	}
 	return 0
-}
-
-func (x *ListSubscriptionAdjustmentsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListSubscriptionAdjustmentsResponse 返回 SubscriptionAdjustments 结果集合及分页信息。
@@ -4524,13 +4308,11 @@ func (x *ListSubscriptionAdjustmentsResponse) GetTotal() uint64 {
 	return 0
 }
 
-// App + currency 维度的人工权益自动执行阈值。
+// 币种维度的人工权益自动执行阈值。
 type SubscriptionAdjustmentRiskRule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 SubscriptionAdjustmentRiskRule。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 SubscriptionAdjustmentRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency *string `protobuf:"bytes,3,opt,name=currency,proto3,oneof" json:"currency,omitempty"`
 	// auto_approve_max_value 以对应 currency 的最小货币单位限定可自动批准的最高价值。
@@ -4580,13 +4362,6 @@ func (*SubscriptionAdjustmentRiskRule) Descriptor() ([]byte, []int) {
 func (x *SubscriptionAdjustmentRiskRule) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *SubscriptionAdjustmentRiskRule) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -4647,9 +4422,7 @@ type UpsertSubscriptionAdjustmentRiskRuleRequest struct {
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,5,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 UpsertSubscriptionAdjustmentRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,7,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4726,20 +4499,11 @@ func (x *UpsertSubscriptionAdjustmentRiskRuleRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *UpsertSubscriptionAdjustmentRiskRuleRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // ListSubscriptionAdjustmentRiskRulesRequest 定义 SubscriptionAdjustmentRiskRules 的筛选与分页参数。
 type ListSubscriptionAdjustmentRiskRulesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
-	// app_id 限定 ListSubscriptionAdjustmentRiskRules 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4774,18 +4538,11 @@ func (*ListSubscriptionAdjustmentRiskRulesRequest) Descriptor() ([]byte, []int) 
 	return file_payment_v1_subscription_proto_rawDescGZIP(), []int{38}
 }
 
-func (x *ListSubscriptionAdjustmentRiskRulesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSubscriptionAdjustmentRiskRulesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
-}
-
-func (x *ListSubscriptionAdjustmentRiskRulesRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListSubscriptionAdjustmentRiskRulesResponse 返回 SubscriptionAdjustmentRiskRules 结果集合及分页信息。
@@ -4851,9 +4608,7 @@ type UpdateSubscriptionPlanRequest struct {
 	// 数据。
 	Data *SubscriptionPlanPatch `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	// 更新字段掩码。
-	UpdateMask *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4909,13 +4664,6 @@ func (x *UpdateSubscriptionPlanRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
-func (x *UpdateSubscriptionPlanRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 var File_payment_v1_subscription_proto protoreflect.FileDescriptor
 
 const file_payment_v1_subscription_proto_rawDesc = "" +
@@ -4926,26 +4674,24 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\bprovider\x18\x01 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12\x10\n" +
 	"\x03sku\x18\x02 \x01(\tR\x03sku\x12 \n" +
 	"\fstore_app_id\x18\x03 \x01(\tR\n" +
-	"storeAppId\"\xe5\x04\n" +
+	"storeAppId\"\xbe\x04\n" +
 	"\x10SubscriptionPlan\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x17\n" +
-	"\x04code\x18\x04 \x01(\tH\x03R\x04code\x88\x01\x01\x12\x19\n" +
-	"\x05price\x18\x05 \x01(\x03H\x04R\x05price\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\x06 \x01(\tH\x05R\bcurrency\x88\x01\x01\x12(\n" +
-	"\rduration_days\x18\a \x01(\rH\x06R\fdurationDays\x88\x01\x01\x12\x1d\n" +
-	"\aenabled\x18\b \x01(\bH\aR\aenabled\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\t \x01(\tH\bR\x06remark\x88\x01\x01\x121\n" +
+	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x03 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\x04 \x01(\tH\x02R\x04code\x88\x01\x01\x12\x19\n" +
+	"\x05price\x18\x05 \x01(\x03H\x03R\x05price\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\x06 \x01(\tH\x04R\bcurrency\x88\x01\x01\x12(\n" +
+	"\rduration_days\x18\a \x01(\rH\x05R\fdurationDays\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\b \x01(\bH\x06R\aenabled\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\t \x01(\tH\aR\x06remark\x88\x01\x01\x121\n" +
 	"\x12active_revision_id\x18\n" +
-	" \x01(\x04H\tR\x10activeRevisionId\x88\x01\x01\x12?\n" +
+	" \x01(\x04H\bR\x10activeRevisionId\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\tR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\a\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
+	"R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_codeB\b\n" +
 	"\x06_priceB\v\n" +
@@ -4956,28 +4702,26 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\a_remarkB\x15\n" +
 	"\x13_active_revision_idB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xff\x06\n" +
+	"\v_updated_at\"\xd8\x06\n" +
 	"\x18SubscriptionPlanRevision\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\aplan_id\x18\x03 \x01(\rH\x02R\x06planId\x88\x01\x01\x12$\n" +
-	"\vrevision_no\x18\x04 \x01(\rH\x03R\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\aplan_id\x18\x03 \x01(\rH\x01R\x06planId\x88\x01\x01\x12$\n" +
+	"\vrevision_no\x18\x04 \x01(\rH\x02R\n" +
 	"revisionNo\x88\x01\x01\x12G\n" +
-	"\x06status\x18\x05 \x01(\x0e2*.payment.v1.SubscriptionPlanRevisionStatusH\x04R\x06status\x88\x01\x01\x12\x19\n" +
-	"\x05price\x18\x06 \x01(\x03H\x05R\x05price\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\a \x01(\tH\x06R\bcurrency\x88\x01\x01\x12(\n" +
-	"\rduration_days\x18\b \x01(\rH\aR\fdurationDays\x88\x01\x01\x125\n" +
-	"\x04mode\x18\t \x01(\x0e2\x1c.payment.v1.SubscriptionModeH\bR\x04mode\x88\x01\x01\x12H\n" +
+	"\x06status\x18\x05 \x01(\x0e2*.payment.v1.SubscriptionPlanRevisionStatusH\x03R\x06status\x88\x01\x01\x12\x19\n" +
+	"\x05price\x18\x06 \x01(\x03H\x04R\x05price\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\a \x01(\tH\x05R\bcurrency\x88\x01\x01\x12(\n" +
+	"\rduration_days\x18\b \x01(\rH\x06R\fdurationDays\x88\x01\x01\x125\n" +
+	"\x04mode\x18\t \x01(\x0e2\x1c.payment.v1.SubscriptionModeH\aR\x04mode\x88\x01\x01\x12H\n" +
 	"\rprovider_skus\x18\n" +
 	" \x03(\v2#.payment.v1.SubscriptionProviderSkuR\fproviderSkus\x128\n" +
-	"\x16created_by_operator_id\x18\v \x01(\rH\tR\x13createdByOperatorId\x88\x01\x01\x12<\n" +
-	"\x18published_by_operator_id\x18\f \x01(\rH\n" +
-	"R\x15publishedByOperatorId\x88\x01\x01\x12B\n" +
-	"\fpublished_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\vR\vpublishedAt\x88\x01\x01\x12?\n" +
+	"\x16created_by_operator_id\x18\v \x01(\rH\bR\x13createdByOperatorId\x88\x01\x01\x12<\n" +
+	"\x18published_by_operator_id\x18\f \x01(\rH\tR\x15publishedByOperatorId\x88\x01\x01\x12B\n" +
+	"\fpublished_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\n" +
+	"R\vpublishedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_plan_idB\x0e\n" +
 	"\f_revision_noB\t\n" +
@@ -4989,28 +4733,26 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x17_created_by_operator_idB\x1b\n" +
 	"\x19_published_by_operator_idB\x0f\n" +
 	"\r_published_atB\r\n" +
-	"\v_created_at\"\xdc\x05\n" +
+	"\v_created_at\"\xb5\x05\n" +
 	"\x10UserSubscription\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\aplan_id\x18\x04 \x01(\rH\x03R\x06planId\x88\x01\x01\x12\x1e\n" +
-	"\border_no\x18\x05 \x01(\tH\x04R\aorderNo\x88\x01\x01\x12>\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\aplan_id\x18\x04 \x01(\rH\x02R\x06planId\x88\x01\x01\x12\x1e\n" +
+	"\border_no\x18\x05 \x01(\tH\x03R\aorderNo\x88\x01\x01\x12>\n" +
 	"\n" +
-	"started_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tstartedAt\x88\x01\x01\x12>\n" +
+	"started_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x04R\tstartedAt\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expired_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x06R\texpiredAt\x88\x01\x01\x12\x1b\n" +
-	"\x06active\x18\b \x01(\bH\aR\x06active\x88\x01\x01\x12-\n" +
-	"\x10plan_revision_id\x18\t \x01(\x04H\bR\x0eplanRevisionId\x88\x01\x01\x12=\n" +
+	"expired_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x05R\texpiredAt\x88\x01\x01\x12\x1b\n" +
+	"\x06active\x18\b \x01(\bH\x06R\x06active\x88\x01\x01\x12-\n" +
+	"\x10plan_revision_id\x18\t \x01(\x04H\aR\x0eplanRevisionId\x88\x01\x01\x12=\n" +
 	"\x18provider_subscription_id\x18\n" +
-	" \x01(\x04H\tR\x16providerSubscriptionId\x88\x01\x01\x12?\n" +
+	" \x01(\x04H\bR\x16providerSubscriptionId\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\tR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
+	"R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\n" +
 	"\n" +
@@ -5022,52 +4764,50 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x11_plan_revision_idB\x1b\n" +
 	"\x19_provider_subscription_idB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xf1\x0f\n" +
+	"\v_updated_at\"\xca\x0f\n" +
 	"\x16UserSubscriptionDetail\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12,\n" +
-	"\x0fsubscription_id\x18\x04 \x01(\x04H\x03R\x0esubscriptionId\x88\x01\x01\x12\x1c\n" +
-	"\aplan_id\x18\x05 \x01(\rH\x04R\x06planId\x88\x01\x01\x12 \n" +
-	"\tplan_name\x18\x06 \x01(\tH\x05R\bplanName\x88\x01\x01\x12 \n" +
-	"\tplan_code\x18\a \x01(\tH\x06R\bplanCode\x88\x01\x01\x12\x19\n" +
-	"\x05price\x18\b \x01(\x03H\aR\x05price\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\t \x01(\tH\bR\bcurrency\x88\x01\x01\x12(\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12,\n" +
+	"\x0fsubscription_id\x18\x04 \x01(\x04H\x02R\x0esubscriptionId\x88\x01\x01\x12\x1c\n" +
+	"\aplan_id\x18\x05 \x01(\rH\x03R\x06planId\x88\x01\x01\x12 \n" +
+	"\tplan_name\x18\x06 \x01(\tH\x04R\bplanName\x88\x01\x01\x12 \n" +
+	"\tplan_code\x18\a \x01(\tH\x05R\bplanCode\x88\x01\x01\x12\x19\n" +
+	"\x05price\x18\b \x01(\x03H\x06R\x05price\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\t \x01(\tH\aR\bcurrency\x88\x01\x01\x12(\n" +
 	"\rduration_days\x18\n" +
-	" \x01(\rH\tR\fdurationDays\x88\x01\x01\x12$\n" +
-	"\vdetail_type\x18\v \x01(\tH\n" +
-	"R\n" +
+	" \x01(\rH\bR\fdurationDays\x88\x01\x01\x12$\n" +
+	"\vdetail_type\x18\v \x01(\tH\tR\n" +
 	"detailType\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\f \x01(\tH\vR\x06status\x88\x01\x01\x12\x1e\n" +
-	"\border_no\x18\r \x01(\tH\fR\aorderNo\x88\x01\x01\x12\"\n" +
+	"\x06status\x18\f \x01(\tH\n" +
+	"R\x06status\x88\x01\x01\x12\x1e\n" +
+	"\border_no\x18\r \x01(\tH\vR\aorderNo\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x0e \x01(\tH\rR\tpaymentNo\x88\x01\x01\x12 \n" +
-	"\trefund_no\x18\x0f \x01(\tH\x0eR\brefundNo\x88\x01\x01\x12K\n" +
-	"\x11period_started_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\x0fperiodStartedAt\x88\x01\x01\x12K\n" +
-	"\x11period_expired_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\x0fperiodExpiredAt\x88\x01\x01\x128\n" +
-	"\apaid_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\x06paidAt\x88\x01\x01\x12@\n" +
-	"\vrefunded_at\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\n" +
+	"payment_no\x18\x0e \x01(\tH\fR\tpaymentNo\x88\x01\x01\x12 \n" +
+	"\trefund_no\x18\x0f \x01(\tH\rR\brefundNo\x88\x01\x01\x12K\n" +
+	"\x11period_started_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\x0fperiodStartedAt\x88\x01\x01\x12K\n" +
+	"\x11period_expired_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\x0fperiodExpiredAt\x88\x01\x01\x128\n" +
+	"\apaid_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\x06paidAt\x88\x01\x01\x12@\n" +
+	"\vrefunded_at\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\n" +
 	"refundedAt\x88\x01\x01\x12<\n" +
-	"\bprovider\x18\x14 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x13R\bprovider\x88\x01\x01\x126\n" +
-	"\x06method\x18\x15 \x01(\x0e2\x19.payment.v1.PaymentMethodH\x14R\x06method\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x16 \x01(\x03H\x15R\x06amount\x88\x01\x01\x12(\n" +
-	"\rrefund_amount\x18\x17 \x01(\x03H\x16R\frefundAmount\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\x18 \x01(\tH\x17R\bmetadata\x88\x01\x01\x12-\n" +
-	"\x10plan_revision_id\x18\x19 \x01(\x04H\x18R\x0eplanRevisionId\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\x1a \x01(\tH\x19R\voperationNo\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\x1b \x01(\rH\x1aR\n" +
+	"\bprovider\x18\x14 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x12R\bprovider\x88\x01\x01\x126\n" +
+	"\x06method\x18\x15 \x01(\x0e2\x19.payment.v1.PaymentMethodH\x13R\x06method\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\x16 \x01(\x03H\x14R\x06amount\x88\x01\x01\x12(\n" +
+	"\rrefund_amount\x18\x17 \x01(\x03H\x15R\frefundAmount\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\x18 \x01(\tH\x16R\bmetadata\x88\x01\x01\x12-\n" +
+	"\x10plan_revision_id\x18\x19 \x01(\x04H\x17R\x0eplanRevisionId\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\x1a \x01(\tH\x18R\voperationNo\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\x1b \x01(\rH\x19R\n" +
 	"operatorId\x88\x01\x01\x12R\n" +
-	"\vreason_code\x18\x1c \x01(\x0e2,.payment.v1.SubscriptionAdjustmentReasonCodeH\x1bR\n" +
+	"\vreason_code\x18\x1c \x01(\x0e2,.payment.v1.SubscriptionAdjustmentReasonCodeH\x1aR\n" +
 	"reasonCode\x88\x01\x01\x12\x17\n" +
-	"\x04note\x18\x1d \x01(\tH\x1cR\x04note\x88\x01\x01\x12=\n" +
-	"\x18provider_subscription_id\x18\x1e \x01(\x04H\x1dR\x16providerSubscriptionId\x88\x01\x01\x12J\n" +
-	"\x1fprovider_subscription_period_id\x18\x1f \x01(\x04H\x1eR\x1cproviderSubscriptionPeriodId\x88\x01\x01\x12?\n" +
+	"\x04note\x18\x1d \x01(\tH\x1bR\x04note\x88\x01\x01\x12=\n" +
+	"\x18provider_subscription_id\x18\x1e \x01(\x04H\x1cR\x16providerSubscriptionId\x88\x01\x01\x12J\n" +
+	"\x1fprovider_subscription_period_id\x18\x1f \x01(\x04H\x1dR\x1cproviderSubscriptionPeriodId\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1fR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1eR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1fR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\x12\n" +
 	"\x10_subscription_idB\n" +
@@ -5104,20 +4844,17 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x19_provider_subscription_idB\"\n" +
 	" _provider_subscription_period_idB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xa3\x01\n" +
-	"\x19CreateSubscriptionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\v_updated_at\"z\n" +
+	"\x19CreateSubscriptionRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x17\n" +
 	"\aplan_id\x18\x03 \x01(\rR\x06planId\x12\x1e\n" +
 	"\border_no\x18\x04 \x01(\tH\x00R\aorderNo\x88\x01\x01B\v\n" +
 	"\t_order_no\"h\n" +
 	"\x1cListUserSubscriptionResponse\x122\n" +
 	"\x05items\x18\x01 \x03(\v2\x1c.payment.v1.UserSubscriptionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"k\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"2\n" +
 	" GetUserSubscriptionDetailRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xd0\x04\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\"\xd0\x04\n" +
 	"!GetUserSubscriptionDetailResponse\x12@\n" +
 	"\fsubscription\x18\x01 \x01(\v2\x1c.payment.v1.UserSubscriptionR\fsubscription\x120\n" +
 	"\x04plan\x18\x02 \x01(\v2\x1c.payment.v1.SubscriptionPlanR\x04plan\x12<\n" +
@@ -5127,44 +4864,42 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x06events\x18\x06 \x03(\v2\x18.payment.v1.PaymentEventR\x06events\x12I\n" +
 	"\rplan_revision\x18\a \x01(\v2$.payment.v1.SubscriptionPlanRevisionR\fplanRevision\x12D\n" +
 	"\vadjustments\x18\b \x03(\v2\".payment.v1.SubscriptionAdjustmentR\vadjustments\x12W\n" +
-	"\x16provider_subscriptions\x18\t \x03(\v2 .payment.v1.ProviderSubscriptionR\x15providerSubscriptions\"\xe0\x0f\n" +
+	"\x16provider_subscriptions\x18\t \x03(\v2 .payment.v1.ProviderSubscriptionR\x15providerSubscriptions\"\xb9\x0f\n" +
 	"\x14ProviderSubscription\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12-\n" +
-	"\x10original_user_id\x18\x04 \x01(\x04H\x03R\x0eoriginalUserId\x88\x01\x01\x125\n" +
-	"\x14user_subscription_id\x18\x05 \x01(\x04H\x04R\x12userSubscriptionId\x88\x01\x01\x12\x1c\n" +
-	"\aplan_id\x18\x06 \x01(\rH\x05R\x06planId\x88\x01\x01\x12-\n" +
-	"\x10plan_revision_id\x18\a \x01(\x04H\x06R\x0eplanRevisionId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12-\n" +
+	"\x10original_user_id\x18\x04 \x01(\x04H\x02R\x0eoriginalUserId\x88\x01\x01\x125\n" +
+	"\x14user_subscription_id\x18\x05 \x01(\x04H\x03R\x12userSubscriptionId\x88\x01\x01\x12\x1c\n" +
+	"\aplan_id\x18\x06 \x01(\rH\x04R\x06planId\x88\x01\x01\x12-\n" +
+	"\x10plan_revision_id\x18\a \x01(\x04H\x05R\x0eplanRevisionId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"channel_id\x18\b \x01(\rH\aR\tchannelId\x88\x01\x01\x123\n" +
-	"\x13channel_revision_id\x18\t \x01(\x04H\bR\x11channelRevisionId\x88\x01\x01\x12<\n" +
+	"channel_id\x18\b \x01(\rH\x06R\tchannelId\x88\x01\x01\x123\n" +
+	"\x13channel_revision_id\x18\t \x01(\x04H\aR\x11channelRevisionId\x88\x01\x01\x12<\n" +
 	"\bprovider\x18\n" +
-	" \x01(\x0e2\x1b.payment.v1.PaymentProviderH\tR\bprovider\x88\x01\x01\x12=\n" +
-	"\x18provider_subscription_id\x18\v \x01(\tH\n" +
-	"R\x16providerSubscriptionId\x88\x01\x01\x12;\n" +
-	"\x17original_transaction_id\x18\f \x01(\tH\vR\x15originalTransactionId\x88\x01\x01\x12$\n" +
-	"\vproduct_sku\x18\r \x01(\tH\fR\n" +
+	" \x01(\x0e2\x1b.payment.v1.PaymentProviderH\bR\bprovider\x88\x01\x01\x12=\n" +
+	"\x18provider_subscription_id\x18\v \x01(\tH\tR\x16providerSubscriptionId\x88\x01\x01\x12;\n" +
+	"\x17original_transaction_id\x18\f \x01(\tH\n" +
+	"R\x15originalTransactionId\x88\x01\x01\x12$\n" +
+	"\vproduct_sku\x18\r \x01(\tH\vR\n" +
 	"productSku\x88\x01\x01\x12C\n" +
-	"\x06status\x18\x0e \x01(\x0e2&.payment.v1.ProviderSubscriptionStatusH\rR\x06status\x88\x01\x01\x12Z\n" +
-	"\x19current_period_started_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\x16currentPeriodStartedAt\x88\x01\x01\x12Z\n" +
-	"\x19current_period_expired_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\x16currentPeriodExpiredAt\x88\x01\x01\x121\n" +
-	"\x12auto_renew_enabled\x18\x11 \x01(\bH\x10R\x10autoRenewEnabled\x88\x01\x01\x124\n" +
-	"\x14cancel_at_period_end\x18\x12 \x01(\bH\x11R\x11cancelAtPeriodEnd\x88\x01\x01\x12@\n" +
-	"\vgrace_until\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\n" +
+	"\x06status\x18\x0e \x01(\x0e2&.payment.v1.ProviderSubscriptionStatusH\fR\x06status\x88\x01\x01\x12Z\n" +
+	"\x19current_period_started_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\x16currentPeriodStartedAt\x88\x01\x01\x12Z\n" +
+	"\x19current_period_expired_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\x16currentPeriodExpiredAt\x88\x01\x01\x121\n" +
+	"\x12auto_renew_enabled\x18\x11 \x01(\bH\x0fR\x10autoRenewEnabled\x88\x01\x01\x124\n" +
+	"\x14cancel_at_period_end\x18\x12 \x01(\bH\x10R\x11cancelAtPeriodEnd\x88\x01\x01\x12@\n" +
+	"\vgrace_until\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\n" +
 	"graceUntil\x88\x01\x01\x12O\n" +
-	"\x13billing_retry_until\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\x11billingRetryUntil\x88\x01\x01\x12B\n" +
-	"\fcancelled_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\vcancelledAt\x88\x01\x01\x12@\n" +
-	"\vterminal_at\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x15R\n" +
+	"\x13billing_retry_until\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\x11billingRetryUntil\x88\x01\x01\x12B\n" +
+	"\fcancelled_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\vcancelledAt\x88\x01\x01\x12@\n" +
+	"\vterminal_at\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\n" +
 	"terminalAt\x88\x01\x01\x12T\n" +
-	"\x16last_provider_event_at\x18\x17 \x01(\v2\x1a.google.protobuf.TimestampH\x16R\x13lastProviderEventAt\x88\x01\x01\x128\n" +
-	"\x16last_provider_event_id\x18\x18 \x01(\tH\x17R\x13lastProviderEventId\x88\x01\x01\x12?\n" +
+	"\x16last_provider_event_at\x18\x17 \x01(\v2\x1a.google.protobuf.TimestampH\x15R\x13lastProviderEventAt\x88\x01\x01\x128\n" +
+	"\x16last_provider_event_id\x18\x18 \x01(\tH\x16R\x13lastProviderEventId\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x17R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x19R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\x13\n" +
 	"\x11_original_user_idB\x17\n" +
@@ -5190,37 +4925,34 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x17_last_provider_event_atB\x19\n" +
 	"\x17_last_provider_event_idB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xa6\n" +
-	"\n" +
+	"\v_updated_at\"\xff\t\n" +
 	"\x1aProviderSubscriptionPeriod\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12J\n" +
-	"\x1fprovider_subscription_record_id\x18\x03 \x01(\x04H\x02R\x1cproviderSubscriptionRecordId\x88\x01\x01\x12<\n" +
-	"\bprovider\x18\x04 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x03R\bprovider\x88\x01\x01\x12;\n" +
-	"\x17provider_transaction_id\x18\x05 \x01(\tH\x04R\x15providerTransactionId\x88\x01\x01\x12$\n" +
-	"\vproduct_sku\x18\x06 \x01(\tH\x05R\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12J\n" +
+	"\x1fprovider_subscription_record_id\x18\x03 \x01(\x04H\x01R\x1cproviderSubscriptionRecordId\x88\x01\x01\x12<\n" +
+	"\bprovider\x18\x04 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x02R\bprovider\x88\x01\x01\x12;\n" +
+	"\x17provider_transaction_id\x18\x05 \x01(\tH\x03R\x15providerTransactionId\x88\x01\x01\x12$\n" +
+	"\vproduct_sku\x18\x06 \x01(\tH\x04R\n" +
 	"productSku\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\a \x01(\x04H\x06R\x06userId\x88\x01\x01\x12-\n" +
-	"\x10plan_revision_id\x18\b \x01(\x04H\aR\x0eplanRevisionId\x88\x01\x01\x12+\n" +
-	"\x0fsource_event_id\x18\t \x01(\x04H\bR\rsourceEventId\x88\x01\x01\x12K\n" +
+	"\auser_id\x18\a \x01(\x04H\x05R\x06userId\x88\x01\x01\x12-\n" +
+	"\x10plan_revision_id\x18\b \x01(\x04H\x06R\x0eplanRevisionId\x88\x01\x01\x12+\n" +
+	"\x0fsource_event_id\x18\t \x01(\x04H\aR\rsourceEventId\x88\x01\x01\x12K\n" +
 	"\x11period_started_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampH\tR\x0fperiodStartedAt\x88\x01\x01\x12K\n" +
-	"\x11period_expired_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\x0fperiodExpiredAt\x88\x01\x01\x12I\n" +
-	"\x06status\x18\f \x01(\x0e2,.payment.v1.ProviderSubscriptionPeriodStatusH\vR\x06status\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\r \x01(\x03H\fR\x06amount\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\x0e \x01(\tH\rR\bcurrency\x88\x01\x01\x12\"\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampH\bR\x0fperiodStartedAt\x88\x01\x01\x12K\n" +
+	"\x11period_expired_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\tR\x0fperiodExpiredAt\x88\x01\x01\x12I\n" +
+	"\x06status\x18\f \x01(\x0e2,.payment.v1.ProviderSubscriptionPeriodStatusH\n" +
+	"R\x06status\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\r \x01(\x03H\vR\x06amount\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\x0e \x01(\tH\fR\bcurrency\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_id\x18\x0f \x01(\x04H\x0eR\tpaymentId\x88\x01\x01\x12\"\n" +
+	"payment_id\x18\x0f \x01(\x04H\rR\tpaymentId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x10 \x01(\tH\x0fR\tpaymentNo\x88\x01\x01\x129\n" +
-	"\x16subscription_detail_id\x18\x11 \x01(\x04H\x10R\x14subscriptionDetailId\x88\x01\x01\x12?\n" +
+	"payment_no\x18\x10 \x01(\tH\x0eR\tpaymentNo\x88\x01\x01\x129\n" +
+	"\x16subscription_detail_id\x18\x11 \x01(\x04H\x0fR\x14subscriptionDetailId\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\"\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\"\n" +
 	" _provider_subscription_record_idB\v\n" +
 	"\t_providerB\x1a\n" +
 	"\x18_provider_transaction_idB\x0e\n" +
@@ -5238,34 +4970,33 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\v_payment_noB\x19\n" +
 	"\x17_subscription_detail_idB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x9e\v\n" +
+	"\v_updated_at\"\xf7\n" +
+	"\n" +
 	"\x19ProviderSubscriptionEvent\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12J\n" +
-	"\x1fprovider_subscription_record_id\x18\x03 \x01(\x04H\x02R\x1cproviderSubscriptionRecordId\x88\x01\x01\x12<\n" +
-	"\bprovider\x18\x04 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x03R\bprovider\x88\x01\x01\x12/\n" +
-	"\x11provider_event_id\x18\x05 \x01(\tH\x04R\x0fproviderEventId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12J\n" +
+	"\x1fprovider_subscription_record_id\x18\x03 \x01(\x04H\x01R\x1cproviderSubscriptionRecordId\x88\x01\x01\x12<\n" +
+	"\bprovider\x18\x04 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x02R\bprovider\x88\x01\x01\x12/\n" +
+	"\x11provider_event_id\x18\x05 \x01(\tH\x03R\x0fproviderEventId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"event_type\x18\x06 \x01(\tH\x05R\teventType\x88\x01\x01\x12X\n" +
-	"\x11normalized_status\x18\a \x01(\x0e2&.payment.v1.ProviderSubscriptionStatusH\x06R\x10normalizedStatus\x88\x01\x01\x12@\n" +
-	"\voccurred_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\aR\n" +
+	"event_type\x18\x06 \x01(\tH\x04R\teventType\x88\x01\x01\x12X\n" +
+	"\x11normalized_status\x18\a \x01(\x0e2&.payment.v1.ProviderSubscriptionStatusH\x05R\x10normalizedStatus\x88\x01\x01\x12@\n" +
+	"\voccurred_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x06R\n" +
 	"occurredAt\x88\x01\x01\x12K\n" +
-	"\x11period_started_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\bR\x0fperiodStartedAt\x88\x01\x01\x12K\n" +
+	"\x11period_started_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\aR\x0fperiodStartedAt\x88\x01\x01\x12K\n" +
 	"\x11period_expired_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampH\tR\x0fperiodExpiredAt\x88\x01\x01\x121\n" +
-	"\x12auto_renew_enabled\x18\v \x01(\bH\n" +
-	"R\x10autoRenewEnabled\x88\x01\x01\x12@\n" +
-	"\vgrace_until\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\vR\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampH\bR\x0fperiodExpiredAt\x88\x01\x01\x121\n" +
+	"\x12auto_renew_enabled\x18\v \x01(\bH\tR\x10autoRenewEnabled\x88\x01\x01\x12@\n" +
+	"\vgrace_until\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\n" +
+	"R\n" +
 	"graceUntil\x88\x01\x01\x12O\n" +
-	"\x13billing_retry_until\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\fR\x11billingRetryUntil\x88\x01\x01\x12H\n" +
-	"\x06source\x18\x0e \x01(\x0e2+.payment.v1.ProviderSubscriptionEventSourceH\rR\x06source\x88\x01\x01\x121\n" +
-	"\x12source_callback_id\x18\x0f \x01(\x04H\x0eR\x10sourceCallbackId\x88\x01\x01\x123\n" +
-	"\x13channel_revision_id\x18\x10 \x01(\x04H\x0fR\x11channelRevisionId\x88\x01\x01\x12,\n" +
-	"\x0fprocess_outcome\x18\x11 \x01(\tH\x10R\x0eprocessOutcome\x88\x01\x01\x12?\n" +
+	"\x13billing_retry_until\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\vR\x11billingRetryUntil\x88\x01\x01\x12H\n" +
+	"\x06source\x18\x0e \x01(\x0e2+.payment.v1.ProviderSubscriptionEventSourceH\fR\x06source\x88\x01\x01\x121\n" +
+	"\x12source_callback_id\x18\x0f \x01(\x04H\rR\x10sourceCallbackId\x88\x01\x01\x123\n" +
+	"\x13channel_revision_id\x18\x10 \x01(\x04H\x0eR\x11channelRevisionId\x88\x01\x01\x12,\n" +
+	"\x0fprocess_outcome\x18\x11 \x01(\tH\x0fR\x0eprocessOutcome\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\"\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\"\n" +
 	" _provider_subscription_record_idB\v\n" +
 	"\t_providerB\x14\n" +
 	"\x12_provider_event_idB\r\n" +
@@ -5288,58 +5019,46 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\rplan_revision\x18\x03 \x01(\v2$.payment.v1.SubscriptionPlanRevisionR\fplanRevision\x12@\n" +
 	"\aperiods\x18\x04 \x03(\v2&.payment.v1.ProviderSubscriptionPeriodR\aperiods\x12=\n" +
 	"\x06events\x18\x05 \x03(\v2%.payment.v1.ProviderSubscriptionEventR\x06events\x12/\n" +
-	"\bpayments\x18\x06 \x03(\v2\x13.payment.v1.PaymentR\bpayments\"\x85\x03\n" +
+	"\bpayments\x18\x06 \x03(\v2\x13.payment.v1.PaymentR\bpayments\"\xcc\x02\n" +
 	" ListProviderSubscriptionsRequest\x12;\n" +
 	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x129\n" +
 	"\tproviders\x18\x02 \x03(\x0e2\x1b.payment.v1.PaymentProviderR\tproviders\x12B\n" +
 	"\bstatuses\x18\x03 \x03(\x0e2&.payment.v1.ProviderSubscriptionStatusR\bstatuses\x12\x1c\n" +
 	"\auser_id\x18\x04 \x01(\x04H\x00R\x06userId\x88\x01\x01\x12-\n" +
-	"\x10plan_revision_id\x18\x05 \x01(\x04H\x01R\x0eplanRevisionId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x02R\x05appId\x88\x01\x01B\n" +
+	"\x10plan_revision_id\x18\x05 \x01(\x04H\x01R\x0eplanRevisionId\x88\x01\x01B\n" +
 	"\n" +
 	"\b_user_idB\x13\n" +
-	"\x11_plan_revision_idB\t\n" +
-	"\a_app_id\"q\n" +
+	"\x11_plan_revision_id\"q\n" +
 	"!ListProviderSubscriptionsResponse\x126\n" +
 	"\x05items\x18\x01 \x03(\v2 .payment.v1.ProviderSubscriptionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"o\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"6\n" +
 	"$GetProviderSubscriptionDetailRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xb8\x02\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\"\xff\x01\n" +
 	")VerifyProviderSubscriptionPurchaseRequest\x127\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12.\n" +
 	"\x13channel_revision_id\x18\x03 \x01(\x04R\x11channelRevisionId\x12'\n" +
 	"\x0fsigned_purchase\x18\x04 \x01(\tR\x0esignedPurchase\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x86\x01\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"M\n" +
 	"*ProcessProviderSubscriptionCallbackRequest\x12\x1f\n" +
 	"\vcallback_id\x18\x01 \x01(\x04R\n" +
-	"callbackId\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xe3\x01\n" +
+	"callbackId\"\xaa\x01\n" +
 	"!CancelProviderSubscriptionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12!\n" +
 	"\foperation_no\x18\x03 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x05 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\xe4\x01\n" +
+	"request_id\x18\x04 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xab\x01\n" +
 	"\"RefreshProviderSubscriptionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12!\n" +
 	"\foperation_no\x18\x03 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x05 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\x99\x03\n" +
+	"request_id\x18\x04 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\x99\x03\n" +
 	"\"ProviderSubscriptionAnalyticsGroup\x12<\n" +
 	"\bprovider\x18\x01 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x00R\bprovider\x88\x01\x01\x12-\n" +
 	"\x10plan_revision_id\x18\x02 \x01(\x04H\x01R\x0eplanRevisionId\x88\x01\x01\x120\n" +
@@ -5354,13 +5073,11 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"_cancelledB\x12\n" +
 	"\x10_grace_recoveredB\n" +
 	"\n" +
-	"\b_churned\"\xd4\x01\n" +
+	"\b_churned\"\x9b\x01\n" +
 	"'GetProviderSubscriptionAnalyticsRequest\x129\n" +
 	"\n" +
 	"started_at\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tstartedAt\x125\n" +
-	"\bended_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\aendedAt\x12,\n" +
-	"\x06app_id\x18\x03 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"r\n" +
+	"\bended_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\aendedAt\"r\n" +
 	"(GetProviderSubscriptionAnalyticsResponse\x12F\n" +
 	"\x06groups\x18\x01 \x03(\v2..payment.v1.ProviderSubscriptionAnalyticsGroupR\x06groups\"h\n" +
 	"\x1cListSubscriptionPlanResponse\x122\n" +
@@ -5387,29 +5104,25 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\bcurrency\x18\x02 \x01(\tR\bcurrency\x12#\n" +
 	"\rduration_days\x18\x03 \x01(\rR\fdurationDays\x120\n" +
 	"\x04mode\x18\x04 \x01(\x0e2\x1c.payment.v1.SubscriptionModeR\x04mode\x12H\n" +
-	"\rprovider_skus\x18\x05 \x03(\v2#.payment.v1.SubscriptionProviderSkuR\fproviderSkus\"\x9a\x03\n" +
+	"\rprovider_skus\x18\x05 \x03(\v2#.payment.v1.SubscriptionProviderSkuR\fproviderSkus\"\xe1\x02\n" +
 	"\x1dCreateSubscriptionPlanRequest\x125\n" +
-	"\x04data\x18\x01 \x01(\v2!.payment.v1.SubscriptionPlanPatchR\x04data\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12T\n" +
+	"\x04data\x18\x01 \x01(\v2!.payment.v1.SubscriptionPlanPatchR\x04data\x12T\n" +
 	"\x10initial_revision\x18\x03 \x01(\v2).payment.v1.SubscriptionPlanRevisionDraftR\x0finitialRevision\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\rR\n" +
 	"operatorId\x12\x1b\n" +
-	"\x06reason\x18\x05 \x01(\tH\x01R\x06reason\x88\x01\x01\x12\"\n" +
+	"\x06reason\x18\x05 \x01(\tH\x00R\x06reason\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x02R\trequestId\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\a \x01(\tH\x03R\voperationNo\x88\x01\x01B\t\n" +
-	"\a_app_idB\t\n" +
+	"request_id\x18\x06 \x01(\tH\x01R\trequestId\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\a \x01(\tH\x02R\voperationNo\x88\x01\x01B\t\n" +
 	"\a_reasonB\r\n" +
 	"\v_request_idB\x0f\n" +
-	"\r_operation_no\"\xb5\x01\n" +
+	"\r_operation_no\"|\n" +
 	"$ListSubscriptionPlanRevisionsRequest\x12\x17\n" +
 	"\aplan_id\x18\x01 \x01(\rR\x06planId\x12;\n" +
-	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12,\n" +
-	"\x06app_id\x18\x03 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"y\n" +
+	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"y\n" +
 	"%ListSubscriptionPlanRevisionsResponse\x12:\n" +
 	"\x05items\x18\x01 \x03(\v2$.payment.v1.SubscriptionPlanRevisionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xc9\x02\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x90\x02\n" +
 	"%CreateSubscriptionPlanRevisionRequest\x12\x17\n" +
 	"\aplan_id\x18\x01 \x01(\rR\x06planId\x12?\n" +
 	"\x05draft\x18\x02 \x01(\v2).payment.v1.SubscriptionPlanRevisionDraftR\x05draft\x12\x1f\n" +
@@ -5418,10 +5131,8 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\a \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\x91\x02\n" +
+	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xd8\x01\n" +
 	"&PublishSubscriptionPlanRevisionRequest\x12\x1f\n" +
 	"\vrevision_id\x18\x01 \x01(\x04R\n" +
 	"revisionId\x12\x1f\n" +
@@ -5430,47 +5141,43 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\xfb\f\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xd4\f\n" +
 	"\x16SubscriptionAdjustment\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\x03 \x01(\tH\x02R\voperationNo\x88\x01\x01\x12?\n" +
-	"\x04type\x18\x04 \x01(\x0e2&.payment.v1.SubscriptionAdjustmentTypeH\x03R\x04type\x88\x01\x01\x12E\n" +
-	"\x06status\x18\x05 \x01(\x0e2(.payment.v1.SubscriptionAdjustmentStatusH\x04R\x06status\x88\x01\x01\x12,\n" +
-	"\x0fsubscription_id\x18\x06 \x01(\x04H\x05R\x0esubscriptionId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\a \x01(\x04H\x06R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\aplan_id\x18\b \x01(\rH\aR\x06planId\x88\x01\x01\x12-\n" +
-	"\x10plan_revision_id\x18\t \x01(\x04H\bR\x0eplanRevisionId\x88\x01\x01\x12(\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\x03 \x01(\tH\x01R\voperationNo\x88\x01\x01\x12?\n" +
+	"\x04type\x18\x04 \x01(\x0e2&.payment.v1.SubscriptionAdjustmentTypeH\x02R\x04type\x88\x01\x01\x12E\n" +
+	"\x06status\x18\x05 \x01(\x0e2(.payment.v1.SubscriptionAdjustmentStatusH\x03R\x06status\x88\x01\x01\x12,\n" +
+	"\x0fsubscription_id\x18\x06 \x01(\x04H\x04R\x0esubscriptionId\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\a \x01(\x04H\x05R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\aplan_id\x18\b \x01(\rH\x06R\x06planId\x88\x01\x01\x12-\n" +
+	"\x10plan_revision_id\x18\t \x01(\x04H\aR\x0eplanRevisionId\x88\x01\x01\x12(\n" +
 	"\rduration_days\x18\n" +
-	" \x01(\rH\tR\fdurationDays\x88\x01\x01\x12!\n" +
-	"\tpermanent\x18\v \x01(\bH\n" +
-	"R\tpermanent\x88\x01\x01\x120\n" +
-	"\x11entitlement_value\x18\f \x01(\x03H\vR\x10entitlementValue\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\r \x01(\tH\fR\bcurrency\x88\x01\x01\x12R\n" +
-	"\vreason_code\x18\x0e \x01(\x0e2,.payment.v1.SubscriptionAdjustmentReasonCodeH\rR\n" +
+	" \x01(\rH\bR\fdurationDays\x88\x01\x01\x12!\n" +
+	"\tpermanent\x18\v \x01(\bH\tR\tpermanent\x88\x01\x01\x120\n" +
+	"\x11entitlement_value\x18\f \x01(\x03H\n" +
+	"R\x10entitlementValue\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\r \x01(\tH\vR\bcurrency\x88\x01\x01\x12R\n" +
+	"\vreason_code\x18\x0e \x01(\x0e2,.payment.v1.SubscriptionAdjustmentReasonCodeH\fR\n" +
 	"reasonCode\x88\x01\x01\x12\x17\n" +
-	"\x04note\x18\x0f \x01(\tH\x0eR\x04note\x88\x01\x01\x12R\n" +
-	"\vrisk_result\x18\x10 \x01(\x0e2,.payment.v1.SubscriptionAdjustmentRiskResultH\x0fR\n" +
+	"\x04note\x18\x0f \x01(\tH\rR\x04note\x88\x01\x01\x12R\n" +
+	"\vrisk_result\x18\x10 \x01(\x0e2,.payment.v1.SubscriptionAdjustmentRiskResultH\x0eR\n" +
 	"riskResult\x88\x01\x01\x12F\n" +
 	"\trisk_hits\x18\x11 \x03(\x0e2).payment.v1.SubscriptionAdjustmentRiskHitR\briskHits\x127\n" +
-	"\x15requester_operator_id\x18\x12 \x01(\rH\x10R\x13requesterOperatorId\x88\x01\x01\x125\n" +
-	"\x14reviewer_operator_id\x18\x13 \x01(\rH\x11R\x12reviewerOperatorId\x88\x01\x01\x12$\n" +
-	"\vreview_note\x18\x14 \x01(\tH\x12R\n" +
+	"\x15requester_operator_id\x18\x12 \x01(\rH\x0fR\x13requesterOperatorId\x88\x01\x01\x125\n" +
+	"\x14reviewer_operator_id\x18\x13 \x01(\rH\x10R\x12reviewerOperatorId\x88\x01\x01\x12$\n" +
+	"\vreview_note\x18\x14 \x01(\tH\x11R\n" +
 	"reviewNote\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\x15 \x01(\tH\x13R\x0eidempotencyKey\x88\x01\x01\x12@\n" +
-	"\vreviewed_at\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\n" +
+	"\x0fidempotency_key\x18\x15 \x01(\tH\x12R\x0eidempotencyKey\x88\x01\x01\x12@\n" +
+	"\vreviewed_at\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\n" +
 	"reviewedAt\x88\x01\x01\x12>\n" +
 	"\n" +
-	"applied_at\x18\x17 \x01(\v2\x1a.google.protobuf.TimestampH\x15R\tappliedAt\x88\x01\x01\x12?\n" +
+	"applied_at\x18\x17 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\tappliedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x16R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x15R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x17R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x0f\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x16R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x0f\n" +
 	"\r_operation_noB\a\n" +
 	"\x05_typeB\t\n" +
 	"\a_statusB\x12\n" +
@@ -5495,7 +5202,7 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\f_reviewed_atB\r\n" +
 	"\v_applied_atB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x97\x05\n" +
+	"\v_updated_at\"\xde\x04\n" +
 	"#SubmitSubscriptionAdjustmentRequest\x12:\n" +
 	"\x04type\x18\x01 \x01(\x0e2&.payment.v1.SubscriptionAdjustmentTypeR\x04type\x12,\n" +
 	"\x0fsubscription_id\x18\x02 \x01(\x04H\x00R\x0esubscriptionId\x88\x01\x01\x12\x1c\n" +
@@ -5511,8 +5218,7 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	" \x01(\rR\n" +
 	"operatorId\x12\"\n" +
 	"\n" +
-	"request_id\x18\v \x01(\tH\x05R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\f \x01(\x0e2\x10.common.v1.AppIdH\x06R\x05appId\x88\x01\x01B\x12\n" +
+	"request_id\x18\v \x01(\tH\x05R\trequestId\x88\x01\x01B\x12\n" +
 	"\x10_subscription_idB\n" +
 	"\n" +
 	"\b_user_idB\x13\n" +
@@ -5520,8 +5226,7 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\x0e_duration_daysB\f\n" +
 	"\n" +
 	"_permanentB\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\x8b\x02\n" +
+	"\v_request_id\"\xd2\x01\n" +
 	"#ReviewSubscriptionAdjustmentRequest\x12!\n" +
 	"\foperation_no\x18\x01 \x01(\tR\voperationNo\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
@@ -5529,41 +5234,35 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\vreview_note\x18\x03 \x01(\tH\x00R\n" +
 	"reviewNote\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tH\x01R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x05 \x01(\x0e2\x10.common.v1.AppIdH\x02R\x05appId\x88\x01\x01B\x0e\n" +
+	"request_id\x18\x04 \x01(\tH\x01R\trequestId\x88\x01\x01B\x0e\n" +
 	"\f_review_noteB\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\xa2\x02\n" +
+	"\v_request_id\"\xe9\x01\n" +
 	"\"ListSubscriptionAdjustmentsRequest\x12;\n" +
 	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12D\n" +
 	"\bstatuses\x18\x02 \x03(\x0e2(.payment.v1.SubscriptionAdjustmentStatusR\bstatuses\x12,\n" +
-	"\x0fsubscription_id\x18\x03 \x01(\x04H\x00R\x0esubscriptionId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\x12\n" +
-	"\x10_subscription_idB\t\n" +
-	"\a_app_id\"u\n" +
+	"\x0fsubscription_id\x18\x03 \x01(\x04H\x00R\x0esubscriptionId\x88\x01\x01B\x12\n" +
+	"\x10_subscription_id\"u\n" +
 	"#ListSubscriptionAdjustmentsResponse\x128\n" +
 	"\x05items\x18\x01 \x03(\v2\".payment.v1.SubscriptionAdjustmentR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x83\x04\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xdc\x03\n" +
 	"\x1eSubscriptionAdjustmentRiskRule\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\x03 \x01(\tH\x02R\bcurrency\x88\x01\x01\x128\n" +
-	"\x16auto_approve_max_value\x18\x04 \x01(\x03H\x03R\x13autoApproveMaxValue\x88\x01\x01\x126\n" +
-	"\x15auto_approve_max_days\x18\x05 \x01(\rH\x04R\x12autoApproveMaxDays\x88\x01\x01\x12\x1d\n" +
-	"\aenabled\x18\x06 \x01(\bH\x05R\aenabled\x88\x01\x01\x12?\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\x03 \x01(\tH\x01R\bcurrency\x88\x01\x01\x128\n" +
+	"\x16auto_approve_max_value\x18\x04 \x01(\x03H\x02R\x13autoApproveMaxValue\x88\x01\x01\x126\n" +
+	"\x15auto_approve_max_days\x18\x05 \x01(\rH\x03R\x12autoApproveMaxDays\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\x06 \x01(\bH\x04R\aenabled\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\aR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
 	"\t_currencyB\x19\n" +
 	"\x17_auto_approve_max_valueB\x18\n" +
 	"\x16_auto_approve_max_daysB\n" +
 	"\n" +
 	"\b_enabledB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xd8\x02\n" +
+	"\v_updated_at\"\x9f\x02\n" +
 	"+UpsertSubscriptionAdjustmentRiskRuleRequest\x12\x1a\n" +
 	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x123\n" +
 	"\x16auto_approve_max_value\x18\x02 \x01(\x03R\x13autoApproveMaxValue\x121\n" +
@@ -5572,24 +5271,18 @@ const file_payment_v1_subscription_proto_rawDesc = "" +
 	"\voperator_id\x18\x05 \x01(\rR\n" +
 	"operatorId\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\a \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\xa2\x01\n" +
+	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"i\n" +
 	"*ListSubscriptionAdjustmentRiskRulesRequest\x12;\n" +
-	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x85\x01\n" +
+	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\x85\x01\n" +
 	"+ListSubscriptionAdjustmentRiskRulesResponse\x12@\n" +
 	"\x05items\x18\x01 \x03(\v2*.payment.v1.SubscriptionAdjustmentRiskRuleR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xdc\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa3\x01\n" +
 	"\x1dUpdateSubscriptionPlanRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x125\n" +
 	"\x04data\x18\x02 \x01(\v2!.payment.v1.SubscriptionPlanPatchR\x04data\x12;\n" +
 	"\vupdate_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
-	"updateMask\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id*|\n" +
+	"updateMask*|\n" +
 	"\x10SubscriptionMode\x12!\n" +
 	"\x1dSUBSCRIPTION_MODE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cSUBSCRIPTION_MODE_FIXED_TERM\x10\x01\x12#\n" +
@@ -5721,12 +5414,11 @@ var file_payment_v1_subscription_proto_goTypes = []any{
 	(PaymentProvider)(0),                                // 51: payment.v1.PaymentProvider
 	(*timestamppb.Timestamp)(nil),                       // 52: google.protobuf.Timestamp
 	(PaymentMethod)(0),                                  // 53: payment.v1.PaymentMethod
-	(v1.AppId)(0),                                       // 54: common.v1.AppId
-	(*Payment)(nil),                                     // 55: payment.v1.Payment
-	(*Refund)(nil),                                      // 56: payment.v1.Refund
-	(*PaymentEvent)(nil),                                // 57: payment.v1.PaymentEvent
-	(*v11.PagingRequest)(nil),                           // 58: common.pagination.v1.PagingRequest
-	(*fieldmaskpb.FieldMask)(nil),                       // 59: google.protobuf.FieldMask
+	(*Payment)(nil),                                     // 54: payment.v1.Payment
+	(*Refund)(nil),                                      // 55: payment.v1.Refund
+	(*PaymentEvent)(nil),                                // 56: payment.v1.PaymentEvent
+	(*v1.PagingRequest)(nil),                            // 57: common.pagination.v1.PagingRequest
+	(*fieldmaskpb.FieldMask)(nil),                       // 58: google.protobuf.FieldMask
 }
 var file_payment_v1_subscription_proto_depIdxs = []int32{
 	51,  // 0: payment.v1.SubscriptionProviderSku.provider:type_name -> payment.v1.PaymentProvider
@@ -5750,109 +5442,90 @@ var file_payment_v1_subscription_proto_depIdxs = []int32{
 	6,   // 18: payment.v1.UserSubscriptionDetail.reason_code:type_name -> payment.v1.SubscriptionAdjustmentReasonCode
 	52,  // 19: payment.v1.UserSubscriptionDetail.created_at:type_name -> google.protobuf.Timestamp
 	52,  // 20: payment.v1.UserSubscriptionDetail.updated_at:type_name -> google.protobuf.Timestamp
-	54,  // 21: payment.v1.CreateSubscriptionRequest.app_id:type_name -> common.v1.AppId
-	13,  // 22: payment.v1.ListUserSubscriptionResponse.items:type_name -> payment.v1.UserSubscription
-	54,  // 23: payment.v1.GetUserSubscriptionDetailRequest.app_id:type_name -> common.v1.AppId
-	13,  // 24: payment.v1.GetUserSubscriptionDetailResponse.subscription:type_name -> payment.v1.UserSubscription
-	11,  // 25: payment.v1.GetUserSubscriptionDetailResponse.plan:type_name -> payment.v1.SubscriptionPlan
-	14,  // 26: payment.v1.GetUserSubscriptionDetailResponse.details:type_name -> payment.v1.UserSubscriptionDetail
-	55,  // 27: payment.v1.GetUserSubscriptionDetailResponse.payments:type_name -> payment.v1.Payment
-	56,  // 28: payment.v1.GetUserSubscriptionDetailResponse.refunds:type_name -> payment.v1.Refund
-	57,  // 29: payment.v1.GetUserSubscriptionDetailResponse.events:type_name -> payment.v1.PaymentEvent
-	12,  // 30: payment.v1.GetUserSubscriptionDetailResponse.plan_revision:type_name -> payment.v1.SubscriptionPlanRevision
-	41,  // 31: payment.v1.GetUserSubscriptionDetailResponse.adjustments:type_name -> payment.v1.SubscriptionAdjustment
-	19,  // 32: payment.v1.GetUserSubscriptionDetailResponse.provider_subscriptions:type_name -> payment.v1.ProviderSubscription
-	51,  // 33: payment.v1.ProviderSubscription.provider:type_name -> payment.v1.PaymentProvider
-	7,   // 34: payment.v1.ProviderSubscription.status:type_name -> payment.v1.ProviderSubscriptionStatus
-	52,  // 35: payment.v1.ProviderSubscription.current_period_started_at:type_name -> google.protobuf.Timestamp
-	52,  // 36: payment.v1.ProviderSubscription.current_period_expired_at:type_name -> google.protobuf.Timestamp
-	52,  // 37: payment.v1.ProviderSubscription.grace_until:type_name -> google.protobuf.Timestamp
-	52,  // 38: payment.v1.ProviderSubscription.billing_retry_until:type_name -> google.protobuf.Timestamp
-	52,  // 39: payment.v1.ProviderSubscription.cancelled_at:type_name -> google.protobuf.Timestamp
-	52,  // 40: payment.v1.ProviderSubscription.terminal_at:type_name -> google.protobuf.Timestamp
-	52,  // 41: payment.v1.ProviderSubscription.last_provider_event_at:type_name -> google.protobuf.Timestamp
-	52,  // 42: payment.v1.ProviderSubscription.created_at:type_name -> google.protobuf.Timestamp
-	52,  // 43: payment.v1.ProviderSubscription.updated_at:type_name -> google.protobuf.Timestamp
-	51,  // 44: payment.v1.ProviderSubscriptionPeriod.provider:type_name -> payment.v1.PaymentProvider
-	52,  // 45: payment.v1.ProviderSubscriptionPeriod.period_started_at:type_name -> google.protobuf.Timestamp
-	52,  // 46: payment.v1.ProviderSubscriptionPeriod.period_expired_at:type_name -> google.protobuf.Timestamp
-	8,   // 47: payment.v1.ProviderSubscriptionPeriod.status:type_name -> payment.v1.ProviderSubscriptionPeriodStatus
-	52,  // 48: payment.v1.ProviderSubscriptionPeriod.created_at:type_name -> google.protobuf.Timestamp
-	52,  // 49: payment.v1.ProviderSubscriptionPeriod.updated_at:type_name -> google.protobuf.Timestamp
-	51,  // 50: payment.v1.ProviderSubscriptionEvent.provider:type_name -> payment.v1.PaymentProvider
-	7,   // 51: payment.v1.ProviderSubscriptionEvent.normalized_status:type_name -> payment.v1.ProviderSubscriptionStatus
-	52,  // 52: payment.v1.ProviderSubscriptionEvent.occurred_at:type_name -> google.protobuf.Timestamp
-	52,  // 53: payment.v1.ProviderSubscriptionEvent.period_started_at:type_name -> google.protobuf.Timestamp
-	52,  // 54: payment.v1.ProviderSubscriptionEvent.period_expired_at:type_name -> google.protobuf.Timestamp
-	52,  // 55: payment.v1.ProviderSubscriptionEvent.grace_until:type_name -> google.protobuf.Timestamp
-	52,  // 56: payment.v1.ProviderSubscriptionEvent.billing_retry_until:type_name -> google.protobuf.Timestamp
-	9,   // 57: payment.v1.ProviderSubscriptionEvent.source:type_name -> payment.v1.ProviderSubscriptionEventSource
-	52,  // 58: payment.v1.ProviderSubscriptionEvent.created_at:type_name -> google.protobuf.Timestamp
-	19,  // 59: payment.v1.ProviderSubscriptionDetail.subscription:type_name -> payment.v1.ProviderSubscription
-	11,  // 60: payment.v1.ProviderSubscriptionDetail.plan:type_name -> payment.v1.SubscriptionPlan
-	12,  // 61: payment.v1.ProviderSubscriptionDetail.plan_revision:type_name -> payment.v1.SubscriptionPlanRevision
-	20,  // 62: payment.v1.ProviderSubscriptionDetail.periods:type_name -> payment.v1.ProviderSubscriptionPeriod
-	21,  // 63: payment.v1.ProviderSubscriptionDetail.events:type_name -> payment.v1.ProviderSubscriptionEvent
-	55,  // 64: payment.v1.ProviderSubscriptionDetail.payments:type_name -> payment.v1.Payment
-	58,  // 65: payment.v1.ListProviderSubscriptionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	51,  // 66: payment.v1.ListProviderSubscriptionsRequest.providers:type_name -> payment.v1.PaymentProvider
-	7,   // 67: payment.v1.ListProviderSubscriptionsRequest.statuses:type_name -> payment.v1.ProviderSubscriptionStatus
-	54,  // 68: payment.v1.ListProviderSubscriptionsRequest.app_id:type_name -> common.v1.AppId
-	19,  // 69: payment.v1.ListProviderSubscriptionsResponse.items:type_name -> payment.v1.ProviderSubscription
-	54,  // 70: payment.v1.GetProviderSubscriptionDetailRequest.app_id:type_name -> common.v1.AppId
-	51,  // 71: payment.v1.VerifyProviderSubscriptionPurchaseRequest.provider:type_name -> payment.v1.PaymentProvider
-	54,  // 72: payment.v1.VerifyProviderSubscriptionPurchaseRequest.app_id:type_name -> common.v1.AppId
-	54,  // 73: payment.v1.ProcessProviderSubscriptionCallbackRequest.app_id:type_name -> common.v1.AppId
-	54,  // 74: payment.v1.CancelProviderSubscriptionRequest.app_id:type_name -> common.v1.AppId
-	54,  // 75: payment.v1.RefreshProviderSubscriptionRequest.app_id:type_name -> common.v1.AppId
-	51,  // 76: payment.v1.ProviderSubscriptionAnalyticsGroup.provider:type_name -> payment.v1.PaymentProvider
-	52,  // 77: payment.v1.GetProviderSubscriptionAnalyticsRequest.started_at:type_name -> google.protobuf.Timestamp
-	52,  // 78: payment.v1.GetProviderSubscriptionAnalyticsRequest.ended_at:type_name -> google.protobuf.Timestamp
-	54,  // 79: payment.v1.GetProviderSubscriptionAnalyticsRequest.app_id:type_name -> common.v1.AppId
-	30,  // 80: payment.v1.GetProviderSubscriptionAnalyticsResponse.groups:type_name -> payment.v1.ProviderSubscriptionAnalyticsGroup
-	11,  // 81: payment.v1.ListSubscriptionPlanResponse.items:type_name -> payment.v1.SubscriptionPlan
-	0,   // 82: payment.v1.SubscriptionPlanRevisionDraft.mode:type_name -> payment.v1.SubscriptionMode
-	10,  // 83: payment.v1.SubscriptionPlanRevisionDraft.provider_skus:type_name -> payment.v1.SubscriptionProviderSku
-	34,  // 84: payment.v1.CreateSubscriptionPlanRequest.data:type_name -> payment.v1.SubscriptionPlanPatch
-	54,  // 85: payment.v1.CreateSubscriptionPlanRequest.app_id:type_name -> common.v1.AppId
-	35,  // 86: payment.v1.CreateSubscriptionPlanRequest.initial_revision:type_name -> payment.v1.SubscriptionPlanRevisionDraft
-	58,  // 87: payment.v1.ListSubscriptionPlanRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	54,  // 88: payment.v1.ListSubscriptionPlanRevisionsRequest.app_id:type_name -> common.v1.AppId
-	12,  // 89: payment.v1.ListSubscriptionPlanRevisionsResponse.items:type_name -> payment.v1.SubscriptionPlanRevision
-	35,  // 90: payment.v1.CreateSubscriptionPlanRevisionRequest.draft:type_name -> payment.v1.SubscriptionPlanRevisionDraft
-	54,  // 91: payment.v1.CreateSubscriptionPlanRevisionRequest.app_id:type_name -> common.v1.AppId
-	54,  // 92: payment.v1.PublishSubscriptionPlanRevisionRequest.app_id:type_name -> common.v1.AppId
-	2,   // 93: payment.v1.SubscriptionAdjustment.type:type_name -> payment.v1.SubscriptionAdjustmentType
-	3,   // 94: payment.v1.SubscriptionAdjustment.status:type_name -> payment.v1.SubscriptionAdjustmentStatus
-	6,   // 95: payment.v1.SubscriptionAdjustment.reason_code:type_name -> payment.v1.SubscriptionAdjustmentReasonCode
-	4,   // 96: payment.v1.SubscriptionAdjustment.risk_result:type_name -> payment.v1.SubscriptionAdjustmentRiskResult
-	5,   // 97: payment.v1.SubscriptionAdjustment.risk_hits:type_name -> payment.v1.SubscriptionAdjustmentRiskHit
-	52,  // 98: payment.v1.SubscriptionAdjustment.reviewed_at:type_name -> google.protobuf.Timestamp
-	52,  // 99: payment.v1.SubscriptionAdjustment.applied_at:type_name -> google.protobuf.Timestamp
-	52,  // 100: payment.v1.SubscriptionAdjustment.created_at:type_name -> google.protobuf.Timestamp
-	52,  // 101: payment.v1.SubscriptionAdjustment.updated_at:type_name -> google.protobuf.Timestamp
-	2,   // 102: payment.v1.SubmitSubscriptionAdjustmentRequest.type:type_name -> payment.v1.SubscriptionAdjustmentType
-	6,   // 103: payment.v1.SubmitSubscriptionAdjustmentRequest.reason_code:type_name -> payment.v1.SubscriptionAdjustmentReasonCode
-	54,  // 104: payment.v1.SubmitSubscriptionAdjustmentRequest.app_id:type_name -> common.v1.AppId
-	54,  // 105: payment.v1.ReviewSubscriptionAdjustmentRequest.app_id:type_name -> common.v1.AppId
-	58,  // 106: payment.v1.ListSubscriptionAdjustmentsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	3,   // 107: payment.v1.ListSubscriptionAdjustmentsRequest.statuses:type_name -> payment.v1.SubscriptionAdjustmentStatus
-	54,  // 108: payment.v1.ListSubscriptionAdjustmentsRequest.app_id:type_name -> common.v1.AppId
-	41,  // 109: payment.v1.ListSubscriptionAdjustmentsResponse.items:type_name -> payment.v1.SubscriptionAdjustment
-	52,  // 110: payment.v1.SubscriptionAdjustmentRiskRule.created_at:type_name -> google.protobuf.Timestamp
-	52,  // 111: payment.v1.SubscriptionAdjustmentRiskRule.updated_at:type_name -> google.protobuf.Timestamp
-	54,  // 112: payment.v1.UpsertSubscriptionAdjustmentRiskRuleRequest.app_id:type_name -> common.v1.AppId
-	58,  // 113: payment.v1.ListSubscriptionAdjustmentRiskRulesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	54,  // 114: payment.v1.ListSubscriptionAdjustmentRiskRulesRequest.app_id:type_name -> common.v1.AppId
-	46,  // 115: payment.v1.ListSubscriptionAdjustmentRiskRulesResponse.items:type_name -> payment.v1.SubscriptionAdjustmentRiskRule
-	34,  // 116: payment.v1.UpdateSubscriptionPlanRequest.data:type_name -> payment.v1.SubscriptionPlanPatch
-	59,  // 117: payment.v1.UpdateSubscriptionPlanRequest.update_mask:type_name -> google.protobuf.FieldMask
-	54,  // 118: payment.v1.UpdateSubscriptionPlanRequest.app_id:type_name -> common.v1.AppId
-	119, // [119:119] is the sub-list for method output_type
-	119, // [119:119] is the sub-list for method input_type
-	119, // [119:119] is the sub-list for extension type_name
-	119, // [119:119] is the sub-list for extension extendee
-	0,   // [0:119] is the sub-list for field type_name
+	13,  // 21: payment.v1.ListUserSubscriptionResponse.items:type_name -> payment.v1.UserSubscription
+	13,  // 22: payment.v1.GetUserSubscriptionDetailResponse.subscription:type_name -> payment.v1.UserSubscription
+	11,  // 23: payment.v1.GetUserSubscriptionDetailResponse.plan:type_name -> payment.v1.SubscriptionPlan
+	14,  // 24: payment.v1.GetUserSubscriptionDetailResponse.details:type_name -> payment.v1.UserSubscriptionDetail
+	54,  // 25: payment.v1.GetUserSubscriptionDetailResponse.payments:type_name -> payment.v1.Payment
+	55,  // 26: payment.v1.GetUserSubscriptionDetailResponse.refunds:type_name -> payment.v1.Refund
+	56,  // 27: payment.v1.GetUserSubscriptionDetailResponse.events:type_name -> payment.v1.PaymentEvent
+	12,  // 28: payment.v1.GetUserSubscriptionDetailResponse.plan_revision:type_name -> payment.v1.SubscriptionPlanRevision
+	41,  // 29: payment.v1.GetUserSubscriptionDetailResponse.adjustments:type_name -> payment.v1.SubscriptionAdjustment
+	19,  // 30: payment.v1.GetUserSubscriptionDetailResponse.provider_subscriptions:type_name -> payment.v1.ProviderSubscription
+	51,  // 31: payment.v1.ProviderSubscription.provider:type_name -> payment.v1.PaymentProvider
+	7,   // 32: payment.v1.ProviderSubscription.status:type_name -> payment.v1.ProviderSubscriptionStatus
+	52,  // 33: payment.v1.ProviderSubscription.current_period_started_at:type_name -> google.protobuf.Timestamp
+	52,  // 34: payment.v1.ProviderSubscription.current_period_expired_at:type_name -> google.protobuf.Timestamp
+	52,  // 35: payment.v1.ProviderSubscription.grace_until:type_name -> google.protobuf.Timestamp
+	52,  // 36: payment.v1.ProviderSubscription.billing_retry_until:type_name -> google.protobuf.Timestamp
+	52,  // 37: payment.v1.ProviderSubscription.cancelled_at:type_name -> google.protobuf.Timestamp
+	52,  // 38: payment.v1.ProviderSubscription.terminal_at:type_name -> google.protobuf.Timestamp
+	52,  // 39: payment.v1.ProviderSubscription.last_provider_event_at:type_name -> google.protobuf.Timestamp
+	52,  // 40: payment.v1.ProviderSubscription.created_at:type_name -> google.protobuf.Timestamp
+	52,  // 41: payment.v1.ProviderSubscription.updated_at:type_name -> google.protobuf.Timestamp
+	51,  // 42: payment.v1.ProviderSubscriptionPeriod.provider:type_name -> payment.v1.PaymentProvider
+	52,  // 43: payment.v1.ProviderSubscriptionPeriod.period_started_at:type_name -> google.protobuf.Timestamp
+	52,  // 44: payment.v1.ProviderSubscriptionPeriod.period_expired_at:type_name -> google.protobuf.Timestamp
+	8,   // 45: payment.v1.ProviderSubscriptionPeriod.status:type_name -> payment.v1.ProviderSubscriptionPeriodStatus
+	52,  // 46: payment.v1.ProviderSubscriptionPeriod.created_at:type_name -> google.protobuf.Timestamp
+	52,  // 47: payment.v1.ProviderSubscriptionPeriod.updated_at:type_name -> google.protobuf.Timestamp
+	51,  // 48: payment.v1.ProviderSubscriptionEvent.provider:type_name -> payment.v1.PaymentProvider
+	7,   // 49: payment.v1.ProviderSubscriptionEvent.normalized_status:type_name -> payment.v1.ProviderSubscriptionStatus
+	52,  // 50: payment.v1.ProviderSubscriptionEvent.occurred_at:type_name -> google.protobuf.Timestamp
+	52,  // 51: payment.v1.ProviderSubscriptionEvent.period_started_at:type_name -> google.protobuf.Timestamp
+	52,  // 52: payment.v1.ProviderSubscriptionEvent.period_expired_at:type_name -> google.protobuf.Timestamp
+	52,  // 53: payment.v1.ProviderSubscriptionEvent.grace_until:type_name -> google.protobuf.Timestamp
+	52,  // 54: payment.v1.ProviderSubscriptionEvent.billing_retry_until:type_name -> google.protobuf.Timestamp
+	9,   // 55: payment.v1.ProviderSubscriptionEvent.source:type_name -> payment.v1.ProviderSubscriptionEventSource
+	52,  // 56: payment.v1.ProviderSubscriptionEvent.created_at:type_name -> google.protobuf.Timestamp
+	19,  // 57: payment.v1.ProviderSubscriptionDetail.subscription:type_name -> payment.v1.ProviderSubscription
+	11,  // 58: payment.v1.ProviderSubscriptionDetail.plan:type_name -> payment.v1.SubscriptionPlan
+	12,  // 59: payment.v1.ProviderSubscriptionDetail.plan_revision:type_name -> payment.v1.SubscriptionPlanRevision
+	20,  // 60: payment.v1.ProviderSubscriptionDetail.periods:type_name -> payment.v1.ProviderSubscriptionPeriod
+	21,  // 61: payment.v1.ProviderSubscriptionDetail.events:type_name -> payment.v1.ProviderSubscriptionEvent
+	54,  // 62: payment.v1.ProviderSubscriptionDetail.payments:type_name -> payment.v1.Payment
+	57,  // 63: payment.v1.ListProviderSubscriptionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	51,  // 64: payment.v1.ListProviderSubscriptionsRequest.providers:type_name -> payment.v1.PaymentProvider
+	7,   // 65: payment.v1.ListProviderSubscriptionsRequest.statuses:type_name -> payment.v1.ProviderSubscriptionStatus
+	19,  // 66: payment.v1.ListProviderSubscriptionsResponse.items:type_name -> payment.v1.ProviderSubscription
+	51,  // 67: payment.v1.VerifyProviderSubscriptionPurchaseRequest.provider:type_name -> payment.v1.PaymentProvider
+	51,  // 68: payment.v1.ProviderSubscriptionAnalyticsGroup.provider:type_name -> payment.v1.PaymentProvider
+	52,  // 69: payment.v1.GetProviderSubscriptionAnalyticsRequest.started_at:type_name -> google.protobuf.Timestamp
+	52,  // 70: payment.v1.GetProviderSubscriptionAnalyticsRequest.ended_at:type_name -> google.protobuf.Timestamp
+	30,  // 71: payment.v1.GetProviderSubscriptionAnalyticsResponse.groups:type_name -> payment.v1.ProviderSubscriptionAnalyticsGroup
+	11,  // 72: payment.v1.ListSubscriptionPlanResponse.items:type_name -> payment.v1.SubscriptionPlan
+	0,   // 73: payment.v1.SubscriptionPlanRevisionDraft.mode:type_name -> payment.v1.SubscriptionMode
+	10,  // 74: payment.v1.SubscriptionPlanRevisionDraft.provider_skus:type_name -> payment.v1.SubscriptionProviderSku
+	34,  // 75: payment.v1.CreateSubscriptionPlanRequest.data:type_name -> payment.v1.SubscriptionPlanPatch
+	35,  // 76: payment.v1.CreateSubscriptionPlanRequest.initial_revision:type_name -> payment.v1.SubscriptionPlanRevisionDraft
+	57,  // 77: payment.v1.ListSubscriptionPlanRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	12,  // 78: payment.v1.ListSubscriptionPlanRevisionsResponse.items:type_name -> payment.v1.SubscriptionPlanRevision
+	35,  // 79: payment.v1.CreateSubscriptionPlanRevisionRequest.draft:type_name -> payment.v1.SubscriptionPlanRevisionDraft
+	2,   // 80: payment.v1.SubscriptionAdjustment.type:type_name -> payment.v1.SubscriptionAdjustmentType
+	3,   // 81: payment.v1.SubscriptionAdjustment.status:type_name -> payment.v1.SubscriptionAdjustmentStatus
+	6,   // 82: payment.v1.SubscriptionAdjustment.reason_code:type_name -> payment.v1.SubscriptionAdjustmentReasonCode
+	4,   // 83: payment.v1.SubscriptionAdjustment.risk_result:type_name -> payment.v1.SubscriptionAdjustmentRiskResult
+	5,   // 84: payment.v1.SubscriptionAdjustment.risk_hits:type_name -> payment.v1.SubscriptionAdjustmentRiskHit
+	52,  // 85: payment.v1.SubscriptionAdjustment.reviewed_at:type_name -> google.protobuf.Timestamp
+	52,  // 86: payment.v1.SubscriptionAdjustment.applied_at:type_name -> google.protobuf.Timestamp
+	52,  // 87: payment.v1.SubscriptionAdjustment.created_at:type_name -> google.protobuf.Timestamp
+	52,  // 88: payment.v1.SubscriptionAdjustment.updated_at:type_name -> google.protobuf.Timestamp
+	2,   // 89: payment.v1.SubmitSubscriptionAdjustmentRequest.type:type_name -> payment.v1.SubscriptionAdjustmentType
+	6,   // 90: payment.v1.SubmitSubscriptionAdjustmentRequest.reason_code:type_name -> payment.v1.SubscriptionAdjustmentReasonCode
+	57,  // 91: payment.v1.ListSubscriptionAdjustmentsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	3,   // 92: payment.v1.ListSubscriptionAdjustmentsRequest.statuses:type_name -> payment.v1.SubscriptionAdjustmentStatus
+	41,  // 93: payment.v1.ListSubscriptionAdjustmentsResponse.items:type_name -> payment.v1.SubscriptionAdjustment
+	52,  // 94: payment.v1.SubscriptionAdjustmentRiskRule.created_at:type_name -> google.protobuf.Timestamp
+	52,  // 95: payment.v1.SubscriptionAdjustmentRiskRule.updated_at:type_name -> google.protobuf.Timestamp
+	57,  // 96: payment.v1.ListSubscriptionAdjustmentRiskRulesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	46,  // 97: payment.v1.ListSubscriptionAdjustmentRiskRulesResponse.items:type_name -> payment.v1.SubscriptionAdjustmentRiskRule
+	34,  // 98: payment.v1.UpdateSubscriptionPlanRequest.data:type_name -> payment.v1.SubscriptionPlanPatch
+	58,  // 99: payment.v1.UpdateSubscriptionPlanRequest.update_mask:type_name -> google.protobuf.FieldMask
+	100, // [100:100] is the sub-list for method output_type
+	100, // [100:100] is the sub-list for method input_type
+	100, // [100:100] is the sub-list for extension type_name
+	100, // [100:100] is the sub-list for extension extendee
+	0,   // [0:100] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_subscription_proto_init() }
@@ -5868,21 +5541,15 @@ func file_payment_v1_subscription_proto_init() {
 	file_payment_v1_subscription_proto_msgTypes[3].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[4].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[5].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[7].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[9].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[10].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[11].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[13].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[15].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[16].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[17].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[18].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[19].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[20].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[21].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[24].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[26].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[27].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[29].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[30].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[31].OneofWrappers = []any{}
@@ -5891,8 +5558,6 @@ func file_payment_v1_subscription_proto_init() {
 	file_payment_v1_subscription_proto_msgTypes[34].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[36].OneofWrappers = []any{}
 	file_payment_v1_subscription_proto_msgTypes[37].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[38].OneofWrappers = []any{}
-	file_payment_v1_subscription_proto_msgTypes[40].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

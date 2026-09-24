@@ -7,7 +7,6 @@
 package walletpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -90,8 +89,6 @@ type WalletReconciliationBatch struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 批次 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 对账币种。
 	Currency *WalletCurrency `protobuf:"varint,3,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
 	// 批次号。
@@ -163,13 +160,6 @@ func (*WalletReconciliationBatch) Descriptor() ([]byte, []int) {
 func (x *WalletReconciliationBatch) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletReconciliationBatch) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -300,8 +290,6 @@ type WalletReconciliationItem struct {
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// 批次 ID。
 	BatchId *uint64 `protobuf:"varint,2,opt,name=batch_id,json=batchId,proto3,oneof" json:"batch_id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 币种。
@@ -382,13 +370,6 @@ func (x *WalletReconciliationItem) GetId() uint64 {
 func (x *WalletReconciliationItem) GetBatchId() uint64 {
 	if x != nil && x.BatchId != nil {
 		return *x.BatchId
-	}
-	return 0
-}
-
-func (x *WalletReconciliationItem) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -524,8 +505,6 @@ type WalletEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 事件 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 事件类型。
@@ -601,13 +580,6 @@ func (*WalletEvent) Descriptor() ([]byte, []int) {
 func (x *WalletEvent) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletEvent) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -748,8 +720,6 @@ func (x *WalletEvent) GetCreatedAt() *timestamppb.Timestamp {
 // 创建对账批次请求。
 type CreateWalletReconciliationBatchRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 对账币种。
 	Currency *WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
 	// Trusted governance identity for Admin execution.
@@ -788,13 +758,6 @@ func (*CreateWalletReconciliationBatchRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_reconciliation_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CreateWalletReconciliationBatchRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateWalletReconciliationBatchRequest) GetCurrency() WalletCurrency {
 	if x != nil && x.Currency != nil {
 		return *x.Currency
@@ -812,8 +775,6 @@ func (x *CreateWalletReconciliationBatchRequest) GetGovernance() *WalletGovernan
 // 重试失败的对账批次。
 type RetryWalletReconciliationBatchRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RetryWalletReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// batch_id 标识关联的 Batch。
 	BatchId uint64 `protobuf:"varint,2,opt,name=batch_id,json=batchId,proto3" json:"batch_id,omitempty"`
 	// governance 承载 RetryWalletReconciliationBatch 关联的 WalletGovernanceIdentity。
@@ -852,13 +813,6 @@ func (*RetryWalletReconciliationBatchRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_reconciliation_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *RetryWalletReconciliationBatchRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RetryWalletReconciliationBatchRequest) GetBatchId() uint64 {
 	if x != nil {
 		return x.BatchId
@@ -876,8 +830,6 @@ func (x *RetryWalletReconciliationBatchRequest) GetGovernance() *WalletGovernanc
 // 为对账差异追加人工调查与处置引用。
 type ResolveWalletReconciliationItemRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResolveWalletReconciliationItem 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// item_id 标识关联的 Item。
 	ItemId uint64 `protobuf:"varint,2,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
 	// investigation 记录人工调查过程与结论摘要，供审计复核。
@@ -922,13 +874,6 @@ func (x *ResolveWalletReconciliationItemRequest) ProtoReflect() protoreflect.Mes
 // Deprecated: Use ResolveWalletReconciliationItemRequest.ProtoReflect.Descriptor instead.
 func (*ResolveWalletReconciliationItemRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_reconciliation_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ResolveWalletReconciliationItemRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ResolveWalletReconciliationItemRequest) GetItemId() uint64 {
@@ -1307,37 +1252,35 @@ var File_wallet_v1_reconciliation_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_reconciliation_proto_rawDesc = "" +
 	"\n" +
-	"\x1ewallet/v1/reconciliation.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1awallet/v1/adjustment.proto\x1a\x16wallet/v1/refund.proto\x1a\x14wallet/v1/risk.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xde\t\n" +
+	"\x1ewallet/v1/reconciliation.proto\x12\twallet.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1awallet/v1/adjustment.proto\x1a\x16wallet/v1/refund.proto\x1a\x14wallet/v1/risk.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xb7\t\n" +
 	"\x19WalletReconciliationBatch\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x02R\bcurrency\x88\x01\x01\x12\x1e\n" +
-	"\bbatch_no\x18\x04 \x01(\tH\x03R\abatchNo\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\x05 \x01(\tH\x04R\x06status\x88\x01\x01\x12,\n" +
-	"\x0fchecked_wallets\x18\x06 \x01(\x04H\x05R\x0echeckedWallets\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x01R\bcurrency\x88\x01\x01\x12\x1e\n" +
+	"\bbatch_no\x18\x04 \x01(\tH\x02R\abatchNo\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x05 \x01(\tH\x03R\x06status\x88\x01\x01\x12,\n" +
+	"\x0fchecked_wallets\x18\x06 \x01(\x04H\x04R\x0echeckedWallets\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"diff_count\x18\a \x01(\x04H\x06R\tdiffCount\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\b \x01(\tH\aR\voperationNo\x88\x01\x01\x12$\n" +
-	"\vtotal_count\x18\t \x01(\x04H\bR\n" +
+	"diff_count\x18\a \x01(\x04H\x05R\tdiffCount\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\b \x01(\tH\x06R\voperationNo\x88\x01\x01\x12$\n" +
+	"\vtotal_count\x18\t \x01(\x04H\aR\n" +
 	"totalCount\x88\x01\x01\x12,\n" +
 	"\x0fprocessed_count\x18\n" +
-	" \x01(\x04H\tR\x0eprocessedCount\x88\x01\x01\x12.\n" +
-	"\x10difference_count\x18\v \x01(\x04H\n" +
-	"R\x0fdifferenceCount\x88\x01\x01\x12(\n" +
-	"\rattempt_count\x18\f \x01(\rH\vR\fattemptCount\x88\x01\x01\x12.\n" +
-	"\x10failure_category\x18\r \x01(\tH\fR\x0ffailureCategory\x88\x01\x01\x12>\n" +
+	" \x01(\x04H\bR\x0eprocessedCount\x88\x01\x01\x12.\n" +
+	"\x10difference_count\x18\v \x01(\x04H\tR\x0fdifferenceCount\x88\x01\x01\x12(\n" +
+	"\rattempt_count\x18\f \x01(\rH\n" +
+	"R\fattemptCount\x88\x01\x01\x12.\n" +
+	"\x10failure_category\x18\r \x01(\tH\vR\x0ffailureCategory\x88\x01\x01\x12>\n" +
 	"\n" +
-	"started_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\rR\tstartedAt\x88\x01\x01\x12@\n" +
-	"\vfinished_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\n" +
+	"started_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\fR\tstartedAt\x88\x01\x01\x12@\n" +
+	"\vfinished_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\n" +
 	"finishedAt\x88\x01\x01\x12G\n" +
-	"\x0fnext_attempt_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\rnextAttemptAt\x88\x01\x01\x12:\n" +
-	"\x17last_retry_operation_no\x18\x11 \x01(\tH\x10R\x14lastRetryOperationNo\x88\x01\x01\x12?\n" +
+	"\x0fnext_attempt_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\rnextAttemptAt\x88\x01\x01\x12:\n" +
+	"\x17last_retry_operation_no\x18\x11 \x01(\tH\x0fR\x14lastRetryOperationNo\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
 	"\t_currencyB\v\n" +
 	"\t_batch_noB\t\n" +
 	"\a_statusB\x12\n" +
@@ -1354,41 +1297,40 @@ const file_wallet_v1_reconciliation_proto_rawDesc = "" +
 	"\x10_next_attempt_atB\x1a\n" +
 	"\x18_last_retry_operation_noB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x86\v\n" +
+	"\v_updated_at\"\xdf\n" +
+	"\n" +
 	"\x18WalletReconciliationItem\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1e\n" +
-	"\bbatch_id\x18\x02 \x01(\x04H\x01R\abatchId\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x03 \x01(\rH\x02R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x04 \x01(\x04H\x03R\x06userId\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\x05 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x04R\bcurrency\x88\x01\x01\x12*\n" +
-	"\x0ewallet_balance\x18\x06 \x01(\x03H\x05R\rwalletBalance\x88\x01\x01\x12*\n" +
-	"\x0eledger_balance\x18\a \x01(\x03H\x06R\rledgerBalance\x88\x01\x01\x12$\n" +
-	"\vdiff_amount\x18\b \x01(\x03H\aR\n" +
+	"\bbatch_id\x18\x02 \x01(\x04H\x01R\abatchId\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x04 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\x05 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x03R\bcurrency\x88\x01\x01\x12*\n" +
+	"\x0ewallet_balance\x18\x06 \x01(\x03H\x04R\rwalletBalance\x88\x01\x01\x12*\n" +
+	"\x0eledger_balance\x18\a \x01(\x03H\x05R\rledgerBalance\x88\x01\x01\x12$\n" +
+	"\vdiff_amount\x18\b \x01(\x03H\x06R\n" +
 	"diffAmount\x88\x01\x01\x12 \n" +
-	"\tdiff_type\x18\t \x01(\tH\bR\bdiffType\x88\x01\x01\x12)\n" +
+	"\tdiff_type\x18\t \x01(\tH\aR\bdiffType\x88\x01\x01\x12)\n" +
 	"\rinvestigation\x18\n" +
-	" \x01(\tH\tR\rinvestigation\x88\x01\x01\x12#\n" +
+	" \x01(\tH\bR\rinvestigation\x88\x01\x01\x12#\n" +
 	"\n" +
-	"conclusion\x18\v \x01(\tH\n" +
-	"R\n" +
+	"conclusion\x18\v \x01(\tH\tR\n" +
 	"conclusion\x88\x01\x01\x12$\n" +
-	"\vresolved_by\x18\f \x01(\rH\vR\n" +
+	"\vresolved_by\x18\f \x01(\rH\n" +
+	"R\n" +
 	"resolvedBy\x88\x01\x01\x12.\n" +
-	"\x10repair_reference\x18\r \x01(\tH\fR\x0frepairReference\x88\x01\x01\x12;\n" +
-	"\x17resolution_operation_no\x18\x0e \x01(\tH\rR\x15resolutionOperationNo\x88\x01\x01\x12@\n" +
-	"\vresolved_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\n" +
+	"\x10repair_reference\x18\r \x01(\tH\vR\x0frepairReference\x88\x01\x01\x12;\n" +
+	"\x17resolution_operation_no\x18\x0e \x01(\tH\fR\x15resolutionOperationNo\x88\x01\x01\x12@\n" +
+	"\vresolved_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\n" +
 	"resolvedAt\x88\x01\x01\x12j\n" +
-	"\x14investigation_status\x18\x10 \x01(\x0e22.wallet.v1.WalletReconciliationInvestigationStatusH\x0fR\x13investigationStatus\x88\x01\x01\x12,\n" +
-	"\x0finvestigated_by\x18\x11 \x01(\rH\x10R\x0einvestigatedBy\x88\x01\x01\x12H\n" +
-	"\x0finvestigated_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\x0einvestigatedAt\x88\x01\x01\x12/\n" +
-	"\x11verified_batch_id\x18\x13 \x01(\x04H\x12R\x0fverifiedBatchId\x88\x01\x01\x12@\n" +
-	"\vverified_at\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\n" +
+	"\x14investigation_status\x18\x10 \x01(\x0e22.wallet.v1.WalletReconciliationInvestigationStatusH\x0eR\x13investigationStatus\x88\x01\x01\x12,\n" +
+	"\x0finvestigated_by\x18\x11 \x01(\rH\x0fR\x0einvestigatedBy\x88\x01\x01\x12H\n" +
+	"\x0finvestigated_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\x0einvestigatedAt\x88\x01\x01\x12/\n" +
+	"\x11verified_batch_id\x18\x13 \x01(\x04H\x11R\x0fverifiedBatchId\x88\x01\x01\x12@\n" +
+	"\vverified_at\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\n" +
 	"verifiedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\tcreatedAt\x88\x01\x01B\x05\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\tcreatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\v\n" +
-	"\t_batch_idB\t\n" +
-	"\a_app_idB\n" +
+	"\t_batch_idB\n" +
 	"\n" +
 	"\b_user_idB\v\n" +
 	"\t_currencyB\x11\n" +
@@ -1408,39 +1350,37 @@ const file_wallet_v1_reconciliation_proto_rawDesc = "" +
 	"\x10_investigated_atB\x14\n" +
 	"\x12_verified_batch_idB\x0e\n" +
 	"\f_verified_atB\r\n" +
-	"\v_created_at\"\xa0\b\n" +
+	"\v_created_at\"\xf9\a\n" +
 	"\vWalletEvent\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"event_type\x18\x04 \x01(\tH\x03R\teventType\x88\x01\x01\x12\x19\n" +
-	"\x05level\x18\x05 \x01(\tH\x04R\x05level\x88\x01\x01\x12\x1e\n" +
-	"\bbiz_type\x18\x06 \x01(\tH\x05R\abizType\x88\x01\x01\x12\x1a\n" +
-	"\x06biz_id\x18\a \x01(\tH\x06R\x05bizId\x88\x01\x01\x12\x1d\n" +
-	"\amessage\x18\b \x01(\tH\aR\amessage\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\t \x01(\tH\bR\bmetadata\x88\x01\x01\x12&\n" +
+	"event_type\x18\x04 \x01(\tH\x02R\teventType\x88\x01\x01\x12\x19\n" +
+	"\x05level\x18\x05 \x01(\tH\x03R\x05level\x88\x01\x01\x12\x1e\n" +
+	"\bbiz_type\x18\x06 \x01(\tH\x04R\abizType\x88\x01\x01\x12\x1a\n" +
+	"\x06biz_id\x18\a \x01(\tH\x05R\x05bizId\x88\x01\x01\x12\x1d\n" +
+	"\amessage\x18\b \x01(\tH\x06R\amessage\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\t \x01(\tH\aR\bmetadata\x88\x01\x01\x12&\n" +
 	"\foperation_no\x18\n" +
-	" \x01(\tH\tR\voperationNo\x88\x01\x01\x12\"\n" +
+	" \x01(\tH\bR\voperationNo\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\v \x01(\tH\n" +
-	"R\trequestId\x88\x01\x01\x12(\n" +
-	"\rresource_type\x18\f \x01(\tH\vR\fresourceType\x88\x01\x01\x12$\n" +
-	"\vresource_id\x18\r \x01(\tH\fR\n" +
+	"request_id\x18\v \x01(\tH\tR\trequestId\x88\x01\x01\x12(\n" +
+	"\rresource_type\x18\f \x01(\tH\n" +
+	"R\fresourceType\x88\x01\x01\x12$\n" +
+	"\vresource_id\x18\r \x01(\tH\vR\n" +
 	"resourceId\x88\x01\x01\x12&\n" +
-	"\fbefore_state\x18\x0e \x01(\tH\rR\vbeforeState\x88\x01\x01\x12$\n" +
-	"\vafter_state\x18\x0f \x01(\tH\x0eR\n" +
+	"\fbefore_state\x18\x0e \x01(\tH\fR\vbeforeState\x88\x01\x01\x12$\n" +
+	"\vafter_state\x18\x0f \x01(\tH\rR\n" +
 	"afterState\x88\x01\x01\x12&\n" +
-	"\frequester_id\x18\x10 \x01(\rH\x0fR\vrequesterId\x88\x01\x01\x12$\n" +
-	"\vapprover_id\x18\x11 \x01(\rH\x10R\n" +
+	"\frequester_id\x18\x10 \x01(\rH\x0eR\vrequesterId\x88\x01\x01\x12$\n" +
+	"\vapprover_id\x18\x11 \x01(\rH\x0fR\n" +
 	"approverId\x88\x01\x01\x12\x1b\n" +
-	"\x06reason\x18\x12 \x01(\tH\x11R\x06reason\x88\x01\x01\x12\x1b\n" +
-	"\x06result\x18\x13 \x01(\tH\x12R\x06result\x88\x01\x01\x12.\n" +
-	"\x10failure_category\x18\x14 \x01(\tH\x13R\x0ffailureCategory\x88\x01\x01\x12?\n" +
+	"\x06reason\x18\x12 \x01(\tH\x10R\x06reason\x88\x01\x01\x12\x1b\n" +
+	"\x06result\x18\x13 \x01(\tH\x11R\x06result\x88\x01\x01\x12.\n" +
+	"\x10failure_category\x18\x14 \x01(\tH\x12R\x0ffailureCategory\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\r\n" +
 	"\v_event_typeB\b\n" +
@@ -1461,24 +1401,21 @@ const file_wallet_v1_reconciliation_proto_rawDesc = "" +
 	"\a_reasonB\t\n" +
 	"\a_resultB\x13\n" +
 	"\x11_failure_categoryB\r\n" +
-	"\v_created_at\"\xf3\x01\n" +
-	"&CreateWalletReconciliationBatchRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12:\n" +
+	"\v_created_at\"\xca\x01\n" +
+	"&CreateWalletReconciliationBatchRequest\x12:\n" +
 	"\bcurrency\x18\x02 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x00R\bcurrency\x88\x01\x01\x12H\n" +
 	"\n" +
 	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
 	"governance\x88\x01\x01B\v\n" +
 	"\t_currencyB\r\n" +
-	"\v_governance\"\xce\x01\n" +
-	"%RetryWalletReconciliationBatchRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12\x1e\n" +
+	"\v_governance\"\xa0\x01\n" +
+	"%RetryWalletReconciliationBatchRequest\x12\x1e\n" +
 	"\bbatch_id\x18\x02 \x01(\x04B\x03\xe0A\x02R\abatchId\x12H\n" +
 	"\n" +
 	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
 	"governance\x88\x01\x01B\r\n" +
-	"\v_governance\"\xef\x03\n" +
-	"&ResolveWalletReconciliationItemRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12\x1c\n" +
+	"\v_governance\"\xc1\x03\n" +
+	"&ResolveWalletReconciliationItemRequest\x12\x1c\n" +
 	"\aitem_id\x18\x02 \x01(\x04B\x03\xe0A\x02R\x06itemId\x12)\n" +
 	"\rinvestigation\x18\x03 \x01(\tH\x00R\rinvestigation\x88\x01\x01\x12#\n" +
 	"\n" +
@@ -1550,11 +1487,10 @@ var file_wallet_v1_reconciliation_proto_goTypes = []any{
 	(*ListWalletUserDebtResponse)(nil),             // 12: wallet.v1.ListWalletUserDebtResponse
 	(WalletCurrency)(0),                            // 13: wallet.v1.WalletCurrency
 	(*timestamppb.Timestamp)(nil),                  // 14: google.protobuf.Timestamp
-	(v1.AppId)(0),                                  // 15: common.v1.AppId
-	(*WalletGovernanceIdentity)(nil),               // 16: wallet.v1.WalletGovernanceIdentity
-	(*WalletFreeze)(nil),                           // 17: wallet.v1.WalletFreeze
-	(*WalletAdjustment)(nil),                       // 18: wallet.v1.WalletAdjustment
-	(*WalletUserDebt)(nil),                         // 19: wallet.v1.WalletUserDebt
+	(*WalletGovernanceIdentity)(nil),               // 15: wallet.v1.WalletGovernanceIdentity
+	(*WalletFreeze)(nil),                           // 16: wallet.v1.WalletFreeze
+	(*WalletAdjustment)(nil),                       // 17: wallet.v1.WalletAdjustment
+	(*WalletUserDebt)(nil),                         // 18: wallet.v1.WalletUserDebt
 }
 var file_wallet_v1_reconciliation_proto_depIdxs = []int32{
 	13, // 0: wallet.v1.WalletReconciliationBatch.currency:type_name -> wallet.v1.WalletCurrency
@@ -1570,25 +1506,22 @@ var file_wallet_v1_reconciliation_proto_depIdxs = []int32{
 	14, // 10: wallet.v1.WalletReconciliationItem.verified_at:type_name -> google.protobuf.Timestamp
 	14, // 11: wallet.v1.WalletReconciliationItem.created_at:type_name -> google.protobuf.Timestamp
 	14, // 12: wallet.v1.WalletEvent.created_at:type_name -> google.protobuf.Timestamp
-	15, // 13: wallet.v1.CreateWalletReconciliationBatchRequest.app_id:type_name -> common.v1.AppId
-	13, // 14: wallet.v1.CreateWalletReconciliationBatchRequest.currency:type_name -> wallet.v1.WalletCurrency
-	16, // 15: wallet.v1.CreateWalletReconciliationBatchRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	15, // 16: wallet.v1.RetryWalletReconciliationBatchRequest.app_id:type_name -> common.v1.AppId
-	16, // 17: wallet.v1.RetryWalletReconciliationBatchRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	15, // 18: wallet.v1.ResolveWalletReconciliationItemRequest.app_id:type_name -> common.v1.AppId
-	16, // 19: wallet.v1.ResolveWalletReconciliationItemRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	0,  // 20: wallet.v1.ResolveWalletReconciliationItemRequest.investigation_status:type_name -> wallet.v1.WalletReconciliationInvestigationStatus
-	17, // 21: wallet.v1.ListWalletFreezeResponse.items:type_name -> wallet.v1.WalletFreeze
-	18, // 22: wallet.v1.ListWalletAdjustmentResponse.items:type_name -> wallet.v1.WalletAdjustment
-	1,  // 23: wallet.v1.ListWalletReconciliationBatchResponse.items:type_name -> wallet.v1.WalletReconciliationBatch
-	2,  // 24: wallet.v1.ListWalletReconciliationItemResponse.items:type_name -> wallet.v1.WalletReconciliationItem
-	3,  // 25: wallet.v1.ListWalletEventResponse.items:type_name -> wallet.v1.WalletEvent
-	19, // 26: wallet.v1.ListWalletUserDebtResponse.items:type_name -> wallet.v1.WalletUserDebt
-	27, // [27:27] is the sub-list for method output_type
-	27, // [27:27] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	13, // 13: wallet.v1.CreateWalletReconciliationBatchRequest.currency:type_name -> wallet.v1.WalletCurrency
+	15, // 14: wallet.v1.CreateWalletReconciliationBatchRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	15, // 15: wallet.v1.RetryWalletReconciliationBatchRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	15, // 16: wallet.v1.ResolveWalletReconciliationItemRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	0,  // 17: wallet.v1.ResolveWalletReconciliationItemRequest.investigation_status:type_name -> wallet.v1.WalletReconciliationInvestigationStatus
+	16, // 18: wallet.v1.ListWalletFreezeResponse.items:type_name -> wallet.v1.WalletFreeze
+	17, // 19: wallet.v1.ListWalletAdjustmentResponse.items:type_name -> wallet.v1.WalletAdjustment
+	1,  // 20: wallet.v1.ListWalletReconciliationBatchResponse.items:type_name -> wallet.v1.WalletReconciliationBatch
+	2,  // 21: wallet.v1.ListWalletReconciliationItemResponse.items:type_name -> wallet.v1.WalletReconciliationItem
+	3,  // 22: wallet.v1.ListWalletEventResponse.items:type_name -> wallet.v1.WalletEvent
+	18, // 23: wallet.v1.ListWalletUserDebtResponse.items:type_name -> wallet.v1.WalletUserDebt
+	24, // [24:24] is the sub-list for method output_type
+	24, // [24:24] is the sub-list for method input_type
+	24, // [24:24] is the sub-list for extension type_name
+	24, // [24:24] is the sub-list for extension extendee
+	0,  // [0:24] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_reconciliation_proto_init() }

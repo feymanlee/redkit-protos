@@ -47,7 +47,7 @@ type SupportConfigurationServiceHTTPServer interface {
 	DiscardConfigurationDraft(context.Context, *AdminDiscardConfigurationDraftRequest) (*emptypb.Empty, error)
 	// ExecuteDeliveryProbe 执行 DeliveryProbe。
 	ExecuteDeliveryProbe(context.Context, *AdminExecuteDeliveryProbeRequest) (*v1.DeliveryProbe, error)
-	// GetConfigurationReadiness GetConfigurationReadiness returns readiness for the authenticated App.
+	// GetConfigurationReadiness GetConfigurationReadiness returns readiness for the platform.
 	GetConfigurationReadiness(context.Context, *AdminGetConfigurationReadinessRequest) (*v1.ConfigurationReadiness, error)
 	// GetDeliveryProbeReadiness 查询 DeliveryProbeReadiness。
 	GetDeliveryProbeReadiness(context.Context, *AdminGetDeliveryProbeReadinessRequest) (*v1.DeliveryProbeReadiness, error)
@@ -369,7 +369,7 @@ type SupportConfigurationServiceHTTPClient interface {
 	DiscardConfigurationDraft(ctx context.Context, req *AdminDiscardConfigurationDraftRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	// ExecuteDeliveryProbe 执行 DeliveryProbe。
 	ExecuteDeliveryProbe(ctx context.Context, req *AdminExecuteDeliveryProbeRequest, opts ...http.CallOption) (rsp *v1.DeliveryProbe, err error)
-	// GetConfigurationReadiness GetConfigurationReadiness returns readiness for the authenticated App.
+	// GetConfigurationReadiness GetConfigurationReadiness returns readiness for the platform.
 	GetConfigurationReadiness(ctx context.Context, req *AdminGetConfigurationReadinessRequest, opts ...http.CallOption) (rsp *v1.ConfigurationReadiness, err error)
 	// GetDeliveryProbeReadiness 查询 DeliveryProbeReadiness。
 	GetDeliveryProbeReadiness(ctx context.Context, req *AdminGetDeliveryProbeReadinessRequest, opts ...http.CallOption) (rsp *v1.DeliveryProbeReadiness, err error)
@@ -475,7 +475,7 @@ func (c *SupportConfigurationServiceHTTPClientImpl) ExecuteDeliveryProbe(ctx con
 	return &out, nil
 }
 
-// GetConfigurationReadiness GetConfigurationReadiness returns readiness for the authenticated App.
+// GetConfigurationReadiness GetConfigurationReadiness returns readiness for the platform.
 func (c *SupportConfigurationServiceHTTPClientImpl) GetConfigurationReadiness(ctx context.Context, in *AdminGetConfigurationReadinessRequest, opts ...http.CallOption) (*v1.ConfigurationReadiness, error) {
 	var out v1.ConfigurationReadiness
 	pattern := "/admin/v1/support/configuration/readiness"

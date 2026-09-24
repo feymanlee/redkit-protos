@@ -29,7 +29,7 @@ const (
 //
 // Gift Reward 背包履约服务。
 type GiftRewardServiceClient interface {
-	// 预检一个 App 下的背包 Gift Reward 配置。
+	// 预检背包 Gift Reward 配置。
 	PreflightBackpackGiftReward(ctx context.Context, in *PreflightBackpackGiftRewardRequest, opts ...grpc.CallOption) (*PreflightBackpackGiftRewardResponse, error)
 	// 按稳定 Reward Item 身份幂等发放背包 Gift。
 	GrantBackpackGiftReward(ctx context.Context, in *GrantBackpackGiftRewardRequest, opts ...grpc.CallOption) (*GrantBackpackGiftRewardResponse, error)
@@ -69,7 +69,7 @@ func (c *giftRewardServiceClient) GrantBackpackGiftReward(ctx context.Context, i
 //
 // Gift Reward 背包履约服务。
 type GiftRewardServiceServer interface {
-	// 预检一个 App 下的背包 Gift Reward 配置。
+	// 预检背包 Gift Reward 配置。
 	PreflightBackpackGiftReward(context.Context, *PreflightBackpackGiftRewardRequest) (*PreflightBackpackGiftRewardResponse, error)
 	// 按稳定 Reward Item 身份幂等发放背包 Gift。
 	GrantBackpackGiftReward(context.Context, *GrantBackpackGiftRewardRequest) (*GrantBackpackGiftRewardResponse, error)

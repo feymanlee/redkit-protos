@@ -8,7 +8,6 @@ package walletpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -27,8 +26,6 @@ const (
 // Coin Reward 预检请求。
 type PreflightCoinRewardRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID，必须与可信 App Scope 一致。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// Reward 币种，只允许 COIN。
 	Currency WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency" json:"currency,omitempty"`
 	// Reward 数量，必须为正数且不超过平台上限。
@@ -67,13 +64,6 @@ func (*PreflightCoinRewardRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_wallet_coin_reward_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PreflightCoinRewardRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PreflightCoinRewardRequest) GetCurrency() WalletCurrency {
 	if x != nil {
 		return x.Currency
@@ -91,8 +81,6 @@ func (x *PreflightCoinRewardRequest) GetAmount() int64 {
 // Coin Reward 预检结果。
 type PreflightCoinRewardResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 已验证的应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 已验证的 Reward 币种。
 	Currency WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency" json:"currency,omitempty"`
 	// 已验证的 Reward 数量。
@@ -131,13 +119,6 @@ func (*PreflightCoinRewardResponse) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_wallet_coin_reward_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PreflightCoinRewardResponse) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PreflightCoinRewardResponse) GetCurrency() WalletCurrency {
 	if x != nil {
 		return x.Currency
@@ -155,8 +136,6 @@ func (x *PreflightCoinRewardResponse) GetAmount() int64 {
 // Coin Reward 履约请求。
 type GrantCoinRewardRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID，必须与可信 App Scope 一致。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// Reward 接收用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// Coin 数量。
@@ -197,13 +176,6 @@ func (*GrantCoinRewardRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_wallet_coin_reward_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GrantCoinRewardRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GrantCoinRewardRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -228,8 +200,6 @@ func (x *GrantCoinRewardRequest) GetRewardItemId() uint64 {
 // Coin Reward 履约结果。
 type GrantCoinRewardResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 已履约的应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 实际入账的 User ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 已发放的 Coin 数量。
@@ -272,13 +242,6 @@ func (*GrantCoinRewardResponse) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_wallet_coin_reward_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GrantCoinRewardResponse) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GrantCoinRewardResponse) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -311,26 +274,22 @@ var File_wallet_v1_wallet_coin_reward_service_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_wallet_coin_reward_service_proto_rawDesc = "" +
 	"\n" +
-	"*wallet/v1/wallet_coin_reward_service.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xba\x01\n" +
-	"\x1aPreflightCoinRewardRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12B\n" +
+	"*wallet/v1/wallet_coin_reward_service.proto\x12\twallet.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x1cwallet/v1/wallet_types.proto\"\x84\x01\n" +
+	"\x1aPreflightCoinRewardRequest\x12B\n" +
 	"\bcurrency\x18\x02 \x01(\x0e2\x19.wallet.v1.WalletCurrencyB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\bcurrency\x12\"\n" +
 	"\x06amount\x18\x03 \x01(\x03B\n" +
-	"\xe0A\x02\xfaB\x04\"\x02 \x00R\x06amount\"\x95\x01\n" +
-	"\x1bPreflightCoinRewardResponse\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x125\n" +
+	"\xe0A\x02\xfaB\x04\"\x02 \x00R\x06amount\"l\n" +
+	"\x1bPreflightCoinRewardResponse\x125\n" +
 	"\bcurrency\x18\x02 \x01(\x0e2\x19.wallet.v1.WalletCurrencyR\bcurrency\x12\x16\n" +
-	"\x06amount\x18\x03 \x01(\x03R\x06amount\"\xc9\x01\n" +
-	"\x16GrantCoinRewardRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12#\n" +
+	"\x06amount\x18\x03 \x01(\x03R\x06amount\"\x93\x01\n" +
+	"\x16GrantCoinRewardRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12\"\n" +
 	"\x06amount\x18\x03 \x01(\x03B\n" +
 	"\xe0A\x02\xfaB\x04\"\x02 \x00R\x06amount\x120\n" +
 	"\x0ereward_item_id\x18\x04 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\frewardItemId\"\xc0\x01\n" +
-	"\x17GrantCoinRewardResponse\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\frewardItemId\"\x97\x01\n" +
+	"\x17GrantCoinRewardResponse\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\x03R\x06amount\x12$\n" +
 	"\x0ereward_item_id\x18\x04 \x01(\x04R\frewardItemId\x12%\n" +
@@ -359,25 +318,20 @@ var file_wallet_v1_wallet_coin_reward_service_proto_goTypes = []any{
 	(*PreflightCoinRewardResponse)(nil), // 1: wallet.v1.PreflightCoinRewardResponse
 	(*GrantCoinRewardRequest)(nil),      // 2: wallet.v1.GrantCoinRewardRequest
 	(*GrantCoinRewardResponse)(nil),     // 3: wallet.v1.GrantCoinRewardResponse
-	(v1.AppId)(0),                       // 4: common.v1.AppId
-	(WalletCurrency)(0),                 // 5: wallet.v1.WalletCurrency
+	(WalletCurrency)(0),                 // 4: wallet.v1.WalletCurrency
 }
 var file_wallet_v1_wallet_coin_reward_service_proto_depIdxs = []int32{
-	4, // 0: wallet.v1.PreflightCoinRewardRequest.app_id:type_name -> common.v1.AppId
-	5, // 1: wallet.v1.PreflightCoinRewardRequest.currency:type_name -> wallet.v1.WalletCurrency
-	4, // 2: wallet.v1.PreflightCoinRewardResponse.app_id:type_name -> common.v1.AppId
-	5, // 3: wallet.v1.PreflightCoinRewardResponse.currency:type_name -> wallet.v1.WalletCurrency
-	4, // 4: wallet.v1.GrantCoinRewardRequest.app_id:type_name -> common.v1.AppId
-	4, // 5: wallet.v1.GrantCoinRewardResponse.app_id:type_name -> common.v1.AppId
-	0, // 6: wallet.v1.CoinRewardService.PreflightCoinReward:input_type -> wallet.v1.PreflightCoinRewardRequest
-	2, // 7: wallet.v1.CoinRewardService.GrantCoinReward:input_type -> wallet.v1.GrantCoinRewardRequest
-	1, // 8: wallet.v1.CoinRewardService.PreflightCoinReward:output_type -> wallet.v1.PreflightCoinRewardResponse
-	3, // 9: wallet.v1.CoinRewardService.GrantCoinReward:output_type -> wallet.v1.GrantCoinRewardResponse
-	8, // [8:10] is the sub-list for method output_type
-	6, // [6:8] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	4, // 0: wallet.v1.PreflightCoinRewardRequest.currency:type_name -> wallet.v1.WalletCurrency
+	4, // 1: wallet.v1.PreflightCoinRewardResponse.currency:type_name -> wallet.v1.WalletCurrency
+	0, // 2: wallet.v1.CoinRewardService.PreflightCoinReward:input_type -> wallet.v1.PreflightCoinRewardRequest
+	2, // 3: wallet.v1.CoinRewardService.GrantCoinReward:input_type -> wallet.v1.GrantCoinRewardRequest
+	1, // 4: wallet.v1.CoinRewardService.PreflightCoinReward:output_type -> wallet.v1.PreflightCoinRewardResponse
+	3, // 5: wallet.v1.CoinRewardService.GrantCoinReward:output_type -> wallet.v1.GrantCoinRewardResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_wallet_coin_reward_service_proto_init() }

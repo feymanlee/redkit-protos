@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on RoomSession with the rules defined in
@@ -62,8 +58,6 @@ func (m *RoomSession) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for RoomId
 
@@ -562,28 +556,6 @@ func (m *ListSessionMembersRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ListSessionMembersRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListSessionMembersRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListSessionMembersRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetSessionId() <= 0 {
 		err := ListSessionMembersRequestValidationError{
 			field:  "SessionId",
@@ -703,10 +675,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListSessionMembersRequestValidationError{}
-
-var _ListSessionMembersRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListSessionMembersResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -868,28 +836,6 @@ func (m *OpenSessionRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _OpenSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := OpenSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := OpenSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetRoomId() <= 0 {
 		err := OpenSessionRequestValidationError{
 			field:  "RoomId",
@@ -1003,10 +949,6 @@ var _ interface {
 	ErrorName() string
 } = OpenSessionRequestValidationError{}
 
-var _OpenSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on JoinSessionRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1028,28 +970,6 @@ func (m *JoinSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _JoinSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := JoinSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := JoinSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := JoinSessionRequestValidationError{
@@ -1164,10 +1084,6 @@ var _ interface {
 	ErrorName() string
 } = JoinSessionRequestValidationError{}
 
-var _JoinSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on LeaveSessionRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1189,28 +1105,6 @@ func (m *LeaveSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _LeaveSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := LeaveSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := LeaveSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := LeaveSessionRequestValidationError{
@@ -1314,10 +1208,6 @@ var _ interface {
 	ErrorName() string
 } = LeaveSessionRequestValidationError{}
 
-var _LeaveSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on EndSessionRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -1339,28 +1229,6 @@ func (m *EndSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _EndSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := EndSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := EndSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := EndSessionRequestValidationError{
@@ -1475,10 +1343,6 @@ var _ interface {
 	ErrorName() string
 } = EndSessionRequestValidationError{}
 
-var _EndSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on GetSessionRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -1500,28 +1364,6 @@ func (m *GetSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _GetSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := GetSessionRequestValidationError{
@@ -1629,10 +1471,6 @@ var _ interface {
 	ErrorName() string
 } = GetSessionRequestValidationError{}
 
-var _GetSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RequestMicRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -1654,28 +1492,6 @@ func (m *RequestMicRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RequestMicRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RequestMicRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RequestMicRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := RequestMicRequestValidationError{
@@ -1779,10 +1595,6 @@ var _ interface {
 	ErrorName() string
 } = RequestMicRequestValidationError{}
 
-var _RequestMicRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on CancelMicRequestRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1804,28 +1616,6 @@ func (m *CancelMicRequestRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CancelMicRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CancelMicRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CancelMicRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := CancelMicRequestRequestValidationError{
@@ -1929,10 +1719,6 @@ var _ interface {
 	ErrorName() string
 } = CancelMicRequestRequestValidationError{}
 
-var _CancelMicRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ApproveMicRequestRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1954,28 +1740,6 @@ func (m *ApproveMicRequestRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ApproveMicRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ApproveMicRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ApproveMicRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := ApproveMicRequestRequestValidationError{
@@ -2094,10 +1858,6 @@ var _ interface {
 	ErrorName() string
 } = ApproveMicRequestRequestValidationError{}
 
-var _ApproveMicRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RejectMicRequestRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2119,28 +1879,6 @@ func (m *RejectMicRequestRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RejectMicRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RejectMicRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RejectMicRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := RejectMicRequestRequestValidationError{
@@ -2255,10 +1993,6 @@ var _ interface {
 	ErrorName() string
 } = RejectMicRequestRequestValidationError{}
 
-var _RejectMicRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on SeatActionRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -2280,28 +2014,6 @@ func (m *SeatActionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _SeatActionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := SeatActionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := SeatActionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := SeatActionRequestValidationError{
@@ -2429,10 +2141,6 @@ var _ interface {
 	ErrorName() string
 } = SeatActionRequestValidationError{}
 
-var _SeatActionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _SeatActionRequest_Action_NotInLookup = map[SeatActionRequest_SeatAction]struct{}{
 	0: {},
 }
@@ -2458,28 +2166,6 @@ func (m *KickMemberRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _KickMemberRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := KickMemberRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := KickMemberRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := KickMemberRequestValidationError{
@@ -2609,10 +2295,6 @@ var _ interface {
 	ErrorName() string
 } = KickMemberRequestValidationError{}
 
-var _KickMemberRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ForceEndSessionRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2634,28 +2316,6 @@ func (m *ForceEndSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ForceEndSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ForceEndSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ForceEndSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := ForceEndSessionRequestValidationError{
@@ -2781,10 +2441,6 @@ var _ interface {
 	ErrorName() string
 } = ForceEndSessionRequestValidationError{}
 
-var _ForceEndSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ListSessionsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2806,28 +2462,6 @@ func (m *ListSessionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ListSessionsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -2967,10 +2601,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListSessionsRequestValidationError{}
-
-var _ListSessionsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListSessionsResponse with the rules
 // defined in the proto definition for this message. If any rules are

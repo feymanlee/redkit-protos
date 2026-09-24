@@ -155,8 +155,6 @@ type PermissionPolicy struct {
 	EvalOrder *uint32 `protobuf:"varint,6,opt,name=eval_order,json=evalOrder,proto3,oneof" json:"eval_order,omitempty"` // 评估优先级（越小越先执行）
 	// cache ttl。
 	CacheTtl *uint32 `protobuf:"varint,7,opt,name=cache_ttl,json=cacheTtl,proto3,oneof" json:"cache_ttl,omitempty"` // 结果缓存秒数（0=不缓存）
-	// AppID。
-	AppId *uint32 `protobuf:"varint,8,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
 	// 状态。
 	Status *PermissionPolicy_Status `protobuf:"varint,9,opt,name=status,proto3,enum=core.permission.v1.PermissionPolicy_Status,oneof" json:"status,omitempty"` // 状态
 	// 创建者用户ID。
@@ -254,13 +252,6 @@ func (x *PermissionPolicy) GetCacheTtl() uint32 {
 	return 0
 }
 
-func (x *PermissionPolicy) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
 func (x *PermissionPolicy) GetStatus() PermissionPolicy_Status {
 	if x != nil && x.Status != nil {
 		return *x.Status
@@ -314,7 +305,8 @@ var File_core_permission_v1_permission_policy_proto protoreflect.FileDescriptor
 
 const file_core_permission_v1_permission_policy_proto_rawDesc = "" +
 	"\n" +
-	"*core/permission/v1/permission_policy.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1egoogle/protobuf/duration.proto\x1a%common/pagination/v1/pagination.proto\"\xa6\v\n" +
+	"*core/permission/v1/permission_policy.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1egoogle/protobuf/duration.proto\x1a%common/pagination/v1/pagination.proto\"\xf2\n" +
+	"\n" +
 	"\x10PermissionPolicy\x12)\n" +
 	"\x02id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e权限策略IDH\x00R\x02id\x88\x01\x01\x12D\n" +
 	"\rpermission_id\x18\x02 \x01(\rB\x1a\xbaG\x17\x92\x02\x14包含的权限点IDH\x01R\fpermissionId\x88\x01\x01\x12o\n" +
@@ -325,22 +317,21 @@ const file_core_permission_v1_permission_policy_proto_rawDesc = "" +
 	"\aversion\x18\x05 \x01(\rB+\xbaG(\x92\x02%策略版本（用于灰度/回滚）H\x04R\aversion\x88\x01\x01\x12Q\n" +
 	"\n" +
 	"eval_order\x18\x06 \x01(\rB-\xbaG*\x92\x02'评估优先级（越小越先执行）H\x05R\tevalOrder\x88\x01\x01\x12K\n" +
-	"\tcache_ttl\x18\a \x01(\rB)\xbaG&\x92\x02#结果缓存秒数（0=不缓存）H\x06R\bcacheTtl\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\b \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\aR\x05appId\x88\x01\x01\x12V\n" +
-	"\x06status\x18\t \x01(\x0e2+.core.permission.v1.PermissionPolicy.StatusB\f\xbaG\t\x92\x02\x06状态H\bR\x06status\x88\x01\x01\x12;\n" +
+	"\tcache_ttl\x18\a \x01(\rB)\xbaG&\x92\x02#结果缓存秒数（0=不缓存）H\x06R\bcacheTtl\x88\x01\x01\x12V\n" +
+	"\x06status\x18\t \x01(\x0e2+.core.permission.v1.PermissionPolicy.StatusB\f\xbaG\t\x92\x02\x06状态H\aR\x06status\x88\x01\x01\x12;\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x17\xbaG\x14\x92\x02\x11创建者用户IDH\tR\tcreatedBy\x88\x01\x01\x12;\n" +
+	"created_by\x18d \x01(\rB\x17\xbaG\x14\x92\x02\x11创建者用户IDH\bR\tcreatedBy\x88\x01\x01\x12;\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x17\xbaG\x14\x92\x02\x11更新者用户IDH\n" +
-	"R\tupdatedBy\x88\x01\x01\x12;\n" +
+	"updated_by\x18e \x01(\rB\x17\xbaG\x14\x92\x02\x11更新者用户IDH\tR\tupdatedBy\x88\x01\x01\x12;\n" +
 	"\n" +
-	"deleted_by\x18f \x01(\rB\x17\xbaG\x14\x92\x02\x11删除者用户IDH\vR\tdeletedBy\x88\x01\x01\x12S\n" +
+	"deleted_by\x18f \x01(\rB\x17\xbaG\x14\x92\x02\x11删除者用户IDH\n" +
+	"R\tdeletedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\fR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\vR\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\rR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\fR\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x0eR\tdeletedAt\x88\x01\x01\"T\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\rR\tdeletedAt\x88\x01\x01\"T\n" +
 	"\fPolicyEngine\x12\x1d\n" +
 	"\x19POLICY_ENGINE_UNSPECIFIED\x10\x00\x12\n" +
 	"\n" +
@@ -360,7 +351,6 @@ const file_core_permission_v1_permission_policy_proto_rawDesc = "" +
 	"\v_eval_orderB\f\n" +
 	"\n" +
 	"_cache_ttlB\t\n" +
-	"\a_app_idB\t\n" +
 	"\a_statusB\r\n" +
 	"\v_created_byB\r\n" +
 	"\v_updated_byB\r\n" +

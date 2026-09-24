@@ -81,14 +81,6 @@ func (m *RolePermission) validate(all bool) error {
 		// no validation rules for Status
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
-	if m.AppName != nil {
-		// no validation rules for AppName
-	}
-
 	if m.CreatedBy != nil {
 		// no validation rules for CreatedBy
 	}

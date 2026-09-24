@@ -8,8 +8,8 @@ package useradministrationpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -666,9 +666,7 @@ type RecoveryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// request_no 是 Recovery 对外关联与审计使用的业务编号。
 	RequestNo string `protobuf:"bytes,1,opt,name=request_no,json=requestNo,proto3" json:"request_no,omitempty"`
-	// app_id 限定 Recovery 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// masked_new_phone 承载按约定地区规则规范化的手机号码。
 	MaskedNewPhone string `protobuf:"bytes,4,opt,name=masked_new_phone,json=maskedNewPhone,proto3" json:"masked_new_phone,omitempty"`
@@ -761,13 +759,6 @@ func (x *RecoveryRequest) GetRequestNo() string {
 		return x.RequestNo
 	}
 	return ""
-}
-
-func (x *RecoveryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RecoveryRequest) GetUserId() uint64 {
@@ -962,9 +953,7 @@ func (x *RecoveryRequest) GetNotices() []*SecurityNotice {
 // SubmitRecoveryRequestRequest 定义提交 RecoveryRequest 的幂等管理命令参数。
 type SubmitRecoveryRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 SubmitRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// new_phone 承载按约定地区规则规范化的手机号码。
 	NewPhone string `protobuf:"bytes,3,opt,name=new_phone,json=newPhone,proto3" json:"new_phone,omitempty"`
@@ -1004,13 +993,6 @@ func (x *SubmitRecoveryRequestRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SubmitRecoveryRequestRequest.ProtoReflect.Descriptor instead.
 func (*SubmitRecoveryRequestRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *SubmitRecoveryRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SubmitRecoveryRequestRequest) GetUserId() uint64 {
@@ -1090,8 +1072,6 @@ func (x *SubmitRecoveryRequestResponse) GetContinuationToken() string {
 // CreateTrustedDeviceRecoveryChallengeRequest 定义创建 TrustedDeviceRecoveryChallenge 的命令参数。
 type CreateTrustedDeviceRecoveryChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// continuation_token 来自统一非枚举提交响应；服务端只保存其摘要。
 	ContinuationToken string `protobuf:"bytes,2,opt,name=continuation_token,json=continuationToken,proto3" json:"continuation_token,omitempty"`
 	// device_id 标识关联的 Device。
@@ -1130,13 +1110,6 @@ func (*CreateTrustedDeviceRecoveryChallengeRequest) Descriptor() ([]byte, []int)
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *CreateTrustedDeviceRecoveryChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateTrustedDeviceRecoveryChallengeRequest) GetContinuationToken() string {
 	if x != nil {
 		return x.ContinuationToken
@@ -1154,8 +1127,6 @@ func (x *CreateTrustedDeviceRecoveryChallengeRequest) GetDeviceId() uint64 {
 // VerifyTrustedDeviceRecoveryChallengeRequest 定义校验 TrustedDeviceRecoveryChallenge 的命令参数。
 type VerifyTrustedDeviceRecoveryChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 VerifyTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ContinuationToken string `protobuf:"bytes,2,opt,name=continuation_token,json=continuationToken,proto3" json:"continuation_token,omitempty"`
 	// device_id 标识关联的 Device。
@@ -1200,13 +1171,6 @@ func (*VerifyTrustedDeviceRecoveryChallengeRequest) Descriptor() ([]byte, []int)
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *VerifyTrustedDeviceRecoveryChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *VerifyTrustedDeviceRecoveryChallengeRequest) GetContinuationToken() string {
 	if x != nil {
 		return x.ContinuationToken
@@ -1245,8 +1209,6 @@ func (x *VerifyTrustedDeviceRecoveryChallengeRequest) GetSignature() []byte {
 // SubmitPaymentRecoveryEvidenceRequest 定义提交 PaymentRecoveryEvidence 的幂等管理命令参数。
 type SubmitPaymentRecoveryEvidenceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 SubmitPaymentRecoveryEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ContinuationToken string `protobuf:"bytes,2,opt,name=continuation_token,json=continuationToken,proto3" json:"continuation_token,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
@@ -1289,13 +1251,6 @@ func (*SubmitPaymentRecoveryEvidenceRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *SubmitPaymentRecoveryEvidenceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *SubmitPaymentRecoveryEvidenceRequest) GetContinuationToken() string {
 	if x != nil {
 		return x.ContinuationToken
@@ -1329,7 +1284,7 @@ type RecoveryRequestFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// request_no 是 RecoveryRequestFilter 对外关联与审计使用的业务编号。
 	RequestNo *string `protobuf:"bytes,1,opt,name=request_no,json=requestNo,proto3,oneof" json:"request_no,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// status 表示 RecoveryRequestFilter 当前可观察的生命周期状态。
 	Status *RecoveryRequestStatus `protobuf:"varint,3,opt,name=status,proto3,enum=user.administration.v1.RecoveryRequestStatus,oneof" json:"status,omitempty"`
@@ -1409,10 +1364,8 @@ func (x *RecoveryRequestFilter) GetSubmittedTo() *timestamppb.Timestamp {
 // ListRecoveryRequestsRequest 定义 RecoveryRequests 的筛选与分页参数。
 type ListRecoveryRequestsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListRecoveryRequests 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter        *RecoveryRequestFilter `protobuf:"bytes,3,opt,name=filter,proto3" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1449,14 +1402,7 @@ func (*ListRecoveryRequestsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *ListRecoveryRequestsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListRecoveryRequestsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListRecoveryRequestsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1528,8 +1474,6 @@ func (x *ListRecoveryRequestsResponse) GetTotal() uint64 {
 // GetRecoveryRequestRequest 标识待查询的 RecoveryRequest。
 type GetRecoveryRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// request_no 是 GetRecoveryRequest 对外关联与审计使用的业务编号。
 	RequestNo     string `protobuf:"bytes,2,opt,name=request_no,json=requestNo,proto3" json:"request_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1566,13 +1510,6 @@ func (*GetRecoveryRequestRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *GetRecoveryRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetRecoveryRequestRequest) GetRequestNo() string {
 	if x != nil {
 		return x.RequestNo
@@ -1583,8 +1520,6 @@ func (x *GetRecoveryRequestRequest) GetRequestNo() string {
 // AcceptRecoveryRequestRequest 定义执行 AcceptRecoveryRequest 的幂等管理命令参数。
 type AcceptRecoveryRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AcceptRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// request_no 是 AcceptRecoveryRequest 对外关联与审计使用的业务编号。
 	RequestNo string `protobuf:"bytes,2,opt,name=request_no,json=requestNo,proto3" json:"request_no,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -1625,13 +1560,6 @@ func (*AcceptRecoveryRequestRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *AcceptRecoveryRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *AcceptRecoveryRequestRequest) GetRequestNo() string {
 	if x != nil {
 		return x.RequestNo
@@ -1656,8 +1584,6 @@ func (x *AcceptRecoveryRequestRequest) GetIdempotencyKey() string {
 // ApproveRecoveryRequestRequest 定义批准 RecoveryRequest 的幂等管理命令参数。
 type ApproveRecoveryRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApproveRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// request_no 是 ApproveRecoveryRequest 对外关联与审计使用的业务编号。
 	RequestNo string `protobuf:"bytes,2,opt,name=request_no,json=requestNo,proto3" json:"request_no,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -1698,13 +1624,6 @@ func (*ApproveRecoveryRequestRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *ApproveRecoveryRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ApproveRecoveryRequestRequest) GetRequestNo() string {
 	if x != nil {
 		return x.RequestNo
@@ -1729,8 +1648,6 @@ func (x *ApproveRecoveryRequestRequest) GetIdempotencyKey() string {
 // RejectRecoveryRequestRequest 定义拒绝 RecoveryRequest 的幂等管理命令参数。
 type RejectRecoveryRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RejectRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// request_no 是 RejectRecoveryRequest 对外关联与审计使用的业务编号。
 	RequestNo string `protobuf:"bytes,2,opt,name=request_no,json=requestNo,proto3" json:"request_no,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -1771,13 +1688,6 @@ func (*RejectRecoveryRequestRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *RejectRecoveryRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RejectRecoveryRequestRequest) GetRequestNo() string {
 	if x != nil {
 		return x.RequestNo
@@ -1802,8 +1712,6 @@ func (x *RejectRecoveryRequestRequest) GetIdempotencyKey() string {
 // ClaimRecoveryGrantRequest 定义执行 ClaimRecoveryGrant 的命令参数。
 type ClaimRecoveryGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ClaimRecoveryGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ContinuationToken string `protobuf:"bytes,2,opt,name=continuation_token,json=continuationToken,proto3" json:"continuation_token,omitempty"`
 	unknownFields     protoimpl.UnknownFields
@@ -1838,13 +1746,6 @@ func (x *ClaimRecoveryGrantRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ClaimRecoveryGrantRequest.ProtoReflect.Descriptor instead.
 func (*ClaimRecoveryGrantRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *ClaimRecoveryGrantRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ClaimRecoveryGrantRequest) GetContinuationToken() string {
@@ -1912,8 +1813,6 @@ func (x *ClaimRecoveryGrantResponse) GetExpiresAt() *timestamppb.Timestamp {
 // CompleteRecoveryRequestRequest 定义完成 RecoveryRequest 的幂等管理命令参数。
 type CompleteRecoveryRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompleteRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
 	Grant string `protobuf:"bytes,2,opt,name=grant,proto3" json:"grant,omitempty"`
 	// new_phone 承载按约定地区规则规范化的手机号码。
@@ -1954,13 +1853,6 @@ func (x *CompleteRecoveryRequestRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CompleteRecoveryRequestRequest.ProtoReflect.Descriptor instead.
 func (*CompleteRecoveryRequestRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_recovery_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *CompleteRecoveryRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CompleteRecoveryRequestRequest) GetGrant() string {
@@ -2087,11 +1979,10 @@ const file_user_administration_v1_recovery_proto_rawDesc = "" +
 	"\x0ereference_type\x18\a \x01(\tR\rreferenceType\x12'\n" +
 	"\x0freference_value\x18\b \x01(\tR\x0ereferenceValue\x12;\n" +
 	"\voccurred_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt\"\xe1\f\n" +
+	"occurredAt\"\xb8\f\n" +
 	"\x0fRecoveryRequest\x12\x1d\n" +
 	"\n" +
-	"request_no\x18\x01 \x01(\tR\trequestNo\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"request_no\x18\x01 \x01(\tR\trequestNo\x12\x17\n" +
 	"\auser_id\x18\x03 \x01(\x04R\x06userId\x12(\n" +
 	"\x10masked_new_phone\x18\x04 \x01(\tR\x0emaskedNewPhone\x126\n" +
 	"\x17evidence_policy_version\x18\x05 \x01(\rR\x15evidencePolicyVersion\x12E\n" +
@@ -2123,31 +2014,27 @@ const file_user_administration_v1_recovery_proto_rawDesc = "" +
 	"\fcompleted_at\x18\x1a \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\x12N\n" +
 	"\fgrant_status\x18\x1b \x01(\x0e2+.user.administration.v1.RecoveryGrantStatusR\vgrantStatus\x12D\n" +
 	"\x10grant_expires_at\x18\x1c \x01(\v2\x1a.google.protobuf.TimestampR\x0egrantExpiresAt\x12@\n" +
-	"\anotices\x18\x1d \x03(\v2&.user.administration.v1.SecurityNoticeR\anotices\"\xb2\x02\n" +
-	"\x1cSubmitRecoveryRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\anotices\x18\x1d \x03(\v2&.user.administration.v1.SecurityNoticeR\anotices\"\xfa\x01\n" +
+	"\x1cSubmitRecoveryRequestRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12=\n" +
 	"\tnew_phone\x18\x03 \x01(\tB \xe0A\x02\xfaB\x1ar\x18\x18\x102\x14^\\+[1-9][0-9]{7,14}$R\bnewPhone\x12>\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x10R\x12verificationTicket\x126\n" +
 	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"]\n" +
 	"\x1dSubmitRecoveryRequestResponse\x12<\n" +
-	"\x12continuation_token\x18\x01 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x11continuationToken\"\xcc\x01\n" +
-	"+CreateTrustedDeviceRecoveryChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12<\n" +
+	"\x12continuation_token\x18\x01 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x11continuationToken\"\x94\x01\n" +
+	"+CreateTrustedDeviceRecoveryChallengeRequest\x12<\n" +
 	"\x12continuation_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x11continuationToken\x12'\n" +
 	"\tdevice_id\x18\x03 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\bdeviceId\"\xd6\x02\n" +
-	"+VerifyTrustedDeviceRecoveryChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12<\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\bdeviceId\"\x9e\x02\n" +
+	"+VerifyTrustedDeviceRecoveryChallengeRequest\x12<\n" +
 	"\x12continuation_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x11continuationToken\x12'\n" +
 	"\tdevice_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\bdeviceId\x12/\n" +
 	"\fchallenge_no\x18\x04 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\vchallengeNo\x12+\n" +
 	"\tchallenge\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x10R\tchallenge\x12*\n" +
-	"\tsignature\x18\x06 \x01(\fB\f\xe0A\x02\xfaB\x06z\x04\x10@\x18@R\tsignature\"\xd8\x02\n" +
-	"$SubmitPaymentRecoveryEvidenceRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12<\n" +
+	"\tsignature\x18\x06 \x01(\fB\f\xe0A\x02\xfaB\x06z\x04\x10@\x18@R\tsignature\"\xa0\x02\n" +
+	"$SubmitPaymentRecoveryEvidenceRequest\x12<\n" +
 	"\x12continuation_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x11continuationToken\x12X\n" +
 	"\bprovider\x18\x03 \x01(\x0e2/.user.administration.v1.RecoveryPaymentProviderB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\bprovider\x12(\n" +
 	"\areceipt\x18\x04 \x01(\tB\x0e\xe0A\x02\xfaB\br\x06\x10\x01\x18\x80\x80\bR\areceipt\x126\n" +
@@ -2165,45 +2052,38 @@ const file_user_administration_v1_recovery_proto_rawDesc = "" +
 	"\b_user_idB\t\n" +
 	"\a_statusB\x11\n" +
 	"\x0f_submitted_fromB\x0f\n" +
-	"\r_submitted_to\"\xd9\x01\n" +
-	"\x1bListRecoveryRequestsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12;\n" +
+	"\r_submitted_to\"\xa1\x01\n" +
+	"\x1bListRecoveryRequestsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12E\n" +
 	"\x06filter\x18\x03 \x01(\v2-.user.administration.v1.RecoveryRequestFilterR\x06filter\"s\n" +
 	"\x1cListRecoveryRequestsResponse\x12=\n" +
 	"\x05items\x18\x01 \x03(\v2'.user.administration.v1.RecoveryRequestR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x80\x01\n" +
-	"\x19GetRecoveryRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12+\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"H\n" +
+	"\x19GetRecoveryRequestRequest\x12+\n" +
 	"\n" +
-	"request_no\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\trequestNo\"\xe2\x01\n" +
-	"\x1cAcceptRecoveryRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12+\n" +
+	"request_no\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\trequestNo\"\xaa\x01\n" +
+	"\x1cAcceptRecoveryRequestRequest\x12+\n" +
 	"\n" +
 	"request_no\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\trequestNo\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xe3\x01\n" +
-	"\x1dApproveRecoveryRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12+\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xab\x01\n" +
+	"\x1dApproveRecoveryRequestRequest\x12+\n" +
 	"\n" +
 	"request_no\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\trequestNo\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xe2\x01\n" +
-	"\x1cRejectRecoveryRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12+\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xaa\x01\n" +
+	"\x1cRejectRecoveryRequestRequest\x12+\n" +
 	"\n" +
 	"request_no\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\trequestNo\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x91\x01\n" +
-	"\x19ClaimRecoveryGrantRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12<\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"Y\n" +
+	"\x19ClaimRecoveryGrantRequest\x12<\n" +
 	"\x12continuation_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x11continuationToken\"\x81\x01\n" +
 	"\x1aClaimRecoveryGrantResponse\x12#\n" +
 	"\x05grant\x18\x01 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x05grant\x12>\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\texpiresAt\"\xb4\x02\n" +
-	"\x1eCompleteRecoveryRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\texpiresAt\"\xfc\x01\n" +
+	"\x1eCompleteRecoveryRequestRequest\x12#\n" +
 	"\x05grant\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\x05grant\x12=\n" +
 	"\tnew_phone\x18\x03 \x01(\tB \xe0A\x02\xfaB\x1ar\x18\x18\x102\x14^\\+[1-9][0-9]{7,14}$R\bnewPhone\x12>\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x10R\x12verificationTicket\x126\n" +
@@ -2304,10 +2184,9 @@ var file_user_administration_v1_recovery_proto_goTypes = []any{
 	(*CompleteRecoveryRequestRequest)(nil),              // 24: user.administration.v1.CompleteRecoveryRequestRequest
 	(*CompleteRecoveryRequestResponse)(nil),             // 25: user.administration.v1.CompleteRecoveryRequestResponse
 	(*timestamppb.Timestamp)(nil),                       // 26: google.protobuf.Timestamp
-	(v1.AppId)(0),                                       // 27: common.v1.AppId
-	(SecurityNoticeStatus)(0),                           // 28: user.administration.v1.SecurityNoticeStatus
-	(*SecurityNotice)(nil),                              // 29: user.administration.v1.SecurityNotice
-	(*v11.PagingRequest)(nil),                           // 30: common.pagination.v1.PagingRequest
+	(SecurityNoticeStatus)(0),                           // 27: user.administration.v1.SecurityNoticeStatus
+	(*SecurityNotice)(nil),                              // 28: user.administration.v1.SecurityNotice
+	(*v1.PagingRequest)(nil),                            // 29: common.pagination.v1.PagingRequest
 }
 var file_user_administration_v1_recovery_proto_depIdxs = []int32{
 	1,  // 0: user.administration.v1.RecoveryEvidence.type:type_name -> user.administration.v1.RecoveryEvidenceType
@@ -2318,70 +2197,58 @@ var file_user_administration_v1_recovery_proto_depIdxs = []int32{
 	0,  // 5: user.administration.v1.RecoveryRequestEvent.from_status:type_name -> user.administration.v1.RecoveryRequestStatus
 	0,  // 6: user.administration.v1.RecoveryRequestEvent.to_status:type_name -> user.administration.v1.RecoveryRequestStatus
 	26, // 7: user.administration.v1.RecoveryRequestEvent.occurred_at:type_name -> google.protobuf.Timestamp
-	27, // 8: user.administration.v1.RecoveryRequest.app_id:type_name -> common.v1.AppId
-	0,  // 9: user.administration.v1.RecoveryRequest.status:type_name -> user.administration.v1.RecoveryRequestStatus
-	26, // 10: user.administration.v1.RecoveryRequest.submitted_at:type_name -> google.protobuf.Timestamp
-	26, // 11: user.administration.v1.RecoveryRequest.created_at:type_name -> google.protobuf.Timestamp
-	26, // 12: user.administration.v1.RecoveryRequest.updated_at:type_name -> google.protobuf.Timestamp
-	8,  // 13: user.administration.v1.RecoveryRequest.events:type_name -> user.administration.v1.RecoveryRequestEvent
-	26, // 14: user.administration.v1.RecoveryRequest.reviewed_at:type_name -> google.protobuf.Timestamp
-	26, // 15: user.administration.v1.RecoveryRequest.hold_applied_at:type_name -> google.protobuf.Timestamp
-	26, // 16: user.administration.v1.RecoveryRequest.hold_released_at:type_name -> google.protobuf.Timestamp
-	28, // 17: user.administration.v1.RecoveryRequest.notice_status:type_name -> user.administration.v1.SecurityNoticeStatus
-	6,  // 18: user.administration.v1.RecoveryRequest.evidences:type_name -> user.administration.v1.RecoveryEvidence
-	26, // 19: user.administration.v1.RecoveryRequest.approved_at:type_name -> google.protobuf.Timestamp
-	26, // 20: user.administration.v1.RecoveryRequest.completed_at:type_name -> google.protobuf.Timestamp
-	5,  // 21: user.administration.v1.RecoveryRequest.grant_status:type_name -> user.administration.v1.RecoveryGrantStatus
-	26, // 22: user.administration.v1.RecoveryRequest.grant_expires_at:type_name -> google.protobuf.Timestamp
-	29, // 23: user.administration.v1.RecoveryRequest.notices:type_name -> user.administration.v1.SecurityNotice
-	27, // 24: user.administration.v1.SubmitRecoveryRequestRequest.app_id:type_name -> common.v1.AppId
-	27, // 25: user.administration.v1.CreateTrustedDeviceRecoveryChallengeRequest.app_id:type_name -> common.v1.AppId
-	27, // 26: user.administration.v1.VerifyTrustedDeviceRecoveryChallengeRequest.app_id:type_name -> common.v1.AppId
-	27, // 27: user.administration.v1.SubmitPaymentRecoveryEvidenceRequest.app_id:type_name -> common.v1.AppId
-	3,  // 28: user.administration.v1.SubmitPaymentRecoveryEvidenceRequest.provider:type_name -> user.administration.v1.RecoveryPaymentProvider
-	0,  // 29: user.administration.v1.RecoveryRequestFilter.status:type_name -> user.administration.v1.RecoveryRequestStatus
-	26, // 30: user.administration.v1.RecoveryRequestFilter.submitted_from:type_name -> google.protobuf.Timestamp
-	26, // 31: user.administration.v1.RecoveryRequestFilter.submitted_to:type_name -> google.protobuf.Timestamp
-	27, // 32: user.administration.v1.ListRecoveryRequestsRequest.app_id:type_name -> common.v1.AppId
-	30, // 33: user.administration.v1.ListRecoveryRequestsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	15, // 34: user.administration.v1.ListRecoveryRequestsRequest.filter:type_name -> user.administration.v1.RecoveryRequestFilter
-	9,  // 35: user.administration.v1.ListRecoveryRequestsResponse.items:type_name -> user.administration.v1.RecoveryRequest
-	27, // 36: user.administration.v1.GetRecoveryRequestRequest.app_id:type_name -> common.v1.AppId
-	27, // 37: user.administration.v1.AcceptRecoveryRequestRequest.app_id:type_name -> common.v1.AppId
-	27, // 38: user.administration.v1.ApproveRecoveryRequestRequest.app_id:type_name -> common.v1.AppId
-	27, // 39: user.administration.v1.RejectRecoveryRequestRequest.app_id:type_name -> common.v1.AppId
-	27, // 40: user.administration.v1.ClaimRecoveryGrantRequest.app_id:type_name -> common.v1.AppId
-	26, // 41: user.administration.v1.ClaimRecoveryGrantResponse.expires_at:type_name -> google.protobuf.Timestamp
-	27, // 42: user.administration.v1.CompleteRecoveryRequestRequest.app_id:type_name -> common.v1.AppId
-	0,  // 43: user.administration.v1.CompleteRecoveryRequestResponse.status:type_name -> user.administration.v1.RecoveryRequestStatus
-	26, // 44: user.administration.v1.CompleteRecoveryRequestResponse.completed_at:type_name -> google.protobuf.Timestamp
-	10, // 45: user.administration.v1.RecoveryService.SubmitRecoveryRequest:input_type -> user.administration.v1.SubmitRecoveryRequestRequest
-	12, // 46: user.administration.v1.RecoveryService.CreateTrustedDeviceRecoveryChallenge:input_type -> user.administration.v1.CreateTrustedDeviceRecoveryChallengeRequest
-	13, // 47: user.administration.v1.RecoveryService.VerifyTrustedDeviceRecoveryChallenge:input_type -> user.administration.v1.VerifyTrustedDeviceRecoveryChallengeRequest
-	14, // 48: user.administration.v1.RecoveryService.SubmitPaymentRecoveryEvidence:input_type -> user.administration.v1.SubmitPaymentRecoveryEvidenceRequest
-	16, // 49: user.administration.v1.RecoveryService.ListRecoveryRequests:input_type -> user.administration.v1.ListRecoveryRequestsRequest
-	18, // 50: user.administration.v1.RecoveryService.GetRecoveryRequest:input_type -> user.administration.v1.GetRecoveryRequestRequest
-	19, // 51: user.administration.v1.RecoveryService.AcceptRecoveryRequest:input_type -> user.administration.v1.AcceptRecoveryRequestRequest
-	20, // 52: user.administration.v1.RecoveryService.ApproveRecoveryRequest:input_type -> user.administration.v1.ApproveRecoveryRequestRequest
-	21, // 53: user.administration.v1.RecoveryService.RejectRecoveryRequest:input_type -> user.administration.v1.RejectRecoveryRequestRequest
-	22, // 54: user.administration.v1.RecoveryService.ClaimRecoveryGrant:input_type -> user.administration.v1.ClaimRecoveryGrantRequest
-	24, // 55: user.administration.v1.RecoveryService.CompleteRecoveryRequest:input_type -> user.administration.v1.CompleteRecoveryRequestRequest
-	11, // 56: user.administration.v1.RecoveryService.SubmitRecoveryRequest:output_type -> user.administration.v1.SubmitRecoveryRequestResponse
-	7,  // 57: user.administration.v1.RecoveryService.CreateTrustedDeviceRecoveryChallenge:output_type -> user.administration.v1.TrustedDeviceRecoveryChallenge
-	6,  // 58: user.administration.v1.RecoveryService.VerifyTrustedDeviceRecoveryChallenge:output_type -> user.administration.v1.RecoveryEvidence
-	6,  // 59: user.administration.v1.RecoveryService.SubmitPaymentRecoveryEvidence:output_type -> user.administration.v1.RecoveryEvidence
-	17, // 60: user.administration.v1.RecoveryService.ListRecoveryRequests:output_type -> user.administration.v1.ListRecoveryRequestsResponse
-	9,  // 61: user.administration.v1.RecoveryService.GetRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
-	9,  // 62: user.administration.v1.RecoveryService.AcceptRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
-	9,  // 63: user.administration.v1.RecoveryService.ApproveRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
-	9,  // 64: user.administration.v1.RecoveryService.RejectRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
-	23, // 65: user.administration.v1.RecoveryService.ClaimRecoveryGrant:output_type -> user.administration.v1.ClaimRecoveryGrantResponse
-	25, // 66: user.administration.v1.RecoveryService.CompleteRecoveryRequest:output_type -> user.administration.v1.CompleteRecoveryRequestResponse
-	56, // [56:67] is the sub-list for method output_type
-	45, // [45:56] is the sub-list for method input_type
-	45, // [45:45] is the sub-list for extension type_name
-	45, // [45:45] is the sub-list for extension extendee
-	0,  // [0:45] is the sub-list for field type_name
+	0,  // 8: user.administration.v1.RecoveryRequest.status:type_name -> user.administration.v1.RecoveryRequestStatus
+	26, // 9: user.administration.v1.RecoveryRequest.submitted_at:type_name -> google.protobuf.Timestamp
+	26, // 10: user.administration.v1.RecoveryRequest.created_at:type_name -> google.protobuf.Timestamp
+	26, // 11: user.administration.v1.RecoveryRequest.updated_at:type_name -> google.protobuf.Timestamp
+	8,  // 12: user.administration.v1.RecoveryRequest.events:type_name -> user.administration.v1.RecoveryRequestEvent
+	26, // 13: user.administration.v1.RecoveryRequest.reviewed_at:type_name -> google.protobuf.Timestamp
+	26, // 14: user.administration.v1.RecoveryRequest.hold_applied_at:type_name -> google.protobuf.Timestamp
+	26, // 15: user.administration.v1.RecoveryRequest.hold_released_at:type_name -> google.protobuf.Timestamp
+	27, // 16: user.administration.v1.RecoveryRequest.notice_status:type_name -> user.administration.v1.SecurityNoticeStatus
+	6,  // 17: user.administration.v1.RecoveryRequest.evidences:type_name -> user.administration.v1.RecoveryEvidence
+	26, // 18: user.administration.v1.RecoveryRequest.approved_at:type_name -> google.protobuf.Timestamp
+	26, // 19: user.administration.v1.RecoveryRequest.completed_at:type_name -> google.protobuf.Timestamp
+	5,  // 20: user.administration.v1.RecoveryRequest.grant_status:type_name -> user.administration.v1.RecoveryGrantStatus
+	26, // 21: user.administration.v1.RecoveryRequest.grant_expires_at:type_name -> google.protobuf.Timestamp
+	28, // 22: user.administration.v1.RecoveryRequest.notices:type_name -> user.administration.v1.SecurityNotice
+	3,  // 23: user.administration.v1.SubmitPaymentRecoveryEvidenceRequest.provider:type_name -> user.administration.v1.RecoveryPaymentProvider
+	0,  // 24: user.administration.v1.RecoveryRequestFilter.status:type_name -> user.administration.v1.RecoveryRequestStatus
+	26, // 25: user.administration.v1.RecoveryRequestFilter.submitted_from:type_name -> google.protobuf.Timestamp
+	26, // 26: user.administration.v1.RecoveryRequestFilter.submitted_to:type_name -> google.protobuf.Timestamp
+	29, // 27: user.administration.v1.ListRecoveryRequestsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	15, // 28: user.administration.v1.ListRecoveryRequestsRequest.filter:type_name -> user.administration.v1.RecoveryRequestFilter
+	9,  // 29: user.administration.v1.ListRecoveryRequestsResponse.items:type_name -> user.administration.v1.RecoveryRequest
+	26, // 30: user.administration.v1.ClaimRecoveryGrantResponse.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 31: user.administration.v1.CompleteRecoveryRequestResponse.status:type_name -> user.administration.v1.RecoveryRequestStatus
+	26, // 32: user.administration.v1.CompleteRecoveryRequestResponse.completed_at:type_name -> google.protobuf.Timestamp
+	10, // 33: user.administration.v1.RecoveryService.SubmitRecoveryRequest:input_type -> user.administration.v1.SubmitRecoveryRequestRequest
+	12, // 34: user.administration.v1.RecoveryService.CreateTrustedDeviceRecoveryChallenge:input_type -> user.administration.v1.CreateTrustedDeviceRecoveryChallengeRequest
+	13, // 35: user.administration.v1.RecoveryService.VerifyTrustedDeviceRecoveryChallenge:input_type -> user.administration.v1.VerifyTrustedDeviceRecoveryChallengeRequest
+	14, // 36: user.administration.v1.RecoveryService.SubmitPaymentRecoveryEvidence:input_type -> user.administration.v1.SubmitPaymentRecoveryEvidenceRequest
+	16, // 37: user.administration.v1.RecoveryService.ListRecoveryRequests:input_type -> user.administration.v1.ListRecoveryRequestsRequest
+	18, // 38: user.administration.v1.RecoveryService.GetRecoveryRequest:input_type -> user.administration.v1.GetRecoveryRequestRequest
+	19, // 39: user.administration.v1.RecoveryService.AcceptRecoveryRequest:input_type -> user.administration.v1.AcceptRecoveryRequestRequest
+	20, // 40: user.administration.v1.RecoveryService.ApproveRecoveryRequest:input_type -> user.administration.v1.ApproveRecoveryRequestRequest
+	21, // 41: user.administration.v1.RecoveryService.RejectRecoveryRequest:input_type -> user.administration.v1.RejectRecoveryRequestRequest
+	22, // 42: user.administration.v1.RecoveryService.ClaimRecoveryGrant:input_type -> user.administration.v1.ClaimRecoveryGrantRequest
+	24, // 43: user.administration.v1.RecoveryService.CompleteRecoveryRequest:input_type -> user.administration.v1.CompleteRecoveryRequestRequest
+	11, // 44: user.administration.v1.RecoveryService.SubmitRecoveryRequest:output_type -> user.administration.v1.SubmitRecoveryRequestResponse
+	7,  // 45: user.administration.v1.RecoveryService.CreateTrustedDeviceRecoveryChallenge:output_type -> user.administration.v1.TrustedDeviceRecoveryChallenge
+	6,  // 46: user.administration.v1.RecoveryService.VerifyTrustedDeviceRecoveryChallenge:output_type -> user.administration.v1.RecoveryEvidence
+	6,  // 47: user.administration.v1.RecoveryService.SubmitPaymentRecoveryEvidence:output_type -> user.administration.v1.RecoveryEvidence
+	17, // 48: user.administration.v1.RecoveryService.ListRecoveryRequests:output_type -> user.administration.v1.ListRecoveryRequestsResponse
+	9,  // 49: user.administration.v1.RecoveryService.GetRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
+	9,  // 50: user.administration.v1.RecoveryService.AcceptRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
+	9,  // 51: user.administration.v1.RecoveryService.ApproveRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
+	9,  // 52: user.administration.v1.RecoveryService.RejectRecoveryRequest:output_type -> user.administration.v1.RecoveryRequest
+	23, // 53: user.administration.v1.RecoveryService.ClaimRecoveryGrant:output_type -> user.administration.v1.ClaimRecoveryGrantResponse
+	25, // 54: user.administration.v1.RecoveryService.CompleteRecoveryRequest:output_type -> user.administration.v1.CompleteRecoveryRequestResponse
+	44, // [44:55] is the sub-list for method output_type
+	33, // [33:44] is the sub-list for method input_type
+	33, // [33:33] is the sub-list for extension type_name
+	33, // [33:33] is the sub-list for extension extendee
+	0,  // [0:33] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_recovery_proto_init() }

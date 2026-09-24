@@ -11,13 +11,13 @@ import "ops/v1/ops_content.proto";
 import "ops/v1/placement.proto";
 import "validate/validate.proto";
 
-// OpsPlacementService 管理当前 App 的投放位注册。
+// OpsPlacementService 管理投放位注册。
 service OpsPlacementService {
   // 查询投放位列表。
   rpc ListPlacements(.common.pagination.v1.PagingRequest) returns (.ops.v1.ListPlacementResponse) {
     option (google.api.http) = {get: "/admin/v1/ops/placements"};
   }
-  // 创建投放位；code 在 App 内唯一且创建后不可改。
+  // 创建投放位；code 唯一且创建后不可改。
   rpc CreatePlacement(AdminCreatePlacementRequest) returns (.ops.v1.Placement) {
     option (google.api.http) = {
       post: "/admin/v1/ops/placements"
@@ -33,7 +33,7 @@ service OpsPlacementService {
   }
 }
 
-// OpsContentService 管理当前 App 的运营投放内容生命周期。
+// OpsContentService 管理运营投放内容生命周期。
 service OpsContentService {
   // 查询运营内容列表。
   rpc ListOpsContentItems(AdminListOpsContentItemsRequest) returns (.ops.v1.ListOpsContentItemResponse) {
@@ -75,7 +75,7 @@ service OpsContentService {
 
 // AdminCreatePlacementRequest 创建投放位。
 message AdminCreatePlacementRequest {
-  // code 是 App 内稳定投放位代码。
+  // code 是稳定的投放位代码。
   string code = 1 [(validate.rules).string.min_len = 1];
   // kind 是投放位形态。
   .ops.v1.PlacementKind kind = 2;

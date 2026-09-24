@@ -41,7 +41,7 @@ const (
 //
 // SupportConfigurationService exposes Support Configuration Draft governance.
 type SupportConfigurationServiceClient interface {
-	// GetConfigurationReadiness returns readiness for the authenticated App.
+	// GetConfigurationReadiness returns readiness for the platform.
 	GetConfigurationReadiness(ctx context.Context, in *AdminGetConfigurationReadinessRequest, opts ...grpc.CallOption) (*v1.ConfigurationReadiness, error)
 	// 创建 ConfigurationDraft。
 	CreateConfigurationDraft(ctx context.Context, in *AdminCreateConfigurationDraftRequest, opts ...grpc.CallOption) (*v1.ConfigurationDraftSummary, error)
@@ -201,7 +201,7 @@ func (c *supportConfigurationServiceClient) RollbackConfigurationRelease(ctx con
 //
 // SupportConfigurationService exposes Support Configuration Draft governance.
 type SupportConfigurationServiceServer interface {
-	// GetConfigurationReadiness returns readiness for the authenticated App.
+	// GetConfigurationReadiness returns readiness for the platform.
 	GetConfigurationReadiness(context.Context, *AdminGetConfigurationReadinessRequest) (*v1.ConfigurationReadiness, error)
 	// 创建 ConfigurationDraft。
 	CreateConfigurationDraft(context.Context, *AdminCreateConfigurationDraftRequest) (*v1.ConfigurationDraftSummary, error)

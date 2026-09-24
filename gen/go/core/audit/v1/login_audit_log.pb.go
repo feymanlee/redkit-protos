@@ -283,10 +283,6 @@ type LoginAuditLog struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 登录审计日志ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 登录审计日志ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
-	// App名称。
-	AppName *string `protobuf:"bytes,3,opt,name=app_name,json=appName,proto3,oneof" json:"app_name,omitempty"` // App名称
 	// 后台人员 ID。
 	OperatorId *uint32 `protobuf:"varint,4,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"`
 	// 账号名。
@@ -321,7 +317,7 @@ type LoginAuditLog struct {
 	RiskFactors []string `protobuf:"bytes,32,rep,name=risk_factors,json=riskFactors,proto3" json:"risk_factors,omitempty"` // 风险因素（ISO 27001标准，如：异地登录/新设备/密码尝试次数过多）
 	// log_hash 用于校验 LoginAuditLog 对应内容或版本的一致性。
 	LogHash *string `protobuf:"bytes,40,opt,name=log_hash,json=logHash,proto3,oneof" json:"log_hash,omitempty"` // 日志内容哈希（SHA256，十六进制字符串）
-	// 日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）。
+	// 日志数字签名（ECDSA，签名内容：operator_id+created_at+log_hash）。
 	Signature []byte `protobuf:"bytes,41,opt,name=signature,proto3,oneof" json:"signature,omitempty"` // 日志数字签名
 	// created_at 记录 LoginAuditLog 的创建时间。
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,50,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"` // 日志创建时间
@@ -364,20 +360,6 @@ func (x *LoginAuditLog) GetId() uint32 {
 		return *x.Id
 	}
 	return 0
-}
-
-func (x *LoginAuditLog) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *LoginAuditLog) GetAppName() string {
-	if x != nil && x.AppName != nil {
-		return *x.AppName
-	}
-	return ""
 }
 
 func (x *LoginAuditLog) GetOperatorId() uint32 {
@@ -697,42 +679,40 @@ var File_core_audit_v1_login_audit_log_proto protoreflect.FileDescriptor
 
 const file_core_audit_v1_login_audit_log_proto_rawDesc = "" +
 	"\n" +
-	"#core/audit/v1/login_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a%common/pagination/v1/pagination.proto\x1a core/audit/v1/geo_location.proto\x1a\x1fcore/audit/v1/device_info.proto\"\x8c\x14\n" +
+	"#core/audit/v1/login_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a%common/pagination/v1/pagination.proto\x1a core/audit/v1/geo_location.proto\x1a\x1fcore/audit/v1/device_info.proto\"\x93\x13\n" +
 	"\rLoginAuditLog\x12/\n" +
-	"\x02id\x18\x01 \x01(\rB\x1a\xbaG\x17\x92\x02\x14登录审计日志IDH\x00R\x02id\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x01R\x05appId\x88\x01\x01\x12/\n" +
-	"\bapp_name\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\tApp名称H\x02R\aappName\x88\x01\x01\x12;\n" +
-	"\voperator_id\x18\x04 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x03R\n" +
+	"\x02id\x18\x01 \x01(\rB\x1a\xbaG\x17\x92\x02\x14登录审计日志IDH\x00R\x02id\x88\x01\x01\x12;\n" +
+	"\voperator_id\x18\x04 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x01R\n" +
 	"operatorId\x88\x01\x01\x120\n" +
-	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t账号名H\x04R\busername\x88\x01\x01\x122\n" +
+	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t账号名H\x02R\busername\x88\x01\x01\x122\n" +
 	"\n" +
 	"ip_address\x18\n" +
-	" \x01(\tB\x0e\xbaG\v\x92\x02\bIP地址H\x05R\tipAddress\x88\x01\x01\x12c\n" +
-	"\fgeo_location\x18\v \x01(\v2\x1a.core.audit.v1.GeoLocationB\x1f\xbaG\x1c\x92\x02\x19地理位置(来自IP库)H\x06R\vgeoLocation\x88\x01\x01\x122\n" +
+	" \x01(\tB\x0e\xbaG\v\x92\x02\bIP地址H\x03R\tipAddress\x88\x01\x01\x12c\n" +
+	"\fgeo_location\x18\v \x01(\v2\x1a.core.audit.v1.GeoLocationB\x1f\xbaG\x1c\x92\x02\x19地理位置(来自IP库)H\x04R\vgeoLocation\x88\x01\x01\x122\n" +
 	"\n" +
-	"session_id\x18\f \x01(\tB\x0e\xbaG\v\x92\x02\b会话IDH\aR\tsessionId\x88\x01\x01\x12S\n" +
-	"\vdevice_info\x18\r \x01(\v2\x19.core.audit.v1.DeviceInfoB\x12\xbaG\x0f\x92\x02\f设备信息H\bR\n" +
+	"session_id\x18\f \x01(\tB\x0e\xbaG\v\x92\x02\b会话IDH\x05R\tsessionId\x88\x01\x01\x12S\n" +
+	"\vdevice_info\x18\r \x01(\v2\x19.core.audit.v1.DeviceInfoB\x12\xbaG\x0f\x92\x02\f设备信息H\x06R\n" +
 	"deviceInfo\x88\x01\x01\x12P\n" +
 	"\n" +
-	"request_id\x18\x10 \x01(\tB,\xbaG)\x92\x02&全局请求ID（关联网关日志）H\tR\trequestId\x88\x01\x01\x12:\n" +
-	"\btrace_id\x18\x11 \x01(\tB\x1a\xbaG\x17\x92\x02\x14全局链路追踪IDH\n" +
-	"R\atraceId\x88\x01\x01\x12g\n" +
-	"\vaction_type\x18\x14 \x01(\x0e2'.core.audit.v1.LoginAuditLog.ActionTypeB\x18\xbaG\x15\x92\x02\x12事件动作类型H\vR\n" +
+	"request_id\x18\x10 \x01(\tB,\xbaG)\x92\x02&全局请求ID（关联网关日志）H\aR\trequestId\x88\x01\x01\x12:\n" +
+	"\btrace_id\x18\x11 \x01(\tB\x1a\xbaG\x17\x92\x02\x14全局链路追踪IDH\bR\atraceId\x88\x01\x01\x12g\n" +
+	"\vaction_type\x18\x14 \x01(\x0e2'.core.audit.v1.LoginAuditLog.ActionTypeB\x18\xbaG\x15\x92\x02\x12事件动作类型H\tR\n" +
 	"actionType\x88\x01\x01\x12Z\n" +
-	"\x06status\x18\x15 \x01(\x0e2#.core.audit.v1.LoginAuditLog.StatusB\x18\xbaG\x15\x92\x02\x12操作结果状态H\fR\x06status\x88\x01\x01\x12l\n" +
-	"\x0efailure_reason\x18\x16 \x01(\tB@\xbaG=\x92\x02:失败原因：密码错误/MFA验证失败/IP黑名单等H\rR\rfailureReason\x88\x01\x01\x12Z\n" +
+	"\x06status\x18\x15 \x01(\x0e2#.core.audit.v1.LoginAuditLog.StatusB\x18\xbaG\x15\x92\x02\x12操作结果状态H\n" +
+	"R\x06status\x88\x01\x01\x12l\n" +
+	"\x0efailure_reason\x18\x16 \x01(\tB@\xbaG=\x92\x02:失败原因：密码错误/MFA验证失败/IP黑名单等H\vR\rfailureReason\x88\x01\x01\x12Z\n" +
 	"\n" +
-	"mfa_status\x18\x17 \x01(\tB6\xbaG3\x92\x020MFA状态：UNVERIFIED/VERIFYING/VERIFIED/FAILEDH\x0eR\tmfaStatus\x88\x01\x01\x12d\n" +
-	"\flogin_method\x18\x18 \x01(\x0e2(.core.audit.v1.LoginAuditLog.LoginMethodB\x12\xbaG\x0f\x92\x02\f登录方式H\x0fR\vloginMethod\x88\x01\x01\x12\\\n" +
+	"mfa_status\x18\x17 \x01(\tB6\xbaG3\x92\x020MFA状态：UNVERIFIED/VERIFYING/VERIFIED/FAILEDH\fR\tmfaStatus\x88\x01\x01\x12d\n" +
+	"\flogin_method\x18\x18 \x01(\x0e2(.core.audit.v1.LoginAuditLog.LoginMethodB\x12\xbaG\x0f\x92\x02\f登录方式H\rR\vloginMethod\x88\x01\x01\x12\\\n" +
 	"\n" +
-	"risk_score\x18\x1e \x01(\rB8\xbaG5\x92\x022风险评分（0-100，分值越高风险越大）H\x10R\triskScore\x88\x01\x01\x12|\n" +
+	"risk_score\x18\x1e \x01(\rB8\xbaG5\x92\x022风险评分（0-100，分值越高风险越大）H\x0eR\triskScore\x88\x01\x01\x12|\n" +
 	"\n" +
-	"risk_level\x18\x1f \x01(\x0e2&.core.audit.v1.LoginAuditLog.RiskLevelB0\xbaG-\x92\x02*风险等级（高风险需实时告警）H\x11R\triskLevel\x88\x01\x01\x12\x82\x01\n" +
+	"risk_level\x18\x1f \x01(\x0e2&.core.audit.v1.LoginAuditLog.RiskLevelB0\xbaG-\x92\x02*风险等级（高风险需实时告警）H\x0fR\triskLevel\x88\x01\x01\x12\x82\x01\n" +
 	"\frisk_factors\x18  \x03(\tB_\xbaG\\\x92\x02Y风险因素（ISO 27001标准，如：异地登录/新设备/密码尝试次数过多）R\vriskFactors\x12\\\n" +
-	"\blog_hash\x18( \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\x12R\alogHash\x88\x01\x01\x12~\n" +
-	"\tsignature\x18) \x01(\fB[\xbaGX\x92\x02U日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）H\x13R\tsignature\x88\x01\x01\x12X\n" +
+	"\blog_hash\x18( \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\x10R\alogHash\x88\x01\x01\x12w\n" +
+	"\tsignature\x18) \x01(\fBT\xbaGQ\x92\x02N日志数字签名（ECDSA，签名内容：operator_id+created_at+log_hash）H\x11R\tsignature\x88\x01\x01\x12X\n" +
 	"\n" +
-	"created_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x14R\tcreatedAt\x88\x01\x01\"y\n" +
+	"created_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x12R\tcreatedAt\x88\x01\x01\"y\n" +
 	"\n" +
 	"ActionType\x12\x1b\n" +
 	"\x17ACTION_TYPE_UNSPECIFIED\x10\x00\x12\t\n" +
@@ -765,9 +745,7 @@ const file_core_audit_v1_login_audit_log_proto_rawDesc = "" +
 	"\vOIDC_SOCIAL\x10\x04\x12\r\n" +
 	"\tBIOMETRIC\x10\x05\x12\t\n" +
 	"\x05FIDO2\x10\x06B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
-	"\t_app_nameB\x0e\n" +
+	"\x03_idB\x0e\n" +
 	"\f_operator_idB\v\n" +
 	"\t_usernameB\r\n" +
 	"\v_ip_addressB\x0f\n" +

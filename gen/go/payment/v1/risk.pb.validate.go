@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on PaymentRiskRule with the rules defined
@@ -204,8 +200,6 @@ func (m *PaymentRiskPolicyRevision) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for RevisionNo
 
@@ -537,8 +531,6 @@ func (m *PaymentRiskReview) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for DecisionId
 
 	// no validation rules for PaymentNo
@@ -782,8 +774,6 @@ func (m *PaymentRiskDecision) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for PaymentNo
 
@@ -1047,10 +1037,6 @@ func (m *CreatePaymentRiskPolicyRevisionRequest) validate(all bool) error {
 
 	// no validation rules for OperationNo
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return CreatePaymentRiskPolicyRevisionRequestMultiError(errors)
 	}
@@ -1166,10 +1152,6 @@ func (m *PublishPaymentRiskPolicyRevisionRequest) validate(all bool) error {
 	// no validation rules for RequestId
 
 	// no validation rules for OperationNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return PublishPaymentRiskPolicyRevisionRequestMultiError(errors)
@@ -1303,10 +1285,6 @@ func (m *ListPaymentRiskPolicyRevisionsRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -1556,10 +1534,6 @@ func (m *GetPaymentRiskDecisionRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for PaymentNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetPaymentRiskDecisionRequestMultiError(errors)
@@ -1828,10 +1802,6 @@ func (m *ListPaymentRiskReviewsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListPaymentRiskReviewsRequestMultiError(errors)
 	}
@@ -2087,10 +2057,6 @@ func (m *DecidePaymentRiskReviewRequest) validate(all bool) error {
 	// no validation rules for RequestId
 
 	// no validation rules for OperationNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return DecidePaymentRiskReviewRequestMultiError(errors)
@@ -2384,10 +2350,6 @@ func (m *GetPaymentAnalyticsRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {

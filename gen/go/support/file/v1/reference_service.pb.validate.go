@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on AttachAndPublishRequest with the rules
@@ -97,8 +93,6 @@ func (m *AttachAndPublishRequest) validate(all bool) error {
 	// no validation rules for OperationNo
 
 	// no validation rules for RequestId
-
-	// no validation rules for AppId
 
 	if len(errors) > 0 {
 		return AttachAndPublishRequestMultiError(errors)
@@ -238,8 +232,6 @@ func (m *DetachReferenceRequest) validate(all bool) error {
 	// no validation rules for OperationNo
 
 	// no validation rules for RequestId
-
-	// no validation rules for AppId
 
 	if len(errors) > 0 {
 		return DetachReferenceRequestMultiError(errors)

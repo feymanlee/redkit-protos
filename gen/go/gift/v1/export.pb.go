@@ -7,8 +7,8 @@
 package giftpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -341,7 +341,7 @@ func (*GiftExportFilter_Catalog) isGiftExportFilter_Value() {}
 // GiftCatalogExportFilter selects catalog rows for asynchronous export.
 type GiftCatalogExportFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// gift_ids 为空时导出当前 App 全部 Gift 身份。
+	// gift_ids 为空时导出全部 Gift 身份。
 	GiftIds []uint32 `protobuf:"varint,1,rep,packed,name=gift_ids,json=giftIds,proto3" json:"gift_ids,omitempty"`
 	// only_published 为 true 时仅导出曾经发布过的 Gift。
 	OnlyPublished *bool `protobuf:"varint,2,opt,name=only_published,json=onlyPublished,proto3,oneof" json:"only_published,omitempty"`
@@ -398,8 +398,6 @@ type GiftExportJob struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GiftExportJob。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// requested_by 标识触发或负责 GiftExportJob 对应业务阶段的主体。
 	RequestedBy uint32 `protobuf:"varint,3,opt,name=requested_by,json=requestedBy,proto3" json:"requested_by,omitempty"`
 	// export_type 区分 GiftExportJob 的业务类型。
@@ -469,13 +467,6 @@ func (*GiftExportJob) Descriptor() ([]byte, []int) {
 func (x *GiftExportJob) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *GiftExportJob) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -595,8 +586,6 @@ func (x *GiftExportJob) GetCompletedAt() *timestamppb.Timestamp {
 // CreateGiftExportJobRequest 定义创建 GiftExportJob 的幂等命令参数。
 type CreateGiftExportJobRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateGiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -639,13 +628,6 @@ func (x *CreateGiftExportJobRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateGiftExportJobRequest.ProtoReflect.Descriptor instead.
 func (*CreateGiftExportJobRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_export_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *CreateGiftExportJobRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateGiftExportJobRequest) GetOperatorId() uint32 {
@@ -796,12 +778,10 @@ func (x *GiftExportJobFilter) GetStatuses() []GiftExportStatus {
 // ListGiftExportJobsRequest 定义 GiftExportJobs 的筛选与分页参数。
 type ListGiftExportJobsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGiftExportJobs 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *GiftExportJobFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -836,13 +816,6 @@ func (*ListGiftExportJobsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_export_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListGiftExportJobsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListGiftExportJobsRequest) GetFilter() *GiftExportJobFilter {
 	if x != nil {
 		return x.Filter
@@ -850,7 +823,7 @@ func (x *ListGiftExportJobsRequest) GetFilter() *GiftExportJobFilter {
 	return nil
 }
 
-func (x *ListGiftExportJobsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListGiftExportJobsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -915,8 +888,6 @@ func (x *ListGiftExportJobsResponse) GetTotal() uint64 {
 // GetGiftExportJobRequest 标识待查询的 GiftExportJob。
 type GetGiftExportJobRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetGiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// id 标识关联的 GetGiftExportJob。
 	Id            uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -951,13 +922,6 @@ func (x *GetGiftExportJobRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetGiftExportJobRequest.ProtoReflect.Descriptor instead.
 func (*GetGiftExportJobRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_export_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *GetGiftExportJobRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetGiftExportJobRequest) GetId() uint64 {
@@ -1043,8 +1007,6 @@ func (x *GiftExportDownloadGrant) GetExpiresAt() *timestamppb.Timestamp {
 // CreateGiftExportDownloadGrantRequest 定义创建 GiftExportDownloadGrant 的幂等命令参数。
 type CreateGiftExportDownloadGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateGiftExportDownloadGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// job_id 标识关联的 Job。
@@ -1087,13 +1049,6 @@ func (*CreateGiftExportDownloadGrantRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_export_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *CreateGiftExportDownloadGrantRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateGiftExportDownloadGrantRequest) GetOperatorId() uint32 {
 	if x != nil {
 		return x.OperatorId
@@ -1125,8 +1080,6 @@ func (x *CreateGiftExportDownloadGrantRequest) GetRequestId() string {
 // RedeemGiftExportDownloadGrantRequest 定义执行 RedeemGiftExportDownloadGrant 的幂等管理命令参数。
 type RedeemGiftExportDownloadGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RedeemGiftExportDownloadGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -1167,13 +1120,6 @@ func (x *RedeemGiftExportDownloadGrantRequest) ProtoReflect() protoreflect.Messa
 // Deprecated: Use RedeemGiftExportDownloadGrantRequest.ProtoReflect.Descriptor instead.
 func (*RedeemGiftExportDownloadGrantRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_export_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *RedeemGiftExportDownloadGrantRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RedeemGiftExportDownloadGrantRequest) GetOperatorId() uint32 {
@@ -1277,10 +1223,9 @@ const file_gift_v1_export_proto_rawDesc = "" +
 	"\x17GiftCatalogExportFilter\x12\x19\n" +
 	"\bgift_ids\x18\x01 \x03(\rR\agiftIds\x12*\n" +
 	"\x0eonly_published\x18\x02 \x01(\bH\x00R\ronlyPublished\x88\x01\x01B\x11\n" +
-	"\x0f_only_published\"\xab\x06\n" +
+	"\x0f_only_published\"\x94\x06\n" +
 	"\rGiftExportJob\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12!\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12!\n" +
 	"\frequested_by\x18\x03 \x01(\rR\vrequestedBy\x128\n" +
 	"\vexport_type\x18\x04 \x01(\x0e2\x17.gift.v1.GiftExportTypeR\n" +
 	"exportType\x12\x16\n" +
@@ -1306,61 +1251,51 @@ const file_gift_v1_export_proto_rawDesc = "" +
 	"\v_request_idB\x0f\n" +
 	"\r_failure_codeB\x12\n" +
 	"\x10_failure_messageB\x0f\n" +
-	"\r_completed_at\"\x97\x02\n" +
-	"\x1aCreateGiftExportJobRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"\r_completed_at\"\xde\x01\n" +
+	"\x1aCreateGiftExportJobRequest\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x01R\trequestId\x88\x01\x01\x121\n" +
-	"\x06filter\x18\x06 \x01(\v2\x19.gift.v1.GiftExportFilterR\x06filterB\t\n" +
-	"\a_app_idB\r\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x121\n" +
+	"\x06filter\x18\x06 \x01(\v2\x19.gift.v1.GiftExportFilterR\x06filterB\r\n" +
 	"\v_request_id\"c\n" +
 	"\x1bCreateGiftExportJobResponse\x12(\n" +
 	"\x03job\x18\x01 \x01(\v2\x16.gift.v1.GiftExportJobR\x03job\x12\x1a\n" +
 	"\breplayed\x18\x02 \x01(\bR\breplayed\"\x88\x01\n" +
 	"\x13GiftExportJobFilter\x12:\n" +
 	"\fexport_types\x18\x01 \x03(\x0e2\x17.gift.v1.GiftExportTypeR\vexportTypes\x125\n" +
-	"\bstatuses\x18\x02 \x03(\x0e2\x19.gift.v1.GiftExportStatusR\bstatuses\"\xc7\x01\n" +
-	"\x19ListGiftExportJobsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x124\n" +
+	"\bstatuses\x18\x02 \x03(\x0e2\x19.gift.v1.GiftExportStatusR\bstatuses\"\x8e\x01\n" +
+	"\x19ListGiftExportJobsRequest\x124\n" +
 	"\x06filter\x18\x02 \x01(\v2\x1c.gift.v1.GiftExportJobFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"`\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"`\n" +
 	"\x1aListGiftExportJobsResponse\x12,\n" +
 	"\x05items\x18\x01 \x03(\v2\x16.gift.v1.GiftExportJobR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"b\n" +
-	"\x17GetGiftExportJobRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\x04R\x02idB\t\n" +
-	"\a_app_id\"\x91\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\")\n" +
+	"\x17GetGiftExportJobRequest\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\x04R\x02id\"\x91\x01\n" +
 	"\x17GiftExportDownloadGrant\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
 	"\x06job_id\x18\x02 \x01(\x04R\x05jobId\x12\x14\n" +
 	"\x05token\x18\x03 \x01(\tR\x05token\x129\n" +
 	"\n" +
-	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xed\x01\n" +
-	"$CreateGiftExportDownloadGrantRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xb4\x01\n" +
+	"$CreateGiftExportDownloadGrantRequest\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12\x15\n" +
 	"\x06job_id\x18\x03 \x01(\x04R\x05jobId\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x01R\trequestId\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
-	"\v_request_id\"\xec\x01\n" +
-	"$RedeemGiftExportDownloadGrantRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xb3\x01\n" +
+	"$RedeemGiftExportDownloadGrantRequest\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12\x14\n" +
 	"\x05token\x18\x03 \x01(\tR\x05token\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x01R\trequestId\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
 	"\v_request_id\"\x85\x01\n" +
 	"%RedeemGiftExportDownloadGrantResponse\x12!\n" +
 	"\fdownload_url\x18\x01 \x01(\tR\vdownloadUrl\x129\n" +
@@ -1422,8 +1357,7 @@ var file_gift_v1_export_proto_goTypes = []any{
 	(*GiftStatFilter)(nil),                        // 19: gift.v1.GiftStatFilter
 	(*GiftEventFilter)(nil),                       // 20: gift.v1.GiftEventFilter
 	(*timestamppb.Timestamp)(nil),                 // 21: google.protobuf.Timestamp
-	(v1.AppId)(0),                                 // 22: common.v1.AppId
-	(*v11.PagingRequest)(nil),                     // 23: common.pagination.v1.PagingRequest
+	(*v1.PagingRequest)(nil),                      // 22: common.pagination.v1.PagingRequest
 }
 var file_gift_v1_export_proto_depIdxs = []int32{
 	15, // 0: gift.v1.GiftExportFilter.send:type_name -> gift.v1.GiftSendFilter
@@ -1439,25 +1373,20 @@ var file_gift_v1_export_proto_depIdxs = []int32{
 	21, // 10: gift.v1.GiftExportJob.created_at:type_name -> google.protobuf.Timestamp
 	21, // 11: gift.v1.GiftExportJob.updated_at:type_name -> google.protobuf.Timestamp
 	21, // 12: gift.v1.GiftExportJob.completed_at:type_name -> google.protobuf.Timestamp
-	22, // 13: gift.v1.CreateGiftExportJobRequest.app_id:type_name -> common.v1.AppId
-	2,  // 14: gift.v1.CreateGiftExportJobRequest.filter:type_name -> gift.v1.GiftExportFilter
-	4,  // 15: gift.v1.CreateGiftExportJobResponse.job:type_name -> gift.v1.GiftExportJob
-	0,  // 16: gift.v1.GiftExportJobFilter.export_types:type_name -> gift.v1.GiftExportType
-	1,  // 17: gift.v1.GiftExportJobFilter.statuses:type_name -> gift.v1.GiftExportStatus
-	22, // 18: gift.v1.ListGiftExportJobsRequest.app_id:type_name -> common.v1.AppId
-	7,  // 19: gift.v1.ListGiftExportJobsRequest.filter:type_name -> gift.v1.GiftExportJobFilter
-	23, // 20: gift.v1.ListGiftExportJobsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	4,  // 21: gift.v1.ListGiftExportJobsResponse.items:type_name -> gift.v1.GiftExportJob
-	22, // 22: gift.v1.GetGiftExportJobRequest.app_id:type_name -> common.v1.AppId
-	21, // 23: gift.v1.GiftExportDownloadGrant.expires_at:type_name -> google.protobuf.Timestamp
-	22, // 24: gift.v1.CreateGiftExportDownloadGrantRequest.app_id:type_name -> common.v1.AppId
-	22, // 25: gift.v1.RedeemGiftExportDownloadGrantRequest.app_id:type_name -> common.v1.AppId
-	21, // 26: gift.v1.RedeemGiftExportDownloadGrantResponse.expires_at:type_name -> google.protobuf.Timestamp
-	27, // [27:27] is the sub-list for method output_type
-	27, // [27:27] is the sub-list for method input_type
-	27, // [27:27] is the sub-list for extension type_name
-	27, // [27:27] is the sub-list for extension extendee
-	0,  // [0:27] is the sub-list for field type_name
+	2,  // 13: gift.v1.CreateGiftExportJobRequest.filter:type_name -> gift.v1.GiftExportFilter
+	4,  // 14: gift.v1.CreateGiftExportJobResponse.job:type_name -> gift.v1.GiftExportJob
+	0,  // 15: gift.v1.GiftExportJobFilter.export_types:type_name -> gift.v1.GiftExportType
+	1,  // 16: gift.v1.GiftExportJobFilter.statuses:type_name -> gift.v1.GiftExportStatus
+	7,  // 17: gift.v1.ListGiftExportJobsRequest.filter:type_name -> gift.v1.GiftExportJobFilter
+	22, // 18: gift.v1.ListGiftExportJobsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	4,  // 19: gift.v1.ListGiftExportJobsResponse.items:type_name -> gift.v1.GiftExportJob
+	21, // 20: gift.v1.GiftExportDownloadGrant.expires_at:type_name -> google.protobuf.Timestamp
+	21, // 21: gift.v1.RedeemGiftExportDownloadGrantResponse.expires_at:type_name -> google.protobuf.Timestamp
+	22, // [22:22] is the sub-list for method output_type
+	22, // [22:22] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_gift_v1_export_proto_init() }
@@ -1481,8 +1410,6 @@ func file_gift_v1_export_proto_init() {
 	file_gift_v1_export_proto_msgTypes[1].OneofWrappers = []any{}
 	file_gift_v1_export_proto_msgTypes[2].OneofWrappers = []any{}
 	file_gift_v1_export_proto_msgTypes[3].OneofWrappers = []any{}
-	file_gift_v1_export_proto_msgTypes[6].OneofWrappers = []any{}
-	file_gift_v1_export_proto_msgTypes[8].OneofWrappers = []any{}
 	file_gift_v1_export_proto_msgTypes[10].OneofWrappers = []any{}
 	file_gift_v1_export_proto_msgTypes[11].OneofWrappers = []any{}
 	type x struct{}

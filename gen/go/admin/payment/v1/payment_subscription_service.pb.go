@@ -510,7 +510,7 @@ type AdminSubmitSubscriptionAdjustmentRequest struct {
 	Type v1.SubscriptionAdjustmentType `protobuf:"varint,1,opt,name=type,proto3,enum=payment.v1.SubscriptionAdjustmentType" json:"type,omitempty"`
 	// subscription_id 标识关联的 Subscription。
 	SubscriptionId *uint64 `protobuf:"varint,2,opt,name=subscription_id,json=subscriptionId,proto3,oneof" json:"subscription_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// plan_revision_id 标识关联的 PlanRevision。
 	PlanRevisionId *uint64 `protobuf:"varint,4,opt,name=plan_revision_id,json=planRevisionId,proto3,oneof" json:"plan_revision_id,omitempty"`
@@ -822,7 +822,7 @@ type AdminListProviderSubscriptionsRequest struct {
 	Providers []v1.PaymentProvider `protobuf:"varint,2,rep,packed,name=providers,proto3,enum=payment.v1.PaymentProvider" json:"providers,omitempty"`
 	// statuses 列出 ListProviderSubscriptions 关联的 ProviderSubscriptionStatus。
 	Statuses []v1.ProviderSubscriptionStatus `protobuf:"varint,3,rep,packed,name=statuses,proto3,enum=payment.v1.ProviderSubscriptionStatus" json:"statuses,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// plan_revision_id 标识关联的 PlanRevision。
 	PlanRevisionId *uint64 `protobuf:"varint,5,opt,name=plan_revision_id,json=planRevisionId,proto3,oneof" json:"plan_revision_id,omitempty"`
@@ -946,7 +946,7 @@ type AdminVerifyProviderSubscriptionPurchaseRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider v1.PaymentProvider `protobuf:"varint,1,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// channel_revision_id 标识关联的 ChannelRevision。
 	ChannelRevisionId uint64 `protobuf:"varint,3,opt,name=channel_revision_id,json=channelRevisionId,proto3" json:"channel_revision_id,omitempty"`

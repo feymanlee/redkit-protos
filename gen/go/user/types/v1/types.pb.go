@@ -8,8 +8,8 @@ package usertypespb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -685,13 +685,11 @@ func (SecurityActivityType) EnumDescriptor() ([]byte, []int) {
 	return file_user_types_v1_types_proto_rawDescGZIP(), []int{10}
 }
 
-// User 表示当前 App 内 User 的身份与生命周期快照。
+// User 表示用户身份与生命周期快照。
 type User struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// app_id 限定 User 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// user_code 提供 User 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,3,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
 	// status 表示 User 当前可观察的生命周期状态。
@@ -747,13 +745,6 @@ func (x *User) GetUserId() uint64 {
 	return 0
 }
 
-func (x *User) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *User) GetUserCode() string {
 	if x != nil {
 		return x.UserCode
@@ -806,16 +797,14 @@ func (x *User) GetUpdatedAt() *timestamppb.Timestamp {
 // Profile 表示当前 User 的可编辑资料快照。
 type Profile struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 Profile 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// nickname 承载用户资料或其脱敏展示值，按个人信息保护。
 	Nickname string `protobuf:"bytes,3,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	// avatar_file_id 标识关联的 AvatarFile。
 	AvatarFileId uint64 `protobuf:"varint,4,opt,name=avatar_file_id,json=avatarFileId,proto3" json:"avatar_file_id,omitempty"`
 	// avatar 承载 Profile 关联的 FileView。
-	Avatar *v11.FileView `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Avatar *v1.FileView `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	// gender 承载用户资料或其脱敏展示值，按个人信息保护。
 	Gender string `protobuf:"bytes,6,opt,name=gender,proto3" json:"gender,omitempty"`
 	// region 指定号码、服务或业务规则采用的地区。
@@ -858,13 +847,6 @@ func (*Profile) Descriptor() ([]byte, []int) {
 	return file_user_types_v1_types_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Profile) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *Profile) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -886,7 +868,7 @@ func (x *Profile) GetAvatarFileId() uint64 {
 	return 0
 }
 
-func (x *Profile) GetAvatar() *v11.FileView {
+func (x *Profile) GetAvatar() *v1.FileView {
 	if x != nil {
 		return x.Avatar
 	}
@@ -924,7 +906,7 @@ func (x *Profile) GetUpdatedAt() *timestamppb.Timestamp {
 // PublicProfile 表示允许对其他 User 展示的 Profile 投影。
 type PublicProfile struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// user_code 提供 PublicProfile 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,2,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
@@ -933,7 +915,7 @@ type PublicProfile struct {
 	// avatar_file_id 标识关联的 AvatarFile。
 	AvatarFileId uint64 `protobuf:"varint,4,opt,name=avatar_file_id,json=avatarFileId,proto3" json:"avatar_file_id,omitempty"`
 	// avatar 承载 PublicProfile 关联的 FileView。
-	Avatar *v11.FileView `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
+	Avatar *v1.FileView `protobuf:"bytes,5,opt,name=avatar,proto3" json:"avatar,omitempty"`
 	// gender 承载用户资料或其脱敏展示值，按个人信息保护。
 	Gender string `protobuf:"bytes,6,opt,name=gender,proto3" json:"gender,omitempty"`
 	// region 指定号码、服务或业务规则采用的地区。
@@ -1004,7 +986,7 @@ func (x *PublicProfile) GetAvatarFileId() uint64 {
 	return 0
 }
 
-func (x *PublicProfile) GetAvatar() *v11.FileView {
+func (x *PublicProfile) GetAvatar() *v1.FileView {
 	if x != nil {
 		return x.Avatar
 	}
@@ -1303,7 +1285,7 @@ func (x *ConsumerClientContext) GetLocale() string {
 	return ""
 }
 
-// Session 表示当前 App 内 User Session 的生命周期快照。
+// Session 表示 User Session 的生命周期快照。
 type Session struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// session_id 标识关联的 Session。
@@ -2007,10 +1989,9 @@ var File_user_types_v1_types_proto protoreflect.FileDescriptor
 
 const file_user_types_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x19user/types/v1/types.proto\x12\ruser.types.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xe4\x03\n" +
+	"\x19user/types/v1/types.proto\x12\ruser.types.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xbb\x03\n" +
 	"\x04User\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1b\n" +
+	"\auser_id\x18\x01 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tuser_code\x18\x03 \x01(\tR\buserCode\x121\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x19.user.types.v1.UserStatusR\x06status\x12C\n" +
 	"\x0fsuspended_until\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x0esuspendedUntil\x12;\n" +
@@ -2022,9 +2003,8 @@ const file_user_types_v1_types_proto_rawDesc = "" +
 	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
 	"updated_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtJ\x04\b\x05\x10\x06R\x11canonical_user_id\"\xcc\x02\n" +
-	"\aProfile\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtJ\x04\b\x05\x10\x06R\x11canonical_user_id\"\xa3\x02\n" +
+	"\aProfile\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1a\n" +
 	"\bnickname\x18\x03 \x01(\tR\bnickname\x12$\n" +
 	"\x0eavatar_file_id\x18\x04 \x01(\x04R\favatarFileId\x120\n" +
@@ -2246,52 +2226,49 @@ var file_user_types_v1_types_proto_goTypes = []any{
 	(*SecurityActivity)(nil),         // 21: user.types.v1.SecurityActivity
 	(*CursorPageRequest)(nil),        // 22: user.types.v1.CursorPageRequest
 	(*CursorPageResponse)(nil),       // 23: user.types.v1.CursorPageResponse
-	(v1.AppId)(0),                    // 24: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),    // 25: google.protobuf.Timestamp
-	(*v11.FileView)(nil),             // 26: common.file.v1.FileView
+	(*timestamppb.Timestamp)(nil),    // 24: google.protobuf.Timestamp
+	(*v1.FileView)(nil),              // 25: common.file.v1.FileView
 }
 var file_user_types_v1_types_proto_depIdxs = []int32{
-	24, // 0: user.types.v1.User.app_id:type_name -> common.v1.AppId
-	0,  // 1: user.types.v1.User.status:type_name -> user.types.v1.UserStatus
-	25, // 2: user.types.v1.User.suspended_until:type_name -> google.protobuf.Timestamp
-	25, // 3: user.types.v1.User.deleting_at:type_name -> google.protobuf.Timestamp
-	25, // 4: user.types.v1.User.deleted_at:type_name -> google.protobuf.Timestamp
-	25, // 5: user.types.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	25, // 6: user.types.v1.User.updated_at:type_name -> google.protobuf.Timestamp
-	24, // 7: user.types.v1.Profile.app_id:type_name -> common.v1.AppId
-	26, // 8: user.types.v1.Profile.avatar:type_name -> common.file.v1.FileView
-	25, // 9: user.types.v1.Profile.updated_at:type_name -> google.protobuf.Timestamp
-	26, // 10: user.types.v1.PublicProfile.avatar:type_name -> common.file.v1.FileView
-	25, // 11: user.types.v1.PublicProfile.updated_at:type_name -> google.protobuf.Timestamp
-	1,  // 12: user.types.v1.Credential.type:type_name -> user.types.v1.CredentialType
-	4,  // 13: user.types.v1.Credential.provider:type_name -> user.types.v1.ExternalIdentityProvider
-	2,  // 14: user.types.v1.Credential.status:type_name -> user.types.v1.CredentialStatus
-	25, // 15: user.types.v1.Credential.verified_at:type_name -> google.protobuf.Timestamp
-	25, // 16: user.types.v1.Credential.created_at:type_name -> google.protobuf.Timestamp
-	25, // 17: user.types.v1.TokenPair.access_token_expires_at:type_name -> google.protobuf.Timestamp
-	25, // 18: user.types.v1.TokenPair.refresh_token_expires_at:type_name -> google.protobuf.Timestamp
-	5,  // 19: user.types.v1.ConsumerClientContext.platform:type_name -> user.types.v1.ConsumerPlatform
-	7,  // 20: user.types.v1.Session.status:type_name -> user.types.v1.SessionStatus
-	3,  // 21: user.types.v1.Session.authentication_method:type_name -> user.types.v1.AuthenticationMethod
-	25, // 22: user.types.v1.Session.last_seen_at:type_name -> google.protobuf.Timestamp
-	25, // 23: user.types.v1.Session.expires_at:type_name -> google.protobuf.Timestamp
-	25, // 24: user.types.v1.Session.created_at:type_name -> google.protobuf.Timestamp
-	5,  // 25: user.types.v1.Device.platform:type_name -> user.types.v1.ConsumerPlatform
-	8,  // 26: user.types.v1.Device.trust_status:type_name -> user.types.v1.DeviceTrustStatus
-	9,  // 27: user.types.v1.Device.recovery_key_algorithm:type_name -> user.types.v1.RecoveryDeviceKeyAlgorithm
-	25, // 28: user.types.v1.Device.recovery_key_registered_at:type_name -> google.protobuf.Timestamp
-	25, // 29: user.types.v1.Device.first_seen_at:type_name -> google.protobuf.Timestamp
-	25, // 30: user.types.v1.Device.last_seen_at:type_name -> google.protobuf.Timestamp
-	25, // 31: user.types.v1.ConsumerUserCapabilities.user_code_change_available_at:type_name -> google.protobuf.Timestamp
-	25, // 32: user.types.v1.SecurityOverview.password_changed_at:type_name -> google.protobuf.Timestamp
-	25, // 33: user.types.v1.SecurityOverview.locked_until:type_name -> google.protobuf.Timestamp
-	10, // 34: user.types.v1.SecurityActivity.type:type_name -> user.types.v1.SecurityActivityType
-	25, // 35: user.types.v1.SecurityActivity.occurred_at:type_name -> google.protobuf.Timestamp
-	36, // [36:36] is the sub-list for method output_type
-	36, // [36:36] is the sub-list for method input_type
-	36, // [36:36] is the sub-list for extension type_name
-	36, // [36:36] is the sub-list for extension extendee
-	0,  // [0:36] is the sub-list for field type_name
+	0,  // 0: user.types.v1.User.status:type_name -> user.types.v1.UserStatus
+	24, // 1: user.types.v1.User.suspended_until:type_name -> google.protobuf.Timestamp
+	24, // 2: user.types.v1.User.deleting_at:type_name -> google.protobuf.Timestamp
+	24, // 3: user.types.v1.User.deleted_at:type_name -> google.protobuf.Timestamp
+	24, // 4: user.types.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	24, // 5: user.types.v1.User.updated_at:type_name -> google.protobuf.Timestamp
+	25, // 6: user.types.v1.Profile.avatar:type_name -> common.file.v1.FileView
+	24, // 7: user.types.v1.Profile.updated_at:type_name -> google.protobuf.Timestamp
+	25, // 8: user.types.v1.PublicProfile.avatar:type_name -> common.file.v1.FileView
+	24, // 9: user.types.v1.PublicProfile.updated_at:type_name -> google.protobuf.Timestamp
+	1,  // 10: user.types.v1.Credential.type:type_name -> user.types.v1.CredentialType
+	4,  // 11: user.types.v1.Credential.provider:type_name -> user.types.v1.ExternalIdentityProvider
+	2,  // 12: user.types.v1.Credential.status:type_name -> user.types.v1.CredentialStatus
+	24, // 13: user.types.v1.Credential.verified_at:type_name -> google.protobuf.Timestamp
+	24, // 14: user.types.v1.Credential.created_at:type_name -> google.protobuf.Timestamp
+	24, // 15: user.types.v1.TokenPair.access_token_expires_at:type_name -> google.protobuf.Timestamp
+	24, // 16: user.types.v1.TokenPair.refresh_token_expires_at:type_name -> google.protobuf.Timestamp
+	5,  // 17: user.types.v1.ConsumerClientContext.platform:type_name -> user.types.v1.ConsumerPlatform
+	7,  // 18: user.types.v1.Session.status:type_name -> user.types.v1.SessionStatus
+	3,  // 19: user.types.v1.Session.authentication_method:type_name -> user.types.v1.AuthenticationMethod
+	24, // 20: user.types.v1.Session.last_seen_at:type_name -> google.protobuf.Timestamp
+	24, // 21: user.types.v1.Session.expires_at:type_name -> google.protobuf.Timestamp
+	24, // 22: user.types.v1.Session.created_at:type_name -> google.protobuf.Timestamp
+	5,  // 23: user.types.v1.Device.platform:type_name -> user.types.v1.ConsumerPlatform
+	8,  // 24: user.types.v1.Device.trust_status:type_name -> user.types.v1.DeviceTrustStatus
+	9,  // 25: user.types.v1.Device.recovery_key_algorithm:type_name -> user.types.v1.RecoveryDeviceKeyAlgorithm
+	24, // 26: user.types.v1.Device.recovery_key_registered_at:type_name -> google.protobuf.Timestamp
+	24, // 27: user.types.v1.Device.first_seen_at:type_name -> google.protobuf.Timestamp
+	24, // 28: user.types.v1.Device.last_seen_at:type_name -> google.protobuf.Timestamp
+	24, // 29: user.types.v1.ConsumerUserCapabilities.user_code_change_available_at:type_name -> google.protobuf.Timestamp
+	24, // 30: user.types.v1.SecurityOverview.password_changed_at:type_name -> google.protobuf.Timestamp
+	24, // 31: user.types.v1.SecurityOverview.locked_until:type_name -> google.protobuf.Timestamp
+	10, // 32: user.types.v1.SecurityActivity.type:type_name -> user.types.v1.SecurityActivityType
+	24, // 33: user.types.v1.SecurityActivity.occurred_at:type_name -> google.protobuf.Timestamp
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_user_types_v1_types_proto_init() }

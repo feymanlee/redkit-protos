@@ -8,8 +8,7 @@ package userconsumerpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -27,9 +26,7 @@ const (
 
 // ListCredentialsRequest 定义 Credentials 的筛选与分页参数。
 type ListCredentialsRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListCredentials 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -64,18 +61,11 @@ func (*ListCredentialsRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListCredentialsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // ListCredentialsResponse 返回 Credentials 结果集合及分页信息。
 type ListCredentialsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// items 包含本次返回或处理的业务条目。
-	Items []*v11.Credential `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Items []*v1.Credential `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	// usable_count 记录 ListCredentials 中符合对应条件的数量。
 	UsableCount   uint32 `protobuf:"varint,2,opt,name=usable_count,json=usableCount,proto3" json:"usable_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -112,7 +102,7 @@ func (*ListCredentialsResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListCredentialsResponse) GetItems() []*v11.Credential {
+func (x *ListCredentialsResponse) GetItems() []*v1.Credential {
 	if x != nil {
 		return x.Items
 	}
@@ -130,9 +120,9 @@ func (x *ListCredentialsResponse) GetUsableCount() uint32 {
 type CredentialMutationResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// credentials 列出 CredentialMutation 关联的 Credential。
-	Credentials []*v11.Credential `protobuf:"bytes,1,rep,name=credentials,proto3" json:"credentials,omitempty"`
+	Credentials []*v1.Credential `protobuf:"bytes,1,rep,name=credentials,proto3" json:"credentials,omitempty"`
 	// tokens 承载 CredentialMutation 关联的 TokenPair。
-	Tokens *v11.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens *v1.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	// current_session_revoked 显式表示 CredentialMutation 是否满足该条件。
 	CurrentSessionRevoked bool `protobuf:"varint,3,opt,name=current_session_revoked,json=currentSessionRevoked,proto3" json:"current_session_revoked,omitempty"`
 	unknownFields         protoimpl.UnknownFields
@@ -169,14 +159,14 @@ func (*CredentialMutationResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CredentialMutationResponse) GetCredentials() []*v11.Credential {
+func (x *CredentialMutationResponse) GetCredentials() []*v1.Credential {
 	if x != nil {
 		return x.Credentials
 	}
 	return nil
 }
 
-func (x *CredentialMutationResponse) GetTokens() *v11.TokenPair {
+func (x *CredentialMutationResponse) GetTokens() *v1.TokenPair {
 	if x != nil {
 		return x.Tokens
 	}
@@ -193,8 +183,6 @@ func (x *CredentialMutationResponse) GetCurrentSessionRevoked() bool {
 // BindPhoneRequest 定义绑定 Phone 的幂等管理命令参数。
 type BindPhoneRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BindPhone 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// phone 承载按约定地区规则规范化的手机号码。
 	Phone string `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
@@ -237,13 +225,6 @@ func (*BindPhoneRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *BindPhoneRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *BindPhoneRequest) GetPhone() string {
 	if x != nil {
 		return x.Phone
@@ -275,8 +256,6 @@ func (x *BindPhoneRequest) GetIdempotencyKey() string {
 // CompleteRequiredPhoneBindingRequest 定义完成 RequiredPhoneBinding 的幂等管理命令参数。
 type CompleteRequiredPhoneBindingRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompleteRequiredPhoneBinding 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// action_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ActionToken string `protobuf:"bytes,2,opt,name=action_token,json=actionToken,proto3" json:"action_token,omitempty"`
 	// phone 承载按约定地区规则规范化的手机号码。
@@ -319,13 +298,6 @@ func (*CompleteRequiredPhoneBindingRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CompleteRequiredPhoneBindingRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CompleteRequiredPhoneBindingRequest) GetActionToken() string {
 	if x != nil {
 		return x.ActionToken
@@ -357,8 +329,6 @@ func (x *CompleteRequiredPhoneBindingRequest) GetIdempotencyKey() string {
 // ChangePhoneRequest 定义执行 ChangePhone 的幂等管理命令参数。
 type ChangePhoneRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ChangePhone 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// new_phone 承载按约定地区规则规范化的手机号码。
 	NewPhone string `protobuf:"bytes,2,opt,name=new_phone,json=newPhone,proto3" json:"new_phone,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
@@ -401,13 +371,6 @@ func (*ChangePhoneRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ChangePhoneRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ChangePhoneRequest) GetNewPhone() string {
 	if x != nil {
 		return x.NewPhone
@@ -439,8 +402,6 @@ func (x *ChangePhoneRequest) GetIdempotencyKey() string {
 // UnbindPhoneRequest 定义解绑 Phone 的幂等管理命令参数。
 type UnbindPhoneRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UnbindPhone 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -479,13 +440,6 @@ func (*UnbindPhoneRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *UnbindPhoneRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UnbindPhoneRequest) GetStepUpToken() string {
 	if x != nil {
 		return x.StepUpToken
@@ -503,8 +457,6 @@ func (x *UnbindPhoneRequest) GetIdempotencyKey() string {
 // SetPasswordRequest 定义设置 Password 的幂等管理命令参数。
 type SetPasswordRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 SetPassword 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// new_password 承载敏感凭据或校验材料，不得写入普通日志。
 	NewPassword string `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -545,13 +497,6 @@ func (*SetPasswordRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *SetPasswordRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *SetPasswordRequest) GetNewPassword() string {
 	if x != nil {
 		return x.NewPassword
@@ -576,8 +521,6 @@ func (x *SetPasswordRequest) GetIdempotencyKey() string {
 // ChangePasswordRequest 定义执行 ChangePassword 的幂等管理命令参数。
 type ChangePasswordRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ChangePassword 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// old_password 承载敏感凭据或校验材料，不得写入普通日志。
 	OldPassword string `protobuf:"bytes,2,opt,name=old_password,json=oldPassword,proto3" json:"old_password,omitempty"`
 	// new_password 承载敏感凭据或校验材料，不得写入普通日志。
@@ -620,13 +563,6 @@ func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ChangePasswordRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ChangePasswordRequest) GetOldPassword() string {
 	if x != nil {
 		return x.OldPassword
@@ -658,10 +594,8 @@ func (x *ChangePasswordRequest) GetIdempotencyKey() string {
 // LinkExternalIdentityRequest 定义执行 LinkExternalIdentity 的幂等管理命令参数。
 type LinkExternalIdentityRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 LinkExternalIdentity 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
-	Provider v11.ExternalIdentityProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=user.types.v1.ExternalIdentityProvider" json:"provider,omitempty"`
+	Provider v1.ExternalIdentityProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=user.types.v1.ExternalIdentityProvider" json:"provider,omitempty"`
 	// provider_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ProviderToken string `protobuf:"bytes,3,opt,name=provider_token,json=providerToken,proto3" json:"provider_token,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -702,18 +636,11 @@ func (*LinkExternalIdentityRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *LinkExternalIdentityRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *LinkExternalIdentityRequest) GetProvider() v11.ExternalIdentityProvider {
+func (x *LinkExternalIdentityRequest) GetProvider() v1.ExternalIdentityProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v11.ExternalIdentityProvider(0)
+	return v1.ExternalIdentityProvider(0)
 }
 
 func (x *LinkExternalIdentityRequest) GetProviderToken() string {
@@ -740,10 +667,8 @@ func (x *LinkExternalIdentityRequest) GetIdempotencyKey() string {
 // UnlinkExternalIdentityRequest 定义执行 UnlinkExternalIdentity 的幂等管理命令参数。
 type UnlinkExternalIdentityRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UnlinkExternalIdentity 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
-	Provider v11.ExternalIdentityProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=user.types.v1.ExternalIdentityProvider" json:"provider,omitempty"`
+	Provider v1.ExternalIdentityProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=user.types.v1.ExternalIdentityProvider" json:"provider,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,3,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -782,18 +707,11 @@ func (*UnlinkExternalIdentityRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_credential_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *UnlinkExternalIdentityRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *UnlinkExternalIdentityRequest) GetProvider() v11.ExternalIdentityProvider {
+func (x *UnlinkExternalIdentityRequest) GetProvider() v1.ExternalIdentityProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v11.ExternalIdentityProvider(0)
+	return v1.ExternalIdentityProvider(0)
 }
 
 func (x *UnlinkExternalIdentityRequest) GetStepUpToken() string {
@@ -814,57 +732,48 @@ var File_user_consumer_v1_credential_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_credential_proto_rawDesc = "" +
 	"\n" +
-	"!user/consumer/v1/credential.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a%user/consumer/v1/authentication.proto\x1a\x19user/types/v1/types.proto\"P\n" +
-	"\x16ListCredentialsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\"m\n" +
+	"!user/consumer/v1/credential.proto\x12\x10user.consumer.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a%user/consumer/v1/authentication.proto\x1a\x19user/types/v1/types.proto\"\x18\n" +
+	"\x16ListCredentialsRequest\"m\n" +
 	"\x17ListCredentialsResponse\x12/\n" +
 	"\x05items\x18\x01 \x03(\v2\x19.user.types.v1.CredentialR\x05items\x12!\n" +
 	"\fusable_count\x18\x02 \x01(\rR\vusableCount\"\xc3\x01\n" +
 	"\x1aCredentialMutationResponse\x12;\n" +
 	"\vcredentials\x18\x01 \x03(\v2\x19.user.types.v1.CredentialR\vcredentials\x120\n" +
 	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\x126\n" +
-	"\x17current_session_revoked\x18\x03 \x01(\bR\x15currentSessionRevoked\"\xab\x02\n" +
-	"\x10BindPhoneRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x124\n" +
+	"\x17current_session_revoked\x18\x03 \x01(\bR\x15currentSessionRevoked\"\xf3\x01\n" +
+	"\x10BindPhoneRequest\x124\n" +
 	"\x05phone\x18\x02 \x01(\tB\x1e\xe0A\x02\xfaB\x18r\x162\x14^\\+[1-9][0-9]{7,14}$R\x05phone\x12>\n" +
 	"\x13verification_ticket\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x10R\x12verificationTicket\x121\n" +
 	"\rstep_up_token\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xbd\x02\n" +
-	"#CompleteRequiredPhoneBindingRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x120\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x85\x02\n" +
+	"#CompleteRequiredPhoneBindingRequest\x120\n" +
 	"\faction_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vactionToken\x124\n" +
 	"\x05phone\x18\x03 \x01(\tB\x1e\xe0A\x02\xfaB\x18r\x162\x14^\\+[1-9][0-9]{7,14}$R\x05phone\x12>\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x10R\x12verificationTicket\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xb4\x02\n" +
-	"\x12ChangePhoneRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12;\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xfc\x01\n" +
+	"\x12ChangePhoneRequest\x12;\n" +
 	"\tnew_phone\x18\x02 \x01(\tB\x1e\xe0A\x02\xfaB\x18r\x162\x14^\\+[1-9][0-9]{7,14}$R\bnewPhone\x12>\n" +
 	"\x13verification_ticket\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x10R\x12verificationTicket\x121\n" +
 	"\rstep_up_token\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xb7\x01\n" +
-	"\x12UnbindPhoneRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x7f\n" +
+	"\x12UnbindPhoneRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xe9\x01\n" +
-	"\x12SetPasswordRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x120\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xb1\x01\n" +
+	"\x12SetPasswordRequest\x120\n" +
 	"\fnew_password\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\vnewPassword\x121\n" +
 	"\rstep_up_token\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x9e\x02\n" +
-	"\x15ChangePasswordRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x120\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xe6\x01\n" +
+	"\x15ChangePasswordRequest\x120\n" +
 	"\fold_password\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\voldPassword\x120\n" +
 	"\fnew_password\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\vnewPassword\x121\n" +
 	"\rstep_up_token\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xca\x02\n" +
-	"\x1bLinkExternalIdentityRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12R\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x92\x02\n" +
+	"\x1bLinkExternalIdentityRequest\x12R\n" +
 	"\bprovider\x18\x02 \x01(\x0e2'.user.types.v1.ExternalIdentityProviderB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\bprovider\x124\n" +
 	"\x0eprovider_token\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80@R\rproviderToken\x121\n" +
 	"\rstep_up_token\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x96\x02\n" +
-	"\x1dUnlinkExternalIdentityRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12R\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xde\x01\n" +
+	"\x1dUnlinkExternalIdentityRequest\x12R\n" +
 	"\bprovider\x18\x02 \x01(\x0e2'.user.types.v1.ExternalIdentityProviderB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\bprovider\x121\n" +
 	"\rstep_up_token\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
 	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey2\xdd\a\n" +
@@ -905,50 +814,40 @@ var file_user_consumer_v1_credential_proto_goTypes = []any{
 	(*ChangePasswordRequest)(nil),               // 8: user.consumer.v1.ChangePasswordRequest
 	(*LinkExternalIdentityRequest)(nil),         // 9: user.consumer.v1.LinkExternalIdentityRequest
 	(*UnlinkExternalIdentityRequest)(nil),       // 10: user.consumer.v1.UnlinkExternalIdentityRequest
-	(v1.AppId)(0),                               // 11: common.v1.AppId
-	(*v11.Credential)(nil),                      // 12: user.types.v1.Credential
-	(*v11.TokenPair)(nil),                       // 13: user.types.v1.TokenPair
-	(v11.ExternalIdentityProvider)(0),           // 14: user.types.v1.ExternalIdentityProvider
-	(*RegisterResponse)(nil),                    // 15: user.consumer.v1.RegisterResponse
+	(*v1.Credential)(nil),                       // 11: user.types.v1.Credential
+	(*v1.TokenPair)(nil),                        // 12: user.types.v1.TokenPair
+	(v1.ExternalIdentityProvider)(0),            // 13: user.types.v1.ExternalIdentityProvider
+	(*RegisterResponse)(nil),                    // 14: user.consumer.v1.RegisterResponse
 }
 var file_user_consumer_v1_credential_proto_depIdxs = []int32{
-	11, // 0: user.consumer.v1.ListCredentialsRequest.app_id:type_name -> common.v1.AppId
-	12, // 1: user.consumer.v1.ListCredentialsResponse.items:type_name -> user.types.v1.Credential
-	12, // 2: user.consumer.v1.CredentialMutationResponse.credentials:type_name -> user.types.v1.Credential
-	13, // 3: user.consumer.v1.CredentialMutationResponse.tokens:type_name -> user.types.v1.TokenPair
-	11, // 4: user.consumer.v1.BindPhoneRequest.app_id:type_name -> common.v1.AppId
-	11, // 5: user.consumer.v1.CompleteRequiredPhoneBindingRequest.app_id:type_name -> common.v1.AppId
-	11, // 6: user.consumer.v1.ChangePhoneRequest.app_id:type_name -> common.v1.AppId
-	11, // 7: user.consumer.v1.UnbindPhoneRequest.app_id:type_name -> common.v1.AppId
-	11, // 8: user.consumer.v1.SetPasswordRequest.app_id:type_name -> common.v1.AppId
-	11, // 9: user.consumer.v1.ChangePasswordRequest.app_id:type_name -> common.v1.AppId
-	11, // 10: user.consumer.v1.LinkExternalIdentityRequest.app_id:type_name -> common.v1.AppId
-	14, // 11: user.consumer.v1.LinkExternalIdentityRequest.provider:type_name -> user.types.v1.ExternalIdentityProvider
-	11, // 12: user.consumer.v1.UnlinkExternalIdentityRequest.app_id:type_name -> common.v1.AppId
-	14, // 13: user.consumer.v1.UnlinkExternalIdentityRequest.provider:type_name -> user.types.v1.ExternalIdentityProvider
-	0,  // 14: user.consumer.v1.ConsumerCredentialService.ListCredentials:input_type -> user.consumer.v1.ListCredentialsRequest
-	3,  // 15: user.consumer.v1.ConsumerCredentialService.BindPhone:input_type -> user.consumer.v1.BindPhoneRequest
-	4,  // 16: user.consumer.v1.ConsumerCredentialService.CompleteRequiredPhoneBinding:input_type -> user.consumer.v1.CompleteRequiredPhoneBindingRequest
-	5,  // 17: user.consumer.v1.ConsumerCredentialService.ChangePhone:input_type -> user.consumer.v1.ChangePhoneRequest
-	6,  // 18: user.consumer.v1.ConsumerCredentialService.UnbindPhone:input_type -> user.consumer.v1.UnbindPhoneRequest
-	7,  // 19: user.consumer.v1.ConsumerCredentialService.SetPassword:input_type -> user.consumer.v1.SetPasswordRequest
-	8,  // 20: user.consumer.v1.ConsumerCredentialService.ChangePassword:input_type -> user.consumer.v1.ChangePasswordRequest
-	9,  // 21: user.consumer.v1.ConsumerCredentialService.LinkExternalIdentity:input_type -> user.consumer.v1.LinkExternalIdentityRequest
-	10, // 22: user.consumer.v1.ConsumerCredentialService.UnlinkExternalIdentity:input_type -> user.consumer.v1.UnlinkExternalIdentityRequest
-	1,  // 23: user.consumer.v1.ConsumerCredentialService.ListCredentials:output_type -> user.consumer.v1.ListCredentialsResponse
-	2,  // 24: user.consumer.v1.ConsumerCredentialService.BindPhone:output_type -> user.consumer.v1.CredentialMutationResponse
-	15, // 25: user.consumer.v1.ConsumerCredentialService.CompleteRequiredPhoneBinding:output_type -> user.consumer.v1.RegisterResponse
-	2,  // 26: user.consumer.v1.ConsumerCredentialService.ChangePhone:output_type -> user.consumer.v1.CredentialMutationResponse
-	2,  // 27: user.consumer.v1.ConsumerCredentialService.UnbindPhone:output_type -> user.consumer.v1.CredentialMutationResponse
-	2,  // 28: user.consumer.v1.ConsumerCredentialService.SetPassword:output_type -> user.consumer.v1.CredentialMutationResponse
-	2,  // 29: user.consumer.v1.ConsumerCredentialService.ChangePassword:output_type -> user.consumer.v1.CredentialMutationResponse
-	2,  // 30: user.consumer.v1.ConsumerCredentialService.LinkExternalIdentity:output_type -> user.consumer.v1.CredentialMutationResponse
-	2,  // 31: user.consumer.v1.ConsumerCredentialService.UnlinkExternalIdentity:output_type -> user.consumer.v1.CredentialMutationResponse
-	23, // [23:32] is the sub-list for method output_type
-	14, // [14:23] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	11, // 0: user.consumer.v1.ListCredentialsResponse.items:type_name -> user.types.v1.Credential
+	11, // 1: user.consumer.v1.CredentialMutationResponse.credentials:type_name -> user.types.v1.Credential
+	12, // 2: user.consumer.v1.CredentialMutationResponse.tokens:type_name -> user.types.v1.TokenPair
+	13, // 3: user.consumer.v1.LinkExternalIdentityRequest.provider:type_name -> user.types.v1.ExternalIdentityProvider
+	13, // 4: user.consumer.v1.UnlinkExternalIdentityRequest.provider:type_name -> user.types.v1.ExternalIdentityProvider
+	0,  // 5: user.consumer.v1.ConsumerCredentialService.ListCredentials:input_type -> user.consumer.v1.ListCredentialsRequest
+	3,  // 6: user.consumer.v1.ConsumerCredentialService.BindPhone:input_type -> user.consumer.v1.BindPhoneRequest
+	4,  // 7: user.consumer.v1.ConsumerCredentialService.CompleteRequiredPhoneBinding:input_type -> user.consumer.v1.CompleteRequiredPhoneBindingRequest
+	5,  // 8: user.consumer.v1.ConsumerCredentialService.ChangePhone:input_type -> user.consumer.v1.ChangePhoneRequest
+	6,  // 9: user.consumer.v1.ConsumerCredentialService.UnbindPhone:input_type -> user.consumer.v1.UnbindPhoneRequest
+	7,  // 10: user.consumer.v1.ConsumerCredentialService.SetPassword:input_type -> user.consumer.v1.SetPasswordRequest
+	8,  // 11: user.consumer.v1.ConsumerCredentialService.ChangePassword:input_type -> user.consumer.v1.ChangePasswordRequest
+	9,  // 12: user.consumer.v1.ConsumerCredentialService.LinkExternalIdentity:input_type -> user.consumer.v1.LinkExternalIdentityRequest
+	10, // 13: user.consumer.v1.ConsumerCredentialService.UnlinkExternalIdentity:input_type -> user.consumer.v1.UnlinkExternalIdentityRequest
+	1,  // 14: user.consumer.v1.ConsumerCredentialService.ListCredentials:output_type -> user.consumer.v1.ListCredentialsResponse
+	2,  // 15: user.consumer.v1.ConsumerCredentialService.BindPhone:output_type -> user.consumer.v1.CredentialMutationResponse
+	14, // 16: user.consumer.v1.ConsumerCredentialService.CompleteRequiredPhoneBinding:output_type -> user.consumer.v1.RegisterResponse
+	2,  // 17: user.consumer.v1.ConsumerCredentialService.ChangePhone:output_type -> user.consumer.v1.CredentialMutationResponse
+	2,  // 18: user.consumer.v1.ConsumerCredentialService.UnbindPhone:output_type -> user.consumer.v1.CredentialMutationResponse
+	2,  // 19: user.consumer.v1.ConsumerCredentialService.SetPassword:output_type -> user.consumer.v1.CredentialMutationResponse
+	2,  // 20: user.consumer.v1.ConsumerCredentialService.ChangePassword:output_type -> user.consumer.v1.CredentialMutationResponse
+	2,  // 21: user.consumer.v1.ConsumerCredentialService.LinkExternalIdentity:output_type -> user.consumer.v1.CredentialMutationResponse
+	2,  // 22: user.consumer.v1.ConsumerCredentialService.UnlinkExternalIdentity:output_type -> user.consumer.v1.CredentialMutationResponse
+	14, // [14:23] is the sub-list for method output_type
+	5,  // [5:14] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_user_consumer_v1_credential_proto_init() }

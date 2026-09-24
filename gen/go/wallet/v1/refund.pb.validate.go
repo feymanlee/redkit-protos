@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on RechargeRefund with the rules defined in
@@ -63,10 +59,6 @@ func (m *RechargeRefund) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -285,10 +277,6 @@ func (m *WalletUserDebt) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -730,10 +718,6 @@ func (m *ListWalletUserDebtsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Filter != nil {
 
 		if all {
@@ -875,10 +859,6 @@ func (m *PrepareRechargeRefundRequest) validate(all bool) error {
 
 	// no validation rules for RefundAmount
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return PrepareRechargeRefundRequestMultiError(errors)
 	}
@@ -983,10 +963,6 @@ func (m *ConfirmRechargeRefundRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for RefundNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return ConfirmRechargeRefundRequestMultiError(errors)
@@ -1099,10 +1075,6 @@ func (m *ApplyRechargeRefundRequest) validate(all bool) error {
 
 	// no validation rules for Force
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ApplyRechargeRefundRequestMultiError(errors)
 	}
@@ -1206,10 +1178,6 @@ func (m *CancelRechargeRefundRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for RefundNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return CancelRechargeRefundRequestMultiError(errors)

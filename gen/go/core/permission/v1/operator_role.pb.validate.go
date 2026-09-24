@@ -69,10 +69,6 @@ func (m *OperatorRole) validate(all bool) error {
 		// no validation rules for OperatorId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.RoleId != nil {
 		// no validation rules for RoleId
 	}

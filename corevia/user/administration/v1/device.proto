@@ -22,9 +22,7 @@ service UserDeviceService {
 }
 // ListDevicesRequest 定义 Devices 的筛选与分页参数。
 message ListDevicesRequest {
-  // app_id 限定 ListDevices 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 3;
@@ -38,9 +36,7 @@ message ListDevicesResponse {
 }
 // TrustDeviceRequest 定义执行 TrustDevice 的幂等管理命令参数。
 message TrustDeviceRequest {
-  // app_id 限定 TrustDevice 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // device_id 标识关联的 Device。
   uint64 device_id = 3;
@@ -51,15 +47,7 @@ message TrustDeviceRequest {
 }
 // RegisterRecoveryDeviceKeyRequest 定义执行 RegisterRecoveryDeviceKey 的幂等管理命令参数。
 message RegisterRecoveryDeviceKeyRequest {
-  // app_id 限定 RegisterRecoveryDeviceKey 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).enum = {
-      defined_only: true
-      not_in: [0]
-    }
-  ];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).uint64.gt = 0
@@ -78,7 +66,7 @@ message RegisterRecoveryDeviceKeyRequest {
     }
   ];
   // proof_signature 是 Ed25519 对以下 UTF-8 规范消息的签名（字段间使用单个 LF，末尾无换行）：
-  // corevia:user:recovery-device-key:v1\napp_id=<decimal>\nuser_id=<decimal>\ndevice_id=<decimal>\nidempotency_key=<value>
+  // corevia:user:recovery-device-key:v1\nuser_id=<decimal>\ndevice_id=<decimal>\nidempotency_key=<value>
   // 签名不得写入日志或持久化。
   bytes proof_signature = 5 [
     (google.api.field_behavior) = REQUIRED,
@@ -106,9 +94,7 @@ message RegisterRecoveryDeviceKeyRequest {
 }
 // RevokeDeviceSessionsRequest 定义撤销 DeviceSessions 的幂等管理命令参数。
 message RevokeDeviceSessionsRequest {
-  // app_id 限定 RevokeDeviceSessions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // device_id 标识关联的 Device。
   uint64 device_id = 3;

@@ -159,12 +159,10 @@ enum SecurityActivityType {
   SECURITY_ACTIVITY_TYPE_USER_DELETION = 11;
 }
 
-// User 表示当前 App 内 User 的身份与生命周期快照。
+// User 表示用户身份与生命周期快照。
 message User {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1;
-  // app_id 限定 User 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // user_code 提供 User 对外稳定使用的业务编码。
   string user_code = 3;
   // status 表示 User 当前可观察的生命周期状态。
@@ -186,9 +184,7 @@ message User {
 
 // Profile 表示当前 User 的可编辑资料快照。
 message Profile {
-  // app_id 限定 Profile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // nickname 承载用户资料或其脱敏展示值，按个人信息保护。
   string nickname = 3;
@@ -208,7 +204,7 @@ message Profile {
 
 // PublicProfile 表示允许对其他 User 展示的 Profile 投影。
 message PublicProfile {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1;
   // user_code 提供 PublicProfile 对外稳定使用的业务编码。
   string user_code = 2;
@@ -274,7 +270,7 @@ message ConsumerClientContext {
   string locale = 5 [(validate.rules).string.max_len = 32];
 }
 
-// Session 表示当前 App 内 User Session 的生命周期快照。
+// Session 表示 User Session 的生命周期快照。
 message Session {
   // session_id 标识关联的 Session。
   string session_id = 1;

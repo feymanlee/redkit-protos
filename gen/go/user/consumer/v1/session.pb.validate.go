@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on ListSessionsRequest with the rules
@@ -60,28 +56,6 @@ func (m *ListSessionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ListSessionsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if all {
 		switch v := interface{}(m.GetPage()).(type) {
@@ -191,10 +165,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListSessionsRequestValidationError{}
-
-var _ListSessionsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListSessionsResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -383,28 +353,6 @@ func (m *RevokeSessionRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _RevokeSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RevokeSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RevokeSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetSessionId()); l < 1 || l > 64 {
 		err := RevokeSessionRequestValidationError{
 			field:  "SessionId",
@@ -507,10 +455,6 @@ var _ interface {
 	ErrorName() string
 } = RevokeSessionRequestValidationError{}
 
-var _RevokeSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RevokeOtherSessionsRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -532,28 +476,6 @@ func (m *RevokeOtherSessionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RevokeOtherSessionsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RevokeOtherSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RevokeOtherSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := RevokeOtherSessionsRequestValidationError{
@@ -657,10 +579,6 @@ var _ interface {
 	ErrorName() string
 } = RevokeOtherSessionsRequestValidationError{}
 
-var _RevokeOtherSessionsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RevokeAllSessionsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -682,28 +600,6 @@ func (m *RevokeAllSessionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RevokeAllSessionsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RevokeAllSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RevokeAllSessionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := RevokeAllSessionsRequestValidationError{
@@ -807,10 +703,6 @@ var _ interface {
 	ErrorName() string
 } = RevokeAllSessionsRequestValidationError{}
 
-var _RevokeAllSessionsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ListDevicesRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -832,28 +724,6 @@ func (m *ListDevicesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ListDevicesRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListDevicesRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListDevicesRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if all {
 		switch v := interface{}(m.GetPage()).(type) {
@@ -963,10 +833,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListDevicesRequestValidationError{}
-
-var _ListDevicesRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListDevicesResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1155,28 +1021,6 @@ func (m *RevokeDeviceRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _RevokeDeviceRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RevokeDeviceRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RevokeDeviceRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetDeviceId() <= 0 {
 		err := RevokeDeviceRequestValidationError{
 			field:  "DeviceId",
@@ -1289,10 +1133,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RevokeDeviceRequestValidationError{}
-
-var _RevokeDeviceRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on RevokeDeviceResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1451,28 +1291,6 @@ func (m *RegisterCurrentDeviceRecoveryKeyRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _RegisterCurrentDeviceRecoveryKeyRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RegisterCurrentDeviceRecoveryKeyRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RegisterCurrentDeviceRecoveryKeyRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if len(m.GetPublicKey()) != 32 {
 		err := RegisterCurrentDeviceRecoveryKeyRequestValidationError{
 			field:  "PublicKey",
@@ -1599,10 +1417,6 @@ var _ interface {
 	ErrorName() string
 } = RegisterCurrentDeviceRecoveryKeyRequestValidationError{}
 
-var _RegisterCurrentDeviceRecoveryKeyRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RemoveCurrentDeviceRecoveryKeyRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
@@ -1625,28 +1439,6 @@ func (m *RemoveCurrentDeviceRecoveryKeyRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RemoveCurrentDeviceRecoveryKeyRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RemoveCurrentDeviceRecoveryKeyRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RemoveCurrentDeviceRecoveryKeyRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := RemoveCurrentDeviceRecoveryKeyRequestValidationError{
@@ -1751,7 +1543,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RemoveCurrentDeviceRecoveryKeyRequestValidationError{}
-
-var _RemoveCurrentDeviceRecoveryKeyRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}

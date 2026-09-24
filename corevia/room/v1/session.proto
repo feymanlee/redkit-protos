@@ -13,8 +13,6 @@ import "validate/validate.proto";
 message RoomSession {
   // id 标识场次稳定身份；Gift Scene Type=ROOM 时 Scene ID 即该值的字符串形式。
   uint64 id = 1;
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // room_id 标识所属房间。
   uint64 room_id = 3;
   // status 是场次生命周期阶段。
@@ -53,8 +51,6 @@ message SessionSnapshot {
 
 // ListSessionMembersRequest 查询在场成员。
 message ListSessionMembersRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // paging 指定分页。
@@ -71,8 +67,6 @@ message ListSessionMembersResponse {
 
 // OpenSessionRequest 开场。
 message OpenSessionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // owner_user_id 必须是房主；同一 User 同时仅允许一个进行中场次。
@@ -83,8 +77,6 @@ message OpenSessionRequest {
 
 // JoinSessionRequest 进入场次（含房主/房管/听众）。
 message JoinSessionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // user_id 是进入者；同一 User 同场次仅一个在场会话，后进踢前会话。
@@ -95,8 +87,6 @@ message JoinSessionRequest {
 
 // LeaveSessionRequest 离场。
 message LeaveSessionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // user_id 是离场者；若占麦则释放麦位并取消排麦。
@@ -105,8 +95,6 @@ message LeaveSessionRequest {
 
 // EndSessionRequest 结束场次。
 message EndSessionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // actor_user_id 是房主；Operator 强制关房走 Admin 契约。
@@ -117,8 +105,6 @@ message EndSessionRequest {
 
 // GetSessionRequest 查询场次快照。
 message GetSessionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // viewer_user_id 是视角 User，用于填充 me。
@@ -127,8 +113,6 @@ message GetSessionRequest {
 
 // RequestMicRequest 进入排麦队列。
 message RequestMicRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // user_id 是申请人。
@@ -137,8 +121,6 @@ message RequestMicRequest {
 
 // CancelMicRequestRequest 取消本人排麦。
 message CancelMicRequestRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // user_id 是取消人。
@@ -147,8 +129,6 @@ message CancelMicRequestRequest {
 
 // ApproveMicRequestRequest 批准上麦并占用空位。
 message ApproveMicRequestRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // actor_user_id 是房主或房管。
@@ -161,8 +141,6 @@ message ApproveMicRequestRequest {
 
 // RejectMicRequestRequest 拒绝排麦。
 message RejectMicRequestRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // actor_user_id 是房主或房管。
@@ -189,8 +167,6 @@ message SeatActionRequest {
     SEAT_ACTION_FORCE_VACATE = 5;
   }
 
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // seat_index 标识麦位。
@@ -203,8 +179,6 @@ message SeatActionRequest {
 
 // KickMemberRequest 将成员移出本场次（必下麦、同步直播群与 RTC）。
 message KickMemberRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // actor_user_id 是房主/房管/Operator。
@@ -219,8 +193,6 @@ message KickMemberRequest {
 
 // ForceEndSessionRequest 是 Operator 强制关场命令。
 message ForceEndSessionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 是平台 Operator。
@@ -233,8 +205,6 @@ message ForceEndSessionRequest {
 
 // ListSessionsRequest 按房间/状态查询场次。
 message ListSessionsRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 可选限定房间。
   optional uint64 room_id = 2 [(validate.rules).uint64.gt = 0];
   // owner_user_id 可选限定房主。

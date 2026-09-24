@@ -29,7 +29,7 @@ const (
 // AdminAdjustBackpackGiftRequest 定义执行 AdjustBackpackGift 的幂等管理命令参数。
 type AdminAdjustBackpackGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,3,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`

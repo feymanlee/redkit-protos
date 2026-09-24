@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on PreflightBackpackGiftRewardRequest with
@@ -61,17 +57,6 @@ func (m *PreflightBackpackGiftRewardRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := PreflightBackpackGiftRewardRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetGiftId() <= 0 {
 		err := PreflightBackpackGiftRewardRequestValidationError{
@@ -200,8 +185,6 @@ func (m *PreflightBackpackGiftRewardResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for GiftId
 
 	// no validation rules for Quantity
@@ -309,17 +292,6 @@ func (m *GrantBackpackGiftRewardRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GrantBackpackGiftRewardRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := GrantBackpackGiftRewardRequestValidationError{
@@ -500,8 +472,6 @@ func (m *GrantBackpackGiftRewardResponse) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 

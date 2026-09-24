@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	filepb "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = filepb.FilePurpose(0)
 )
@@ -64,8 +60,6 @@ func (m *GetFileViewRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for FileId
 
@@ -170,8 +164,6 @@ func (m *BatchGetFileViewsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if len(errors) > 0 {
 		return BatchGetFileViewsRequestMultiError(errors)
@@ -546,8 +538,6 @@ func (m *ValidateFileRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for FileId
 
 	// no validation rules for ExpectedPurpose
@@ -801,8 +791,6 @@ func (m *BatchValidateFilesRequest) validate(all bool) error {
 		}
 
 	}
-
-	// no validation rules for AppId
 
 	if len(errors) > 0 {
 		return BatchValidateFilesRequestMultiError(errors)
@@ -1183,8 +1171,6 @@ func (m *CreateFileDownloadAuthorizationRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for FileId
 
 	// no validation rules for ExpectedPurpose
@@ -1427,8 +1413,6 @@ func (m *IssueProtectedDownloadRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for FileId
 

@@ -25,7 +25,7 @@ service SupportSmsService {
   }
 }
 
-// AdminListSmsMessagesRequest selects the authenticated App's SMS observations.
+// AdminListSmsMessagesRequest selects the SMS observations.
 message AdminListSmsMessagesRequest {
   // filter 限定本次查询采用的筛选条件。
   .support.messaging.v1.SmsMessageFilter filter = 1;

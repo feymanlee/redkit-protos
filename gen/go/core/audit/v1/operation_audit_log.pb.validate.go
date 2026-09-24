@@ -61,14 +61,6 @@ func (m *OperationAuditLog) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
-	if m.AppName != nil {
-		// no validation rules for AppName
-	}
-
 	if m.OperatorId != nil {
 		// no validation rules for OperatorId
 	}

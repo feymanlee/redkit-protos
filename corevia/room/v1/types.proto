@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package room.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 
 // RoomType 是房间稳定身份上的业务形态。
@@ -195,8 +194,6 @@ message RtcChannelBinding {
 message RoomRestriction {
   // id 标识处置事实。
   uint64 id = 1;
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // room_id 标识房间。
   uint64 room_id = 3;
   // session_id 在房间级处置时为空。

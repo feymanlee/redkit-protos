@@ -268,7 +268,7 @@ type AdminCreateEmergencyWalletBlockRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency v11.WalletCurrency `protobuf:"varint,1,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency" json:"currency,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// operation_scope 限定 CreateEmergencyWalletBlock 的生效或授权范围。
 	OperationScope v11.EmergencyWalletBlockScope `protobuf:"varint,3,opt,name=operation_scope,json=operationScope,proto3,enum=wallet.v1.EmergencyWalletBlockScope" json:"operation_scope,omitempty"`

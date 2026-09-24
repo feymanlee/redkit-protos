@@ -24,7 +24,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AdminListVerificationAuditsRequest selects the authenticated App's Verification observations.
+// AdminListVerificationAuditsRequest selects the Verification observations.
 type AdminListVerificationAuditsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// filter 限定本次查询采用的筛选条件。

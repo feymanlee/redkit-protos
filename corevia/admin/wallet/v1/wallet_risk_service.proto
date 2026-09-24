@@ -86,7 +86,7 @@ message AdminApproveWalletRiskRuleRevisionRequest {
 message AdminCreateEmergencyWalletBlockRequest {
   // currency 指定相关金额使用的币种或计量单位。
   .wallet.v1.WalletCurrency currency = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 2 [(validate.rules).uint64.gt = 0];
   // operation_scope 限定 CreateEmergencyWalletBlock 的生效或授权范围。
   .wallet.v1.EmergencyWalletBlockScope operation_scope = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];

@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package user.internal.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "validate/validate.proto";
 import "user/types/v1/types.proto";
@@ -17,11 +16,9 @@ service UserIdentityQueryService {
   rpc BatchGetPublicProfiles(BatchGetPublicProfilesRequest) returns (BatchGetPublicProfilesResponse);
 }
 
-// UserReference 在内部服务间稳定引用当前 App 内的 User。
+// UserReference 在内部服务间稳定引用 User。
 message UserReference {
-  // app_id 限定 UserReference 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // 3 曾是 canonical_user_id；账号合并别名已下线，编号与名称保持保留，不得复用。
   reserved 3;
@@ -38,9 +35,7 @@ message UserReference {
 
 // ResolveUserIdentityRequest 定义处置 UserIdentity 的命令参数。
 message ResolveUserIdentityRequest {
-  // app_id 限定 ResolveUserIdentity 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 
@@ -52,8 +47,6 @@ message ResolveUserIdentityResponse {
 
 // BatchResolveUsersRequest 定义执行 BatchResolveUsers 的命令参数。
 message BatchResolveUsersRequest {
-  // app_id 限定 BatchResolveUsers 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // user_ids 列出本次请求关联的 User 标识。
   repeated uint64 user_ids = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).repeated = {min_items: 1, max_items: 200, unique: true, items: {uint64: {gt: 0}}}];
 }
@@ -66,8 +59,6 @@ message BatchResolveUsersResponse {
 
 // BatchGetPublicProfilesRequest 定义执行 BatchGetPublicProfiles 的命令参数。
 message BatchGetPublicProfilesRequest {
-  // app_id 限定 BatchGetPublicProfiles 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // user_ids 列出本次请求关联的 User 标识。
   repeated uint64 user_ids = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).repeated = {min_items: 1, max_items: 200, unique: true, items: {uint64: {gt: 0}}}];
 }

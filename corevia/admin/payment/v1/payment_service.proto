@@ -279,7 +279,7 @@ message AdminPaymentDetail {
 
 // AdminGetUserPaymentSummaryRequest 标识待查询的 UserPaymentSummary。
 message AdminGetUserPaymentSummaryRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 

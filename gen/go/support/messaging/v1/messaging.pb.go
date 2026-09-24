@@ -7,8 +7,8 @@
 package messagingpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -200,8 +200,6 @@ type SmsMessage struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 记录 ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// App ID。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 消息号。
@@ -269,13 +267,6 @@ func (x *SmsMessage) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *SmsMessage) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SmsMessage) GetUserId() uint64 {
@@ -381,8 +372,6 @@ type SmsDeliveryAttempt struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 记录 ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// App ID。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 消息号。
 	MessageNo string `protobuf:"bytes,3,opt,name=message_no,json=messageNo,proto3" json:"message_no,omitempty"`
 	// 渠道。
@@ -448,13 +437,6 @@ func (x *SmsDeliveryAttempt) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *SmsDeliveryAttempt) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SmsDeliveryAttempt) GetMessageNo() string {
@@ -551,8 +533,6 @@ func (x *SmsDeliveryAttempt) GetTemplateRevisionId() uint64 {
 // SendTemplateSmsRequest 请求发送模板短信。
 type SendTemplateSmsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// App ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// E.164 格式手机号。
@@ -597,13 +577,6 @@ func (x *SendTemplateSmsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SendTemplateSmsRequest.ProtoReflect.Descriptor instead.
 func (*SendTemplateSmsRequest) Descriptor() ([]byte, []int) {
 	return file_support_messaging_v1_messaging_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *SendTemplateSmsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SendTemplateSmsRequest) GetUserId() uint64 {
@@ -698,7 +671,6 @@ func (x *SendTemplateSmsResponse) GetMessage() *SmsMessage {
 type GetSmsMessageByIdempotencyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体 App 身份；metadata 必须携带相同 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 原始 App 作用域幂等键。
 	IdempotencyKey string `protobuf:"bytes,2,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -733,13 +705,6 @@ func (x *GetSmsMessageByIdempotencyRequest) ProtoReflect() protoreflect.Message 
 // Deprecated: Use GetSmsMessageByIdempotencyRequest.ProtoReflect.Descriptor instead.
 func (*GetSmsMessageByIdempotencyRequest) Descriptor() ([]byte, []int) {
 	return file_support_messaging_v1_messaging_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *GetSmsMessageByIdempotencyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetSmsMessageByIdempotencyRequest) GetIdempotencyKey() string {
@@ -913,15 +878,14 @@ func (x *SmsMessageFilter) GetRecipientPhone() string {
 	return ""
 }
 
-// ListSmsMessagesRequest carries App scope, typed filters, and bounded paging.
+// ListSmsMessagesRequest carries typed filters and bounded paging.
 type ListSmsMessagesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Concrete App identity.
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// Optional typed observation filters.
 	Filter *SmsMessageFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// Bounded server-side paging.
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -956,13 +920,6 @@ func (*ListSmsMessagesRequest) Descriptor() ([]byte, []int) {
 	return file_support_messaging_v1_messaging_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ListSmsMessagesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSmsMessagesRequest) GetFilter() *SmsMessageFilter {
 	if x != nil {
 		return x.Filter
@@ -970,7 +927,7 @@ func (x *ListSmsMessagesRequest) GetFilter() *SmsMessageFilter {
 	return nil
 }
 
-func (x *ListSmsMessagesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSmsMessagesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1036,11 +993,10 @@ func (x *ListSmsDeliveryAttemptsResponse) GetTotal() uint64 {
 type ListSmsDeliveryAttemptsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Concrete App identity.
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// Exact logical message identity.
 	MessageNo string `protobuf:"bytes,2,opt,name=message_no,json=messageNo,proto3" json:"message_no,omitempty"`
 	// Bounded server-side paging.
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1075,13 +1031,6 @@ func (*ListSmsDeliveryAttemptsRequest) Descriptor() ([]byte, []int) {
 	return file_support_messaging_v1_messaging_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListSmsDeliveryAttemptsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSmsDeliveryAttemptsRequest) GetMessageNo() string {
 	if x != nil {
 		return x.MessageNo
@@ -1089,7 +1038,7 @@ func (x *ListSmsDeliveryAttemptsRequest) GetMessageNo() string {
 	return ""
 }
 
-func (x *ListSmsDeliveryAttemptsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSmsDeliveryAttemptsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1100,7 +1049,6 @@ func (x *ListSmsDeliveryAttemptsRequest) GetPaging() *v11.PagingRequest {
 type RevealSmsRecipientPhoneRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Concrete App identity.
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// Exact logical message identity.
 	MessageNo     string `protobuf:"bytes,2,opt,name=message_no,json=messageNo,proto3" json:"message_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1135,13 +1083,6 @@ func (x *RevealSmsRecipientPhoneRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RevealSmsRecipientPhoneRequest.ProtoReflect.Descriptor instead.
 func (*RevealSmsRecipientPhoneRequest) Descriptor() ([]byte, []int) {
 	return file_support_messaging_v1_messaging_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *RevealSmsRecipientPhoneRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RevealSmsRecipientPhoneRequest) GetMessageNo() string {
@@ -1210,11 +1151,10 @@ var File_support_messaging_v1_messaging_proto protoreflect.FileDescriptor
 
 const file_support_messaging_v1_messaging_proto_rawDesc = "" +
 	"\n" +
-	"$support/messaging/v1/messaging.proto\x12\x14support.messaging.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd0\x05\n" +
+	"$support/messaging/v1/messaging.proto\x12\x14support.messaging.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa7\x05\n" +
 	"\n" +
 	"SmsMessage\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x17\n" +
 	"\auser_id\x18\x03 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
 	"message_no\x18\x04 \x01(\tR\tmessageNo\x12!\n" +
@@ -1232,10 +1172,9 @@ const file_support_messaging_v1_messaging_proto_rawDesc = "" +
 	"\asent_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\x06sentAt\x128\n" +
 	"\x18configuration_release_id\x18\x0e \x01(\x04R\x16configurationReleaseId\x12.\n" +
 	"\x13channel_revision_id\x18\x0f \x01(\x04R\x11channelRevisionId\x120\n" +
-	"\x14template_revision_id\x18\x10 \x01(\x04R\x12templateRevisionId\"\xae\x05\n" +
+	"\x14template_revision_id\x18\x10 \x01(\x04R\x12templateRevisionId\"\x85\x05\n" +
 	"\x12SmsDeliveryAttempt\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1d\n" +
 	"\n" +
 	"message_no\x18\x03 \x01(\tR\tmessageNo\x12=\n" +
 	"\bprovider\x18\x04 \x01(\x0e2!.support.messaging.v1.SmsProviderR\bprovider\x12\x1d\n" +
@@ -1253,9 +1192,8 @@ const file_support_messaging_v1_messaging_proto_rawDesc = "" +
 	"\x10failure_category\x18\f \x01(\x0e20.support.messaging.v1.SmsDeliveryFailureCategoryR\x0ffailureCategory\x128\n" +
 	"\x18configuration_release_id\x18\r \x01(\x04R\x16configurationReleaseId\x12.\n" +
 	"\x13channel_revision_id\x18\x0e \x01(\x04R\x11channelRevisionId\x120\n" +
-	"\x14template_revision_id\x18\x0f \x01(\x04R\x12templateRevisionId\"\xfa\x02\n" +
-	"\x16SendTemplateSmsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x14template_revision_id\x18\x0f \x01(\x04R\x12templateRevisionId\"\xd1\x02\n" +
+	"\x16SendTemplateSmsRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\x12#\n" +
 	"\rtemplate_code\x18\x04 \x01(\tR\ftemplateCode\x12\\\n" +
@@ -1269,9 +1207,8 @@ const file_support_messaging_v1_messaging_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"U\n" +
 	"\x17SendTemplateSmsResponse\x12:\n" +
-	"\amessage\x18\x01 \x01(\v2 .support.messaging.v1.SmsMessageR\amessage\"u\n" +
+	"\amessage\x18\x01 \x01(\v2 .support.messaging.v1.SmsMessageR\amessage\"L\n" +
 	"!GetSmsMessageByIdempotencyRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12'\n" +
 	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\"g\n" +
 	"\x17ListSmsMessagesResponse\x126\n" +
 	"\x05items\x18\x01 \x03(\v2 .support.messaging.v1.SmsMessageR\x05items\x12\x14\n" +
@@ -1288,21 +1225,18 @@ const file_support_messaging_v1_messaging_proto_rawDesc = "" +
 	"created_to\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedTo\x12'\n" +
 	"\x0frecipient_phone\x18\b \x01(\tR\x0erecipientPhoneB\t\n" +
 	"\a_statusB\v\n" +
-	"\t_provider\"\xbe\x01\n" +
-	"\x16ListSmsMessagesRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12>\n" +
+	"\t_provider\"\x95\x01\n" +
+	"\x16ListSmsMessagesRequest\x12>\n" +
 	"\x06filter\x18\x02 \x01(\v2&.support.messaging.v1.SmsMessageFilterR\x06filter\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"w\n" +
 	"\x1fListSmsDeliveryAttemptsResponse\x12>\n" +
 	"\x05items\x18\x01 \x03(\v2(.support.messaging.v1.SmsDeliveryAttemptR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa5\x01\n" +
-	"\x1eListSmsDeliveryAttemptsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"|\n" +
+	"\x1eListSmsDeliveryAttemptsRequest\x12\x1d\n" +
 	"\n" +
 	"message_no\x18\x02 \x01(\tR\tmessageNo\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"h\n" +
-	"\x1eRevealSmsRecipientPhoneRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"?\n" +
+	"\x1eRevealSmsRecipientPhoneRequest\x12\x1d\n" +
 	"\n" +
 	"message_no\x18\x02 \x01(\tR\tmessageNo\"i\n" +
 	"\x1fRevealSmsRecipientPhoneResponse\x12\x1d\n" +
@@ -1364,51 +1298,43 @@ var file_support_messaging_v1_messaging_proto_goTypes = []any{
 	(*RevealSmsRecipientPhoneRequest)(nil),    // 13: support.messaging.v1.RevealSmsRecipientPhoneRequest
 	(*RevealSmsRecipientPhoneResponse)(nil),   // 14: support.messaging.v1.RevealSmsRecipientPhoneResponse
 	nil,                                       // 15: support.messaging.v1.SendTemplateSmsRequest.ParametersEntry
-	(v1.AppId)(0),                             // 16: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),             // 17: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),                 // 18: common.pagination.v1.PagingRequest
+	(*timestamppb.Timestamp)(nil),             // 16: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),                  // 17: common.pagination.v1.PagingRequest
 }
 var file_support_messaging_v1_messaging_proto_depIdxs = []int32{
-	16, // 0: support.messaging.v1.SmsMessage.app_id:type_name -> common.v1.AppId
-	1,  // 1: support.messaging.v1.SmsMessage.status:type_name -> support.messaging.v1.SmsMessageStatus
-	0,  // 2: support.messaging.v1.SmsMessage.selected_provider:type_name -> support.messaging.v1.SmsProvider
-	17, // 3: support.messaging.v1.SmsMessage.created_at:type_name -> google.protobuf.Timestamp
-	17, // 4: support.messaging.v1.SmsMessage.sent_at:type_name -> google.protobuf.Timestamp
-	16, // 5: support.messaging.v1.SmsDeliveryAttempt.app_id:type_name -> common.v1.AppId
-	0,  // 6: support.messaging.v1.SmsDeliveryAttempt.provider:type_name -> support.messaging.v1.SmsProvider
-	17, // 7: support.messaging.v1.SmsDeliveryAttempt.created_at:type_name -> google.protobuf.Timestamp
-	2,  // 8: support.messaging.v1.SmsDeliveryAttempt.failure_category:type_name -> support.messaging.v1.SmsDeliveryFailureCategory
-	16, // 9: support.messaging.v1.SendTemplateSmsRequest.app_id:type_name -> common.v1.AppId
-	15, // 10: support.messaging.v1.SendTemplateSmsRequest.parameters:type_name -> support.messaging.v1.SendTemplateSmsRequest.ParametersEntry
-	3,  // 11: support.messaging.v1.SendTemplateSmsResponse.message:type_name -> support.messaging.v1.SmsMessage
-	16, // 12: support.messaging.v1.GetSmsMessageByIdempotencyRequest.app_id:type_name -> common.v1.AppId
-	3,  // 13: support.messaging.v1.ListSmsMessagesResponse.items:type_name -> support.messaging.v1.SmsMessage
-	1,  // 14: support.messaging.v1.SmsMessageFilter.status:type_name -> support.messaging.v1.SmsMessageStatus
-	0,  // 15: support.messaging.v1.SmsMessageFilter.provider:type_name -> support.messaging.v1.SmsProvider
-	17, // 16: support.messaging.v1.SmsMessageFilter.created_from:type_name -> google.protobuf.Timestamp
-	17, // 17: support.messaging.v1.SmsMessageFilter.created_to:type_name -> google.protobuf.Timestamp
-	16, // 18: support.messaging.v1.ListSmsMessagesRequest.app_id:type_name -> common.v1.AppId
-	9,  // 19: support.messaging.v1.ListSmsMessagesRequest.filter:type_name -> support.messaging.v1.SmsMessageFilter
-	18, // 20: support.messaging.v1.ListSmsMessagesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	4,  // 21: support.messaging.v1.ListSmsDeliveryAttemptsResponse.items:type_name -> support.messaging.v1.SmsDeliveryAttempt
-	16, // 22: support.messaging.v1.ListSmsDeliveryAttemptsRequest.app_id:type_name -> common.v1.AppId
-	18, // 23: support.messaging.v1.ListSmsDeliveryAttemptsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	16, // 24: support.messaging.v1.RevealSmsRecipientPhoneRequest.app_id:type_name -> common.v1.AppId
-	5,  // 25: support.messaging.v1.SmsService.SendTemplateSms:input_type -> support.messaging.v1.SendTemplateSmsRequest
-	7,  // 26: support.messaging.v1.SmsService.GetSmsMessageByIdempotency:input_type -> support.messaging.v1.GetSmsMessageByIdempotencyRequest
-	10, // 27: support.messaging.v1.SmsService.ListSmsMessages:input_type -> support.messaging.v1.ListSmsMessagesRequest
-	12, // 28: support.messaging.v1.SmsService.ListSmsDeliveryAttempts:input_type -> support.messaging.v1.ListSmsDeliveryAttemptsRequest
-	13, // 29: support.messaging.v1.SmsService.RevealSmsRecipientPhone:input_type -> support.messaging.v1.RevealSmsRecipientPhoneRequest
-	6,  // 30: support.messaging.v1.SmsService.SendTemplateSms:output_type -> support.messaging.v1.SendTemplateSmsResponse
-	3,  // 31: support.messaging.v1.SmsService.GetSmsMessageByIdempotency:output_type -> support.messaging.v1.SmsMessage
-	8,  // 32: support.messaging.v1.SmsService.ListSmsMessages:output_type -> support.messaging.v1.ListSmsMessagesResponse
-	11, // 33: support.messaging.v1.SmsService.ListSmsDeliveryAttempts:output_type -> support.messaging.v1.ListSmsDeliveryAttemptsResponse
-	14, // 34: support.messaging.v1.SmsService.RevealSmsRecipientPhone:output_type -> support.messaging.v1.RevealSmsRecipientPhoneResponse
-	30, // [30:35] is the sub-list for method output_type
-	25, // [25:30] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	1,  // 0: support.messaging.v1.SmsMessage.status:type_name -> support.messaging.v1.SmsMessageStatus
+	0,  // 1: support.messaging.v1.SmsMessage.selected_provider:type_name -> support.messaging.v1.SmsProvider
+	16, // 2: support.messaging.v1.SmsMessage.created_at:type_name -> google.protobuf.Timestamp
+	16, // 3: support.messaging.v1.SmsMessage.sent_at:type_name -> google.protobuf.Timestamp
+	0,  // 4: support.messaging.v1.SmsDeliveryAttempt.provider:type_name -> support.messaging.v1.SmsProvider
+	16, // 5: support.messaging.v1.SmsDeliveryAttempt.created_at:type_name -> google.protobuf.Timestamp
+	2,  // 6: support.messaging.v1.SmsDeliveryAttempt.failure_category:type_name -> support.messaging.v1.SmsDeliveryFailureCategory
+	15, // 7: support.messaging.v1.SendTemplateSmsRequest.parameters:type_name -> support.messaging.v1.SendTemplateSmsRequest.ParametersEntry
+	3,  // 8: support.messaging.v1.SendTemplateSmsResponse.message:type_name -> support.messaging.v1.SmsMessage
+	3,  // 9: support.messaging.v1.ListSmsMessagesResponse.items:type_name -> support.messaging.v1.SmsMessage
+	1,  // 10: support.messaging.v1.SmsMessageFilter.status:type_name -> support.messaging.v1.SmsMessageStatus
+	0,  // 11: support.messaging.v1.SmsMessageFilter.provider:type_name -> support.messaging.v1.SmsProvider
+	16, // 12: support.messaging.v1.SmsMessageFilter.created_from:type_name -> google.protobuf.Timestamp
+	16, // 13: support.messaging.v1.SmsMessageFilter.created_to:type_name -> google.protobuf.Timestamp
+	9,  // 14: support.messaging.v1.ListSmsMessagesRequest.filter:type_name -> support.messaging.v1.SmsMessageFilter
+	17, // 15: support.messaging.v1.ListSmsMessagesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	4,  // 16: support.messaging.v1.ListSmsDeliveryAttemptsResponse.items:type_name -> support.messaging.v1.SmsDeliveryAttempt
+	17, // 17: support.messaging.v1.ListSmsDeliveryAttemptsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	5,  // 18: support.messaging.v1.SmsService.SendTemplateSms:input_type -> support.messaging.v1.SendTemplateSmsRequest
+	7,  // 19: support.messaging.v1.SmsService.GetSmsMessageByIdempotency:input_type -> support.messaging.v1.GetSmsMessageByIdempotencyRequest
+	10, // 20: support.messaging.v1.SmsService.ListSmsMessages:input_type -> support.messaging.v1.ListSmsMessagesRequest
+	12, // 21: support.messaging.v1.SmsService.ListSmsDeliveryAttempts:input_type -> support.messaging.v1.ListSmsDeliveryAttemptsRequest
+	13, // 22: support.messaging.v1.SmsService.RevealSmsRecipientPhone:input_type -> support.messaging.v1.RevealSmsRecipientPhoneRequest
+	6,  // 23: support.messaging.v1.SmsService.SendTemplateSms:output_type -> support.messaging.v1.SendTemplateSmsResponse
+	3,  // 24: support.messaging.v1.SmsService.GetSmsMessageByIdempotency:output_type -> support.messaging.v1.SmsMessage
+	8,  // 25: support.messaging.v1.SmsService.ListSmsMessages:output_type -> support.messaging.v1.ListSmsMessagesResponse
+	11, // 26: support.messaging.v1.SmsService.ListSmsDeliveryAttempts:output_type -> support.messaging.v1.ListSmsDeliveryAttemptsResponse
+	14, // 27: support.messaging.v1.SmsService.RevealSmsRecipientPhone:output_type -> support.messaging.v1.RevealSmsRecipientPhoneResponse
+	23, // [23:28] is the sub-list for method output_type
+	18, // [18:23] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_support_messaging_v1_messaging_proto_init() }

@@ -13,7 +13,7 @@ import "payment/v1/risk.proto";
 
 // 支付服务。
 service PaymentService {
-  // 查询当前 App 与客户端平台可购买的固定期限订阅 Offer。
+  // 查询客户端平台可购买的固定期限订阅 Offer。
   rpc ListSubscriptionOffers(ListSubscriptionOffersRequest) returns (ListSubscriptionOffersResponse) {}
   // 以 Payment 权威 Plan Revision 创建或恢复固定期限订阅 Provider Checkout。
   rpc StartFixedTermSubscriptionCheckout(StartFixedTermSubscriptionCheckoutRequest) returns (PurchaseView) {}
@@ -47,7 +47,7 @@ service PaymentService {
   rpc GetMySubscription(GetMySubscriptionRequest) returns (GetMySubscriptionResponse) {}
   // 在公开 Attempt 栅栏仍为当前值时创建或恢复下一笔串行 Payment Attempt。
   rpc RetryMyPurchase(RetryMyPurchaseRequest) returns (PurchaseView) {}
-  // 查询当前已认证 User 在当前 App 与购买上下文下可见的公开 Payment Option。
+  // 查询当前已认证 User 在购买上下文下可见的公开 Payment Option。
   rpc ListPurchaseOptions(ListPurchaseOptionsRequest) returns (ListPurchaseOptionsResponse) {}
   // 创建支付单。
   rpc CreatePayment(CreatePaymentRequest) returns (Payment) {}
@@ -65,7 +65,7 @@ service PaymentService {
   rpc GetPaymentDetail(GetPaymentDetailRequest) returns (PaymentDetail) {}
   // 查询用户支付摘要，供 User Administration 临时聚合。
   rpc GetUserPaymentSummary(GetUserPaymentSummaryRequest) returns (UserPaymentSummary) {}
-  // 查询当前 App 的 Payment 运营总览。
+  // 查询 Payment 运营总览。
   rpc GetPaymentOperationsSummary(GetPaymentOperationsSummaryRequest) returns (PaymentOperationsSummary) {}
   // 查询跨工作流待办投影。
   rpc ListPaymentWorkQueue(ListPaymentWorkQueueRequest) returns (ListPaymentWorkQueueResponse) {}

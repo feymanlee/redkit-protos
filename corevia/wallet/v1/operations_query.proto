@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package wallet.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -14,8 +13,6 @@ service WalletOperationsQueryService {
 
 // GetWalletOperationsSummaryRequest 标识待查询的 WalletOperationsSummary。
 message GetWalletOperationsSummaryRequest {
-  // app_id 限定 GetWalletOperationsSummary 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // long_running_freeze_before 指定 GetWalletOperationsSummary 查询或生效区间的结束边界。
   google.protobuf.Timestamp long_running_freeze_before = 2 [(google.api.field_behavior) = REQUIRED];
 }

@@ -27,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// UserPolicyService 管理每个 App 的用户与认证策略。
+// UserPolicyService 管理平台的用户与认证策略。
 type UserPolicyServiceClient interface {
 	// 查询 UserAppPolicy。
 	GetUserAppPolicy(ctx context.Context, in *GetUserAppPolicyRequest, opts ...grpc.CallOption) (*UserAppPolicy, error)
@@ -67,7 +67,7 @@ func (c *userPolicyServiceClient) UpdateUserAppPolicy(ctx context.Context, in *U
 // All implementations must embed UnimplementedUserPolicyServiceServer
 // for forward compatibility.
 //
-// UserPolicyService 管理每个 App 的用户与认证策略。
+// UserPolicyService 管理平台的用户与认证策略。
 type UserPolicyServiceServer interface {
 	// 查询 UserAppPolicy。
 	GetUserAppPolicy(context.Context, *GetUserAppPolicyRequest) (*UserAppPolicy, error)

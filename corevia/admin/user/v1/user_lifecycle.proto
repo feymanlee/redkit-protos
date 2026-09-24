@@ -8,7 +8,7 @@ import "google/protobuf/empty.proto";
 import "user/administration/v1/lifecycle.proto";
 import "validate/validate.proto";
 
-// UserLifecycleAdminService 是 App-scoped 的 User 生命周期观察与受控恢复 BFF。
+// UserLifecycleAdminService 是 User 生命周期观察与受控恢复 BFF。
 service UserLifecycleAdminService {
   // 查询 LifecycleOperation 列表。
   rpc ListLifecycleOperations(AdminListLifecycleOperationsRequest) returns (.user.administration.v1.ListLifecycleOperationsResponse) {

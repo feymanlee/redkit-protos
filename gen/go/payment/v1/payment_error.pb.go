@@ -48,11 +48,11 @@ const (
 	PaymentErrorReason_PURCHASE_IDEMPOTENCY_CONFLICT PaymentErrorReason = 904
 	// Purchase 当前状态不允许创建下一 Payment Attempt。
 	PaymentErrorReason_PURCHASE_NOT_RETRYABLE PaymentErrorReason = 905
-	// 当前 App 与客户端平台下不存在可购买的固定期限 Subscription Offer。
+	// 当前客户端平台下不存在可购买的固定期限 Subscription Offer。
 	PaymentErrorReason_SUBSCRIPTION_OFFER_UNAVAILABLE PaymentErrorReason = 906
 	// Payment 自有的 Subscription Purchase Order 已过业务有效期。
 	PaymentErrorReason_SUBSCRIPTION_PURCHASE_EXPIRED PaymentErrorReason = 907
-	// 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+	// 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
 	PaymentErrorReason_RECHARGE_OFFER_UNAVAILABLE PaymentErrorReason = 908
 	// Store App、Provider、SKU 与发布时间窗解析到了多个 Recharge Revision。
 	PaymentErrorReason_RECHARGE_STORE_MAPPING_AMBIGUOUS PaymentErrorReason = 909

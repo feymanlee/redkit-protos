@@ -123,7 +123,7 @@ func ErrorFileNotReady(format string, args ...interface{}) *errors.Error {
 	return errors.New(409, FileErrorReason_FILE_NOT_READY.String(), fmt.Sprintf(format, args...))
 }
 
-// App、Purpose 或 Owner 与业务预期不匹配。
+// Purpose 或 Owner 与业务预期不匹配。
 func IsFileBindingMismatch(err error) bool {
 	if err == nil {
 		return false
@@ -132,7 +132,7 @@ func IsFileBindingMismatch(err error) bool {
 	return e.Reason == FileErrorReason_FILE_BINDING_MISMATCH.String() && e.Code == 409
 }
 
-// App、Purpose 或 Owner 与业务预期不匹配。
+// Purpose 或 Owner 与业务预期不匹配。
 func ErrorFileBindingMismatch(format string, args ...interface{}) *errors.Error {
 	return errors.New(409, FileErrorReason_FILE_BINDING_MISMATCH.String(), fmt.Sprintf(format, args...))
 }
@@ -179,7 +179,7 @@ func ErrorForbidden(format string, args ...interface{}) *errors.Error {
 	return errors.New(403, FileErrorReason_FORBIDDEN.String(), fmt.Sprintf(format, args...))
 }
 
-// 当前 App/Purpose 缺少可用的 Active File Policy Revision。
+// 当前 Purpose 缺少可用的 Active File Policy Revision。
 func IsFileConfigurationNotReady(err error) bool {
 	if err == nil {
 		return false
@@ -188,7 +188,7 @@ func IsFileConfigurationNotReady(err error) bool {
 	return e.Reason == FileErrorReason_FILE_CONFIGURATION_NOT_READY.String() && e.Code == 503
 }
 
-// 当前 App/Purpose 缺少可用的 Active File Policy Revision。
+// 当前 Purpose 缺少可用的 Active File Policy Revision。
 func ErrorFileConfigurationNotReady(format string, args ...interface{}) *errors.Error {
 	return errors.New(503, FileErrorReason_FILE_CONFIGURATION_NOT_READY.String(), fmt.Sprintf(format, args...))
 }

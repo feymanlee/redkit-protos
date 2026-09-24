@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package ops.reward.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
@@ -211,8 +210,6 @@ message RewardPackagePreflight {
 
 // ListRewardPackagesRequest 定义 RewardPackages 的筛选与分页参数。
 message ListRewardPackagesRequest {
-  // app_id 限定 ListRewardPackages 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
 }
 
 // ListRewardPackagesResponse 返回 RewardPackages 结果集合及分页信息。
@@ -223,16 +220,12 @@ message ListRewardPackagesResponse {
 
 // GetRewardPackageRequest 标识待查询的 RewardPackage。
 message GetRewardPackageRequest {
-  // app_id 限定 GetRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 
 // CreateRewardPackageRequest 定义创建 RewardPackage 的幂等命令参数。
 message CreateRewardPackageRequest {
-  // app_id 限定 CreateRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_code 提供 CreateRewardPackage 对外稳定使用的业务编码。
   string package_code = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
   // display_name 提供 CreateRewardPackage 面向展示或识别的名称。
@@ -253,8 +246,6 @@ message CreateRewardPackageRequest {
 
 // CreateRewardPackageRevisionDraftRequest 定义创建 RewardPackageRevisionDraft 的幂等命令参数。
 message CreateRewardPackageRevisionDraftRequest {
-  // app_id 限定 CreateRewardPackageRevisionDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -267,8 +258,6 @@ message CreateRewardPackageRevisionDraftRequest {
 
 // UpdateRewardPackageDraftRequest 定义更新 RewardPackageDraft 的命令参数。
 message UpdateRewardPackageDraftRequest {
-  // app_id 限定 UpdateRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // display_name 提供 UpdateRewardPackageDraft 面向展示或识别的名称。
@@ -287,8 +276,6 @@ message UpdateRewardPackageDraftRequest {
 
 // PreflightRewardPackageDraftRequest 定义执行 PreflightRewardPackageDraft 的命令参数。
 message PreflightRewardPackageDraftRequest {
-  // app_id 限定 PreflightRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -297,8 +284,6 @@ message PreflightRewardPackageDraftRequest {
 
 // PublishRewardPackageRequest 定义发布 RewardPackage 的幂等管理命令参数。
 message PublishRewardPackageRequest {
-  // app_id 限定 PublishRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -311,8 +296,6 @@ message PublishRewardPackageRequest {
 
 // DisableRewardPackageRequest 定义停用 RewardPackage 的幂等管理命令参数。
 message DisableRewardPackageRequest {
-  // app_id 限定 DisableRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -325,8 +308,6 @@ message DisableRewardPackageRequest {
 
 // DiscardRewardPackageDraftRequest 定义执行 DiscardRewardPackageDraft 的幂等管理命令参数。
 message DiscardRewardPackageDraftRequest {
-  // app_id 限定 DiscardRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // revision_id 标识关联的 Revision。
@@ -341,8 +322,6 @@ message DiscardRewardPackageDraftRequest {
 
 // ResolvePublishedRewardPackageRequest 定义处置 PublishedRewardPackage 的命令参数。
 message ResolvePublishedRewardPackageRequest {
-  // app_id 限定 ResolvePublishedRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_code 提供 ResolvePublishedRewardPackage 对外稳定使用的业务编码。
   string package_code = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
 }

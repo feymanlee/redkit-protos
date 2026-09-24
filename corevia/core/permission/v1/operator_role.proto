@@ -37,11 +37,6 @@ message OperatorRole {
     (gnostic.openapi.v3.property) = { description: "后台人员ID" }
   ]; // 后台人员ID
 
-  // AppID。
-  optional uint32 app_id = 3 [
-    (gnostic.openapi.v3.property) = { description: "AppID" }
-  ]; // AppID
-
   // 角色ID。
   optional uint32 role_id = 4 [
     (gnostic.openapi.v3.property) = { description: "角色ID" }

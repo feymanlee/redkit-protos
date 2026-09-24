@@ -9,7 +9,7 @@ import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "validate/validate.proto";
 
-// OpsRewardPackageService exposes App-scoped Reward Package governance.
+// OpsRewardPackageService exposes Reward Package governance.
 service OpsRewardPackageService {
   // 查询 RewardPackage 列表。
   rpc ListRewardPackages(AdminListRewardPackagesRequest) returns (.ops.reward.v1.ListRewardPackagesResponse) {
@@ -49,7 +49,7 @@ service OpsRewardPackageService {
   }
 }
 
-// OpsRewardGrantService exposes App-scoped Reward observation and Manual Reward review.
+// OpsRewardGrantService exposes Reward observation and Manual Reward review.
 service OpsRewardGrantService {
   // 查询 RewardGrant 列表。
   rpc ListRewardGrants(AdminListRewardGrantsRequest) returns (.ops.reward.v1.ListRewardGrantsResponse) {
@@ -126,7 +126,7 @@ message AdminListPendingManualRewardGrantsRequest {}
 message AdminCreateManualRewardGrantRequest {
   // package_id 标识关联的 Package。
   uint64 package_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
-  // requested_user_id 标识当前 App 内关联的 User。
+  // requested_user_id 标识关联的 User。
   uint64 requested_user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];

@@ -40,9 +40,9 @@ const (
 	VerificationErrorReason_NOT_FOUND VerificationErrorReason = 5
 	// 状态冲突。
 	VerificationErrorReason_CONFLICT VerificationErrorReason = 6
-	// Recipient Phone 无法按 App 默认区域规范化为有效 E.164。
+	// Recipient Phone 无法按平台默认区域规范化为有效 E.164。
 	VerificationErrorReason_INVALID_RECIPIENT_PHONE VerificationErrorReason = 7
-	// 当前 App 没有可用于 Verification Runtime 的完整 Active Release。
+	// 没有可用于 Verification Runtime 的完整 Active Release。
 	VerificationErrorReason_SUPPORT_CONFIGURATION_NOT_READY VerificationErrorReason = 8
 	// 服务内部错误。
 	VerificationErrorReason_INTERNAL_SERVER_ERROR VerificationErrorReason = 2000

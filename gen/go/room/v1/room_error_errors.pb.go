@@ -67,7 +67,7 @@ func ErrorNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, RoomErrorReason_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
-// 房间不存在或不在当前 App。
+// 房间不存在。
 func IsRoomNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -76,12 +76,12 @@ func IsRoomNotFound(err error) bool {
 	return e.Reason == RoomErrorReason_ROOM_NOT_FOUND.String() && e.Code == 404
 }
 
-// 房间不存在或不在当前 App。
+// 房间不存在。
 func ErrorRoomNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, RoomErrorReason_ROOM_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
 
-// 场次不存在或不在当前 App。
+// 场次不存在。
 func IsSessionNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -90,7 +90,7 @@ func IsSessionNotFound(err error) bool {
 	return e.Reason == RoomErrorReason_SESSION_NOT_FOUND.String() && e.Code == 404
 }
 
-// 场次不存在或不在当前 App。
+// 场次不存在。
 func ErrorSessionNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, RoomErrorReason_SESSION_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }

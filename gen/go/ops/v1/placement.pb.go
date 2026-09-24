@@ -8,7 +8,6 @@ package opsv1
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -89,14 +88,12 @@ func (PlacementKind) EnumDescriptor() ([]byte, []int) {
 	return file_ops_v1_placement_proto_rawDescGZIP(), []int{0}
 }
 
-// Placement 是 App 内由稳定 code 标识的运营投放位注册事实。
+// Placement 是由稳定 code 标识的运营投放位注册事实。
 type Placement struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// placement_id 是当前 App 内投放位的数字标识。
+	// placement_id 是投放位的数字标识。
 	PlacementId uint64 `protobuf:"varint,1,opt,name=placement_id,json=placementId,proto3" json:"placement_id,omitempty"`
-	// app_id 归属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// code 是 App 内稳定投放位代码，创建后不可修改。
+	// code 是稳定的投放位代码，创建后不可修改。
 	Code string `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	// kind 是投放位形态。
 	Kind PlacementKind `protobuf:"varint,4,opt,name=kind,proto3,enum=ops.v1.PlacementKind" json:"kind,omitempty"`
@@ -151,13 +148,6 @@ func (x *Placement) GetPlacementId() uint64 {
 	return 0
 }
 
-func (x *Placement) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *Placement) GetCode() string {
 	if x != nil {
 		return x.Code
@@ -207,7 +197,7 @@ func (x *Placement) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListPlacementResponse 返回当前 App 的投放位列表。
+// ListPlacementResponse 返回投放位列表。
 type ListPlacementResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// items 是按 code 排序的投放位列表。
@@ -257,10 +247,9 @@ var File_ops_v1_placement_proto protoreflect.FileDescriptor
 
 const file_ops_v1_placement_proto_rawDesc = "" +
 	"\n" +
-	"\x16ops/v1/placement.proto\x12\x06ops.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xf3\x02\n" +
+	"\x16ops/v1/placement.proto\x12\x06ops.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xca\x02\n" +
 	"\tPlacement\x12!\n" +
-	"\fplacement_id\x18\x01 \x01(\x04R\vplacementId\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x12\n" +
+	"\fplacement_id\x18\x01 \x01(\x04R\vplacementId\x12\x12\n" +
 	"\x04code\x18\x03 \x01(\tR\x04code\x12)\n" +
 	"\x04kind\x18\x04 \x01(\x0e2\x15.ops.v1.PlacementKindR\x04kind\x12!\n" +
 	"\fdisplay_name\x18\x05 \x01(\tR\vdisplayName\x12(\n" +
@@ -300,20 +289,18 @@ var file_ops_v1_placement_proto_goTypes = []any{
 	(PlacementKind)(0),            // 0: ops.v1.PlacementKind
 	(*Placement)(nil),             // 1: ops.v1.Placement
 	(*ListPlacementResponse)(nil), // 2: ops.v1.ListPlacementResponse
-	(v1.AppId)(0),                 // 3: common.v1.AppId
-	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
 }
 var file_ops_v1_placement_proto_depIdxs = []int32{
-	3, // 0: ops.v1.Placement.app_id:type_name -> common.v1.AppId
-	0, // 1: ops.v1.Placement.kind:type_name -> ops.v1.PlacementKind
-	4, // 2: ops.v1.Placement.created_at:type_name -> google.protobuf.Timestamp
-	4, // 3: ops.v1.Placement.updated_at:type_name -> google.protobuf.Timestamp
-	1, // 4: ops.v1.ListPlacementResponse.items:type_name -> ops.v1.Placement
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	0, // 0: ops.v1.Placement.kind:type_name -> ops.v1.PlacementKind
+	3, // 1: ops.v1.Placement.created_at:type_name -> google.protobuf.Timestamp
+	3, // 2: ops.v1.Placement.updated_at:type_name -> google.protobuf.Timestamp
+	1, // 3: ops.v1.ListPlacementResponse.items:type_name -> ops.v1.Placement
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_ops_v1_placement_proto_init() }

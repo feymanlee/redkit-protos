@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on PaymentChannel with the rules defined in
@@ -62,8 +58,6 @@ func (m *PaymentChannel) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for Provider
 
@@ -661,8 +655,6 @@ func (m *ChannelProbe) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for ChannelId
 
 	// no validation rules for RevisionId
@@ -965,8 +957,6 @@ func (m *RoutingPolicyRevision) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionNo
 
 	// no validation rules for Status
@@ -1141,8 +1131,6 @@ func (m *ChannelPublication) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for TargetType
 
@@ -1931,8 +1919,6 @@ func (m *CreatePaymentOptionRevisionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for OptionCode
 
 	// no validation rules for DisplayName
@@ -2536,8 +2522,6 @@ func (m *ListProviderCapabilitySupportRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if len(errors) > 0 {
 		return ListProviderCapabilitySupportRequestMultiError(errors)
 	}
@@ -2781,8 +2765,6 @@ func (m *CreatePaymentChannelRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Provider
 
 	// no validation rules for Method
@@ -2927,8 +2909,6 @@ func (m *CreateChannelRevisionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for ChannelId
 
 	if all {
@@ -3071,8 +3051,6 @@ func (m *ProbeChannelRevisionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionId
 
 	// no validation rules for OperatorId
@@ -3214,8 +3192,6 @@ func (m *ListPaymentChannelsRequest) validate(all bool) error {
 			}
 		}
 	}
-
-	// no validation rules for AppId
 
 	if len(errors) > 0 {
 		return ListPaymentChannelsRequestMultiError(errors)
@@ -3486,8 +3462,6 @@ func (m *ListChannelRevisionsRequest) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for AppId
-
 	// no validation rules for ChannelId
 
 	if len(errors) > 0 {
@@ -3733,8 +3707,6 @@ func (m *CreateRoutingPolicyRevisionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	for idx, item := range m.GetRules() {
 		_, _ = idx, item
 
@@ -3881,8 +3853,6 @@ func (m *SubmitChannelPublicationRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for TargetType
 
 	// no validation rules for Action
@@ -4009,8 +3979,6 @@ func (m *ReviewChannelPublicationRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for PublicationId
 
@@ -4157,8 +4125,6 @@ func (m *ListChannelPublicationsRequest) validate(all bool) error {
 			}
 		}
 	}
-
-	// no validation rules for AppId
 
 	if m.Status != nil {
 		// no validation rules for Status
@@ -4436,8 +4402,6 @@ func (m *ListRoutingPolicyRevisionsRequest) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for AppId
-
 	if len(errors) > 0 {
 		return ListRoutingPolicyRevisionsRequestMultiError(errors)
 	}
@@ -4682,8 +4646,6 @@ func (m *PreviewPaymentRoutingRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for BizType
 

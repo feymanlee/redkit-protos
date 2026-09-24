@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package ops.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 import "ops/v1/placement.proto";
 import "validate/validate.proto";
@@ -45,10 +44,8 @@ message JumpTarget {
 
 // OpsContentItem 是绑定 Placement 的运营投放内容事实。
 message OpsContentItem {
-  // content_id 是当前 App 内内容项标识。
+  // content_id 是内容项标识。
   uint64 content_id = 1;
-  // app_id 归属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // placement_id 关联的投放位。
   uint64 placement_id = 3;
   // placement_code 是冗余展示用投放位 code。
@@ -59,7 +56,7 @@ message OpsContentItem {
   string media_file_id = 6;
   // sort_order 越小越靠前。
   int32 sort_order = 7;
-  // start_at 是生效开始时间（UTC instant）；业务日与窗口语义按 App Business Time Zone 解释。
+  // start_at 是生效开始时间（UTC instant）；业务日与窗口语义按平台 Business Time Zone 解释。
   google.protobuf.Timestamp start_at = 8;
   // end_at 是生效结束时间（UTC instant）；空表示不自动过期。
   google.protobuf.Timestamp end_at = 9;
@@ -85,8 +82,6 @@ message ListOpsContentItemResponse {
 
 // PublishedPlacementFeedRequest 是受信任 BFF 拉取已发布投放的只读请求。
 message PublishedPlacementFeedRequest {
-  // app_id 由受信任调用方注入具体 App；UNSPECIFIED 必须失败。
-  common.v1.AppId app_id = 1;
   // placement_code 必填，按稳定投放位代码拉取。
   string placement_code = 2;
   // observed_at 可选，缺省使用服务端当前时刻；仅测试/BFF 预览使用时由调用方负责合法性。

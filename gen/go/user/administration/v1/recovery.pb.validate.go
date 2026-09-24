@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on RecoveryEvidence with the rules defined
@@ -484,8 +480,6 @@ func (m *RecoveryRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for RequestNo
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -980,28 +974,6 @@ func (m *SubmitRecoveryRequestRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _SubmitRecoveryRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := SubmitRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := SubmitRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetUserId() <= 0 {
 		err := SubmitRecoveryRequestRequestValidationError{
 			field:  "UserId",
@@ -1137,10 +1109,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SubmitRecoveryRequestRequestValidationError{}
-
-var _SubmitRecoveryRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _SubmitRecoveryRequestRequest_NewPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
@@ -1282,28 +1250,6 @@ func (m *CreateTrustedDeviceRecoveryChallengeRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _CreateTrustedDeviceRecoveryChallengeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CreateTrustedDeviceRecoveryChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CreateTrustedDeviceRecoveryChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetContinuationToken()); l < 1 || l > 256 {
 		err := CreateTrustedDeviceRecoveryChallengeRequestValidationError{
 			field:  "ContinuationToken",
@@ -1408,10 +1354,6 @@ var _ interface {
 	ErrorName() string
 } = CreateTrustedDeviceRecoveryChallengeRequestValidationError{}
 
-var _CreateTrustedDeviceRecoveryChallengeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on
 // VerifyTrustedDeviceRecoveryChallengeRequest with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -1435,28 +1377,6 @@ func (m *VerifyTrustedDeviceRecoveryChallengeRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _VerifyTrustedDeviceRecoveryChallengeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := VerifyTrustedDeviceRecoveryChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := VerifyTrustedDeviceRecoveryChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetContinuationToken()); l < 1 || l > 256 {
 		err := VerifyTrustedDeviceRecoveryChallengeRequestValidationError{
@@ -1595,10 +1515,6 @@ var _ interface {
 	ErrorName() string
 } = VerifyTrustedDeviceRecoveryChallengeRequestValidationError{}
 
-var _VerifyTrustedDeviceRecoveryChallengeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on SubmitPaymentRecoveryEvidenceRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
@@ -1621,28 +1537,6 @@ func (m *SubmitPaymentRecoveryEvidenceRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _SubmitPaymentRecoveryEvidenceRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := SubmitPaymentRecoveryEvidenceRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := SubmitPaymentRecoveryEvidenceRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetContinuationToken()); l < 1 || l > 256 {
 		err := SubmitPaymentRecoveryEvidenceRequestValidationError{
@@ -1769,10 +1663,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SubmitPaymentRecoveryEvidenceRequestValidationError{}
-
-var _SubmitPaymentRecoveryEvidenceRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on RecoveryRequestFilter with the rules
 // defined in the proto definition for this message. If any rules are
@@ -2024,28 +1914,6 @@ func (m *ListRecoveryRequestsRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ListRecoveryRequestsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListRecoveryRequestsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListRecoveryRequestsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
 		case interface{ ValidateAll() error }:
@@ -2184,10 +2052,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListRecoveryRequestsRequestValidationError{}
-
-var _ListRecoveryRequestsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListRecoveryRequestsResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -2350,28 +2214,6 @@ func (m *GetRecoveryRequestRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _GetRecoveryRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetRequestNo()); l < 1 || l > 64 {
 		err := GetRecoveryRequestRequestValidationError{
 			field:  "RequestNo",
@@ -2463,10 +2305,6 @@ var _ interface {
 	ErrorName() string
 } = GetRecoveryRequestRequestValidationError{}
 
-var _GetRecoveryRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on AcceptRecoveryRequestRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2488,28 +2326,6 @@ func (m *AcceptRecoveryRequestRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _AcceptRecoveryRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := AcceptRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := AcceptRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetRequestNo()); l < 1 || l > 64 {
 		err := AcceptRecoveryRequestRequestValidationError{
@@ -2625,10 +2441,6 @@ var _ interface {
 	ErrorName() string
 } = AcceptRecoveryRequestRequestValidationError{}
 
-var _AcceptRecoveryRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ApproveRecoveryRequestRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2650,28 +2462,6 @@ func (m *ApproveRecoveryRequestRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ApproveRecoveryRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ApproveRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ApproveRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetRequestNo()); l < 1 || l > 64 {
 		err := ApproveRecoveryRequestRequestValidationError{
@@ -2787,10 +2577,6 @@ var _ interface {
 	ErrorName() string
 } = ApproveRecoveryRequestRequestValidationError{}
 
-var _ApproveRecoveryRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RejectRecoveryRequestRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2812,28 +2598,6 @@ func (m *RejectRecoveryRequestRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RejectRecoveryRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RejectRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RejectRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetRequestNo()); l < 1 || l > 64 {
 		err := RejectRecoveryRequestRequestValidationError{
@@ -2949,10 +2713,6 @@ var _ interface {
 	ErrorName() string
 } = RejectRecoveryRequestRequestValidationError{}
 
-var _RejectRecoveryRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ClaimRecoveryGrantRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2974,28 +2734,6 @@ func (m *ClaimRecoveryGrantRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ClaimRecoveryGrantRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ClaimRecoveryGrantRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ClaimRecoveryGrantRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetContinuationToken()); l < 1 || l > 256 {
 		err := ClaimRecoveryGrantRequestValidationError{
@@ -3087,10 +2825,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ClaimRecoveryGrantRequestValidationError{}
-
-var _ClaimRecoveryGrantRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ClaimRecoveryGrantResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -3256,28 +2990,6 @@ func (m *CompleteRecoveryRequestRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _CompleteRecoveryRequestRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompleteRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompleteRecoveryRequestRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetGrant()); l < 1 || l > 256 {
 		err := CompleteRecoveryRequestRequestValidationError{
 			field:  "Grant",
@@ -3413,10 +3125,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CompleteRecoveryRequestRequestValidationError{}
-
-var _CompleteRecoveryRequestRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _CompleteRecoveryRequestRequest_NewPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 

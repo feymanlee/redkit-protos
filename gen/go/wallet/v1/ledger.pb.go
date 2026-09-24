@@ -7,7 +7,6 @@
 package walletpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -288,8 +287,6 @@ type WalletTransaction struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 记录 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 用户余额 ID。
@@ -373,13 +370,6 @@ func (*WalletTransaction) Descriptor() ([]byte, []int) {
 func (x *WalletTransaction) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletTransaction) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -658,8 +648,6 @@ func (x *ListWalletTransactionResponse) GetTotal() uint64 {
 // 获取钱包请求。
 type GetWalletRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 币种。
@@ -698,13 +686,6 @@ func (*GetWalletRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_ledger_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetWalletRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetWalletRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -722,8 +703,6 @@ func (x *GetWalletRequest) GetCurrency() WalletCurrency {
 // 余额变更请求。
 type ChangeBalanceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 变动金额。
@@ -786,13 +765,6 @@ func (x *ChangeBalanceRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ChangeBalanceRequest.ProtoReflect.Descriptor instead.
 func (*ChangeBalanceRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_ledger_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ChangeBalanceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ChangeBalanceRequest) GetUserId() uint64 {
@@ -958,8 +930,6 @@ func (x *ChangeBalanceResponse) GetTransaction() *WalletTransaction {
 // 用户转账到平台请求。
 type TransferToPlatformRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 金额。
@@ -1010,13 +980,6 @@ func (x *TransferToPlatformRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use TransferToPlatformRequest.ProtoReflect.Descriptor instead.
 func (*TransferToPlatformRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_ledger_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *TransferToPlatformRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *TransferToPlatformRequest) GetUserId() uint64 {
@@ -1085,8 +1048,6 @@ func (x *TransferToPlatformRequest) GetRemark() string {
 // 按稳定业务键查询用户到平台转账请求。
 type GetPlatformTransferByBusinessKeyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 调用方稳定业务键。
 	BusinessKey   string `protobuf:"bytes,2,opt,name=business_key,json=businessKey,proto3" json:"business_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1123,13 +1084,6 @@ func (*GetPlatformTransferByBusinessKeyRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_ledger_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *GetPlatformTransferByBusinessKeyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetPlatformTransferByBusinessKeyRequest) GetBusinessKey() string {
 	if x != nil {
 		return x.BusinessKey
@@ -1146,8 +1100,6 @@ type TransferToPlatformResponse struct {
 	PlatformTransaction *WalletTransaction `protobuf:"bytes,2,opt,name=platform_transaction,json=platformTransaction,proto3" json:"platform_transaction,omitempty"`
 	// 权威操作结果。
 	Outcome TransferToPlatformResponse_Outcome `protobuf:"varint,3,opt,name=outcome,proto3,enum=wallet.v1.TransferToPlatformResponse_Outcome" json:"outcome,omitempty"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 扣款用户 ID。
 	UserId uint64 `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 请求总金额。
@@ -1221,13 +1173,6 @@ func (x *TransferToPlatformResponse) GetOutcome() TransferToPlatformResponse_Out
 		return x.Outcome
 	}
 	return TransferToPlatformResponse_OUTCOME_UNSPECIFIED
-}
-
-func (x *TransferToPlatformResponse) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *TransferToPlatformResponse) GetUserId() uint64 {
@@ -1311,8 +1256,6 @@ type ReverseTransactionRequest struct {
 	OperatorId *uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"`
 	// 审计备注。
 	AuditNote *string `protobuf:"bytes,4,opt,name=audit_note,json=auditNote,proto3,oneof" json:"audit_note,omitempty"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,5,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// Trusted governance identity for Admin-initiated reversals.
 	Governance    *WalletGovernanceIdentity `protobuf:"bytes,6,opt,name=governance,proto3,oneof" json:"governance,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1377,13 +1320,6 @@ func (x *ReverseTransactionRequest) GetAuditNote() string {
 	return ""
 }
 
-func (x *ReverseTransactionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ReverseTransactionRequest) GetGovernance() *WalletGovernanceIdentity {
 	if x != nil {
 		return x.Governance
@@ -1395,39 +1331,38 @@ var File_wallet_v1_ledger_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\n" +
-	"\x16wallet/v1/ledger.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xf0\r\n" +
+	"\x16wallet/v1/ledger.proto\x12\twallet.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xc9\r\n" +
 	"\x11WalletTransaction\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12 \n" +
-	"\twallet_id\x18\x04 \x01(\x04H\x03R\bwalletId\x88\x01\x01\x12:\n" +
-	"\x04type\x18\x05 \x01(\x0e2!.wallet.v1.WalletTransaction.TypeH\x04R\x04type\x88\x01\x01\x12\x1e\n" +
-	"\bbiz_type\x18\x06 \x01(\tH\x05R\abizType\x88\x01\x01\x12\x1a\n" +
-	"\x06biz_id\x18\a \x01(\tH\x06R\x05bizId\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\b \x01(\x03H\aR\x06amount\x88\x01\x01\x12(\n" +
-	"\rbalance_after\x18\t \x01(\x03H\bR\fbalanceAfter\x88\x01\x01\x12:\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12 \n" +
+	"\twallet_id\x18\x04 \x01(\x04H\x02R\bwalletId\x88\x01\x01\x12:\n" +
+	"\x04type\x18\x05 \x01(\x0e2!.wallet.v1.WalletTransaction.TypeH\x03R\x04type\x88\x01\x01\x12\x1e\n" +
+	"\bbiz_type\x18\x06 \x01(\tH\x04R\abizType\x88\x01\x01\x12\x1a\n" +
+	"\x06biz_id\x18\a \x01(\tH\x05R\x05bizId\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\b \x01(\x03H\x06R\x06amount\x88\x01\x01\x12(\n" +
+	"\rbalance_after\x18\t \x01(\x03H\aR\fbalanceAfter\x88\x01\x01\x12:\n" +
 	"\bcurrency\x18\n" +
-	" \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\tR\bcurrency\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\v \x01(\tH\n" +
-	"R\x06remark\x88\x01\x01\x12I\n" +
-	"\tdirection\x18\f \x01(\x0e2&.wallet.v1.WalletTransaction.DirectionH\vR\tdirection\x88\x01\x01\x12@\n" +
-	"\x06status\x18\r \x01(\x0e2#.wallet.v1.WalletTransaction.StatusH\fR\x06status\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\x0e \x01(\tH\rR\voperationNo\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\x0f \x01(\tH\x0eR\x0eidempotencyKey\x88\x01\x01\x12*\n" +
-	"\x0esource_service\x18\x10 \x01(\tH\x0fR\rsourceService\x88\x01\x01\x125\n" +
-	"\x14counterparty_user_id\x18\x11 \x01(\x04H\x10R\x12counterpartyUserId\x88\x01\x01\x12\"\n" +
+	" \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\bR\bcurrency\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\v \x01(\tH\tR\x06remark\x88\x01\x01\x12I\n" +
+	"\tdirection\x18\f \x01(\x0e2&.wallet.v1.WalletTransaction.DirectionH\n" +
+	"R\tdirection\x88\x01\x01\x12@\n" +
+	"\x06status\x18\r \x01(\x0e2#.wallet.v1.WalletTransaction.StatusH\vR\x06status\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\x0e \x01(\tH\fR\voperationNo\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\x0f \x01(\tH\rR\x0eidempotencyKey\x88\x01\x01\x12*\n" +
+	"\x0esource_service\x18\x10 \x01(\tH\x0eR\rsourceService\x88\x01\x01\x125\n" +
+	"\x14counterparty_user_id\x18\x11 \x01(\x04H\x0fR\x12counterpartyUserId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\x12 \x01(\tH\x11R\trequestId\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\x13 \x01(\rH\x12R\n" +
+	"request_id\x18\x12 \x01(\tH\x10R\trequestId\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\x13 \x01(\rH\x11R\n" +
 	"operatorId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"audit_note\x18\x14 \x01(\tH\x13R\tauditNote\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\x15 \x01(\tH\x14R\bmetadata\x88\x01\x01\x12;\n" +
-	"\x17original_transaction_id\x18\x16 \x01(\x04H\x15R\x15originalTransactionId\x88\x01\x01\x12\x1d\n" +
-	"\adiamond\x18\x17 \x01(\x03H\x16R\adiamond\x88\x01\x01\x12\x17\n" +
-	"\x04coin\x18\x18 \x01(\x03H\x17R\x04coin\x88\x01\x01\x12?\n" +
+	"audit_note\x18\x14 \x01(\tH\x12R\tauditNote\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\x15 \x01(\tH\x13R\bmetadata\x88\x01\x01\x12;\n" +
+	"\x17original_transaction_id\x18\x16 \x01(\x04H\x14R\x15originalTransactionId\x88\x01\x01\x12\x1d\n" +
+	"\adiamond\x18\x17 \x01(\x03H\x15R\adiamond\x88\x01\x01\x12\x17\n" +
+	"\x04coin\x18\x18 \x01(\x03H\x16R\x04coin\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x18R\tcreatedAt\x88\x01\x01\"\xe7\x01\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x17R\tcreatedAt\x88\x01\x01\"\xe7\x01\n" +
 	"\x04Type\x12\x14\n" +
 	"\x10TYPE_UNSPECIFIED\x10\x00\x12\f\n" +
 	"\bRECHARGE\x10\x01\x12\r\n" +
@@ -1456,8 +1391,7 @@ const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tSUCCEEDED\x10\x01\x12\f\n" +
 	"\bREVERSED\x10\x02B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\f\n" +
 	"\n" +
@@ -1490,14 +1424,12 @@ const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\"i\n" +
 	"\x1dListWalletTransactionResponse\x122\n" +
 	"\x05items\x18\x01 \x03(\v2\x1c.wallet.v1.WalletTransactionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x9d\x01\n" +
-	"\x10GetWalletRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"t\n" +
+	"\x10GetWalletRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12:\n" +
 	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x00R\bcurrency\x88\x01\x01B\v\n" +
-	"\t_currency\"\xef\x06\n" +
-	"\x14ChangeBalanceRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\t_currency\"\xc6\x06\n" +
+	"\x14ChangeBalanceRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\x03R\x06amount\x12:\n" +
 	"\bcurrency\x18\x04 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x00R\bcurrency\x88\x01\x01\x12\x19\n" +
@@ -1531,9 +1463,8 @@ const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\x18_original_transaction_id\"\x82\x01\n" +
 	"\x15ChangeBalanceResponse\x12)\n" +
 	"\x06wallet\x18\x01 \x01(\v2\x11.wallet.v1.WalletR\x06wallet\x12>\n" +
-	"\vtransaction\x18\x02 \x01(\v2\x1c.wallet.v1.WalletTransactionR\vtransaction\"\xd0\x03\n" +
-	"\x19TransferToPlatformRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\vtransaction\x18\x02 \x01(\v2\x1c.wallet.v1.WalletTransactionR\vtransaction\"\xa7\x03\n" +
+	"\x19TransferToPlatformRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\x03R\x06amount\x12:\n" +
 	"\bcurrency\x18\x04 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x00R\bcurrency\x88\x01\x01\x12\x19\n" +
@@ -1547,15 +1478,13 @@ const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\t_currencyB\x11\n" +
 	"\x0f_source_serviceB\x17\n" +
 	"\x15_counterparty_user_idB\t\n" +
-	"\a_remark\"u\n" +
-	"'GetPlatformTransferByBusinessKeyRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12!\n" +
-	"\fbusiness_key\x18\x02 \x01(\tR\vbusinessKey\"\x84\x06\n" +
+	"\a_remark\"L\n" +
+	"'GetPlatformTransferByBusinessKeyRequest\x12!\n" +
+	"\fbusiness_key\x18\x02 \x01(\tR\vbusinessKey\"\xdb\x05\n" +
 	"\x1aTransferToPlatformResponse\x12G\n" +
 	"\x10user_transaction\x18\x01 \x01(\v2\x1c.wallet.v1.WalletTransactionR\x0fuserTransaction\x12O\n" +
 	"\x14platform_transaction\x18\x02 \x01(\v2\x1c.wallet.v1.WalletTransactionR\x13platformTransaction\x12G\n" +
-	"\aoutcome\x18\x03 \x01(\x0e2-.wallet.v1.TransferToPlatformResponse.OutcomeR\aoutcome\x12'\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\aoutcome\x18\x03 \x01(\x0e2-.wallet.v1.TransferToPlatformResponse.OutcomeR\aoutcome\x12\x17\n" +
 	"\auser_id\x18\x05 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06amount\x18\x06 \x01(\x03R\x06amount\x125\n" +
 	"\bcurrency\x18\a \x01(\x0e2\x19.wallet.v1.WalletCurrencyR\bcurrency\x12\x19\n" +
@@ -1573,21 +1502,19 @@ const file_wallet_v1_ledger_proto_rawDesc = "" +
 	"\bREJECTED\x10\x02\x12\x0e\n" +
 	"\n" +
 	"PROCESSING\x10\x03\x12\r\n" +
-	"\tNOT_FOUND\x10\x04\"\xe6\x02\n" +
+	"\tNOT_FOUND\x10\x04\"\xad\x02\n" +
 	"\x19ReverseTransactionRequest\x12%\n" +
 	"\x0etransaction_id\x18\x01 \x01(\x04R\rtransactionId\x12'\n" +
 	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\x12$\n" +
 	"\voperator_id\x18\x03 \x01(\rH\x00R\n" +
 	"operatorId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"audit_note\x18\x04 \x01(\tH\x01R\tauditNote\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x05 \x01(\x0e2\x10.common.v1.AppIdH\x02R\x05appId\x88\x01\x01\x12H\n" +
+	"audit_note\x18\x04 \x01(\tH\x01R\tauditNote\x88\x01\x01\x12H\n" +
 	"\n" +
-	"governance\x18\x06 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x03R\n" +
+	"governance\x18\x06 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x02R\n" +
 	"governance\x88\x01\x01B\x0e\n" +
 	"\f_operator_idB\r\n" +
-	"\v_audit_noteB\t\n" +
-	"\a_app_idB\r\n" +
+	"\v_audit_noteB\r\n" +
 	"\v_governanceB\x9f\x01\n" +
 	"\rcom.wallet.v1B\vLedgerProtoP\x01Z<github.com/feymanlee/redkit-protos/gen/go/wallet/v1;walletpb\xa2\x02\x03WXX\xaa\x02\tWallet.V1\xca\x02\tWallet\\V1\xe2\x02\x15Wallet\\V1\\GPBMetadata\xea\x02\n" +
 	"Wallet::V1b\x06proto3"
@@ -1624,8 +1551,7 @@ var file_wallet_v1_ledger_proto_goTypes = []any{
 	(WalletCurrency)(0),                             // 14: wallet.v1.WalletCurrency
 	(*timestamppb.Timestamp)(nil),                   // 15: google.protobuf.Timestamp
 	(*Wallet)(nil),                                  // 16: wallet.v1.Wallet
-	(v1.AppId)(0),                                   // 17: common.v1.AppId
-	(*WalletGovernanceIdentity)(nil),                // 18: wallet.v1.WalletGovernanceIdentity
+	(*WalletGovernanceIdentity)(nil),                // 17: wallet.v1.WalletGovernanceIdentity
 }
 var file_wallet_v1_ledger_proto_depIdxs = []int32{
 	0,  // 0: wallet.v1.WalletTransaction.type:type_name -> wallet.v1.WalletTransaction.Type
@@ -1635,28 +1561,22 @@ var file_wallet_v1_ledger_proto_depIdxs = []int32{
 	15, // 4: wallet.v1.WalletTransaction.created_at:type_name -> google.protobuf.Timestamp
 	16, // 5: wallet.v1.ListWalletResponse.items:type_name -> wallet.v1.Wallet
 	4,  // 6: wallet.v1.ListWalletTransactionResponse.items:type_name -> wallet.v1.WalletTransaction
-	17, // 7: wallet.v1.GetWalletRequest.app_id:type_name -> common.v1.AppId
-	14, // 8: wallet.v1.GetWalletRequest.currency:type_name -> wallet.v1.WalletCurrency
-	17, // 9: wallet.v1.ChangeBalanceRequest.app_id:type_name -> common.v1.AppId
-	14, // 10: wallet.v1.ChangeBalanceRequest.currency:type_name -> wallet.v1.WalletCurrency
-	0,  // 11: wallet.v1.ChangeBalanceRequest.transaction_type:type_name -> wallet.v1.WalletTransaction.Type
-	16, // 12: wallet.v1.ChangeBalanceResponse.wallet:type_name -> wallet.v1.Wallet
-	4,  // 13: wallet.v1.ChangeBalanceResponse.transaction:type_name -> wallet.v1.WalletTransaction
-	17, // 14: wallet.v1.TransferToPlatformRequest.app_id:type_name -> common.v1.AppId
-	14, // 15: wallet.v1.TransferToPlatformRequest.currency:type_name -> wallet.v1.WalletCurrency
-	17, // 16: wallet.v1.GetPlatformTransferByBusinessKeyRequest.app_id:type_name -> common.v1.AppId
-	4,  // 17: wallet.v1.TransferToPlatformResponse.user_transaction:type_name -> wallet.v1.WalletTransaction
-	4,  // 18: wallet.v1.TransferToPlatformResponse.platform_transaction:type_name -> wallet.v1.WalletTransaction
-	3,  // 19: wallet.v1.TransferToPlatformResponse.outcome:type_name -> wallet.v1.TransferToPlatformResponse.Outcome
-	17, // 20: wallet.v1.TransferToPlatformResponse.app_id:type_name -> common.v1.AppId
-	14, // 21: wallet.v1.TransferToPlatformResponse.currency:type_name -> wallet.v1.WalletCurrency
-	17, // 22: wallet.v1.ReverseTransactionRequest.app_id:type_name -> common.v1.AppId
-	18, // 23: wallet.v1.ReverseTransactionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	24, // [24:24] is the sub-list for method output_type
-	24, // [24:24] is the sub-list for method input_type
-	24, // [24:24] is the sub-list for extension type_name
-	24, // [24:24] is the sub-list for extension extendee
-	0,  // [0:24] is the sub-list for field type_name
+	14, // 7: wallet.v1.GetWalletRequest.currency:type_name -> wallet.v1.WalletCurrency
+	14, // 8: wallet.v1.ChangeBalanceRequest.currency:type_name -> wallet.v1.WalletCurrency
+	0,  // 9: wallet.v1.ChangeBalanceRequest.transaction_type:type_name -> wallet.v1.WalletTransaction.Type
+	16, // 10: wallet.v1.ChangeBalanceResponse.wallet:type_name -> wallet.v1.Wallet
+	4,  // 11: wallet.v1.ChangeBalanceResponse.transaction:type_name -> wallet.v1.WalletTransaction
+	14, // 12: wallet.v1.TransferToPlatformRequest.currency:type_name -> wallet.v1.WalletCurrency
+	4,  // 13: wallet.v1.TransferToPlatformResponse.user_transaction:type_name -> wallet.v1.WalletTransaction
+	4,  // 14: wallet.v1.TransferToPlatformResponse.platform_transaction:type_name -> wallet.v1.WalletTransaction
+	3,  // 15: wallet.v1.TransferToPlatformResponse.outcome:type_name -> wallet.v1.TransferToPlatformResponse.Outcome
+	14, // 16: wallet.v1.TransferToPlatformResponse.currency:type_name -> wallet.v1.WalletCurrency
+	17, // 17: wallet.v1.ReverseTransactionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	18, // [18:18] is the sub-list for method output_type
+	18, // [18:18] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_ledger_proto_init() }

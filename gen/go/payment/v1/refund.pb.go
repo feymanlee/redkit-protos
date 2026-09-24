@@ -7,8 +7,8 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -387,8 +387,6 @@ type Refund struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 退款单 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 支付单号。
@@ -448,13 +446,6 @@ func (*Refund) Descriptor() ([]byte, []int) {
 func (x *Refund) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *Refund) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -547,10 +538,8 @@ type CreateRefundRequest struct {
 	Reason *string `protobuf:"bytes,3,opt,name=reason,proto3,oneof" json:"reason,omitempty"`
 	// 幂等键。
 	IdempotencyKey *string `protobuf:"bytes,4,opt,name=idempotency_key,json=idempotencyKey,proto3,oneof" json:"idempotency_key,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v1.AppId `protobuf:"varint,5,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CreateRefundRequest) Reset() {
@@ -609,13 +598,6 @@ func (x *CreateRefundRequest) GetIdempotencyKey() string {
 		return *x.IdempotencyKey
 	}
 	return ""
-}
-
-func (x *CreateRefundRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // 退款列表响应。
@@ -678,13 +660,11 @@ type RefundRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 Refund。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 Refund 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,3,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// payment_no 是 Refund 对外关联与审计使用的业务编号。
 	PaymentNo string `protobuf:"bytes,4,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,5,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// amount 以对应 currency 的最小货币单位表示，不使用浮点数。
 	Amount int64 `protobuf:"varint,6,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -765,13 +745,6 @@ func (x *RefundRequest) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *RefundRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RefundRequest) GetOperationNo() string {
@@ -1026,13 +999,11 @@ func (x *RefundAvailability) GetFullRefundEntitlementImpact() RefundRequest_Enti
 	return RefundRequest_ENTITLEMENT_IMPACT_UNSPECIFIED
 }
 
-// RefundRiskRule 按 App 和 ISO 4217 币种控制自动审批边界。
+// RefundRiskRule 按 ISO 4217 币种控制自动审批边界。
 type RefundRiskRule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 RefundRiskRule。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 RefundRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency string `protobuf:"bytes,3,opt,name=currency,proto3" json:"currency,omitempty"`
 	// auto_approve_max_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
@@ -1084,13 +1055,6 @@ func (x *RefundRiskRule) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *RefundRiskRule) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RefundRiskRule) GetCurrency() string {
@@ -1151,9 +1115,7 @@ type SubmitRefundRequestRequest struct {
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,6,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId string `protobuf:"bytes,7,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
-	// app_id 限定 SubmitRefundRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,8,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     string `protobuf:"bytes,7,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1237,13 +1199,6 @@ func (x *SubmitRefundRequestRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *SubmitRefundRequestRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // ReviewRefundRequestRequest 定义审核 RefundRequest 的幂等管理命令参数。
 type ReviewRefundRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1254,9 +1209,7 @@ type ReviewRefundRequestRequest struct {
 	// review_note 记录人工判断的补充说明，供审计与复核。
 	ReviewNote *string `protobuf:"bytes,3,opt,name=review_note,json=reviewNote,proto3,oneof" json:"review_note,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
-	// app_id 限定 ReviewRefundRequest 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,5,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     string `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1319,13 +1272,6 @@ func (x *ReviewRefundRequestRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *ReviewRefundRequestRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // RefundRequestFilter 定义可组合的查询筛选条件。
 type RefundRequestFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1385,11 +1331,9 @@ func (x *RefundRequestFilter) GetStatuses() []RefundRequest_Status {
 type ListRefundRequestsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
-	Filter *RefundRequestFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
-	// app_id 限定 ListRefundRequests 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Filter        *RefundRequestFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1424,7 +1368,7 @@ func (*ListRefundRequestsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_refund_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListRefundRequestsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListRefundRequestsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1436,13 +1380,6 @@ func (x *ListRefundRequestsRequest) GetFilter() *RefundRequestFilter {
 		return x.Filter
 	}
 	return nil
-}
-
-func (x *ListRefundRequestsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListRefundRequestsResponse 返回 RefundRequests 结果集合及分页信息。
@@ -1514,9 +1451,7 @@ type UpsertRefundRiskRuleRequest struct {
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,5,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
-	// app_id 限定 UpsertRefundRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,7,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1593,20 +1528,11 @@ func (x *UpsertRefundRiskRuleRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *UpsertRefundRiskRuleRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // ListRefundRiskRulesRequest 定义 RefundRiskRules 的筛选与分页参数。
 type ListRefundRiskRulesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
-	// app_id 限定 ListRefundRiskRules 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1641,18 +1567,11 @@ func (*ListRefundRiskRulesRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_refund_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ListRefundRiskRulesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListRefundRiskRulesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
-}
-
-func (x *ListRefundRiskRulesRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListRefundRiskRulesResponse 返回 RefundRiskRules 结果集合及分页信息。
@@ -1715,35 +1634,33 @@ var File_payment_v1_refund_proto protoreflect.FileDescriptor
 const file_payment_v1_refund_proto_rawDesc = "" +
 	"\n" +
 	"\x17payment/v1/refund.proto\x12\n" +
-	"payment.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\xc6\x06\n" +
+	"payment.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\x9f\x06\n" +
 	"\x06Refund\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x04 \x01(\tH\x03R\tpaymentNo\x88\x01\x01\x12 \n" +
-	"\trefund_no\x18\x05 \x01(\tH\x04R\brefundNo\x88\x01\x01\x121\n" +
-	"\x12provider_refund_no\x18\x06 \x01(\tH\x05R\x10providerRefundNo\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\a \x01(\x03H\x06R\x06amount\x88\x01\x01\x12\x1b\n" +
-	"\x06reason\x18\b \x01(\tH\aR\x06reason\x88\x01\x01\x126\n" +
-	"\x06status\x18\t \x01(\x0e2\x19.payment.v1.Refund.StatusH\bR\x06status\x88\x01\x01\x12\x1f\n" +
+	"payment_no\x18\x04 \x01(\tH\x02R\tpaymentNo\x88\x01\x01\x12 \n" +
+	"\trefund_no\x18\x05 \x01(\tH\x03R\brefundNo\x88\x01\x01\x121\n" +
+	"\x12provider_refund_no\x18\x06 \x01(\tH\x04R\x10providerRefundNo\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\a \x01(\x03H\x05R\x06amount\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\b \x01(\tH\x06R\x06reason\x88\x01\x01\x126\n" +
+	"\x06status\x18\t \x01(\x0e2\x19.payment.v1.Refund.StatusH\aR\x06status\x88\x01\x01\x12\x1f\n" +
 	"\bcurrency\x18\n" +
-	" \x01(\tH\tR\bcurrency\x88\x01\x01\x12@\n" +
-	"\vrefunded_at\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\n" +
+	" \x01(\tH\bR\bcurrency\x88\x01\x01\x12@\n" +
+	"\vrefunded_at\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\tR\n" +
 	"refundedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
+	"R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tupdatedAt\x88\x01\x01\"o\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tupdatedAt\x88\x01\x01\"o\n" +
 	"\x06Status\x12\x12\n" +
 	"\x0eREFUND_CREATED\x10\x00\x12\x15\n" +
 	"\x11REFUND_PROCESSING\x10\x01\x12\x14\n" +
 	"\x10REFUND_SUCCEEDED\x10\x02\x12\x11\n" +
 	"\rREFUND_FAILED\x10\x03\x12\x11\n" +
 	"\rREFUND_CLOSED\x10\x04B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\r\n" +
 	"\v_payment_noB\f\n" +
@@ -1756,23 +1673,20 @@ const file_payment_v1_refund_proto_rawDesc = "" +
 	"\t_currencyB\x0e\n" +
 	"\f_refunded_atB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xef\x01\n" +
+	"\v_updated_at\"\xb6\x01\n" +
 	"\x13CreateRefundRequest\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\x03R\x06amount\x12\x1b\n" +
 	"\x06reason\x18\x03 \x01(\tH\x00R\x06reason\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tH\x01R\x0eidempotencyKey\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x05 \x01(\x0e2\x10.common.v1.AppIdH\x02R\x05appId\x88\x01\x01B\t\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tH\x01R\x0eidempotencyKey\x88\x01\x01B\t\n" +
 	"\a_reasonB\x12\n" +
-	"\x10_idempotency_keyB\t\n" +
-	"\a_app_id\"T\n" +
+	"\x10_idempotency_key\"T\n" +
 	"\x12ListRefundResponse\x12(\n" +
 	"\x05items\x18\x01 \x03(\v2\x12.payment.v1.RefundR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xff\x0e\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xd6\x0e\n" +
 	"\rRefundRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12!\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12!\n" +
 	"\foperation_no\x18\x03 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x04 \x01(\tR\tpaymentNo\x12\x17\n" +
@@ -1846,10 +1760,9 @@ const file_payment_v1_refund_proto_rawDesc = "" +
 	"\x16reserved_refund_amount\x18\x03 \x01(\x03R\x14reservedRefundAmount\x12>\n" +
 	"\x1bremaining_refundable_amount\x18\x04 \x01(\x03R\x19remainingRefundableAmount\x12\x1a\n" +
 	"\bcurrency\x18\x05 \x01(\tR\bcurrency\x12p\n" +
-	"\x1efull_refund_entitlement_impact\x18\x06 \x01(\x0e2+.payment.v1.RefundRequest.EntitlementImpactR\x1bfullRefundEntitlementImpact\"\xe8\x02\n" +
+	"\x1efull_refund_entitlement_impact\x18\x06 \x01(\x0e2+.payment.v1.RefundRequest.EntitlementImpactR\x1bfullRefundEntitlementImpact\"\xbf\x02\n" +
 	"\x0eRefundRiskRule\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1a\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1a\n" +
 	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x125\n" +
 	"\x17auto_approve_max_amount\x18\x04 \x01(\x03R\x14autoApproveMaxAmount\x128\n" +
 	"\x18cumulative_review_amount\x18\x05 \x01(\x03R\x16cumulativeReviewAmount\x12\x18\n" +
@@ -1857,7 +1770,7 @@ const file_payment_v1_refund_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12:\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xe4\x02\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xab\x02\n" +
 	"\x1aSubmitRefundRequestRequest\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12\x16\n" +
@@ -1869,10 +1782,8 @@ const file_payment_v1_refund_proto_rawDesc = "" +
 	"\voperator_id\x18\x06 \x01(\rR\n" +
 	"operatorId\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\a \x01(\tR\trequestId\x12,\n" +
-	"\x06app_id\x18\b \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\t\n" +
-	"\a_remarkB\t\n" +
-	"\a_app_id\"\xee\x01\n" +
+	"request_id\x18\a \x01(\tR\trequestIdB\t\n" +
+	"\a_remark\"\xb5\x01\n" +
 	"\x1aReviewRefundRequestRequest\x12!\n" +
 	"\foperation_no\x18\x01 \x01(\tR\voperationNo\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
@@ -1880,23 +1791,19 @@ const file_payment_v1_refund_proto_rawDesc = "" +
 	"\vreview_note\x18\x03 \x01(\tH\x00R\n" +
 	"reviewNote\x88\x01\x01\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tR\trequestId\x12,\n" +
-	"\x06app_id\x18\x05 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\x0e\n" +
-	"\f_review_noteB\t\n" +
-	"\a_app_id\"\x86\x01\n" +
+	"request_id\x18\x04 \x01(\tR\trequestIdB\x0e\n" +
+	"\f_review_note\"\x86\x01\n" +
 	"\x13RefundRequestFilter\x12\"\n" +
 	"\n" +
 	"payment_no\x18\x01 \x01(\tH\x00R\tpaymentNo\x88\x01\x01\x12<\n" +
 	"\bstatuses\x18\x02 \x03(\x0e2 .payment.v1.RefundRequest.StatusR\bstatusesB\r\n" +
-	"\v_payment_no\"\xca\x01\n" +
+	"\v_payment_no\"\x91\x01\n" +
 	"\x19ListRefundRequestsRequest\x12;\n" +
 	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x127\n" +
-	"\x06filter\x18\x02 \x01(\v2\x1f.payment.v1.RefundRequestFilterR\x06filter\x12,\n" +
-	"\x06app_id\x18\x03 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"c\n" +
+	"\x06filter\x18\x02 \x01(\v2\x1f.payment.v1.RefundRequestFilterR\x06filter\"c\n" +
 	"\x1aListRefundRequestsResponse\x12/\n" +
 	"\x05items\x18\x01 \x03(\v2\x19.payment.v1.RefundRequestR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xbd\x02\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x84\x02\n" +
 	"\x1bUpsertRefundRiskRuleRequest\x12\x1a\n" +
 	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x125\n" +
 	"\x17auto_approve_max_amount\x18\x02 \x01(\x03R\x14autoApproveMaxAmount\x128\n" +
@@ -1905,13 +1812,9 @@ const file_payment_v1_refund_proto_rawDesc = "" +
 	"\voperator_id\x18\x05 \x01(\rR\n" +
 	"operatorId\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tR\trequestId\x12,\n" +
-	"\x06app_id\x18\a \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x92\x01\n" +
+	"request_id\x18\x06 \x01(\tR\trequestId\"Y\n" +
 	"\x1aListRefundRiskRulesRequest\x12;\n" +
-	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"e\n" +
+	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"e\n" +
 	"\x1bListRefundRiskRulesResponse\x120\n" +
 	"\x05items\x18\x01 \x03(\v2\x1a.payment.v1.RefundRiskRuleR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05totalB\xa6\x01\n" +
@@ -1955,46 +1858,37 @@ var file_payment_v1_refund_proto_goTypes = []any{
 	(*ListRefundRiskRulesRequest)(nil),   // 18: payment.v1.ListRefundRiskRulesRequest
 	(*ListRefundRiskRulesResponse)(nil),  // 19: payment.v1.ListRefundRiskRulesResponse
 	(*timestamppb.Timestamp)(nil),        // 20: google.protobuf.Timestamp
-	(v1.AppId)(0),                        // 21: common.v1.AppId
-	(*v11.PagingRequest)(nil),            // 22: common.pagination.v1.PagingRequest
+	(*v1.PagingRequest)(nil),             // 21: common.pagination.v1.PagingRequest
 }
 var file_payment_v1_refund_proto_depIdxs = []int32{
 	0,  // 0: payment.v1.Refund.status:type_name -> payment.v1.Refund.Status
 	20, // 1: payment.v1.Refund.refunded_at:type_name -> google.protobuf.Timestamp
 	20, // 2: payment.v1.Refund.created_at:type_name -> google.protobuf.Timestamp
 	20, // 3: payment.v1.Refund.updated_at:type_name -> google.protobuf.Timestamp
-	21, // 4: payment.v1.CreateRefundRequest.app_id:type_name -> common.v1.AppId
-	6,  // 5: payment.v1.ListRefundResponse.items:type_name -> payment.v1.Refund
-	21, // 6: payment.v1.RefundRequest.app_id:type_name -> common.v1.AppId
-	2,  // 7: payment.v1.RefundRequest.reason_code:type_name -> payment.v1.RefundRequest.ReasonCode
-	1,  // 8: payment.v1.RefundRequest.status:type_name -> payment.v1.RefundRequest.Status
-	3,  // 9: payment.v1.RefundRequest.risk_result:type_name -> payment.v1.RefundRequest.RiskResult
-	4,  // 10: payment.v1.RefundRequest.risk_hits:type_name -> payment.v1.RefundRequest.RiskHit
-	5,  // 11: payment.v1.RefundRequest.entitlement_impact:type_name -> payment.v1.RefundRequest.EntitlementImpact
-	20, // 12: payment.v1.RefundRequest.reviewed_at:type_name -> google.protobuf.Timestamp
-	20, // 13: payment.v1.RefundRequest.created_at:type_name -> google.protobuf.Timestamp
-	20, // 14: payment.v1.RefundRequest.updated_at:type_name -> google.protobuf.Timestamp
-	5,  // 15: payment.v1.RefundAvailability.full_refund_entitlement_impact:type_name -> payment.v1.RefundRequest.EntitlementImpact
-	21, // 16: payment.v1.RefundRiskRule.app_id:type_name -> common.v1.AppId
-	20, // 17: payment.v1.RefundRiskRule.created_at:type_name -> google.protobuf.Timestamp
-	20, // 18: payment.v1.RefundRiskRule.updated_at:type_name -> google.protobuf.Timestamp
-	2,  // 19: payment.v1.SubmitRefundRequestRequest.reason_code:type_name -> payment.v1.RefundRequest.ReasonCode
-	21, // 20: payment.v1.SubmitRefundRequestRequest.app_id:type_name -> common.v1.AppId
-	21, // 21: payment.v1.ReviewRefundRequestRequest.app_id:type_name -> common.v1.AppId
-	1,  // 22: payment.v1.RefundRequestFilter.statuses:type_name -> payment.v1.RefundRequest.Status
-	22, // 23: payment.v1.ListRefundRequestsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	14, // 24: payment.v1.ListRefundRequestsRequest.filter:type_name -> payment.v1.RefundRequestFilter
-	21, // 25: payment.v1.ListRefundRequestsRequest.app_id:type_name -> common.v1.AppId
-	9,  // 26: payment.v1.ListRefundRequestsResponse.items:type_name -> payment.v1.RefundRequest
-	21, // 27: payment.v1.UpsertRefundRiskRuleRequest.app_id:type_name -> common.v1.AppId
-	22, // 28: payment.v1.ListRefundRiskRulesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	21, // 29: payment.v1.ListRefundRiskRulesRequest.app_id:type_name -> common.v1.AppId
-	11, // 30: payment.v1.ListRefundRiskRulesResponse.items:type_name -> payment.v1.RefundRiskRule
-	31, // [31:31] is the sub-list for method output_type
-	31, // [31:31] is the sub-list for method input_type
-	31, // [31:31] is the sub-list for extension type_name
-	31, // [31:31] is the sub-list for extension extendee
-	0,  // [0:31] is the sub-list for field type_name
+	6,  // 4: payment.v1.ListRefundResponse.items:type_name -> payment.v1.Refund
+	2,  // 5: payment.v1.RefundRequest.reason_code:type_name -> payment.v1.RefundRequest.ReasonCode
+	1,  // 6: payment.v1.RefundRequest.status:type_name -> payment.v1.RefundRequest.Status
+	3,  // 7: payment.v1.RefundRequest.risk_result:type_name -> payment.v1.RefundRequest.RiskResult
+	4,  // 8: payment.v1.RefundRequest.risk_hits:type_name -> payment.v1.RefundRequest.RiskHit
+	5,  // 9: payment.v1.RefundRequest.entitlement_impact:type_name -> payment.v1.RefundRequest.EntitlementImpact
+	20, // 10: payment.v1.RefundRequest.reviewed_at:type_name -> google.protobuf.Timestamp
+	20, // 11: payment.v1.RefundRequest.created_at:type_name -> google.protobuf.Timestamp
+	20, // 12: payment.v1.RefundRequest.updated_at:type_name -> google.protobuf.Timestamp
+	5,  // 13: payment.v1.RefundAvailability.full_refund_entitlement_impact:type_name -> payment.v1.RefundRequest.EntitlementImpact
+	20, // 14: payment.v1.RefundRiskRule.created_at:type_name -> google.protobuf.Timestamp
+	20, // 15: payment.v1.RefundRiskRule.updated_at:type_name -> google.protobuf.Timestamp
+	2,  // 16: payment.v1.SubmitRefundRequestRequest.reason_code:type_name -> payment.v1.RefundRequest.ReasonCode
+	1,  // 17: payment.v1.RefundRequestFilter.statuses:type_name -> payment.v1.RefundRequest.Status
+	21, // 18: payment.v1.ListRefundRequestsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	14, // 19: payment.v1.ListRefundRequestsRequest.filter:type_name -> payment.v1.RefundRequestFilter
+	9,  // 20: payment.v1.ListRefundRequestsResponse.items:type_name -> payment.v1.RefundRequest
+	21, // 21: payment.v1.ListRefundRiskRulesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	11, // 22: payment.v1.ListRefundRiskRulesResponse.items:type_name -> payment.v1.RefundRiskRule
+	23, // [23:23] is the sub-list for method output_type
+	23, // [23:23] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_refund_proto_init() }
@@ -2009,9 +1903,6 @@ func file_payment_v1_refund_proto_init() {
 	file_payment_v1_refund_proto_msgTypes[6].OneofWrappers = []any{}
 	file_payment_v1_refund_proto_msgTypes[7].OneofWrappers = []any{}
 	file_payment_v1_refund_proto_msgTypes[8].OneofWrappers = []any{}
-	file_payment_v1_refund_proto_msgTypes[9].OneofWrappers = []any{}
-	file_payment_v1_refund_proto_msgTypes[11].OneofWrappers = []any{}
-	file_payment_v1_refund_proto_msgTypes[12].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

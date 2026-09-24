@@ -57,8 +57,6 @@ enum PaymentExportField {
 message PaymentExportJob {
   // job_no 是 PaymentExportJob 对外关联与审计使用的业务编号。
   string job_no = 1;
-  // app_id 限定 PaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // operator_id 标识关联的后台 Operator。
   uint64 operator_id = 3;
   // status 表示 PaymentExportJob 当前可观察的生命周期状态。
@@ -87,8 +85,6 @@ message PaymentExportJob {
 
 // CreatePaymentExportJobRequest 定义创建 PaymentExportJob 的幂等命令参数。
 message CreatePaymentExportJobRequest {
-  // app_id 限定 CreatePaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // operator_id 标识关联的后台 Operator。
   uint64 operator_id = 2;
   // filter 限定本次查询采用的筛选条件。
@@ -103,8 +99,6 @@ message CreatePaymentExportJobRequest {
 
 // GetPaymentExportJobRequest 标识待查询的 PaymentExportJob。
 message GetPaymentExportJobRequest {
-  // app_id 限定 GetPaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // job_no 是 GetPaymentExportJob 对外关联与审计使用的业务编号。
   string job_no = 2;
 }
@@ -125,8 +119,6 @@ message ListPaymentExportJobsResponse {
 
 // CreatePaymentExportDownloadRequest 定义创建 PaymentExportDownload 的命令参数。
 message CreatePaymentExportDownloadRequest {
-  // app_id 限定 CreatePaymentExportDownload 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // operator_id 标识关联的后台 Operator。
   uint64 operator_id = 2;
   // job_no 是 CreatePaymentExportDownload 对外关联与审计使用的业务编号。

@@ -16,9 +16,9 @@ enum RoomErrorReason {
   FORBIDDEN = 300 [(errors.code) = 403];
   // not found。
   NOT_FOUND = 400 [(errors.code) = 404];
-  // 房间不存在或不在当前 App。
+  // 房间不存在。
   ROOM_NOT_FOUND = 401 [(errors.code) = 404];
-  // 场次不存在或不在当前 App。
+  // 场次不存在。
   SESSION_NOT_FOUND = 402 [(errors.code) = 404];
   // 麦位不存在或状态不允许该操作。
   SEAT_NOT_AVAILABLE = 403 [(errors.code) = 409];

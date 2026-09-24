@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on WalletTransaction with the rules defined
@@ -63,10 +59,6 @@ func (m *WalletTransaction) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -569,8 +561,6 @@ func (m *GetWalletRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	if m.Currency != nil {
@@ -676,8 +666,6 @@ func (m *ChangeBalanceRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -993,8 +981,6 @@ func (m *TransferToPlatformRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for Amount
@@ -1124,8 +1110,6 @@ func (m *GetPlatformTransferByBusinessKeyRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for BusinessKey
 
@@ -1293,8 +1277,6 @@ func (m *TransferToPlatformResponse) validate(all bool) error {
 
 	// no validation rules for Outcome
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for Amount
@@ -1427,10 +1409,6 @@ func (m *ReverseTransactionRequest) validate(all bool) error {
 
 	if m.AuditNote != nil {
 		// no validation rules for AuditNote
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Governance != nil {

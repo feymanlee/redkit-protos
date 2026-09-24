@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package wallet.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 import "wallet/v1/wallet_types.proto";
 
@@ -63,8 +62,6 @@ message WalletTransaction {
 
   // 记录 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 用户余额 ID。
@@ -131,8 +128,6 @@ message ListWalletTransactionResponse {
 
 // 获取钱包请求。
 message GetWalletRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 币种。
@@ -141,8 +136,6 @@ message GetWalletRequest {
 
 // 余额变更请求。
 message ChangeBalanceRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 变动金额。
@@ -184,8 +177,6 @@ message ChangeBalanceResponse {
 }
 // 用户转账到平台请求。
 message TransferToPlatformRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 金额。
@@ -208,8 +199,6 @@ message TransferToPlatformRequest {
 
 // 按稳定业务键查询用户到平台转账请求。
 message GetPlatformTransferByBusinessKeyRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 调用方稳定业务键。
   string business_key = 2;
 }
@@ -236,8 +225,6 @@ message TransferToPlatformResponse {
   WalletTransaction platform_transaction = 2;
   // 权威操作结果。
   Outcome outcome = 3;
-  // 应用 ID。
-  common.v1.AppId app_id = 4;
   // 扣款用户 ID。
   uint64 user_id = 5;
   // 请求总金额。
@@ -270,8 +257,6 @@ message ReverseTransactionRequest {
   optional uint32 operator_id = 3;
   // 审计备注。
   optional string audit_note = 4;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 5;
   // Trusted governance identity for Admin-initiated reversals.
   optional WalletGovernanceIdentity governance = 6;
 }

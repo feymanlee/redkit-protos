@@ -7,7 +7,6 @@
 package useradministrationpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
@@ -25,9 +24,7 @@ const (
 
 // GetUserAppPolicyRequest 标识待查询的 UserAppPolicy。
 type GetUserAppPolicyRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetUserAppPolicy 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -60,13 +57,6 @@ func (x *GetUserAppPolicyRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetUserAppPolicyRequest.ProtoReflect.Descriptor instead.
 func (*GetUserAppPolicyRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_policy_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GetUserAppPolicyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // UserAppPolicyPatch 描述对应能力的配置与约束。
@@ -235,8 +225,6 @@ func (x *UserAppPolicyPatch) GetPasswordHistoryCount() uint32 {
 // UpdateUserAppPolicyRequest 定义更新 UserAppPolicy 的命令参数。
 type UpdateUserAppPolicyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UpdateUserAppPolicy 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// data 承载 UpdateUserAppPolicy 对应阶段的结构化业务内容。
 	Data *UserAppPolicyPatch `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	// update_mask 指定本次请求允许局部更新的字段路径。
@@ -279,13 +267,6 @@ func (*UpdateUserAppPolicyRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_policy_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpdateUserAppPolicyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UpdateUserAppPolicyRequest) GetData() *UserAppPolicyPatch {
 	if x != nil {
 		return x.Data
@@ -318,9 +299,8 @@ var File_user_administration_v1_policy_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_policy_proto_rawDesc = "" +
 	"\n" +
-	"#user/administration/v1/policy.proto\x12\x16user.administration.v1\x1a\x16common/v1/common.proto\x1a google/protobuf/field_mask.proto\x1a\"user/administration/v1/types.proto\"B\n" +
-	"\x17GetUserAppPolicyRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"\x82\x06\n" +
+	"#user/administration/v1/policy.proto\x12\x16user.administration.v1\x1a google/protobuf/field_mask.proto\x1a\"user/administration/v1/types.proto\"\x19\n" +
+	"\x17GetUserAppPolicyRequest\"\x82\x06\n" +
 	"\x12UserAppPolicyPatch\x12W\n" +
 	"\x13enabled_credentials\x18\x01 \x03(\x0e2&.user.administration.v1.CredentialTypeR\x12enabledCredentials\x121\n" +
 	"\x14registration_enabled\x18\x02 \x01(\bR\x13registrationEnabled\x12:\n" +
@@ -336,9 +316,8 @@ const file_user_administration_v1_policy_proto_rawDesc = "" +
 	"\x1euser_code_change_interval_days\x18\v \x01(\rR\x1auserCodeChangeIntervalDays\x12.\n" +
 	"\x13password_min_length\x18\f \x01(\rR\x11passwordMinLength\x12.\n" +
 	"\x13password_max_length\x18\r \x01(\rR\x11passwordMaxLength\x124\n" +
-	"\x16password_history_count\x18\x0e \x01(\rR\x14passwordHistoryCount\"\x83\x02\n" +
-	"\x1aUpdateUserAppPolicyRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12>\n" +
+	"\x16password_history_count\x18\x0e \x01(\rR\x14passwordHistoryCount\"\xda\x01\n" +
+	"\x1aUpdateUserAppPolicyRequest\x12>\n" +
 	"\x04data\x18\x02 \x01(\v2*.user.administration.v1.UserAppPolicyPatchR\x04data\x12;\n" +
 	"\vupdate_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
 	"updateMask\x12\x16\n" +
@@ -366,26 +345,23 @@ var file_user_administration_v1_policy_proto_goTypes = []any{
 	(*GetUserAppPolicyRequest)(nil),    // 0: user.administration.v1.GetUserAppPolicyRequest
 	(*UserAppPolicyPatch)(nil),         // 1: user.administration.v1.UserAppPolicyPatch
 	(*UpdateUserAppPolicyRequest)(nil), // 2: user.administration.v1.UpdateUserAppPolicyRequest
-	(v1.AppId)(0),                      // 3: common.v1.AppId
-	(CredentialType)(0),                // 4: user.administration.v1.CredentialType
-	(*fieldmaskpb.FieldMask)(nil),      // 5: google.protobuf.FieldMask
-	(*UserAppPolicy)(nil),              // 6: user.administration.v1.UserAppPolicy
+	(CredentialType)(0),                // 3: user.administration.v1.CredentialType
+	(*fieldmaskpb.FieldMask)(nil),      // 4: google.protobuf.FieldMask
+	(*UserAppPolicy)(nil),              // 5: user.administration.v1.UserAppPolicy
 }
 var file_user_administration_v1_policy_proto_depIdxs = []int32{
-	3, // 0: user.administration.v1.GetUserAppPolicyRequest.app_id:type_name -> common.v1.AppId
-	4, // 1: user.administration.v1.UserAppPolicyPatch.enabled_credentials:type_name -> user.administration.v1.CredentialType
-	3, // 2: user.administration.v1.UpdateUserAppPolicyRequest.app_id:type_name -> common.v1.AppId
-	1, // 3: user.administration.v1.UpdateUserAppPolicyRequest.data:type_name -> user.administration.v1.UserAppPolicyPatch
-	5, // 4: user.administration.v1.UpdateUserAppPolicyRequest.update_mask:type_name -> google.protobuf.FieldMask
-	0, // 5: user.administration.v1.UserPolicyService.GetUserAppPolicy:input_type -> user.administration.v1.GetUserAppPolicyRequest
-	2, // 6: user.administration.v1.UserPolicyService.UpdateUserAppPolicy:input_type -> user.administration.v1.UpdateUserAppPolicyRequest
-	6, // 7: user.administration.v1.UserPolicyService.GetUserAppPolicy:output_type -> user.administration.v1.UserAppPolicy
-	6, // 8: user.administration.v1.UserPolicyService.UpdateUserAppPolicy:output_type -> user.administration.v1.UserAppPolicy
-	7, // [7:9] is the sub-list for method output_type
-	5, // [5:7] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	3, // 0: user.administration.v1.UserAppPolicyPatch.enabled_credentials:type_name -> user.administration.v1.CredentialType
+	1, // 1: user.administration.v1.UpdateUserAppPolicyRequest.data:type_name -> user.administration.v1.UserAppPolicyPatch
+	4, // 2: user.administration.v1.UpdateUserAppPolicyRequest.update_mask:type_name -> google.protobuf.FieldMask
+	0, // 3: user.administration.v1.UserPolicyService.GetUserAppPolicy:input_type -> user.administration.v1.GetUserAppPolicyRequest
+	2, // 4: user.administration.v1.UserPolicyService.UpdateUserAppPolicy:input_type -> user.administration.v1.UpdateUserAppPolicyRequest
+	5, // 5: user.administration.v1.UserPolicyService.GetUserAppPolicy:output_type -> user.administration.v1.UserAppPolicy
+	5, // 6: user.administration.v1.UserPolicyService.UpdateUserAppPolicy:output_type -> user.administration.v1.UserAppPolicy
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_policy_proto_init() }

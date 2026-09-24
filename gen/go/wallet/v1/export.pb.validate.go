@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	paginationpb "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = paginationpb.Sorting_Direction(0)
 )
@@ -1363,8 +1359,6 @@ func (m *WalletExportJob) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for ExportNo
 
 	if all {
@@ -1686,8 +1680,6 @@ func (m *CreateWalletExportRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetQuery()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1826,8 +1818,6 @@ func (m *ListWalletExportsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -2106,8 +2096,6 @@ func (m *RetryWalletExportRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for ExportId
 
 	// no validation rules for RequesterId
@@ -2219,8 +2207,6 @@ func (m *GetWalletExportDownloadRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for ExportId
 

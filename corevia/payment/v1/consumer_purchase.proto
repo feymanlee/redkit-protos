@@ -102,8 +102,6 @@ enum RefundGuidance {
 
 // AppSdkPaymentAction 描述客户端调用 App SDK 发起支付所需的参数。
 message AppSdkPaymentAction {
-  // app_id 限定 AppSdkPaymentAction 所属 App；UNSPECIFIED 不表示跨 App。
-  optional string app_id = 1;
   // partner_id 标识关联的 Partner。
   optional string partner_id = 2;
   // prepay_id 标识关联的 Prepay。
@@ -374,7 +372,7 @@ message GoogleSubscriptionManagementAction {
   string url = 1;
 }
 
-// RestoreStorePurchasesRequest 仅接收 Store 返回的最小凭证集合，App 和 User 始终来自可信上下文。
+// RestoreStorePurchasesRequest 仅接收 Store 返回的最小凭证集合，User 始终来自可信上下文。
 message RestoreStorePurchasesRequest {
   // items 包含本次返回或处理的业务条目。
   repeated StorePurchaseRestoreEvidence items = 1 [(validate.rules).repeated = {min_items: 1, max_items: 50}];
@@ -432,7 +430,7 @@ message GetMyPurchaseRequest {
   }
 }
 
-// ListMyPurchasesRequest 使用 Payment 生成的不透明游标；App、User 和合并别名均不由客户端提供。
+// ListMyPurchasesRequest 使用 Payment 生成的不透明游标；User 与合并别名均不由客户端提供。
 message ListMyPurchasesRequest {
   // page_size 限定单次查询允许返回的最大条目数。
   uint32 page_size = 1 [(validate.rules).uint32 = {lte: 100}];

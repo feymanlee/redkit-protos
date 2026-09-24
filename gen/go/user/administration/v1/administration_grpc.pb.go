@@ -45,13 +45,13 @@ const (
 //
 // UserAdministrationService 提供后台专用的 User 查询与处置，不承担后台权限校验。
 type UserAdministrationServiceClient interface {
-	// SearchUsers 在具体 App 内执行结构化用户搜索和筛选。
+	// SearchUsers 执行结构化用户搜索和筛选。
 	SearchUsers(ctx context.Context, in *SearchUsersRequest, opts ...grpc.CallOption) (*SearchUsersResponse, error)
 	// CreateUser 创建一个 PENDING User，不建立任何 Credential。
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*User, error)
 	// GetUser 按 user_id 或 user_code 查询 User。
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
-	// ListUsers 分页查询具体 App 内的 Users。
+	// ListUsers 分页查询 Users。
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// ChangeUserCode 校验 verification_ticket 后变更 UserCode。
 	ChangeUserCode(ctx context.Context, in *ChangeUserCodeRequest, opts ...grpc.CallOption) (*User, error)
@@ -265,13 +265,13 @@ func (c *userAdministrationServiceClient) RevokeDeviceTrust(ctx context.Context,
 //
 // UserAdministrationService 提供后台专用的 User 查询与处置，不承担后台权限校验。
 type UserAdministrationServiceServer interface {
-	// SearchUsers 在具体 App 内执行结构化用户搜索和筛选。
+	// SearchUsers 执行结构化用户搜索和筛选。
 	SearchUsers(context.Context, *SearchUsersRequest) (*SearchUsersResponse, error)
 	// CreateUser 创建一个 PENDING User，不建立任何 Credential。
 	CreateUser(context.Context, *CreateUserRequest) (*User, error)
 	// GetUser 按 user_id 或 user_code 查询 User。
 	GetUser(context.Context, *GetUserRequest) (*User, error)
-	// ListUsers 分页查询具体 App 内的 Users。
+	// ListUsers 分页查询 Users。
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// ChangeUserCode 校验 verification_ticket 后变更 UserCode。
 	ChangeUserCode(context.Context, *ChangeUserCodeRequest) (*User, error)

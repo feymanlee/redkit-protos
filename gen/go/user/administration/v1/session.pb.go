@@ -7,8 +7,8 @@
 package useradministrationpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -27,12 +27,10 @@ const (
 // ListSessionsRequest 定义 Sessions 的筛选与分页参数。
 type ListSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListSessions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,13 +65,6 @@ func (*ListSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_session_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListSessionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSessionsRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -81,7 +72,7 @@ func (x *ListSessionsRequest) GetUserId() uint64 {
 	return 0
 }
 
-func (x *ListSessionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSessionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -146,9 +137,7 @@ func (x *ListSessionsResponse) GetTotal() uint64 {
 // CheckSessionRequest 定义执行 CheckSession 的命令参数。
 type CheckSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CheckSession 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// session_id 标识关联的 Session。
 	SessionId string `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
@@ -186,13 +175,6 @@ func (x *CheckSessionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CheckSessionRequest.ProtoReflect.Descriptor instead.
 func (*CheckSessionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_session_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CheckSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CheckSessionRequest) GetUserId() uint64 {
@@ -283,9 +265,7 @@ func (x *CheckSessionResponse) GetSessionStatus() SessionStatus {
 // RevokeSessionRequest 定义撤销 Session 的幂等管理命令参数。
 type RevokeSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeSession 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// session_id 标识关联的 Session。
 	SessionId string `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
@@ -327,13 +307,6 @@ func (*RevokeSessionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_session_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *RevokeSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeSessionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -365,9 +338,7 @@ func (x *RevokeSessionRequest) GetIdempotencyKey() string {
 // RevokeAllSessionsRequest 定义撤销 AllSessions 的幂等管理命令参数。
 type RevokeAllSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeAllSessions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -407,13 +378,6 @@ func (*RevokeAllSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_session_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *RevokeAllSessionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeAllSessionsRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -439,16 +403,14 @@ var File_user_administration_v1_session_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_session_proto_rawDesc = "" +
 	"\n" +
-	"$user/administration/v1/session.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\"user/administration/v1/types.proto\"\x94\x01\n" +
-	"\x13ListSessionsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"$user/administration/v1/session.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\"user/administration/v1/types.proto\"k\n" +
+	"\x13ListSessionsRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"c\n" +
 	"\x14ListSessionsResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.user.administration.v1.SessionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x9b\x01\n" +
-	"\x13CheckSessionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"r\n" +
+	"\x13CheckSessionRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x03 \x01(\tR\tsessionId\x12#\n" +
@@ -457,16 +419,14 @@ const file_user_administration_v1_session_proto_rawDesc = "" +
 	"\x05valid\x18\x01 \x01(\bR\x05valid\x12C\n" +
 	"\vuser_status\x18\x02 \x01(\x0e2\".user.administration.v1.UserStatusR\n" +
 	"userStatus\x12L\n" +
-	"\x0esession_status\x18\x03 \x01(\x0e2%.user.administration.v1.SessionStatusR\rsessionStatus\"\xb8\x01\n" +
-	"\x14RevokeSessionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0esession_status\x18\x03 \x01(\x0e2%.user.administration.v1.SessionStatusR\rsessionStatus\"\x8f\x01\n" +
+	"\x14RevokeSessionRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
 	"session_id\x18\x03 \x01(\tR\tsessionId\x12\x16\n" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\x9d\x01\n" +
-	"\x18RevokeAllSessionsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"t\n" +
+	"\x18RevokeAllSessionsRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12'\n" +
 	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey2\xa0\x03\n" +
@@ -497,35 +457,30 @@ var file_user_administration_v1_session_proto_goTypes = []any{
 	(*CheckSessionResponse)(nil),     // 3: user.administration.v1.CheckSessionResponse
 	(*RevokeSessionRequest)(nil),     // 4: user.administration.v1.RevokeSessionRequest
 	(*RevokeAllSessionsRequest)(nil), // 5: user.administration.v1.RevokeAllSessionsRequest
-	(v1.AppId)(0),                    // 6: common.v1.AppId
-	(*v11.PagingRequest)(nil),        // 7: common.pagination.v1.PagingRequest
-	(*Session)(nil),                  // 8: user.administration.v1.Session
-	(UserStatus)(0),                  // 9: user.administration.v1.UserStatus
-	(SessionStatus)(0),               // 10: user.administration.v1.SessionStatus
-	(*emptypb.Empty)(nil),            // 11: google.protobuf.Empty
+	(*v1.PagingRequest)(nil),         // 6: common.pagination.v1.PagingRequest
+	(*Session)(nil),                  // 7: user.administration.v1.Session
+	(UserStatus)(0),                  // 8: user.administration.v1.UserStatus
+	(SessionStatus)(0),               // 9: user.administration.v1.SessionStatus
+	(*emptypb.Empty)(nil),            // 10: google.protobuf.Empty
 }
 var file_user_administration_v1_session_proto_depIdxs = []int32{
-	6,  // 0: user.administration.v1.ListSessionsRequest.app_id:type_name -> common.v1.AppId
-	7,  // 1: user.administration.v1.ListSessionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	8,  // 2: user.administration.v1.ListSessionsResponse.items:type_name -> user.administration.v1.Session
-	6,  // 3: user.administration.v1.CheckSessionRequest.app_id:type_name -> common.v1.AppId
-	9,  // 4: user.administration.v1.CheckSessionResponse.user_status:type_name -> user.administration.v1.UserStatus
-	10, // 5: user.administration.v1.CheckSessionResponse.session_status:type_name -> user.administration.v1.SessionStatus
-	6,  // 6: user.administration.v1.RevokeSessionRequest.app_id:type_name -> common.v1.AppId
-	6,  // 7: user.administration.v1.RevokeAllSessionsRequest.app_id:type_name -> common.v1.AppId
-	0,  // 8: user.administration.v1.UserSessionService.ListSessions:input_type -> user.administration.v1.ListSessionsRequest
-	2,  // 9: user.administration.v1.UserSessionService.CheckSession:input_type -> user.administration.v1.CheckSessionRequest
-	4,  // 10: user.administration.v1.UserSessionService.RevokeSession:input_type -> user.administration.v1.RevokeSessionRequest
-	5,  // 11: user.administration.v1.UserSessionService.RevokeAllSessions:input_type -> user.administration.v1.RevokeAllSessionsRequest
-	1,  // 12: user.administration.v1.UserSessionService.ListSessions:output_type -> user.administration.v1.ListSessionsResponse
-	3,  // 13: user.administration.v1.UserSessionService.CheckSession:output_type -> user.administration.v1.CheckSessionResponse
-	11, // 14: user.administration.v1.UserSessionService.RevokeSession:output_type -> google.protobuf.Empty
-	11, // 15: user.administration.v1.UserSessionService.RevokeAllSessions:output_type -> google.protobuf.Empty
-	12, // [12:16] is the sub-list for method output_type
-	8,  // [8:12] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	6,  // 0: user.administration.v1.ListSessionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	7,  // 1: user.administration.v1.ListSessionsResponse.items:type_name -> user.administration.v1.Session
+	8,  // 2: user.administration.v1.CheckSessionResponse.user_status:type_name -> user.administration.v1.UserStatus
+	9,  // 3: user.administration.v1.CheckSessionResponse.session_status:type_name -> user.administration.v1.SessionStatus
+	0,  // 4: user.administration.v1.UserSessionService.ListSessions:input_type -> user.administration.v1.ListSessionsRequest
+	2,  // 5: user.administration.v1.UserSessionService.CheckSession:input_type -> user.administration.v1.CheckSessionRequest
+	4,  // 6: user.administration.v1.UserSessionService.RevokeSession:input_type -> user.administration.v1.RevokeSessionRequest
+	5,  // 7: user.administration.v1.UserSessionService.RevokeAllSessions:input_type -> user.administration.v1.RevokeAllSessionsRequest
+	1,  // 8: user.administration.v1.UserSessionService.ListSessions:output_type -> user.administration.v1.ListSessionsResponse
+	3,  // 9: user.administration.v1.UserSessionService.CheckSession:output_type -> user.administration.v1.CheckSessionResponse
+	10, // 10: user.administration.v1.UserSessionService.RevokeSession:output_type -> google.protobuf.Empty
+	10, // 11: user.administration.v1.UserSessionService.RevokeAllSessions:output_type -> google.protobuf.Empty
+	8,  // [8:12] is the sub-list for method output_type
+	4,  // [4:8] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_session_proto_init() }

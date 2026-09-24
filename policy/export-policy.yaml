@@ -1,7 +1,7 @@
 # redkit-protos 契约策略。
 #
 # 模型：**所有 Protobuf 只住在 redkit-protos**。没有「其他项目各自持有 proto」；
-# 仓外工程（Gamoji/Pincp BFF、App 服务等）只 **消费** 本仓契约，不另建 proto 源。
+# 仓外工程（C 端 BFF、App 服务等）只 **消费** 本仓契约，不另建 proto 源。
 #
 # 目录：`corevia/` 是唯一契约 tree（与历史 backend/api 路径兼容，import 仍为 common/v1…）。
 # external / forbidden 约束的是「仓外项目可以 import 什么」，不是「仓库里有没有这些文件」。

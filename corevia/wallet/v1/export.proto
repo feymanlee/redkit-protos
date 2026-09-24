@@ -144,7 +144,7 @@ message WalletExportSort {
 
 // WalletBalanceExportFilter 定义可组合的查询筛选条件。
 message WalletBalanceExportFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1;
   // currency 指定相关金额使用的币种或计量单位。
   optional WalletCurrency currency = 2;
@@ -152,7 +152,7 @@ message WalletBalanceExportFilter {
 
 // WalletTransactionExportFilter 定义可组合的查询筛选条件。
 message WalletTransactionExportFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1;
   // currency 指定相关金额使用的币种或计量单位。
   optional WalletCurrency currency = 2;
@@ -168,7 +168,7 @@ message WalletTransactionExportFilter {
 
 // WalletDebtExportFilter 定义可组合的查询筛选条件。
 message WalletDebtExportFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1;
   // status 表示 WalletDebtExportFilter 当前可观察的生命周期状态。
   optional string status = 2;
@@ -182,7 +182,7 @@ message WalletDebtExportFilter {
 
 // WalletAdjustmentExportFilter 定义可组合的查询筛选条件。
 message WalletAdjustmentExportFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1;
   // status 表示 WalletAdjustmentExportFilter 当前可观察的生命周期状态。
   optional WalletAdjustment.Status status = 2;
@@ -198,7 +198,7 @@ message WalletAdjustmentExportFilter {
 message WalletReconciliationDifferenceExportFilter {
   // batch_id 标识关联的 Batch。
   optional uint64 batch_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 2;
   // diff_type 区分 WalletReconciliationDifferenceExportFilter 的业务类型。
   optional string diff_type = 3;
@@ -237,8 +237,6 @@ message WalletExportQuery {
 message WalletExportJob {
   // id 标识关联的 WalletExportJob。
   uint64 id = 1;
-  // app_id 限定 WalletExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // export_no 是 WalletExportJob 对外关联与审计使用的业务编号。
   string export_no = 3;
   // query 承载 WalletExportJob 关联的 WalletExportQuery。
@@ -275,8 +273,6 @@ message WalletExportJob {
 
 // CreateWalletExportRequest 定义创建 WalletExport 的幂等命令参数。
 message CreateWalletExportRequest {
-  // app_id 限定 CreateWalletExport 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // query 承载 CreateWalletExport 关联的 WalletExportQuery。
   WalletExportQuery query = 2 [(google.api.field_behavior) = REQUIRED];
   // requester_id 标识关联的 Requester。
@@ -291,8 +287,6 @@ message CreateWalletExportRequest {
 
 // ListWalletExportsRequest 定义 WalletExports 的筛选与分页参数。
 message ListWalletExportsRequest {
-  // app_id 限定 ListWalletExports 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
   // resource 指定本次查询、导出或操作面向的资源类型。
@@ -311,8 +305,6 @@ message ListWalletExportsResponse {
 
 // RetryWalletExportRequest 定义重试 WalletExport 的幂等管理命令参数。
 message RetryWalletExportRequest {
-  // app_id 限定 RetryWalletExport 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // export_id 标识关联的 Export。
   uint64 export_id = 2 [(google.api.field_behavior) = REQUIRED];
   // requester_id 标识关联的 Requester。
@@ -327,8 +319,6 @@ message RetryWalletExportRequest {
 
 // GetWalletExportDownloadRequest 标识待查询的 WalletExportDownload。
 message GetWalletExportDownloadRequest {
-  // app_id 限定 GetWalletExportDownload 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // export_id 标识关联的 Export。
   uint64 export_id = 2 [(google.api.field_behavior) = REQUIRED];
   // requester_id 标识关联的 Requester。

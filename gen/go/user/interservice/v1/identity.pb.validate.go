@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	usertypespb "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = usertypespb.UserStatus(0)
 )
@@ -64,8 +60,6 @@ func (m *UserReference) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -177,28 +171,6 @@ func (m *ResolveUserIdentityRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ResolveUserIdentityRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ResolveUserIdentityRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ResolveUserIdentityRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetUserId() <= 0 {
 		err := ResolveUserIdentityRequestValidationError{
 			field:  "UserId",
@@ -289,10 +261,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ResolveUserIdentityRequestValidationError{}
-
-var _ResolveUserIdentityRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ResolveUserIdentityResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -448,28 +416,6 @@ func (m *BatchResolveUsersRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _BatchResolveUsersRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BatchResolveUsersRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BatchResolveUsersRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := len(m.GetUserIds()); l < 1 || l > 200 {
 		err := BatchResolveUsersRequestValidationError{
 			field:  "UserIds",
@@ -591,10 +537,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = BatchResolveUsersRequestValidationError{}
-
-var _BatchResolveUsersRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on BatchResolveUsersResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -754,28 +696,6 @@ func (m *BatchGetPublicProfilesRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _BatchGetPublicProfilesRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BatchGetPublicProfilesRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BatchGetPublicProfilesRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := len(m.GetUserIds()); l < 1 || l > 200 {
 		err := BatchGetPublicProfilesRequestValidationError{
 			field:  "UserIds",
@@ -898,10 +818,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = BatchGetPublicProfilesRequestValidationError{}
-
-var _BatchGetPublicProfilesRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on BatchGetPublicProfilesResponse with the
 // rules defined in the proto definition for this message. If any rules are

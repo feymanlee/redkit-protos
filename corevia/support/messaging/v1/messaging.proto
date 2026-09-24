@@ -46,8 +46,6 @@ enum SmsDeliveryFailureCategory {
 message SmsMessage {
   // 记录 ID。
   uint64 id = 1;
-  // App ID。
-  common.v1.AppId app_id = 2;
   // 用户 ID。
   uint64 user_id = 3;
   // 消息号。
@@ -82,8 +80,6 @@ message SmsMessage {
 message SmsDeliveryAttempt {
   // 记录 ID。
   uint64 id = 1;
-  // App ID。
-  common.v1.AppId app_id = 2;
   // 消息号。
   string message_no = 3;
   // 渠道。
@@ -114,8 +110,6 @@ message SmsDeliveryAttempt {
 
 // SendTemplateSmsRequest 请求发送模板短信。
 message SendTemplateSmsRequest {
-  // App ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // E.164 格式手机号。
@@ -139,7 +133,6 @@ message SendTemplateSmsResponse {
 // GetSmsMessageByIdempotencyRequest 用于调用方 timeout 结果不确定时查询一个持久化 Message。
 message GetSmsMessageByIdempotencyRequest {
   // 具体 App 身份；metadata 必须携带相同 App。
-  common.v1.AppId app_id = 1;
   // 原始 App 作用域幂等键。
   string idempotency_key = 2;
 }
@@ -172,10 +165,9 @@ message SmsMessageFilter {
   string recipient_phone = 8;
 }
 
-// ListSmsMessagesRequest carries App scope, typed filters, and bounded paging.
+// ListSmsMessagesRequest carries typed filters and bounded paging.
 message ListSmsMessagesRequest {
   // Concrete App identity.
-  common.v1.AppId app_id = 1;
   // Optional typed observation filters.
   SmsMessageFilter filter = 2;
   // Bounded server-side paging.
@@ -193,7 +185,6 @@ message ListSmsDeliveryAttemptsResponse {
 // ListSmsDeliveryAttemptsRequest selects attempts for one logical message.
 message ListSmsDeliveryAttemptsRequest {
   // Concrete App identity.
-  common.v1.AppId app_id = 1;
   // Exact logical message identity.
   string message_no = 2;
   // Bounded server-side paging.
@@ -203,7 +194,6 @@ message ListSmsDeliveryAttemptsRequest {
 // RevealSmsRecipientPhoneRequest explicitly selects FULL display for one Message.
 message RevealSmsRecipientPhoneRequest {
   // Concrete App identity.
-  common.v1.AppId app_id = 1;
   // Exact logical message identity.
   string message_no = 2;
 }

@@ -5,7 +5,7 @@ package wallet.v1;
 import "common/pagination/v1/pagination.proto";
 import "wallet/v1/risk.proto";
 
-// 钱包风险服务，管理 App/币种级规则 Revision 和立即生效的紧急写入阻断。
+// 钱包风险服务，管理币种级规则 Revision 和立即生效的紧急写入阻断。
 service WalletRiskService {
   // 查询 RiskRule 列表。
   rpc ListRiskRules(common.pagination.v1.PagingRequest) returns (ListWalletRiskRuleResponse) {}
@@ -17,7 +17,7 @@ service WalletRiskService {
   rpc ApproveRiskRuleRevision(ApproveWalletRiskRuleRevisionRequest) returns (WalletRiskRuleRevision) {}
   // 查询 EmergencyWalletBlock 列表。
   rpc ListEmergencyWalletBlocks(common.pagination.v1.PagingRequest) returns (ListEmergencyWalletBlockResponse) {}
-  // 幂等创建并立即启用有截止时间的 App 级或 User 级 EmergencyWalletBlock。
+  // 幂等创建并立即启用有截止时间的 User 级 EmergencyWalletBlock。
   rpc CreateEmergencyWalletBlock(CreateEmergencyWalletBlockRequest) returns (EmergencyWalletBlock) {}
   // 使用 governance operation 幂等结束仍处于 ACTIVE 的 EmergencyWalletBlock。
   rpc EndEmergencyWalletBlock(EndEmergencyWalletBlockRequest) returns (EmergencyWalletBlock) {}

@@ -27,8 +27,8 @@ type DataScope int32
 const (
 	// 未指定。
 	DataScope_DATA_SCOPE_UNSPECIFIED DataScope = 0
-	// 全部数据：可跨 App 或 App 内所有数据 (取决于 app_id)。
-	DataScope_ALL DataScope = 1 // 全部数据：可跨App或App内所有 Unit (取决于 app_id)
+	// 全部数据：平台内所有数据。
+	DataScope_ALL DataScope = 1 // 全部数据：平台内所有数据
 	// 仅限本人：只能看到 owner_id 等于自己的数据。
 	DataScope_SELF DataScope = 2 // 仅限本人：只能看到 owner_id 等于自己的数据
 	// 自定义数据范围。

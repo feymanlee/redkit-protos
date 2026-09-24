@@ -15,17 +15,17 @@ service RewardService {
   rpc GrantReward(GrantRewardRequest) returns (GrantRewardResponse) {}
   // GetRewardGrant looks up the original accepted Grant by either supported identity.
   rpc GetRewardGrant(GetRewardGrantRequest) returns (RewardGrant) {}
-  // ListRewardGrants provides an App-scoped operational observation view.
+  // ListRewardGrants provides an operational observation view.
   rpc ListRewardGrants(ListRewardGrantsRequest) returns (ListRewardGrantsResponse) {}
   // GetRewardGrantObservation returns immutable intent and fulfillment history.
   rpc GetRewardGrantObservation(GetRewardGrantObservationRequest) returns (RewardGrantObservation) {}
-  // ListActionRequiredRewardItems returns the App-scoped manual recovery queue.
+  // ListActionRequiredRewardItems returns the manual recovery queue.
   rpc ListActionRequiredRewardItems(ListActionRequiredRewardItemsRequest) returns (ListActionRequiredRewardItemsResponse) {}
   // ReplayRewardItem safely redelivers the frozen command for one original Item.
   rpc ReplayRewardItem(ReplayRewardItemRequest) returns (ReplayRewardItemResponse) {}
   // CreateManualRewardGrant records an Operator request without accepting it.
   rpc CreateManualRewardGrant(CreateManualRewardGrantRequest) returns (CreateManualRewardGrantResponse) {}
-  // ListPendingManualRewardGrants returns Pending and Stale entries for the App-scoped review work view.
+  // ListPendingManualRewardGrants returns Pending and Stale entries for the review work view.
   rpc ListPendingManualRewardGrants(ListPendingManualRewardGrantsRequest) returns (ListPendingManualRewardGrantsResponse) {}
   // ApproveManualRewardGrant accepts a request reviewed by another Operator.
   rpc ApproveManualRewardGrant(ApproveManualRewardGrantRequest) returns (ManualRewardGrant) {}
@@ -121,15 +121,13 @@ message RewardBusinessIdentity {
 
 // GrantRewardRequest 定义执行 GrantReward 的命令参数。
 message GrantRewardRequest {
-  // app_id 限定 GrantReward 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // source 标识业务事实或请求的稳定来源。
   string source = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
   // reward_business_reference 记录外部系统或关联流程提供的引用标识。
   string reward_business_reference = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
   // package_code 提供 GrantReward 对外稳定使用的业务编码。
   string package_code = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 64}];
-  // requested_user_id 标识当前 App 内关联的 User。
+  // requested_user_id 标识关联的 User。
   uint64 requested_user_id = 5 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 
@@ -143,8 +141,6 @@ message GrantRewardResponse {
 
 // GetRewardGrantRequest 标识待查询的 RewardGrant。
 message GetRewardGrantRequest {
-  // app_id 限定 GetRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // GetRewardGrantRequest 使用以下一种查询表达式。
   oneof query {
     option (validate.required) = true;
@@ -157,7 +153,7 @@ message GetRewardGrantRequest {
 
 // RewardGrantFilter 定义可组合的查询筛选条件。
 message RewardGrantFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1 [(validate.rules).uint64.gt = 0];
   // package_code 提供 RewardGrantFilter 对外稳定使用的业务编码。
   optional string package_code = 2 [(validate.rules).string = {min_len: 3, max_len: 64}];
@@ -175,8 +171,6 @@ message RewardGrantFilter {
 
 // ListRewardGrantsRequest 定义 RewardGrants 的筛选与分页参数。
 message ListRewardGrantsRequest {
-  // app_id 限定 ListRewardGrants 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // filter 限定本次查询采用的筛选条件。
   RewardGrantFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -193,8 +187,6 @@ message ListRewardGrantsResponse {
 
 // GetRewardGrantObservationRequest 标识待查询的 RewardGrantObservation。
 message GetRewardGrantObservationRequest {
-  // app_id 限定 GetRewardGrantObservation 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // grant_id 标识关联的 Grant。
   uint64 grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
@@ -255,8 +247,6 @@ message RewardGrantObservation {
 
 // ListActionRequiredRewardItemsRequest 定义 ActionRequiredRewardItems 的筛选与分页参数。
 message ListActionRequiredRewardItemsRequest {
-  // app_id 限定 ListActionRequiredRewardItems 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
 }
@@ -306,8 +296,6 @@ message ActionRequiredRewardItem {
 
 // ReplayRewardItemRequest 定义重放 RewardItem 的幂等管理命令参数。
 message ReplayRewardItemRequest {
-  // app_id 限定 ReplayRewardItem 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // item_id 标识关联的 Item。
   uint64 item_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -396,13 +384,11 @@ message RewardGrantSnapshot {
 message RewardGrant {
   // id 标识关联的 RewardGrant。
   uint64 id = 1;
-  // app_id 限定 RewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // business_identity 记录外部或上游系统用于稳定关联 RewardGrant 的身份。
   RewardBusinessIdentity business_identity = 3;
   // package_code 提供 RewardGrant 对外稳定使用的业务编码。
   string package_code = 4;
-  // requested_user_id 标识当前 App 内关联的 User。
+  // requested_user_id 标识关联的 User。
   uint64 requested_user_id = 5;
   // 6 曾是 canonical_user_id；账号合并别名已下线，编号与名称保持保留，不得复用。
   reserved 6;
@@ -423,11 +409,9 @@ message RewardGrant {
 
 // CreateManualRewardGrantRequest 定义创建 ManualRewardGrant 的幂等命令参数。
 message CreateManualRewardGrantRequest {
-  // app_id 限定 CreateManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // package_id 标识关联的 Package。
   uint64 package_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
-  // requested_user_id 标识当前 App 内关联的 User。
+  // requested_user_id 标识关联的 User。
   uint64 requested_user_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 4 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];
@@ -447,8 +431,6 @@ message CreateManualRewardGrantResponse {
 
 // ListPendingManualRewardGrantsRequest 定义 PendingManualRewardGrants 的筛选与分页参数。
 message ListPendingManualRewardGrantsRequest {
-  // app_id 限定 ListPendingManualRewardGrants 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
 }
 
 // ListPendingManualRewardGrantsResponse 返回 PendingManualRewardGrants 结果集合及分页信息。
@@ -459,8 +441,6 @@ message ListPendingManualRewardGrantsResponse {
 
 // ApproveManualRewardGrantRequest 定义批准 ManualRewardGrant 的命令参数。
 message ApproveManualRewardGrantRequest {
-  // app_id 限定 ApproveManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // manual_grant_id 标识关联的 ManualGrant。
   uint64 manual_grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -471,8 +451,6 @@ message ApproveManualRewardGrantRequest {
 
 // RejectManualRewardGrantRequest 定义拒绝 ManualRewardGrant 的命令参数。
 message RejectManualRewardGrantRequest {
-  // app_id 限定 RejectManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // manual_grant_id 标识关联的 ManualGrant。
   uint64 manual_grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -483,8 +461,6 @@ message RejectManualRewardGrantRequest {
 
 // WithdrawManualRewardGrantRequest 定义撤回 ManualRewardGrant 的命令参数。
 message WithdrawManualRewardGrantRequest {
-  // app_id 限定 WithdrawManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum.defined_only = true];
   // manual_grant_id 标识关联的 ManualGrant。
   uint64 manual_grant_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 标识关联的后台 Operator。
@@ -497,15 +473,13 @@ message WithdrawManualRewardGrantRequest {
 message ManualRewardGrant {
   // id 标识关联的 ManualRewardGrant。
   uint64 id = 1;
-  // app_id 限定 ManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // package_id 标识关联的 Package。
   uint64 package_id = 3;
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 4;
   // package_code 提供 ManualRewardGrant 对外稳定使用的业务编码。
   string package_code = 5;
-  // requested_user_id 标识当前 App 内关联的 User。
+  // requested_user_id 标识关联的 User。
   uint64 requested_user_id = 6;
   // requester_operator_id 标识关联的后台 Operator。
   uint32 requester_operator_id = 7;

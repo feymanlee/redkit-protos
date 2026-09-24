@@ -28,10 +28,10 @@ var File_admin_platform_v1_admin_doc_proto protoreflect.FileDescriptor
 
 const file_admin_platform_v1_admin_doc_proto_rawDesc = "" +
 	"\n" +
-	"!admin/platform/v1/admin_doc.proto\x12\x11admin.platform.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a%admin/platform/v1/app_selection.proto\x1a*admin/gift/v1/gift_analytics_service.proto\x1a)admin/gift/v1/gift_backpack_service.proto\x1a(admin/gift/v1/gift_catalog_service.proto\x1a%admin/gift/v1/gift_send_service.proto\x1a+admin/gift/v1/gift_settlement_service.proto\x1a.admin/payment/v1/payment_channel_service.proto\x1a;admin/payment/v1/payment_recharge_fulfillment_service.proto\x1a5admin/payment/v1/payment_reconciliation_service.proto\x1a-admin/payment/v1/payment_refund_service.proto\x1a&admin/payment/v1/payment_service.proto\x1a3admin/payment/v1/payment_subscription_service.proto\x1a/admin/wallet/v1/wallet_adjustment_service.proto\x1a-admin/wallet/v1/wallet_recharge_service.proto\x1a3admin/wallet/v1/wallet_reconciliation_service.proto\x1a)admin/wallet/v1/wallet_risk_service.proto\x1a$admin/wallet/v1/wallet_service.protoB\xea\a\xbaG\x8d\x06\x12\xb2\x01\n" +
+	"!admin/platform/v1/admin_doc.proto\x12\x11admin.platform.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a*admin/gift/v1/gift_analytics_service.proto\x1a)admin/gift/v1/gift_backpack_service.proto\x1a(admin/gift/v1/gift_catalog_service.proto\x1a%admin/gift/v1/gift_send_service.proto\x1a+admin/gift/v1/gift_settlement_service.proto\x1a.admin/payment/v1/payment_channel_service.proto\x1a;admin/payment/v1/payment_recharge_fulfillment_service.proto\x1a5admin/payment/v1/payment_reconciliation_service.proto\x1a-admin/payment/v1/payment_refund_service.proto\x1a&admin/payment/v1/payment_service.proto\x1a3admin/payment/v1/payment_subscription_service.proto\x1a/admin/wallet/v1/wallet_adjustment_service.proto\x1a-admin/wallet/v1/wallet_recharge_service.proto\x1a3admin/wallet/v1/wallet_reconciliation_service.proto\x1a)admin/wallet/v1/wallet_risk_service.proto\x1a$admin/wallet/v1/wallet_service.protoB\xd6\x06\xbaG\xf9\x04\x12\xb2\x01\n" +
 	"\x11Corevia Admin API\x12\x11Corevia Admin API\"?\n" +
 	"\x05tx7do\x12!https://github.com/tx7do/platform\x1a\x13yanglinbo@gmail.com*D\n" +
-	"\vMIT License\x125https://github.com/tx7do/platform/blob/master/LICENSE2\x031.0*\xb5\x04\n" +
+	"\vMIT License\x125https://github.com/tx7do/platform/blob/master/LICENSE2\x031.0*\xaf\x03\n" +
 	"\xd4\x01\n" +
 	"\xd1\x01\n" +
 	"\fKratosStatus\x12\xc0\x01\n" +
@@ -55,21 +55,15 @@ const file_admin_platform_v1_admin_doc_proto_rawDesc = "" +
 	";\n" +
 	"\x10application/json\x12'\n" +
 	"%\x12#\n" +
-	"!#/components/schemas/KratosStatus:\xf2\x01\n" +
+	"!#/components/schemas/KratosStatus:m\n" +
 	"k\n" +
 	"\n" +
 	"BearerAuth\x12]\n" +
 	"[\n" +
-	"\x04http\x12F使用登录接口返回的 access token，格式为 Bearer <token>。*\x06bearer2\x03JWT\n" +
-	"\x82\x01\n" +
-	"\bAppScope\x12v\n" +
-	"t\n" +
-	"\x06apiKey\x12U当前业务 App 的具体 ID；未选择 App 时不得调用 App-scoped operation。\x1a\vx-md-app-id\"\x06header2\x1e\n" +
+	"\x04http\x12F使用登录接口返回的 access token，格式为 Bearer <token>。*\x06bearer2\x03JWT2\x10\n" +
 	"\x0e\n" +
 	"\n" +
 	"BearerAuth\x12\x00\n" +
-	"\f\n" +
-	"\bAppScope\x12\x00\n" +
 	"\x15com.admin.platform.v1B\rAdminDocProtoP\x01ZKgithub.com/feymanlee/redkit-protos/gen/go/admin/platform/v1;adminplatformpb\xa2\x02\x03APX\xaa\x02\x11Admin.Platform.V1\xca\x02\x11Admin\\Platform\\V1\xe2\x02\x1dAdmin\\Platform\\V1\\GPBMetadata\xea\x02\x13Admin::Platform::V1b\x06proto3"
 
 var file_admin_platform_v1_admin_doc_proto_goTypes = []any{}
@@ -86,7 +80,6 @@ func file_admin_platform_v1_admin_doc_proto_init() {
 	if File_admin_platform_v1_admin_doc_proto != nil {
 		return
 	}
-	file_admin_platform_v1_app_selection_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

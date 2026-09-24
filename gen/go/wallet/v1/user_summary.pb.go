@@ -8,7 +8,6 @@ package walletpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -28,9 +27,7 @@ const (
 // GetUserWalletSummaryRequest 标识待查询的 UserWalletSummary。
 type GetUserWalletSummaryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetUserWalletSummary 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -64,13 +61,6 @@ func (x *GetUserWalletSummaryRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetUserWalletSummaryRequest.ProtoReflect.Descriptor instead.
 func (*GetUserWalletSummaryRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_user_summary_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GetUserWalletSummaryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetUserWalletSummaryRequest) GetUserId() uint64 {
@@ -202,9 +192,8 @@ var File_wallet_v1_user_summary_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_user_summary_proto_rawDesc = "" +
 	"\n" +
-	"\x1cwallet/v1/user_summary.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"z\n" +
-	"\x1bGetUserWalletSummaryRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x1cwallet/v1/user_summary.proto\x12\twallet.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"B\n" +
+	"\x1bGetUserWalletSummaryRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\x8b\x03\n" +
 	"\x11UserWalletSummary\x12\x18\n" +
@@ -237,17 +226,15 @@ var file_wallet_v1_user_summary_proto_msgTypes = make([]protoimpl.MessageInfo, 2
 var file_wallet_v1_user_summary_proto_goTypes = []any{
 	(*GetUserWalletSummaryRequest)(nil), // 0: wallet.v1.GetUserWalletSummaryRequest
 	(*UserWalletSummary)(nil),           // 1: wallet.v1.UserWalletSummary
-	(v1.AppId)(0),                       // 2: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),       // 3: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),       // 2: google.protobuf.Timestamp
 }
 var file_wallet_v1_user_summary_proto_depIdxs = []int32{
-	2, // 0: wallet.v1.GetUserWalletSummaryRequest.app_id:type_name -> common.v1.AppId
-	3, // 1: wallet.v1.UserWalletSummary.latest_transaction_at:type_name -> google.protobuf.Timestamp
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	2, // 0: wallet.v1.UserWalletSummary.latest_transaction_at:type_name -> google.protobuf.Timestamp
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_user_summary_proto_init() }

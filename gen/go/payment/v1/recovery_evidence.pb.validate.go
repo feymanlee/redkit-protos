@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on VerifyRecoveryPaymentEvidenceRequest
@@ -61,28 +57,6 @@ func (m *VerifyRecoveryPaymentEvidenceRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _VerifyRecoveryPaymentEvidenceRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := VerifyRecoveryPaymentEvidenceRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := VerifyRecoveryPaymentEvidenceRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := VerifyRecoveryPaymentEvidenceRequestValidationError{
@@ -220,10 +194,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = VerifyRecoveryPaymentEvidenceRequestValidationError{}
-
-var _VerifyRecoveryPaymentEvidenceRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on RecoveryPaymentEvidenceProof with the
 // rules defined in the proto definition for this message. If any rules are

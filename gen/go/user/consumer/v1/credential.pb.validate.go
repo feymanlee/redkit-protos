@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	usertypespb "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = usertypespb.ExternalIdentityProvider(0)
 )
@@ -64,28 +60,6 @@ func (m *ListCredentialsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ListCredentialsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListCredentialsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListCredentialsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if len(errors) > 0 {
 		return ListCredentialsRequestMultiError(errors)
@@ -166,10 +140,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListCredentialsRequestValidationError{}
-
-var _ListCredentialsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListCredentialsResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -498,28 +468,6 @@ func (m *BindPhoneRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _BindPhoneRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BindPhoneRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BindPhoneRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if !_BindPhoneRequest_Phone_Pattern.MatchString(m.GetPhone()) {
 		err := BindPhoneRequestValidationError{
 			field:  "Phone",
@@ -642,10 +590,6 @@ var _ interface {
 	ErrorName() string
 } = BindPhoneRequestValidationError{}
 
-var _BindPhoneRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _BindPhoneRequest_Phone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
 // Validate checks the field values on CompleteRequiredPhoneBindingRequest with
@@ -670,28 +614,6 @@ func (m *CompleteRequiredPhoneBindingRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CompleteRequiredPhoneBindingRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompleteRequiredPhoneBindingRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompleteRequiredPhoneBindingRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetActionToken()); l < 32 || l > 512 {
 		err := CompleteRequiredPhoneBindingRequestValidationError{
@@ -819,10 +741,6 @@ var _ interface {
 	ErrorName() string
 } = CompleteRequiredPhoneBindingRequestValidationError{}
 
-var _CompleteRequiredPhoneBindingRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _CompleteRequiredPhoneBindingRequest_Phone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
 // Validate checks the field values on ChangePhoneRequest with the rules
@@ -846,28 +764,6 @@ func (m *ChangePhoneRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ChangePhoneRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ChangePhoneRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ChangePhoneRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if !_ChangePhoneRequest_NewPhone_Pattern.MatchString(m.GetNewPhone()) {
 		err := ChangePhoneRequestValidationError{
@@ -993,10 +889,6 @@ var _ interface {
 	ErrorName() string
 } = ChangePhoneRequestValidationError{}
 
-var _ChangePhoneRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _ChangePhoneRequest_NewPhone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
 // Validate checks the field values on UnbindPhoneRequest with the rules
@@ -1020,28 +912,6 @@ func (m *UnbindPhoneRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _UnbindPhoneRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := UnbindPhoneRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := UnbindPhoneRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := UnbindPhoneRequestValidationError{
@@ -1145,10 +1015,6 @@ var _ interface {
 	ErrorName() string
 } = UnbindPhoneRequestValidationError{}
 
-var _UnbindPhoneRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on SetPasswordRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1170,28 +1036,6 @@ func (m *SetPasswordRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _SetPasswordRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := SetPasswordRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := SetPasswordRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetNewPassword()); l < 1 || l > 256 {
 		err := SetPasswordRequestValidationError{
@@ -1306,10 +1150,6 @@ var _ interface {
 	ErrorName() string
 } = SetPasswordRequestValidationError{}
 
-var _SetPasswordRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ChangePasswordRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1331,28 +1171,6 @@ func (m *ChangePasswordRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ChangePasswordRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ChangePasswordRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ChangePasswordRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetOldPassword()); l < 1 || l > 256 {
 		err := ChangePasswordRequestValidationError{
@@ -1478,10 +1296,6 @@ var _ interface {
 	ErrorName() string
 } = ChangePasswordRequestValidationError{}
 
-var _ChangePasswordRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on LinkExternalIdentityRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1503,28 +1317,6 @@ func (m *LinkExternalIdentityRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _LinkExternalIdentityRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := LinkExternalIdentityRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := LinkExternalIdentityRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if _, ok := _LinkExternalIdentityRequest_Provider_NotInLookup[m.GetProvider()]; ok {
 		err := LinkExternalIdentityRequestValidationError{
@@ -1662,10 +1454,6 @@ var _ interface {
 	ErrorName() string
 } = LinkExternalIdentityRequestValidationError{}
 
-var _LinkExternalIdentityRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _LinkExternalIdentityRequest_Provider_NotInLookup = map[usertypespb.ExternalIdentityProvider]struct{}{
 	0: {},
 }
@@ -1691,28 +1479,6 @@ func (m *UnlinkExternalIdentityRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _UnlinkExternalIdentityRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := UnlinkExternalIdentityRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := UnlinkExternalIdentityRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if _, ok := _UnlinkExternalIdentityRequest_Provider_NotInLookup[m.GetProvider()]; ok {
 		err := UnlinkExternalIdentityRequestValidationError{
@@ -1838,10 +1604,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UnlinkExternalIdentityRequestValidationError{}
-
-var _UnlinkExternalIdentityRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _UnlinkExternalIdentityRequest_Provider_NotInLookup = map[usertypespb.ExternalIdentityProvider]struct{}{
 	0: {},

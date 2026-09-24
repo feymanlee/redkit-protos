@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	usertypespb "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = usertypespb.UserStatus(0)
 )
@@ -64,28 +60,6 @@ func (m *CheckSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CheckSessionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CheckSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CheckSessionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := CheckSessionRequestValidationError{
@@ -199,10 +173,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CheckSessionRequestValidationError{}
-
-var _CheckSessionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on CheckSessionResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -503,28 +473,6 @@ func (m *GetAccessTokenVerificationKeysRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _GetAccessTokenVerificationKeysRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetAccessTokenVerificationKeysRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetAccessTokenVerificationKeysRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if len(errors) > 0 {
 		return GetAccessTokenVerificationKeysRequestMultiError(errors)
 	}
@@ -606,10 +554,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetAccessTokenVerificationKeysRequestValidationError{}
-
-var _GetAccessTokenVerificationKeysRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on GetAccessTokenVerificationKeysResponse
 // with the rules defined in the proto definition for this message. If any

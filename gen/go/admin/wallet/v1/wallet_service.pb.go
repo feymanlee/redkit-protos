@@ -29,7 +29,7 @@ const (
 // AdminGetWalletRequest 标识待查询的 Wallet。
 type AdminGetWalletRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency      *v1.WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
@@ -84,7 +84,7 @@ func (x *AdminGetWalletRequest) GetCurrency() v1.WalletCurrency {
 // AdminFreezeWalletRequest 定义执行 FreezeWallet 的幂等管理命令参数。
 type AdminFreezeWalletRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// amount 以对应 WalletCurrency 的最小计量单位表示，不使用浮点数。
 	Amount int64 `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -284,7 +284,7 @@ func (x *AdminListWalletUserDebtsRequest) GetFilter() *AdminWalletUserDebtFilter
 // AdminWalletUserDebtFilter 定义可组合的查询筛选条件。
 type AdminWalletUserDebtFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// status 表示 WalletUserDebtFilter 当前可观察的生命周期状态。
 	Status *string `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`

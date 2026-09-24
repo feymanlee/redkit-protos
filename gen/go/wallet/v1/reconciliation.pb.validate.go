@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on WalletReconciliationBatch with the rules
@@ -63,10 +59,6 @@ func (m *WalletReconciliationBatch) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Currency != nil {
@@ -392,10 +384,6 @@ func (m *WalletReconciliationItem) validate(all bool) error {
 		// no validation rules for BatchId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.UserId != nil {
 		// no validation rules for UserId
 	}
@@ -690,10 +678,6 @@ func (m *WalletEvent) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.UserId != nil {
 		// no validation rules for UserId
 	}
@@ -900,8 +884,6 @@ func (m *CreateWalletReconciliationBatchRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if m.Currency != nil {
 		// no validation rules for Currency
 	}
@@ -1044,8 +1026,6 @@ func (m *RetryWalletReconciliationBatchRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for BatchId
 
 	if m.Governance != nil {
@@ -1186,8 +1166,6 @@ func (m *ResolveWalletReconciliationItemRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for ItemId
 

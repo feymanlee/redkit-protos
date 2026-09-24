@@ -8,9 +8,8 @@ package useradministrationpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -212,9 +211,7 @@ func (LifecycleSlaState) EnumDescriptor() ([]byte, []int) {
 // BeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
 type BeginUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BeginUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	VerificationTicket string `protobuf:"bytes,3,opt,name=verification_ticket,json=verificationTicket,proto3" json:"verification_ticket,omitempty"`
@@ -254,13 +251,6 @@ func (*BeginUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *BeginUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *BeginUserDeletionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -285,9 +275,7 @@ func (x *BeginUserDeletionRequest) GetIdempotencyKey() string {
 // CancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
 type CancelUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CancelUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	VerificationTicket string `protobuf:"bytes,3,opt,name=verification_ticket,json=verificationTicket,proto3" json:"verification_ticket,omitempty"`
@@ -327,13 +315,6 @@ func (*CancelUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CancelUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CancelUserDeletionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -358,9 +339,7 @@ func (x *CancelUserDeletionRequest) GetIdempotencyKey() string {
 // FinalizeUserDeletionRequest 定义执行 FinalizeUserDeletion 的幂等管理命令参数。
 type FinalizeUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 FinalizeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,3,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
@@ -398,13 +377,6 @@ func (*FinalizeUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *FinalizeUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *FinalizeUserDeletionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -426,7 +398,7 @@ type LifecycleOperationFilter struct {
 	OperationType *LifecycleOperationType `protobuf:"varint,1,opt,name=operation_type,json=operationType,proto3,enum=user.administration.v1.LifecycleOperationType,oneof" json:"operation_type,omitempty"`
 	// status 表示 LifecycleOperationFilter 当前可观察的生命周期状态。
 	Status *string `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// created_from 指定 LifecycleOperationFilter 查询或生效区间的起始边界。
 	CreatedFrom *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_from,json=createdFrom,proto3" json:"created_from,omitempty"`
@@ -540,10 +512,8 @@ func (x *LifecycleOperationFilter) GetStalled() bool {
 // ListLifecycleOperationsRequest 定义 LifecycleOperations 的筛选与分页参数。
 type ListLifecycleOperationsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListLifecycleOperations 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter        *LifecycleOperationFilter `protobuf:"bytes,3,opt,name=filter,proto3" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -580,14 +550,7 @@ func (*ListLifecycleOperationsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_lifecycle_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ListLifecycleOperationsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListLifecycleOperationsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListLifecycleOperationsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -661,13 +624,11 @@ type LifecycleOperation struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,1,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
-	// app_id 限定 LifecycleOperation 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// operation_type 区分 LifecycleOperation 的业务类型。
 	OperationType LifecycleOperationType `protobuf:"varint,3,opt,name=operation_type,json=operationType,proto3,enum=user.administration.v1.LifecycleOperationType" json:"operation_type,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// related_user_id 标识当前 App 内关联的 User。
+	// related_user_id 标识关联的 User。
 	RelatedUserId uint64 `protobuf:"varint,5,opt,name=related_user_id,json=relatedUserId,proto3" json:"related_user_id,omitempty"`
 	// status 表示 LifecycleOperation 当前可观察的生命周期状态。
 	Status string `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
@@ -728,13 +689,6 @@ func (x *LifecycleOperation) GetOperationNo() string {
 		return x.OperationNo
 	}
 	return ""
-}
-
-func (x *LifecycleOperation) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *LifecycleOperation) GetOperationType() LifecycleOperationType {
@@ -978,19 +932,16 @@ var File_user_administration_v1_lifecycle_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_lifecycle_proto_rawDesc = "" +
 	"\n" +
-	"&user/administration/v1/lifecycle.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"\xb6\x01\n" +
-	"\x18BeginUserDeletionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"&user/administration/v1/lifecycle.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"\x8d\x01\n" +
+	"\x18BeginUserDeletionRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12/\n" +
 	"\x13verification_ticket\x18\x03 \x01(\tR\x12verificationTicket\x12'\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\xb7\x01\n" +
-	"\x19CancelUserDeletionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\x8e\x01\n" +
+	"\x19CancelUserDeletionRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12/\n" +
 	"\x13verification_ticket\x18\x03 \x01(\tR\x12verificationTicket\x12'\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\x88\x01\n" +
-	"\x1bFinalizeUserDeletionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"_\n" +
+	"\x1bFinalizeUserDeletionRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12'\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tR\x0eidempotencyKey\"\xd1\x04\n" +
 	"\x18LifecycleOperationFilter\x12f\n" +
@@ -1009,17 +960,15 @@ const file_user_administration_v1_lifecycle_proto_rawDesc = "" +
 	"\x0f_operation_typeB\t\n" +
 	"\a_statusB\n" +
 	"\n" +
-	"\b_user_id\"\xdf\x01\n" +
-	"\x1eListLifecycleOperationsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12;\n" +
+	"\b_user_id\"\xa7\x01\n" +
+	"\x1eListLifecycleOperationsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12H\n" +
 	"\x06filter\x18\x03 \x01(\v20.user.administration.v1.LifecycleOperationFilterR\x06filter\"H\n" +
 	"\x16LifecycleOperationLink\x12\x1a\n" +
 	"\brelation\x18\x01 \x01(\tR\brelation\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\"\xe4\x05\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\"\xbb\x05\n" +
 	"\x12LifecycleOperation\x12!\n" +
-	"\foperation_no\x18\x01 \x01(\tR\voperationNo\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12U\n" +
+	"\foperation_no\x18\x01 \x01(\tR\voperationNo\x12U\n" +
 	"\x0eoperation_type\x18\x03 \x01(\x0e2..user.administration.v1.LifecycleOperationTypeR\roperationType\x12\x17\n" +
 	"\auser_id\x18\x04 \x01(\x04R\x06userId\x12&\n" +
 	"\x0frelated_user_id\x18\x05 \x01(\x04R\rrelatedUserId\x12\x16\n" +
@@ -1100,47 +1049,41 @@ var file_user_administration_v1_lifecycle_proto_goTypes = []any{
 	(*LifecycleOperation)(nil),              // 9: user.administration.v1.LifecycleOperation
 	(*LifecycleOperationSummary)(nil),       // 10: user.administration.v1.LifecycleOperationSummary
 	(*ListLifecycleOperationsResponse)(nil), // 11: user.administration.v1.ListLifecycleOperationsResponse
-	(v1.AppId)(0),                           // 12: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),           // 13: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),               // 14: common.pagination.v1.PagingRequest
-	(*User)(nil),                            // 15: user.administration.v1.User
+	(*timestamppb.Timestamp)(nil),           // 12: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),                // 13: common.pagination.v1.PagingRequest
+	(*User)(nil),                            // 14: user.administration.v1.User
 }
 var file_user_administration_v1_lifecycle_proto_depIdxs = []int32{
-	12, // 0: user.administration.v1.BeginUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	12, // 1: user.administration.v1.CancelUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	12, // 2: user.administration.v1.FinalizeUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	0,  // 3: user.administration.v1.LifecycleOperationFilter.operation_type:type_name -> user.administration.v1.LifecycleOperationType
-	13, // 4: user.administration.v1.LifecycleOperationFilter.created_from:type_name -> google.protobuf.Timestamp
-	13, // 5: user.administration.v1.LifecycleOperationFilter.created_to:type_name -> google.protobuf.Timestamp
-	13, // 6: user.administration.v1.LifecycleOperationFilter.updated_from:type_name -> google.protobuf.Timestamp
-	13, // 7: user.administration.v1.LifecycleOperationFilter.updated_to:type_name -> google.protobuf.Timestamp
-	1,  // 8: user.administration.v1.LifecycleOperationFilter.sla:type_name -> user.administration.v1.LifecycleSlaFilter
-	12, // 9: user.administration.v1.ListLifecycleOperationsRequest.app_id:type_name -> common.v1.AppId
-	14, // 10: user.administration.v1.ListLifecycleOperationsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	6,  // 11: user.administration.v1.ListLifecycleOperationsRequest.filter:type_name -> user.administration.v1.LifecycleOperationFilter
-	12, // 12: user.administration.v1.LifecycleOperation.app_id:type_name -> common.v1.AppId
-	0,  // 13: user.administration.v1.LifecycleOperation.operation_type:type_name -> user.administration.v1.LifecycleOperationType
-	13, // 14: user.administration.v1.LifecycleOperation.created_at:type_name -> google.protobuf.Timestamp
-	13, // 15: user.administration.v1.LifecycleOperation.updated_at:type_name -> google.protobuf.Timestamp
-	13, // 16: user.administration.v1.LifecycleOperation.sla_due_at:type_name -> google.protobuf.Timestamp
-	2,  // 17: user.administration.v1.LifecycleOperation.sla_state:type_name -> user.administration.v1.LifecycleSlaState
-	8,  // 18: user.administration.v1.LifecycleOperation.links:type_name -> user.administration.v1.LifecycleOperationLink
-	0,  // 19: user.administration.v1.LifecycleOperationSummary.operation_type:type_name -> user.administration.v1.LifecycleOperationType
-	9,  // 20: user.administration.v1.ListLifecycleOperationsResponse.items:type_name -> user.administration.v1.LifecycleOperation
-	10, // 21: user.administration.v1.ListLifecycleOperationsResponse.summary:type_name -> user.administration.v1.LifecycleOperationSummary
-	7,  // 22: user.administration.v1.UserLifecycleService.ListLifecycleOperations:input_type -> user.administration.v1.ListLifecycleOperationsRequest
-	3,  // 23: user.administration.v1.UserLifecycleService.BeginUserDeletion:input_type -> user.administration.v1.BeginUserDeletionRequest
-	4,  // 24: user.administration.v1.UserLifecycleService.CancelUserDeletion:input_type -> user.administration.v1.CancelUserDeletionRequest
-	5,  // 25: user.administration.v1.UserLifecycleService.FinalizeUserDeletion:input_type -> user.administration.v1.FinalizeUserDeletionRequest
-	11, // 26: user.administration.v1.UserLifecycleService.ListLifecycleOperations:output_type -> user.administration.v1.ListLifecycleOperationsResponse
-	15, // 27: user.administration.v1.UserLifecycleService.BeginUserDeletion:output_type -> user.administration.v1.User
-	15, // 28: user.administration.v1.UserLifecycleService.CancelUserDeletion:output_type -> user.administration.v1.User
-	15, // 29: user.administration.v1.UserLifecycleService.FinalizeUserDeletion:output_type -> user.administration.v1.User
-	26, // [26:30] is the sub-list for method output_type
-	22, // [22:26] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	0,  // 0: user.administration.v1.LifecycleOperationFilter.operation_type:type_name -> user.administration.v1.LifecycleOperationType
+	12, // 1: user.administration.v1.LifecycleOperationFilter.created_from:type_name -> google.protobuf.Timestamp
+	12, // 2: user.administration.v1.LifecycleOperationFilter.created_to:type_name -> google.protobuf.Timestamp
+	12, // 3: user.administration.v1.LifecycleOperationFilter.updated_from:type_name -> google.protobuf.Timestamp
+	12, // 4: user.administration.v1.LifecycleOperationFilter.updated_to:type_name -> google.protobuf.Timestamp
+	1,  // 5: user.administration.v1.LifecycleOperationFilter.sla:type_name -> user.administration.v1.LifecycleSlaFilter
+	13, // 6: user.administration.v1.ListLifecycleOperationsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	6,  // 7: user.administration.v1.ListLifecycleOperationsRequest.filter:type_name -> user.administration.v1.LifecycleOperationFilter
+	0,  // 8: user.administration.v1.LifecycleOperation.operation_type:type_name -> user.administration.v1.LifecycleOperationType
+	12, // 9: user.administration.v1.LifecycleOperation.created_at:type_name -> google.protobuf.Timestamp
+	12, // 10: user.administration.v1.LifecycleOperation.updated_at:type_name -> google.protobuf.Timestamp
+	12, // 11: user.administration.v1.LifecycleOperation.sla_due_at:type_name -> google.protobuf.Timestamp
+	2,  // 12: user.administration.v1.LifecycleOperation.sla_state:type_name -> user.administration.v1.LifecycleSlaState
+	8,  // 13: user.administration.v1.LifecycleOperation.links:type_name -> user.administration.v1.LifecycleOperationLink
+	0,  // 14: user.administration.v1.LifecycleOperationSummary.operation_type:type_name -> user.administration.v1.LifecycleOperationType
+	9,  // 15: user.administration.v1.ListLifecycleOperationsResponse.items:type_name -> user.administration.v1.LifecycleOperation
+	10, // 16: user.administration.v1.ListLifecycleOperationsResponse.summary:type_name -> user.administration.v1.LifecycleOperationSummary
+	7,  // 17: user.administration.v1.UserLifecycleService.ListLifecycleOperations:input_type -> user.administration.v1.ListLifecycleOperationsRequest
+	3,  // 18: user.administration.v1.UserLifecycleService.BeginUserDeletion:input_type -> user.administration.v1.BeginUserDeletionRequest
+	4,  // 19: user.administration.v1.UserLifecycleService.CancelUserDeletion:input_type -> user.administration.v1.CancelUserDeletionRequest
+	5,  // 20: user.administration.v1.UserLifecycleService.FinalizeUserDeletion:input_type -> user.administration.v1.FinalizeUserDeletionRequest
+	11, // 21: user.administration.v1.UserLifecycleService.ListLifecycleOperations:output_type -> user.administration.v1.ListLifecycleOperationsResponse
+	14, // 22: user.administration.v1.UserLifecycleService.BeginUserDeletion:output_type -> user.administration.v1.User
+	14, // 23: user.administration.v1.UserLifecycleService.CancelUserDeletion:output_type -> user.administration.v1.User
+	14, // 24: user.administration.v1.UserLifecycleService.FinalizeUserDeletion:output_type -> user.administration.v1.User
+	21, // [21:25] is the sub-list for method output_type
+	17, // [17:21] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_lifecycle_proto_init() }

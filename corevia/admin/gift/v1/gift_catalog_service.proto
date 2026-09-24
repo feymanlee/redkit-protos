@@ -190,7 +190,7 @@ message AdminGiftPatch {
   optional string gift_tier = 17 [(validate.rules).string = {in: ["COMMON", "LUXURY", "EFFECT"]}];
   // effects 设置结构化特效资源清单；提供时整体替换 Draft 中的既有清单。
   repeated .gift.v1.GiftEffect effects = 18;
-  // display_placements 设置 App 级陈列位投放；提供时整体替换。
+  // display_placements 设置 陈列位投放；提供时整体替换。
   repeated .gift.v1.GiftDisplayPlacement display_placements = 19;
   // locales 设置多语言文案；提供时整体替换，默认 locale 必填。
   repeated .gift.v1.GiftLocaleText locales = 20;

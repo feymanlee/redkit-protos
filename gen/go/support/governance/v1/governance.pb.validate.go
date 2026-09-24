@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on GovernanceEvent with the rules defined
@@ -62,8 +58,6 @@ func (m *GovernanceEvent) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for OperatorId
 
@@ -215,8 +209,6 @@ func (m *ListGovernanceEventsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for TargetType
 

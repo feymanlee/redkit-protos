@@ -10,12 +10,10 @@ import "google/protobuf/timestamp.proto";
 import "room/v1/types.proto";
 import "validate/validate.proto";
 
-// Room 是 App 内可被进入、开场的稳定业务空间身份。
+// Room 是可被进入、开场的稳定业务空间身份。
 message Room {
   // id 标识房间稳定身份。
   uint64 id = 1;
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // owner_user_id 是房主 User。
   uint64 owner_user_id = 3;
   // room_type 是房间稳定类型，不随场次变更。
@@ -70,8 +68,6 @@ message ListRoomsResponse {
 
 // CreateRoomRequest 定义创建房间的命令参数。
 message CreateRoomRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // owner_user_id 是房主 User；一期任意 ACTIVE User 可建房。
   uint64 owner_user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // room_type 一期仅接受 ROOM_TYPE_CHAT。
@@ -84,9 +80,9 @@ message CreateRoomRequest {
   optional string description = 6 [(validate.rules).string.max_len = 500];
   // cover_file_id 是封面 File 引用。
   optional uint64 cover_file_id = 7 [(validate.rules).uint64.gt = 0];
-  // seat_count 为空时使用 App 默认（CHAT 默认 8）。
+  // seat_count 为空时使用平台默认（CHAT 默认 8）。
   optional uint32 seat_count = 8 [(validate.rules).uint32 = {gte: 1, lte: 20}];
-  // audience_limit 为空时使用 App 默认（CHAT 默认 50）。
+  // audience_limit 为空时使用平台默认（CHAT 默认 50）。
   optional uint32 audience_limit = 9 [(validate.rules).uint32 = {gte: 1, lte: 1000}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 10 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
@@ -94,8 +90,6 @@ message CreateRoomRequest {
 
 // UpdateRoomRequest 定义更新房间资料的命令参数；不改 owner 与 room_type。
 message UpdateRoomRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_user_id 是发起更新的房主。
@@ -116,8 +110,6 @@ message UpdateRoomRequest {
 
 // GetRoomRequest 标识待查询的房间。
 message GetRoomRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
@@ -132,8 +124,6 @@ message ListRoomsRequest {
 
 // ListMyRoomsRequest 查询某 User 拥有的房间。
 message ListMyRoomsRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // owner_user_id 是房主。
   uint64 owner_user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // paging 指定分页。
@@ -142,8 +132,6 @@ message ListMyRoomsRequest {
 
 // AppointModeratorRequest 任命房管。
 message AppointModeratorRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // actor_user_id 是房主。
@@ -154,8 +142,6 @@ message AppointModeratorRequest {
 
 // RemoveModeratorRequest 撤销房管。
 message RemoveModeratorRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // actor_user_id 是房主。
@@ -166,8 +152,6 @@ message RemoveModeratorRequest {
 
 // CreateRoomRestrictionRequest 创建房间级或场次级处置。
 message CreateRoomRestrictionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // session_id 在 scope=SESSION 时必填。
@@ -192,8 +176,6 @@ message CreateRoomRestrictionRequest {
 
 // RevokeRoomRequest 撤销仍生效的房间处置。
 message RevokeRoomRestrictionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // restriction_id 标识处置。
   uint64 restriction_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // actor_type 标识发起方类型。
@@ -208,8 +190,6 @@ message RevokeRoomRestrictionRequest {
 
 // ListRoomRestrictionsRequest 查询房间处置。
 message ListRoomRestrictionsRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // only_active 为 true 时仅返回仍生效处置。
@@ -228,8 +208,6 @@ message ListRoomRestrictionsResponse {
 
 // TakeDownRoomRequest 是 Operator 下架房间命令。
 message TakeDownRoomRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 是平台 Operator。
@@ -242,8 +220,6 @@ message TakeDownRoomRequest {
 
 // RestoreRoomRequest 是 Operator 恢复房间命令。
 message RestoreRoomRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // operator_id 是平台 Operator。

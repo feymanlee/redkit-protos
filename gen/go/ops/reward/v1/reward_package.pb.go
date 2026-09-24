@@ -8,7 +8,6 @@ package opsrewardv1
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -949,9 +948,7 @@ func (x *RewardPackagePreflight) GetCheckedAt() *timestamppb.Timestamp {
 
 // ListRewardPackagesRequest 定义 RewardPackages 的筛选与分页参数。
 type ListRewardPackagesRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListRewardPackages 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -984,13 +981,6 @@ func (x *ListRewardPackagesRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListRewardPackagesRequest.ProtoReflect.Descriptor instead.
 func (*ListRewardPackagesRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *ListRewardPackagesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListRewardPackagesResponse 返回 RewardPackages 结果集合及分页信息。
@@ -1042,8 +1032,6 @@ func (x *ListRewardPackagesResponse) GetItems() []*RewardPackage {
 // GetRewardPackageRequest 标识待查询的 RewardPackage。
 type GetRewardPackageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId     uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1080,13 +1068,6 @@ func (*GetRewardPackageRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetRewardPackageRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetRewardPackageRequest) GetPackageId() uint64 {
 	if x != nil {
 		return x.PackageId
@@ -1097,8 +1078,6 @@ func (x *GetRewardPackageRequest) GetPackageId() uint64 {
 // CreateRewardPackageRequest 定义创建 RewardPackage 的幂等命令参数。
 type CreateRewardPackageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_code 提供 CreateRewardPackage 对外稳定使用的业务编码。
 	PackageCode string `protobuf:"bytes,2,opt,name=package_code,json=packageCode,proto3" json:"package_code,omitempty"`
 	// display_name 提供 CreateRewardPackage 面向展示或识别的名称。
@@ -1149,13 +1128,6 @@ func (x *CreateRewardPackageRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateRewardPackageRequest.ProtoReflect.Descriptor instead.
 func (*CreateRewardPackageRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *CreateRewardPackageRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateRewardPackageRequest) GetPackageCode() string {
@@ -1218,8 +1190,6 @@ func (x *CreateRewardPackageRequest) GetItems() []*RewardPackageItemInput {
 // CreateRewardPackageRevisionDraftRequest 定义创建 RewardPackageRevisionDraft 的幂等命令参数。
 type CreateRewardPackageRevisionDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateRewardPackageRevisionDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1262,13 +1232,6 @@ func (*CreateRewardPackageRevisionDraftRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *CreateRewardPackageRevisionDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateRewardPackageRevisionDraftRequest) GetPackageId() uint64 {
 	if x != nil {
 		return x.PackageId
@@ -1300,8 +1263,6 @@ func (x *CreateRewardPackageRevisionDraftRequest) GetOperationNo() string {
 // UpdateRewardPackageDraftRequest 定义更新 RewardPackageDraft 的命令参数。
 type UpdateRewardPackageDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UpdateRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	// display_name 提供 UpdateRewardPackageDraft 面向展示或识别的名称。
@@ -1350,13 +1311,6 @@ func (x *UpdateRewardPackageDraftRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateRewardPackageDraftRequest.ProtoReflect.Descriptor instead.
 func (*UpdateRewardPackageDraftRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *UpdateRewardPackageDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *UpdateRewardPackageDraftRequest) GetPackageId() uint64 {
@@ -1412,8 +1366,6 @@ func (x *UpdateRewardPackageDraftRequest) GetItems() []*RewardPackageItemInput {
 // PreflightRewardPackageDraftRequest 定义执行 PreflightRewardPackageDraft 的命令参数。
 type PreflightRewardPackageDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PreflightRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1452,13 +1404,6 @@ func (*PreflightRewardPackageDraftRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *PreflightRewardPackageDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PreflightRewardPackageDraftRequest) GetPackageId() uint64 {
 	if x != nil {
 		return x.PackageId
@@ -1476,8 +1421,6 @@ func (x *PreflightRewardPackageDraftRequest) GetOperatorId() uint32 {
 // PublishRewardPackageRequest 定义发布 RewardPackage 的幂等管理命令参数。
 type PublishRewardPackageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PublishRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1520,13 +1463,6 @@ func (*PublishRewardPackageRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *PublishRewardPackageRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PublishRewardPackageRequest) GetPackageId() uint64 {
 	if x != nil {
 		return x.PackageId
@@ -1558,8 +1494,6 @@ func (x *PublishRewardPackageRequest) GetOperationNo() string {
 // DisableRewardPackageRequest 定义停用 RewardPackage 的幂等管理命令参数。
 type DisableRewardPackageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 DisableRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1602,13 +1536,6 @@ func (*DisableRewardPackageRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *DisableRewardPackageRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *DisableRewardPackageRequest) GetPackageId() uint64 {
 	if x != nil {
 		return x.PackageId
@@ -1640,8 +1567,6 @@ func (x *DisableRewardPackageRequest) GetOperationNo() string {
 // DiscardRewardPackageDraftRequest 定义执行 DiscardRewardPackageDraft 的幂等管理命令参数。
 type DiscardRewardPackageDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 DiscardRewardPackageDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	// revision_id 标识关联的 Revision。
@@ -1686,13 +1611,6 @@ func (*DiscardRewardPackageDraftRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *DiscardRewardPackageDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *DiscardRewardPackageDraftRequest) GetPackageId() uint64 {
 	if x != nil {
 		return x.PackageId
@@ -1731,8 +1649,6 @@ func (x *DiscardRewardPackageDraftRequest) GetOperationNo() string {
 // ResolvePublishedRewardPackageRequest 定义处置 PublishedRewardPackage 的命令参数。
 type ResolvePublishedRewardPackageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResolvePublishedRewardPackage 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_code 提供 ResolvePublishedRewardPackage 对外稳定使用的业务编码。
 	PackageCode   string `protobuf:"bytes,2,opt,name=package_code,json=packageCode,proto3" json:"package_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1769,13 +1685,6 @@ func (*ResolvePublishedRewardPackageRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_package_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *ResolvePublishedRewardPackageRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ResolvePublishedRewardPackageRequest) GetPackageCode() string {
 	if x != nil {
 		return x.PackageCode
@@ -1787,7 +1696,7 @@ var File_ops_reward_v1_reward_package_proto protoreflect.FileDescriptor
 
 const file_ops_reward_v1_reward_package_proto_rawDesc = "" +
 	"\n" +
-	"\"ops/reward/v1/reward_package.proto\x12\rops.reward.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"1\n" +
+	"\"ops/reward/v1/reward_package.proto\x12\rops.reward.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"1\n" +
 	"\x0eCoinRewardItem\x12\x1f\n" +
 	"\x06amount\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\x06amount\"\xbf\x01\n" +
 	"\x0eGiftRewardItem\x12 \n" +
@@ -1845,18 +1754,15 @@ const file_ops_reward_v1_reward_package_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\x0e2+.ops.reward.v1.RewardPackagePreflightStatusR\x06status\x12H\n" +
 	"\bblockers\x18\x03 \x03(\x0e2,.ops.reward.v1.RewardPackagePreflightBlockerR\bblockers\x129\n" +
 	"\n" +
-	"checked_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcheckedAt\"Q\n" +
-	"\x19ListRewardPackagesRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\"P\n" +
+	"checked_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcheckedAt\"\x1b\n" +
+	"\x19ListRewardPackagesRequest\"P\n" +
 	"\x1aListRewardPackagesResponse\x122\n" +
-	"\x05items\x18\x01 \x03(\v2\x1c.ops.reward.v1.RewardPackageR\x05items\"z\n" +
-	"\x17GetRewardPackageRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
+	"\x05items\x18\x01 \x03(\v2\x1c.ops.reward.v1.RewardPackageR\x05items\"D\n" +
+	"\x17GetRewardPackageRequest\x12)\n" +
 	"\n" +
 	"package_id\x18\x02 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\"\xe4\x03\n" +
-	"\x1aCreateRewardPackageRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12/\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\"\xae\x03\n" +
+	"\x1aCreateRewardPackageRequest\x12/\n" +
 	"\fpackage_code\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x03\x18@R\vpackageCode\x120\n" +
 	"\fdisplay_name\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\vdisplayName\x12#\n" +
 	"\vcoin_amount\x18\x04 \x01(\x03B\x02\x18\x01R\n" +
@@ -1869,9 +1775,8 @@ const file_ops_reward_v1_reward_package_proto_rawDesc = "" +
 	"\x06reason\x18\a \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x120\n" +
 	"\foperation_no\x18\b \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\x12J\n" +
 	"\x05items\x18\t \x03(\v2%.ops.reward.v1.RewardPackageItemInputB\r\xfaB\n" +
-	"\x92\x01\a\"\x05\x8a\x01\x02\x10\x01R\x05items\"\x90\x02\n" +
-	"'CreateRewardPackageRevisionDraftRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
+	"\x92\x01\a\"\x05\x8a\x01\x02\x10\x01R\x05items\"\xda\x01\n" +
+	"'CreateRewardPackageRevisionDraftRequest\x12)\n" +
 	"\n" +
 	"package_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x12+\n" +
@@ -1879,9 +1784,8 @@ const file_ops_reward_v1_reward_package_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
 	"operatorId\x12%\n" +
 	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x120\n" +
-	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xb1\x03\n" +
-	"\x1fUpdateRewardPackageDraftRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
+	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xfb\x02\n" +
+	"\x1fUpdateRewardPackageDraftRequest\x12)\n" +
 	"\n" +
 	"package_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x120\n" +
@@ -1895,27 +1799,15 @@ const file_ops_reward_v1_reward_package_proto_rawDesc = "" +
 	"operatorId\x12%\n" +
 	"\x06reason\x18\a \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x12J\n" +
 	"\x05items\x18\b \x03(\v2%.ops.reward.v1.RewardPackageItemInputB\r\xfaB\n" +
-	"\x92\x01\a\"\x05\x8a\x01\x02\x10\x01R\x05items\"\xb2\x01\n" +
-	"\"PreflightRewardPackageDraftRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
+	"\x92\x01\a\"\x05\x8a\x01\x02\x10\x01R\x05items\"|\n" +
+	"\"PreflightRewardPackageDraftRequest\x12)\n" +
 	"\n" +
 	"package_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\rB\n" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
-	"operatorId\"\x84\x02\n" +
-	"\x1bPublishRewardPackageRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
-	"\n" +
-	"package_id\x18\x02 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x12+\n" +
-	"\voperator_id\x18\x03 \x01(\rB\n" +
-	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
-	"operatorId\x12%\n" +
-	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x120\n" +
-	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\x84\x02\n" +
-	"\x1bDisableRewardPackageRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
+	"operatorId\"\xce\x01\n" +
+	"\x1bPublishRewardPackageRequest\x12)\n" +
 	"\n" +
 	"package_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x12+\n" +
@@ -1923,9 +1815,17 @@ const file_ops_reward_v1_reward_package_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
 	"operatorId\x12%\n" +
 	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x120\n" +
-	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xb6\x02\n" +
-	" DiscardRewardPackageDraftRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
+	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xce\x01\n" +
+	"\x1bDisableRewardPackageRequest\x12)\n" +
+	"\n" +
+	"package_id\x18\x02 \x01(\x04B\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x12+\n" +
+	"\voperator_id\x18\x03 \x01(\rB\n" +
+	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
+	"operatorId\x12%\n" +
+	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x120\n" +
+	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\x80\x02\n" +
+	" DiscardRewardPackageDraftRequest\x12)\n" +
 	"\n" +
 	"package_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x12+\n" +
@@ -1936,9 +1836,8 @@ const file_ops_reward_v1_reward_package_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
 	"operatorId\x12%\n" +
 	"\x06reason\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x120\n" +
-	"\foperation_no\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\x8d\x01\n" +
-	"$ResolvePublishedRewardPackageRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12/\n" +
+	"\foperation_no\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"W\n" +
+	"$ResolvePublishedRewardPackageRequest\x12/\n" +
 	"\fpackage_code\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x03\x18@R\vpackageCode*\xa8\x01\n" +
 	"\x13RewardPackageStatus\x12%\n" +
 	"!REWARD_PACKAGE_STATUS_UNSPECIFIED\x10\x00\x12\x1f\n" +
@@ -2023,7 +1922,6 @@ var file_ops_reward_v1_reward_package_proto_goTypes = []any{
 	(*DiscardRewardPackageDraftRequest)(nil),        // 20: ops.reward.v1.DiscardRewardPackageDraftRequest
 	(*ResolvePublishedRewardPackageRequest)(nil),    // 21: ops.reward.v1.ResolvePublishedRewardPackageRequest
 	(*timestamppb.Timestamp)(nil),                   // 22: google.protobuf.Timestamp
-	(v1.AppId)(0),                                   // 23: common.v1.AppId
 }
 var file_ops_reward_v1_reward_package_proto_depIdxs = []int32{
 	4,  // 0: ops.reward.v1.RewardPackageItemInput.coin:type_name -> ops.reward.v1.CoinRewardItem
@@ -2049,44 +1947,34 @@ var file_ops_reward_v1_reward_package_proto_depIdxs = []int32{
 	2,  // 20: ops.reward.v1.RewardPackagePreflight.status:type_name -> ops.reward.v1.RewardPackagePreflightStatus
 	3,  // 21: ops.reward.v1.RewardPackagePreflight.blockers:type_name -> ops.reward.v1.RewardPackagePreflightBlocker
 	22, // 22: ops.reward.v1.RewardPackagePreflight.checked_at:type_name -> google.protobuf.Timestamp
-	23, // 23: ops.reward.v1.ListRewardPackagesRequest.app_id:type_name -> common.v1.AppId
-	9,  // 24: ops.reward.v1.ListRewardPackagesResponse.items:type_name -> ops.reward.v1.RewardPackage
-	23, // 25: ops.reward.v1.GetRewardPackageRequest.app_id:type_name -> common.v1.AppId
-	23, // 26: ops.reward.v1.CreateRewardPackageRequest.app_id:type_name -> common.v1.AppId
-	6,  // 27: ops.reward.v1.CreateRewardPackageRequest.items:type_name -> ops.reward.v1.RewardPackageItemInput
-	23, // 28: ops.reward.v1.CreateRewardPackageRevisionDraftRequest.app_id:type_name -> common.v1.AppId
-	23, // 29: ops.reward.v1.UpdateRewardPackageDraftRequest.app_id:type_name -> common.v1.AppId
-	6,  // 30: ops.reward.v1.UpdateRewardPackageDraftRequest.items:type_name -> ops.reward.v1.RewardPackageItemInput
-	23, // 31: ops.reward.v1.PreflightRewardPackageDraftRequest.app_id:type_name -> common.v1.AppId
-	23, // 32: ops.reward.v1.PublishRewardPackageRequest.app_id:type_name -> common.v1.AppId
-	23, // 33: ops.reward.v1.DisableRewardPackageRequest.app_id:type_name -> common.v1.AppId
-	23, // 34: ops.reward.v1.DiscardRewardPackageDraftRequest.app_id:type_name -> common.v1.AppId
-	23, // 35: ops.reward.v1.ResolvePublishedRewardPackageRequest.app_id:type_name -> common.v1.AppId
-	11, // 36: ops.reward.v1.RewardPackageService.ListRewardPackages:input_type -> ops.reward.v1.ListRewardPackagesRequest
-	13, // 37: ops.reward.v1.RewardPackageService.GetRewardPackage:input_type -> ops.reward.v1.GetRewardPackageRequest
-	14, // 38: ops.reward.v1.RewardPackageService.CreateRewardPackage:input_type -> ops.reward.v1.CreateRewardPackageRequest
-	15, // 39: ops.reward.v1.RewardPackageService.CreateRewardPackageRevisionDraft:input_type -> ops.reward.v1.CreateRewardPackageRevisionDraftRequest
-	16, // 40: ops.reward.v1.RewardPackageService.UpdateRewardPackageDraft:input_type -> ops.reward.v1.UpdateRewardPackageDraftRequest
-	17, // 41: ops.reward.v1.RewardPackageService.PreflightRewardPackageDraft:input_type -> ops.reward.v1.PreflightRewardPackageDraftRequest
-	18, // 42: ops.reward.v1.RewardPackageService.PublishRewardPackage:input_type -> ops.reward.v1.PublishRewardPackageRequest
-	19, // 43: ops.reward.v1.RewardPackageService.DisableRewardPackage:input_type -> ops.reward.v1.DisableRewardPackageRequest
-	20, // 44: ops.reward.v1.RewardPackageService.DiscardRewardPackageDraft:input_type -> ops.reward.v1.DiscardRewardPackageDraftRequest
-	21, // 45: ops.reward.v1.RewardPackageService.ResolvePublishedRewardPackage:input_type -> ops.reward.v1.ResolvePublishedRewardPackageRequest
-	12, // 46: ops.reward.v1.RewardPackageService.ListRewardPackages:output_type -> ops.reward.v1.ListRewardPackagesResponse
-	9,  // 47: ops.reward.v1.RewardPackageService.GetRewardPackage:output_type -> ops.reward.v1.RewardPackage
-	9,  // 48: ops.reward.v1.RewardPackageService.CreateRewardPackage:output_type -> ops.reward.v1.RewardPackage
-	9,  // 49: ops.reward.v1.RewardPackageService.CreateRewardPackageRevisionDraft:output_type -> ops.reward.v1.RewardPackage
-	9,  // 50: ops.reward.v1.RewardPackageService.UpdateRewardPackageDraft:output_type -> ops.reward.v1.RewardPackage
-	10, // 51: ops.reward.v1.RewardPackageService.PreflightRewardPackageDraft:output_type -> ops.reward.v1.RewardPackagePreflight
-	9,  // 52: ops.reward.v1.RewardPackageService.PublishRewardPackage:output_type -> ops.reward.v1.RewardPackage
-	9,  // 53: ops.reward.v1.RewardPackageService.DisableRewardPackage:output_type -> ops.reward.v1.RewardPackage
-	9,  // 54: ops.reward.v1.RewardPackageService.DiscardRewardPackageDraft:output_type -> ops.reward.v1.RewardPackage
-	8,  // 55: ops.reward.v1.RewardPackageService.ResolvePublishedRewardPackage:output_type -> ops.reward.v1.RewardPackageRevision
-	46, // [46:56] is the sub-list for method output_type
-	36, // [36:46] is the sub-list for method input_type
-	36, // [36:36] is the sub-list for extension type_name
-	36, // [36:36] is the sub-list for extension extendee
-	0,  // [0:36] is the sub-list for field type_name
+	9,  // 23: ops.reward.v1.ListRewardPackagesResponse.items:type_name -> ops.reward.v1.RewardPackage
+	6,  // 24: ops.reward.v1.CreateRewardPackageRequest.items:type_name -> ops.reward.v1.RewardPackageItemInput
+	6,  // 25: ops.reward.v1.UpdateRewardPackageDraftRequest.items:type_name -> ops.reward.v1.RewardPackageItemInput
+	11, // 26: ops.reward.v1.RewardPackageService.ListRewardPackages:input_type -> ops.reward.v1.ListRewardPackagesRequest
+	13, // 27: ops.reward.v1.RewardPackageService.GetRewardPackage:input_type -> ops.reward.v1.GetRewardPackageRequest
+	14, // 28: ops.reward.v1.RewardPackageService.CreateRewardPackage:input_type -> ops.reward.v1.CreateRewardPackageRequest
+	15, // 29: ops.reward.v1.RewardPackageService.CreateRewardPackageRevisionDraft:input_type -> ops.reward.v1.CreateRewardPackageRevisionDraftRequest
+	16, // 30: ops.reward.v1.RewardPackageService.UpdateRewardPackageDraft:input_type -> ops.reward.v1.UpdateRewardPackageDraftRequest
+	17, // 31: ops.reward.v1.RewardPackageService.PreflightRewardPackageDraft:input_type -> ops.reward.v1.PreflightRewardPackageDraftRequest
+	18, // 32: ops.reward.v1.RewardPackageService.PublishRewardPackage:input_type -> ops.reward.v1.PublishRewardPackageRequest
+	19, // 33: ops.reward.v1.RewardPackageService.DisableRewardPackage:input_type -> ops.reward.v1.DisableRewardPackageRequest
+	20, // 34: ops.reward.v1.RewardPackageService.DiscardRewardPackageDraft:input_type -> ops.reward.v1.DiscardRewardPackageDraftRequest
+	21, // 35: ops.reward.v1.RewardPackageService.ResolvePublishedRewardPackage:input_type -> ops.reward.v1.ResolvePublishedRewardPackageRequest
+	12, // 36: ops.reward.v1.RewardPackageService.ListRewardPackages:output_type -> ops.reward.v1.ListRewardPackagesResponse
+	9,  // 37: ops.reward.v1.RewardPackageService.GetRewardPackage:output_type -> ops.reward.v1.RewardPackage
+	9,  // 38: ops.reward.v1.RewardPackageService.CreateRewardPackage:output_type -> ops.reward.v1.RewardPackage
+	9,  // 39: ops.reward.v1.RewardPackageService.CreateRewardPackageRevisionDraft:output_type -> ops.reward.v1.RewardPackage
+	9,  // 40: ops.reward.v1.RewardPackageService.UpdateRewardPackageDraft:output_type -> ops.reward.v1.RewardPackage
+	10, // 41: ops.reward.v1.RewardPackageService.PreflightRewardPackageDraft:output_type -> ops.reward.v1.RewardPackagePreflight
+	9,  // 42: ops.reward.v1.RewardPackageService.PublishRewardPackage:output_type -> ops.reward.v1.RewardPackage
+	9,  // 43: ops.reward.v1.RewardPackageService.DisableRewardPackage:output_type -> ops.reward.v1.RewardPackage
+	9,  // 44: ops.reward.v1.RewardPackageService.DiscardRewardPackageDraft:output_type -> ops.reward.v1.RewardPackage
+	8,  // 45: ops.reward.v1.RewardPackageService.ResolvePublishedRewardPackage:output_type -> ops.reward.v1.RewardPackageRevision
+	36, // [36:46] is the sub-list for method output_type
+	26, // [26:36] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_ops_reward_v1_reward_package_proto_init() }

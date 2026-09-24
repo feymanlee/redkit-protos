@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on UserDeletionParticipant with the rules
@@ -424,28 +420,6 @@ func (m *BeginUserDeletionRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _BeginUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BeginUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BeginUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := BeginUserDeletionRequestValidationError{
 			field:  "StepUpToken",
@@ -547,10 +521,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = BeginUserDeletionRequestValidationError{}
-
-var _BeginUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on UserDeletionAccess with the rules
 // defined in the proto definition for this message. If any rules are
@@ -736,28 +706,6 @@ func (m *GetUserDeletionRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _GetUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetDeletionNo()); l < 1 || l > 128 {
 		err := GetUserDeletionRequestValidationError{
 			field:  "DeletionNo",
@@ -860,10 +808,6 @@ var _ interface {
 	ErrorName() string
 } = GetUserDeletionRequestValidationError{}
 
-var _GetUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on CancelUserDeletionRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -885,28 +829,6 @@ func (m *CancelUserDeletionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CancelUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CancelUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CancelUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetDeletionNo()); l < 1 || l > 128 {
 		err := CancelUserDeletionRequestValidationError{
@@ -1161,9 +1083,5 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CancelUserDeletionRequestValidationError{}
-
-var _CancelUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _CancelUserDeletionRequest_TotpCode_Pattern = regexp.MustCompile("^[0-9]{6}$")

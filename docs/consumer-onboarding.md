@@ -1,6 +1,6 @@
 # 仓外项目如何引用 redkit-protos
 
-适用：Gamoji BFF、Pincp BFF、App BFF / App Services 等**不自建 proto 源**的工程。
+适用：C 端 BFF、App BFF / App Services 等**不自建 proto 源**的工程。
 
 ## Go 项目（推荐）
 
@@ -94,8 +94,7 @@ package your.v1;
 import "common/v1/common.proto";
 
 message YourMessage {
-  common.v1.AppId app_id = 1;
-  uint64 user_id = 2;
+  uint64 user_id = 1;
 }
 ```
 

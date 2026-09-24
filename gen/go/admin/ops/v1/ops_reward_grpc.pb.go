@@ -35,7 +35,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// OpsRewardPackageService exposes App-scoped Reward Package governance.
+// OpsRewardPackageService exposes Reward Package governance.
 type OpsRewardPackageServiceClient interface {
 	// 查询 RewardPackage 列表。
 	ListRewardPackages(ctx context.Context, in *AdminListRewardPackagesRequest, opts ...grpc.CallOption) (*v1.ListRewardPackagesResponse, error)
@@ -159,7 +159,7 @@ func (c *opsRewardPackageServiceClient) DiscardRewardPackageDraft(ctx context.Co
 // All implementations must embed UnimplementedOpsRewardPackageServiceServer
 // for forward compatibility.
 //
-// OpsRewardPackageService exposes App-scoped Reward Package governance.
+// OpsRewardPackageService exposes Reward Package governance.
 type OpsRewardPackageServiceServer interface {
 	// 查询 RewardPackage 列表。
 	ListRewardPackages(context.Context, *AdminListRewardPackagesRequest) (*v1.ListRewardPackagesResponse, error)
@@ -464,7 +464,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// OpsRewardGrantService exposes App-scoped Reward observation and Manual Reward review.
+// OpsRewardGrantService exposes Reward observation and Manual Reward review.
 type OpsRewardGrantServiceClient interface {
 	// 查询 RewardGrant 列表。
 	ListRewardGrants(ctx context.Context, in *AdminListRewardGrantsRequest, opts ...grpc.CallOption) (*v1.ListRewardGrantsResponse, error)
@@ -588,7 +588,7 @@ func (c *opsRewardGrantServiceClient) WithdrawManualRewardGrant(ctx context.Cont
 // All implementations must embed UnimplementedOpsRewardGrantServiceServer
 // for forward compatibility.
 //
-// OpsRewardGrantService exposes App-scoped Reward observation and Manual Reward review.
+// OpsRewardGrantService exposes Reward observation and Manual Reward review.
 type OpsRewardGrantServiceServer interface {
 	// 查询 RewardGrant 列表。
 	ListRewardGrants(context.Context, *AdminListRewardGrantsRequest) (*v1.ListRewardGrantsResponse, error)

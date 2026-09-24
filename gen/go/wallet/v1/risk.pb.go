@@ -7,8 +7,8 @@
 package walletpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -204,8 +204,6 @@ type WalletRiskRule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 WalletRiskRule。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 WalletRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency *WalletCurrency `protobuf:"varint,3,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
 	// active_revision_id 标识关联的 ActiveRevision。
@@ -257,13 +255,6 @@ func (x *WalletRiskRule) GetId() uint32 {
 	return 0
 }
 
-func (x *WalletRiskRule) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
 func (x *WalletRiskRule) GetCurrency() WalletCurrency {
 	if x != nil && x.Currency != nil {
 		return *x.Currency
@@ -304,8 +295,6 @@ type WalletRiskRuleRevision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 WalletRiskRuleRevision。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 WalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// rule_id 标识关联的 Rule。
 	RuleId *uint32 `protobuf:"varint,3,opt,name=rule_id,json=ruleId,proto3,oneof" json:"rule_id,omitempty"`
 	// revision_no 是 WalletRiskRuleRevision 对外关联与审计使用的业务编号。
@@ -375,13 +364,6 @@ func (*WalletRiskRuleRevision) Descriptor() ([]byte, []int) {
 func (x *WalletRiskRuleRevision) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletRiskRuleRevision) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -592,8 +574,6 @@ func (x *WalletRiskRuleRevisionPatch) GetEnabled() bool {
 // CreateWalletRiskRuleRevisionRequest 定义创建 WalletRiskRuleRevision 的命令参数。
 type CreateWalletRiskRuleRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// data 承载 CreateWalletRiskRuleRevision 对应阶段的结构化业务内容。
 	Data *WalletRiskRuleRevisionPatch `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	// governance 承载 CreateWalletRiskRuleRevision 关联的 WalletGovernanceIdentity。
@@ -632,13 +612,6 @@ func (*CreateWalletRiskRuleRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_risk_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CreateWalletRiskRuleRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateWalletRiskRuleRevisionRequest) GetData() *WalletRiskRuleRevisionPatch {
 	if x != nil {
 		return x.Data
@@ -656,8 +629,6 @@ func (x *CreateWalletRiskRuleRevisionRequest) GetGovernance() *WalletGovernanceI
 // ApproveWalletRiskRuleRevisionRequest 定义批准 WalletRiskRuleRevision 的命令参数。
 type ApproveWalletRiskRuleRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApproveWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// revision_id 标识关联的 Revision。
 	RevisionId uint64 `protobuf:"varint,2,opt,name=revision_id,json=revisionId,proto3" json:"revision_id,omitempty"`
 	// effective_at 记录 ApproveWalletRiskRuleRevision 对应业务阶段的时间点。
@@ -696,13 +667,6 @@ func (x *ApproveWalletRiskRuleRevisionRequest) ProtoReflect() protoreflect.Messa
 // Deprecated: Use ApproveWalletRiskRuleRevisionRequest.ProtoReflect.Descriptor instead.
 func (*ApproveWalletRiskRuleRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_risk_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ApproveWalletRiskRuleRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ApproveWalletRiskRuleRevisionRequest) GetRevisionId() uint64 {
@@ -784,12 +748,10 @@ func (x *ListWalletRiskRuleResponse) GetTotal() uint64 {
 // ListWalletRiskRuleRevisionRequest 定义 WalletRiskRuleRevision 的筛选与分页参数。
 type ListWalletRiskRuleRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListWalletRiskRuleRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// rule_id 标识关联的 Rule。
 	RuleId *uint32 `protobuf:"varint,2,opt,name=rule_id,json=ruleId,proto3,oneof" json:"rule_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -824,13 +786,6 @@ func (*ListWalletRiskRuleRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_risk_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListWalletRiskRuleRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListWalletRiskRuleRevisionRequest) GetRuleId() uint32 {
 	if x != nil && x.RuleId != nil {
 		return *x.RuleId
@@ -838,7 +793,7 @@ func (x *ListWalletRiskRuleRevisionRequest) GetRuleId() uint32 {
 	return 0
 }
 
-func (x *ListWalletRiskRuleRevisionRequest) GetPaging() *v11.PagingRequest {
+func (x *ListWalletRiskRuleRevisionRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -905,11 +860,9 @@ type EmergencyWalletBlock struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 EmergencyWalletBlock。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 EmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency *WalletCurrency `protobuf:"varint,3,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// operation_scope 限定 EmergencyWalletBlock 的生效或授权范围。
 	OperationScope *EmergencyWalletBlockScope `protobuf:"varint,5,opt,name=operation_scope,json=operationScope,proto3,enum=wallet.v1.EmergencyWalletBlockScope,oneof" json:"operation_scope,omitempty"`
@@ -970,13 +923,6 @@ func (*EmergencyWalletBlock) Descriptor() ([]byte, []int) {
 func (x *EmergencyWalletBlock) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *EmergencyWalletBlock) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1075,11 +1021,9 @@ func (x *EmergencyWalletBlock) GetUpdatedAt() *timestamppb.Timestamp {
 // CreateEmergencyWalletBlockRequest 定义创建 EmergencyWalletBlock 的命令参数。
 type CreateEmergencyWalletBlockRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateEmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency" json:"currency,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// operation_scope 限定 CreateEmergencyWalletBlock 的生效或授权范围。
 	OperationScope EmergencyWalletBlockScope `protobuf:"varint,4,opt,name=operation_scope,json=operationScope,proto3,enum=wallet.v1.EmergencyWalletBlockScope" json:"operation_scope,omitempty"`
@@ -1121,13 +1065,6 @@ func (*CreateEmergencyWalletBlockRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_risk_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *CreateEmergencyWalletBlockRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateEmergencyWalletBlockRequest) GetCurrency() WalletCurrency {
 	if x != nil {
 		return x.Currency
@@ -1166,8 +1103,6 @@ func (x *CreateEmergencyWalletBlockRequest) GetGovernance() *WalletGovernanceIde
 // EndEmergencyWalletBlockRequest 定义执行 EndEmergencyWalletBlock 的命令参数。
 type EndEmergencyWalletBlockRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 EndEmergencyWalletBlock 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// block_id 标识关联的 Block。
 	BlockId uint64 `protobuf:"varint,2,opt,name=block_id,json=blockId,proto3" json:"block_id,omitempty"`
 	// governance 承载 EndEmergencyWalletBlock 关联的 WalletGovernanceIdentity。
@@ -1204,13 +1139,6 @@ func (x *EndEmergencyWalletBlockRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use EndEmergencyWalletBlockRequest.ProtoReflect.Descriptor instead.
 func (*EndEmergencyWalletBlockRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_risk_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *EndEmergencyWalletBlockRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *EndEmergencyWalletBlockRequest) GetBlockId() uint64 {
@@ -1286,51 +1214,47 @@ var File_wallet_v1_risk_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_risk_proto_rawDesc = "" +
 	"\n" +
-	"\x14wallet/v1/risk.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xeb\x03\n" +
+	"\x14wallet/v1/risk.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xc4\x03\n" +
 	"\x0eWalletRiskRule\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x02R\bcurrency\x88\x01\x01\x121\n" +
-	"\x12active_revision_id\x18\x04 \x01(\x04H\x03R\x10activeRevisionId\x88\x01\x01\x12O\n" +
-	"\x0factive_revision\x18\x05 \x01(\v2!.wallet.v1.WalletRiskRuleRevisionH\x04R\x0eactiveRevision\x88\x01\x01\x12?\n" +
+	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x01R\bcurrency\x88\x01\x01\x121\n" +
+	"\x12active_revision_id\x18\x04 \x01(\x04H\x02R\x10activeRevisionId\x88\x01\x01\x12O\n" +
+	"\x0factive_revision\x18\x05 \x01(\v2!.wallet.v1.WalletRiskRuleRevisionH\x03R\x0eactiveRevision\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x04R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
 	"\t_currencyB\x15\n" +
 	"\x13_active_revision_idB\x12\n" +
 	"\x10_active_revisionB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x8d\n" +
-	"\n" +
+	"\v_updated_at\"\xe6\t\n" +
 	"\x16WalletRiskRuleRevision\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\arule_id\x18\x03 \x01(\rH\x02R\x06ruleId\x88\x01\x01\x12$\n" +
-	"\vrevision_no\x18\x04 \x01(\rH\x03R\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\arule_id\x18\x03 \x01(\rH\x01R\x06ruleId\x88\x01\x01\x12$\n" +
+	"\vrevision_no\x18\x04 \x01(\rH\x02R\n" +
 	"revisionNo\x88\x01\x01\x121\n" +
-	"\x12single_debit_limit\x18\x05 \x01(\x03H\x04R\x10singleDebitLimit\x88\x01\x01\x12/\n" +
-	"\x11daily_debit_limit\x18\x06 \x01(\x03H\x05R\x0fdailyDebitLimit\x88\x01\x01\x12;\n" +
-	"\x17single_adjustment_limit\x18\a \x01(\x03H\x06R\x15singleAdjustmentLimit\x88\x01\x01\x12\x1d\n" +
-	"\aenabled\x18\b \x01(\bH\aR\aenabled\x88\x01\x01\x12E\n" +
-	"\x06status\x18\t \x01(\x0e2(.wallet.v1.WalletRiskRuleRevision.StatusH\bR\x06status\x88\x01\x01\x12&\n" +
+	"\x12single_debit_limit\x18\x05 \x01(\x03H\x03R\x10singleDebitLimit\x88\x01\x01\x12/\n" +
+	"\x11daily_debit_limit\x18\x06 \x01(\x03H\x04R\x0fdailyDebitLimit\x88\x01\x01\x12;\n" +
+	"\x17single_adjustment_limit\x18\a \x01(\x03H\x05R\x15singleAdjustmentLimit\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\b \x01(\bH\x06R\aenabled\x88\x01\x01\x12E\n" +
+	"\x06status\x18\t \x01(\x0e2(.wallet.v1.WalletRiskRuleRevision.StatusH\aR\x06status\x88\x01\x01\x12&\n" +
 	"\frequester_id\x18\n" +
-	" \x01(\rH\tR\vrequesterId\x88\x01\x01\x12$\n" +
-	"\vapprover_id\x18\v \x01(\rH\n" +
-	"R\n" +
+	" \x01(\rH\bR\vrequesterId\x88\x01\x01\x12$\n" +
+	"\vapprover_id\x18\v \x01(\rH\tR\n" +
 	"approverId\x88\x01\x01\x12-\n" +
-	"\x10base_revision_id\x18\f \x01(\x04H\vR\x0ebaseRevisionId\x88\x01\x01\x12B\n" +
-	"\feffective_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\fR\veffectiveAt\x88\x01\x01\x12@\n" +
-	"\vapproved_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\rR\n" +
+	"\x10base_revision_id\x18\f \x01(\x04H\n" +
+	"R\x0ebaseRevisionId\x88\x01\x01\x12B\n" +
+	"\feffective_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\vR\veffectiveAt\x88\x01\x01\x12@\n" +
+	"\vapproved_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\fR\n" +
 	"approvedAt\x88\x01\x01\x12B\n" +
-	"\factivated_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\vactivatedAt\x88\x01\x01\x12.\n" +
-	"\x10failure_category\x18\x10 \x01(\tH\x0fR\x0ffailureCategory\x88\x01\x01\x12?\n" +
+	"\factivated_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\vactivatedAt\x88\x01\x01\x12.\n" +
+	"\x10failure_category\x18\x10 \x01(\tH\x0eR\x0ffailureCategory\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01\"U\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tupdatedAt\x88\x01\x01\"U\n" +
 	"\x06Status\x12\x16\n" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05DRAFT\x10\x01\x12\r\n" +
@@ -1338,8 +1262,7 @@ const file_wallet_v1_risk_proto_rawDesc = "" +
 	"\tACTIVATED\x10\x03\x12\n" +
 	"\n" +
 	"\x06FAILED\x10\x04B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_rule_idB\x0e\n" +
 	"\f_revision_noB\x15\n" +
@@ -1366,62 +1289,54 @@ const file_wallet_v1_risk_proto_rawDesc = "" +
 	"\x17single_adjustment_limit\x18\x05 \x01(\x03R\x15singleAdjustmentLimit\x12\x18\n" +
 	"\aenabled\x18\x06 \x01(\bR\aenabledB\n" +
 	"\n" +
-	"\b_rule_id\"\xf3\x01\n" +
-	"#CreateWalletRiskRuleRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12:\n" +
+	"\b_rule_id\"\xba\x01\n" +
+	"#CreateWalletRiskRuleRevisionRequest\x12:\n" +
 	"\x04data\x18\x02 \x01(\v2&.wallet.v1.WalletRiskRuleRevisionPatchR\x04data\x12H\n" +
 	"\n" +
-	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
-	"governance\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
-	"\v_governance\"\x98\x02\n" +
-	"$ApproveWalletRiskRuleRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
+	"governance\x88\x01\x01B\r\n" +
+	"\v_governance\"\xdf\x01\n" +
+	"$ApproveWalletRiskRuleRevisionRequest\x12\x1f\n" +
 	"\vrevision_id\x18\x02 \x01(\x04R\n" +
 	"revisionId\x12=\n" +
 	"\feffective_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\veffectiveAt\x12H\n" +
 	"\n" +
-	"governance\x18\x04 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
-	"governance\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"governance\x18\x04 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
+	"governance\x88\x01\x01B\r\n" +
 	"\v_governance\"c\n" +
 	"\x1aListWalletRiskRuleResponse\x12/\n" +
 	"\x05items\x18\x01 \x03(\v2\x19.wallet.v1.WalletRiskRuleR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xc3\x01\n" +
-	"!ListWalletRiskRuleRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\arule_id\x18\x02 \x01(\rH\x01R\x06ruleId\x88\x01\x01\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_idB\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x8a\x01\n" +
+	"!ListWalletRiskRuleRevisionRequest\x12\x1c\n" +
+	"\arule_id\x18\x02 \x01(\rH\x00R\x06ruleId\x88\x01\x01\x12;\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\n" +
 	"\n" +
 	"\b_rule_id\"s\n" +
 	"\"ListWalletRiskRuleRevisionResponse\x127\n" +
 	"\x05items\x18\x01 \x03(\v2!.wallet.v1.WalletRiskRuleRevisionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xd1\a\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xaa\a\n" +
 	"\x14EmergencyWalletBlock\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x02R\bcurrency\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x04 \x01(\x04H\x03R\x06userId\x88\x01\x01\x12R\n" +
-	"\x0foperation_scope\x18\x05 \x01(\x0e2$.wallet.v1.EmergencyWalletBlockScopeH\x04R\x0eoperationScope\x88\x01\x01\x12B\n" +
-	"\x06status\x18\x06 \x01(\x0e2%.wallet.v1.EmergencyWalletBlockStatusH\x05R\x06status\x88\x01\x01\x12\x1b\n" +
-	"\x06reason\x18\a \x01(\tH\x06R\x06reason\x88\x01\x01\x12&\n" +
-	"\frequester_id\x18\b \x01(\rH\aR\vrequesterId\x88\x01\x01\x12>\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x01R\bcurrency\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x04 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12R\n" +
+	"\x0foperation_scope\x18\x05 \x01(\x0e2$.wallet.v1.EmergencyWalletBlockScopeH\x03R\x0eoperationScope\x88\x01\x01\x12B\n" +
+	"\x06status\x18\x06 \x01(\x0e2%.wallet.v1.EmergencyWalletBlockStatusH\x04R\x06status\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\a \x01(\tH\x05R\x06reason\x88\x01\x01\x12&\n" +
+	"\frequester_id\x18\b \x01(\rH\x06R\vrequesterId\x88\x01\x01\x12>\n" +
 	"\n" +
-	"started_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\bR\tstartedAt\x88\x01\x01\x12>\n" +
+	"started_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\aR\tstartedAt\x88\x01\x01\x12>\n" +
 	"\n" +
 	"expires_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampH\tR\texpiresAt\x88\x01\x01\x12:\n" +
-	"\bended_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\aendedAt\x88\x01\x01\x12\x1e\n" +
-	"\bended_by\x18\f \x01(\rH\vR\aendedBy\x88\x01\x01\x12&\n" +
-	"\fended_reason\x18\r \x01(\tH\fR\vendedReason\x88\x01\x01\x12?\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampH\bR\texpiresAt\x88\x01\x01\x12:\n" +
+	"\bended_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\tR\aendedAt\x88\x01\x01\x12\x1e\n" +
+	"\bended_by\x18\f \x01(\rH\n" +
+	"R\aendedBy\x88\x01\x01\x12&\n" +
+	"\fended_reason\x18\r \x01(\tH\vR\vendedReason\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\rR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\rR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
 	"\t_currencyB\n" +
 	"\n" +
 	"\b_user_idB\x12\n" +
@@ -1435,28 +1350,24 @@ const file_wallet_v1_risk_proto_rawDesc = "" +
 	"\t_ended_byB\x0f\n" +
 	"\r_ended_reasonB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xa0\x03\n" +
-	"!CreateEmergencyWalletBlockRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x125\n" +
+	"\v_updated_at\"\xe7\x02\n" +
+	"!CreateEmergencyWalletBlockRequest\x125\n" +
 	"\bcurrency\x18\x02 \x01(\x0e2\x19.wallet.v1.WalletCurrencyR\bcurrency\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12M\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x00R\x06userId\x88\x01\x01\x12M\n" +
 	"\x0foperation_scope\x18\x04 \x01(\x0e2$.wallet.v1.EmergencyWalletBlockScopeR\x0eoperationScope\x129\n" +
 	"\n" +
 	"expires_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x12H\n" +
 	"\n" +
-	"governance\x18\x06 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x02R\n" +
-	"governance\x88\x01\x01B\t\n" +
-	"\a_app_idB\n" +
+	"governance\x18\x06 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
+	"governance\x88\x01\x01B\n" +
 	"\n" +
 	"\b_user_idB\r\n" +
-	"\v_governance\"\xcd\x01\n" +
-	"\x1eEndEmergencyWalletBlockRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x19\n" +
+	"\v_governance\"\x94\x01\n" +
+	"\x1eEndEmergencyWalletBlockRequest\x12\x19\n" +
 	"\bblock_id\x18\x02 \x01(\x04R\ablockId\x12H\n" +
 	"\n" +
-	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
-	"governance\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
+	"governance\x88\x01\x01B\r\n" +
 	"\v_governance\"o\n" +
 	" ListEmergencyWalletBlockResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.wallet.v1.EmergencyWalletBlockR\x05items\x12\x14\n" +
@@ -1509,9 +1420,8 @@ var file_wallet_v1_risk_proto_goTypes = []any{
 	(*ListEmergencyWalletBlockResponse)(nil),     // 14: wallet.v1.ListEmergencyWalletBlockResponse
 	(WalletCurrency)(0),                          // 15: wallet.v1.WalletCurrency
 	(*timestamppb.Timestamp)(nil),                // 16: google.protobuf.Timestamp
-	(v1.AppId)(0),                                // 17: common.v1.AppId
-	(*WalletGovernanceIdentity)(nil),             // 18: wallet.v1.WalletGovernanceIdentity
-	(*v11.PagingRequest)(nil),                    // 19: common.pagination.v1.PagingRequest
+	(*WalletGovernanceIdentity)(nil),             // 17: wallet.v1.WalletGovernanceIdentity
+	(*v1.PagingRequest)(nil),                     // 18: common.pagination.v1.PagingRequest
 }
 var file_wallet_v1_risk_proto_depIdxs = []int32{
 	15, // 0: wallet.v1.WalletRiskRule.currency:type_name -> wallet.v1.WalletCurrency
@@ -1525,37 +1435,32 @@ var file_wallet_v1_risk_proto_depIdxs = []int32{
 	16, // 8: wallet.v1.WalletRiskRuleRevision.created_at:type_name -> google.protobuf.Timestamp
 	16, // 9: wallet.v1.WalletRiskRuleRevision.updated_at:type_name -> google.protobuf.Timestamp
 	15, // 10: wallet.v1.WalletRiskRuleRevisionPatch.currency:type_name -> wallet.v1.WalletCurrency
-	17, // 11: wallet.v1.CreateWalletRiskRuleRevisionRequest.app_id:type_name -> common.v1.AppId
-	5,  // 12: wallet.v1.CreateWalletRiskRuleRevisionRequest.data:type_name -> wallet.v1.WalletRiskRuleRevisionPatch
-	18, // 13: wallet.v1.CreateWalletRiskRuleRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	17, // 14: wallet.v1.ApproveWalletRiskRuleRevisionRequest.app_id:type_name -> common.v1.AppId
-	16, // 15: wallet.v1.ApproveWalletRiskRuleRevisionRequest.effective_at:type_name -> google.protobuf.Timestamp
-	18, // 16: wallet.v1.ApproveWalletRiskRuleRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	3,  // 17: wallet.v1.ListWalletRiskRuleResponse.items:type_name -> wallet.v1.WalletRiskRule
-	17, // 18: wallet.v1.ListWalletRiskRuleRevisionRequest.app_id:type_name -> common.v1.AppId
-	19, // 19: wallet.v1.ListWalletRiskRuleRevisionRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	4,  // 20: wallet.v1.ListWalletRiskRuleRevisionResponse.items:type_name -> wallet.v1.WalletRiskRuleRevision
-	15, // 21: wallet.v1.EmergencyWalletBlock.currency:type_name -> wallet.v1.WalletCurrency
-	0,  // 22: wallet.v1.EmergencyWalletBlock.operation_scope:type_name -> wallet.v1.EmergencyWalletBlockScope
-	1,  // 23: wallet.v1.EmergencyWalletBlock.status:type_name -> wallet.v1.EmergencyWalletBlockStatus
-	16, // 24: wallet.v1.EmergencyWalletBlock.started_at:type_name -> google.protobuf.Timestamp
-	16, // 25: wallet.v1.EmergencyWalletBlock.expires_at:type_name -> google.protobuf.Timestamp
-	16, // 26: wallet.v1.EmergencyWalletBlock.ended_at:type_name -> google.protobuf.Timestamp
-	16, // 27: wallet.v1.EmergencyWalletBlock.created_at:type_name -> google.protobuf.Timestamp
-	16, // 28: wallet.v1.EmergencyWalletBlock.updated_at:type_name -> google.protobuf.Timestamp
-	17, // 29: wallet.v1.CreateEmergencyWalletBlockRequest.app_id:type_name -> common.v1.AppId
-	15, // 30: wallet.v1.CreateEmergencyWalletBlockRequest.currency:type_name -> wallet.v1.WalletCurrency
-	0,  // 31: wallet.v1.CreateEmergencyWalletBlockRequest.operation_scope:type_name -> wallet.v1.EmergencyWalletBlockScope
-	16, // 32: wallet.v1.CreateEmergencyWalletBlockRequest.expires_at:type_name -> google.protobuf.Timestamp
-	18, // 33: wallet.v1.CreateEmergencyWalletBlockRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	17, // 34: wallet.v1.EndEmergencyWalletBlockRequest.app_id:type_name -> common.v1.AppId
-	18, // 35: wallet.v1.EndEmergencyWalletBlockRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	11, // 36: wallet.v1.ListEmergencyWalletBlockResponse.items:type_name -> wallet.v1.EmergencyWalletBlock
-	37, // [37:37] is the sub-list for method output_type
-	37, // [37:37] is the sub-list for method input_type
-	37, // [37:37] is the sub-list for extension type_name
-	37, // [37:37] is the sub-list for extension extendee
-	0,  // [0:37] is the sub-list for field type_name
+	5,  // 11: wallet.v1.CreateWalletRiskRuleRevisionRequest.data:type_name -> wallet.v1.WalletRiskRuleRevisionPatch
+	17, // 12: wallet.v1.CreateWalletRiskRuleRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	16, // 13: wallet.v1.ApproveWalletRiskRuleRevisionRequest.effective_at:type_name -> google.protobuf.Timestamp
+	17, // 14: wallet.v1.ApproveWalletRiskRuleRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	3,  // 15: wallet.v1.ListWalletRiskRuleResponse.items:type_name -> wallet.v1.WalletRiskRule
+	18, // 16: wallet.v1.ListWalletRiskRuleRevisionRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	4,  // 17: wallet.v1.ListWalletRiskRuleRevisionResponse.items:type_name -> wallet.v1.WalletRiskRuleRevision
+	15, // 18: wallet.v1.EmergencyWalletBlock.currency:type_name -> wallet.v1.WalletCurrency
+	0,  // 19: wallet.v1.EmergencyWalletBlock.operation_scope:type_name -> wallet.v1.EmergencyWalletBlockScope
+	1,  // 20: wallet.v1.EmergencyWalletBlock.status:type_name -> wallet.v1.EmergencyWalletBlockStatus
+	16, // 21: wallet.v1.EmergencyWalletBlock.started_at:type_name -> google.protobuf.Timestamp
+	16, // 22: wallet.v1.EmergencyWalletBlock.expires_at:type_name -> google.protobuf.Timestamp
+	16, // 23: wallet.v1.EmergencyWalletBlock.ended_at:type_name -> google.protobuf.Timestamp
+	16, // 24: wallet.v1.EmergencyWalletBlock.created_at:type_name -> google.protobuf.Timestamp
+	16, // 25: wallet.v1.EmergencyWalletBlock.updated_at:type_name -> google.protobuf.Timestamp
+	15, // 26: wallet.v1.CreateEmergencyWalletBlockRequest.currency:type_name -> wallet.v1.WalletCurrency
+	0,  // 27: wallet.v1.CreateEmergencyWalletBlockRequest.operation_scope:type_name -> wallet.v1.EmergencyWalletBlockScope
+	16, // 28: wallet.v1.CreateEmergencyWalletBlockRequest.expires_at:type_name -> google.protobuf.Timestamp
+	17, // 29: wallet.v1.CreateEmergencyWalletBlockRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	17, // 30: wallet.v1.EndEmergencyWalletBlockRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	11, // 31: wallet.v1.ListEmergencyWalletBlockResponse.items:type_name -> wallet.v1.EmergencyWalletBlock
+	32, // [32:32] is the sub-list for method output_type
+	32, // [32:32] is the sub-list for method input_type
+	32, // [32:32] is the sub-list for extension type_name
+	32, // [32:32] is the sub-list for extension extendee
+	0,  // [0:32] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_risk_proto_init() }

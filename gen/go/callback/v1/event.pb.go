@@ -162,8 +162,6 @@ type CallbackEvent struct {
 	// event_type 为点分规范事件类型，不限支付。
 	// 例：payment.succeeded、refund.result、subscription.renewed、dispute.opened、risk.alert、kyc.result。
 	EventType string `protobuf:"bytes,4,opt,name=event_type,json=eventType,proto3" json:"event_type,omitempty"`
-	// app_id 为业务归属 App；由验签通过的配置或载荷解析，不接受调用方自报。
-	AppId uint32 `protobuf:"varint,5,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// occurred_at 为来源侧发生时间；未知时由 BFF 收到时间填充。
 	OccurredAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=occurred_at,json=occurredAt,proto3" json:"occurred_at,omitempty"`
 	// verified_at 为入口验签通过时间。
@@ -244,13 +242,6 @@ func (x *CallbackEvent) GetEventType() string {
 		return x.EventType
 	}
 	return ""
-}
-
-func (x *CallbackEvent) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
 }
 
 func (x *CallbackEvent) GetOccurredAt() *timestamppb.Timestamp {
@@ -536,14 +527,13 @@ var File_callback_v1_event_proto protoreflect.FileDescriptor
 
 const file_callback_v1_event_proto_rawDesc = "" +
 	"\n" +
-	"\x17callback/v1/event.proto\x12\vcallback.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe7\x06\n" +
+	"\x17callback/v1/event.proto\x12\vcallback.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd0\x06\n" +
 	"\rCallbackEvent\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12'\n" +
 	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\x12\x16\n" +
 	"\x06source\x18\x03 \x01(\tR\x06source\x12\x1d\n" +
 	"\n" +
-	"event_type\x18\x04 \x01(\tR\teventType\x12\x15\n" +
-	"\x06app_id\x18\x05 \x01(\rR\x05appId\x12;\n" +
+	"event_type\x18\x04 \x01(\tR\teventType\x12;\n" +
 	"\voccurred_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"occurredAt\x12;\n" +
 	"\vverified_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\n" +

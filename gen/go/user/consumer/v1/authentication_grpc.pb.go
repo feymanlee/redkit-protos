@@ -38,11 +38,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// C 端认证服务，负责当前 App 的注册、登录、Token 换取和密码重置流程。
+// C 端认证服务，负责注册、登录、Token 换取和密码重置流程。
 type ConsumerAuthenticationServiceClient interface {
-	// 查询当前 App 公开的注册、登录和认证策略，不返回密钥或内部风控配置。
+	// 查询公开的注册、登录和认证策略，不返回密钥或内部风控配置。
 	GetAuthenticationOptions(ctx context.Context, in *GetAuthenticationOptionsRequest, opts ...grpc.CallOption) (*AuthenticationOptions, error)
-	// 注册当前 App 的用户，并返回认证结果或仍需完成的账号动作。
+	// 注册用户，并返回认证结果或仍需完成的账号动作。
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	// 验证登录凭据，并返回认证结果、二次挑战或仍需完成的账号动作。
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
@@ -50,7 +50,7 @@ type ConsumerAuthenticationServiceClient interface {
 	ResendLoginChallenge(ctx context.Context, in *ResendLoginChallengeRequest, opts ...grpc.CallOption) (*LoginChallenge, error)
 	// 验证 LoginChallenge 的一个允许因子，并返回认证结果或后续账号动作。
 	CompleteLoginChallenge(ctx context.Context, in *CompleteLoginChallengeRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	// 使用当前 App 与安装实例绑定的 refresh_token 幂等换取 TokenPair。
+	// 使用当前安装实例绑定的 refresh_token 幂等换取 TokenPair。
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*v1.TokenPair, error)
 	// 幂等撤销当前会话。
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -186,11 +186,11 @@ func (c *consumerAuthenticationServiceClient) CompleteRequiredPasswordReset(ctx 
 // All implementations must embed UnimplementedConsumerAuthenticationServiceServer
 // for forward compatibility.
 //
-// C 端认证服务，负责当前 App 的注册、登录、Token 换取和密码重置流程。
+// C 端认证服务，负责注册、登录、Token 换取和密码重置流程。
 type ConsumerAuthenticationServiceServer interface {
-	// 查询当前 App 公开的注册、登录和认证策略，不返回密钥或内部风控配置。
+	// 查询公开的注册、登录和认证策略，不返回密钥或内部风控配置。
 	GetAuthenticationOptions(context.Context, *GetAuthenticationOptionsRequest) (*AuthenticationOptions, error)
-	// 注册当前 App 的用户，并返回认证结果或仍需完成的账号动作。
+	// 注册用户，并返回认证结果或仍需完成的账号动作。
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	// 验证登录凭据，并返回认证结果、二次挑战或仍需完成的账号动作。
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
@@ -198,7 +198,7 @@ type ConsumerAuthenticationServiceServer interface {
 	ResendLoginChallenge(context.Context, *ResendLoginChallengeRequest) (*LoginChallenge, error)
 	// 验证 LoginChallenge 的一个允许因子，并返回认证结果或后续账号动作。
 	CompleteLoginChallenge(context.Context, *CompleteLoginChallengeRequest) (*LoginResponse, error)
-	// 使用当前 App 与安装实例绑定的 refresh_token 幂等换取 TokenPair。
+	// 使用当前安装实例绑定的 refresh_token 幂等换取 TokenPair。
 	RefreshToken(context.Context, *RefreshTokenRequest) (*v1.TokenPair, error)
 	// 幂等撤销当前会话。
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)

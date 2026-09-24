@@ -42,7 +42,7 @@ service WalletService {
   rpc ListWalletUserDebts(ListWalletUserDebtsRequest) returns (ListWalletUserDebtResponse) {}
   // 创建受审计的异步导出作业。
   rpc CreateExport(CreateWalletExportRequest) returns (WalletExportJob) {}
-  // 查询当前 App 的导出作业。
+  // 查询导出作业。
   rpc ListExports(ListWalletExportsRequest) returns (ListWalletExportsResponse) {}
   // 重试失败的导出作业。
   rpc RetryExport(RetryWalletExportRequest) returns (WalletExportJob) {}

@@ -7,8 +7,8 @@
 package walletpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -91,9 +91,7 @@ type WalletDebtWriteOff struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 WalletDebtWriteOff。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 WalletDebtWriteOff 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// debt_id 标识关联的 Debt。
 	DebtId *uint64 `protobuf:"varint,4,opt,name=debt_id,json=debtId,proto3,oneof" json:"debt_id,omitempty"`
@@ -160,13 +158,6 @@ func (*WalletDebtWriteOff) Descriptor() ([]byte, []int) {
 func (x *WalletDebtWriteOff) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletDebtWriteOff) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -279,8 +270,6 @@ func (x *WalletDebtWriteOff) GetUpdatedAt() *timestamppb.Timestamp {
 // CreateWalletDebtWriteOffRequest 定义创建 WalletDebtWriteOff 的幂等命令参数。
 type CreateWalletDebtWriteOffRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateWalletDebtWriteOff 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// debt_id 标识关联的 Debt。
 	DebtId uint64 `protobuf:"varint,2,opt,name=debt_id,json=debtId,proto3" json:"debt_id,omitempty"`
 	// amount 以对应 WalletCurrency 的最小计量单位表示，不使用浮点数。
@@ -325,13 +314,6 @@ func (x *CreateWalletDebtWriteOffRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateWalletDebtWriteOffRequest.ProtoReflect.Descriptor instead.
 func (*CreateWalletDebtWriteOffRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_debt_write_off_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *CreateWalletDebtWriteOffRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateWalletDebtWriteOffRequest) GetDebtId() uint64 {
@@ -385,8 +367,6 @@ type ReviewWalletDebtWriteOffRequest struct {
 	ReviewerId uint32 `protobuf:"varint,2,opt,name=reviewer_id,json=reviewerId,proto3" json:"reviewer_id,omitempty"`
 	// review_note 记录人工判断的补充说明，供审计与复核。
 	ReviewNote *string `protobuf:"bytes,3,opt,name=review_note,json=reviewNote,proto3,oneof" json:"review_note,omitempty"`
-	// app_id 限定 ReviewWalletDebtWriteOff 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// governance 承载 ReviewWalletDebtWriteOff 关联的 WalletGovernanceIdentity。
 	Governance    *WalletGovernanceIdentity `protobuf:"bytes,5,opt,name=governance,proto3,oneof" json:"governance,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -444,13 +424,6 @@ func (x *ReviewWalletDebtWriteOffRequest) GetReviewNote() string {
 	return ""
 }
 
-func (x *ReviewWalletDebtWriteOffRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ReviewWalletDebtWriteOffRequest) GetGovernance() *WalletGovernanceIdentity {
 	if x != nil {
 		return x.Governance
@@ -465,7 +438,7 @@ type WalletDebtWriteOffFilter struct {
 	Status *WalletDebtWriteOff_Status `protobuf:"varint,1,opt,name=status,proto3,enum=wallet.v1.WalletDebtWriteOff_Status,oneof" json:"status,omitempty"`
 	// requester_id 标识关联的 Requester。
 	RequesterId *uint32 `protobuf:"varint,2,opt,name=requester_id,json=requesterId,proto3,oneof" json:"requester_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// debt_id 标识关联的 Debt。
 	DebtId *uint64 `protobuf:"varint,4,opt,name=debt_id,json=debtId,proto3,oneof" json:"debt_id,omitempty"`
@@ -543,10 +516,8 @@ func (x *WalletDebtWriteOffFilter) GetMinimumAgeSeconds() uint64 {
 // ListWalletDebtWriteOffsRequest 定义 WalletDebtWriteOffs 的筛选与分页参数。
 type ListWalletDebtWriteOffsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListWalletDebtWriteOffs 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter        *WalletDebtWriteOffFilter `protobuf:"bytes,3,opt,name=filter,proto3,oneof" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -583,14 +554,7 @@ func (*ListWalletDebtWriteOffsRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_debt_write_off_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ListWalletDebtWriteOffsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListWalletDebtWriteOffsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListWalletDebtWriteOffsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -663,42 +627,40 @@ var File_wallet_v1_debt_write_off_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_debt_write_off_proto_rawDesc = "" +
 	"\n" +
-	"\x1ewallet/v1/debt_write_off.proto\x12\twallet.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xc1\b\n" +
+	"\x1ewallet/v1/debt_write_off.proto\x12\twallet.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\x9a\b\n" +
 	"\x12WalletDebtWriteOff\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\adebt_id\x18\x04 \x01(\x04H\x03R\x06debtId\x88\x01\x01\x12\x1c\n" +
-	"\adebt_no\x18\x05 \x01(\tH\x04R\x06debtNo\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x06 \x01(\x03H\x05R\x06amount\x88\x01\x01\x12\x1b\n" +
-	"\x06reason\x18\a \x01(\tH\x06R\x06reason\x88\x01\x01\x12A\n" +
-	"\x06status\x18\b \x01(\x0e2$.wallet.v1.WalletDebtWriteOff.StatusH\aR\x06status\x88\x01\x01\x12&\n" +
-	"\frequester_id\x18\t \x01(\rH\bR\vrequesterId\x88\x01\x01\x12$\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\adebt_id\x18\x04 \x01(\x04H\x02R\x06debtId\x88\x01\x01\x12\x1c\n" +
+	"\adebt_no\x18\x05 \x01(\tH\x03R\x06debtNo\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\x06 \x01(\x03H\x04R\x06amount\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\a \x01(\tH\x05R\x06reason\x88\x01\x01\x12A\n" +
+	"\x06status\x18\b \x01(\x0e2$.wallet.v1.WalletDebtWriteOff.StatusH\x06R\x06status\x88\x01\x01\x12&\n" +
+	"\frequester_id\x18\t \x01(\rH\aR\vrequesterId\x88\x01\x01\x12$\n" +
 	"\vreviewer_id\x18\n" +
-	" \x01(\rH\tR\n" +
+	" \x01(\rH\bR\n" +
 	"reviewerId\x88\x01\x01\x12$\n" +
-	"\vreview_note\x18\v \x01(\tH\n" +
-	"R\n" +
+	"\vreview_note\x18\v \x01(\tH\tR\n" +
 	"reviewNote\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\f \x01(\tH\vR\x0eidempotencyKey\x88\x01\x01\x12>\n" +
+	"\x0fidempotency_key\x18\f \x01(\tH\n" +
+	"R\x0eidempotencyKey\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expires_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\fR\texpiresAt\x88\x01\x01\x12@\n" +
-	"\vreviewed_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\rR\n" +
+	"expires_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\vR\texpiresAt\x88\x01\x01\x12@\n" +
+	"\vreviewed_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\fR\n" +
 	"reviewedAt\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expired_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\texpiredAt\x88\x01\x01\x12?\n" +
+	"expired_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\texpiredAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tupdatedAt\x88\x01\x01\"U\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tupdatedAt\x88\x01\x01\"U\n" +
 	"\x06Status\x12\x16\n" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\v\n" +
 	"\aAPPLIED\x10\x02\x12\f\n" +
 	"\bREJECTED\x10\x03\x12\v\n" +
 	"\aEXPIRED\x10\x04B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\n" +
 	"\n" +
@@ -716,9 +678,8 @@ const file_wallet_v1_debt_write_off_proto_rawDesc = "" +
 	"\f_reviewed_atB\r\n" +
 	"\v_expired_atB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xd6\x02\n" +
-	"\x1fCreateWalletDebtWriteOffRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12\x1c\n" +
+	"\v_updated_at\"\xa8\x02\n" +
+	"\x1fCreateWalletDebtWriteOffRequest\x12\x1c\n" +
 	"\adebt_id\x18\x02 \x01(\x04B\x03\xe0A\x02R\x06debtId\x12\x1b\n" +
 	"\x06amount\x18\x03 \x01(\x03B\x03\xe0A\x02R\x06amount\x12\x1b\n" +
 	"\x06reason\x18\x04 \x01(\tB\x03\xe0A\x02R\x06reason\x12&\n" +
@@ -727,20 +688,18 @@ const file_wallet_v1_debt_write_off_proto_rawDesc = "" +
 	"\n" +
 	"governance\x18\a \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
 	"governance\x88\x01\x01B\r\n" +
-	"\v_governance\"\xb6\x02\n" +
+	"\v_governance\"\xfd\x01\n" +
 	"\x1fReviewWalletDebtWriteOffRequest\x12%\n" +
 	"\fwrite_off_id\x18\x01 \x01(\x04B\x03\xe0A\x02R\n" +
 	"writeOffId\x12$\n" +
 	"\vreviewer_id\x18\x02 \x01(\rB\x03\xe0A\x02R\n" +
 	"reviewerId\x12$\n" +
 	"\vreview_note\x18\x03 \x01(\tH\x00R\n" +
-	"reviewNote\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01\x12H\n" +
+	"reviewNote\x88\x01\x01\x12H\n" +
 	"\n" +
-	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x02R\n" +
+	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
 	"governance\x88\x01\x01B\x0e\n" +
-	"\f_review_noteB\t\n" +
-	"\a_app_idB\r\n" +
+	"\f_review_noteB\r\n" +
 	"\v_governance\"\xc2\x02\n" +
 	"\x18WalletDebtWriteOffFilter\x12A\n" +
 	"\x06status\x18\x01 \x01(\x0e2$.wallet.v1.WalletDebtWriteOff.StatusH\x00R\x06status\x88\x01\x01\x12&\n" +
@@ -754,12 +713,10 @@ const file_wallet_v1_debt_write_off_proto_rawDesc = "" +
 	"\b_user_idB\n" +
 	"\n" +
 	"\b_debt_idB\x16\n" +
-	"\x14_minimum_age_seconds\"\xe3\x01\n" +
-	"\x1eListWalletDebtWriteOffsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
+	"\x14_minimum_age_seconds\"\xaa\x01\n" +
+	"\x1eListWalletDebtWriteOffsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12@\n" +
-	"\x06filter\x18\x03 \x01(\v2#.wallet.v1.WalletDebtWriteOffFilterH\x01R\x06filter\x88\x01\x01B\t\n" +
-	"\a_app_idB\t\n" +
+	"\x06filter\x18\x03 \x01(\v2#.wallet.v1.WalletDebtWriteOffFilterH\x00R\x06filter\x88\x01\x01B\t\n" +
 	"\a_filter\"l\n" +
 	"\x1fListWalletDebtWriteOffsResponse\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.wallet.v1.WalletDebtWriteOffR\x05items\x12\x14\n" +
@@ -795,9 +752,8 @@ var file_wallet_v1_debt_write_off_proto_goTypes = []any{
 	(*ListWalletDebtWriteOffsRequest)(nil),  // 5: wallet.v1.ListWalletDebtWriteOffsRequest
 	(*ListWalletDebtWriteOffsResponse)(nil), // 6: wallet.v1.ListWalletDebtWriteOffsResponse
 	(*timestamppb.Timestamp)(nil),           // 7: google.protobuf.Timestamp
-	(v1.AppId)(0),                           // 8: common.v1.AppId
-	(*WalletGovernanceIdentity)(nil),        // 9: wallet.v1.WalletGovernanceIdentity
-	(*v11.PagingRequest)(nil),               // 10: common.pagination.v1.PagingRequest
+	(*WalletGovernanceIdentity)(nil),        // 8: wallet.v1.WalletGovernanceIdentity
+	(*v1.PagingRequest)(nil),                // 9: common.pagination.v1.PagingRequest
 }
 var file_wallet_v1_debt_write_off_proto_depIdxs = []int32{
 	0,  // 0: wallet.v1.WalletDebtWriteOff.status:type_name -> wallet.v1.WalletDebtWriteOff.Status
@@ -806,28 +762,25 @@ var file_wallet_v1_debt_write_off_proto_depIdxs = []int32{
 	7,  // 3: wallet.v1.WalletDebtWriteOff.expired_at:type_name -> google.protobuf.Timestamp
 	7,  // 4: wallet.v1.WalletDebtWriteOff.created_at:type_name -> google.protobuf.Timestamp
 	7,  // 5: wallet.v1.WalletDebtWriteOff.updated_at:type_name -> google.protobuf.Timestamp
-	8,  // 6: wallet.v1.CreateWalletDebtWriteOffRequest.app_id:type_name -> common.v1.AppId
-	9,  // 7: wallet.v1.CreateWalletDebtWriteOffRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	8,  // 8: wallet.v1.ReviewWalletDebtWriteOffRequest.app_id:type_name -> common.v1.AppId
-	9,  // 9: wallet.v1.ReviewWalletDebtWriteOffRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	0,  // 10: wallet.v1.WalletDebtWriteOffFilter.status:type_name -> wallet.v1.WalletDebtWriteOff.Status
-	8,  // 11: wallet.v1.ListWalletDebtWriteOffsRequest.app_id:type_name -> common.v1.AppId
-	10, // 12: wallet.v1.ListWalletDebtWriteOffsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	4,  // 13: wallet.v1.ListWalletDebtWriteOffsRequest.filter:type_name -> wallet.v1.WalletDebtWriteOffFilter
-	1,  // 14: wallet.v1.ListWalletDebtWriteOffsResponse.items:type_name -> wallet.v1.WalletDebtWriteOff
-	2,  // 15: wallet.v1.WalletDebtWriteOffService.CreateWriteOff:input_type -> wallet.v1.CreateWalletDebtWriteOffRequest
-	3,  // 16: wallet.v1.WalletDebtWriteOffService.ApproveWriteOff:input_type -> wallet.v1.ReviewWalletDebtWriteOffRequest
-	3,  // 17: wallet.v1.WalletDebtWriteOffService.RejectWriteOff:input_type -> wallet.v1.ReviewWalletDebtWriteOffRequest
-	5,  // 18: wallet.v1.WalletDebtWriteOffService.ListWriteOffs:input_type -> wallet.v1.ListWalletDebtWriteOffsRequest
-	1,  // 19: wallet.v1.WalletDebtWriteOffService.CreateWriteOff:output_type -> wallet.v1.WalletDebtWriteOff
-	1,  // 20: wallet.v1.WalletDebtWriteOffService.ApproveWriteOff:output_type -> wallet.v1.WalletDebtWriteOff
-	1,  // 21: wallet.v1.WalletDebtWriteOffService.RejectWriteOff:output_type -> wallet.v1.WalletDebtWriteOff
-	6,  // 22: wallet.v1.WalletDebtWriteOffService.ListWriteOffs:output_type -> wallet.v1.ListWalletDebtWriteOffsResponse
-	19, // [19:23] is the sub-list for method output_type
-	15, // [15:19] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	8,  // 6: wallet.v1.CreateWalletDebtWriteOffRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	8,  // 7: wallet.v1.ReviewWalletDebtWriteOffRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	0,  // 8: wallet.v1.WalletDebtWriteOffFilter.status:type_name -> wallet.v1.WalletDebtWriteOff.Status
+	9,  // 9: wallet.v1.ListWalletDebtWriteOffsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	4,  // 10: wallet.v1.ListWalletDebtWriteOffsRequest.filter:type_name -> wallet.v1.WalletDebtWriteOffFilter
+	1,  // 11: wallet.v1.ListWalletDebtWriteOffsResponse.items:type_name -> wallet.v1.WalletDebtWriteOff
+	2,  // 12: wallet.v1.WalletDebtWriteOffService.CreateWriteOff:input_type -> wallet.v1.CreateWalletDebtWriteOffRequest
+	3,  // 13: wallet.v1.WalletDebtWriteOffService.ApproveWriteOff:input_type -> wallet.v1.ReviewWalletDebtWriteOffRequest
+	3,  // 14: wallet.v1.WalletDebtWriteOffService.RejectWriteOff:input_type -> wallet.v1.ReviewWalletDebtWriteOffRequest
+	5,  // 15: wallet.v1.WalletDebtWriteOffService.ListWriteOffs:input_type -> wallet.v1.ListWalletDebtWriteOffsRequest
+	1,  // 16: wallet.v1.WalletDebtWriteOffService.CreateWriteOff:output_type -> wallet.v1.WalletDebtWriteOff
+	1,  // 17: wallet.v1.WalletDebtWriteOffService.ApproveWriteOff:output_type -> wallet.v1.WalletDebtWriteOff
+	1,  // 18: wallet.v1.WalletDebtWriteOffService.RejectWriteOff:output_type -> wallet.v1.WalletDebtWriteOff
+	6,  // 19: wallet.v1.WalletDebtWriteOffService.ListWriteOffs:output_type -> wallet.v1.ListWalletDebtWriteOffsResponse
+	16, // [16:20] is the sub-list for method output_type
+	12, // [12:16] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_debt_write_off_proto_init() }

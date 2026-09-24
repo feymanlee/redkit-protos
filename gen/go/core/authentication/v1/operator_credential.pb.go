@@ -328,8 +328,6 @@ type OperatorCredential struct {
 	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` // 主键ID
 	// 关联主表的后台人员ID。
 	OperatorId *uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"` // 关联主表的后台人员ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
 	// 认证方式类型。
 	IdentityType *OperatorCredential_IdentityType `protobuf:"varint,10,opt,name=identity_type,json=identityType,proto3,enum=core.authentication.v1.OperatorCredential_IdentityType,oneof" json:"identity_type,omitempty"` // 认证方式类型
 	// 身份唯一标识符。
@@ -402,13 +400,6 @@ func (x *OperatorCredential) GetId() uint32 {
 func (x *OperatorCredential) GetOperatorId() uint32 {
 	if x != nil && x.OperatorId != nil {
 		return *x.OperatorId
-	}
-	return 0
-}
-
-func (x *OperatorCredential) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -824,8 +815,6 @@ type ChangeCredentialRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
-	// app_id 限定 ChangeCredential 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// 旧凭证。
 	OldCredential string `protobuf:"bytes,3,opt,name=old_credential,json=oldCredential,proto3" json:"old_credential,omitempty"` // 旧凭证
 	// 新凭证。
@@ -867,13 +856,6 @@ func (*ChangeCredentialRequest) Descriptor() ([]byte, []int) {
 func (x *ChangeCredentialRequest) GetOperatorId() uint32 {
 	if x != nil {
 		return x.OperatorId
-	}
-	return 0
-}
-
-func (x *ChangeCredentialRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -942,39 +924,38 @@ var File_core_authentication_v1_operator_credential_proto protoreflect.FileDescr
 
 const file_core_authentication_v1_operator_credential_proto_rawDesc = "" +
 	"\n" +
-	"0core/authentication/v1/operator_credential.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a%common/pagination/v1/pagination.proto\"\xe6\x18\n" +
+	"0core/authentication/v1/operator_credential.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a%common/pagination/v1/pagination.proto\"\xb2\x18\n" +
 	"\x12OperatorCredential\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12I\n" +
 	"\voperator_id\x18\x02 \x01(\rB#\xbaG \x92\x02\x1d关联主表的后台人员IDH\x00R\n" +
-	"operatorId\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x03 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x01R\x05appId\x88\x01\x01\x12\xd8\x01\n" +
+	"operatorId\x88\x01\x01\x12\xd8\x01\n" +
 	"\ridentity_type\x18\n" +
-	" \x01(\x0e27.core.authentication.v1.OperatorCredential.IdentityTypeBu\xbaGr\x92\x02o认证方式类型，如后台人员名+密码、邮箱+密码、手机号+验证码、第三方平台认证等H\x02R\fidentityType\x88\x01\x01\x12\xa9\x02\n" +
+	" \x01(\x0e27.core.authentication.v1.OperatorCredential.IdentityTypeBu\xbaGr\x92\x02o认证方式类型，如后台人员名+密码、邮箱+密码、手机号+验证码、第三方平台认证等H\x01R\fidentityType\x88\x01\x01\x12\xa9\x02\n" +
 	"\n" +
-	"identifier\x18\v \x01(\tB\x83\x02\xbaG\xff\x01\x92\x02\xfb\x01身份唯一标识符，如果是密码登录，则是后台人员名；如果是邮箱登录，则是邮箱地址；如果是手机号登录，则是手机号；如果是第三方平台登录，则是第三方平台的唯一ID（如微信的OpenID）H\x03R\n" +
+	"identifier\x18\v \x01(\tB\x83\x02\xbaG\xff\x01\x92\x02\xfb\x01身份唯一标识符，如果是密码登录，则是后台人员名；如果是邮箱登录，则是邮箱地址；如果是手机号登录，则是手机号；如果是第三方平台登录，则是第三方平台的唯一ID（如微信的OpenID）H\x02R\n" +
 	"identifier\x88\x01\x01\x12\xae\x01\n" +
-	"\x0fcredential_type\x18\x14 \x01(\x0e29.core.authentication.v1.OperatorCredential.CredentialTypeBE\xbaGB\x92\x02?凭证类型，如加密密码、访问令牌、刷新令牌等H\x04R\x0ecredentialType\x88\x01\x01\x12\x99\x02\n" +
+	"\x0fcredential_type\x18\x14 \x01(\x0e29.core.authentication.v1.OperatorCredential.CredentialTypeBE\xbaGB\x92\x02?凭证类型，如加密密码、访问令牌、刷新令牌等H\x03R\x0ecredentialType\x88\x01\x01\x12\x99\x02\n" +
 	"\n" +
-	"credential\x18\x15 \x01(\tB\xf3\x01\xbaG\xef\x01\x92\x02\xeb\x01凭证，如果是密码登录，则是密码的hash值；如果是邮箱登录，则是邮箱的验证码；如果是手机号登录，则是手机号的验证码；如果是第三方平台登录，则是第三方平台的access_tokenH\x05R\n" +
+	"credential\x18\x15 \x01(\tB\xf3\x01\xbaG\xef\x01\x92\x02\xeb\x01凭证，如果是密码登录，则是密码的hash值；如果是邮箱登录，则是邮箱的验证码；如果是手机号登录，则是手机号的验证码；如果是第三方平台登录，则是第三方平台的access_tokenH\x04R\n" +
 	"credential\x88\x01\x01\x12\xaa\x01\n" +
 	"\n" +
-	"is_primary\x18\x1e \x01(\bB\x85\x01\xbaG\x81\x01\x92\x02~是否主认证方式，如果后台人员同时绑定了邮箱和手机号，那么可以指定邮箱为主要认证方式。H\x06R\tisPrimary\x88\x01\x01\x12b\n" +
-	"\x06status\x18\x1f \x01(\x0e21.core.authentication.v1.OperatorCredential.StatusB\x12\xbaG\x0f\x92\x02\f凭证状态H\aR\x06status\x88\x01\x01\x12\x8d\x01\n" +
+	"is_primary\x18\x1e \x01(\bB\x85\x01\xbaG\x81\x01\x92\x02~是否主认证方式，如果后台人员同时绑定了邮箱和手机号，那么可以指定邮箱为主要认证方式。H\x05R\tisPrimary\x88\x01\x01\x12b\n" +
+	"\x06status\x18\x1f \x01(\x0e21.core.authentication.v1.OperatorCredential.StatusB\x12\xbaG\x0f\x92\x02\f凭证状态H\x06R\x06status\x88\x01\x01\x12\x8d\x01\n" +
 	"\n" +
-	"extra_info\x18  \x01(\tBi\xbaGf\x92\x02c扩展信息，如果是第三方平台认证，可以记录第三方平台的后台人员信息。H\bR\textraInfo\x88\x01\x01\x12T\n" +
-	"\bprovider\x18! \x01(\tB3\xbaG0\x92\x02-第三方平台标识（如 google, wechat）H\tR\bprovider\x88\x01\x01\x12[\n" +
-	"\x13provider_account_id\x18\" \x01(\tB&\xbaG#\x92\x02 第三方平台的账号唯一IDH\n" +
-	"R\x11providerAccountId\x88\x01\x01\x12A\n" +
+	"extra_info\x18  \x01(\tBi\xbaGf\x92\x02c扩展信息，如果是第三方平台认证，可以记录第三方平台的后台人员信息。H\aR\textraInfo\x88\x01\x01\x12T\n" +
+	"\bprovider\x18! \x01(\tB3\xbaG0\x92\x02-第三方平台标识（如 google, wechat）H\bR\bprovider\x88\x01\x01\x12[\n" +
+	"\x13provider_account_id\x18\" \x01(\tB&\xbaG#\x92\x02 第三方平台的账号唯一IDH\tR\x11providerAccountId\x88\x01\x01\x12A\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\vR\tcreatedBy\x88\x01\x01\x12A\n" +
+	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\n" +
+	"R\tcreatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\fR\tupdatedBy\x88\x01\x01\x12S\n" +
+	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\vR\tupdatedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\rR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\fR\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x0eR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\rR\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x0fR\tdeletedAt\x88\x01\x01\"\xc5\x01\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x0eR\tdeletedAt\x88\x01\x01\"\xc5\x01\n" +
 	"\fIdentityType\x12\f\n" +
 	"\bUSERNAME\x10\x00\x12\n" +
 	"\n" +
@@ -1025,8 +1006,7 @@ const file_core_authentication_v1_operator_credential_proto_rawDesc = "" +
 	"\aREMOVED\x10\x04\x12\v\n" +
 	"\aBLOCKED\x10\x05\x12\r\n" +
 	"\tTEMPORARY\x10\x06B\x0e\n" +
-	"\f_operator_idB\t\n" +
-	"\a_app_idB\x10\n" +
+	"\f_operator_idB\x10\n" +
 	"\x0e_identity_typeB\r\n" +
 	"\v_identifierB\x12\n" +
 	"\x10_credential_typeB\r\n" +
@@ -1067,11 +1047,10 @@ const file_core_authentication_v1_operator_credential_proto_rawDesc = "" +
 	"credential\x12;\n" +
 	"\fneed_decrypt\x18\x04 \x01(\bB\x18\xbaG\x15\x92\x02\x12是否需要解码R\vneedDecrypt\"4\n" +
 	"\x18VerifyCredentialResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"\xf0\x01\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"\xc0\x01\n" +
 	"\x17ChangeCredentialRequest\x125\n" +
 	"\voperator_id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDR\n" +
-	"operatorId\x12.\n" +
-	"\x06app_id\x18\x02 \x01(\rB\x17\xbaG\x14\x92\x02\x11身份所属AppIDR\x05appId\x126\n" +
+	"operatorId\x126\n" +
 	"\x0eold_credential\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\t旧凭证R\roldCredential\x126\n" +
 	"\x0enew_credential\x18\x04 \x01(\tB\x0f\xbaG\f\x92\x02\t新凭证R\rnewCredential\"7\n" +
 	"\x1fCountOperatorCredentialResponse\x12\x14\n" +

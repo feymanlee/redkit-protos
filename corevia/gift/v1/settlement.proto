@@ -12,8 +12,6 @@ import "google/protobuf/timestamp.proto";
 message GiftSettlementRecord {
   // 记录 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 送礼记录 ID。
   optional uint64 send_record_id = 3;
   // 礼物 ID。
@@ -77,10 +75,8 @@ message GiftSettlementRecordFilter {
   optional google.protobuf.Timestamp occurred_to = 9;
 }
 
-// ListGiftSettlementRecordsRequest carries trusted App scope, typed filters and stable paging.
+// ListGiftSettlementRecordsRequest carries typed filters and stable paging.
 message ListGiftSettlementRecordsRequest {
-  // app_id 限定 ListGiftSettlementRecords 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   GiftSettlementRecordFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -147,19 +143,17 @@ message GiftSettlementReconciliationEvidence {
   optional uint64 gift_revision_id = 6;
 }
 
-// GiftReconciliationIssue is one App-scoped logical inconsistency for one successful Send.
+// GiftReconciliationIssue is one logical inconsistency for one successful Send.
 message GiftReconciliationIssue {
   // id 标识关联的 GiftReconciliationIssue。
   uint64 id = 1;
-  // app_id 限定 GiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // send_record_id 标识关联的 SendRecord。
   uint64 send_record_id = 3;
   // gift_id 标识关联的 Gift。
   uint32 gift_id = 4;
   // recipient_id 标识关联的 Recipient。
   string recipient_id = 5;
-  // recipient_user_id 标识当前 App 内关联的 User。
+  // recipient_user_id 标识关联的 User。
   uint64 recipient_user_id = 6;
   // issue_type 区分 GiftReconciliationIssue 的业务类型。
   GiftReconciliationIssueType issue_type = 7;
@@ -193,8 +187,6 @@ message GiftReconciliationIssue {
 message GiftReconciliationIssueNote {
   // id 标识关联的 GiftReconciliationIssueNote。
   uint64 id = 1;
-  // app_id 限定 GiftReconciliationIssueNote 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // issue_id 标识关联的 Issue。
   uint64 issue_id = 3;
   // operator_id 标识关联的后台 Operator。
@@ -229,8 +221,6 @@ message GiftReconciliationIssueFilter {
 
 // ListGiftReconciliationIssuesRequest 定义 GiftReconciliationIssues 的筛选与分页参数。
 message ListGiftReconciliationIssuesRequest {
-  // app_id 限定 ListGiftReconciliationIssues 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   GiftReconciliationIssueFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -247,8 +237,6 @@ message ListGiftReconciliationIssuesResponse {
 
 // GetGiftReconciliationIssueRequest 标识待查询的 GiftReconciliationIssue。
 message GetGiftReconciliationIssueRequest {
-  // app_id 限定 GetGiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // id 标识关联的 GetGiftReconciliationIssue。
   uint64 id = 2;
 }
@@ -265,8 +253,6 @@ message GiftReconciliationIssueAuditDetails {
 
 // AcknowledgeGiftReconciliationIssueRequest 定义执行 AcknowledgeGiftReconciliationIssue 的幂等管理命令参数。
 message AcknowledgeGiftReconciliationIssueRequest {
-  // app_id 限定 AcknowledgeGiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // id 标识关联的 AcknowledgeGiftReconciliationIssue。
   uint64 id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -281,8 +267,6 @@ message AcknowledgeGiftReconciliationIssueRequest {
 
 // AddGiftReconciliationIssueNoteRequest 定义执行 AddGiftReconciliationIssueNote 的幂等管理命令参数。
 message AddGiftReconciliationIssueNoteRequest {
-  // app_id 限定 AddGiftReconciliationIssueNote 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // id 标识关联的 AddGiftReconciliationIssueNote。
   uint64 id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -297,8 +281,6 @@ message AddGiftReconciliationIssueNoteRequest {
 
 // ReconcileGiftSettlementRequest 定义核对 GiftSettlement 的幂等管理命令参数。
 message ReconcileGiftSettlementRequest {
-  // app_id 限定 ReconcileGiftSettlement 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // issue_id 标识关联的 Issue。
   uint64 issue_id = 2;
   // operator_id 标识关联的后台 Operator。

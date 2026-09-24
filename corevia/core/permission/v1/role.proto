@@ -110,15 +110,6 @@ message Role {
     (gnostic.openapi.v3.property) = {description: "绑定的权限点ID列表"}
   ]; // 绑定的权限点ID列表
 
-  // AppID，0代表系统全局角色。
-  optional uint32 app_id = 40 [
-    (gnostic.openapi.v3.property) = {description: "AppID，0代表系统全局角色"}
-  ];  // AppID，0代表系统全局角色
-  // App名称。
-  optional string app_name = 41 [
-    (gnostic.openapi.v3.property) = {description: "App名称"}
-  ];  // App名称
-
   // 创建者后台人员ID。
   optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者后台人员ID"}]; // 创建者后台人员ID
   // 更新者后台人员ID。
@@ -133,7 +124,6 @@ message Role {
   // 删除时间。
   optional google.protobuf.Timestamp deleted_at = 202 [ (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
 }
-
 
 // 角色权限覆盖
 message RoleOverride {
@@ -199,14 +189,7 @@ message RoleMetadata {
     BLOCKED = 2;     // 阻止同步
   }
 
-  // 作用域
-  enum Scope {
-    // 平台级。
-    PLATFORM = 0;     // 平台级
-    // App级。
-    APP = 1;          // App级
-  }
-
+  // Scope 枚举（编号 0-1）已随平台收敛为单一 App 删除，见 ADR 0075；不得复用这些编号或名称。
   // 角色元数据ID。
   optional uint32 id = 1 [
     (gnostic.openapi.v3.property) = {description: "角色元数据ID"}
@@ -247,20 +230,10 @@ message RoleMetadata {
     (gnostic.openapi.v3.property) = {description: "同步策略"}
   ];  // 同步策略
 
-  // 作用域。
-  optional Scope scope = 9 [
-    (gnostic.openapi.v3.property) = {description: "作用域"}
-  ];  // 作用域
-
   // App自定义覆盖项。
   RoleOverride custom_overrides = 10 [
     (gnostic.openapi.v3.property) = {description: "App自定义覆盖项"}
   ];  // App自定义覆盖项
-
-  // AppID，0代表系统全局角色。
-  optional uint32 app_id = 20 [
-    (gnostic.openapi.v3.property) = {description: "AppID，0代表系统全局角色"}
-  ];  // AppID，0代表系统全局角色
 
   // 创建者后台人员ID。
   optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者后台人员ID"}]; // 创建者后台人员ID
@@ -276,7 +249,6 @@ message RoleMetadata {
   // 删除时间。
   optional google.protobuf.Timestamp deleted_at = 202 [ (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
 }
-
 
 // 角色列表 - 答复
 message ListRoleResponse {
@@ -309,9 +281,6 @@ message GetRoleRequest {
       description: "视图字段过滤器，用于控制返回的字段"
     }
   ]; // 视图字段过滤器，用于控制返回的字段
-
-  // App scope for this lookup.
-  optional uint32 app_id = 40;
 }
 
 // 创建角色 - 请求
@@ -335,9 +304,6 @@ message UpdateRoleRequest {
       example: {yaml : "id,realname,username"}
     }]; // 要更新的字段列表
 
-  // Immutable App scope for the target role.
-  optional uint32 app_id = 4;
-
 }
 
 // 删除角色 - 请求
@@ -354,8 +320,6 @@ message DeleteRoleRequest {
 
   }
 
-  // App scope for the target role.
-  optional uint32 app_id = 40;
 }
 
 // batch 创建 roles请求。
@@ -475,10 +439,6 @@ message ListPermissionIdsResponse {
 
 // 从App角色模板创建App角色 - 请求
 message CreateAppRoleFromTemplateRequest {
-  // AppID。
-  uint32 app_id = 1 [
-    (gnostic.openapi.v3.property) = {description: "AppID"}
-  ];  // AppID
 
   // 操作者ID。
   uint32 operator_id = 2 [
@@ -497,11 +457,6 @@ message AssignRolesToOperatorRequest {
   repeated uint32 role_ids = 2 [
     (gnostic.openapi.v3.property) = {description: "角色ID列表"}
   ]; // 角色ID列表
-
-  // AppID。
-  uint32 app_id = 3 [
-    (gnostic.openapi.v3.property) = {description: "AppID"}
-  ]; // AppID
 
   // 操作者ID。
   uint32 operated_by = 4 [
@@ -526,11 +481,6 @@ message AssignOperatorsToRoleRequest {
     (gnostic.openapi.v3.property) = {description: "后台人员ID列表"}
   ]; // 全量替换该角色的后台人员列表
 
-  // AppID。
-  uint32 app_id = 3 [
-    (gnostic.openapi.v3.property) = {description: "AppID"}
-  ]; // AppID
-
   // 操作者ID。
   uint32 operated_by = 4 [
     (gnostic.openapi.v3.property) = {description: "操作者ID"}
@@ -548,11 +498,6 @@ message GetOperatorRolesRequest {
   uint32 operator_id = 1 [
     (gnostic.openapi.v3.property) = {description: "后台人员ID"}
   ]; // 后台人员ID
-
-  // AppID。
-  uint32 app_id = 2 [
-    (gnostic.openapi.v3.property) = {description: "AppID"}
-  ]; // AppID
 
   // 是否包含已过期角色。
   bool include_expired = 3 [
@@ -622,11 +567,6 @@ message UnassignRolesFromOperatorRequest {
     (gnostic.openapi.v3.property) = {description: "要移除的角色ID列表"}
   ];
 
-  // AppID，0 表示全局。
-  uint32 app_id = 3 [
-    (gnostic.openapi.v3.property) = {description: "AppID，0 表示全局"}
-  ];
-
   // 操作者ID，用于审计。
   uint32 operated_by = 4 [
     (gnostic.openapi.v3.property) = {description: "操作者ID，用于审计"}
@@ -671,11 +611,6 @@ message UnassignOperatorsFromRoleRequest {
   repeated uint32 operator_ids = 2 [
     (gnostic.openapi.v3.property) = {description: "要移除的后台人员ID列表"}
   ]; // 要移除的后台人员ID列表
-
-  // AppID，0 表示全局。
-  uint32 app_id = 3 [
-    (gnostic.openapi.v3.property) = {description: "AppID，0 表示全局"}
-  ];
 
   // 操作者ID，用于审计。
   uint32 operator_id = 4 [

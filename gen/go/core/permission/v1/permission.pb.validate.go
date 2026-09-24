@@ -81,10 +81,6 @@ func (m *Permission) validate(all bool) error {
 		// no validation rules for GroupId
 	}
 
-	if m.Scope != nil {
-		// no validation rules for Scope
-	}
-
 	if m.GroupName != nil {
 		// no validation rules for GroupName
 	}

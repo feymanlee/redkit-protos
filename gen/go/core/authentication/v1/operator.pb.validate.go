@@ -65,8 +65,6 @@ func (m *OperatorMetadata) validate(all bool) error {
 
 	// no validation rules for OperatorId
 
-	// no validation rules for AppId
-
 	// no validation rules for DataScope
 
 	if m.ServiceName != nil {

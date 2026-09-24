@@ -87,7 +87,7 @@ type GiftCatalogServiceClient interface {
 	UpdateGiftCategory(ctx context.Context, in *UpdateGiftCategoryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 停用礼物分类并原子记录 Operator Audit。
 	DisableGiftCategory(ctx context.Context, in *DisableGiftCategoryRequest, opts ...grpc.CallOption) (*DisableGiftCategoryResponse, error)
-	// 查询 App-scoped Scene Type registry。
+	// 查询 Scene Type registry。
 	ListGiftSceneTypes(ctx context.Context, in *v1.PagingRequest, opts ...grpc.CallOption) (*ListGiftSceneTypesResponse, error)
 	// 登记稳定 Scene Type Code。
 	CreateGiftSceneType(ctx context.Context, in *CreateGiftSceneTypeRequest, opts ...grpc.CallOption) (*GiftSceneType, error)
@@ -97,9 +97,9 @@ type GiftCatalogServiceClient interface {
 	DeleteGiftSceneType(ctx context.Context, in *DeleteGiftSceneTypeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 预览 Scene Type 开关影响的 Active Gift 范围。
 	GetGiftSceneTypeImpact(ctx context.Context, in *GetGiftSceneTypeImpactRequest, opts ...grpc.CallOption) (*GiftSceneTypeImpact, error)
-	// 幂等启用或停用 App 级 Scene Type kill switch。
+	// 幂等启用或停用 Scene Type kill switch。
 	SetGiftSceneTypeEnabled(ctx context.Context, in *SetGiftSceneTypeEnabledRequest, opts ...grpc.CallOption) (*SetGiftSceneTypeEnabledResponse, error)
-	// 查询 App 范围内的 Gift Operator Audit。
+	// 查询 Gift Operator Audit。
 	ListGiftOperatorAudits(ctx context.Context, in *ListGiftOperatorAuditsRequest, opts ...grpc.CallOption) (*ListGiftOperatorAuditsResponse, error)
 }
 
@@ -391,7 +391,7 @@ type GiftCatalogServiceServer interface {
 	UpdateGiftCategory(context.Context, *UpdateGiftCategoryRequest) (*emptypb.Empty, error)
 	// 停用礼物分类并原子记录 Operator Audit。
 	DisableGiftCategory(context.Context, *DisableGiftCategoryRequest) (*DisableGiftCategoryResponse, error)
-	// 查询 App-scoped Scene Type registry。
+	// 查询 Scene Type registry。
 	ListGiftSceneTypes(context.Context, *v1.PagingRequest) (*ListGiftSceneTypesResponse, error)
 	// 登记稳定 Scene Type Code。
 	CreateGiftSceneType(context.Context, *CreateGiftSceneTypeRequest) (*GiftSceneType, error)
@@ -401,9 +401,9 @@ type GiftCatalogServiceServer interface {
 	DeleteGiftSceneType(context.Context, *DeleteGiftSceneTypeRequest) (*emptypb.Empty, error)
 	// 预览 Scene Type 开关影响的 Active Gift 范围。
 	GetGiftSceneTypeImpact(context.Context, *GetGiftSceneTypeImpactRequest) (*GiftSceneTypeImpact, error)
-	// 幂等启用或停用 App 级 Scene Type kill switch。
+	// 幂等启用或停用 Scene Type kill switch。
 	SetGiftSceneTypeEnabled(context.Context, *SetGiftSceneTypeEnabledRequest) (*SetGiftSceneTypeEnabledResponse, error)
-	// 查询 App 范围内的 Gift Operator Audit。
+	// 查询 Gift Operator Audit。
 	ListGiftOperatorAudits(context.Context, *ListGiftOperatorAuditsRequest) (*ListGiftOperatorAuditsResponse, error)
 	mustEmbedUnimplementedGiftCatalogServiceServer()
 }

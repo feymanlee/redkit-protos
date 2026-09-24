@@ -85,10 +85,6 @@ func (m *PermissionPolicy) validate(all bool) error {
 		// no validation rules for CacheTtl
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Status != nil {
 		// no validation rules for Status
 	}

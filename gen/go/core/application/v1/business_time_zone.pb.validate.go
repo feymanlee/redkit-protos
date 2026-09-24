@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,154 +33,46 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
-// Validate checks the field values on GetBusinessTimeZoneRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetBusinessTimeZoneRequest) Validate() error {
+// Validate checks the field values on BusinessTimeZone with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *BusinessTimeZone) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetBusinessTimeZoneRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on BusinessTimeZone with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetBusinessTimeZoneRequestMultiError, or nil if none found.
-func (m *GetBusinessTimeZoneRequest) ValidateAll() error {
+// BusinessTimeZoneMultiError, or nil if none found.
+func (m *BusinessTimeZone) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetBusinessTimeZoneRequest) validate(all bool) error {
+func (m *BusinessTimeZone) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
-
-	if len(errors) > 0 {
-		return GetBusinessTimeZoneRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetBusinessTimeZoneRequestMultiError is an error wrapping multiple
-// validation errors returned by GetBusinessTimeZoneRequest.ValidateAll() if
-// the designated constraints aren't met.
-type GetBusinessTimeZoneRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetBusinessTimeZoneRequestMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetBusinessTimeZoneRequestMultiError) AllErrors() []error { return m }
-
-// GetBusinessTimeZoneRequestValidationError is the validation error returned
-// by GetBusinessTimeZoneRequest.Validate if the designated constraints aren't met.
-type GetBusinessTimeZoneRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetBusinessTimeZoneRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetBusinessTimeZoneRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetBusinessTimeZoneRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetBusinessTimeZoneRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetBusinessTimeZoneRequestValidationError) ErrorName() string {
-	return "GetBusinessTimeZoneRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetBusinessTimeZoneRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetBusinessTimeZoneRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetBusinessTimeZoneRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetBusinessTimeZoneRequestValidationError{}
-
-// Validate checks the field values on AppBusinessTimeZone with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *AppBusinessTimeZone) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on AppBusinessTimeZone with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// AppBusinessTimeZoneMultiError, or nil if none found.
-func (m *AppBusinessTimeZone) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *AppBusinessTimeZone) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for IanaName
 
 	if len(errors) > 0 {
-		return AppBusinessTimeZoneMultiError(errors)
+		return BusinessTimeZoneMultiError(errors)
 	}
 
 	return nil
 }
 
-// AppBusinessTimeZoneMultiError is an error wrapping multiple validation
-// errors returned by AppBusinessTimeZone.ValidateAll() if the designated
-// constraints aren't met.
-type AppBusinessTimeZoneMultiError []error
+// BusinessTimeZoneMultiError is an error wrapping multiple validation errors
+// returned by BusinessTimeZone.ValidateAll() if the designated constraints
+// aren't met.
+type BusinessTimeZoneMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m AppBusinessTimeZoneMultiError) Error() string {
+func (m BusinessTimeZoneMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -191,11 +81,11 @@ func (m AppBusinessTimeZoneMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m AppBusinessTimeZoneMultiError) AllErrors() []error { return m }
+func (m BusinessTimeZoneMultiError) AllErrors() []error { return m }
 
-// AppBusinessTimeZoneValidationError is the validation error returned by
-// AppBusinessTimeZone.Validate if the designated constraints aren't met.
-type AppBusinessTimeZoneValidationError struct {
+// BusinessTimeZoneValidationError is the validation error returned by
+// BusinessTimeZone.Validate if the designated constraints aren't met.
+type BusinessTimeZoneValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -203,24 +93,22 @@ type AppBusinessTimeZoneValidationError struct {
 }
 
 // Field function returns field value.
-func (e AppBusinessTimeZoneValidationError) Field() string { return e.field }
+func (e BusinessTimeZoneValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e AppBusinessTimeZoneValidationError) Reason() string { return e.reason }
+func (e BusinessTimeZoneValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e AppBusinessTimeZoneValidationError) Cause() error { return e.cause }
+func (e BusinessTimeZoneValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e AppBusinessTimeZoneValidationError) Key() bool { return e.key }
+func (e BusinessTimeZoneValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e AppBusinessTimeZoneValidationError) ErrorName() string {
-	return "AppBusinessTimeZoneValidationError"
-}
+func (e BusinessTimeZoneValidationError) ErrorName() string { return "BusinessTimeZoneValidationError" }
 
 // Error satisfies the builtin error interface
-func (e AppBusinessTimeZoneValidationError) Error() string {
+func (e BusinessTimeZoneValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -232,14 +120,14 @@ func (e AppBusinessTimeZoneValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAppBusinessTimeZone.%s: %s%s",
+		"invalid %sBusinessTimeZone.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = AppBusinessTimeZoneValidationError{}
+var _ error = BusinessTimeZoneValidationError{}
 
 var _ interface {
 	Field() string
@@ -247,4 +135,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = AppBusinessTimeZoneValidationError{}
+} = BusinessTimeZoneValidationError{}

@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	filepb "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = filepb.FilePurpose(0)
 )
@@ -64,8 +60,6 @@ func (m *CreateUploadSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for Purpose
 
@@ -354,8 +348,6 @@ func (m *CompleteUploadSessionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for SessionNo
 
 	// no validation rules for Etag
@@ -599,8 +591,6 @@ func (m *AbortUploadSessionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for SessionNo
 
 	// no validation rules for Reason
@@ -708,8 +698,6 @@ func (m *GetUploadSessionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for SessionNo
 
@@ -938,8 +926,6 @@ func (m *StoreServiceFileRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	switch v := m.Part.(type) {
 	case *StoreServiceFileRequest_Metadata:

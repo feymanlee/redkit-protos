@@ -7,8 +7,8 @@
 package giftpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -208,8 +208,6 @@ type GiftSendRecord struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 记录 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 礼物 ID。
 	GiftId *uint32 `protobuf:"varint,3,opt,name=gift_id,json=giftId,proto3,oneof" json:"gift_id,omitempty"`
 	// 发送用户 ID。
@@ -309,13 +307,6 @@ func (*GiftSendRecord) Descriptor() ([]byte, []int) {
 func (x *GiftSendRecord) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftSendRecord) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -719,15 +710,13 @@ func (x *GiftSendFilter) GetOccurredTo() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListGiftSendRecordsRequest carries trusted App scope, typed filters and stable paging.
+// ListGiftSendRecordsRequest carries typed filters and stable paging.
 type ListGiftSendRecordsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGiftSendRecords 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *GiftSendFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -762,13 +751,6 @@ func (*ListGiftSendRecordsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_send_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ListGiftSendRecordsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListGiftSendRecordsRequest) GetFilter() *GiftSendFilter {
 	if x != nil {
 		return x.Filter
@@ -776,7 +758,7 @@ func (x *ListGiftSendRecordsRequest) GetFilter() *GiftSendFilter {
 	return nil
 }
 
-func (x *ListGiftSendRecordsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListGiftSendRecordsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -786,8 +768,6 @@ func (x *ListGiftSendRecordsRequest) GetPaging() *v11.PagingRequest {
 // 查询送礼记录详情请求。
 type GetGiftSendRecordRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 送礼记录 ID。
 	Id            uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -822,13 +802,6 @@ func (x *GetGiftSendRecordRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetGiftSendRecordRequest.ProtoReflect.Descriptor instead.
 func (*GetGiftSendRecordRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_send_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *GetGiftSendRecordRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetGiftSendRecordRequest) GetId() uint64 {
@@ -978,8 +951,6 @@ func (x *GiftSendReconciliation) GetNextAction() GiftSendReconciliation_NextActi
 // ReconcileGiftSendRequest checks one existing Send without replaying user intent.
 type ReconcileGiftSendRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ReconcileGiftSend 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// send_id 标识关联的 Send。
 	SendId uint64 `protobuf:"varint,2,opt,name=send_id,json=sendId,proto3" json:"send_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1022,13 +993,6 @@ func (x *ReconcileGiftSendRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ReconcileGiftSendRequest.ProtoReflect.Descriptor instead.
 func (*ReconcileGiftSendRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_send_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *ReconcileGiftSendRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReconcileGiftSendRequest) GetSendId() uint64 {
@@ -1124,8 +1088,6 @@ func (x *ReconcileGiftSendResponse) GetReplayed() bool {
 // 发送礼物请求。
 type SendGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 礼物 ID。
 	GiftId uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
 	// 发送用户 ID。
@@ -1180,13 +1142,6 @@ func (x *SendGiftRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SendGiftRequest.ProtoReflect.Descriptor instead.
 func (*SendGiftRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_send_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *SendGiftRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SendGiftRequest) GetGiftId() uint32 {
@@ -1269,8 +1224,6 @@ func (x *SendGiftRequest) GetMetadata() string {
 // 使用背包礼物发送礼物请求。
 type SendBackpackGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 礼物 ID。
 	GiftId uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
 	// 发送用户 ID。
@@ -1325,13 +1278,6 @@ func (x *SendBackpackGiftRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SendBackpackGiftRequest.ProtoReflect.Descriptor instead.
 func (*SendBackpackGiftRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_send_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *SendBackpackGiftRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SendBackpackGiftRequest) GetGiftId() uint32 {
@@ -1415,49 +1361,48 @@ var File_gift_v1_send_proto protoreflect.FileDescriptor
 
 const file_gift_v1_send_proto_rawDesc = "" +
 	"\n" +
-	"\x12gift/v1/send.proto\x12\agift.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x16gift/v1/backpack.proto\x1a\x18gift/v1/settlement.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xcd\x10\n" +
+	"\x12gift/v1/send.proto\x12\agift.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x16gift/v1/backpack.proto\x1a\x18gift/v1/settlement.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x10\n" +
 	"\x0eGiftSendRecord\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x03 \x01(\rH\x02R\x06giftId\x88\x01\x01\x12)\n" +
-	"\x0esender_user_id\x18\x04 \x01(\x04H\x03R\fsenderUserId\x88\x01\x01\x12*\n" +
-	"\x0erecipient_type\x18\x05 \x01(\tH\x04R\rrecipientType\x88\x01\x01\x12&\n" +
-	"\frecipient_id\x18\x06 \x01(\tH\x05R\vrecipientId\x88\x01\x01\x12\x1f\n" +
-	"\bquantity\x18\a \x01(\rH\x06R\bquantity\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x03 \x01(\rH\x01R\x06giftId\x88\x01\x01\x12)\n" +
+	"\x0esender_user_id\x18\x04 \x01(\x04H\x02R\fsenderUserId\x88\x01\x01\x12*\n" +
+	"\x0erecipient_type\x18\x05 \x01(\tH\x03R\rrecipientType\x88\x01\x01\x12&\n" +
+	"\frecipient_id\x18\x06 \x01(\tH\x04R\vrecipientId\x88\x01\x01\x12\x1f\n" +
+	"\bquantity\x18\a \x01(\rH\x05R\bquantity\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"unit_price\x18\b \x01(\x03H\aR\tunitPrice\x88\x01\x01\x12$\n" +
-	"\vtotal_price\x18\t \x01(\x03H\bR\n" +
+	"unit_price\x18\b \x01(\x03H\x06R\tunitPrice\x88\x01\x01\x12$\n" +
+	"\vtotal_price\x18\t \x01(\x03H\aR\n" +
 	"totalPrice\x88\x01\x01\x12'\n" +
 	"\rwallet_biz_id\x18\n" +
-	" \x01(\tH\tR\vwalletBizId\x88\x01\x01\x12;\n" +
-	"\x06status\x18\v \x01(\x0e2\x1e.gift.v1.GiftSendRecord.StatusH\n" +
-	"R\x06status\x88\x01\x01\x12(\n" +
-	"\rerror_message\x18\f \x01(\tH\vR\ferrorMessage\x88\x01\x01\x12\"\n" +
+	" \x01(\tH\bR\vwalletBizId\x88\x01\x01\x12;\n" +
+	"\x06status\x18\v \x01(\x0e2\x1e.gift.v1.GiftSendRecord.StatusH\tR\x06status\x88\x01\x01\x12(\n" +
+	"\rerror_message\x18\f \x01(\tH\n" +
+	"R\ferrorMessage\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"scene_type\x18\r \x01(\tH\fR\tsceneType\x88\x01\x01\x12\x1e\n" +
-	"\bscene_id\x18\x0e \x01(\tH\rR\asceneId\x88\x01\x01\x12/\n" +
-	"\x11recipient_user_id\x18\x0f \x01(\x04H\x0eR\x0frecipientUserId\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\x10 \x01(\tH\x0fR\x0eidempotencyKey\x88\x01\x01\x12\"\n" +
+	"scene_type\x18\r \x01(\tH\vR\tsceneType\x88\x01\x01\x12\x1e\n" +
+	"\bscene_id\x18\x0e \x01(\tH\fR\asceneId\x88\x01\x01\x12/\n" +
+	"\x11recipient_user_id\x18\x0f \x01(\x04H\rR\x0frecipientUserId\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\x10 \x01(\tH\x0eR\x0eidempotencyKey\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\x11 \x01(\tH\x10R\trequestId\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\x12 \x01(\tH\x11R\bmetadata\x88\x01\x01\x12@\n" +
-	"\x1awallet_user_transaction_id\x18\x13 \x01(\x04H\x12R\x17walletUserTransactionId\x88\x01\x01\x12H\n" +
-	"\x1ewallet_platform_transaction_id\x18\x14 \x01(\x04H\x13R\x1bwalletPlatformTransactionId\x88\x01\x01\x12\x1d\n" +
-	"\adiamond\x18\x15 \x01(\x03H\x14R\adiamond\x88\x01\x01\x12\x17\n" +
-	"\x04coin\x18\x16 \x01(\x03H\x15R\x04coin\x88\x01\x01\x12,\n" +
-	"\x0fplatform_amount\x18\x17 \x01(\x03H\x16R\x0eplatformAmount\x88\x01\x01\x12.\n" +
-	"\x10recipient_amount\x18\x18 \x01(\x03H\x17R\x0frecipientAmount\x88\x01\x01\x12*\n" +
-	"\x0epayment_source\x18\x19 \x01(\tH\x18R\rpaymentSource\x88\x01\x01\x12;\n" +
-	"\x17backpack_transaction_id\x18\x1a \x01(\x04H\x19R\x15backpackTransactionId\x88\x01\x01\x120\n" +
-	"\x11backpack_quantity\x18\x1b \x01(\rH\x1aR\x10backpackQuantity\x88\x01\x01\x12*\n" +
-	"\x0eprice_snapshot\x18\x1c \x01(\x03H\x1bR\rpriceSnapshot\x88\x01\x01\x12-\n" +
-	"\x10gift_revision_id\x18\x1d \x01(\x04H\x1cR\x0egiftRevisionId\x88\x01\x01\x12(\n" +
-	"\rplatform_rate\x18\x1e \x01(\rH\x1dR\fplatformRate\x88\x01\x01\x12*\n" +
-	"\x0erecipient_rate\x18\x1f \x01(\rH\x1eR\rrecipientRate\x88\x01\x01\x12?\n" +
+	"request_id\x18\x11 \x01(\tH\x0fR\trequestId\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\x12 \x01(\tH\x10R\bmetadata\x88\x01\x01\x12@\n" +
+	"\x1awallet_user_transaction_id\x18\x13 \x01(\x04H\x11R\x17walletUserTransactionId\x88\x01\x01\x12H\n" +
+	"\x1ewallet_platform_transaction_id\x18\x14 \x01(\x04H\x12R\x1bwalletPlatformTransactionId\x88\x01\x01\x12\x1d\n" +
+	"\adiamond\x18\x15 \x01(\x03H\x13R\adiamond\x88\x01\x01\x12\x17\n" +
+	"\x04coin\x18\x16 \x01(\x03H\x14R\x04coin\x88\x01\x01\x12,\n" +
+	"\x0fplatform_amount\x18\x17 \x01(\x03H\x15R\x0eplatformAmount\x88\x01\x01\x12.\n" +
+	"\x10recipient_amount\x18\x18 \x01(\x03H\x16R\x0frecipientAmount\x88\x01\x01\x12*\n" +
+	"\x0epayment_source\x18\x19 \x01(\tH\x17R\rpaymentSource\x88\x01\x01\x12;\n" +
+	"\x17backpack_transaction_id\x18\x1a \x01(\x04H\x18R\x15backpackTransactionId\x88\x01\x01\x120\n" +
+	"\x11backpack_quantity\x18\x1b \x01(\rH\x19R\x10backpackQuantity\x88\x01\x01\x12*\n" +
+	"\x0eprice_snapshot\x18\x1c \x01(\x03H\x1aR\rpriceSnapshot\x88\x01\x01\x12-\n" +
+	"\x10gift_revision_id\x18\x1d \x01(\x04H\x1bR\x0egiftRevisionId\x88\x01\x01\x12(\n" +
+	"\rplatform_rate\x18\x1e \x01(\rH\x1cR\fplatformRate\x88\x01\x01\x12*\n" +
+	"\x0erecipient_rate\x18\x1f \x01(\rH\x1dR\rrecipientRate\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1fR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1eR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH R\tupdatedAt\x88\x01\x01\"X\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1fR\tupdatedAt\x88\x01\x01\"X\n" +
 	"\x06Status\x12\x16\n" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\r\n" +
@@ -1466,8 +1411,7 @@ const file_gift_v1_send_proto_rawDesc = "" +
 	"\x06FAILED\x10\x03\x12\x0e\n" +
 	"\n" +
 	"PROCESSING\x10\x04B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_gift_idB\x11\n" +
 	"\x0f_sender_user_idB\x11\n" +
@@ -1527,16 +1471,12 @@ const file_gift_v1_send_proto_rawDesc = "" +
 	"\v_scene_typeB\v\n" +
 	"\t_scene_idB\x10\n" +
 	"\x0e_occurred_fromB\x0e\n" +
-	"\f_occurred_to\"\xc3\x01\n" +
-	"\x1aListGiftSendRecordsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12/\n" +
+	"\f_occurred_to\"\x8a\x01\n" +
+	"\x1aListGiftSendRecordsRequest\x12/\n" +
 	"\x06filter\x18\x02 \x01(\v2\x17.gift.v1.GiftSendFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"c\n" +
-	"\x18GetGiftSendRecordRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\x04R\x02idB\t\n" +
-	"\a_app_id\"\xd5\x02\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"*\n" +
+	"\x18GetGiftSendRecordRequest\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\x04R\x02id\"\xd5\x02\n" +
 	"\x17GiftSendWorkbenchDetail\x12+\n" +
 	"\x04send\x18\x01 \x01(\v2\x17.gift.v1.GiftSendRecordR\x04send\x12B\n" +
 	"\n" +
@@ -1564,62 +1504,56 @@ const file_gift_v1_send_proto_rawDesc = "" +
 	"\x04NONE\x10\x01\x12\x17\n" +
 	"\x13USER_RETRY_REQUIRED\x10\x02\x12\x17\n" +
 	"\x13WAIT_FOR_DOWNSTREAM\x10\x03\x12\x15\n" +
-	"\x11INVESTIGATE_FACTS\x10\x04\"\xfb\x01\n" +
-	"\x18ReconcileGiftSendRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x17\n" +
+	"\x11INVESTIGATE_FACTS\x10\x04\"\xc2\x01\n" +
+	"\x18ReconcileGiftSendRequest\x12\x17\n" +
 	"\asend_id\x18\x02 \x01(\x04R\x06sendId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x01R\trequestId\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
 	"\v_request_id\"q\n" +
 	"\x19ReconcileGiftSendResponse\x128\n" +
 	"\x06detail\x18\x01 \x01(\v2 .gift.v1.GiftSendWorkbenchDetailR\x06detail\x12\x1a\n" +
-	"\breplayed\x18\x02 \x01(\bR\breplayed\"\xcb\x04\n" +
-	"\x0fSendGiftRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x17\n" +
+	"\breplayed\x18\x02 \x01(\bR\breplayed\"\x92\x04\n" +
+	"\x0fSendGiftRequest\x12\x17\n" +
 	"\agift_id\x18\x02 \x01(\rR\x06giftId\x12$\n" +
 	"\x0esender_user_id\x18\x03 \x01(\x04R\fsenderUserId\x12%\n" +
 	"\x0erecipient_type\x18\x04 \x01(\tR\rrecipientType\x12!\n" +
 	"\frecipient_id\x18\x05 \x01(\tR\vrecipientId\x12\x1f\n" +
-	"\bquantity\x18\x06 \x01(\rH\x01R\bquantity\x88\x01\x01\x12\"\n" +
+	"\bquantity\x18\x06 \x01(\rH\x00R\bquantity\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"scene_type\x18\a \x01(\tH\x02R\tsceneType\x88\x01\x01\x12\x1e\n" +
-	"\bscene_id\x18\b \x01(\tH\x03R\asceneId\x88\x01\x01\x12/\n" +
-	"\x11recipient_user_id\x18\t \x01(\x04H\x04R\x0frecipientUserId\x88\x01\x01\x12,\n" +
+	"scene_type\x18\a \x01(\tH\x01R\tsceneType\x88\x01\x01\x12\x1e\n" +
+	"\bscene_id\x18\b \x01(\tH\x02R\asceneId\x88\x01\x01\x12/\n" +
+	"\x11recipient_user_id\x18\t \x01(\x04H\x03R\x0frecipientUserId\x88\x01\x01\x12,\n" +
 	"\x0fidempotency_key\x18\n" +
-	" \x01(\tH\x05R\x0eidempotencyKey\x88\x01\x01\x12\"\n" +
+	" \x01(\tH\x04R\x0eidempotencyKey\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\v \x01(\tH\x06R\trequestId\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\f \x01(\tH\aR\bmetadata\x88\x01\x01B\t\n" +
-	"\a_app_idB\v\n" +
+	"request_id\x18\v \x01(\tH\x05R\trequestId\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\f \x01(\tH\x06R\bmetadata\x88\x01\x01B\v\n" +
 	"\t_quantityB\r\n" +
 	"\v_scene_typeB\v\n" +
 	"\t_scene_idB\x14\n" +
 	"\x12_recipient_user_idB\x12\n" +
 	"\x10_idempotency_keyB\r\n" +
 	"\v_request_idB\v\n" +
-	"\t_metadata\"\xd3\x04\n" +
-	"\x17SendBackpackGiftRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x17\n" +
+	"\t_metadata\"\x9a\x04\n" +
+	"\x17SendBackpackGiftRequest\x12\x17\n" +
 	"\agift_id\x18\x02 \x01(\rR\x06giftId\x12$\n" +
 	"\x0esender_user_id\x18\x03 \x01(\x04R\fsenderUserId\x12%\n" +
 	"\x0erecipient_type\x18\x04 \x01(\tR\rrecipientType\x12!\n" +
 	"\frecipient_id\x18\x05 \x01(\tR\vrecipientId\x12\x1f\n" +
-	"\bquantity\x18\x06 \x01(\rH\x01R\bquantity\x88\x01\x01\x12\"\n" +
+	"\bquantity\x18\x06 \x01(\rH\x00R\bquantity\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"scene_type\x18\a \x01(\tH\x02R\tsceneType\x88\x01\x01\x12\x1e\n" +
-	"\bscene_id\x18\b \x01(\tH\x03R\asceneId\x88\x01\x01\x12/\n" +
-	"\x11recipient_user_id\x18\t \x01(\x04H\x04R\x0frecipientUserId\x88\x01\x01\x12,\n" +
+	"scene_type\x18\a \x01(\tH\x01R\tsceneType\x88\x01\x01\x12\x1e\n" +
+	"\bscene_id\x18\b \x01(\tH\x02R\asceneId\x88\x01\x01\x12/\n" +
+	"\x11recipient_user_id\x18\t \x01(\x04H\x03R\x0frecipientUserId\x88\x01\x01\x12,\n" +
 	"\x0fidempotency_key\x18\n" +
-	" \x01(\tH\x05R\x0eidempotencyKey\x88\x01\x01\x12\"\n" +
+	" \x01(\tH\x04R\x0eidempotencyKey\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"request_id\x18\v \x01(\tH\x06R\trequestId\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\f \x01(\tH\aR\bmetadata\x88\x01\x01B\t\n" +
-	"\a_app_idB\v\n" +
+	"request_id\x18\v \x01(\tH\x05R\trequestId\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\f \x01(\tH\x06R\bmetadata\x88\x01\x01B\v\n" +
 	"\t_quantityB\r\n" +
 	"\v_scene_typeB\v\n" +
 	"\t_scene_idB\x14\n" +
@@ -1659,10 +1593,9 @@ var file_gift_v1_send_proto_goTypes = []any{
 	(*SendGiftRequest)(nil),                // 12: gift.v1.SendGiftRequest
 	(*SendBackpackGiftRequest)(nil),        // 13: gift.v1.SendBackpackGiftRequest
 	(*timestamppb.Timestamp)(nil),          // 14: google.protobuf.Timestamp
-	(v1.AppId)(0),                          // 15: common.v1.AppId
-	(*v11.PagingRequest)(nil),              // 16: common.pagination.v1.PagingRequest
-	(*GiftSettlementRecord)(nil),           // 17: gift.v1.GiftSettlementRecord
-	(*GiftBackpackTransactionItem)(nil),    // 18: gift.v1.GiftBackpackTransactionItem
+	(*v1.PagingRequest)(nil),               // 15: common.pagination.v1.PagingRequest
+	(*GiftSettlementRecord)(nil),           // 16: gift.v1.GiftSettlementRecord
+	(*GiftBackpackTransactionItem)(nil),    // 17: gift.v1.GiftBackpackTransactionItem
 }
 var file_gift_v1_send_proto_depIdxs = []int32{
 	0,  // 0: gift.v1.GiftSendRecord.status:type_name -> gift.v1.GiftSendRecord.Status
@@ -1672,26 +1605,21 @@ var file_gift_v1_send_proto_depIdxs = []int32{
 	0,  // 4: gift.v1.GiftSendFilter.statuses:type_name -> gift.v1.GiftSendRecord.Status
 	14, // 5: gift.v1.GiftSendFilter.occurred_from:type_name -> google.protobuf.Timestamp
 	14, // 6: gift.v1.GiftSendFilter.occurred_to:type_name -> google.protobuf.Timestamp
-	15, // 7: gift.v1.ListGiftSendRecordsRequest.app_id:type_name -> common.v1.AppId
-	5,  // 8: gift.v1.ListGiftSendRecordsRequest.filter:type_name -> gift.v1.GiftSendFilter
-	16, // 9: gift.v1.ListGiftSendRecordsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	15, // 10: gift.v1.GetGiftSendRecordRequest.app_id:type_name -> common.v1.AppId
-	3,  // 11: gift.v1.GiftSendWorkbenchDetail.send:type_name -> gift.v1.GiftSendRecord
-	17, // 12: gift.v1.GiftSendWorkbenchDetail.settlement:type_name -> gift.v1.GiftSettlementRecord
-	18, // 13: gift.v1.GiftSendWorkbenchDetail.backpack_items:type_name -> gift.v1.GiftBackpackTransactionItem
-	9,  // 14: gift.v1.GiftSendWorkbenchDetail.last_reconciliation:type_name -> gift.v1.GiftSendReconciliation
-	14, // 15: gift.v1.GiftSendReconciliation.checked_at:type_name -> google.protobuf.Timestamp
-	1,  // 16: gift.v1.GiftSendReconciliation.result:type_name -> gift.v1.GiftSendReconciliation.Result
-	2,  // 17: gift.v1.GiftSendReconciliation.next_action:type_name -> gift.v1.GiftSendReconciliation.NextAction
-	15, // 18: gift.v1.ReconcileGiftSendRequest.app_id:type_name -> common.v1.AppId
-	8,  // 19: gift.v1.ReconcileGiftSendResponse.detail:type_name -> gift.v1.GiftSendWorkbenchDetail
-	15, // 20: gift.v1.SendGiftRequest.app_id:type_name -> common.v1.AppId
-	15, // 21: gift.v1.SendBackpackGiftRequest.app_id:type_name -> common.v1.AppId
-	22, // [22:22] is the sub-list for method output_type
-	22, // [22:22] is the sub-list for method input_type
-	22, // [22:22] is the sub-list for extension type_name
-	22, // [22:22] is the sub-list for extension extendee
-	0,  // [0:22] is the sub-list for field type_name
+	5,  // 7: gift.v1.ListGiftSendRecordsRequest.filter:type_name -> gift.v1.GiftSendFilter
+	15, // 8: gift.v1.ListGiftSendRecordsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	3,  // 9: gift.v1.GiftSendWorkbenchDetail.send:type_name -> gift.v1.GiftSendRecord
+	16, // 10: gift.v1.GiftSendWorkbenchDetail.settlement:type_name -> gift.v1.GiftSettlementRecord
+	17, // 11: gift.v1.GiftSendWorkbenchDetail.backpack_items:type_name -> gift.v1.GiftBackpackTransactionItem
+	9,  // 12: gift.v1.GiftSendWorkbenchDetail.last_reconciliation:type_name -> gift.v1.GiftSendReconciliation
+	14, // 13: gift.v1.GiftSendReconciliation.checked_at:type_name -> google.protobuf.Timestamp
+	1,  // 14: gift.v1.GiftSendReconciliation.result:type_name -> gift.v1.GiftSendReconciliation.Result
+	2,  // 15: gift.v1.GiftSendReconciliation.next_action:type_name -> gift.v1.GiftSendReconciliation.NextAction
+	8,  // 16: gift.v1.ReconcileGiftSendResponse.detail:type_name -> gift.v1.GiftSendWorkbenchDetail
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_gift_v1_send_proto_init() }
@@ -1703,8 +1631,6 @@ func file_gift_v1_send_proto_init() {
 	file_gift_v1_settlement_proto_init()
 	file_gift_v1_send_proto_msgTypes[0].OneofWrappers = []any{}
 	file_gift_v1_send_proto_msgTypes[2].OneofWrappers = []any{}
-	file_gift_v1_send_proto_msgTypes[3].OneofWrappers = []any{}
-	file_gift_v1_send_proto_msgTypes[4].OneofWrappers = []any{}
 	file_gift_v1_send_proto_msgTypes[5].OneofWrappers = []any{}
 	file_gift_v1_send_proto_msgTypes[7].OneofWrappers = []any{}
 	file_gift_v1_send_proto_msgTypes[9].OneofWrappers = []any{}

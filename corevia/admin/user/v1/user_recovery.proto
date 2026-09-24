@@ -10,15 +10,15 @@ import "validate/validate.proto";
 
 // UserRecoveryAdminService 暴露所选 App 的 Recovery 初审队列。
 service UserRecoveryAdminService {
-  // ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+  // ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
   rpc ListRecoveryRequests(AdminListRecoveryRequestsRequest) returns (.user.administration.v1.ListRecoveryRequestsResponse) {
     option (google.api.http) = {get: "/admin/v1/user-recovery-requests"};
   }
-  // GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+  // GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
   rpc GetRecoveryRequest(AdminGetRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
     option (google.api.http) = {get: "/admin/v1/user-recovery-requests/{request_no}"};
   }
-  // AcceptRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+  // AcceptRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
   rpc AcceptRecoveryRequest(AdminAcceptRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
     option (google.api.http) = {post: "/admin/v1/user-recovery-requests/{request_no}:accept" body: "*"};
   }
@@ -26,7 +26,7 @@ service UserRecoveryAdminService {
   rpc ApproveRecoveryRequest(AdminApproveRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
     option (google.api.http) = {post: "/admin/v1/user-recovery-requests/{request_no}:approve" body: "*"};
   }
-  // RejectRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+  // RejectRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
   rpc RejectRecoveryRequest(AdminRejectRecoveryRequestRequest) returns (.user.administration.v1.RecoveryRequest) {
     option (google.api.http) = {post: "/admin/v1/user-recovery-requests/{request_no}:reject" body: "*"};
   }

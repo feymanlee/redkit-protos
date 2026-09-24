@@ -195,8 +195,6 @@ message AdminForceKickMemberRequest {
 
 // AdminCreateRoomRestrictionRequest Operator 创建处置。
 message AdminCreateRoomRestrictionRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  .common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // room_id 标识房间。
   uint64 room_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // session_id 在 scope=SESSION 时必填。

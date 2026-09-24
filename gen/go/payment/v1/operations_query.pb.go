@@ -7,8 +7,6 @@
 package paymentpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -26,9 +24,7 @@ const (
 
 // GetRechargeDeadLetterSummaryRequest 标识待查询的 RechargeDeadLetterSummary。
 type GetRechargeDeadLetterSummaryRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetRechargeDeadLetterSummary 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -61,13 +57,6 @@ func (x *GetRechargeDeadLetterSummaryRequest) ProtoReflect() protoreflect.Messag
 // Deprecated: Use GetRechargeDeadLetterSummaryRequest.ProtoReflect.Descriptor instead.
 func (*GetRechargeDeadLetterSummaryRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_operations_query_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GetRechargeDeadLetterSummaryRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // PaymentOperationsAmount 表示运营指标中的金额及其币种。
@@ -194,9 +183,8 @@ var File_payment_v1_operations_query_proto protoreflect.FileDescriptor
 const file_payment_v1_operations_query_proto_rawDesc = "" +
 	"\n" +
 	"!payment/v1/operations_query.proto\x12\n" +
-	"payment.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"S\n" +
-	"#GetRechargeDeadLetterSummaryRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\"M\n" +
+	"payment.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"%\n" +
+	"#GetRechargeDeadLetterSummaryRequest\"M\n" +
 	"\x17PaymentOperationsAmount\x12\x1a\n" +
 	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\x03R\x06amount\"\xba\x01\n" +
@@ -229,20 +217,18 @@ var file_payment_v1_operations_query_proto_goTypes = []any{
 	(*GetRechargeDeadLetterSummaryRequest)(nil), // 0: payment.v1.GetRechargeDeadLetterSummaryRequest
 	(*PaymentOperationsAmount)(nil),             // 1: payment.v1.PaymentOperationsAmount
 	(*PaymentOperationsMetric)(nil),             // 2: payment.v1.PaymentOperationsMetric
-	(v1.AppId)(0),                               // 3: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),               // 4: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),               // 3: google.protobuf.Timestamp
 }
 var file_payment_v1_operations_query_proto_depIdxs = []int32{
-	3, // 0: payment.v1.GetRechargeDeadLetterSummaryRequest.app_id:type_name -> common.v1.AppId
-	1, // 1: payment.v1.PaymentOperationsMetric.amounts:type_name -> payment.v1.PaymentOperationsAmount
-	4, // 2: payment.v1.PaymentOperationsMetric.oldest_at:type_name -> google.protobuf.Timestamp
-	0, // 3: payment.v1.PaymentOperationsQueryService.GetRechargeDeadLetterSummary:input_type -> payment.v1.GetRechargeDeadLetterSummaryRequest
-	2, // 4: payment.v1.PaymentOperationsQueryService.GetRechargeDeadLetterSummary:output_type -> payment.v1.PaymentOperationsMetric
-	4, // [4:5] is the sub-list for method output_type
-	3, // [3:4] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1, // 0: payment.v1.PaymentOperationsMetric.amounts:type_name -> payment.v1.PaymentOperationsAmount
+	3, // 1: payment.v1.PaymentOperationsMetric.oldest_at:type_name -> google.protobuf.Timestamp
+	0, // 2: payment.v1.PaymentOperationsQueryService.GetRechargeDeadLetterSummary:input_type -> payment.v1.GetRechargeDeadLetterSummaryRequest
+	2, // 3: payment.v1.PaymentOperationsQueryService.GetRechargeDeadLetterSummary:output_type -> payment.v1.PaymentOperationsMetric
+	3, // [3:4] is the sub-list for method output_type
+	2, // [2:3] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_operations_query_proto_init() }

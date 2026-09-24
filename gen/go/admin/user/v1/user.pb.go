@@ -29,7 +29,7 @@ const (
 // GetAdminUserRequest 标识待查询的 AdminUser。
 type GetAdminUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -72,7 +72,7 @@ func (x *GetAdminUserRequest) GetUserId() uint64 {
 	return 0
 }
 
-// AdminListUsersRequest omits App scope because Admin BFF injects the selected App.
+// AdminListUsersRequest 的可见范围由 Admin BFF 的服务端上下文限定，请求不接受范围参数。
 type AdminListUsersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// search selects one explicit User lookup strategy.
@@ -139,7 +139,7 @@ func (x *AdminListUsersRequest) GetPaging() *v11.PagingRequest {
 // AdminSuspendUserRequest 定义暂停 User 的幂等管理命令参数。
 type AdminSuspendUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// suspended_until 指定 SuspendUser 查询或生效区间的结束边界。
 	SuspendedUntil *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=suspended_until,json=suspendedUntil,proto3" json:"suspended_until,omitempty"`
@@ -221,7 +221,7 @@ func (x *AdminSuspendUserRequest) GetInternalNote() string {
 // AdminReactivateUserRequest 定义恢复 User 的幂等管理命令参数。
 type AdminReactivateUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,2,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
@@ -294,7 +294,7 @@ func (x *AdminReactivateUserRequest) GetInternalNote() string {
 // AdminModerateUserProfileRequest 定义审核 UserProfile 的幂等管理命令参数。
 type AdminModerateUserProfileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// clear_fields 列出 ModerateUserProfile 关联的 ProfileModerationField。
 	ClearFields []v1.ProfileModerationField `protobuf:"varint,2,rep,packed,name=clear_fields,json=clearFields,proto3,enum=user.administration.v1.ProfileModerationField" json:"clear_fields,omitempty"`
@@ -376,7 +376,7 @@ func (x *AdminModerateUserProfileRequest) GetIdempotencyKey() string {
 // AdminResetUserCodeRequest 定义重置 UserCode 的幂等管理命令参数。
 type AdminResetUserCodeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -440,7 +440,7 @@ func (x *AdminResetUserCodeRequest) GetIdempotencyKey() string {
 // AdminBeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
 type AdminBeginUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -504,7 +504,7 @@ func (x *AdminBeginUserDeletionRequest) GetIdempotencyKey() string {
 // AdminCancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
 type AdminCancelUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -568,7 +568,7 @@ func (x *AdminCancelUserDeletionRequest) GetIdempotencyKey() string {
 // AdminRevealUserPIIRequest 定义执行 RevealUserPII 的命令参数。
 type AdminRevealUserPIIRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason        string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -623,7 +623,7 @@ func (x *AdminRevealUserPIIRequest) GetReason() string {
 // AdminListUserCredentialsRequest 定义 UserCredentials 的筛选与分页参数。
 type AdminListUserCredentialsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -678,7 +678,7 @@ func (x *AdminListUserCredentialsRequest) GetPaging() *v11.PagingRequest {
 // AdminListUserAdminActionsRequest 定义 UserAdminActions 的筛选与分页参数。
 type AdminListUserAdminActionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -733,7 +733,7 @@ func (x *AdminListUserAdminActionsRequest) GetPaging() *v11.PagingRequest {
 // AdminListUserSecurityNoticesRequest 定义 UserSecurityNotices 的筛选与分页参数。
 type AdminListUserSecurityNoticesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -788,7 +788,7 @@ func (x *AdminListUserSecurityNoticesRequest) GetPaging() *v11.PagingRequest {
 // AdminResendUserSecurityNoticeRequest 定义执行 ResendUserSecurityNotice 的幂等管理命令参数。
 type AdminResendUserSecurityNoticeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// notice_no 是 ResendUserSecurityNotice 对外关联与审计使用的业务编号。
 	NoticeNo string `protobuf:"bytes,2,opt,name=notice_no,json=noticeNo,proto3" json:"notice_no,omitempty"`

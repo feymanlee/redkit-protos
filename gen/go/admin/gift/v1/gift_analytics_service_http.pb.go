@@ -25,11 +25,11 @@ const OperationGiftAnalyticsServiceListGiftEvents = "/admin.gift.v1.GiftAnalytic
 const OperationGiftAnalyticsServiceListGiftStats = "/admin.gift.v1.GiftAnalyticsService/ListGiftStats"
 
 type GiftAnalyticsServiceHTTPServer interface {
-	// GetGiftOverview 查询当前 App 的礼物运营概览。
+	// GetGiftOverview 查询礼物运营概览。
 	GetGiftOverview(context.Context, *AdminGetGiftOverviewRequest) (*v1.GiftOverviewResponse, error)
-	// ListGiftEvents 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+	// ListGiftEvents 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
 	ListGiftEvents(context.Context, *AdminListGiftEventsRequest) (*v1.ListGiftEventResponse, error)
-	// ListGiftStats 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+	// ListGiftStats 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
 	ListGiftStats(context.Context, *AdminListGiftStatsRequest) (*v1.ListGiftStatResponse, error)
 }
 
@@ -98,11 +98,11 @@ func _GiftAnalyticsService_ListGiftEvents0_HTTP_Handler(srv GiftAnalyticsService
 }
 
 type GiftAnalyticsServiceHTTPClient interface {
-	// GetGiftOverview 查询当前 App 的礼物运营概览。
+	// GetGiftOverview 查询礼物运营概览。
 	GetGiftOverview(ctx context.Context, req *AdminGetGiftOverviewRequest, opts ...http.CallOption) (rsp *v1.GiftOverviewResponse, err error)
-	// ListGiftEvents 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+	// ListGiftEvents 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
 	ListGiftEvents(ctx context.Context, req *AdminListGiftEventsRequest, opts ...http.CallOption) (rsp *v1.ListGiftEventResponse, err error)
-	// ListGiftStats 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+	// ListGiftStats 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
 	ListGiftStats(ctx context.Context, req *AdminListGiftStatsRequest, opts ...http.CallOption) (rsp *v1.ListGiftStatResponse, err error)
 }
 
@@ -114,7 +114,7 @@ func NewGiftAnalyticsServiceHTTPClient(client *http.Client) GiftAnalyticsService
 	return &GiftAnalyticsServiceHTTPClientImpl{client}
 }
 
-// GetGiftOverview 查询当前 App 的礼物运营概览。
+// GetGiftOverview 查询礼物运营概览。
 func (c *GiftAnalyticsServiceHTTPClientImpl) GetGiftOverview(ctx context.Context, in *AdminGetGiftOverviewRequest, opts ...http.CallOption) (*v1.GiftOverviewResponse, error) {
 	var out v1.GiftOverviewResponse
 	pattern := "/admin/v1/gift-overview"
@@ -128,7 +128,7 @@ func (c *GiftAnalyticsServiceHTTPClientImpl) GetGiftOverview(ctx context.Context
 	return &out, nil
 }
 
-// ListGiftEvents 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+// ListGiftEvents 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
 func (c *GiftAnalyticsServiceHTTPClientImpl) ListGiftEvents(ctx context.Context, in *AdminListGiftEventsRequest, opts ...http.CallOption) (*v1.ListGiftEventResponse, error) {
 	var out v1.ListGiftEventResponse
 	pattern := "/admin/v1/gift-events"
@@ -142,7 +142,7 @@ func (c *GiftAnalyticsServiceHTTPClientImpl) ListGiftEvents(ctx context.Context,
 	return &out, nil
 }
 
-// ListGiftStats 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+// ListGiftStats 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
 func (c *GiftAnalyticsServiceHTTPClientImpl) ListGiftStats(ctx context.Context, in *AdminListGiftStatsRequest, opts ...http.CallOption) (*v1.ListGiftStatResponse, error) {
 	var out v1.ListGiftStatResponse
 	pattern := "/admin/v1/gift-stats"

@@ -29,9 +29,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// OpsPlacementAdminService 在 App Scope 下管理投放位注册；由 Admin BFF 聚合调用。
+// OpsPlacementAdminService 管理投放位注册；由 Admin BFF 聚合调用。
 type OpsPlacementAdminServiceClient interface {
-	// 查询当前 App 投放位列表。
+	// 查询投放位列表。
 	ListPlacements(ctx context.Context, in *v1.PagingRequest, opts ...grpc.CallOption) (*ListPlacementResponse, error)
 	// 创建投放位。
 	CreatePlacement(ctx context.Context, in *CreatePlacementRequest, opts ...grpc.CallOption) (*Placement, error)
@@ -81,9 +81,9 @@ func (c *opsPlacementAdminServiceClient) UpdatePlacement(ctx context.Context, in
 // All implementations must embed UnimplementedOpsPlacementAdminServiceServer
 // for forward compatibility.
 //
-// OpsPlacementAdminService 在 App Scope 下管理投放位注册；由 Admin BFF 聚合调用。
+// OpsPlacementAdminService 管理投放位注册；由 Admin BFF 聚合调用。
 type OpsPlacementAdminServiceServer interface {
-	// 查询当前 App 投放位列表。
+	// 查询投放位列表。
 	ListPlacements(context.Context, *v1.PagingRequest) (*ListPlacementResponse, error)
 	// 创建投放位。
 	CreatePlacement(context.Context, *CreatePlacementRequest) (*Placement, error)
@@ -221,7 +221,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// OpsContentAdminService 在 App Scope 下管理运营投放内容生命周期。
+// OpsContentAdminService 管理运营投放内容生命周期。
 type OpsContentAdminServiceClient interface {
 	// 查询运营内容列表。
 	ListOpsContentItems(ctx context.Context, in *ListOpsContentItemsRequest, opts ...grpc.CallOption) (*ListOpsContentItemResponse, error)
@@ -309,7 +309,7 @@ func (c *opsContentAdminServiceClient) OfflineOpsContentItem(ctx context.Context
 // All implementations must embed UnimplementedOpsContentAdminServiceServer
 // for forward compatibility.
 //
-// OpsContentAdminService 在 App Scope 下管理运营投放内容生命周期。
+// OpsContentAdminService 管理运营投放内容生命周期。
 type OpsContentAdminServiceServer interface {
 	// 查询运营内容列表。
 	ListOpsContentItems(context.Context, *ListOpsContentItemsRequest) (*ListOpsContentItemResponse, error)

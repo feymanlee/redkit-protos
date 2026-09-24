@@ -30,11 +30,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// OpsPlacementService 管理当前 App 的投放位注册。
+// OpsPlacementService 管理投放位注册。
 type OpsPlacementServiceClient interface {
 	// 查询投放位列表。
 	ListPlacements(ctx context.Context, in *v1.PagingRequest, opts ...grpc.CallOption) (*v11.ListPlacementResponse, error)
-	// 创建投放位；code 在 App 内唯一且创建后不可改。
+	// 创建投放位；code 唯一且创建后不可改。
 	CreatePlacement(ctx context.Context, in *AdminCreatePlacementRequest, opts ...grpc.CallOption) (*v11.Placement, error)
 	// 更新投放位展示名、容量或启用状态；被引用后不能删除只能停用。
 	UpdatePlacement(ctx context.Context, in *AdminUpdatePlacementRequest, opts ...grpc.CallOption) (*v11.Placement, error)
@@ -82,11 +82,11 @@ func (c *opsPlacementServiceClient) UpdatePlacement(ctx context.Context, in *Adm
 // All implementations must embed UnimplementedOpsPlacementServiceServer
 // for forward compatibility.
 //
-// OpsPlacementService 管理当前 App 的投放位注册。
+// OpsPlacementService 管理投放位注册。
 type OpsPlacementServiceServer interface {
 	// 查询投放位列表。
 	ListPlacements(context.Context, *v1.PagingRequest) (*v11.ListPlacementResponse, error)
-	// 创建投放位；code 在 App 内唯一且创建后不可改。
+	// 创建投放位；code 唯一且创建后不可改。
 	CreatePlacement(context.Context, *AdminCreatePlacementRequest) (*v11.Placement, error)
 	// 更新投放位展示名、容量或启用状态；被引用后不能删除只能停用。
 	UpdatePlacement(context.Context, *AdminUpdatePlacementRequest) (*v11.Placement, error)
@@ -221,7 +221,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// OpsContentService 管理当前 App 的运营投放内容生命周期。
+// OpsContentService 管理运营投放内容生命周期。
 type OpsContentServiceClient interface {
 	// 查询运营内容列表。
 	ListOpsContentItems(ctx context.Context, in *AdminListOpsContentItemsRequest, opts ...grpc.CallOption) (*v11.ListOpsContentItemResponse, error)
@@ -309,7 +309,7 @@ func (c *opsContentServiceClient) OfflineOpsContentItem(ctx context.Context, in 
 // All implementations must embed UnimplementedOpsContentServiceServer
 // for forward compatibility.
 //
-// OpsContentService 管理当前 App 的运营投放内容生命周期。
+// OpsContentService 管理运营投放内容生命周期。
 type OpsContentServiceServer interface {
 	// 查询运营内容列表。
 	ListOpsContentItems(context.Context, *AdminListOpsContentItemsRequest) (*v11.ListOpsContentItemResponse, error)

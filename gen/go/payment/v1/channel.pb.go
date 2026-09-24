@@ -7,9 +7,9 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
-	v12 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
+	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -754,8 +754,6 @@ type PaymentChannel struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 PaymentChannel。
 	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 PaymentChannel 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// method 指定 PaymentChannel 使用的 PaymentMethod。
@@ -807,13 +805,6 @@ func (x *PaymentChannel) GetId() uint32 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *PaymentChannel) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PaymentChannel) GetProvider() PaymentProvider {
@@ -890,7 +881,7 @@ type PaymentChannelRevision struct {
 	// icon_file_id 标识关联的 IconFile。
 	IconFileId *uint64 `protobuf:"varint,14,opt,name=icon_file_id,json=iconFileId,proto3,oneof" json:"icon_file_id,omitempty"`
 	// icon 承载 PaymentChannelRevision 关联的 FileView。
-	Icon *v11.FileView `protobuf:"bytes,15,opt,name=icon,proto3" json:"icon,omitempty"`
+	Icon *v1.FileView `protobuf:"bytes,15,opt,name=icon,proto3" json:"icon,omitempty"`
 	// icon_reference_version 标识 PaymentChannelRevision 所采用的契约或资源版本。
 	IconReferenceVersion uint64 `protobuf:"varint,16,opt,name=icon_reference_version,json=iconReferenceVersion,proto3" json:"icon_reference_version,omitempty"`
 	// remark 提供 PaymentChannelRevision 的补充说明。
@@ -1035,7 +1026,7 @@ func (x *PaymentChannelRevision) GetIconFileId() uint64 {
 	return 0
 }
 
-func (x *PaymentChannelRevision) GetIcon() *v11.FileView {
+func (x *PaymentChannelRevision) GetIcon() *v1.FileView {
 	if x != nil {
 		return x.Icon
 	}
@@ -1153,8 +1144,6 @@ type ChannelProbe struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ChannelProbe。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ChannelProbe 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// channel_id 标识关联的 Channel。
 	ChannelId uint32 `protobuf:"varint,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 	// revision_id 标识关联的 Revision。
@@ -1218,13 +1207,6 @@ func (x *ChannelProbe) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *ChannelProbe) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ChannelProbe) GetChannelId() uint32 {
@@ -1434,8 +1416,6 @@ type RoutingPolicyRevision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 RoutingPolicyRevision。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 RoutingPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// revision_no 是 RoutingPolicyRevision 对外关联与审计使用的业务编号。
 	RevisionNo uint64 `protobuf:"varint,3,opt,name=revision_no,json=revisionNo,proto3" json:"revision_no,omitempty"`
 	// status 表示 RoutingPolicyRevision 当前可观察的生命周期状态。
@@ -1489,13 +1469,6 @@ func (x *RoutingPolicyRevision) GetId() uint64 {
 	return 0
 }
 
-func (x *RoutingPolicyRevision) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RoutingPolicyRevision) GetRevisionNo() uint64 {
 	if x != nil {
 		return x.RevisionNo
@@ -1543,8 +1516,6 @@ type ChannelPublication struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ChannelPublication。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// target_type 区分 ChannelPublication 的业务类型。
 	TargetType ChannelPublicationTargetType `protobuf:"varint,3,opt,name=target_type,json=targetType,proto3,enum=payment.v1.ChannelPublicationTargetType" json:"target_type,omitempty"`
 	// action 指定本次状态推进采用的业务动作。
@@ -1624,13 +1595,6 @@ func (x *ChannelPublication) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *ChannelPublication) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ChannelPublication) GetTargetType() ChannelPublicationTargetType {
@@ -2027,7 +1991,7 @@ func (x *ConsumerPaymentOption) GetSelectionRequired() bool {
 	return false
 }
 
-// Consumer 请求只包含公开购买上下文；App 与 User 只能来自可信 metadata。
+// Consumer 请求只包含公开购买上下文；User 只能来自可信 metadata。
 type ListPurchaseOptionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// purchase_type 区分 ListPurchaseOptions 的业务类型。
@@ -2149,8 +2113,6 @@ func (x *ListPurchaseOptionsResponse) GetItems() []*ConsumerPaymentOption {
 // CreatePaymentOptionRevisionRequest 定义创建 PaymentOptionRevision 的幂等命令参数。
 type CreatePaymentOptionRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreatePaymentOptionRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// option_code 提供 CreatePaymentOptionRevision 对外稳定使用的业务编码。
 	OptionCode string `protobuf:"bytes,2,opt,name=option_code,json=optionCode,proto3" json:"option_code,omitempty"`
 	// display_name 提供 CreatePaymentOptionRevision 面向展示或识别的名称。
@@ -2211,13 +2173,6 @@ func (x *CreatePaymentOptionRevisionRequest) ProtoReflect() protoreflect.Message
 // Deprecated: Use CreatePaymentOptionRevisionRequest.ProtoReflect.Descriptor instead.
 func (*CreatePaymentOptionRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *CreatePaymentOptionRevisionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreatePaymentOptionRevisionRequest) GetOptionCode() string {
@@ -2654,11 +2609,9 @@ func (x *ProviderCapabilitySupport) GetCapabilityFingerprint() string {
 	return ""
 }
 
-// ListProviderCapabilitySupportRequest 查询当前 App 可管理的 Provider 能力事实。
+// ListProviderCapabilitySupportRequest 查询可管理的 Provider 能力事实。
 type ListProviderCapabilitySupportRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定管理权限作用域；UNSPECIFIED 不表示全平台。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2691,13 +2644,6 @@ func (x *ListProviderCapabilitySupportRequest) ProtoReflect() protoreflect.Messa
 // Deprecated: Use ListProviderCapabilitySupportRequest.ProtoReflect.Descriptor instead.
 func (*ListProviderCapabilitySupportRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *ListProviderCapabilitySupportRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListProviderCapabilitySupportResponse 返回当前进程注册的 Provider 能力事实。
@@ -2749,8 +2695,6 @@ func (x *ListProviderCapabilitySupportResponse) GetItems() []*ProviderCapability
 // CreatePaymentChannelRequest 定义创建 PaymentChannel 的幂等命令参数。
 type CreatePaymentChannelRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreatePaymentChannel 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// method 指定 CreatePaymentChannel 使用的 PaymentMethod。
@@ -2797,13 +2741,6 @@ func (x *CreatePaymentChannelRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreatePaymentChannelRequest.ProtoReflect.Descriptor instead.
 func (*CreatePaymentChannelRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *CreatePaymentChannelRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreatePaymentChannelRequest) GetProvider() PaymentProvider {
@@ -2858,8 +2795,6 @@ func (x *CreatePaymentChannelRequest) GetOperationNo() string {
 // CreateChannelRevisionRequest 定义创建 ChannelRevision 的幂等命令参数。
 type CreateChannelRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// channel_id 标识关联的 Channel。
 	ChannelId uint32 `protobuf:"varint,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 	// draft 承载 CreateChannelRevision 关联的 ChannelRevisionDraft。
@@ -2904,13 +2839,6 @@ func (x *CreateChannelRevisionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateChannelRevisionRequest.ProtoReflect.Descriptor instead.
 func (*CreateChannelRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *CreateChannelRevisionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateChannelRevisionRequest) GetChannelId() uint32 {
@@ -2958,8 +2886,6 @@ func (x *CreateChannelRevisionRequest) GetOperationNo() string {
 // ProbeChannelRevisionRequest 定义执行 ProbeChannelRevision 的幂等管理命令参数。
 type ProbeChannelRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ProbeChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// revision_id 标识关联的 Revision。
 	RevisionId uint64 `protobuf:"varint,2,opt,name=revision_id,json=revisionId,proto3" json:"revision_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3004,13 +2930,6 @@ func (*ProbeChannelRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *ProbeChannelRevisionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ProbeChannelRevisionRequest) GetRevisionId() uint64 {
 	if x != nil {
 		return x.RevisionId
@@ -3050,9 +2969,7 @@ func (x *ProbeChannelRevisionRequest) GetOperationNo() string {
 type ListPaymentChannelsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v12.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
-	// app_id 限定 ListPaymentChannels 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	Paging        *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3087,18 +3004,11 @@ func (*ListPaymentChannelsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *ListPaymentChannelsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListPaymentChannelsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
-}
-
-func (x *ListPaymentChannelsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListPaymentChannelResponse 返回 PaymentChannel 结果集合及分页信息。
@@ -3160,9 +3070,7 @@ func (x *ListPaymentChannelResponse) GetTotal() uint64 {
 type ListChannelRevisionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v12.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
-	// app_id 限定 ListChannelRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	// channel_id 标识关联的 Channel。
 	ChannelId     uint32 `protobuf:"varint,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3199,18 +3107,11 @@ func (*ListChannelRevisionsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *ListChannelRevisionsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListChannelRevisionsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
-}
-
-func (x *ListChannelRevisionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ListChannelRevisionsRequest) GetChannelId() uint32 {
@@ -3278,8 +3179,6 @@ func (x *ListChannelRevisionResponse) GetTotal() uint64 {
 // CreateRoutingPolicyRevisionRequest 定义创建 RoutingPolicyRevision 的幂等命令参数。
 type CreateRoutingPolicyRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateRoutingPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// rules 列出 CreateRoutingPolicyRevision 关联的 PaymentRoutingRule。
 	Rules []*PaymentRoutingRule `protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3324,13 +3223,6 @@ func (*CreateRoutingPolicyRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{24}
 }
 
-func (x *CreateRoutingPolicyRevisionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateRoutingPolicyRevisionRequest) GetRules() []*PaymentRoutingRule {
 	if x != nil {
 		return x.Rules
@@ -3369,8 +3261,6 @@ func (x *CreateRoutingPolicyRevisionRequest) GetOperationNo() string {
 // SubmitChannelPublicationRequest 定义提交 ChannelPublication 的幂等管理命令参数。
 type SubmitChannelPublicationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 SubmitChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// target_type 区分 SubmitChannelPublication 的业务类型。
 	TargetType ChannelPublicationTargetType `protobuf:"varint,2,opt,name=target_type,json=targetType,proto3,enum=payment.v1.ChannelPublicationTargetType" json:"target_type,omitempty"`
 	// action 指定本次状态推进采用的业务动作。
@@ -3421,13 +3311,6 @@ func (x *SubmitChannelPublicationRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SubmitChannelPublicationRequest.ProtoReflect.Descriptor instead.
 func (*SubmitChannelPublicationRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *SubmitChannelPublicationRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SubmitChannelPublicationRequest) GetTargetType() ChannelPublicationTargetType {
@@ -3496,8 +3379,6 @@ func (x *SubmitChannelPublicationRequest) GetPaymentOptionRevisionId() uint64 {
 // ReviewChannelPublicationRequest 定义审核 ChannelPublication 的幂等管理命令参数。
 type ReviewChannelPublicationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ReviewChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// publication_id 标识关联的 Publication。
 	PublicationId uint64 `protobuf:"varint,2,opt,name=publication_id,json=publicationId,proto3" json:"publication_id,omitempty"`
 	// decision 记录 ReviewChannelPublication 对应审核或执行流程的结论。
@@ -3544,13 +3425,6 @@ func (x *ReviewChannelPublicationRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ReviewChannelPublicationRequest.ProtoReflect.Descriptor instead.
 func (*ReviewChannelPublicationRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{26}
-}
-
-func (x *ReviewChannelPublicationRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReviewChannelPublicationRequest) GetPublicationId() uint64 {
@@ -3606,9 +3480,7 @@ func (x *ReviewChannelPublicationRequest) GetAllowSimulated() bool {
 type ListChannelPublicationsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v12.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
-	// app_id 限定 ListChannelPublications 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	// status 表示 ListChannelPublications 当前可观察的生命周期状态。
 	Status        *ChannelPublicationStatus `protobuf:"varint,3,opt,name=status,proto3,enum=payment.v1.ChannelPublicationStatus,oneof" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3645,18 +3517,11 @@ func (*ListChannelPublicationsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *ListChannelPublicationsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListChannelPublicationsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
-}
-
-func (x *ListChannelPublicationsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ListChannelPublicationsRequest) GetStatus() ChannelPublicationStatus {
@@ -3725,9 +3590,7 @@ func (x *ListChannelPublicationResponse) GetTotal() uint64 {
 type ListRoutingPolicyRevisionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v12.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
-	// app_id 限定 ListRoutingPolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	Paging        *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3762,18 +3625,11 @@ func (*ListRoutingPolicyRevisionsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{29}
 }
 
-func (x *ListRoutingPolicyRevisionsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListRoutingPolicyRevisionsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
-}
-
-func (x *ListRoutingPolicyRevisionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListRoutingPolicyRevisionResponse 返回 RoutingPolicyRevision 结果集合及分页信息。
@@ -3834,8 +3690,6 @@ func (x *ListRoutingPolicyRevisionResponse) GetTotal() uint64 {
 // PreviewPaymentRoutingRequest 定义执行 PreviewPaymentRouting 的命令参数。
 type PreviewPaymentRoutingRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PreviewPaymentRouting 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// biz_type 区分 PreviewPaymentRouting 的业务类型。
 	BizType string `protobuf:"bytes,2,opt,name=biz_type,json=bizType,proto3" json:"biz_type,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
@@ -3882,13 +3736,6 @@ func (x *PreviewPaymentRoutingRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use PreviewPaymentRoutingRequest.ProtoReflect.Descriptor instead.
 func (*PreviewPaymentRoutingRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_channel_proto_rawDescGZIP(), []int{31}
-}
-
-func (x *PreviewPaymentRoutingRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PreviewPaymentRoutingRequest) GetBizType() string {
@@ -3945,10 +3792,9 @@ var File_payment_v1_channel_proto protoreflect.FileDescriptor
 const file_payment_v1_channel_proto_rawDesc = "" +
 	"\n" +
 	"\x18payment/v1/channel.proto\x12\n" +
-	"payment.v1\x1a\x19common/file/v1/file.proto\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\xc4\x03\n" +
+	"payment.v1\x1a\x19common/file/v1/file.proto\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\x9b\x03\n" +
 	"\x0ePaymentChannel\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x127\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x127\n" +
 	"\bprovider\x18\x03 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x121\n" +
 	"\x06method\x18\x04 \x01(\x0e2\x19.payment.v1.PaymentMethodR\x06method\x121\n" +
 	"\x12active_revision_id\x18\x05 \x01(\x04H\x00R\x10activeRevisionId\x88\x01\x01\x12K\n" +
@@ -3998,10 +3844,9 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\tsucceeded\x18\x02 \x01(\bR\tsucceeded\x12\x1d\n" +
 	"\amessage\x18\x03 \x01(\tH\x00R\amessage\x88\x01\x01B\n" +
 	"\n" +
-	"\b_message\"\xed\x04\n" +
+	"\b_message\"\xc4\x04\n" +
 	"\fChannelProbe\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1d\n" +
 	"\n" +
 	"channel_id\x18\x03 \x01(\rR\tchannelId\x12\x1f\n" +
 	"\vrevision_id\x18\x04 \x01(\x04R\n" +
@@ -4035,10 +3880,9 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\bpriority\x18\x06 \x01(\x05R\bpriority\x12\x16\n" +
 	"\x06weight\x18\a \x01(\rR\x06weight\x12\x1a\n" +
 	"\bfallback\x18\b \x01(\bR\bfallback\x12.\n" +
-	"\x13channel_revision_id\x18\t \x01(\x04R\x11channelRevisionId\"\x88\x03\n" +
+	"\x13channel_revision_id\x18\t \x01(\x04R\x11channelRevisionId\"\xdf\x02\n" +
 	"\x15RoutingPolicyRevision\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\vrevision_no\x18\x03 \x01(\x04R\n" +
 	"revisionNo\x12?\n" +
 	"\x06status\x18\x04 \x01(\x0e2'.payment.v1.RoutingPolicyRevisionStatusR\x06status\x12-\n" +
@@ -4046,10 +3890,9 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\x05rules\x18\x06 \x03(\v2\x1e.payment.v1.PaymentRoutingRuleR\x05rules\x123\n" +
 	"\x16created_by_operator_id\x18\a \x01(\rR\x13createdByOperatorId\x12:\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd6\v\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xad\v\n" +
 	"\x12ChannelPublication\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12I\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12I\n" +
 	"\vtarget_type\x18\x03 \x01(\x0e2(.payment.v1.ChannelPublicationTargetTypeR\n" +
 	"targetType\x12<\n" +
 	"\x06action\x18\x04 \x01(\x0e2$.payment.v1.ChannelPublicationActionR\x06action\x123\n" +
@@ -4125,9 +3968,8 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x12J\n" +
 	"\x0fclient_platform\x18\x04 \x01(\x0e2!.payment.v1.RoutingClientPlatformR\x0eclientPlatform\"V\n" +
 	"\x1bListPurchaseOptionsResponse\x127\n" +
-	"\x05items\x18\x01 \x03(\v2!.payment.v1.ConsumerPaymentOptionR\x05items\"\xef\x05\n" +
-	"\"CreatePaymentOptionRevisionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x05items\x18\x01 \x03(\v2!.payment.v1.ConsumerPaymentOptionR\x05items\"\xc6\x05\n" +
+	"\"CreatePaymentOptionRevisionRequest\x12\x1f\n" +
 	"\voption_code\x18\x02 \x01(\tR\n" +
 	"optionCode\x12!\n" +
 	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12?\n" +
@@ -4192,13 +4034,11 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\bprovider\x18\x01 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12A\n" +
 	"\fcapabilities\x18\x02 \x03(\x0e2\x1d.payment.v1.ChannelCapabilityR\fcapabilities\x12)\n" +
 	"\x10contract_version\x18\x03 \x01(\tR\x0fcontractVersion\x125\n" +
-	"\x16capability_fingerprint\x18\x04 \x01(\tR\x15capabilityFingerprint\"O\n" +
-	"$ListProviderCapabilitySupportRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"d\n" +
+	"\x16capability_fingerprint\x18\x04 \x01(\tR\x15capabilityFingerprint\"&\n" +
+	"$ListProviderCapabilitySupportRequest\"d\n" +
 	"%ListProviderCapabilitySupportResponse\x12;\n" +
-	"\x05items\x18\x01 \x03(\v2%.payment.v1.ProviderCapabilitySupportR\x05items\"\xfa\x02\n" +
-	"\x1bCreatePaymentChannelRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x127\n" +
+	"\x05items\x18\x01 \x03(\v2%.payment.v1.ProviderCapabilitySupportR\x05items\"\xd1\x02\n" +
+	"\x1bCreatePaymentChannelRequest\x127\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x121\n" +
 	"\x06method\x18\x03 \x01(\x0e2\x19.payment.v1.PaymentMethodR\x06method\x12K\n" +
 	"\x10initial_revision\x18\x04 \x01(\v2 .payment.v1.ChannelRevisionDraftR\x0finitialRevision\x12\x1f\n" +
@@ -4207,9 +4047,8 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\x06reason\x18\x06 \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\a \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\b \x01(\tR\voperationNo\"\x99\x02\n" +
-	"\x1cCreateChannelRevisionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\foperation_no\x18\b \x01(\tR\voperationNo\"\xf0\x01\n" +
+	"\x1cCreateChannelRevisionRequest\x12\x1d\n" +
 	"\n" +
 	"channel_id\x18\x02 \x01(\rR\tchannelId\x126\n" +
 	"\x05draft\x18\x03 \x01(\v2 .payment.v1.ChannelRevisionDraftR\x05draft\x12\x1f\n" +
@@ -4218,9 +4057,8 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\x06reason\x18\x05 \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x06 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\a \x01(\tR\voperationNo\"\xe2\x01\n" +
-	"\x1bProbeChannelRevisionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\foperation_no\x18\a \x01(\tR\voperationNo\"\xb9\x01\n" +
+	"\x1bProbeChannelRevisionRequest\x12\x1f\n" +
 	"\vrevision_id\x18\x02 \x01(\x04R\n" +
 	"revisionId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
@@ -4228,32 +4066,28 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x05 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\x06 \x01(\tR\voperationNo\"\x82\x01\n" +
+	"\foperation_no\x18\x06 \x01(\tR\voperationNo\"Y\n" +
 	"\x1aListPaymentChannelsRequest\x12;\n" +
-	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"d\n" +
+	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"d\n" +
 	"\x1aListPaymentChannelResponse\x120\n" +
 	"\x05items\x18\x01 \x03(\v2\x1a.payment.v1.PaymentChannelR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa2\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"y\n" +
 	"\x1bListChannelRevisionsRequest\x12;\n" +
-	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12\x1d\n" +
 	"\n" +
 	"channel_id\x18\x03 \x01(\rR\tchannelId\"m\n" +
 	"\x1bListChannelRevisionResponse\x128\n" +
 	"\x05items\x18\x01 \x03(\v2\".payment.v1.PaymentChannelRevisionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xfe\x01\n" +
-	"\"CreateRoutingPolicyRevisionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x124\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xd5\x01\n" +
+	"\"CreateRoutingPolicyRevisionRequest\x124\n" +
 	"\x05rules\x18\x02 \x03(\v2\x1e.payment.v1.PaymentRoutingRuleR\x05rules\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x05 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\x06 \x01(\tR\voperationNo\"\xdd\x04\n" +
-	"\x1fSubmitChannelPublicationRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12I\n" +
+	"\foperation_no\x18\x06 \x01(\tR\voperationNo\"\xb4\x04\n" +
+	"\x1fSubmitChannelPublicationRequest\x12I\n" +
 	"\vtarget_type\x18\x02 \x01(\x0e2(.payment.v1.ChannelPublicationTargetTypeR\n" +
 	"targetType\x12<\n" +
 	"\x06action\x18\x03 \x01(\x0e2$.payment.v1.ChannelPublicationActionR\x06action\x123\n" +
@@ -4269,9 +4103,8 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	" \x01(\x04H\x02R\x17paymentOptionRevisionId\x88\x01\x01B\x16\n" +
 	"\x14_channel_revision_idB\x1d\n" +
 	"\x1b_routing_policy_revision_idB\x1d\n" +
-	"\x1b_payment_option_revision_id\"\xd9\x02\n" +
-	"\x1fReviewChannelPublicationRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12%\n" +
+	"\x1b_payment_option_revision_id\"\xb0\x02\n" +
+	"\x1fReviewChannelPublicationRequest\x12%\n" +
 	"\x0epublication_id\x18\x02 \x01(\x04R\rpublicationId\x12B\n" +
 	"\bdecision\x18\x03 \x01(\x0e2&.payment.v1.ChannelPublicationDecisionR\bdecision\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\rR\n" +
@@ -4280,23 +4113,20 @@ const file_payment_v1_channel_proto_rawDesc = "" +
 	"\n" +
 	"request_id\x18\x06 \x01(\tR\trequestId\x12!\n" +
 	"\foperation_no\x18\a \x01(\tR\voperationNo\x12'\n" +
-	"\x0fallow_simulated\x18\b \x01(\bR\x0eallowSimulated\"\xd4\x01\n" +
+	"\x0fallow_simulated\x18\b \x01(\bR\x0eallowSimulated\"\xab\x01\n" +
 	"\x1eListChannelPublicationsRequest\x12;\n" +
-	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12A\n" +
+	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12A\n" +
 	"\x06status\x18\x03 \x01(\x0e2$.payment.v1.ChannelPublicationStatusH\x00R\x06status\x88\x01\x01B\t\n" +
 	"\a_status\"l\n" +
 	"\x1eListChannelPublicationResponse\x124\n" +
 	"\x05items\x18\x01 \x03(\v2\x1e.payment.v1.ChannelPublicationR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x89\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"`\n" +
 	"!ListRoutingPolicyRevisionsRequest\x12;\n" +
-	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"r\n" +
+	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"r\n" +
 	"!ListRoutingPolicyRevisionResponse\x127\n" +
 	"\x05items\x18\x01 \x03(\v2!.payment.v1.RoutingPolicyRevisionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa2\x03\n" +
-	"\x1cPreviewPaymentRoutingRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xf9\x02\n" +
+	"\x1cPreviewPaymentRoutingRequest\x12\x19\n" +
 	"\bbiz_type\x18\x02 \x01(\tR\abizType\x12\x1a\n" +
 	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x121\n" +
 	"\x06method\x18\x04 \x01(\x0e2\x19.payment.v1.PaymentMethodR\x06method\x12J\n" +
@@ -4441,106 +4271,88 @@ var file_payment_v1_channel_proto_goTypes = []any{
 	(*ListRoutingPolicyRevisionsRequest)(nil),     // 41: payment.v1.ListRoutingPolicyRevisionsRequest
 	(*ListRoutingPolicyRevisionResponse)(nil),     // 42: payment.v1.ListRoutingPolicyRevisionResponse
 	(*PreviewPaymentRoutingRequest)(nil),          // 43: payment.v1.PreviewPaymentRoutingRequest
-	(v1.AppId)(0),                                 // 44: common.v1.AppId
-	(PaymentProvider)(0),                          // 45: payment.v1.PaymentProvider
-	(PaymentMethod)(0),                            // 46: payment.v1.PaymentMethod
-	(*timestamppb.Timestamp)(nil),                 // 47: google.protobuf.Timestamp
-	(*v11.FileView)(nil),                          // 48: common.file.v1.FileView
-	(*v12.PagingRequest)(nil),                     // 49: common.pagination.v1.PagingRequest
+	(PaymentProvider)(0),                          // 44: payment.v1.PaymentProvider
+	(PaymentMethod)(0),                            // 45: payment.v1.PaymentMethod
+	(*timestamppb.Timestamp)(nil),                 // 46: google.protobuf.Timestamp
+	(*v1.FileView)(nil),                           // 47: common.file.v1.FileView
+	(*v11.PagingRequest)(nil),                     // 48: common.pagination.v1.PagingRequest
 }
 var file_payment_v1_channel_proto_depIdxs = []int32{
-	44, // 0: payment.v1.PaymentChannel.app_id:type_name -> common.v1.AppId
-	45, // 1: payment.v1.PaymentChannel.provider:type_name -> payment.v1.PaymentProvider
-	46, // 2: payment.v1.PaymentChannel.method:type_name -> payment.v1.PaymentMethod
-	13, // 3: payment.v1.PaymentChannel.latest_revision:type_name -> payment.v1.PaymentChannelRevision
-	47, // 4: payment.v1.PaymentChannel.created_at:type_name -> google.protobuf.Timestamp
-	47, // 5: payment.v1.PaymentChannel.updated_at:type_name -> google.protobuf.Timestamp
-	0,  // 6: payment.v1.PaymentChannelRevision.status:type_name -> payment.v1.ChannelRevisionStatus
-	1,  // 7: payment.v1.PaymentChannelRevision.capabilities:type_name -> payment.v1.ChannelCapability
-	47, // 8: payment.v1.PaymentChannelRevision.valid_from:type_name -> google.protobuf.Timestamp
-	47, // 9: payment.v1.PaymentChannelRevision.valid_until:type_name -> google.protobuf.Timestamp
-	48, // 10: payment.v1.PaymentChannelRevision.icon:type_name -> common.file.v1.FileView
-	2,  // 11: payment.v1.PaymentChannelRevision.probe_status:type_name -> payment.v1.ChannelProbeStatus
-	15, // 12: payment.v1.PaymentChannelRevision.latest_probe:type_name -> payment.v1.ChannelProbe
-	47, // 13: payment.v1.PaymentChannelRevision.created_at:type_name -> google.protobuf.Timestamp
-	44, // 14: payment.v1.ChannelProbe.app_id:type_name -> common.v1.AppId
-	2,  // 15: payment.v1.ChannelProbe.status:type_name -> payment.v1.ChannelProbeStatus
-	14, // 16: payment.v1.ChannelProbe.checks:type_name -> payment.v1.ChannelProbeCheck
-	47, // 17: payment.v1.ChannelProbe.created_at:type_name -> google.protobuf.Timestamp
-	46, // 18: payment.v1.PaymentRoutingRule.method:type_name -> payment.v1.PaymentMethod
-	8,  // 19: payment.v1.PaymentRoutingRule.client_platforms:type_name -> payment.v1.RoutingClientPlatform
-	44, // 20: payment.v1.RoutingPolicyRevision.app_id:type_name -> common.v1.AppId
-	7,  // 21: payment.v1.RoutingPolicyRevision.status:type_name -> payment.v1.RoutingPolicyRevisionStatus
-	16, // 22: payment.v1.RoutingPolicyRevision.rules:type_name -> payment.v1.PaymentRoutingRule
-	47, // 23: payment.v1.RoutingPolicyRevision.created_at:type_name -> google.protobuf.Timestamp
-	44, // 24: payment.v1.ChannelPublication.app_id:type_name -> common.v1.AppId
-	3,  // 25: payment.v1.ChannelPublication.target_type:type_name -> payment.v1.ChannelPublicationTargetType
-	4,  // 26: payment.v1.ChannelPublication.action:type_name -> payment.v1.ChannelPublicationAction
-	5,  // 27: payment.v1.ChannelPublication.status:type_name -> payment.v1.ChannelPublicationStatus
-	6,  // 28: payment.v1.ChannelPublication.decision:type_name -> payment.v1.ChannelPublicationDecision
-	47, // 29: payment.v1.ChannelPublication.created_at:type_name -> google.protobuf.Timestamp
-	47, // 30: payment.v1.ChannelPublication.decided_at:type_name -> google.protobuf.Timestamp
-	10, // 31: payment.v1.PaymentOptionRevision.status:type_name -> payment.v1.PaymentOptionRevisionStatus
-	9,  // 32: payment.v1.PaymentOptionRevision.purchase_types:type_name -> payment.v1.PurchaseType
-	8,  // 33: payment.v1.PaymentOptionRevision.client_platforms:type_name -> payment.v1.RoutingClientPlatform
-	1,  // 34: payment.v1.PaymentOptionRevision.required_capability:type_name -> payment.v1.ChannelCapability
-	47, // 35: payment.v1.PaymentOptionRevision.valid_from:type_name -> google.protobuf.Timestamp
-	47, // 36: payment.v1.PaymentOptionRevision.valid_until:type_name -> google.protobuf.Timestamp
-	47, // 37: payment.v1.PaymentOptionRevision.created_at:type_name -> google.protobuf.Timestamp
-	11, // 38: payment.v1.ConsumerPaymentOption.unavailable_reason:type_name -> payment.v1.PaymentOptionUnavailableReason
-	9,  // 39: payment.v1.ListPurchaseOptionsRequest.purchase_type:type_name -> payment.v1.PurchaseType
-	8,  // 40: payment.v1.ListPurchaseOptionsRequest.client_platform:type_name -> payment.v1.RoutingClientPlatform
-	20, // 41: payment.v1.ListPurchaseOptionsResponse.items:type_name -> payment.v1.ConsumerPaymentOption
-	44, // 42: payment.v1.CreatePaymentOptionRevisionRequest.app_id:type_name -> common.v1.AppId
-	9,  // 43: payment.v1.CreatePaymentOptionRevisionRequest.purchase_types:type_name -> payment.v1.PurchaseType
-	8,  // 44: payment.v1.CreatePaymentOptionRevisionRequest.client_platforms:type_name -> payment.v1.RoutingClientPlatform
-	1,  // 45: payment.v1.CreatePaymentOptionRevisionRequest.required_capability:type_name -> payment.v1.ChannelCapability
-	47, // 46: payment.v1.CreatePaymentOptionRevisionRequest.valid_from:type_name -> google.protobuf.Timestamp
-	47, // 47: payment.v1.CreatePaymentOptionRevisionRequest.valid_until:type_name -> google.protobuf.Timestamp
-	45, // 48: payment.v1.PaymentRoutingDecision.provider:type_name -> payment.v1.PaymentProvider
-	46, // 49: payment.v1.PaymentRoutingDecision.method:type_name -> payment.v1.PaymentMethod
-	1,  // 50: payment.v1.ChannelRevisionDraft.capabilities:type_name -> payment.v1.ChannelCapability
-	47, // 51: payment.v1.ChannelRevisionDraft.valid_from:type_name -> google.protobuf.Timestamp
-	47, // 52: payment.v1.ChannelRevisionDraft.valid_until:type_name -> google.protobuf.Timestamp
-	45, // 53: payment.v1.ProviderCapabilitySupport.provider:type_name -> payment.v1.PaymentProvider
-	1,  // 54: payment.v1.ProviderCapabilitySupport.capabilities:type_name -> payment.v1.ChannelCapability
-	44, // 55: payment.v1.ListProviderCapabilitySupportRequest.app_id:type_name -> common.v1.AppId
-	26, // 56: payment.v1.ListProviderCapabilitySupportResponse.items:type_name -> payment.v1.ProviderCapabilitySupport
-	44, // 57: payment.v1.CreatePaymentChannelRequest.app_id:type_name -> common.v1.AppId
-	45, // 58: payment.v1.CreatePaymentChannelRequest.provider:type_name -> payment.v1.PaymentProvider
-	46, // 59: payment.v1.CreatePaymentChannelRequest.method:type_name -> payment.v1.PaymentMethod
-	25, // 60: payment.v1.CreatePaymentChannelRequest.initial_revision:type_name -> payment.v1.ChannelRevisionDraft
-	44, // 61: payment.v1.CreateChannelRevisionRequest.app_id:type_name -> common.v1.AppId
-	25, // 62: payment.v1.CreateChannelRevisionRequest.draft:type_name -> payment.v1.ChannelRevisionDraft
-	44, // 63: payment.v1.ProbeChannelRevisionRequest.app_id:type_name -> common.v1.AppId
-	49, // 64: payment.v1.ListPaymentChannelsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	44, // 65: payment.v1.ListPaymentChannelsRequest.app_id:type_name -> common.v1.AppId
-	12, // 66: payment.v1.ListPaymentChannelResponse.items:type_name -> payment.v1.PaymentChannel
-	49, // 67: payment.v1.ListChannelRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	44, // 68: payment.v1.ListChannelRevisionsRequest.app_id:type_name -> common.v1.AppId
-	13, // 69: payment.v1.ListChannelRevisionResponse.items:type_name -> payment.v1.PaymentChannelRevision
-	44, // 70: payment.v1.CreateRoutingPolicyRevisionRequest.app_id:type_name -> common.v1.AppId
-	16, // 71: payment.v1.CreateRoutingPolicyRevisionRequest.rules:type_name -> payment.v1.PaymentRoutingRule
-	44, // 72: payment.v1.SubmitChannelPublicationRequest.app_id:type_name -> common.v1.AppId
-	3,  // 73: payment.v1.SubmitChannelPublicationRequest.target_type:type_name -> payment.v1.ChannelPublicationTargetType
-	4,  // 74: payment.v1.SubmitChannelPublicationRequest.action:type_name -> payment.v1.ChannelPublicationAction
-	44, // 75: payment.v1.ReviewChannelPublicationRequest.app_id:type_name -> common.v1.AppId
-	6,  // 76: payment.v1.ReviewChannelPublicationRequest.decision:type_name -> payment.v1.ChannelPublicationDecision
-	49, // 77: payment.v1.ListChannelPublicationsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	44, // 78: payment.v1.ListChannelPublicationsRequest.app_id:type_name -> common.v1.AppId
-	5,  // 79: payment.v1.ListChannelPublicationsRequest.status:type_name -> payment.v1.ChannelPublicationStatus
-	18, // 80: payment.v1.ListChannelPublicationResponse.items:type_name -> payment.v1.ChannelPublication
-	49, // 81: payment.v1.ListRoutingPolicyRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	44, // 82: payment.v1.ListRoutingPolicyRevisionsRequest.app_id:type_name -> common.v1.AppId
-	17, // 83: payment.v1.ListRoutingPolicyRevisionResponse.items:type_name -> payment.v1.RoutingPolicyRevision
-	44, // 84: payment.v1.PreviewPaymentRoutingRequest.app_id:type_name -> common.v1.AppId
-	46, // 85: payment.v1.PreviewPaymentRoutingRequest.method:type_name -> payment.v1.PaymentMethod
-	8,  // 86: payment.v1.PreviewPaymentRoutingRequest.client_platform:type_name -> payment.v1.RoutingClientPlatform
-	87, // [87:87] is the sub-list for method output_type
-	87, // [87:87] is the sub-list for method input_type
-	87, // [87:87] is the sub-list for extension type_name
-	87, // [87:87] is the sub-list for extension extendee
-	0,  // [0:87] is the sub-list for field type_name
+	44, // 0: payment.v1.PaymentChannel.provider:type_name -> payment.v1.PaymentProvider
+	45, // 1: payment.v1.PaymentChannel.method:type_name -> payment.v1.PaymentMethod
+	13, // 2: payment.v1.PaymentChannel.latest_revision:type_name -> payment.v1.PaymentChannelRevision
+	46, // 3: payment.v1.PaymentChannel.created_at:type_name -> google.protobuf.Timestamp
+	46, // 4: payment.v1.PaymentChannel.updated_at:type_name -> google.protobuf.Timestamp
+	0,  // 5: payment.v1.PaymentChannelRevision.status:type_name -> payment.v1.ChannelRevisionStatus
+	1,  // 6: payment.v1.PaymentChannelRevision.capabilities:type_name -> payment.v1.ChannelCapability
+	46, // 7: payment.v1.PaymentChannelRevision.valid_from:type_name -> google.protobuf.Timestamp
+	46, // 8: payment.v1.PaymentChannelRevision.valid_until:type_name -> google.protobuf.Timestamp
+	47, // 9: payment.v1.PaymentChannelRevision.icon:type_name -> common.file.v1.FileView
+	2,  // 10: payment.v1.PaymentChannelRevision.probe_status:type_name -> payment.v1.ChannelProbeStatus
+	15, // 11: payment.v1.PaymentChannelRevision.latest_probe:type_name -> payment.v1.ChannelProbe
+	46, // 12: payment.v1.PaymentChannelRevision.created_at:type_name -> google.protobuf.Timestamp
+	2,  // 13: payment.v1.ChannelProbe.status:type_name -> payment.v1.ChannelProbeStatus
+	14, // 14: payment.v1.ChannelProbe.checks:type_name -> payment.v1.ChannelProbeCheck
+	46, // 15: payment.v1.ChannelProbe.created_at:type_name -> google.protobuf.Timestamp
+	45, // 16: payment.v1.PaymentRoutingRule.method:type_name -> payment.v1.PaymentMethod
+	8,  // 17: payment.v1.PaymentRoutingRule.client_platforms:type_name -> payment.v1.RoutingClientPlatform
+	7,  // 18: payment.v1.RoutingPolicyRevision.status:type_name -> payment.v1.RoutingPolicyRevisionStatus
+	16, // 19: payment.v1.RoutingPolicyRevision.rules:type_name -> payment.v1.PaymentRoutingRule
+	46, // 20: payment.v1.RoutingPolicyRevision.created_at:type_name -> google.protobuf.Timestamp
+	3,  // 21: payment.v1.ChannelPublication.target_type:type_name -> payment.v1.ChannelPublicationTargetType
+	4,  // 22: payment.v1.ChannelPublication.action:type_name -> payment.v1.ChannelPublicationAction
+	5,  // 23: payment.v1.ChannelPublication.status:type_name -> payment.v1.ChannelPublicationStatus
+	6,  // 24: payment.v1.ChannelPublication.decision:type_name -> payment.v1.ChannelPublicationDecision
+	46, // 25: payment.v1.ChannelPublication.created_at:type_name -> google.protobuf.Timestamp
+	46, // 26: payment.v1.ChannelPublication.decided_at:type_name -> google.protobuf.Timestamp
+	10, // 27: payment.v1.PaymentOptionRevision.status:type_name -> payment.v1.PaymentOptionRevisionStatus
+	9,  // 28: payment.v1.PaymentOptionRevision.purchase_types:type_name -> payment.v1.PurchaseType
+	8,  // 29: payment.v1.PaymentOptionRevision.client_platforms:type_name -> payment.v1.RoutingClientPlatform
+	1,  // 30: payment.v1.PaymentOptionRevision.required_capability:type_name -> payment.v1.ChannelCapability
+	46, // 31: payment.v1.PaymentOptionRevision.valid_from:type_name -> google.protobuf.Timestamp
+	46, // 32: payment.v1.PaymentOptionRevision.valid_until:type_name -> google.protobuf.Timestamp
+	46, // 33: payment.v1.PaymentOptionRevision.created_at:type_name -> google.protobuf.Timestamp
+	11, // 34: payment.v1.ConsumerPaymentOption.unavailable_reason:type_name -> payment.v1.PaymentOptionUnavailableReason
+	9,  // 35: payment.v1.ListPurchaseOptionsRequest.purchase_type:type_name -> payment.v1.PurchaseType
+	8,  // 36: payment.v1.ListPurchaseOptionsRequest.client_platform:type_name -> payment.v1.RoutingClientPlatform
+	20, // 37: payment.v1.ListPurchaseOptionsResponse.items:type_name -> payment.v1.ConsumerPaymentOption
+	9,  // 38: payment.v1.CreatePaymentOptionRevisionRequest.purchase_types:type_name -> payment.v1.PurchaseType
+	8,  // 39: payment.v1.CreatePaymentOptionRevisionRequest.client_platforms:type_name -> payment.v1.RoutingClientPlatform
+	1,  // 40: payment.v1.CreatePaymentOptionRevisionRequest.required_capability:type_name -> payment.v1.ChannelCapability
+	46, // 41: payment.v1.CreatePaymentOptionRevisionRequest.valid_from:type_name -> google.protobuf.Timestamp
+	46, // 42: payment.v1.CreatePaymentOptionRevisionRequest.valid_until:type_name -> google.protobuf.Timestamp
+	44, // 43: payment.v1.PaymentRoutingDecision.provider:type_name -> payment.v1.PaymentProvider
+	45, // 44: payment.v1.PaymentRoutingDecision.method:type_name -> payment.v1.PaymentMethod
+	1,  // 45: payment.v1.ChannelRevisionDraft.capabilities:type_name -> payment.v1.ChannelCapability
+	46, // 46: payment.v1.ChannelRevisionDraft.valid_from:type_name -> google.protobuf.Timestamp
+	46, // 47: payment.v1.ChannelRevisionDraft.valid_until:type_name -> google.protobuf.Timestamp
+	44, // 48: payment.v1.ProviderCapabilitySupport.provider:type_name -> payment.v1.PaymentProvider
+	1,  // 49: payment.v1.ProviderCapabilitySupport.capabilities:type_name -> payment.v1.ChannelCapability
+	26, // 50: payment.v1.ListProviderCapabilitySupportResponse.items:type_name -> payment.v1.ProviderCapabilitySupport
+	44, // 51: payment.v1.CreatePaymentChannelRequest.provider:type_name -> payment.v1.PaymentProvider
+	45, // 52: payment.v1.CreatePaymentChannelRequest.method:type_name -> payment.v1.PaymentMethod
+	25, // 53: payment.v1.CreatePaymentChannelRequest.initial_revision:type_name -> payment.v1.ChannelRevisionDraft
+	25, // 54: payment.v1.CreateChannelRevisionRequest.draft:type_name -> payment.v1.ChannelRevisionDraft
+	48, // 55: payment.v1.ListPaymentChannelsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	12, // 56: payment.v1.ListPaymentChannelResponse.items:type_name -> payment.v1.PaymentChannel
+	48, // 57: payment.v1.ListChannelRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	13, // 58: payment.v1.ListChannelRevisionResponse.items:type_name -> payment.v1.PaymentChannelRevision
+	16, // 59: payment.v1.CreateRoutingPolicyRevisionRequest.rules:type_name -> payment.v1.PaymentRoutingRule
+	3,  // 60: payment.v1.SubmitChannelPublicationRequest.target_type:type_name -> payment.v1.ChannelPublicationTargetType
+	4,  // 61: payment.v1.SubmitChannelPublicationRequest.action:type_name -> payment.v1.ChannelPublicationAction
+	6,  // 62: payment.v1.ReviewChannelPublicationRequest.decision:type_name -> payment.v1.ChannelPublicationDecision
+	48, // 63: payment.v1.ListChannelPublicationsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	5,  // 64: payment.v1.ListChannelPublicationsRequest.status:type_name -> payment.v1.ChannelPublicationStatus
+	18, // 65: payment.v1.ListChannelPublicationResponse.items:type_name -> payment.v1.ChannelPublication
+	48, // 66: payment.v1.ListRoutingPolicyRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	17, // 67: payment.v1.ListRoutingPolicyRevisionResponse.items:type_name -> payment.v1.RoutingPolicyRevision
+	45, // 68: payment.v1.PreviewPaymentRoutingRequest.method:type_name -> payment.v1.PaymentMethod
+	8,  // 69: payment.v1.PreviewPaymentRoutingRequest.client_platform:type_name -> payment.v1.RoutingClientPlatform
+	70, // [70:70] is the sub-list for method output_type
+	70, // [70:70] is the sub-list for method input_type
+	70, // [70:70] is the sub-list for extension type_name
+	70, // [70:70] is the sub-list for extension extendee
+	0,  // [0:70] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_channel_proto_init() }

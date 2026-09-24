@@ -27,15 +27,15 @@ const OperationUserRecoveryAdminServiceListRecoveryRequests = "/admin.user.v1.Us
 const OperationUserRecoveryAdminServiceRejectRecoveryRequest = "/admin.user.v1.UserRecoveryAdminService/RejectRecoveryRequest"
 
 type UserRecoveryAdminServiceHTTPServer interface {
-	// AcceptRecoveryRequest AcceptRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// AcceptRecoveryRequest AcceptRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	AcceptRecoveryRequest(context.Context, *AdminAcceptRecoveryRequestRequest) (*v1.RecoveryRequest, error)
 	// ApproveRecoveryRequest ApproveRecoveryRequest 受 user:recovery:approve 控制；Grant 明文永不经过 Admin 边界。
 	ApproveRecoveryRequest(context.Context, *AdminApproveRecoveryRequestRequest) (*v1.RecoveryRequest, error)
-	// GetRecoveryRequest GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// GetRecoveryRequest GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	GetRecoveryRequest(context.Context, *AdminGetRecoveryRequestRequest) (*v1.RecoveryRequest, error)
-	// ListRecoveryRequests ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// ListRecoveryRequests ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	ListRecoveryRequests(context.Context, *AdminListRecoveryRequestsRequest) (*v1.ListRecoveryRequestsResponse, error)
-	// RejectRecoveryRequest RejectRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// RejectRecoveryRequest RejectRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	RejectRecoveryRequest(context.Context, *AdminRejectRecoveryRequestRequest) (*v1.RecoveryRequest, error)
 }
 
@@ -165,15 +165,15 @@ func _UserRecoveryAdminService_RejectRecoveryRequest0_HTTP_Handler(srv UserRecov
 }
 
 type UserRecoveryAdminServiceHTTPClient interface {
-	// AcceptRecoveryRequest AcceptRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// AcceptRecoveryRequest AcceptRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	AcceptRecoveryRequest(ctx context.Context, req *AdminAcceptRecoveryRequestRequest, opts ...http.CallOption) (rsp *v1.RecoveryRequest, err error)
 	// ApproveRecoveryRequest ApproveRecoveryRequest 受 user:recovery:approve 控制；Grant 明文永不经过 Admin 边界。
 	ApproveRecoveryRequest(ctx context.Context, req *AdminApproveRecoveryRequestRequest, opts ...http.CallOption) (rsp *v1.RecoveryRequest, err error)
-	// GetRecoveryRequest GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// GetRecoveryRequest GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	GetRecoveryRequest(ctx context.Context, req *AdminGetRecoveryRequestRequest, opts ...http.CallOption) (rsp *v1.RecoveryRequest, err error)
-	// ListRecoveryRequests ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// ListRecoveryRequests ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	ListRecoveryRequests(ctx context.Context, req *AdminListRecoveryRequestsRequest, opts ...http.CallOption) (rsp *v1.ListRecoveryRequestsResponse, err error)
-	// RejectRecoveryRequest RejectRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// RejectRecoveryRequest RejectRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	RejectRecoveryRequest(ctx context.Context, req *AdminRejectRecoveryRequestRequest, opts ...http.CallOption) (rsp *v1.RecoveryRequest, err error)
 }
 
@@ -185,7 +185,7 @@ func NewUserRecoveryAdminServiceHTTPClient(client *http.Client) UserRecoveryAdmi
 	return &UserRecoveryAdminServiceHTTPClientImpl{client}
 }
 
-// AcceptRecoveryRequest AcceptRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+// AcceptRecoveryRequest AcceptRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 func (c *UserRecoveryAdminServiceHTTPClientImpl) AcceptRecoveryRequest(ctx context.Context, in *AdminAcceptRecoveryRequestRequest, opts ...http.CallOption) (*v1.RecoveryRequest, error) {
 	var out v1.RecoveryRequest
 	pattern := "/admin/v1/user-recovery-requests/{request_no}:accept"
@@ -213,7 +213,7 @@ func (c *UserRecoveryAdminServiceHTTPClientImpl) ApproveRecoveryRequest(ctx cont
 	return &out, nil
 }
 
-// GetRecoveryRequest GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+// GetRecoveryRequest GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 func (c *UserRecoveryAdminServiceHTTPClientImpl) GetRecoveryRequest(ctx context.Context, in *AdminGetRecoveryRequestRequest, opts ...http.CallOption) (*v1.RecoveryRequest, error) {
 	var out v1.RecoveryRequest
 	pattern := "/admin/v1/user-recovery-requests/{request_no}"
@@ -227,7 +227,7 @@ func (c *UserRecoveryAdminServiceHTTPClientImpl) GetRecoveryRequest(ctx context.
 	return &out, nil
 }
 
-// ListRecoveryRequests ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+// ListRecoveryRequests ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 func (c *UserRecoveryAdminServiceHTTPClientImpl) ListRecoveryRequests(ctx context.Context, in *AdminListRecoveryRequestsRequest, opts ...http.CallOption) (*v1.ListRecoveryRequestsResponse, error) {
 	var out v1.ListRecoveryRequestsResponse
 	pattern := "/admin/v1/user-recovery-requests"
@@ -241,7 +241,7 @@ func (c *UserRecoveryAdminServiceHTTPClientImpl) ListRecoveryRequests(ctx contex
 	return &out, nil
 }
 
-// RejectRecoveryRequest RejectRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+// RejectRecoveryRequest RejectRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 func (c *UserRecoveryAdminServiceHTTPClientImpl) RejectRecoveryRequest(ctx context.Context, in *AdminRejectRecoveryRequestRequest, opts ...http.CallOption) (*v1.RecoveryRequest, error) {
 	var out v1.RecoveryRequest
 	pattern := "/admin/v1/user-recovery-requests/{request_no}:reject"

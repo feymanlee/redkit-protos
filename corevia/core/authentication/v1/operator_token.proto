@@ -13,17 +13,6 @@ message OperatorTokenPayload {
       description: "后台人员ID"
     }]; // 后台人员ID
 
-  // AppID。
-  optional uint32 app_id = 2 [ (gnostic.openapi.v3.property) = {
-      description: "AppID"
-    }]; // AppID
-
-  // App that owns the user identity. Unlike app_id, this is not changed when
-  // a platform operator establishes an App Selection.
-  optional uint32 operator_app_id = 22 [ (gnostic.openapi.v3.property) = {
-      description: "后台人员身份所属AppID"
-    }];
-
   // 客户端ID。
   optional string client_id = 3 [ (gnostic.openapi.v3.property) = {
       description: "客户端ID"
@@ -53,11 +42,6 @@ message OperatorTokenPayload {
   optional bool is_platform_admin = 20 [ (gnostic.openapi.v3.property) = {
       description: "是否平台超级管理员"
     }]; // 是否平台超级管理员
-
-  // 是否App管理员。
-  optional bool is_app_admin = 21 [ (gnostic.openapi.v3.property) = {
-      description: "是否App管理员"
-    }]; // 是否App管理员
 
   // 令牌唯一标识(JWT ID)。
   optional string jti = 100 [ (gnostic.openapi.v3.property) = {

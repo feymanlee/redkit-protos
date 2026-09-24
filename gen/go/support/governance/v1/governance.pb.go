@@ -7,8 +7,8 @@
 package governancepb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -373,8 +373,6 @@ type GovernanceEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GovernanceEvent。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GovernanceEvent 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint64 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// operation_type 区分 GovernanceEvent 的业务类型。
@@ -438,13 +436,6 @@ func (x *GovernanceEvent) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *GovernanceEvent) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GovernanceEvent) GetOperatorId() uint64 {
@@ -534,14 +525,12 @@ func (x *GovernanceEvent) GetOccurredAt() *timestamppb.Timestamp {
 // ListGovernanceEventsRequest selects immutable history for one authoritative target.
 type ListGovernanceEventsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGovernanceEvents 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// target_type 区分 ListGovernanceEvents 的业务类型。
 	TargetType GovernanceTargetType `protobuf:"varint,2,opt,name=target_type,json=targetType,proto3,enum=support.governance.v1.GovernanceTargetType" json:"target_type,omitempty"`
 	// target_id 标识关联的 Target。
 	TargetId string `protobuf:"bytes,3,opt,name=target_id,json=targetId,proto3" json:"target_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,4,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,4,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -576,13 +565,6 @@ func (*ListGovernanceEventsRequest) Descriptor() ([]byte, []int) {
 	return file_support_governance_v1_governance_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListGovernanceEventsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListGovernanceEventsRequest) GetTargetType() GovernanceTargetType {
 	if x != nil {
 		return x.TargetType
@@ -597,7 +579,7 @@ func (x *ListGovernanceEventsRequest) GetTargetId() string {
 	return ""
 }
 
-func (x *ListGovernanceEventsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListGovernanceEventsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -663,10 +645,9 @@ var File_support_governance_v1_governance_proto protoreflect.FileDescriptor
 
 const file_support_governance_v1_governance_proto_rawDesc = "" +
 	"\n" +
-	"&support/governance/v1/governance.proto\x12\x15support.governance.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb2\x05\n" +
+	"&support/governance/v1/governance.proto\x12\x15support.governance.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x89\x05\n" +
 	"\x0fGovernanceEvent\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\x04R\n" +
 	"operatorId\x12U\n" +
 	"\x0eoperation_type\x18\x04 \x01(\x0e2..support.governance.v1.GovernanceOperationTypeR\roperationType\x12!\n" +
@@ -683,9 +664,8 @@ const file_support_governance_v1_governance_proto_rawDesc = "" +
 	"\x06result\x18\f \x01(\x0e2'.support.governance.v1.GovernanceResultR\x06result\x12[\n" +
 	"\x10failure_category\x18\r \x01(\x0e20.support.governance.v1.GovernanceFailureCategoryR\x0ffailureCategory\x12;\n" +
 	"\voccurred_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt\"\xee\x01\n" +
-	"\x1bListGovernanceEventsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12L\n" +
+	"occurredAt\"\xc5\x01\n" +
+	"\x1bListGovernanceEventsRequest\x12L\n" +
 	"\vtarget_type\x18\x02 \x01(\x0e2+.support.governance.v1.GovernanceTargetTypeR\n" +
 	"targetType\x12\x1b\n" +
 	"\ttarget_id\x18\x03 \x01(\tR\btargetId\x12;\n" +
@@ -771,28 +751,25 @@ var file_support_governance_v1_governance_proto_goTypes = []any{
 	(*GovernanceEvent)(nil),              // 4: support.governance.v1.GovernanceEvent
 	(*ListGovernanceEventsRequest)(nil),  // 5: support.governance.v1.ListGovernanceEventsRequest
 	(*ListGovernanceEventsResponse)(nil), // 6: support.governance.v1.ListGovernanceEventsResponse
-	(v1.AppId)(0),                        // 7: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),        // 8: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),            // 9: common.pagination.v1.PagingRequest
+	(*timestamppb.Timestamp)(nil),        // 7: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),             // 8: common.pagination.v1.PagingRequest
 }
 var file_support_governance_v1_governance_proto_depIdxs = []int32{
-	7,  // 0: support.governance.v1.GovernanceEvent.app_id:type_name -> common.v1.AppId
-	0,  // 1: support.governance.v1.GovernanceEvent.operation_type:type_name -> support.governance.v1.GovernanceOperationType
-	1,  // 2: support.governance.v1.GovernanceEvent.target_type:type_name -> support.governance.v1.GovernanceTargetType
-	2,  // 3: support.governance.v1.GovernanceEvent.result:type_name -> support.governance.v1.GovernanceResult
-	3,  // 4: support.governance.v1.GovernanceEvent.failure_category:type_name -> support.governance.v1.GovernanceFailureCategory
-	8,  // 5: support.governance.v1.GovernanceEvent.occurred_at:type_name -> google.protobuf.Timestamp
-	7,  // 6: support.governance.v1.ListGovernanceEventsRequest.app_id:type_name -> common.v1.AppId
-	1,  // 7: support.governance.v1.ListGovernanceEventsRequest.target_type:type_name -> support.governance.v1.GovernanceTargetType
-	9,  // 8: support.governance.v1.ListGovernanceEventsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	4,  // 9: support.governance.v1.ListGovernanceEventsResponse.items:type_name -> support.governance.v1.GovernanceEvent
-	5,  // 10: support.governance.v1.GovernanceService.ListGovernanceEvents:input_type -> support.governance.v1.ListGovernanceEventsRequest
-	6,  // 11: support.governance.v1.GovernanceService.ListGovernanceEvents:output_type -> support.governance.v1.ListGovernanceEventsResponse
-	11, // [11:12] is the sub-list for method output_type
-	10, // [10:11] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	0, // 0: support.governance.v1.GovernanceEvent.operation_type:type_name -> support.governance.v1.GovernanceOperationType
+	1, // 1: support.governance.v1.GovernanceEvent.target_type:type_name -> support.governance.v1.GovernanceTargetType
+	2, // 2: support.governance.v1.GovernanceEvent.result:type_name -> support.governance.v1.GovernanceResult
+	3, // 3: support.governance.v1.GovernanceEvent.failure_category:type_name -> support.governance.v1.GovernanceFailureCategory
+	7, // 4: support.governance.v1.GovernanceEvent.occurred_at:type_name -> google.protobuf.Timestamp
+	1, // 5: support.governance.v1.ListGovernanceEventsRequest.target_type:type_name -> support.governance.v1.GovernanceTargetType
+	8, // 6: support.governance.v1.ListGovernanceEventsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	4, // 7: support.governance.v1.ListGovernanceEventsResponse.items:type_name -> support.governance.v1.GovernanceEvent
+	5, // 8: support.governance.v1.GovernanceService.ListGovernanceEvents:input_type -> support.governance.v1.ListGovernanceEventsRequest
+	6, // 9: support.governance.v1.GovernanceService.ListGovernanceEvents:output_type -> support.governance.v1.ListGovernanceEventsResponse
+	9, // [9:10] is the sub-list for method output_type
+	8, // [8:9] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_support_governance_v1_governance_proto_init() }

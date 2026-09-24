@@ -44,7 +44,7 @@ type FileAccessServiceClient interface {
 	BatchValidateFiles(ctx context.Context, in *BatchValidateFilesRequest, opts ...grpc.CallOption) (*BatchValidateFilesResponse, error)
 	// 为受保护文件签发短期下载地址。
 	CreateDownloadAuthorization(ctx context.Context, in *CreateFileDownloadAuthorizationRequest, opts ...grpc.CallOption) (*FileDownloadAuthorization, error)
-	// 校验 App、Purpose、Owner 与状态后签发短期受保护下载地址。
+	// 校验 Purpose、Owner 与状态后签发短期受保护下载地址。
 	IssueProtectedDownload(ctx context.Context, in *IssueProtectedDownloadRequest, opts ...grpc.CallOption) (*IssueProtectedDownloadResponse, error)
 }
 
@@ -132,7 +132,7 @@ type FileAccessServiceServer interface {
 	BatchValidateFiles(context.Context, *BatchValidateFilesRequest) (*BatchValidateFilesResponse, error)
 	// 为受保护文件签发短期下载地址。
 	CreateDownloadAuthorization(context.Context, *CreateFileDownloadAuthorizationRequest) (*FileDownloadAuthorization, error)
-	// 校验 App、Purpose、Owner 与状态后签发短期受保护下载地址。
+	// 校验 Purpose、Owner 与状态后签发短期受保护下载地址。
 	IssueProtectedDownload(context.Context, *IssueProtectedDownloadRequest) (*IssueProtectedDownloadResponse, error)
 	mustEmbedUnimplementedFileAccessServiceServer()
 }

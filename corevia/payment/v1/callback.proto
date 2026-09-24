@@ -3,7 +3,6 @@ syntax = "proto3";
 package payment.v1;
 
 import "callback/v1/event.proto";
-import "common/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 import "payment/v1/governance.proto";
 import "payment/v1/payment_types.proto";
@@ -12,8 +11,6 @@ import "payment/v1/payment_types.proto";
 message PaymentCallback {
   // 回调 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 支付渠道。
   optional PaymentProvider provider = 3;
   // 支付单号。
@@ -52,8 +49,6 @@ message CallbackVerificationCandidate {
   uint64 id = 1;
   // revision_key 在约定作用域内稳定定位 CallbackVerificationCandidate。
   string revision_key = 2;
-  // app_id 限定 CallbackVerificationCandidate 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 3;
   // channel_id 标识关联的 Channel。
   uint32 channel_id = 4;
   // provider 标识本次能力使用的外部 Provider。
@@ -94,7 +89,7 @@ message CallbackReprocessAttempt {
   google.protobuf.Timestamp created_at = 10;
 }
 
-// Payment 内部的 App-scoped Callback Reprocess 命令。
+// Payment 内部的 Callback Reprocess 命令。
 message ReprocessPaymentCallbackRequest {
   // callback_id 标识关联的 Callback。
   uint64 callback_id = 1;
@@ -102,8 +97,6 @@ message ReprocessPaymentCallbackRequest {
   uint32 operator_id = 2;
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3;
-  // app_id 限定 ReprocessPaymentCallback 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 4;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 5;
   // operation_no 为审计与幂等重放稳定标识本次管理操作。

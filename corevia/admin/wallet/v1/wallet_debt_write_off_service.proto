@@ -77,7 +77,7 @@ message AdminWalletDebtWriteOffFilter {
   optional .wallet.v1.WalletDebtWriteOff.Status status = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   // requester_id 标识关联的 Requester。
   optional uint32 requester_id = 2 [(validate.rules).uint32.gt = 0];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3 [(validate.rules).uint64.gt = 0];
   // debt_id 标识关联的 Debt。
   optional uint64 debt_id = 4 [(validate.rules).uint64.gt = 0];

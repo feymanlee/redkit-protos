@@ -31,13 +31,13 @@ const (
 //
 // 礼物分析服务。
 type GiftAnalyticsServiceClient interface {
-	// 查询当前 App 在 Asia/Shanghai 业务日范围内的运营概览。
+	// 查询 Asia/Shanghai 业务日范围内的运营概览。
 	GetGiftOverview(ctx context.Context, in *GetGiftOverviewRequest, opts ...grpc.CallOption) (*GiftOverviewResponse, error)
 	// 查询 User Overview 使用的 Gift 聚合摘要。
 	GetUserGiftSummary(ctx context.Context, in *GetUserGiftSummaryRequest, opts ...grpc.CallOption) (*UserGiftSummary, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+	// 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
 	ListGiftEvents(ctx context.Context, in *ListGiftEventsRequest, opts ...grpc.CallOption) (*ListGiftEventResponse, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+	// 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
 	ListGiftStats(ctx context.Context, in *ListGiftStatsRequest, opts ...grpc.CallOption) (*ListGiftStatResponse, error)
 }
 
@@ -95,13 +95,13 @@ func (c *giftAnalyticsServiceClient) ListGiftStats(ctx context.Context, in *List
 //
 // 礼物分析服务。
 type GiftAnalyticsServiceServer interface {
-	// 查询当前 App 在 Asia/Shanghai 业务日范围内的运营概览。
+	// 查询 Asia/Shanghai 业务日范围内的运营概览。
 	GetGiftOverview(context.Context, *GetGiftOverviewRequest) (*GiftOverviewResponse, error)
 	// 查询 User Overview 使用的 Gift 聚合摘要。
 	GetUserGiftSummary(context.Context, *GetUserGiftSummaryRequest) (*UserGiftSummary, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+	// 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
 	ListGiftEvents(context.Context, *ListGiftEventsRequest) (*ListGiftEventResponse, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+	// 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
 	ListGiftStats(context.Context, *ListGiftStatsRequest) (*ListGiftStatResponse, error)
 	mustEmbedUnimplementedGiftAnalyticsServiceServer()
 }

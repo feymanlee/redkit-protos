@@ -7,7 +7,6 @@
 package paymentpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -249,8 +248,6 @@ type PaymentGovernanceEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 PaymentGovernanceEvent。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 PaymentGovernanceEvent 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// action 指定本次状态推进采用的业务动作。
@@ -314,13 +311,6 @@ func (x *PaymentGovernanceEvent) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *PaymentGovernanceEvent) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PaymentGovernanceEvent) GetOperatorId() uint32 {
@@ -465,8 +455,6 @@ func (x *ListPaymentGovernanceEventResponse) GetTotal() uint64 {
 // GetRawDiagnosticDataRequest 标识待查询的 RawDiagnosticData。
 type GetRawDiagnosticDataRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetRawDiagnosticData 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// resource_type 区分 GetRawDiagnosticData 的业务类型。
 	ResourceType DiagnosticResourceType `protobuf:"varint,2,opt,name=resource_type,json=resourceType,proto3,enum=payment.v1.DiagnosticResourceType" json:"resource_type,omitempty"`
 	// resource_id 标识关联的 Resource。
@@ -511,13 +499,6 @@ func (*GetRawDiagnosticDataRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_governance_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetRawDiagnosticDataRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetRawDiagnosticDataRequest) GetResourceType() DiagnosticResourceType {
 	if x != nil {
 		return x.ResourceType
@@ -556,8 +537,6 @@ func (x *GetRawDiagnosticDataRequest) GetOperationNo() string {
 // EraseDiagnosticDataRequest 定义执行 EraseDiagnosticData 的幂等管理命令参数。
 type EraseDiagnosticDataRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 EraseDiagnosticData 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// resource_type 区分 EraseDiagnosticData 的业务类型。
 	ResourceType DiagnosticResourceType `protobuf:"varint,2,opt,name=resource_type,json=resourceType,proto3,enum=payment.v1.DiagnosticResourceType" json:"resource_type,omitempty"`
 	// resource_id 标识关联的 Resource。
@@ -602,13 +581,6 @@ func (x *EraseDiagnosticDataRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use EraseDiagnosticDataRequest.ProtoReflect.Descriptor instead.
 func (*EraseDiagnosticDataRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_governance_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *EraseDiagnosticDataRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *EraseDiagnosticDataRequest) GetResourceType() DiagnosticResourceType {
@@ -658,7 +630,7 @@ var File_payment_v1_governance_proto protoreflect.FileDescriptor
 const file_payment_v1_governance_proto_rawDesc = "" +
 	"\n" +
 	"\x1bpayment/v1/governance.proto\x12\n" +
-	"payment.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"q\n" +
+	"payment.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"q\n" +
 	"\x14MaskedDiagnosticData\x12\x18\n" +
 	"\asummary\x18\x01 \x01(\tR\asummary\x12'\n" +
 	"\x0fredacted_fields\x18\x02 \x03(\tR\x0eredactedFields\x12\x16\n" +
@@ -678,10 +650,9 @@ const file_payment_v1_governance_proto_rawDesc = "" +
 	"\n" +
 	"\b_payloadB\f\n" +
 	"\n" +
-	"_erased_at\"\xb7\x04\n" +
+	"_erased_at\"\x8e\x04\n" +
 	"\x16PaymentGovernanceEvent\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
 	"\x06action\x18\x04 \x01(\tR\x06action\x12!\n" +
@@ -706,9 +677,8 @@ const file_payment_v1_governance_proto_rawDesc = "" +
 	"\x0e_after_summary\"t\n" +
 	"\"ListPaymentGovernanceEventResponse\x128\n" +
 	"\x05items\x18\x01 \x03(\v2\".payment.v1.PaymentGovernanceEventR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x93\x02\n" +
-	"\x1bGetRawDiagnosticDataRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12G\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xea\x01\n" +
+	"\x1bGetRawDiagnosticDataRequest\x12G\n" +
 	"\rresource_type\x18\x02 \x01(\x0e2\".payment.v1.DiagnosticResourceTypeR\fresourceType\x12\x1f\n" +
 	"\vresource_id\x18\x03 \x01(\tR\n" +
 	"resourceId\x12\x1f\n" +
@@ -716,9 +686,8 @@ const file_payment_v1_governance_proto_rawDesc = "" +
 	"operatorId\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x05 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\x06 \x01(\tR\voperationNo\"\xaa\x02\n" +
-	"\x1aEraseDiagnosticDataRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12G\n" +
+	"\foperation_no\x18\x06 \x01(\tR\voperationNo\"\x81\x02\n" +
+	"\x1aEraseDiagnosticDataRequest\x12G\n" +
 	"\rresource_type\x18\x02 \x01(\x0e2\".payment.v1.DiagnosticResourceTypeR\fresourceType\x12\x1f\n" +
 	"\vresource_id\x18\x03 \x01(\tR\n" +
 	"resourceId\x12\x1f\n" +
@@ -760,23 +729,19 @@ var file_payment_v1_governance_proto_goTypes = []any{
 	(*GetRawDiagnosticDataRequest)(nil),        // 5: payment.v1.GetRawDiagnosticDataRequest
 	(*EraseDiagnosticDataRequest)(nil),         // 6: payment.v1.EraseDiagnosticDataRequest
 	(*timestamppb.Timestamp)(nil),              // 7: google.protobuf.Timestamp
-	(v1.AppId)(0),                              // 8: common.v1.AppId
 }
 var file_payment_v1_governance_proto_depIdxs = []int32{
 	0, // 0: payment.v1.RawDiagnosticData.resource_type:type_name -> payment.v1.DiagnosticResourceType
 	7, // 1: payment.v1.RawDiagnosticData.erased_at:type_name -> google.protobuf.Timestamp
-	8, // 2: payment.v1.PaymentGovernanceEvent.app_id:type_name -> common.v1.AppId
-	7, // 3: payment.v1.PaymentGovernanceEvent.created_at:type_name -> google.protobuf.Timestamp
-	3, // 4: payment.v1.ListPaymentGovernanceEventResponse.items:type_name -> payment.v1.PaymentGovernanceEvent
-	8, // 5: payment.v1.GetRawDiagnosticDataRequest.app_id:type_name -> common.v1.AppId
-	0, // 6: payment.v1.GetRawDiagnosticDataRequest.resource_type:type_name -> payment.v1.DiagnosticResourceType
-	8, // 7: payment.v1.EraseDiagnosticDataRequest.app_id:type_name -> common.v1.AppId
-	0, // 8: payment.v1.EraseDiagnosticDataRequest.resource_type:type_name -> payment.v1.DiagnosticResourceType
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	7, // 2: payment.v1.PaymentGovernanceEvent.created_at:type_name -> google.protobuf.Timestamp
+	3, // 3: payment.v1.ListPaymentGovernanceEventResponse.items:type_name -> payment.v1.PaymentGovernanceEvent
+	0, // 4: payment.v1.GetRawDiagnosticDataRequest.resource_type:type_name -> payment.v1.DiagnosticResourceType
+	0, // 5: payment.v1.EraseDiagnosticDataRequest.resource_type:type_name -> payment.v1.DiagnosticResourceType
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_governance_proto_init() }

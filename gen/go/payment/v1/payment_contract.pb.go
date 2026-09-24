@@ -7,7 +7,6 @@
 package paymentpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -305,8 +304,6 @@ type Payment struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 支付单 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 支付单号。
@@ -406,13 +403,6 @@ func (*Payment) Descriptor() ([]byte, []int) {
 func (x *Payment) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *Payment) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -639,8 +629,6 @@ type PaymentEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 事件 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 支付单号。
 	PaymentNo *string `protobuf:"bytes,3,opt,name=payment_no,json=paymentNo,proto3,oneof" json:"payment_no,omitempty"`
 	// 事件类型。
@@ -692,13 +680,6 @@ func (*PaymentEvent) Descriptor() ([]byte, []int) {
 func (x *PaymentEvent) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *PaymentEvent) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -945,13 +926,11 @@ func (x *PaymentOutboxEvent) GetUpdatedAt() *timestamppb.Timestamp {
 // 充值履约事件身份由原始事件与 Payment 权威事实共同组成。
 type RechargeFulfillmentIdentity struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RechargeFulfillmentIdentity 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// order_no 是 RechargeFulfillmentIdentity 对外关联与审计使用的业务编号。
 	OrderNo string `protobuf:"bytes,2,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
 	// payment_no 是 RechargeFulfillmentIdentity 对外关联与审计使用的业务编号。
 	PaymentNo string `protobuf:"bytes,3,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// amount 以对应 currency 的最小货币单位表示，不使用浮点数。
 	Amount int64 `protobuf:"varint,5,opt,name=amount,proto3" json:"amount,omitempty"`
@@ -989,13 +968,6 @@ func (x *RechargeFulfillmentIdentity) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RechargeFulfillmentIdentity.ProtoReflect.Descriptor instead.
 func (*RechargeFulfillmentIdentity) Descriptor() ([]byte, []int) {
 	return file_payment_v1_payment_contract_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *RechargeFulfillmentIdentity) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
 }
 
 func (x *RechargeFulfillmentIdentity) GetOrderNo() string {
@@ -1681,8 +1653,6 @@ type ReplayDeliveryFailureRequest struct {
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
-	// app_id 限定 ReplayDeliveryFailure 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
 	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
@@ -1742,13 +1712,6 @@ func (x *ReplayDeliveryFailureRequest) GetReason() string {
 	return ""
 }
 
-func (x *ReplayDeliveryFailureRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ReplayDeliveryFailureRequest) GetRequestId() string {
 	if x != nil && x.RequestId != nil {
 		return *x.RequestId
@@ -1766,7 +1729,7 @@ func (x *ReplayDeliveryFailureRequest) GetOperationNo() string {
 // 支付单创建字段，不携带资源身份或服务端状态。
 type PaymentPatch struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// payment_no 是 PaymentPatch 对外关联与审计使用的业务编号。
 	PaymentNo *string `protobuf:"bytes,2,opt,name=payment_no,json=paymentNo,proto3,oneof" json:"payment_no,omitempty"`
@@ -1966,9 +1929,7 @@ func (x *PaymentPatch) GetProductCode() string {
 type CreatePaymentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 数据。
-	Data *PaymentPatch `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Data          *PaymentPatch `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2010,20 +1971,11 @@ func (x *CreatePaymentRequest) GetData() *PaymentPatch {
 	return nil
 }
 
-func (x *CreatePaymentRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // 查询支付单请求。
 type GetPaymentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 支付单号。
-	PaymentNo string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	PaymentNo     string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2065,13 +2017,6 @@ func (x *GetPaymentRequest) GetPaymentNo() string {
 	return ""
 }
 
-func (x *GetPaymentRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // 关闭支付单请求。
 type ClosePaymentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2079,8 +2024,6 @@ type ClosePaymentRequest struct {
 	PaymentNo string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
 	// 标准关闭原因码。
 	ReasonCode PaymentClosureReasonCode `protobuf:"varint,2,opt,name=reason_code,json=reasonCode,proto3,enum=payment.v1.PaymentClosureReasonCode" json:"reason_code,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId *v1.AppId `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 可信管理网关注入的操作人。
 	OperatorId uint32 `protobuf:"varint,4,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// 跨服务请求 ID。
@@ -2137,13 +2080,6 @@ func (x *ClosePaymentRequest) GetReasonCode() PaymentClosureReasonCode {
 	return PaymentClosureReasonCode_PAYMENT_CLOSURE_REASON_CODE_UNSPECIFIED
 }
 
-func (x *ClosePaymentRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ClosePaymentRequest) GetOperatorId() uint32 {
 	if x != nil {
 		return x.OperatorId
@@ -2176,9 +2112,7 @@ func (x *ClosePaymentRequest) GetRemark() string {
 type SimulatePaymentSuccessRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 支付单号。
-	PaymentNo string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	PaymentNo     string `protobuf:"bytes,1,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2218,13 +2152,6 @@ func (x *SimulatePaymentSuccessRequest) GetPaymentNo() string {
 		return x.PaymentNo
 	}
 	return ""
-}
-
-func (x *SimulatePaymentSuccessRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // 支付列表响应。
@@ -2401,8 +2328,6 @@ type ReplayPaymentOutboxEventRequest struct {
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// 重放原因。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// 跨服务请求 ID。
 	RequestId string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	// 幂等治理操作号。
@@ -2462,13 +2387,6 @@ func (x *ReplayPaymentOutboxEventRequest) GetReason() string {
 	return ""
 }
 
-func (x *ReplayPaymentOutboxEventRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ReplayPaymentOutboxEventRequest) GetRequestId() string {
 	if x != nil {
 		return x.RequestId
@@ -2488,49 +2406,48 @@ var File_payment_v1_payment_contract_proto protoreflect.FileDescriptor
 const file_payment_v1_payment_contract_proto_rawDesc = "" +
 	"\n" +
 	"!payment/v1/payment_contract.proto\x12\n" +
-	"payment.v1\x1a\x16common/v1/common.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\x1a\x1bpayment/v1/governance.proto\x1a\x18payment/v1/channel.proto\"\xe4\x12\n" +
+	"payment.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\x1a\x1bpayment/v1/governance.proto\x1a\x18payment/v1/channel.proto\"\xbd\x12\n" +
 	"\aPayment\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x04 \x01(\tH\x03R\tpaymentNo\x88\x01\x01\x12\x1e\n" +
-	"\border_no\x18\x05 \x01(\tH\x04R\aorderNo\x88\x01\x01\x12\x1d\n" +
-	"\asubject\x18\x06 \x01(\tH\x05R\asubject\x88\x01\x01\x125\n" +
-	"\x06amount\x18\a \x01(\x03B\x18\xbaG\x15\x92\x02\x12现金金额，分H\x06R\x06amount\x88\x01\x01\x12I\n" +
-	"\x0frefunded_amount\x18\b \x01(\x03B\x1b\xbaG\x18\x92\x02\x15已退款金额，分H\aR\x0erefundedAmount\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\t \x01(\tH\bR\bcurrency\x88\x01\x01\x12<\n" +
+	"payment_no\x18\x04 \x01(\tH\x02R\tpaymentNo\x88\x01\x01\x12\x1e\n" +
+	"\border_no\x18\x05 \x01(\tH\x03R\aorderNo\x88\x01\x01\x12\x1d\n" +
+	"\asubject\x18\x06 \x01(\tH\x04R\asubject\x88\x01\x01\x125\n" +
+	"\x06amount\x18\a \x01(\x03B\x18\xbaG\x15\x92\x02\x12现金金额，分H\x05R\x06amount\x88\x01\x01\x12I\n" +
+	"\x0frefunded_amount\x18\b \x01(\x03B\x1b\xbaG\x18\x92\x02\x15已退款金额，分H\x06R\x0erefundedAmount\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\t \x01(\tH\aR\bcurrency\x88\x01\x01\x12<\n" +
 	"\bprovider\x18\n" +
-	" \x01(\x0e2\x1b.payment.v1.PaymentProviderH\tR\bprovider\x88\x01\x01\x126\n" +
-	"\x06method\x18\v \x01(\x0e2\x19.payment.v1.PaymentMethodH\n" +
-	"R\x06method\x88\x01\x01\x127\n" +
-	"\x06status\x18\f \x01(\x0e2\x1a.payment.v1.Payment.StatusH\vR\x06status\x88\x01\x01\x12\x1e\n" +
-	"\bbiz_type\x18\r \x01(\tH\fR\abizType\x88\x01\x01\x12\x1a\n" +
-	"\x06biz_id\x18\x0e \x01(\tH\rR\x05bizId\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\x0f \x01(\tH\x0eR\x0eidempotencyKey\x88\x01\x01\x12/\n" +
-	"\x11provider_trade_no\x18\x10 \x01(\tH\x0fR\x0fproviderTradeNo\x88\x01\x01\x12*\n" +
-	"\x0epayment_params\x18\x11 \x01(\tH\x10R\rpaymentParams\x88\x01\x01\x12\"\n" +
+	" \x01(\x0e2\x1b.payment.v1.PaymentProviderH\bR\bprovider\x88\x01\x01\x126\n" +
+	"\x06method\x18\v \x01(\x0e2\x19.payment.v1.PaymentMethodH\tR\x06method\x88\x01\x01\x127\n" +
+	"\x06status\x18\f \x01(\x0e2\x1a.payment.v1.Payment.StatusH\n" +
+	"R\x06status\x88\x01\x01\x12\x1e\n" +
+	"\bbiz_type\x18\r \x01(\tH\vR\abizType\x88\x01\x01\x12\x1a\n" +
+	"\x06biz_id\x18\x0e \x01(\tH\fR\x05bizId\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\x0f \x01(\tH\rR\x0eidempotencyKey\x88\x01\x01\x12/\n" +
+	"\x11provider_trade_no\x18\x10 \x01(\tH\x0eR\x0fproviderTradeNo\x88\x01\x01\x12*\n" +
+	"\x0epayment_params\x18\x11 \x01(\tH\x0fR\rpaymentParams\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"notify_url\x18\x12 \x01(\tH\x11R\tnotifyUrl\x88\x01\x01\x12\"\n" +
+	"notify_url\x18\x12 \x01(\tH\x10R\tnotifyUrl\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"return_url\x18\x13 \x01(\tH\x12R\treturnUrl\x88\x01\x01\x12\x1f\n" +
-	"\bmetadata\x18\x14 \x01(\tH\x13R\bmetadata\x88\x01\x01\x12Y\n" +
-	"\x12fulfillment_status\x18\x15 \x01(\x0e2%.payment.v1.Payment.FulfillmentStatusH\x14R\x11fulfillmentStatus\x88\x01\x01\x12\"\n" +
+	"return_url\x18\x13 \x01(\tH\x11R\treturnUrl\x88\x01\x01\x12\x1f\n" +
+	"\bmetadata\x18\x14 \x01(\tH\x12R\bmetadata\x88\x01\x01\x12Y\n" +
+	"\x12fulfillment_status\x18\x15 \x01(\x0e2%.payment.v1.Payment.FulfillmentStatusH\x13R\x11fulfillmentStatus\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"channel_id\x18\x16 \x01(\rH\x15R\tchannelId\x88\x01\x01\x123\n" +
-	"\x13channel_revision_id\x18\x17 \x01(\x04H\x16R\x11channelRevisionId\x88\x01\x01\x12@\n" +
-	"\x1arouting_policy_revision_id\x18\x18 \x01(\x04H\x17R\x17routingPolicyRevisionId\x88\x01\x01\x12+\n" +
-	"\x0frouting_rule_id\x18\x19 \x01(\tH\x18R\rroutingRuleId\x88\x01\x01\x12F\n" +
-	"\x1dsubscription_plan_revision_id\x18\x1a \x01(\x04H\x19R\x1asubscriptionPlanRevisionId\x88\x01\x01\x12*\n" +
-	"\x0eattempt_number\x18\x1b \x01(\rH\x1aR\rattemptNumber\x88\x01\x01\x123\n" +
-	"\x13payment_option_code\x18\x1c \x01(\tH\x1bR\x11paymentOptionCode\x88\x01\x01\x12@\n" +
-	"\x1apayment_option_revision_id\x18\x1d \x01(\x04H\x1cR\x17paymentOptionRevisionId\x88\x01\x01\x128\n" +
-	"\apaid_at\x18\x1e \x01(\v2\x1a.google.protobuf.TimestampH\x1dR\x06paidAt\x88\x01\x01\x12<\n" +
-	"\texpire_at\x18\x1f \x01(\v2\x1a.google.protobuf.TimestampH\x1eR\bexpireAt\x88\x01\x01\x12?\n" +
+	"channel_id\x18\x16 \x01(\rH\x14R\tchannelId\x88\x01\x01\x123\n" +
+	"\x13channel_revision_id\x18\x17 \x01(\x04H\x15R\x11channelRevisionId\x88\x01\x01\x12@\n" +
+	"\x1arouting_policy_revision_id\x18\x18 \x01(\x04H\x16R\x17routingPolicyRevisionId\x88\x01\x01\x12+\n" +
+	"\x0frouting_rule_id\x18\x19 \x01(\tH\x17R\rroutingRuleId\x88\x01\x01\x12F\n" +
+	"\x1dsubscription_plan_revision_id\x18\x1a \x01(\x04H\x18R\x1asubscriptionPlanRevisionId\x88\x01\x01\x12*\n" +
+	"\x0eattempt_number\x18\x1b \x01(\rH\x19R\rattemptNumber\x88\x01\x01\x123\n" +
+	"\x13payment_option_code\x18\x1c \x01(\tH\x1aR\x11paymentOptionCode\x88\x01\x01\x12@\n" +
+	"\x1apayment_option_revision_id\x18\x1d \x01(\x04H\x1bR\x17paymentOptionRevisionId\x88\x01\x01\x128\n" +
+	"\apaid_at\x18\x1e \x01(\v2\x1a.google.protobuf.TimestampH\x1cR\x06paidAt\x88\x01\x01\x12<\n" +
+	"\texpire_at\x18\x1f \x01(\v2\x1a.google.protobuf.TimestampH\x1dR\bexpireAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1fR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1eR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH R\tupdatedAt\x88\x01\x01\"\x99\x01\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x1fR\tupdatedAt\x88\x01\x01\"\x99\x01\n" +
 	"\x06Status\x12\v\n" +
 	"\aCREATED\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\x0e\n" +
@@ -2550,8 +2467,7 @@ const file_payment_v1_payment_contract_proto_rawDesc = "" +
 	"\tCREDITING\x10\x01\x12\f\n" +
 	"\bCREDITED\x10\x02\x12\x11\n" +
 	"\rCREDIT_FAILED\x10\x03B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\r\n" +
 	"\v_payment_noB\v\n" +
@@ -2586,23 +2502,21 @@ const file_payment_v1_payment_contract_proto_rawDesc = "" +
 	"\n" +
 	"_expire_atB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x99\x04\n" +
+	"\v_updated_at\"\xf2\x03\n" +
 	"\fPaymentEvent\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x03 \x01(\tH\x02R\tpaymentNo\x88\x01\x01\x12\"\n" +
+	"payment_no\x18\x03 \x01(\tH\x01R\tpaymentNo\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"event_type\x18\x04 \x01(\tH\x03R\teventType\x88\x01\x01\x12$\n" +
-	"\vfrom_status\x18\x05 \x01(\tH\x04R\n" +
+	"event_type\x18\x04 \x01(\tH\x02R\teventType\x88\x01\x01\x12$\n" +
+	"\vfrom_status\x18\x05 \x01(\tH\x03R\n" +
 	"fromStatus\x88\x01\x01\x12 \n" +
-	"\tto_status\x18\x06 \x01(\tH\x05R\btoStatus\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\a \x01(\tH\x06R\x0eidempotencyKey\x88\x01\x01\x12R\n" +
-	"\x11masked_diagnostic\x18\b \x01(\v2 .payment.v1.MaskedDiagnosticDataH\aR\x10maskedDiagnostic\x88\x01\x01\x12?\n" +
+	"\tto_status\x18\x06 \x01(\tH\x04R\btoStatus\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\a \x01(\tH\x05R\x0eidempotencyKey\x88\x01\x01\x12R\n" +
+	"\x11masked_diagnostic\x18\b \x01(\v2 .payment.v1.MaskedDiagnosticDataH\x06R\x10maskedDiagnostic\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\bR\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\r\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\aR\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\r\n" +
 	"\v_payment_noB\r\n" +
 	"\v_event_typeB\x0e\n" +
 	"\f_from_statusB\f\n" +
@@ -2643,9 +2557,8 @@ const file_payment_v1_payment_contract_proto_rawDesc = "" +
 	"\x0e_replay_reasonB\x14\n" +
 	"\x12_masked_diagnosticB\r\n" +
 	"\v_payment_noB\x14\n" +
-	"\x12_recharge_identity\"\xbb\x01\n" +
-	"\x1bRechargeFulfillmentIdentity\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\rR\x05appId\x12\x19\n" +
+	"\x12_recharge_identity\"\xa4\x01\n" +
+	"\x1bRechargeFulfillmentIdentity\x12\x19\n" +
 	"\border_no\x18\x02 \x01(\tR\aorderNo\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x03 \x01(\tR\tpaymentNo\x12\x17\n" +
@@ -2700,17 +2613,15 @@ const file_payment_v1_payment_contract_proto_rawDesc = "" +
 	"\x19_replay_ineligible_reason\"f\n" +
 	"\x1bListDeliveryFailureResponse\x121\n" +
 	"\x05items\x18\x01 \x03(\v2\x1b.payment.v1.DeliveryFailureR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x97\x02\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xde\x01\n" +
 	"\x1cReplayDeliveryFailureRequest\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
-	"\x06reason\x18\x03 \x01(\tR\x06reason\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\"\n" +
+	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x01R\trequestId\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\x06 \x01(\tH\x02R\voperationNo\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\x06 \x01(\tH\x01R\voperationNo\x88\x01\x01B\r\n" +
 	"\v_request_idB\x0f\n" +
 	"\r_operation_no\"\x88\b\n" +
 	"\fPaymentPatch\x12\x1c\n" +
@@ -2757,34 +2668,26 @@ const file_payment_v1_payment_contract_proto_rawDesc = "" +
 	"_expire_atB\x12\n" +
 	"\x10_client_platformB\x16\n" +
 	"\x14_payment_option_codeB\x0f\n" +
-	"\r_product_code\"}\n" +
+	"\r_product_code\"D\n" +
 	"\x14CreatePaymentRequest\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.payment.v1.PaymentPatchR\x04data\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"k\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.payment.v1.PaymentPatchR\x04data\"2\n" +
 	"\x11GetPaymentRequest\x12\x1d\n" +
 	"\n" +
-	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xaf\x02\n" +
+	"payment_no\x18\x01 \x01(\tR\tpaymentNo\"\xf6\x01\n" +
 	"\x13ClosePaymentRequest\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12E\n" +
 	"\vreason_code\x18\x02 \x01(\x0e2$.payment.v1.PaymentClosureReasonCodeR\n" +
-	"reasonCode\x12,\n" +
-	"\x06app_id\x18\x03 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"reasonCode\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\rR\n" +
 	"operatorId\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x05 \x01(\tR\trequestId\x12!\n" +
 	"\foperation_no\x18\x06 \x01(\tR\voperationNo\x12\x16\n" +
-	"\x06remark\x18\a \x01(\tR\x06remarkB\t\n" +
-	"\a_app_id\"w\n" +
+	"\x06remark\x18\a \x01(\tR\x06remark\">\n" +
 	"\x1dSimulatePaymentSuccessRequest\x12\x1d\n" +
 	"\n" +
-	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"V\n" +
+	"payment_no\x18\x01 \x01(\tR\tpaymentNo\"V\n" +
 	"\x13ListPaymentResponse\x12)\n" +
 	"\x05items\x18\x01 \x03(\v2\x13.payment.v1.PaymentR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\"`\n" +
@@ -2793,17 +2696,15 @@ const file_payment_v1_payment_contract_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\"l\n" +
 	"\x1eListPaymentOutboxEventResponse\x124\n" +
 	"\x05items\x18\x01 \x03(\v2\x1e.payment.v1.PaymentOutboxEventR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xf0\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xb7\x01\n" +
 	"\x1fReplayPaymentOutboxEventRequest\x12\x19\n" +
 	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
-	"\x06reason\x18\x03 \x01(\tR\x06reason\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1d\n" +
+	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x05 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\x06 \x01(\tR\voperationNoB\t\n" +
-	"\a_app_id*\xd0\x02\n" +
+	"\foperation_no\x18\x06 \x01(\tR\voperationNo*\xd0\x02\n" +
 	"\x13DeliveryFailureKind\x12%\n" +
 	"!DELIVERY_FAILURE_KIND_UNSPECIFIED\x10\x00\x12\"\n" +
 	"\x1eDELIVERY_FAILURE_KIND_RECHARGE\x10\x01\x12,\n" +
@@ -2869,8 +2770,7 @@ var file_payment_v1_payment_contract_proto_goTypes = []any{
 	(PaymentMethod)(0),                                    // 27: payment.v1.PaymentMethod
 	(*timestamppb.Timestamp)(nil),                         // 28: google.protobuf.Timestamp
 	(*MaskedDiagnosticData)(nil),                          // 29: payment.v1.MaskedDiagnosticData
-	(v1.AppId)(0),                                         // 30: common.v1.AppId
-	(RoutingClientPlatform)(0),                            // 31: payment.v1.RoutingClientPlatform
+	(RoutingClientPlatform)(0),                            // 30: payment.v1.RoutingClientPlatform
 }
 var file_payment_v1_payment_contract_proto_depIdxs = []int32{
 	26, // 0: payment.v1.Payment.provider:type_name -> payment.v1.PaymentProvider
@@ -2902,26 +2802,20 @@ var file_payment_v1_payment_contract_proto_depIdxs = []int32{
 	12, // 26: payment.v1.DeliveryFailure.payment_attempt_expiration:type_name -> payment.v1.PaymentAttemptExpirationDeliveryFailureDetail
 	13, // 27: payment.v1.DeliveryFailure.subscription_fulfillment:type_name -> payment.v1.SubscriptionFulfillmentDeliveryFailureDetail
 	14, // 28: payment.v1.ListDeliveryFailureResponse.items:type_name -> payment.v1.DeliveryFailure
-	30, // 29: payment.v1.ReplayDeliveryFailureRequest.app_id:type_name -> common.v1.AppId
-	26, // 30: payment.v1.PaymentPatch.provider:type_name -> payment.v1.PaymentProvider
-	27, // 31: payment.v1.PaymentPatch.method:type_name -> payment.v1.PaymentMethod
-	28, // 32: payment.v1.PaymentPatch.expire_at:type_name -> google.protobuf.Timestamp
-	31, // 33: payment.v1.PaymentPatch.client_platform:type_name -> payment.v1.RoutingClientPlatform
-	17, // 34: payment.v1.CreatePaymentRequest.data:type_name -> payment.v1.PaymentPatch
-	30, // 35: payment.v1.CreatePaymentRequest.app_id:type_name -> common.v1.AppId
-	30, // 36: payment.v1.GetPaymentRequest.app_id:type_name -> common.v1.AppId
-	1,  // 37: payment.v1.ClosePaymentRequest.reason_code:type_name -> payment.v1.PaymentClosureReasonCode
-	30, // 38: payment.v1.ClosePaymentRequest.app_id:type_name -> common.v1.AppId
-	30, // 39: payment.v1.SimulatePaymentSuccessRequest.app_id:type_name -> common.v1.AppId
-	4,  // 40: payment.v1.ListPaymentResponse.items:type_name -> payment.v1.Payment
-	5,  // 41: payment.v1.ListPaymentEventResponse.items:type_name -> payment.v1.PaymentEvent
-	6,  // 42: payment.v1.ListPaymentOutboxEventResponse.items:type_name -> payment.v1.PaymentOutboxEvent
-	30, // 43: payment.v1.ReplayPaymentOutboxEventRequest.app_id:type_name -> common.v1.AppId
-	44, // [44:44] is the sub-list for method output_type
-	44, // [44:44] is the sub-list for method input_type
-	44, // [44:44] is the sub-list for extension type_name
-	44, // [44:44] is the sub-list for extension extendee
-	0,  // [0:44] is the sub-list for field type_name
+	26, // 29: payment.v1.PaymentPatch.provider:type_name -> payment.v1.PaymentProvider
+	27, // 30: payment.v1.PaymentPatch.method:type_name -> payment.v1.PaymentMethod
+	28, // 31: payment.v1.PaymentPatch.expire_at:type_name -> google.protobuf.Timestamp
+	30, // 32: payment.v1.PaymentPatch.client_platform:type_name -> payment.v1.RoutingClientPlatform
+	17, // 33: payment.v1.CreatePaymentRequest.data:type_name -> payment.v1.PaymentPatch
+	1,  // 34: payment.v1.ClosePaymentRequest.reason_code:type_name -> payment.v1.PaymentClosureReasonCode
+	4,  // 35: payment.v1.ListPaymentResponse.items:type_name -> payment.v1.Payment
+	5,  // 36: payment.v1.ListPaymentEventResponse.items:type_name -> payment.v1.PaymentEvent
+	6,  // 37: payment.v1.ListPaymentOutboxEventResponse.items:type_name -> payment.v1.PaymentOutboxEvent
+	38, // [38:38] is the sub-list for method output_type
+	38, // [38:38] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_payment_contract_proto_init() }
@@ -2945,11 +2839,6 @@ func file_payment_v1_payment_contract_proto_init() {
 	}
 	file_payment_v1_payment_contract_proto_msgTypes[12].OneofWrappers = []any{}
 	file_payment_v1_payment_contract_proto_msgTypes[13].OneofWrappers = []any{}
-	file_payment_v1_payment_contract_proto_msgTypes[14].OneofWrappers = []any{}
-	file_payment_v1_payment_contract_proto_msgTypes[15].OneofWrappers = []any{}
-	file_payment_v1_payment_contract_proto_msgTypes[16].OneofWrappers = []any{}
-	file_payment_v1_payment_contract_proto_msgTypes[17].OneofWrappers = []any{}
-	file_payment_v1_payment_contract_proto_msgTypes[21].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

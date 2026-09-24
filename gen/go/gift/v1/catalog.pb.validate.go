@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on GiftCategory with the rules defined in
@@ -63,10 +59,6 @@ func (m *GiftCategory) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Name != nil {
@@ -627,10 +619,6 @@ func (m *Gift) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.CategoryId != nil {
@@ -2330,8 +2318,6 @@ func (m *GiftDraft) validate(all bool) error {
 
 	// no validation rules for GiftId
 
-	// no validation rules for AppId
-
 	// no validation rules for CategoryId
 
 	// no validation rules for Name
@@ -2815,8 +2801,6 @@ func (m *GiftRevision) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for GiftId
-
-	// no validation rules for AppId
 
 	// no validation rules for RevisionNo
 
@@ -3341,8 +3325,6 @@ func (m *GiftRevisionSchedule) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for GiftId
 
 	// no validation rules for RevisionId
@@ -3822,8 +3804,6 @@ func (m *GiftSceneType) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for Code
 
@@ -4368,10 +4348,6 @@ func (m *CreateGiftSceneTypeRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return CreateGiftSceneTypeRequestMultiError(errors)
 	}
@@ -4534,10 +4510,6 @@ func (m *UpdateGiftSceneTypeRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return UpdateGiftSceneTypeRequestMultiError(errors)
 	}
@@ -4642,10 +4614,6 @@ func (m *DeleteGiftSceneTypeRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return DeleteGiftSceneTypeRequestMultiError(errors)
 	}
@@ -4749,10 +4717,6 @@ func (m *GetGiftSceneTypeImpactRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetGiftSceneTypeImpactRequestMultiError(errors)
@@ -5036,10 +5000,6 @@ func (m *SetGiftSceneTypeEnabledRequest) validate(all bool) error {
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -5613,10 +5573,6 @@ func (m *GetGiftRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return GetGiftRequestMultiError(errors)
 	}
@@ -5744,10 +5700,6 @@ func (m *CreateGiftRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -5879,10 +5831,6 @@ func (m *CreateGiftCategoryRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -6047,10 +5995,6 @@ func (m *UpdateGiftDraftRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return UpdateGiftDraftRequestMultiError(errors)
 	}
@@ -6154,10 +6098,6 @@ func (m *DiscardGiftDraftRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return DiscardGiftDraftRequestMultiError(errors)
@@ -6271,10 +6211,6 @@ func (m *PublishGiftDraftRequest) validate(all bool) error {
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.EffectiveAt != nil {
@@ -6634,10 +6570,6 @@ func (m *ListGiftRevisionsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListGiftRevisionsRequestMultiError(errors)
 	}
@@ -6883,10 +6815,6 @@ func (m *CompareGiftRevisionsRequest) validate(all bool) error {
 	// no validation rules for BaseRevisionId
 
 	// no validation rules for HeadRevisionId
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return CompareGiftRevisionsRequestMultiError(errors)
@@ -7437,10 +7365,6 @@ func (m *ApplyCatalogImportRequest) validate(all bool) error {
 
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.RequestId != nil {
 		// no validation rules for RequestId
 	}
@@ -7830,10 +7754,6 @@ func (m *CancelScheduledGiftRevisionRequest) validate(all bool) error {
 		// no validation rules for RequestId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return CancelScheduledGiftRevisionRequestMultiError(errors)
 	}
@@ -8144,10 +8064,6 @@ func (m *EmergencyOfflineGiftRequest) validate(all bool) error {
 		// no validation rules for RequestId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return EmergencyOfflineGiftRequestMultiError(errors)
 	}
@@ -8416,10 +8332,6 @@ func (m *GetGiftArchivePreflightRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return GetGiftArchivePreflightRequestMultiError(errors)
 	}
@@ -8645,10 +8557,6 @@ func (m *ArchiveGiftRequest) validate(all bool) error {
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -8975,10 +8883,6 @@ func (m *UpdateGiftCategoryRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return UpdateGiftCategoryRequestMultiError(errors)
 	}
@@ -9091,10 +8995,6 @@ func (m *DisableGiftCategoryRequest) validate(all bool) error {
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -9363,8 +9263,6 @@ func (m *GiftOperatorAudit) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for OperatorId
 
@@ -9751,10 +9649,6 @@ func (m *ListGiftOperatorAuditsRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {

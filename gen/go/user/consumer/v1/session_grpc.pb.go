@@ -35,17 +35,17 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// C 端会话服务，管理当前 App 内已认证用户的会话、设备和设备恢复公钥。
+// C 端会话服务，管理已认证用户的会话、设备和设备恢复公钥。
 type ConsumerSessionServiceClient interface {
-	// 分页查询当前用户在当前 App 内的 Session 列表。
+	// 分页查询当前用户的 Session 列表。
 	ListSessions(ctx context.Context, in *ListSessionsRequest, opts ...grpc.CallOption) (*ListSessionsResponse, error)
 	// 按 session_id 幂等撤销当前用户的一条 Session。
 	RevokeSession(ctx context.Context, in *RevokeSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// 使用 step_up_token 撤销当前会话之外的全部 Session，并返回当前会话的新 TokenPair。
 	RevokeOtherSessions(ctx context.Context, in *RevokeOtherSessionsRequest, opts ...grpc.CallOption) (*v1.TokenPair, error)
-	// 使用 step_up_token 幂等撤销当前用户在当前 App 内的全部 Session，包括当前会话。
+	// 使用 step_up_token 幂等撤销当前用户的全部 Session，包括当前会话。
 	RevokeAllSessions(ctx context.Context, in *RevokeAllSessionsRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// 分页查询当前用户在当前 App 内登记的 Device 列表。
+	// 分页查询当前用户登记的 Device 列表。
 	ListDevices(ctx context.Context, in *ListDevicesRequest, opts ...grpc.CallOption) (*ListDevicesResponse, error)
 	// 使用 step_up_token 幂等撤销指定 Device 及其会话，并说明当前会话是否同时失效。
 	RevokeDevice(ctx context.Context, in *RevokeDeviceRequest, opts ...grpc.CallOption) (*RevokeDeviceResponse, error)
@@ -147,17 +147,17 @@ func (c *consumerSessionServiceClient) RemoveCurrentDeviceRecoveryKey(ctx contex
 // All implementations must embed UnimplementedConsumerSessionServiceServer
 // for forward compatibility.
 //
-// C 端会话服务，管理当前 App 内已认证用户的会话、设备和设备恢复公钥。
+// C 端会话服务，管理已认证用户的会话、设备和设备恢复公钥。
 type ConsumerSessionServiceServer interface {
-	// 分页查询当前用户在当前 App 内的 Session 列表。
+	// 分页查询当前用户的 Session 列表。
 	ListSessions(context.Context, *ListSessionsRequest) (*ListSessionsResponse, error)
 	// 按 session_id 幂等撤销当前用户的一条 Session。
 	RevokeSession(context.Context, *RevokeSessionRequest) (*emptypb.Empty, error)
 	// 使用 step_up_token 撤销当前会话之外的全部 Session，并返回当前会话的新 TokenPair。
 	RevokeOtherSessions(context.Context, *RevokeOtherSessionsRequest) (*v1.TokenPair, error)
-	// 使用 step_up_token 幂等撤销当前用户在当前 App 内的全部 Session，包括当前会话。
+	// 使用 step_up_token 幂等撤销当前用户的全部 Session，包括当前会话。
 	RevokeAllSessions(context.Context, *RevokeAllSessionsRequest) (*emptypb.Empty, error)
-	// 分页查询当前用户在当前 App 内登记的 Device 列表。
+	// 分页查询当前用户登记的 Device 列表。
 	ListDevices(context.Context, *ListDevicesRequest) (*ListDevicesResponse, error)
 	// 使用 step_up_token 幂等撤销指定 Device 及其会话，并说明当前会话是否同时失效。
 	RevokeDevice(context.Context, *RevokeDeviceRequest) (*RevokeDeviceResponse, error)

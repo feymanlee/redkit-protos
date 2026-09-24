@@ -8,7 +8,6 @@ package opsv1
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -204,10 +203,8 @@ func (x *JumpTarget) GetValue() string {
 // OpsContentItem 是绑定 Placement 的运营投放内容事实。
 type OpsContentItem struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// content_id 是当前 App 内内容项标识。
+	// content_id 是内容项标识。
 	ContentId uint64 `protobuf:"varint,1,opt,name=content_id,json=contentId,proto3" json:"content_id,omitempty"`
-	// app_id 归属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// placement_id 关联的投放位。
 	PlacementId uint64 `protobuf:"varint,3,opt,name=placement_id,json=placementId,proto3" json:"placement_id,omitempty"`
 	// placement_code 是冗余展示用投放位 code。
@@ -218,7 +215,7 @@ type OpsContentItem struct {
 	MediaFileId string `protobuf:"bytes,6,opt,name=media_file_id,json=mediaFileId,proto3" json:"media_file_id,omitempty"`
 	// sort_order 越小越靠前。
 	SortOrder int32 `protobuf:"varint,7,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"`
-	// start_at 是生效开始时间（UTC instant）；业务日与窗口语义按 App Business Time Zone 解释。
+	// start_at 是生效开始时间（UTC instant）；业务日与窗口语义按平台 Business Time Zone 解释。
 	StartAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=start_at,json=startAt,proto3" json:"start_at,omitempty"`
 	// end_at 是生效结束时间（UTC instant）；空表示不自动过期。
 	EndAt *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=end_at,json=endAt,proto3" json:"end_at,omitempty"`
@@ -271,13 +268,6 @@ func (x *OpsContentItem) GetContentId() uint64 {
 		return x.ContentId
 	}
 	return 0
-}
-
-func (x *OpsContentItem) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *OpsContentItem) GetPlacementId() uint64 {
@@ -422,8 +412,6 @@ func (x *ListOpsContentItemResponse) GetTotal() int64 {
 // PublishedPlacementFeedRequest 是受信任 BFF 拉取已发布投放的只读请求。
 type PublishedPlacementFeedRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 由受信任调用方注入具体 App；UNSPECIFIED 必须失败。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// placement_code 必填，按稳定投放位代码拉取。
 	PlacementCode string `protobuf:"bytes,2,opt,name=placement_code,json=placementCode,proto3" json:"placement_code,omitempty"`
 	// observed_at 可选，缺省使用服务端当前时刻；仅测试/BFF 预览使用时由调用方负责合法性。
@@ -460,13 +448,6 @@ func (x *PublishedPlacementFeedRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use PublishedPlacementFeedRequest.ProtoReflect.Descriptor instead.
 func (*PublishedPlacementFeedRequest) Descriptor() ([]byte, []int) {
 	return file_ops_v1_ops_content_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *PublishedPlacementFeedRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PublishedPlacementFeedRequest) GetPlacementCode() string {
@@ -542,15 +523,14 @@ var File_ops_v1_ops_content_proto protoreflect.FileDescriptor
 
 const file_ops_v1_ops_content_proto_rawDesc = "" +
 	"\n" +
-	"\x18ops/v1/ops_content.proto\x12\x06ops.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16ops/v1/placement.proto\x1a\x17validate/validate.proto\"N\n" +
+	"\x18ops/v1/ops_content.proto\x12\x06ops.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x16ops/v1/placement.proto\x1a\x17validate/validate.proto\"N\n" +
 	"\n" +
 	"JumpTarget\x12*\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x16.ops.v1.JumpTargetTypeR\x04type\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value\"\xcd\x04\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value\"\xa4\x04\n" +
 	"\x0eOpsContentItem\x12\x1d\n" +
 	"\n" +
-	"content_id\x18\x01 \x01(\x04R\tcontentId\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12!\n" +
+	"content_id\x18\x01 \x01(\x04R\tcontentId\x12!\n" +
 	"\fplacement_id\x18\x03 \x01(\x04R\vplacementId\x12%\n" +
 	"\x0eplacement_code\x18\x04 \x01(\tR\rplacementCode\x12\x14\n" +
 	"\x05title\x18\x05 \x01(\tR\x05title\x12\"\n" +
@@ -569,9 +549,8 @@ const file_ops_v1_ops_content_proto_rawDesc = "" +
 	"updated_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"`\n" +
 	"\x1aListOpsContentItemResponse\x12,\n" +
 	"\x05items\x18\x01 \x03(\v2\x16.ops.v1.OpsContentItemR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\xac\x01\n" +
-	"\x1dPublishedPlacementFeedRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12%\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x83\x01\n" +
+	"\x1dPublishedPlacementFeedRequest\x12%\n" +
 	"\x0eplacement_code\x18\x02 \x01(\tR\rplacementCode\x12;\n" +
 	"\vobserved_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"observedAt\"\x7f\n" +
@@ -615,29 +594,26 @@ var file_ops_v1_ops_content_proto_goTypes = []any{
 	(*ListOpsContentItemResponse)(nil),     // 4: ops.v1.ListOpsContentItemResponse
 	(*PublishedPlacementFeedRequest)(nil),  // 5: ops.v1.PublishedPlacementFeedRequest
 	(*PublishedPlacementFeedResponse)(nil), // 6: ops.v1.PublishedPlacementFeedResponse
-	(v1.AppId)(0),                          // 7: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),          // 8: google.protobuf.Timestamp
-	(*Placement)(nil),                      // 9: ops.v1.Placement
+	(*timestamppb.Timestamp)(nil),          // 7: google.protobuf.Timestamp
+	(*Placement)(nil),                      // 8: ops.v1.Placement
 }
 var file_ops_v1_ops_content_proto_depIdxs = []int32{
 	0,  // 0: ops.v1.JumpTarget.type:type_name -> ops.v1.JumpTargetType
-	7,  // 1: ops.v1.OpsContentItem.app_id:type_name -> common.v1.AppId
-	8,  // 2: ops.v1.OpsContentItem.start_at:type_name -> google.protobuf.Timestamp
-	8,  // 3: ops.v1.OpsContentItem.end_at:type_name -> google.protobuf.Timestamp
-	1,  // 4: ops.v1.OpsContentItem.status:type_name -> ops.v1.OpsContentStatus
-	2,  // 5: ops.v1.OpsContentItem.jump:type_name -> ops.v1.JumpTarget
-	8,  // 6: ops.v1.OpsContentItem.created_at:type_name -> google.protobuf.Timestamp
-	8,  // 7: ops.v1.OpsContentItem.updated_at:type_name -> google.protobuf.Timestamp
-	3,  // 8: ops.v1.ListOpsContentItemResponse.items:type_name -> ops.v1.OpsContentItem
-	7,  // 9: ops.v1.PublishedPlacementFeedRequest.app_id:type_name -> common.v1.AppId
-	8,  // 10: ops.v1.PublishedPlacementFeedRequest.observed_at:type_name -> google.protobuf.Timestamp
-	9,  // 11: ops.v1.PublishedPlacementFeedResponse.placement:type_name -> ops.v1.Placement
-	3,  // 12: ops.v1.PublishedPlacementFeedResponse.items:type_name -> ops.v1.OpsContentItem
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	7,  // 1: ops.v1.OpsContentItem.start_at:type_name -> google.protobuf.Timestamp
+	7,  // 2: ops.v1.OpsContentItem.end_at:type_name -> google.protobuf.Timestamp
+	1,  // 3: ops.v1.OpsContentItem.status:type_name -> ops.v1.OpsContentStatus
+	2,  // 4: ops.v1.OpsContentItem.jump:type_name -> ops.v1.JumpTarget
+	7,  // 5: ops.v1.OpsContentItem.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 6: ops.v1.OpsContentItem.updated_at:type_name -> google.protobuf.Timestamp
+	3,  // 7: ops.v1.ListOpsContentItemResponse.items:type_name -> ops.v1.OpsContentItem
+	7,  // 8: ops.v1.PublishedPlacementFeedRequest.observed_at:type_name -> google.protobuf.Timestamp
+	8,  // 9: ops.v1.PublishedPlacementFeedResponse.placement:type_name -> ops.v1.Placement
+	3,  // 10: ops.v1.PublishedPlacementFeedResponse.items:type_name -> ops.v1.OpsContentItem
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_ops_v1_ops_content_proto_init() }

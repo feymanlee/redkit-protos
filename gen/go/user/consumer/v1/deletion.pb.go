@@ -8,7 +8,6 @@ package userconsumerpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -486,8 +485,6 @@ func (x *UserDeletion) GetCompletedAt() *timestamppb.Timestamp {
 // BeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
 type BeginUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BeginUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -524,13 +521,6 @@ func (x *BeginUserDeletionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use BeginUserDeletionRequest.ProtoReflect.Descriptor instead.
 func (*BeginUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_deletion_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *BeginUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *BeginUserDeletionRequest) GetStepUpToken() string {
@@ -614,8 +604,6 @@ func (x *UserDeletionAccess) GetExpiresAt() *timestamppb.Timestamp {
 // GetUserDeletionRequest 标识待查询的 UserDeletion。
 type GetUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// deletion_no 是 GetUserDeletion 对外关联与审计使用的业务编号。
 	DeletionNo string `protobuf:"bytes,2,opt,name=deletion_no,json=deletionNo,proto3" json:"deletion_no,omitempty"`
 	// deletion_access_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -654,13 +642,6 @@ func (*GetUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_deletion_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetUserDeletionRequest) GetDeletionNo() string {
 	if x != nil {
 		return x.DeletionNo
@@ -678,8 +659,6 @@ func (x *GetUserDeletionRequest) GetDeletionAccessToken() string {
 // CancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
 type CancelUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CancelUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// deletion_no 是 CancelUserDeletion 对外关联与审计使用的业务编号。
 	DeletionNo string `protobuf:"bytes,2,opt,name=deletion_no,json=deletionNo,proto3" json:"deletion_no,omitempty"`
 	// deletion_access_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -727,13 +706,6 @@ func (x *CancelUserDeletionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CancelUserDeletionRequest.ProtoReflect.Descriptor instead.
 func (*CancelUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_deletion_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *CancelUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CancelUserDeletionRequest) GetDeletionNo() string {
@@ -836,7 +808,7 @@ var File_user_consumer_v1_deletion_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_deletion_proto_rawDesc = "" +
 	"\n" +
-	"\x1fuser/consumer/v1/deletion.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a%user/consumer/v1/authentication.proto\"\xf5\x01\n" +
+	"\x1fuser/consumer/v1/deletion.proto\x12\x10user.consumer.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a%user/consumer/v1/authentication.proto\"\xf5\x01\n" +
 	"\x17UserDeletionParticipant\x12A\n" +
 	"\x04type\x18\x01 \x01(\x0e2-.user.consumer.v1.UserDeletionParticipantTypeR\x04type\x12G\n" +
 	"\x06status\x18\x02 \x01(\x0e2/.user.consumer.v1.UserDeletionParticipantStatusR\x06status\x12N\n" +
@@ -855,23 +827,20 @@ const file_user_consumer_v1_deletion_proto_rawDesc = "" +
 	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
 	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12=\n" +
-	"\fcompleted_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"\xbd\x01\n" +
-	"\x18BeginUserDeletionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\fcompleted_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"\x85\x01\n" +
+	"\x18BeginUserDeletionRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xbf\x01\n" +
 	"\x12UserDeletionAccess\x12:\n" +
 	"\bdeletion\x18\x01 \x01(\v2\x1e.user.consumer.v1.UserDeletionR\bdeletion\x122\n" +
 	"\x15deletion_access_token\x18\x02 \x01(\tR\x13deletionAccessToken\x129\n" +
 	"\n" +
-	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xbe\x01\n" +
-	"\x16GetUserDeletionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12.\n" +
+	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x86\x01\n" +
+	"\x16GetUserDeletionRequest\x12.\n" +
 	"\vdeletion_no\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\n" +
 	"deletionNo\x12<\n" +
-	"\x15deletion_access_token\x18\x03 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x04R\x13deletionAccessToken\"\x84\x04\n" +
-	"\x19CancelUserDeletionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12.\n" +
+	"\x15deletion_access_token\x18\x03 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x04R\x13deletionAccessToken\"\xcc\x03\n" +
+	"\x19CancelUserDeletionRequest\x12.\n" +
 	"\vdeletion_no\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\n" +
 	"deletionNo\x12A\n" +
 	"\x15deletion_access_token\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x13deletionAccessToken\x126\n" +
@@ -948,8 +917,7 @@ var file_user_consumer_v1_deletion_proto_goTypes = []any{
 	(*GetUserDeletionRequest)(nil),     // 8: user.consumer.v1.GetUserDeletionRequest
 	(*CancelUserDeletionRequest)(nil),  // 9: user.consumer.v1.CancelUserDeletionRequest
 	(*timestamppb.Timestamp)(nil),      // 10: google.protobuf.Timestamp
-	(v1.AppId)(0),                      // 11: common.v1.AppId
-	(*ExternalIdentityProof)(nil),      // 12: user.consumer.v1.ExternalIdentityProof
+	(*ExternalIdentityProof)(nil),      // 11: user.consumer.v1.ExternalIdentityProof
 }
 var file_user_consumer_v1_deletion_proto_depIdxs = []int32{
 	1,  // 0: user.consumer.v1.UserDeletionParticipant.type:type_name -> user.consumer.v1.UserDeletionParticipantType
@@ -961,23 +929,20 @@ var file_user_consumer_v1_deletion_proto_depIdxs = []int32{
 	10, // 6: user.consumer.v1.UserDeletion.created_at:type_name -> google.protobuf.Timestamp
 	10, // 7: user.consumer.v1.UserDeletion.updated_at:type_name -> google.protobuf.Timestamp
 	10, // 8: user.consumer.v1.UserDeletion.completed_at:type_name -> google.protobuf.Timestamp
-	11, // 9: user.consumer.v1.BeginUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	5,  // 10: user.consumer.v1.UserDeletionAccess.deletion:type_name -> user.consumer.v1.UserDeletion
-	10, // 11: user.consumer.v1.UserDeletionAccess.expires_at:type_name -> google.protobuf.Timestamp
-	11, // 12: user.consumer.v1.GetUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	11, // 13: user.consumer.v1.CancelUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	12, // 14: user.consumer.v1.CancelUserDeletionRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
-	6,  // 15: user.consumer.v1.ConsumerUserDeletionService.BeginUserDeletion:input_type -> user.consumer.v1.BeginUserDeletionRequest
-	8,  // 16: user.consumer.v1.ConsumerUserDeletionService.GetUserDeletion:input_type -> user.consumer.v1.GetUserDeletionRequest
-	9,  // 17: user.consumer.v1.ConsumerUserDeletionService.CancelUserDeletion:input_type -> user.consumer.v1.CancelUserDeletionRequest
-	7,  // 18: user.consumer.v1.ConsumerUserDeletionService.BeginUserDeletion:output_type -> user.consumer.v1.UserDeletionAccess
-	5,  // 19: user.consumer.v1.ConsumerUserDeletionService.GetUserDeletion:output_type -> user.consumer.v1.UserDeletion
-	5,  // 20: user.consumer.v1.ConsumerUserDeletionService.CancelUserDeletion:output_type -> user.consumer.v1.UserDeletion
-	18, // [18:21] is the sub-list for method output_type
-	15, // [15:18] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	5,  // 9: user.consumer.v1.UserDeletionAccess.deletion:type_name -> user.consumer.v1.UserDeletion
+	10, // 10: user.consumer.v1.UserDeletionAccess.expires_at:type_name -> google.protobuf.Timestamp
+	11, // 11: user.consumer.v1.CancelUserDeletionRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
+	6,  // 12: user.consumer.v1.ConsumerUserDeletionService.BeginUserDeletion:input_type -> user.consumer.v1.BeginUserDeletionRequest
+	8,  // 13: user.consumer.v1.ConsumerUserDeletionService.GetUserDeletion:input_type -> user.consumer.v1.GetUserDeletionRequest
+	9,  // 14: user.consumer.v1.ConsumerUserDeletionService.CancelUserDeletion:input_type -> user.consumer.v1.CancelUserDeletionRequest
+	7,  // 15: user.consumer.v1.ConsumerUserDeletionService.BeginUserDeletion:output_type -> user.consumer.v1.UserDeletionAccess
+	5,  // 16: user.consumer.v1.ConsumerUserDeletionService.GetUserDeletion:output_type -> user.consumer.v1.UserDeletion
+	5,  // 17: user.consumer.v1.ConsumerUserDeletionService.CancelUserDeletion:output_type -> user.consumer.v1.UserDeletion
+	15, // [15:18] is the sub-list for method output_type
+	12, // [12:15] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_user_consumer_v1_deletion_proto_init() }

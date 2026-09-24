@@ -9,7 +9,6 @@ import "support/file/v1/types.proto";
 // CreateUploadSessionRequest 创建一次受限客户端直传意图。
 message CreateUploadSessionRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // 强类型业务用途。
   common.file.v1.FilePurpose purpose = 2;
   // 文件归属主体类型。
@@ -47,7 +46,6 @@ message CreateUploadSessionResponse {
 // CompleteUploadSessionRequest 校验上传结果并创建不可变 File。
 message CompleteUploadSessionRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // 会话号。
   string session_no = 2;
   // Provider 返回的 ETag。
@@ -67,7 +65,6 @@ message CompleteUploadSessionResponse {
 // AbortUploadSessionRequest 取消仍在等待的上传会话。
 message AbortUploadSessionRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // 会话号。
   string session_no = 2;
   // 取消原因。
@@ -79,7 +76,6 @@ message AbortUploadSessionRequest {
 // GetUploadSessionRequest 查询一个上传会话。
 message GetUploadSessionRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // 会话号。
   string session_no = 2;
 }
@@ -112,8 +108,6 @@ message StoreServiceFileMetadata {
 
 // StoreServiceFileRequest streams one internal-service-owned file without exposing storage credentials.
 message StoreServiceFileRequest {
-  // app_id 限定 StoreServiceFile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // StoreServiceFileRequest 在以下 part 分支中选择一种。
   oneof part {
     // metadata 携带 StoreServiceFile 的扩展元数据，不作为核心业务事实。

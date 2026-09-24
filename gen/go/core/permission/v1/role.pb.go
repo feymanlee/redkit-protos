@@ -181,55 +181,6 @@ func (RoleMetadata_SyncPolicy) EnumDescriptor() ([]byte, []int) {
 	return file_core_permission_v1_role_proto_rawDescGZIP(), []int{2, 0}
 }
 
-// 作用域
-type RoleMetadata_Scope int32
-
-const (
-	// 平台级。
-	RoleMetadata_PLATFORM RoleMetadata_Scope = 0 // 平台级
-	// App级。
-	RoleMetadata_APP RoleMetadata_Scope = 1 // App级
-)
-
-// Enum value maps for RoleMetadata_Scope.
-var (
-	RoleMetadata_Scope_name = map[int32]string{
-		0: "PLATFORM",
-		1: "APP",
-	}
-	RoleMetadata_Scope_value = map[string]int32{
-		"PLATFORM": 0,
-		"APP":      1,
-	}
-)
-
-func (x RoleMetadata_Scope) Enum() *RoleMetadata_Scope {
-	p := new(RoleMetadata_Scope)
-	*p = x
-	return p
-}
-
-func (x RoleMetadata_Scope) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (RoleMetadata_Scope) Descriptor() protoreflect.EnumDescriptor {
-	return file_core_permission_v1_role_proto_enumTypes[3].Descriptor()
-}
-
-func (RoleMetadata_Scope) Type() protoreflect.EnumType {
-	return &file_core_permission_v1_role_proto_enumTypes[3]
-}
-
-func (x RoleMetadata_Scope) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use RoleMetadata_Scope.Descriptor instead.
-func (RoleMetadata_Scope) EnumDescriptor() ([]byte, []int) {
-	return file_core_permission_v1_role_proto_rawDescGZIP(), []int{2, 1}
-}
-
 // 角色
 type Role struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -251,10 +202,6 @@ type Role struct {
 	Type *Role_Type `protobuf:"varint,8,opt,name=type,proto3,enum=core.permission.v1.Role_Type,oneof" json:"type,omitempty"` // 角色类型
 	// 绑定的权限点ID列表。
 	Permissions []uint32 `protobuf:"varint,10,rep,packed,name=permissions,proto3" json:"permissions,omitempty"` // 绑定的权限点ID列表
-	// AppID，0代表系统全局角色。
-	AppId *uint32 `protobuf:"varint,40,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID，0代表系统全局角色
-	// App名称。
-	AppName *string `protobuf:"bytes,41,opt,name=app_name,json=appName,proto3,oneof" json:"app_name,omitempty"` // App名称
 	// 创建者后台人员ID。
 	CreatedBy *uint32 `protobuf:"varint,100,opt,name=created_by,json=createdBy,proto3,oneof" json:"created_by,omitempty"` // 创建者后台人员ID
 	// 更新者后台人员ID。
@@ -362,20 +309,6 @@ func (x *Role) GetPermissions() []uint32 {
 		return x.Permissions
 	}
 	return nil
-}
-
-func (x *Role) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *Role) GetAppName() string {
-	if x != nil && x.AppName != nil {
-		return *x.AppName
-	}
-	return ""
 }
 
 func (x *Role) GetCreatedBy() uint32 {
@@ -505,6 +438,7 @@ func (x *RoleOverride) GetSecurityPolicy() *RoleOverride_SecurityPolicy {
 // 角色元数据
 type RoleMetadata struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
+	// Scope 枚举（编号 0-1）已随平台收敛为单一 App 删除，见 ADR 0075；不得复用这些编号或名称。
 	// 角色元数据ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 角色元数据ID
 	// 角色ID。
@@ -521,12 +455,8 @@ type RoleMetadata struct {
 	LastSyncedAt *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=last_synced_at,json=lastSyncedAt,proto3,oneof" json:"last_synced_at,omitempty"` // 最后同步时间
 	// 同步策略。
 	SyncPolicy *RoleMetadata_SyncPolicy `protobuf:"varint,8,opt,name=sync_policy,json=syncPolicy,proto3,enum=core.permission.v1.RoleMetadata_SyncPolicy,oneof" json:"sync_policy,omitempty"` // 同步策略
-	// 作用域。
-	Scope *RoleMetadata_Scope `protobuf:"varint,9,opt,name=scope,proto3,enum=core.permission.v1.RoleMetadata_Scope,oneof" json:"scope,omitempty"` // 作用域
 	// App自定义覆盖项。
 	CustomOverrides *RoleOverride `protobuf:"bytes,10,opt,name=custom_overrides,json=customOverrides,proto3" json:"custom_overrides,omitempty"` // App自定义覆盖项
-	// AppID，0代表系统全局角色。
-	AppId *uint32 `protobuf:"varint,20,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID，0代表系统全局角色
 	// 创建者后台人员ID。
 	CreatedBy *uint32 `protobuf:"varint,100,opt,name=created_by,json=createdBy,proto3,oneof" json:"created_by,omitempty"` // 创建者后台人员ID
 	// 更新者后台人员ID。
@@ -629,25 +559,11 @@ func (x *RoleMetadata) GetSyncPolicy() RoleMetadata_SyncPolicy {
 	return RoleMetadata_AUTO
 }
 
-func (x *RoleMetadata) GetScope() RoleMetadata_Scope {
-	if x != nil && x.Scope != nil {
-		return *x.Scope
-	}
-	return RoleMetadata_PLATFORM
-}
-
 func (x *RoleMetadata) GetCustomOverrides() *RoleOverride {
 	if x != nil {
 		return x.CustomOverrides
 	}
 	return nil
-}
-
-func (x *RoleMetadata) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
 }
 
 func (x *RoleMetadata) GetCreatedBy() uint32 {
@@ -759,9 +675,7 @@ type GetRoleRequest struct {
 	//	*GetRoleRequest_Code
 	QueryBy isGetRoleRequest_QueryBy `protobuf_oneof:"query_by"`
 	// 读取字段掩码。
-	ViewMask *fieldmaskpb.FieldMask `protobuf:"bytes,100,opt,name=view_mask,json=viewMask,proto3,oneof" json:"view_mask,omitempty"` // 视图字段过滤器，用于控制返回的字段
-	// App scope for this lookup.
-	AppId         *uint32 `protobuf:"varint,40,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	ViewMask      *fieldmaskpb.FieldMask `protobuf:"bytes,100,opt,name=view_mask,json=viewMask,proto3,oneof" json:"view_mask,omitempty"` // 视图字段过滤器，用于控制返回的字段
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -835,13 +749,6 @@ func (x *GetRoleRequest) GetViewMask() *fieldmaskpb.FieldMask {
 		return x.ViewMask
 	}
 	return nil
-}
-
-func (x *GetRoleRequest) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
 }
 
 type isGetRoleRequest_QueryBy interface {
@@ -923,9 +830,7 @@ type UpdateRoleRequest struct {
 	// 数据。
 	Data *Role `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	// 更新字段掩码。
-	UpdateMask *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"` // 要更新的字段列表
-	// Immutable App scope for the target role.
-	AppId         *uint32 `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"` // 要更新的字段列表
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -981,13 +886,6 @@ func (x *UpdateRoleRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
-func (x *UpdateRoleRequest) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
 // 删除角色 - 请求
 type DeleteRoleRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -997,9 +895,7 @@ type DeleteRoleRequest struct {
 	//
 	//	*DeleteRoleRequest_Id
 	//	*DeleteRoleRequest_Code
-	QueryBy isDeleteRoleRequest_QueryBy `protobuf_oneof:"query_by"`
-	// App scope for the target role.
-	AppId         *uint32 `protobuf:"varint,40,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	QueryBy       isDeleteRoleRequest_QueryBy `protobuf_oneof:"query_by"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1057,13 +953,6 @@ func (x *DeleteRoleRequest) GetCode() string {
 		}
 	}
 	return ""
-}
-
-func (x *DeleteRoleRequest) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
 }
 
 type isDeleteRoleRequest_QueryBy interface {
@@ -1779,8 +1668,6 @@ func (x *ListPermissionIdsResponse) GetPermissionIds() []uint32 {
 // 从App角色模板创建App角色 - 请求
 type CreateAppRoleFromTemplateRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// AppID。
-	AppId uint32 `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"` // AppID
 	// 操作者ID。
 	OperatorId    uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 操作者ID
 	unknownFields protoimpl.UnknownFields
@@ -1817,13 +1704,6 @@ func (*CreateAppRoleFromTemplateRequest) Descriptor() ([]byte, []int) {
 	return file_core_permission_v1_role_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *CreateAppRoleFromTemplateRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
-}
-
 func (x *CreateAppRoleFromTemplateRequest) GetOperatorId() uint32 {
 	if x != nil {
 		return x.OperatorId
@@ -1838,8 +1718,6 @@ type AssignRolesToOperatorRequest struct {
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 后台人员ID
 	// 角色ID列表。
 	RoleIds []uint32 `protobuf:"varint,2,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"` // 角色ID列表
-	// AppID。
-	AppId uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"` // AppID
 	// 操作者ID。
 	OperatedBy uint32 `protobuf:"varint,4,opt,name=operated_by,json=operatedBy,proto3" json:"operated_by,omitempty"` // 操作者ID
 	// 变更原因。
@@ -1892,13 +1770,6 @@ func (x *AssignRolesToOperatorRequest) GetRoleIds() []uint32 {
 	return nil
 }
 
-func (x *AssignRolesToOperatorRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
-}
-
 func (x *AssignRolesToOperatorRequest) GetOperatedBy() uint32 {
 	if x != nil {
 		return x.OperatedBy
@@ -1920,8 +1791,6 @@ type AssignOperatorsToRoleRequest struct {
 	RoleId uint32 `protobuf:"varint,1,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"` // 目标角色ID
 	// 后台人员ID列表。
 	OperatorIds []uint32 `protobuf:"varint,2,rep,packed,name=operator_ids,json=operatorIds,proto3" json:"operator_ids,omitempty"` // 全量替换该角色的后台人员列表
-	// AppID。
-	AppId uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"` // AppID
 	// 操作者ID。
 	OperatedBy uint32 `protobuf:"varint,4,opt,name=operated_by,json=operatedBy,proto3" json:"operated_by,omitempty"` // 操作者ID
 	// 变更原因。
@@ -1974,13 +1843,6 @@ func (x *AssignOperatorsToRoleRequest) GetOperatorIds() []uint32 {
 	return nil
 }
 
-func (x *AssignOperatorsToRoleRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
-}
-
 func (x *AssignOperatorsToRoleRequest) GetOperatedBy() uint32 {
 	if x != nil {
 		return x.OperatedBy
@@ -2000,8 +1862,6 @@ type GetOperatorRolesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 后台人员ID。
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 后台人员ID
-	// AppID。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"` // AppID
 	// 是否包含已过期角色。
 	IncludeExpired bool `protobuf:"varint,3,opt,name=include_expired,json=includeExpired,proto3" json:"include_expired,omitempty"` // 是否包含已过期角色
 	unknownFields  protoimpl.UnknownFields
@@ -2041,13 +1901,6 @@ func (*GetOperatorRolesRequest) Descriptor() ([]byte, []int) {
 func (x *GetOperatorRolesRequest) GetOperatorId() uint32 {
 	if x != nil {
 		return x.OperatorId
-	}
-	return 0
-}
-
-func (x *GetOperatorRolesRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -2346,8 +2199,6 @@ type UnassignRolesFromOperatorRequest struct {
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// 要移除的角色ID列表。
 	RoleIds []uint32 `protobuf:"varint,2,rep,packed,name=role_ids,json=roleIds,proto3" json:"role_ids,omitempty"`
-	// AppID，0 表示全局。
-	AppId uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// 操作者ID，用于审计。
 	OperatedBy uint32 `protobuf:"varint,4,opt,name=operated_by,json=operatedBy,proto3" json:"operated_by,omitempty"`
 	// 变更原因（可选）。
@@ -2402,13 +2253,6 @@ func (x *UnassignRolesFromOperatorRequest) GetRoleIds() []uint32 {
 		return x.RoleIds
 	}
 	return nil
-}
-
-func (x *UnassignRolesFromOperatorRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
 }
 
 func (x *UnassignRolesFromOperatorRequest) GetOperatedBy() uint32 {
@@ -2501,8 +2345,6 @@ type UnassignOperatorsFromRoleRequest struct {
 	RoleId uint32 `protobuf:"varint,1,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"` // 目标角色ID
 	// 要移除的后台人员ID列表。
 	OperatorIds []uint32 `protobuf:"varint,2,rep,packed,name=operator_ids,json=operatorIds,proto3" json:"operator_ids,omitempty"` // 要移除的后台人员ID列表
-	// AppID，0 表示全局。
-	AppId uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// 操作者ID，用于审计。
 	OperatorId uint32 `protobuf:"varint,4,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// 变更原因（可选）。
@@ -2557,13 +2399,6 @@ func (x *UnassignOperatorsFromRoleRequest) GetOperatorIds() []uint32 {
 		return x.OperatorIds
 	}
 	return nil
-}
-
-func (x *UnassignOperatorsFromRoleRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
 }
 
 func (x *UnassignOperatorsFromRoleRequest) GetOperatorId() uint32 {
@@ -2763,7 +2598,8 @@ var File_core_permission_v1_role_proto protoreflect.FileDescriptor
 
 const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\n" +
-	"\x1dcore/permission/v1/role.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\x1a&core/permission/v1/operator_role.proto\"\xb4\v\n" +
+	"\x1dcore/permission/v1/role.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\x1a&core/permission/v1/operator_role.proto\"\xa6\n" +
+	"\n" +
 	"\x04Role\x12#\n" +
 	"\x02id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b角色IDH\x00R\x02id\x88\x01\x01\x12+\n" +
 	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f角色名称H\x01R\x04name\x88\x01\x01\x12L\n" +
@@ -2775,22 +2611,20 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\fis_protected\x18\a \x01(\bB3\xbaG0\x92\x02-受保护角色，仅平台管理员可修改H\x06R\visProtected\x88\x01\x01\x12J\n" +
 	"\x04type\x18\b \x01(\x0e2\x1d.core.permission.v1.Role.TypeB\x12\xbaG\x0f\x92\x02\f角色类型H\aR\x04type\x88\x01\x01\x12B\n" +
 	"\vpermissions\x18\n" +
-	" \x03(\rB \xbaG\x1d\x92\x02\x1a绑定的权限点ID列表R\vpermissions\x12C\n" +
-	"\x06app_id\x18( \x01(\rB'\xbaG$\x92\x02!AppID，0代表系统全局角色H\bR\x05appId\x88\x01\x01\x12/\n" +
-	"\bapp_name\x18) \x01(\tB\x0f\xbaG\f\x92\x02\tApp名称H\tR\aappName\x88\x01\x01\x12A\n" +
+	" \x03(\rB \xbaG\x1d\x92\x02\x1a绑定的权限点ID列表R\vpermissions\x12A\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\n" +
-	"R\tcreatedBy\x88\x01\x01\x12A\n" +
+	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\bR\tcreatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\vR\tupdatedBy\x88\x01\x01\x12A\n" +
+	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\tR\tupdatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\fR\tdeletedBy\x88\x01\x01\x12S\n" +
+	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\n" +
+	"R\tdeletedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\rR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\vR\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x0eR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\fR\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x0fR\tdeletedAt\x88\x01\x01\"\x19\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\rR\tdeletedAt\x88\x01\x01\"\x19\n" +
 	"\x06Status\x12\a\n" +
 	"\x03OFF\x10\x00\x12\x06\n" +
 	"\x02ON\x10\x01\")\n" +
@@ -2806,9 +2640,7 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\a_statusB\x0e\n" +
 	"\f_descriptionB\x0f\n" +
 	"\r_is_protectedB\a\n" +
-	"\x05_typeB\t\n" +
-	"\a_app_idB\v\n" +
-	"\t_app_nameB\r\n" +
+	"\x05_typeB\r\n" +
 	"\v_created_byB\r\n" +
 	"\v_updated_byB\r\n" +
 	"\v_deleted_byB\r\n" +
@@ -2831,7 +2663,7 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\tforce_mfa\x18\x01 \x01(\bB\x1b\xbaG\x18\x92\x02\x15强制多因素认证R\bforceMfa\x129\n" +
 	"\rip_allow_list\x18\x02 \x03(\tB\x15\xbaG\x12\x92\x02\x0fIP 允许列表R\vipAllowListB\x0f\n" +
 	"\r_display_nameB\x0e\n" +
-	"\f_description\"\xdc\f\n" +
+	"\f_description\"\x8e\v\n" +
 	"\fRoleMetadata\x12,\n" +
 	"\x02id\x18\x01 \x01(\rB\x17\xbaG\x14\x92\x02\x11角色元数据IDH\x00R\x02id\x88\x01\x01\x12,\n" +
 	"\arole_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b角色IDH\x01R\x06roleId\x88\x01\x01\x12;\n" +
@@ -2842,33 +2674,28 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\x13last_synced_version\x18\x06 \x01(\x05B\x1e\xbaG\x1b\x92\x02\x18上次同步的版本号H\x05R\x11lastSyncedVersion\x88\x01\x01\x12_\n" +
 	"\x0elast_synced_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12最后同步时间H\x06R\flastSyncedAt\x88\x01\x01\x12e\n" +
 	"\vsync_policy\x18\b \x01(\x0e2+.core.permission.v1.RoleMetadata.SyncPolicyB\x12\xbaG\x0f\x92\x02\f同步策略H\aR\n" +
-	"syncPolicy\x88\x01\x01\x12R\n" +
-	"\x05scope\x18\t \x01(\x0e2&.core.permission.v1.RoleMetadata.ScopeB\x0f\xbaG\f\x92\x02\t作用域H\bR\x05scope\x88\x01\x01\x12h\n" +
+	"syncPolicy\x88\x01\x01\x12h\n" +
 	"\x10custom_overrides\x18\n" +
-	" \x01(\v2 .core.permission.v1.RoleOverrideB\x1b\xbaG\x18\x92\x02\x15App自定义覆盖项R\x0fcustomOverrides\x12C\n" +
-	"\x06app_id\x18\x14 \x01(\rB'\xbaG$\x92\x02!AppID，0代表系统全局角色H\tR\x05appId\x88\x01\x01\x12A\n" +
+	" \x01(\v2 .core.permission.v1.RoleOverrideB\x1b\xbaG\x18\x92\x02\x15App自定义覆盖项R\x0fcustomOverrides\x12A\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\n" +
-	"R\tcreatedBy\x88\x01\x01\x12A\n" +
+	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\bR\tcreatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\vR\tupdatedBy\x88\x01\x01\x12A\n" +
+	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\tR\tupdatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\fR\tdeletedBy\x88\x01\x01\x12S\n" +
+	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\n" +
+	"R\tdeletedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\rR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\vR\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x0eR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\fR\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x0fR\tdeletedAt\x88\x01\x01\"/\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\rR\tdeletedAt\x88\x01\x01\"/\n" +
 	"\n" +
 	"SyncPolicy\x12\b\n" +
 	"\x04AUTO\x10\x00\x12\n" +
 	"\n" +
 	"\x06MANUAL\x10\x01\x12\v\n" +
-	"\aBLOCKED\x10\x02\"\x1e\n" +
-	"\x05Scope\x12\f\n" +
-	"\bPLATFORM\x10\x00\x12\a\n" +
-	"\x03APP\x10\x01B\x05\n" +
+	"\aBLOCKED\x10\x02B\x05\n" +
 	"\x03_idB\n" +
 	"\n" +
 	"\b_role_idB\x0e\n" +
@@ -2877,9 +2704,7 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\x11_template_versionB\x16\n" +
 	"\x14_last_synced_versionB\x11\n" +
 	"\x0f_last_synced_atB\x0e\n" +
-	"\f_sync_policyB\b\n" +
-	"\x06_scopeB\t\n" +
-	"\a_app_idB\r\n" +
+	"\f_sync_policyB\r\n" +
 	"\v_created_byB\r\n" +
 	"\v_updated_byB\r\n" +
 	"\v_deleted_byB\r\n" +
@@ -2888,35 +2713,29 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\v_deleted_at\"X\n" +
 	"\x10ListRoleResponse\x12.\n" +
 	"\x05items\x18\x01 \x03(\v2\x18.core.permission.v1.RoleR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xba\x02\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x93\x02\n" +
 	"\x0eGetRoleRequest\x12\x1c\n" +
 	"\x02id\x18\x01 \x01(\rB\n" +
 	"\xbaG\a\x18\x01\x92\x02\x02IDH\x00R\x02id\x12$\n" +
 	"\x04name\x18\x02 \x01(\tB\x0e\xbaG\v\x18\x01\x92\x02\x06名称H\x00R\x04name\x12*\n" +
 	"\x04code\x18\x03 \x01(\tB\x14\xbaG\x11\x18\x01\x92\x02\f唯一编码H\x00R\x04code\x12w\n" +
-	"\tview_mask\x18d \x01(\v2\x1a.google.protobuf.FieldMaskB9\xbaG6\x92\x023视图字段过滤器，用于控制返回的字段H\x01R\bviewMask\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18( \x01(\rH\x02R\x05appId\x88\x01\x01B\n" +
+	"\tview_mask\x18d \x01(\v2\x1a.google.protobuf.FieldMaskB9\xbaG6\x92\x023视图字段过滤器，用于控制返回的字段H\x01R\bviewMask\x88\x01\x01B\n" +
 	"\n" +
 	"\bquery_byB\f\n" +
 	"\n" +
-	"_view_maskB\t\n" +
-	"\a_app_id\"A\n" +
+	"_view_mask\"A\n" +
 	"\x11CreateRoleRequest\x12,\n" +
-	"\x04data\x18\x01 \x01(\v2\x18.core.permission.v1.RoleR\x04data\"\xed\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x18.core.permission.v1.RoleR\x04data\"\xc6\x01\n" +
 	"\x11UpdateRoleRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12,\n" +
 	"\x04data\x18\x02 \x01(\v2\x18.core.permission.v1.RoleR\x04data\x12s\n" +
 	"\vupdate_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskB6\xbaG3:\x16\x12\x14id,realname,username\x92\x02\x18要更新的字段列表R\n" +
-	"updateMask\x12\x1a\n" +
-	"\x06app_id\x18\x04 \x01(\rH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x90\x01\n" +
+	"updateMask\"i\n" +
 	"\x11DeleteRoleRequest\x12\"\n" +
 	"\x02id\x18\x01 \x01(\rB\x10\xbaG\r\x18\x01\x92\x02\b角色IDH\x00R\x02id\x12$\n" +
-	"\x04code\x18\x02 \x01(\tB\x0e\xbaG\v\x18\x01\x92\x02\x06编码H\x00R\x04code\x12\x1a\n" +
-	"\x06app_id\x18( \x01(\rH\x01R\x05appId\x88\x01\x01B\n" +
+	"\x04code\x18\x02 \x01(\tB\x0e\xbaG\v\x18\x01\x92\x02\x06编码H\x00R\x04codeB\n" +
 	"\n" +
-	"\bquery_byB\t\n" +
-	"\a_app_id\"I\n" +
+	"\bquery_by\"I\n" +
 	"\x17BatchCreateRolesRequest\x12.\n" +
 	"\x05items\x18\x01 \x03(\v2\x18.core.permission.v1.RoleR\x05items\"`\n" +
 	"\x18BatchCreateRolesResponse\x12D\n" +
@@ -2962,30 +2781,26 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\n" +
 	"\bquery_by\"[\n" +
 	"\x19ListPermissionIdsResponse\x12>\n" +
-	"\x0epermission_ids\x18\x01 \x03(\rB\x17\xbaG\x14\x92\x02\x11权限点ID列表R\rpermissionIds\"z\n" +
-	" CreateAppRoleFromTemplateRequest\x12\"\n" +
-	"\x06app_id\x18\x01 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDR\x05appId\x122\n" +
+	"\x0epermission_ids\x18\x01 \x03(\rB\x17\xbaG\x14\x92\x02\x11权限点ID列表R\rpermissionIds\"V\n" +
+	" CreateAppRoleFromTemplateRequest\x122\n" +
 	"\voperator_id\x18\x02 \x01(\rB\x11\xbaG\x0e\x92\x02\v操作者IDR\n" +
-	"operatorId\"\x8a\x02\n" +
+	"operatorId\"\xe6\x01\n" +
 	"\x1cAssignRolesToOperatorRequest\x125\n" +
 	"\voperator_id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDR\n" +
 	"operatorId\x12/\n" +
-	"\brole_ids\x18\x02 \x03(\rB\x14\xbaG\x11\x92\x02\x0e角色ID列表R\aroleIds\x12\"\n" +
-	"\x06app_id\x18\x03 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDR\x05appId\x122\n" +
+	"\brole_ids\x18\x02 \x03(\rB\x14\xbaG\x11\x92\x02\x0e角色ID列表R\aroleIds\x122\n" +
 	"\voperated_by\x18\x04 \x01(\rB\x11\xbaG\x0e\x92\x02\v操作者IDR\n" +
 	"operatedBy\x12*\n" +
-	"\x06reason\x18\x05 \x01(\tB\x12\xbaG\x0f\x92\x02\f变更原因R\x06reason\"\x90\x02\n" +
+	"\x06reason\x18\x05 \x01(\tB\x12\xbaG\x0f\x92\x02\f变更原因R\x06reason\"\xec\x01\n" +
 	"\x1cAssignOperatorsToRoleRequest\x12-\n" +
 	"\arole_id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e目标角色IDR\x06roleId\x12=\n" +
-	"\foperator_ids\x18\x02 \x03(\rB\x1a\xbaG\x17\x92\x02\x14后台人员ID列表R\voperatorIds\x12\"\n" +
-	"\x06app_id\x18\x03 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDR\x05appId\x122\n" +
+	"\foperator_ids\x18\x02 \x03(\rB\x1a\xbaG\x17\x92\x02\x14后台人员ID列表R\voperatorIds\x122\n" +
 	"\voperated_by\x18\x04 \x01(\rB\x11\xbaG\x0e\x92\x02\v操作者IDR\n" +
 	"operatedBy\x12*\n" +
-	"\x06reason\x18\x05 \x01(\tB\x12\xbaG\x0f\x92\x02\f变更原因R\x06reason\"\xc0\x01\n" +
+	"\x06reason\x18\x05 \x01(\tB\x12\xbaG\x0f\x92\x02\f变更原因R\x06reason\"\x9c\x01\n" +
 	"\x17GetOperatorRolesRequest\x125\n" +
 	"\voperator_id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDR\n" +
-	"operatorId\x12\"\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDR\x05appId\x12J\n" +
+	"operatorId\x12J\n" +
 	"\x0finclude_expired\x18\x03 \x01(\bB!\xbaG\x1e\x92\x02\x1b是否包含已过期角色R\x0eincludeExpired\"X\n" +
 	"\x18GetOperatorRolesResponse\x12<\n" +
 	"\bbindings\x18\x01 \x03(\v2 .core.permission.v1.OperatorRoleR\bbindings\"\xa0\x01\n" +
@@ -3002,12 +2817,11 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\x0fexclude_expired\x18\x02 \x01(\bB8\xbaG5\x92\x022是否排除过期后台人员，默认值：falseH\x00R\x0eexcludeExpired\x88\x01\x01B\x12\n" +
 	"\x10_exclude_expired\"X\n" +
 	"\x17ListOperatorIDsResponse\x12=\n" +
-	"\foperator_ids\x18\x01 \x03(\rB\x1a\xbaG\x17\x92\x02\x14后台人员ID列表R\voperatorIds\"\xa8\x04\n" +
+	"\foperator_ids\x18\x01 \x03(\rB\x1a\xbaG\x17\x92\x02\x14后台人员ID列表R\voperatorIds\"\xf3\x03\n" +
 	" UnassignRolesFromOperatorRequest\x12;\n" +
 	"\voperator_id\x18\x01 \x01(\rB\x1a\xbaG\x17\x92\x02\x14目标后台人员IDR\n" +
 	"operatorId\x12;\n" +
-	"\brole_ids\x18\x02 \x03(\rB \xbaG\x1d\x92\x02\x1a要移除的角色ID列表R\aroleIds\x123\n" +
-	"\x06app_id\x18\x03 \x01(\rB\x1c\xbaG\x19\x92\x02\x16AppID，0 表示全局R\x05appId\x12A\n" +
+	"\brole_ids\x18\x02 \x03(\rB \xbaG\x1d\x92\x02\x1a要移除的角色ID列表R\aroleIds\x12A\n" +
 	"\voperated_by\x18\x04 \x01(\rB \xbaG\x1d\x92\x02\x1a操作者ID，用于审计R\n" +
 	"operatedBy\x12;\n" +
 	"\x06reason\x18\x05 \x01(\tB\x1e\xbaG\x1b\x92\x02\x18变更原因（可选）H\x00R\x06reason\x88\x01\x01\x12w\n" +
@@ -3017,11 +2831,10 @@ const file_core_permission_v1_role_proto_rawDesc = "" +
 	"\a_reason\"\x92\x02\n" +
 	"!UnassignRolesFromOperatorResponse\x12b\n" +
 	"\x10removed_role_ids\x18\x01 \x03(\rB8\xbaG5\x92\x022成功被移除的角色ID列表（可能为空）R\x0eremovedRoleIds\x12\x88\x01\n" +
-	"\x12not_found_role_ids\x18\x02 \x03(\rB[\xbaGX\x92\x02U部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）R\x0fnotFoundRoleIds\"\xa8\x04\n" +
+	"\x12not_found_role_ids\x18\x02 \x03(\rB[\xbaGX\x92\x02U部分失败时返回每个失败项的详细信息（如 DB 锁、权限不足等）R\x0fnotFoundRoleIds\"\xf3\x03\n" +
 	" UnassignOperatorsFromRoleRequest\x12-\n" +
 	"\arole_id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e目标角色IDR\x06roleId\x12I\n" +
-	"\foperator_ids\x18\x02 \x03(\rB&\xbaG#\x92\x02 要移除的后台人员ID列表R\voperatorIds\x123\n" +
-	"\x06app_id\x18\x03 \x01(\rB\x1c\xbaG\x19\x92\x02\x16AppID，0 表示全局R\x05appId\x12A\n" +
+	"\foperator_ids\x18\x02 \x03(\rB&\xbaG#\x92\x02 要移除的后台人员ID列表R\voperatorIds\x12A\n" +
 	"\voperator_id\x18\x04 \x01(\rB \xbaG\x1d\x92\x02\x1a操作者ID，用于审计R\n" +
 	"operatorId\x12;\n" +
 	"\x06reason\x18\x05 \x01(\tB\x1e\xbaG\x1b\x92\x02\x18变更原因（可选）H\x00R\x06reason\x88\x01\x01\x12w\n" +
@@ -3057,106 +2870,104 @@ func file_core_permission_v1_role_proto_rawDescGZIP() []byte {
 	return file_core_permission_v1_role_proto_rawDescData
 }
 
-var file_core_permission_v1_role_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_core_permission_v1_role_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_core_permission_v1_role_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_core_permission_v1_role_proto_goTypes = []any{
 	(Role_Status)(0),                          // 0: core.permission.v1.Role.Status
 	(Role_Type)(0),                            // 1: core.permission.v1.Role.Type
 	(RoleMetadata_SyncPolicy)(0),              // 2: core.permission.v1.RoleMetadata.SyncPolicy
-	(RoleMetadata_Scope)(0),                   // 3: core.permission.v1.RoleMetadata.Scope
-	(*Role)(nil),                              // 4: core.permission.v1.Role
-	(*RoleOverride)(nil),                      // 5: core.permission.v1.RoleOverride
-	(*RoleMetadata)(nil),                      // 6: core.permission.v1.RoleMetadata
-	(*ListRoleResponse)(nil),                  // 7: core.permission.v1.ListRoleResponse
-	(*GetRoleRequest)(nil),                    // 8: core.permission.v1.GetRoleRequest
-	(*CreateRoleRequest)(nil),                 // 9: core.permission.v1.CreateRoleRequest
-	(*UpdateRoleRequest)(nil),                 // 10: core.permission.v1.UpdateRoleRequest
-	(*DeleteRoleRequest)(nil),                 // 11: core.permission.v1.DeleteRoleRequest
-	(*BatchCreateRolesRequest)(nil),           // 12: core.permission.v1.BatchCreateRolesRequest
-	(*BatchCreateRolesResponse)(nil),          // 13: core.permission.v1.BatchCreateRolesResponse
-	(*GetRoleCodesByRoleIdsRequest)(nil),      // 14: core.permission.v1.GetRoleCodesByRoleIdsRequest
-	(*GetRoleCodesByRoleIdsResponse)(nil),     // 15: core.permission.v1.GetRoleCodesByRoleIdsResponse
-	(*GetRolesByRoleCodesRequest)(nil),        // 16: core.permission.v1.GetRolesByRoleCodesRequest
-	(*GetRolesByRoleIdsRequest)(nil),          // 17: core.permission.v1.GetRolesByRoleIdsRequest
-	(*CountRoleResponse)(nil),                 // 18: core.permission.v1.CountRoleResponse
-	(*ListRoleCodesByIdsRequest)(nil),         // 19: core.permission.v1.ListRoleCodesByIdsRequest
-	(*ListRoleCodesByIdsResponse)(nil),        // 20: core.permission.v1.ListRoleCodesByIdsResponse
-	(*ListRoleIdsByCodesRequest)(nil),         // 21: core.permission.v1.ListRoleIdsByCodesRequest
-	(*ListRoleIdsByCodesResponse)(nil),        // 22: core.permission.v1.ListRoleIdsByCodesResponse
-	(*ListPermissionIdsRequest)(nil),          // 23: core.permission.v1.ListPermissionIdsRequest
-	(*ListPermissionIdsResponse)(nil),         // 24: core.permission.v1.ListPermissionIdsResponse
-	(*CreateAppRoleFromTemplateRequest)(nil),  // 25: core.permission.v1.CreateAppRoleFromTemplateRequest
-	(*AssignRolesToOperatorRequest)(nil),      // 26: core.permission.v1.AssignRolesToOperatorRequest
-	(*AssignOperatorsToRoleRequest)(nil),      // 27: core.permission.v1.AssignOperatorsToRoleRequest
-	(*GetOperatorRolesRequest)(nil),           // 28: core.permission.v1.GetOperatorRolesRequest
-	(*GetOperatorRolesResponse)(nil),          // 29: core.permission.v1.GetOperatorRolesResponse
-	(*ListOperatorRoleIDsRequest)(nil),        // 30: core.permission.v1.ListOperatorRoleIDsRequest
-	(*ListOperatorRoleIDsResponse)(nil),       // 31: core.permission.v1.ListOperatorRoleIDsResponse
-	(*ListOperatorIDsByRoleIDsRequest)(nil),   // 32: core.permission.v1.ListOperatorIDsByRoleIDsRequest
-	(*ListOperatorIDsResponse)(nil),           // 33: core.permission.v1.ListOperatorIDsResponse
-	(*UnassignRolesFromOperatorRequest)(nil),  // 34: core.permission.v1.UnassignRolesFromOperatorRequest
-	(*UnassignRolesFromOperatorResponse)(nil), // 35: core.permission.v1.UnassignRolesFromOperatorResponse
-	(*UnassignOperatorsFromRoleRequest)(nil),  // 36: core.permission.v1.UnassignOperatorsFromRoleRequest
-	(*UnassignOperatorsFromRoleResponse)(nil), // 37: core.permission.v1.UnassignOperatorsFromRoleResponse
-	(*RoleOverride_PermissionDelta)(nil),      // 38: core.permission.v1.RoleOverride.PermissionDelta
-	nil,                                       // 39: core.permission.v1.RoleOverride.ExtendedSettingsEntry
-	(*RoleOverride_SecurityPolicy)(nil),       // 40: core.permission.v1.RoleOverride.SecurityPolicy
-	(*timestamppb.Timestamp)(nil),             // 41: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil),             // 42: google.protobuf.FieldMask
-	(*OperatorRole)(nil),                      // 43: core.permission.v1.OperatorRole
-	(*v1.PagingRequest)(nil),                  // 44: common.pagination.v1.PagingRequest
-	(*emptypb.Empty)(nil),                     // 45: google.protobuf.Empty
+	(*Role)(nil),                              // 3: core.permission.v1.Role
+	(*RoleOverride)(nil),                      // 4: core.permission.v1.RoleOverride
+	(*RoleMetadata)(nil),                      // 5: core.permission.v1.RoleMetadata
+	(*ListRoleResponse)(nil),                  // 6: core.permission.v1.ListRoleResponse
+	(*GetRoleRequest)(nil),                    // 7: core.permission.v1.GetRoleRequest
+	(*CreateRoleRequest)(nil),                 // 8: core.permission.v1.CreateRoleRequest
+	(*UpdateRoleRequest)(nil),                 // 9: core.permission.v1.UpdateRoleRequest
+	(*DeleteRoleRequest)(nil),                 // 10: core.permission.v1.DeleteRoleRequest
+	(*BatchCreateRolesRequest)(nil),           // 11: core.permission.v1.BatchCreateRolesRequest
+	(*BatchCreateRolesResponse)(nil),          // 12: core.permission.v1.BatchCreateRolesResponse
+	(*GetRoleCodesByRoleIdsRequest)(nil),      // 13: core.permission.v1.GetRoleCodesByRoleIdsRequest
+	(*GetRoleCodesByRoleIdsResponse)(nil),     // 14: core.permission.v1.GetRoleCodesByRoleIdsResponse
+	(*GetRolesByRoleCodesRequest)(nil),        // 15: core.permission.v1.GetRolesByRoleCodesRequest
+	(*GetRolesByRoleIdsRequest)(nil),          // 16: core.permission.v1.GetRolesByRoleIdsRequest
+	(*CountRoleResponse)(nil),                 // 17: core.permission.v1.CountRoleResponse
+	(*ListRoleCodesByIdsRequest)(nil),         // 18: core.permission.v1.ListRoleCodesByIdsRequest
+	(*ListRoleCodesByIdsResponse)(nil),        // 19: core.permission.v1.ListRoleCodesByIdsResponse
+	(*ListRoleIdsByCodesRequest)(nil),         // 20: core.permission.v1.ListRoleIdsByCodesRequest
+	(*ListRoleIdsByCodesResponse)(nil),        // 21: core.permission.v1.ListRoleIdsByCodesResponse
+	(*ListPermissionIdsRequest)(nil),          // 22: core.permission.v1.ListPermissionIdsRequest
+	(*ListPermissionIdsResponse)(nil),         // 23: core.permission.v1.ListPermissionIdsResponse
+	(*CreateAppRoleFromTemplateRequest)(nil),  // 24: core.permission.v1.CreateAppRoleFromTemplateRequest
+	(*AssignRolesToOperatorRequest)(nil),      // 25: core.permission.v1.AssignRolesToOperatorRequest
+	(*AssignOperatorsToRoleRequest)(nil),      // 26: core.permission.v1.AssignOperatorsToRoleRequest
+	(*GetOperatorRolesRequest)(nil),           // 27: core.permission.v1.GetOperatorRolesRequest
+	(*GetOperatorRolesResponse)(nil),          // 28: core.permission.v1.GetOperatorRolesResponse
+	(*ListOperatorRoleIDsRequest)(nil),        // 29: core.permission.v1.ListOperatorRoleIDsRequest
+	(*ListOperatorRoleIDsResponse)(nil),       // 30: core.permission.v1.ListOperatorRoleIDsResponse
+	(*ListOperatorIDsByRoleIDsRequest)(nil),   // 31: core.permission.v1.ListOperatorIDsByRoleIDsRequest
+	(*ListOperatorIDsResponse)(nil),           // 32: core.permission.v1.ListOperatorIDsResponse
+	(*UnassignRolesFromOperatorRequest)(nil),  // 33: core.permission.v1.UnassignRolesFromOperatorRequest
+	(*UnassignRolesFromOperatorResponse)(nil), // 34: core.permission.v1.UnassignRolesFromOperatorResponse
+	(*UnassignOperatorsFromRoleRequest)(nil),  // 35: core.permission.v1.UnassignOperatorsFromRoleRequest
+	(*UnassignOperatorsFromRoleResponse)(nil), // 36: core.permission.v1.UnassignOperatorsFromRoleResponse
+	(*RoleOverride_PermissionDelta)(nil),      // 37: core.permission.v1.RoleOverride.PermissionDelta
+	nil,                                       // 38: core.permission.v1.RoleOverride.ExtendedSettingsEntry
+	(*RoleOverride_SecurityPolicy)(nil),       // 39: core.permission.v1.RoleOverride.SecurityPolicy
+	(*timestamppb.Timestamp)(nil),             // 40: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),             // 41: google.protobuf.FieldMask
+	(*OperatorRole)(nil),                      // 42: core.permission.v1.OperatorRole
+	(*v1.PagingRequest)(nil),                  // 43: common.pagination.v1.PagingRequest
+	(*emptypb.Empty)(nil),                     // 44: google.protobuf.Empty
 }
 var file_core_permission_v1_role_proto_depIdxs = []int32{
 	0,  // 0: core.permission.v1.Role.status:type_name -> core.permission.v1.Role.Status
 	1,  // 1: core.permission.v1.Role.type:type_name -> core.permission.v1.Role.Type
-	41, // 2: core.permission.v1.Role.created_at:type_name -> google.protobuf.Timestamp
-	41, // 3: core.permission.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
-	41, // 4: core.permission.v1.Role.deleted_at:type_name -> google.protobuf.Timestamp
-	38, // 5: core.permission.v1.RoleOverride.permissions:type_name -> core.permission.v1.RoleOverride.PermissionDelta
-	39, // 6: core.permission.v1.RoleOverride.extended_settings:type_name -> core.permission.v1.RoleOverride.ExtendedSettingsEntry
-	40, // 7: core.permission.v1.RoleOverride.security_policy:type_name -> core.permission.v1.RoleOverride.SecurityPolicy
-	41, // 8: core.permission.v1.RoleMetadata.last_synced_at:type_name -> google.protobuf.Timestamp
+	40, // 2: core.permission.v1.Role.created_at:type_name -> google.protobuf.Timestamp
+	40, // 3: core.permission.v1.Role.updated_at:type_name -> google.protobuf.Timestamp
+	40, // 4: core.permission.v1.Role.deleted_at:type_name -> google.protobuf.Timestamp
+	37, // 5: core.permission.v1.RoleOverride.permissions:type_name -> core.permission.v1.RoleOverride.PermissionDelta
+	38, // 6: core.permission.v1.RoleOverride.extended_settings:type_name -> core.permission.v1.RoleOverride.ExtendedSettingsEntry
+	39, // 7: core.permission.v1.RoleOverride.security_policy:type_name -> core.permission.v1.RoleOverride.SecurityPolicy
+	40, // 8: core.permission.v1.RoleMetadata.last_synced_at:type_name -> google.protobuf.Timestamp
 	2,  // 9: core.permission.v1.RoleMetadata.sync_policy:type_name -> core.permission.v1.RoleMetadata.SyncPolicy
-	3,  // 10: core.permission.v1.RoleMetadata.scope:type_name -> core.permission.v1.RoleMetadata.Scope
-	5,  // 11: core.permission.v1.RoleMetadata.custom_overrides:type_name -> core.permission.v1.RoleOverride
-	41, // 12: core.permission.v1.RoleMetadata.created_at:type_name -> google.protobuf.Timestamp
-	41, // 13: core.permission.v1.RoleMetadata.updated_at:type_name -> google.protobuf.Timestamp
-	41, // 14: core.permission.v1.RoleMetadata.deleted_at:type_name -> google.protobuf.Timestamp
-	4,  // 15: core.permission.v1.ListRoleResponse.items:type_name -> core.permission.v1.Role
-	42, // 16: core.permission.v1.GetRoleRequest.view_mask:type_name -> google.protobuf.FieldMask
-	4,  // 17: core.permission.v1.CreateRoleRequest.data:type_name -> core.permission.v1.Role
-	4,  // 18: core.permission.v1.UpdateRoleRequest.data:type_name -> core.permission.v1.Role
-	42, // 19: core.permission.v1.UpdateRoleRequest.update_mask:type_name -> google.protobuf.FieldMask
-	4,  // 20: core.permission.v1.BatchCreateRolesRequest.items:type_name -> core.permission.v1.Role
-	42, // 21: core.permission.v1.GetRolesByRoleCodesRequest.view_mask:type_name -> google.protobuf.FieldMask
-	42, // 22: core.permission.v1.GetRolesByRoleIdsRequest.view_mask:type_name -> google.protobuf.FieldMask
-	43, // 23: core.permission.v1.GetOperatorRolesResponse.bindings:type_name -> core.permission.v1.OperatorRole
-	44, // 24: core.permission.v1.RoleService.List:input_type -> common.pagination.v1.PagingRequest
-	44, // 25: core.permission.v1.RoleService.Count:input_type -> common.pagination.v1.PagingRequest
-	8,  // 26: core.permission.v1.RoleService.Get:input_type -> core.permission.v1.GetRoleRequest
-	9,  // 27: core.permission.v1.RoleService.Create:input_type -> core.permission.v1.CreateRoleRequest
-	10, // 28: core.permission.v1.RoleService.Update:input_type -> core.permission.v1.UpdateRoleRequest
-	11, // 29: core.permission.v1.RoleService.Delete:input_type -> core.permission.v1.DeleteRoleRequest
-	23, // 30: core.permission.v1.RoleService.ListPermissionIds:input_type -> core.permission.v1.ListPermissionIdsRequest
-	28, // 31: core.permission.v1.RoleService.GetOperatorRoles:input_type -> core.permission.v1.GetOperatorRolesRequest
-	26, // 32: core.permission.v1.RoleService.AssignRolesToOperator:input_type -> core.permission.v1.AssignRolesToOperatorRequest
-	34, // 33: core.permission.v1.RoleService.UnassignRolesFromOperator:input_type -> core.permission.v1.UnassignRolesFromOperatorRequest
-	7,  // 34: core.permission.v1.RoleService.List:output_type -> core.permission.v1.ListRoleResponse
-	18, // 35: core.permission.v1.RoleService.Count:output_type -> core.permission.v1.CountRoleResponse
-	4,  // 36: core.permission.v1.RoleService.Get:output_type -> core.permission.v1.Role
-	45, // 37: core.permission.v1.RoleService.Create:output_type -> google.protobuf.Empty
-	45, // 38: core.permission.v1.RoleService.Update:output_type -> google.protobuf.Empty
-	45, // 39: core.permission.v1.RoleService.Delete:output_type -> google.protobuf.Empty
-	24, // 40: core.permission.v1.RoleService.ListPermissionIds:output_type -> core.permission.v1.ListPermissionIdsResponse
-	29, // 41: core.permission.v1.RoleService.GetOperatorRoles:output_type -> core.permission.v1.GetOperatorRolesResponse
-	45, // 42: core.permission.v1.RoleService.AssignRolesToOperator:output_type -> google.protobuf.Empty
-	35, // 43: core.permission.v1.RoleService.UnassignRolesFromOperator:output_type -> core.permission.v1.UnassignRolesFromOperatorResponse
-	34, // [34:44] is the sub-list for method output_type
-	24, // [24:34] is the sub-list for method input_type
-	24, // [24:24] is the sub-list for extension type_name
-	24, // [24:24] is the sub-list for extension extendee
-	0,  // [0:24] is the sub-list for field type_name
+	4,  // 10: core.permission.v1.RoleMetadata.custom_overrides:type_name -> core.permission.v1.RoleOverride
+	40, // 11: core.permission.v1.RoleMetadata.created_at:type_name -> google.protobuf.Timestamp
+	40, // 12: core.permission.v1.RoleMetadata.updated_at:type_name -> google.protobuf.Timestamp
+	40, // 13: core.permission.v1.RoleMetadata.deleted_at:type_name -> google.protobuf.Timestamp
+	3,  // 14: core.permission.v1.ListRoleResponse.items:type_name -> core.permission.v1.Role
+	41, // 15: core.permission.v1.GetRoleRequest.view_mask:type_name -> google.protobuf.FieldMask
+	3,  // 16: core.permission.v1.CreateRoleRequest.data:type_name -> core.permission.v1.Role
+	3,  // 17: core.permission.v1.UpdateRoleRequest.data:type_name -> core.permission.v1.Role
+	41, // 18: core.permission.v1.UpdateRoleRequest.update_mask:type_name -> google.protobuf.FieldMask
+	3,  // 19: core.permission.v1.BatchCreateRolesRequest.items:type_name -> core.permission.v1.Role
+	41, // 20: core.permission.v1.GetRolesByRoleCodesRequest.view_mask:type_name -> google.protobuf.FieldMask
+	41, // 21: core.permission.v1.GetRolesByRoleIdsRequest.view_mask:type_name -> google.protobuf.FieldMask
+	42, // 22: core.permission.v1.GetOperatorRolesResponse.bindings:type_name -> core.permission.v1.OperatorRole
+	43, // 23: core.permission.v1.RoleService.List:input_type -> common.pagination.v1.PagingRequest
+	43, // 24: core.permission.v1.RoleService.Count:input_type -> common.pagination.v1.PagingRequest
+	7,  // 25: core.permission.v1.RoleService.Get:input_type -> core.permission.v1.GetRoleRequest
+	8,  // 26: core.permission.v1.RoleService.Create:input_type -> core.permission.v1.CreateRoleRequest
+	9,  // 27: core.permission.v1.RoleService.Update:input_type -> core.permission.v1.UpdateRoleRequest
+	10, // 28: core.permission.v1.RoleService.Delete:input_type -> core.permission.v1.DeleteRoleRequest
+	22, // 29: core.permission.v1.RoleService.ListPermissionIds:input_type -> core.permission.v1.ListPermissionIdsRequest
+	27, // 30: core.permission.v1.RoleService.GetOperatorRoles:input_type -> core.permission.v1.GetOperatorRolesRequest
+	25, // 31: core.permission.v1.RoleService.AssignRolesToOperator:input_type -> core.permission.v1.AssignRolesToOperatorRequest
+	33, // 32: core.permission.v1.RoleService.UnassignRolesFromOperator:input_type -> core.permission.v1.UnassignRolesFromOperatorRequest
+	6,  // 33: core.permission.v1.RoleService.List:output_type -> core.permission.v1.ListRoleResponse
+	17, // 34: core.permission.v1.RoleService.Count:output_type -> core.permission.v1.CountRoleResponse
+	3,  // 35: core.permission.v1.RoleService.Get:output_type -> core.permission.v1.Role
+	44, // 36: core.permission.v1.RoleService.Create:output_type -> google.protobuf.Empty
+	44, // 37: core.permission.v1.RoleService.Update:output_type -> google.protobuf.Empty
+	44, // 38: core.permission.v1.RoleService.Delete:output_type -> google.protobuf.Empty
+	23, // 39: core.permission.v1.RoleService.ListPermissionIds:output_type -> core.permission.v1.ListPermissionIdsResponse
+	28, // 40: core.permission.v1.RoleService.GetOperatorRoles:output_type -> core.permission.v1.GetOperatorRolesResponse
+	44, // 41: core.permission.v1.RoleService.AssignRolesToOperator:output_type -> google.protobuf.Empty
+	34, // 42: core.permission.v1.RoleService.UnassignRolesFromOperator:output_type -> core.permission.v1.UnassignRolesFromOperatorResponse
+	33, // [33:43] is the sub-list for method output_type
+	23, // [23:33] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_core_permission_v1_role_proto_init() }
@@ -3173,7 +2984,6 @@ func file_core_permission_v1_role_proto_init() {
 		(*GetRoleRequest_Name)(nil),
 		(*GetRoleRequest_Code)(nil),
 	}
-	file_core_permission_v1_role_proto_msgTypes[6].OneofWrappers = []any{}
 	file_core_permission_v1_role_proto_msgTypes[7].OneofWrappers = []any{
 		(*DeleteRoleRequest_Id)(nil),
 		(*DeleteRoleRequest_Code)(nil),
@@ -3197,7 +3007,7 @@ func file_core_permission_v1_role_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_permission_v1_role_proto_rawDesc), len(file_core_permission_v1_role_proto_rawDesc)),
-			NumEnums:      4,
+			NumEnums:      3,
 			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,

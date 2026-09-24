@@ -29,7 +29,7 @@ const (
 // AdminListUserSessionsRequest 定义 UserSessions 的筛选与分页参数。
 type AdminListUserSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -84,7 +84,7 @@ func (x *AdminListUserSessionsRequest) GetPaging() *v1.PagingRequest {
 // AdminListUserDevicesRequest 定义 UserDevices 的筛选与分页参数。
 type AdminListUserDevicesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -139,7 +139,7 @@ func (x *AdminListUserDevicesRequest) GetPaging() *v1.PagingRequest {
 // AdminRevokeSessionRequest 定义撤销 Session 的幂等管理命令参数。
 type AdminRevokeSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// session_id 标识关联的 Session。
 	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
@@ -212,7 +212,7 @@ func (x *AdminRevokeSessionRequest) GetIdempotencyKey() string {
 // AdminRevokeAllSessionsRequest 定义撤销 AllSessions 的幂等管理命令参数。
 type AdminRevokeAllSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -276,7 +276,7 @@ func (x *AdminRevokeAllSessionsRequest) GetIdempotencyKey() string {
 // AdminRevokeDeviceSessionsRequest 定义撤销 DeviceSessions 的幂等管理命令参数。
 type AdminRevokeDeviceSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// device_id 标识关联的 Device。
 	DeviceId uint64 `protobuf:"varint,2,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
@@ -349,7 +349,7 @@ func (x *AdminRevokeDeviceSessionsRequest) GetIdempotencyKey() string {
 // AdminListSecurityEventsRequest 定义 SecurityEvents 的筛选与分页参数。
 type AdminListSecurityEventsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -404,7 +404,7 @@ func (x *AdminListSecurityEventsRequest) GetPaging() *v1.PagingRequest {
 // AdminUnlockUserRequest 定义执行 UnlockUser 的幂等管理命令参数。
 type AdminUnlockUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -468,7 +468,7 @@ func (x *AdminUnlockUserRequest) GetIdempotencyKey() string {
 // AdminGetUserSecurityStateRequest 标识待查询的 UserSecurityState。
 type AdminGetUserSecurityStateRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -514,7 +514,7 @@ func (x *AdminGetUserSecurityStateRequest) GetUserId() uint64 {
 // AdminRequirePasswordResetRequest 定义执行 RequirePasswordReset 的幂等管理命令参数。
 type AdminRequirePasswordResetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -578,7 +578,7 @@ func (x *AdminRequirePasswordResetRequest) GetIdempotencyKey() string {
 // AdminRevokeCredentialRequest 定义撤销 Credential 的幂等管理命令参数。
 type AdminRevokeCredentialRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// credential_id 标识关联的 Credential。
 	CredentialId uint64 `protobuf:"varint,2,opt,name=credential_id,json=credentialId,proto3" json:"credential_id,omitempty"`
@@ -651,7 +651,7 @@ func (x *AdminRevokeCredentialRequest) GetIdempotencyKey() string {
 // AdminResetMFARequest 定义重置 MFA 的幂等管理命令参数。
 type AdminResetMFARequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -715,7 +715,7 @@ func (x *AdminResetMFARequest) GetIdempotencyKey() string {
 // AdminRevokeDeviceTrustRequest 定义撤销 DeviceTrust 的幂等管理命令参数。
 type AdminRevokeDeviceTrustRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// device_id 标识关联的 Device。
 	DeviceId uint64 `protobuf:"varint,2,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`

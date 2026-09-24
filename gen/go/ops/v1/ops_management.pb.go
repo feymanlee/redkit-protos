@@ -28,7 +28,7 @@ const (
 // CreatePlacementRequest 创建投放位。
 type CreatePlacementRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// code 是 App 内稳定投放位代码。
+	// code 是稳定的投放位代码。
 	Code string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
 	// kind 是投放位形态。
 	Kind PlacementKind `protobuf:"varint,2,opt,name=kind,proto3,enum=ops.v1.PlacementKind" json:"kind,omitempty"`

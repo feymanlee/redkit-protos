@@ -5,16 +5,7 @@ package common.v1;
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
-// 平台固定 App 标识。
-enum AppId {
-  // 未指定 App。
-  APP_ID_UNSPECIFIED = 0;
-  // Gamoji App。
-  APP_ID_GAMOJI = 1;
-  // Pincp App。
-  APP_ID_PINCP = 2;
-}
-
+// 平台固定 App 标识（enum AppId，编号 0-2）已随平台收敛为单一 App 删除，见 ADR 0075；不得复用这些编号或名称。
 // 用户引用。
 message UserRef {
   // 用户 ID。

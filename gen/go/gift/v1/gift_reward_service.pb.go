@@ -8,7 +8,6 @@ package giftpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -28,9 +27,7 @@ const (
 // 背包 Gift Reward 预检请求。
 type PreflightBackpackGiftRewardRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID，必须与可信 App Scope 一致。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// Gift ID，必须属于当前 App。
+	// Gift ID。
 	GiftId uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
 	// 发放数量，必须为正数且不超过平台上限。
 	Quantity      uint64 `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
@@ -68,13 +65,6 @@ func (*PreflightBackpackGiftRewardRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_gift_reward_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PreflightBackpackGiftRewardRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PreflightBackpackGiftRewardRequest) GetGiftId() uint32 {
 	if x != nil {
 		return x.GiftId
@@ -92,8 +82,6 @@ func (x *PreflightBackpackGiftRewardRequest) GetQuantity() uint64 {
 // 背包 Gift Reward 预检结果。
 type PreflightBackpackGiftRewardResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PreflightBackpackGiftReward 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
 	// quantity 表示 PreflightBackpackGiftReward 涉及的业务对象数量。
@@ -132,13 +120,6 @@ func (*PreflightBackpackGiftRewardResponse) Descriptor() ([]byte, []int) {
 	return file_gift_v1_gift_reward_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PreflightBackpackGiftRewardResponse) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PreflightBackpackGiftRewardResponse) GetGiftId() uint32 {
 	if x != nil {
 		return x.GiftId
@@ -156,11 +137,9 @@ func (x *PreflightBackpackGiftRewardResponse) GetQuantity() uint64 {
 // 背包 Gift Reward 履约请求。
 type GrantBackpackGiftRewardRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID，必须与可信 App Scope 一致。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// Reward 接收用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	// Gift ID，必须属于当前 App。
+	// Gift ID。
 	GiftId uint32 `protobuf:"varint,3,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
 	// 发放数量。
 	Quantity uint64 `protobuf:"varint,4,opt,name=quantity,proto3" json:"quantity,omitempty"`
@@ -202,13 +181,6 @@ func (*GrantBackpackGiftRewardRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_gift_reward_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GrantBackpackGiftRewardRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GrantBackpackGiftRewardRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -247,9 +219,7 @@ func (x *GrantBackpackGiftRewardRequest) GetExpireAt() *timestamppb.Timestamp {
 // 背包 Gift Reward 履约结果。
 type GrantBackpackGiftRewardResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GrantBackpackGiftReward 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,3,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
@@ -295,13 +265,6 @@ func (x *GrantBackpackGiftRewardResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GrantBackpackGiftRewardResponse.ProtoReflect.Descriptor instead.
 func (*GrantBackpackGiftRewardResponse) Descriptor() ([]byte, []int) {
 	return file_gift_v1_gift_reward_service_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *GrantBackpackGiftRewardResponse) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GrantBackpackGiftRewardResponse) GetUserId() uint64 {
@@ -357,19 +320,16 @@ var File_gift_v1_gift_reward_service_proto protoreflect.FileDescriptor
 
 const file_gift_v1_gift_reward_service_proto_rawDesc = "" +
 	"\n" +
-	"!gift/v1/gift_reward_service.proto\x12\agift.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xa7\x01\n" +
-	"\"PreflightBackpackGiftRewardRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12#\n" +
+	"!gift/v1/gift_reward_service.proto\x12\agift.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"q\n" +
+	"\"PreflightBackpackGiftRewardRequest\x12#\n" +
 	"\agift_id\x18\x02 \x01(\rB\n" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\x06giftId\x12&\n" +
 	"\bquantity\x18\x03 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\bquantity\"\x83\x01\n" +
-	"#PreflightBackpackGiftRewardResponse\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\bquantity\"Z\n" +
+	"#PreflightBackpackGiftRewardResponse\x12\x17\n" +
 	"\agift_id\x18\x02 \x01(\rR\x06giftId\x12\x1a\n" +
-	"\bquantity\x18\x03 \x01(\x04R\bquantity\"\xcb\x02\n" +
-	"\x1eGrantBackpackGiftRewardRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12#\n" +
+	"\bquantity\x18\x03 \x01(\x04R\bquantity\"\x95\x02\n" +
+	"\x1eGrantBackpackGiftRewardRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12#\n" +
 	"\agift_id\x18\x03 \x01(\rB\n" +
@@ -380,9 +340,8 @@ const file_gift_v1_gift_reward_service_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\frewardItemId\x12A\n" +
 	"\texpire_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x01H\x00R\bexpireAt\x88\x01\x01B\f\n" +
 	"\n" +
-	"_expire_at\"\xcc\x02\n" +
-	"\x1fGrantBackpackGiftRewardResponse\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"_expire_at\"\xa3\x02\n" +
+	"\x1fGrantBackpackGiftRewardResponse\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x17\n" +
 	"\agift_id\x18\x03 \x01(\rR\x06giftId\x12\x1a\n" +
 	"\bquantity\x18\x04 \x01(\x04R\bquantity\x12$\n" +
@@ -415,25 +374,20 @@ var file_gift_v1_gift_reward_service_proto_goTypes = []any{
 	(*PreflightBackpackGiftRewardResponse)(nil), // 1: gift.v1.PreflightBackpackGiftRewardResponse
 	(*GrantBackpackGiftRewardRequest)(nil),      // 2: gift.v1.GrantBackpackGiftRewardRequest
 	(*GrantBackpackGiftRewardResponse)(nil),     // 3: gift.v1.GrantBackpackGiftRewardResponse
-	(v1.AppId)(0),                               // 4: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),               // 5: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),               // 4: google.protobuf.Timestamp
 }
 var file_gift_v1_gift_reward_service_proto_depIdxs = []int32{
-	4, // 0: gift.v1.PreflightBackpackGiftRewardRequest.app_id:type_name -> common.v1.AppId
-	4, // 1: gift.v1.PreflightBackpackGiftRewardResponse.app_id:type_name -> common.v1.AppId
-	4, // 2: gift.v1.GrantBackpackGiftRewardRequest.app_id:type_name -> common.v1.AppId
-	5, // 3: gift.v1.GrantBackpackGiftRewardRequest.expire_at:type_name -> google.protobuf.Timestamp
-	4, // 4: gift.v1.GrantBackpackGiftRewardResponse.app_id:type_name -> common.v1.AppId
-	5, // 5: gift.v1.GrantBackpackGiftRewardResponse.expire_at:type_name -> google.protobuf.Timestamp
-	0, // 6: gift.v1.GiftRewardService.PreflightBackpackGiftReward:input_type -> gift.v1.PreflightBackpackGiftRewardRequest
-	2, // 7: gift.v1.GiftRewardService.GrantBackpackGiftReward:input_type -> gift.v1.GrantBackpackGiftRewardRequest
-	1, // 8: gift.v1.GiftRewardService.PreflightBackpackGiftReward:output_type -> gift.v1.PreflightBackpackGiftRewardResponse
-	3, // 9: gift.v1.GiftRewardService.GrantBackpackGiftReward:output_type -> gift.v1.GrantBackpackGiftRewardResponse
-	8, // [8:10] is the sub-list for method output_type
-	6, // [6:8] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	4, // 0: gift.v1.GrantBackpackGiftRewardRequest.expire_at:type_name -> google.protobuf.Timestamp
+	4, // 1: gift.v1.GrantBackpackGiftRewardResponse.expire_at:type_name -> google.protobuf.Timestamp
+	0, // 2: gift.v1.GiftRewardService.PreflightBackpackGiftReward:input_type -> gift.v1.PreflightBackpackGiftRewardRequest
+	2, // 3: gift.v1.GiftRewardService.GrantBackpackGiftReward:input_type -> gift.v1.GrantBackpackGiftRewardRequest
+	1, // 4: gift.v1.GiftRewardService.PreflightBackpackGiftReward:output_type -> gift.v1.PreflightBackpackGiftRewardResponse
+	3, // 5: gift.v1.GiftRewardService.GrantBackpackGiftReward:output_type -> gift.v1.GrantBackpackGiftRewardResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_gift_v1_gift_reward_service_proto_init() }

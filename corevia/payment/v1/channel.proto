@@ -179,8 +179,6 @@ enum PaymentOptionUnavailableReason {
 message PaymentChannel {
   // id 标识关联的 PaymentChannel。
   uint32 id = 1;
-  // app_id 限定 PaymentChannel 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 3;
   // method 指定 PaymentChannel 使用的 PaymentMethod。
@@ -255,8 +253,6 @@ message ChannelProbeCheck {
 message ChannelProbe {
   // id 标识关联的 ChannelProbe。
   uint64 id = 1;
-  // app_id 限定 ChannelProbe 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // channel_id 标识关联的 Channel。
   uint32 channel_id = 3;
   // revision_id 标识关联的 Revision。
@@ -309,8 +305,6 @@ message PaymentRoutingRule {
 message RoutingPolicyRevision {
   // id 标识关联的 RoutingPolicyRevision。
   uint64 id = 1;
-  // app_id 限定 RoutingPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // revision_no 是 RoutingPolicyRevision 对外关联与审计使用的业务编号。
   uint64 revision_no = 3;
   // status 表示 RoutingPolicyRevision 当前可观察的生命周期状态。
@@ -329,8 +323,6 @@ message RoutingPolicyRevision {
 message ChannelPublication {
   // id 标识关联的 ChannelPublication。
   uint64 id = 1;
-  // app_id 限定 ChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // target_type 区分 ChannelPublication 的业务类型。
   ChannelPublicationTargetType target_type = 3;
   // action 指定本次状态推进采用的业务动作。
@@ -421,7 +413,7 @@ message ConsumerPaymentOption {
   bool selection_required = 5;
 }
 
-// Consumer 请求只包含公开购买上下文；App 与 User 只能来自可信 metadata。
+// Consumer 请求只包含公开购买上下文；User 只能来自可信 metadata。
 message ListPurchaseOptionsRequest {
   // purchase_type 区分 ListPurchaseOptions 的业务类型。
   PurchaseType purchase_type = 1;
@@ -441,8 +433,6 @@ message ListPurchaseOptionsResponse {
 
 // CreatePaymentOptionRevisionRequest 定义创建 PaymentOptionRevision 的幂等命令参数。
 message CreatePaymentOptionRevisionRequest {
-  // app_id 限定 CreatePaymentOptionRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // option_code 提供 CreatePaymentOptionRevision 对外稳定使用的业务编码。
   string option_code = 2;
   // display_name 提供 CreatePaymentOptionRevision 面向展示或识别的名称。
@@ -535,10 +525,8 @@ message ProviderCapabilitySupport {
   string capability_fingerprint = 4;
 }
 
-// ListProviderCapabilitySupportRequest 查询当前 App 可管理的 Provider 能力事实。
+// ListProviderCapabilitySupportRequest 查询可管理的 Provider 能力事实。
 message ListProviderCapabilitySupportRequest {
-  // app_id 限定管理权限作用域；UNSPECIFIED 不表示全平台。
-  common.v1.AppId app_id = 1;
 }
 
 // ListProviderCapabilitySupportResponse 返回当前进程注册的 Provider 能力事实。
@@ -549,8 +537,6 @@ message ListProviderCapabilitySupportResponse {
 
 // CreatePaymentChannelRequest 定义创建 PaymentChannel 的幂等命令参数。
 message CreatePaymentChannelRequest {
-  // app_id 限定 CreatePaymentChannel 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 2;
   // method 指定 CreatePaymentChannel 使用的 PaymentMethod。
@@ -569,8 +555,6 @@ message CreatePaymentChannelRequest {
 
 // CreateChannelRevisionRequest 定义创建 ChannelRevision 的幂等命令参数。
 message CreateChannelRevisionRequest {
-  // app_id 限定 CreateChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // channel_id 标识关联的 Channel。
   uint32 channel_id = 2;
   // draft 承载 CreateChannelRevision 关联的 ChannelRevisionDraft。
@@ -587,8 +571,6 @@ message CreateChannelRevisionRequest {
 
 // ProbeChannelRevisionRequest 定义执行 ProbeChannelRevision 的幂等管理命令参数。
 message ProbeChannelRevisionRequest {
-  // app_id 限定 ProbeChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -605,8 +587,6 @@ message ProbeChannelRevisionRequest {
 message ListPaymentChannelsRequest {
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 1;
-  // app_id 限定 ListPaymentChannels 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
 }
 
 // ListPaymentChannelResponse 返回 PaymentChannel 结果集合及分页信息。
@@ -621,8 +601,6 @@ message ListPaymentChannelResponse {
 message ListChannelRevisionsRequest {
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 1;
-  // app_id 限定 ListChannelRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // channel_id 标识关联的 Channel。
   uint32 channel_id = 3;
 }
@@ -637,8 +615,6 @@ message ListChannelRevisionResponse {
 
 // CreateRoutingPolicyRevisionRequest 定义创建 RoutingPolicyRevision 的幂等命令参数。
 message CreateRoutingPolicyRevisionRequest {
-  // app_id 限定 CreateRoutingPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // rules 列出 CreateRoutingPolicyRevision 关联的 PaymentRoutingRule。
   repeated PaymentRoutingRule rules = 2;
   // operator_id 标识关联的后台 Operator。
@@ -653,8 +629,6 @@ message CreateRoutingPolicyRevisionRequest {
 
 // SubmitChannelPublicationRequest 定义提交 ChannelPublication 的幂等管理命令参数。
 message SubmitChannelPublicationRequest {
-  // app_id 限定 SubmitChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // target_type 区分 SubmitChannelPublication 的业务类型。
   ChannelPublicationTargetType target_type = 2;
   // action 指定本次状态推进采用的业务动作。
@@ -677,8 +651,6 @@ message SubmitChannelPublicationRequest {
 
 // ReviewChannelPublicationRequest 定义审核 ChannelPublication 的幂等管理命令参数。
 message ReviewChannelPublicationRequest {
-  // app_id 限定 ReviewChannelPublication 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // publication_id 标识关联的 Publication。
   uint64 publication_id = 2;
   // decision 记录 ReviewChannelPublication 对应审核或执行流程的结论。
@@ -699,8 +671,6 @@ message ReviewChannelPublicationRequest {
 message ListChannelPublicationsRequest {
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 1;
-  // app_id 限定 ListChannelPublications 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // status 表示 ListChannelPublications 当前可观察的生命周期状态。
   optional ChannelPublicationStatus status = 3;
 }
@@ -717,8 +687,6 @@ message ListChannelPublicationResponse {
 message ListRoutingPolicyRevisionsRequest {
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 1;
-  // app_id 限定 ListRoutingPolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
 }
 
 // ListRoutingPolicyRevisionResponse 返回 RoutingPolicyRevision 结果集合及分页信息。
@@ -731,8 +699,6 @@ message ListRoutingPolicyRevisionResponse {
 
 // PreviewPaymentRoutingRequest 定义执行 PreviewPaymentRouting 的命令参数。
 message PreviewPaymentRoutingRequest {
-  // app_id 限定 PreviewPaymentRouting 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // biz_type 区分 PreviewPaymentRouting 的业务类型。
   string biz_type = 2;
   // currency 指定相关金额使用的币种或计量单位。

@@ -16,7 +16,7 @@ service PaymentChannelService {
   rpc ListPaymentChannels(ListPaymentChannelsRequest) returns (ListPaymentChannelResponse) {}
   // 查询 ChannelRevision 列表。
   rpc ListChannelRevisions(ListChannelRevisionsRequest) returns (ListChannelRevisionResponse) {}
-  // 为当前 App 创建不可变的 RoutingPolicyRevision 草稿。
+  // 创建不可变的 RoutingPolicyRevision 草稿。
   rpc CreateRoutingPolicyRevision(CreateRoutingPolicyRevisionRequest) returns (RoutingPolicyRevision) {}
   // 校验候选渠道后创建不可变的公开 PaymentOptionRevision 草稿。
   rpc CreatePaymentOptionRevision(CreatePaymentOptionRevisionRequest) returns (PaymentOptionRevision) {}

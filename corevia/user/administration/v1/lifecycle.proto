@@ -4,7 +4,6 @@ package user.administration.v1;
 
 import "common/pagination/v1/pagination.proto";
 import "common/v1/common.proto";
-import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "user/administration/v1/types.proto";
 import "validate/validate.proto";
@@ -24,9 +23,7 @@ service UserLifecycleService {
 
 // BeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
 message BeginUserDeletionRequest {
-  // app_id 限定 BeginUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string verification_ticket = 3;
@@ -36,9 +33,7 @@ message BeginUserDeletionRequest {
 
 // CancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
 message CancelUserDeletionRequest {
-  // app_id 限定 CancelUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string verification_ticket = 3;
@@ -48,9 +43,7 @@ message CancelUserDeletionRequest {
 
 // FinalizeUserDeletionRequest 定义执行 FinalizeUserDeletion 的幂等管理命令参数。
 message FinalizeUserDeletionRequest {
-  // app_id 限定 FinalizeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 3;
@@ -107,7 +100,7 @@ message LifecycleOperationFilter {
   optional LifecycleOperationType operation_type = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   // status 表示 LifecycleOperationFilter 当前可观察的生命周期状态。
   optional string status = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3 [(validate.rules).uint64.gt = 0];
   // created_from 指定 LifecycleOperationFilter 查询或生效区间的起始边界。
   google.protobuf.Timestamp created_from = 4;
@@ -125,8 +118,6 @@ message LifecycleOperationFilter {
 
 // ListLifecycleOperationsRequest 定义 LifecycleOperations 的筛选与分页参数。
 message ListLifecycleOperationsRequest {
-  // app_id 限定 ListLifecycleOperations 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
   // filter 限定本次查询采用的筛选条件。
@@ -145,13 +136,11 @@ message LifecycleOperationLink {
 message LifecycleOperation {
   // operation_no 为审计与幂等重放稳定标识本次管理操作。
   string operation_no = 1;
-  // app_id 限定 LifecycleOperation 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // operation_type 区分 LifecycleOperation 的业务类型。
   LifecycleOperationType operation_type = 3;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 4;
-  // related_user_id 标识当前 App 内关联的 User。
+  // related_user_id 标识关联的 User。
   uint64 related_user_id = 5;
   // status 表示 LifecycleOperation 当前可观察的生命周期状态。
   string status = 6;

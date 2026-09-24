@@ -179,7 +179,7 @@ func ErrorTransactionNotReversible(format string, args ...interface{}) *errors.E
 	return errors.New(409, WalletErrorReason_TRANSACTION_NOT_REVERSIBLE.String(), fmt.Sprintf(format, args...))
 }
 
-// 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+// 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
 func IsRechargeOfferUnavailable(err error) bool {
 	if err == nil {
 		return false
@@ -188,7 +188,7 @@ func IsRechargeOfferUnavailable(err error) bool {
 	return e.Reason == WalletErrorReason_RECHARGE_OFFER_UNAVAILABLE.String() && e.Code == 404
 }
 
-// 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+// 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
 func ErrorRechargeOfferUnavailable(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, WalletErrorReason_RECHARGE_OFFER_UNAVAILABLE.String(), fmt.Sprintf(format, args...))
 }

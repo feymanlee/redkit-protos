@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on Room with the rules defined in the proto
@@ -61,8 +57,6 @@ func (m *Room) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for OwnerUserId
 
@@ -521,28 +515,6 @@ func (m *CreateRoomRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _CreateRoomRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CreateRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CreateRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetOwnerUserId() <= 0 {
 		err := CreateRoomRequestValidationError{
 			field:  "OwnerUserId",
@@ -760,10 +732,6 @@ var _ interface {
 	ErrorName() string
 } = CreateRoomRequestValidationError{}
 
-var _CreateRoomRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _CreateRoomRequest_RoomType_NotInLookup = map[RoomType]struct{}{
 	0: {},
 }
@@ -793,28 +761,6 @@ func (m *UpdateRoomRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _UpdateRoomRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := UpdateRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := UpdateRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRoomId() <= 0 {
 		err := UpdateRoomRequestValidationError{
@@ -1019,10 +965,6 @@ var _ interface {
 	ErrorName() string
 } = UpdateRoomRequestValidationError{}
 
-var _UpdateRoomRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _UpdateRoomRequest_Visibility_NotInLookup = map[RoomVisibility]struct{}{
 	0: {},
 }
@@ -1048,28 +990,6 @@ func (m *GetRoomRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _GetRoomRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRoomId() <= 0 {
 		err := GetRoomRequestValidationError{
@@ -1159,10 +1079,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetRoomRequestValidationError{}
-
-var _GetRoomRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListRoomsRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -1344,28 +1260,6 @@ func (m *ListMyRoomsRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ListMyRoomsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListMyRoomsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListMyRoomsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetOwnerUserId() <= 0 {
 		err := ListMyRoomsRequestValidationError{
 			field:  "OwnerUserId",
@@ -1486,10 +1380,6 @@ var _ interface {
 	ErrorName() string
 } = ListMyRoomsRequestValidationError{}
 
-var _ListMyRoomsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on AppointModeratorRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1511,28 +1401,6 @@ func (m *AppointModeratorRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _AppointModeratorRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := AppointModeratorRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := AppointModeratorRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRoomId() <= 0 {
 		err := AppointModeratorRequestValidationError{
@@ -1647,10 +1515,6 @@ var _ interface {
 	ErrorName() string
 } = AppointModeratorRequestValidationError{}
 
-var _AppointModeratorRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RemoveModeratorRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1672,28 +1536,6 @@ func (m *RemoveModeratorRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RemoveModeratorRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RemoveModeratorRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RemoveModeratorRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRoomId() <= 0 {
 		err := RemoveModeratorRequestValidationError{
@@ -1808,10 +1650,6 @@ var _ interface {
 	ErrorName() string
 } = RemoveModeratorRequestValidationError{}
 
-var _RemoveModeratorRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on CreateRoomRestrictionRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1833,28 +1671,6 @@ func (m *CreateRoomRestrictionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CreateRoomRestrictionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CreateRoomRestrictionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CreateRoomRestrictionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRoomId() <= 0 {
 		err := CreateRoomRestrictionRequestValidationError{
@@ -2106,10 +1922,6 @@ var _ interface {
 	ErrorName() string
 } = CreateRoomRestrictionRequestValidationError{}
 
-var _CreateRoomRestrictionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _CreateRoomRestrictionRequest_Scope_NotInLookup = map[RestrictionScope]struct{}{
 	0: {},
 }
@@ -2143,28 +1955,6 @@ func (m *RevokeRoomRestrictionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RevokeRoomRestrictionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RevokeRoomRestrictionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RevokeRoomRestrictionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRestrictionId() <= 0 {
 		err := RevokeRoomRestrictionRequestValidationError{
@@ -2313,10 +2103,6 @@ var _ interface {
 	ErrorName() string
 } = RevokeRoomRestrictionRequestValidationError{}
 
-var _RevokeRoomRestrictionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _RevokeRoomRestrictionRequest_ActorType_NotInLookup = map[RestrictionActorType]struct{}{
 	0: {},
 }
@@ -2342,28 +2128,6 @@ func (m *ListRoomRestrictionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ListRoomRestrictionsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListRoomRestrictionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListRoomRestrictionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRoomId() <= 0 {
 		err := ListRoomRestrictionsRequestValidationError{
@@ -2489,10 +2253,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListRoomRestrictionsRequestValidationError{}
-
-var _ListRoomRestrictionsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListRoomRestrictionsResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -2655,28 +2415,6 @@ func (m *TakeDownRoomRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _TakeDownRoomRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := TakeDownRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := TakeDownRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetRoomId() <= 0 {
 		err := TakeDownRoomRequestValidationError{
 			field:  "RoomId",
@@ -2801,10 +2539,6 @@ var _ interface {
 	ErrorName() string
 } = TakeDownRoomRequestValidationError{}
 
-var _TakeDownRoomRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RestoreRoomRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2826,28 +2560,6 @@ func (m *RestoreRoomRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RestoreRoomRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RestoreRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RestoreRoomRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetRoomId() <= 0 {
 		err := RestoreRoomRequestValidationError{
@@ -2972,7 +2684,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RestoreRoomRequestValidationError{}
-
-var _RestoreRoomRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}

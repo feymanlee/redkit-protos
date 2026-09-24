@@ -20,7 +20,7 @@ service PaymentRefundService {
   rpc RejectRefundRequest(ReviewRefundRequestRequest) returns (RefundRequest) {}
   // 查询退款申请。
   rpc ListRefundRequests(ListRefundRequestsRequest) returns (ListRefundRequestsResponse) {}
-  // 配置 App/币种退款风险阈值。
+  // 配置币种退款风险阈值。
   rpc UpsertRefundRiskRule(UpsertRefundRiskRuleRequest) returns (RefundRiskRule) {}
   // 查询退款风险阈值。
   rpc ListRefundRiskRules(ListRefundRiskRulesRequest) returns (ListRefundRiskRulesResponse) {}

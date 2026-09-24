@@ -74,7 +74,7 @@ func (x *AdminCreatePaymentRequest) GetData() *AdminPaymentPatch {
 // AdminPaymentPatch 承载 Payment 的局部管理修正；presence 表示是否修改。
 type AdminPaymentPatch struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// payment_no 是 PaymentPatch 对外关联与审计使用的业务编号。
 	PaymentNo *string `protobuf:"bytes,2,opt,name=payment_no,json=paymentNo,proto3,oneof" json:"payment_no,omitempty"`

@@ -38,10 +38,6 @@ const (
 	ErrorReason_COMMON_NOT_FOUND ErrorReason = 404
 	// 通用 conflict。
 	ErrorReason_COMMON_CONFLICT ErrorReason = 409
-	// 缺少具体 App Scope。
-	ErrorReason_APP_SCOPE_REQUIRED ErrorReason = 4001
-	// App Scope 不是受支持的 App。
-	ErrorReason_APP_SCOPE_INVALID ErrorReason = 4002
 	// 通用 站内 server 错误。
 	ErrorReason_COMMON_INTERNAL_SERVER_ERROR ErrorReason = 500
 )
@@ -49,15 +45,13 @@ const (
 // Enum value maps for ErrorReason.
 var (
 	ErrorReason_name = map[int32]string{
-		0:    "COMMON_UNSPECIFIED",
-		400:  "COMMON_BAD_REQUEST",
-		401:  "COMMON_UNAUTHORIZED",
-		403:  "COMMON_FORBIDDEN",
-		404:  "COMMON_NOT_FOUND",
-		409:  "COMMON_CONFLICT",
-		4001: "APP_SCOPE_REQUIRED",
-		4002: "APP_SCOPE_INVALID",
-		500:  "COMMON_INTERNAL_SERVER_ERROR",
+		0:   "COMMON_UNSPECIFIED",
+		400: "COMMON_BAD_REQUEST",
+		401: "COMMON_UNAUTHORIZED",
+		403: "COMMON_FORBIDDEN",
+		404: "COMMON_NOT_FOUND",
+		409: "COMMON_CONFLICT",
+		500: "COMMON_INTERNAL_SERVER_ERROR",
 	}
 	ErrorReason_value = map[string]int32{
 		"COMMON_UNSPECIFIED":           0,
@@ -66,8 +60,6 @@ var (
 		"COMMON_FORBIDDEN":             403,
 		"COMMON_NOT_FOUND":             404,
 		"COMMON_CONFLICT":              409,
-		"APP_SCOPE_REQUIRED":           4001,
-		"APP_SCOPE_INVALID":            4002,
 		"COMMON_INTERNAL_SERVER_ERROR": 500,
 	}
 )
@@ -103,17 +95,15 @@ var File_common_v1_common_error_proto protoreflect.FileDescriptor
 
 const file_common_v1_common_error_proto_rawDesc = "" +
 	"\n" +
-	"\x1ccommon/v1/common_error.proto\x12\tcommon.v1\x1a\x13errors/errors.proto*\xa6\x02\n" +
+	"\x1ccommon/v1/common_error.proto\x12\tcommon.v1\x1a\x13errors/errors.proto*\xf9\x01\n" +
 	"\vErrorReason\x12\x16\n" +
 	"\x12COMMON_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x12COMMON_BAD_REQUEST\x10\x90\x03\x1a\x04\xa8E\x90\x03\x12\x1e\n" +
 	"\x13COMMON_UNAUTHORIZED\x10\x91\x03\x1a\x04\xa8E\x91\x03\x12\x1b\n" +
 	"\x10COMMON_FORBIDDEN\x10\x93\x03\x1a\x04\xa8E\x93\x03\x12\x1b\n" +
 	"\x10COMMON_NOT_FOUND\x10\x94\x03\x1a\x04\xa8E\x94\x03\x12\x1a\n" +
-	"\x0fCOMMON_CONFLICT\x10\x99\x03\x1a\x04\xa8E\x99\x03\x12\x1d\n" +
-	"\x12APP_SCOPE_REQUIRED\x10\xa1\x1f\x1a\x04\xa8E\x90\x03\x12\x1c\n" +
-	"\x11APP_SCOPE_INVALID\x10\xa2\x1f\x1a\x04\xa8E\x90\x03\x12'\n" +
-	"\x1cCOMMON_INTERNAL_SERVER_ERROR\x10\xf4\x03\x1a\x04\xa8E\xf4\x03\x1a\x04\xa0E\xf4\x03B\xa4\x01\n" +
+	"\x0fCOMMON_CONFLICT\x10\x99\x03\x1a\x04\xa8E\x99\x03\x12'\n" +
+	"\x1cCOMMON_INTERNAL_SERVER_ERROR\x10\xf4\x03\x1a\x04\xa8E\xf4\x03\x1a\x04\xa0E\xf4\x03\"\x06\b\xa1\x1f\x10\xa1\x1f\"\x06\b\xa2\x1f\x10\xa2\x1fB\xa4\x01\n" +
 	"\rcom.common.v1B\x10CommonErrorProtoP\x01Z<github.com/feymanlee/redkit-protos/gen/go/common/v1;commonpb\xa2\x02\x03CXX\xaa\x02\tCommon.V1\xca\x02\tCommon\\V1\xe2\x02\x15Common\\V1\\GPBMetadata\xea\x02\n" +
 	"Common::V1b\x06proto3"
 

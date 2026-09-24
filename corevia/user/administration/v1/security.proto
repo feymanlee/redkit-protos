@@ -35,9 +35,7 @@ service UserSecurityService {
 }
 // EnrollMFARequest 定义执行 EnrollMFA 的幂等管理命令参数。
 message EnrollMFARequest {
-  // app_id 限定 EnrollMFA 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 3;
@@ -55,9 +53,7 @@ message EnrollMFAResponse {
 }
 // ConfirmMFARequest 定义执行 ConfirmMFA 的幂等管理命令参数。
 message ConfirmMFARequest {
-  // app_id 限定 ConfirmMFA 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // factor_id 标识关联的 Factor。
   string factor_id = 3;
@@ -68,9 +64,7 @@ message ConfirmMFARequest {
 }
 // DisableMFARequest 定义停用 MFA 的幂等管理命令参数。
 message DisableMFARequest {
-  // app_id 限定 DisableMFA 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string verification_ticket = 3;
@@ -79,9 +73,7 @@ message DisableMFARequest {
 }
 // GenerateRecoveryCodesRequest 定义执行 GenerateRecoveryCodes 的幂等管理命令参数。
 message GenerateRecoveryCodesRequest {
-  // app_id 限定 GenerateRecoveryCodes 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 3;
@@ -95,9 +87,7 @@ message GenerateRecoveryCodesResponse {
 }
 // ListSecurityEventsRequest 定义 SecurityEvents 的筛选与分页参数。
 message ListSecurityEventsRequest {
-  // app_id 限定 ListSecurityEvents 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 3;
@@ -111,9 +101,7 @@ message ListSecurityEventsResponse {
 }
 // UnlockUserRequest 定义执行 UnlockUser 的幂等管理命令参数。
 message UnlockUserRequest {
-  // app_id 限定 UnlockUser 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3;
@@ -122,9 +110,7 @@ message UnlockUserRequest {
 }
 // ListAdminActionsRequest 定义 AdminActions 的筛选与分页参数。
 message ListAdminActionsRequest {
-  // app_id 限定 ListAdminActions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 3;
@@ -207,9 +193,7 @@ enum SecurityNoticeStatus {
 message SecurityNotice {
   // notice_no 是 SecurityNotice 对外关联与审计使用的业务编号。
   string notice_no = 1;
-  // app_id 限定 SecurityNotice 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // type 区分 SecurityNotice 的业务类型。
   SecurityNoticeType type = 4;
@@ -243,15 +227,7 @@ message SecurityNotice {
 
 // ListSecurityNoticesRequest 定义 SecurityNotices 的筛选与分页参数。
 message ListSecurityNoticesRequest {
-  // app_id 限定 ListSecurityNotices 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).enum = {
-      defined_only: true
-      not_in: [0]
-    }
-  ];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).uint64.gt = 0
@@ -270,15 +246,7 @@ message ListSecurityNoticesResponse {
 
 // ResendSecurityNoticeRequest 定义执行 ResendSecurityNotice 的幂等管理命令参数。
 message ResendSecurityNoticeRequest {
-  // app_id 限定 ResendSecurityNotice 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).enum = {
-      defined_only: true
-      not_in: [0]
-    }
-  ];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).uint64.gt = 0
@@ -310,15 +278,7 @@ message ResendSecurityNoticeRequest {
 }
 // GetSecurityStateRequest 标识待查询的 SecurityState。
 message GetSecurityStateRequest {
-  // app_id 限定 GetSecurityState 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).enum = {
-      defined_only: true
-      not_in: [0]
-    }
-  ];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).uint64.gt = 0

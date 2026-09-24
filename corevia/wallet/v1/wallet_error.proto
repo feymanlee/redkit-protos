@@ -32,7 +32,7 @@ enum WalletErrorReason {
   OPERATION_PROCESSING = 406 [(errors.code) = 409];
   // 流水必须由其事实服务的补偿流程处置，不能使用通用冲正。
   TRANSACTION_NOT_REVERSIBLE = 407 [(errors.code) = 409];
-  // 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+  // 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
   RECHARGE_OFFER_UNAVAILABLE = 408 [(errors.code) = 404];
   // Store App、Provider、SKU 与发布时间窗解析到了多个 Revision，必须失败关闭。
   RECHARGE_STORE_MAPPING_AMBIGUOUS = 409 [(errors.code) = 409];

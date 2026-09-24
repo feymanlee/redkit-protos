@@ -9,7 +9,7 @@ package adminroompb
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v12 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	v1 "github.com/feymanlee/redkit-protos/gen/go/room/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -753,8 +753,6 @@ func (x *AdminForceKickMemberRequest) GetOperationNo() string {
 // AdminCreateRoomRestrictionRequest Operator 创建处置。
 type AdminCreateRoomRestrictionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v12.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// session_id 在 scope=SESSION 时必填。
@@ -803,13 +801,6 @@ func (x *AdminCreateRoomRestrictionRequest) ProtoReflect() protoreflect.Message 
 // Deprecated: Use AdminCreateRoomRestrictionRequest.ProtoReflect.Descriptor instead.
 func (*AdminCreateRoomRestrictionRequest) Descriptor() ([]byte, []int) {
 	return file_admin_room_v1_room_admin_service_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *AdminCreateRoomRestrictionRequest) GetAppId() v12.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v12.AppId(0)
 }
 
 func (x *AdminCreateRoomRestrictionRequest) GetRoomId() uint64 {
@@ -1000,9 +991,8 @@ const file_admin_room_v1_room_admin_service_proto_rawDesc = "" +
 	"\x0etarget_user_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\ftargetUserId\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\xe8\aR\x06reason\x120\n" +
-	"\foperation_no\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\x93\x04\n" +
-	"!AdminCreateRoomRestrictionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\foperation_no\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xdb\x03\n" +
+	"!AdminCreateRoomRestrictionRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12+\n" +
 	"\n" +
@@ -1071,15 +1061,14 @@ var file_admin_room_v1_room_admin_service_proto_goTypes = []any{
 	(v1.SessionStatus)(0),                     // 16: room.v1.SessionStatus
 	(*v1.RoomSession)(nil),                    // 17: room.v1.RoomSession
 	(*v1.SessionMember)(nil),                  // 18: room.v1.SessionMember
-	(v12.AppId)(0),                            // 19: common.v1.AppId
-	(v1.RestrictionScope)(0),                  // 20: room.v1.RestrictionScope
-	(v1.RestrictionKind)(0),                   // 21: room.v1.RestrictionKind
-	(*timestamppb.Timestamp)(nil),             // 22: google.protobuf.Timestamp
-	(*v1.Room)(nil),                           // 23: room.v1.Room
-	(*v1.ListRoomsResponse)(nil),              // 24: room.v1.ListRoomsResponse
-	(*v1.SessionSnapshot)(nil),                // 25: room.v1.SessionSnapshot
-	(*v1.ListRoomRestrictionsResponse)(nil),   // 26: room.v1.ListRoomRestrictionsResponse
-	(*v1.RoomRestriction)(nil),                // 27: room.v1.RoomRestriction
+	(v1.RestrictionScope)(0),                  // 19: room.v1.RestrictionScope
+	(v1.RestrictionKind)(0),                   // 20: room.v1.RestrictionKind
+	(*timestamppb.Timestamp)(nil),             // 21: google.protobuf.Timestamp
+	(*v1.Room)(nil),                           // 22: room.v1.Room
+	(*v1.ListRoomsResponse)(nil),              // 23: room.v1.ListRoomsResponse
+	(*v1.SessionSnapshot)(nil),                // 24: room.v1.SessionSnapshot
+	(*v1.ListRoomRestrictionsResponse)(nil),   // 25: room.v1.ListRoomRestrictionsResponse
+	(*v1.RoomRestriction)(nil),                // 26: room.v1.RoomRestriction
 }
 var file_admin_room_v1_room_admin_service_proto_depIdxs = []int32{
 	14, // 0: admin.room.v1.AdminListRoomsRequest.filter:type_name -> room.v1.RoomFilter
@@ -1090,39 +1079,38 @@ var file_admin_room_v1_room_admin_service_proto_depIdxs = []int32{
 	15, // 5: admin.room.v1.AdminListSessionMembersRequest.paging:type_name -> common.pagination.v1.PagingRequest
 	18, // 6: admin.room.v1.AdminListSessionMembersResponse.items:type_name -> room.v1.SessionMember
 	15, // 7: admin.room.v1.AdminListRoomRestrictionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	19, // 8: admin.room.v1.AdminCreateRoomRestrictionRequest.app_id:type_name -> common.v1.AppId
-	20, // 9: admin.room.v1.AdminCreateRoomRestrictionRequest.scope:type_name -> room.v1.RestrictionScope
-	21, // 10: admin.room.v1.AdminCreateRoomRestrictionRequest.kind:type_name -> room.v1.RestrictionKind
-	22, // 11: admin.room.v1.AdminCreateRoomRestrictionRequest.expires_at:type_name -> google.protobuf.Timestamp
-	0,  // 12: admin.room.v1.RoomAdministrationService.GetRoom:input_type -> admin.room.v1.AdminGetRoomRequest
-	1,  // 13: admin.room.v1.RoomAdministrationService.ListRooms:input_type -> admin.room.v1.AdminListRoomsRequest
-	2,  // 14: admin.room.v1.RoomAdministrationService.GetSession:input_type -> admin.room.v1.AdminGetSessionRequest
-	3,  // 15: admin.room.v1.RoomAdministrationService.ListSessions:input_type -> admin.room.v1.AdminListSessionsRequest
-	5,  // 16: admin.room.v1.RoomAdministrationService.ListSessionMembers:input_type -> admin.room.v1.AdminListSessionMembersRequest
-	7,  // 17: admin.room.v1.RoomAdministrationService.ListRoomRestrictions:input_type -> admin.room.v1.AdminListRoomRestrictionsRequest
-	8,  // 18: admin.room.v1.RoomAdministrationService.TakeDownRoom:input_type -> admin.room.v1.AdminTakeDownRoomRequest
-	9,  // 19: admin.room.v1.RoomAdministrationService.RestoreRoom:input_type -> admin.room.v1.AdminRestoreRoomRequest
-	10, // 20: admin.room.v1.RoomAdministrationService.ForceEndSession:input_type -> admin.room.v1.AdminForceEndSessionRequest
-	11, // 21: admin.room.v1.RoomAdministrationService.ForceKickMember:input_type -> admin.room.v1.AdminForceKickMemberRequest
-	12, // 22: admin.room.v1.RoomAdministrationService.CreateRoomRestriction:input_type -> admin.room.v1.AdminCreateRoomRestrictionRequest
-	13, // 23: admin.room.v1.RoomAdministrationService.RevokeRoomRestriction:input_type -> admin.room.v1.AdminRevokeRoomRestrictionRequest
-	23, // 24: admin.room.v1.RoomAdministrationService.GetRoom:output_type -> room.v1.Room
-	24, // 25: admin.room.v1.RoomAdministrationService.ListRooms:output_type -> room.v1.ListRoomsResponse
-	25, // 26: admin.room.v1.RoomAdministrationService.GetSession:output_type -> room.v1.SessionSnapshot
-	4,  // 27: admin.room.v1.RoomAdministrationService.ListSessions:output_type -> admin.room.v1.AdminListSessionsResponse
-	6,  // 28: admin.room.v1.RoomAdministrationService.ListSessionMembers:output_type -> admin.room.v1.AdminListSessionMembersResponse
-	26, // 29: admin.room.v1.RoomAdministrationService.ListRoomRestrictions:output_type -> room.v1.ListRoomRestrictionsResponse
-	23, // 30: admin.room.v1.RoomAdministrationService.TakeDownRoom:output_type -> room.v1.Room
-	23, // 31: admin.room.v1.RoomAdministrationService.RestoreRoom:output_type -> room.v1.Room
-	17, // 32: admin.room.v1.RoomAdministrationService.ForceEndSession:output_type -> room.v1.RoomSession
-	25, // 33: admin.room.v1.RoomAdministrationService.ForceKickMember:output_type -> room.v1.SessionSnapshot
-	27, // 34: admin.room.v1.RoomAdministrationService.CreateRoomRestriction:output_type -> room.v1.RoomRestriction
-	27, // 35: admin.room.v1.RoomAdministrationService.RevokeRoomRestriction:output_type -> room.v1.RoomRestriction
-	24, // [24:36] is the sub-list for method output_type
-	12, // [12:24] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	19, // 8: admin.room.v1.AdminCreateRoomRestrictionRequest.scope:type_name -> room.v1.RestrictionScope
+	20, // 9: admin.room.v1.AdminCreateRoomRestrictionRequest.kind:type_name -> room.v1.RestrictionKind
+	21, // 10: admin.room.v1.AdminCreateRoomRestrictionRequest.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 11: admin.room.v1.RoomAdministrationService.GetRoom:input_type -> admin.room.v1.AdminGetRoomRequest
+	1,  // 12: admin.room.v1.RoomAdministrationService.ListRooms:input_type -> admin.room.v1.AdminListRoomsRequest
+	2,  // 13: admin.room.v1.RoomAdministrationService.GetSession:input_type -> admin.room.v1.AdminGetSessionRequest
+	3,  // 14: admin.room.v1.RoomAdministrationService.ListSessions:input_type -> admin.room.v1.AdminListSessionsRequest
+	5,  // 15: admin.room.v1.RoomAdministrationService.ListSessionMembers:input_type -> admin.room.v1.AdminListSessionMembersRequest
+	7,  // 16: admin.room.v1.RoomAdministrationService.ListRoomRestrictions:input_type -> admin.room.v1.AdminListRoomRestrictionsRequest
+	8,  // 17: admin.room.v1.RoomAdministrationService.TakeDownRoom:input_type -> admin.room.v1.AdminTakeDownRoomRequest
+	9,  // 18: admin.room.v1.RoomAdministrationService.RestoreRoom:input_type -> admin.room.v1.AdminRestoreRoomRequest
+	10, // 19: admin.room.v1.RoomAdministrationService.ForceEndSession:input_type -> admin.room.v1.AdminForceEndSessionRequest
+	11, // 20: admin.room.v1.RoomAdministrationService.ForceKickMember:input_type -> admin.room.v1.AdminForceKickMemberRequest
+	12, // 21: admin.room.v1.RoomAdministrationService.CreateRoomRestriction:input_type -> admin.room.v1.AdminCreateRoomRestrictionRequest
+	13, // 22: admin.room.v1.RoomAdministrationService.RevokeRoomRestriction:input_type -> admin.room.v1.AdminRevokeRoomRestrictionRequest
+	22, // 23: admin.room.v1.RoomAdministrationService.GetRoom:output_type -> room.v1.Room
+	23, // 24: admin.room.v1.RoomAdministrationService.ListRooms:output_type -> room.v1.ListRoomsResponse
+	24, // 25: admin.room.v1.RoomAdministrationService.GetSession:output_type -> room.v1.SessionSnapshot
+	4,  // 26: admin.room.v1.RoomAdministrationService.ListSessions:output_type -> admin.room.v1.AdminListSessionsResponse
+	6,  // 27: admin.room.v1.RoomAdministrationService.ListSessionMembers:output_type -> admin.room.v1.AdminListSessionMembersResponse
+	25, // 28: admin.room.v1.RoomAdministrationService.ListRoomRestrictions:output_type -> room.v1.ListRoomRestrictionsResponse
+	22, // 29: admin.room.v1.RoomAdministrationService.TakeDownRoom:output_type -> room.v1.Room
+	22, // 30: admin.room.v1.RoomAdministrationService.RestoreRoom:output_type -> room.v1.Room
+	17, // 31: admin.room.v1.RoomAdministrationService.ForceEndSession:output_type -> room.v1.RoomSession
+	24, // 32: admin.room.v1.RoomAdministrationService.ForceKickMember:output_type -> room.v1.SessionSnapshot
+	26, // 33: admin.room.v1.RoomAdministrationService.CreateRoomRestriction:output_type -> room.v1.RoomRestriction
+	26, // 34: admin.room.v1.RoomAdministrationService.RevokeRoomRestriction:output_type -> room.v1.RoomRestriction
+	23, // [23:35] is the sub-list for method output_type
+	11, // [11:23] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_admin_room_v1_room_admin_service_proto_init() }

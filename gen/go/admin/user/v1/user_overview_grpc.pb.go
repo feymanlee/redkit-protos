@@ -27,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// UserOverviewService assembles a transient, App-scoped view without owning downstream facts.
+// UserOverviewService assembles a transient view without owning downstream facts.
 type UserOverviewServiceClient interface {
 	// 查询 UserOverview。
 	GetUserOverview(ctx context.Context, in *GetUserOverviewRequest, opts ...grpc.CallOption) (*UserOverview, error)
@@ -67,7 +67,7 @@ func (c *userOverviewServiceClient) GetUserOverviewSection(ctx context.Context, 
 // All implementations must embed UnimplementedUserOverviewServiceServer
 // for forward compatibility.
 //
-// UserOverviewService assembles a transient, App-scoped view without owning downstream facts.
+// UserOverviewService assembles a transient view without owning downstream facts.
 type UserOverviewServiceServer interface {
 	// 查询 UserOverview。
 	GetUserOverview(context.Context, *GetUserOverviewRequest) (*UserOverview, error)

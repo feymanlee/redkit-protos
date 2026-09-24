@@ -38,7 +38,7 @@ service GiftBackpackService {
 
 // AdminAdjustBackpackGiftRequest 定义执行 AdjustBackpackGift 的幂等管理命令参数。
 message AdminAdjustBackpackGiftRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // gift_id 标识关联的 Gift。
   uint32 gift_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint32.gt = 0];

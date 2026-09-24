@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package wallet.v1;
 
-import "common/v1/common.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -54,10 +53,6 @@ message WalletGovernanceIdentity {
 message Wallet {
   // 钱包 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
-  // 应用名称。
-  optional string app_name = 3;
   // 用户 ID。
   optional uint64 user_id = 4;
   // 币种；未指定时返回用户聚合余额。
@@ -85,8 +80,6 @@ message Wallet {
 message WalletFreeze {
   // 冻结 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 钱包 ID。
@@ -132,8 +125,6 @@ message WalletFreeze {
 }
 // 冻结钱包请求。
 message FreezeWalletRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 冻结金额。
@@ -166,8 +157,6 @@ message UnfreezeWalletRequest {
   string idempotency_key = 2;
   // 备注。
   optional string remark = 3;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 4;
   // Trusted governance identity for Admin-initiated unfreezes.
   optional WalletGovernanceIdentity governance = 5;
 }

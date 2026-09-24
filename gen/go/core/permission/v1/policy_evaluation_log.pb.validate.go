@@ -61,10 +61,6 @@ func (m *PolicyEvaluationLog) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.OperatorId != nil {
 		// no validation rules for OperatorId
 	}

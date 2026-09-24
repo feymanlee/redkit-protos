@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package support.file.v1;
 
-import "common/v1/common.proto";
 import "support/file/v1/types.proto";
 
 // AttachAndPublishRequest 挂接或替换一个版本化业务引用。
@@ -17,8 +16,6 @@ message AttachAndPublishRequest {
   string operation_no = 4;
   // 请求链标识。
   string request_id = 5;
-  // 具体业务 App。
-  common.v1.AppId app_id = 6;
 }
 
 // DetachReferenceRequest 解除一个版本化业务引用。
@@ -33,8 +30,6 @@ message DetachReferenceRequest {
   string operation_no = 4;
   // 请求链标识。
   string request_id = 5;
-  // 具体业务 App。
-  common.v1.AppId app_id = 6;
 }
 
 // FileReferenceService 维护业务 File ID事实的派生投影。

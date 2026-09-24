@@ -95,8 +95,6 @@ type OperatorRole struct {
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // ID
 	// 后台人员ID。
 	OperatorId *uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"` // 后台人员ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
 	// 角色ID。
 	RoleId *uint32 `protobuf:"varint,4,opt,name=role_id,json=roleId,proto3,oneof" json:"role_id,omitempty"` // 角色ID
 	// 是否主角色。
@@ -169,13 +167,6 @@ func (x *OperatorRole) GetId() uint32 {
 func (x *OperatorRole) GetOperatorId() uint32 {
 	if x != nil && x.OperatorId != nil {
 		return *x.OperatorId
-	}
-	return 0
-}
-
-func (x *OperatorRole) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -282,38 +273,37 @@ var File_core_permission_v1_operator_role_proto protoreflect.FileDescriptor
 
 const file_core_permission_v1_operator_role_proto_rawDesc = "" +
 	"\n" +
-	"&core/permission/v1/operator_role.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1ccore/operator/v1/types.proto\"\x84\f\n" +
+	"&core/permission/v1/operator_role.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1ccore/operator/v1/types.proto\"\xd0\v\n" +
 	"\fOperatorRole\x12\x1d\n" +
 	"\x02id\x18\x01 \x01(\rB\b\xbaG\x05\x92\x02\x02IDH\x00R\x02id\x88\x01\x01\x12:\n" +
 	"\voperator_id\x18\x02 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDH\x01R\n" +
-	"operatorId\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x03 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x02R\x05appId\x88\x01\x01\x12,\n" +
-	"\arole_id\x18\x04 \x01(\rB\x0e\xbaG\v\x92\x02\b角色IDH\x03R\x06roleId\x88\x01\x01\x129\n" +
+	"operatorId\x88\x01\x01\x12,\n" +
+	"\arole_id\x18\x04 \x01(\rB\x0e\xbaG\v\x92\x02\b角色IDH\x02R\x06roleId\x88\x01\x01\x129\n" +
 	"\n" +
-	"is_primary\x18\x06 \x01(\bB\x15\xbaG\x12\x92\x02\x0f是否主角色H\x04R\tisPrimary\x88\x01\x01\x12R\n" +
-	"\x06status\x18\a \x01(\x0e2'.core.permission.v1.OperatorRole.StatusB\f\xbaG\t\x92\x02\x06状态H\x05R\x06status\x88\x01\x01\x12]\n" +
+	"is_primary\x18\x06 \x01(\bB\x15\xbaG\x12\x92\x02\x0f是否主角色H\x03R\tisPrimary\x88\x01\x01\x12R\n" +
+	"\x06status\x18\a \x01(\x0e2'.core.permission.v1.OperatorRole.StatusB\f\xbaG\t\x92\x02\x06状态H\x04R\x06status\x88\x01\x01\x12]\n" +
 	"\vassigned_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampB\x1b\xbaG\x18\x92\x02\x15分配时间（UTC）H\x06R\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampB\x1b\xbaG\x18\x92\x02\x15分配时间（UTC）H\x05R\n" +
 	"assignedAt\x88\x01\x01\x12D\n" +
-	"\vassigned_by\x18\v \x01(\rB\x1e\xbaG\x1b\x92\x02\x18分配者后台人员 IDH\aR\n" +
+	"\vassigned_by\x18\v \x01(\rB\x1e\xbaG\x1b\x92\x02\x18分配者后台人员 IDH\x06R\n" +
 	"assignedBy\x88\x01\x01\x12W\n" +
-	"\bstart_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x1b\xbaG\x18\x92\x02\x15生效时间（UTC）H\bR\astartAt\x88\x01\x01\x12S\n" +
-	"\x06end_at\x183 \x01(\v2\x1a.google.protobuf.TimestampB\x1b\xbaG\x18\x92\x02\x15失效时间（UTC）H\tR\x05endAt\x88\x01\x01\x12Y\n" +
+	"\bstart_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x1b\xbaG\x18\x92\x02\x15生效时间（UTC）H\aR\astartAt\x88\x01\x01\x12S\n" +
+	"\x06end_at\x183 \x01(\v2\x1a.google.protobuf.TimestampB\x1b\xbaG\x18\x92\x02\x15失效时间（UTC）H\bR\x05endAt\x88\x01\x01\x12Y\n" +
 	"\n" +
-	"data_scope\x18P \x01(\x0e2\x1b.core.operator.v1.DataScopeB\x18\xbaG\x15\x92\x02\x12数据权限范围H\n" +
-	"R\tdataScope\x88\x01\x01\x12A\n" +
+	"data_scope\x18P \x01(\x0e2\x1b.core.operator.v1.DataScopeB\x18\xbaG\x15\x92\x02\x12数据权限范围H\tR\tdataScope\x88\x01\x01\x12A\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\vR\tcreatedBy\x88\x01\x01\x12A\n" +
+	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\n" +
+	"R\tcreatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\fR\tupdatedBy\x88\x01\x01\x12A\n" +
+	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\vR\tupdatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\rR\tdeletedBy\x88\x01\x01\x12S\n" +
+	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\fR\tdeletedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\x0eR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\rR\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x0fR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x0eR\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x10R\tdeletedAt\x88\x01\x01\"T\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x0fR\tdeletedAt\x88\x01\x01\"T\n" +
 	"\x06Status\x12\x16\n" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\n" +
@@ -322,8 +312,7 @@ const file_core_permission_v1_operator_role_proto_rawDesc = "" +
 	"\bDISABLED\x10\x03\x12\v\n" +
 	"\aEXPIRED\x10\x04B\x05\n" +
 	"\x03_idB\x0e\n" +
-	"\f_operator_idB\t\n" +
-	"\a_app_idB\n" +
+	"\f_operator_idB\n" +
 	"\n" +
 	"\b_role_idB\r\n" +
 	"\v_is_primaryB\t\n" +

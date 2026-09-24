@@ -41,13 +41,13 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// C 端用户管理服务，所有请求均由 Admin BFF 注入当前 App。
+// C 端用户管理服务，所有请求均由 Admin BFF 适配。
 type UserServiceClient interface {
-	// 获取当前 App 的 C 端用户列表。
+	// 获取 C 端用户列表。
 	ListUsers(ctx context.Context, in *AdminListUsersRequest, opts ...grpc.CallOption) (*v1.SearchUsersResponse, error)
-	// 获取当前 App 的一个 C 端用户。
+	// 获取一个 C 端用户。
 	GetUser(ctx context.Context, in *GetAdminUserRequest, opts ...grpc.CallOption) (*v1.User, error)
-	// 获取当前 App 的一个 C 端用户公开资料。
+	// 获取一个 C 端用户公开资料。
 	GetUserProfile(ctx context.Context, in *GetAdminUserRequest, opts ...grpc.CallOption) (*v1.Profile, error)
 	// 暂停一个 C 端账号。
 	SuspendUser(ctx context.Context, in *AdminSuspendUserRequest, opts ...grpc.CallOption) (*v1.User, error)
@@ -237,13 +237,13 @@ func (c *userServiceClient) ResendUserSecurityNotice(ctx context.Context, in *Ad
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
 //
-// C 端用户管理服务，所有请求均由 Admin BFF 注入当前 App。
+// C 端用户管理服务，所有请求均由 Admin BFF 适配。
 type UserServiceServer interface {
-	// 获取当前 App 的 C 端用户列表。
+	// 获取 C 端用户列表。
 	ListUsers(context.Context, *AdminListUsersRequest) (*v1.SearchUsersResponse, error)
-	// 获取当前 App 的一个 C 端用户。
+	// 获取一个 C 端用户。
 	GetUser(context.Context, *GetAdminUserRequest) (*v1.User, error)
-	// 获取当前 App 的一个 C 端用户公开资料。
+	// 获取一个 C 端用户公开资料。
 	GetUserProfile(context.Context, *GetAdminUserRequest) (*v1.Profile, error)
 	// 暂停一个 C 端账号。
 	SuspendUser(context.Context, *AdminSuspendUserRequest) (*v1.User, error)

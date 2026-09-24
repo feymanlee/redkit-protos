@@ -42,7 +42,7 @@ service GiftCatalogService {
   rpc UpdateGiftCategory(UpdateGiftCategoryRequest) returns (google.protobuf.Empty) {}
   // 停用礼物分类并原子记录 Operator Audit。
   rpc DisableGiftCategory(DisableGiftCategoryRequest) returns (DisableGiftCategoryResponse) {}
-  // 查询 App-scoped Scene Type registry。
+  // 查询 Scene Type registry。
   rpc ListGiftSceneTypes(common.pagination.v1.PagingRequest) returns (ListGiftSceneTypesResponse) {}
   // 登记稳定 Scene Type Code。
   rpc CreateGiftSceneType(CreateGiftSceneTypeRequest) returns (GiftSceneType) {}
@@ -52,8 +52,8 @@ service GiftCatalogService {
   rpc DeleteGiftSceneType(DeleteGiftSceneTypeRequest) returns (google.protobuf.Empty) {}
   // 预览 Scene Type 开关影响的 Active Gift 范围。
   rpc GetGiftSceneTypeImpact(GetGiftSceneTypeImpactRequest) returns (GiftSceneTypeImpact) {}
-  // 幂等启用或停用 App 级 Scene Type kill switch。
+  // 幂等启用或停用 Scene Type kill switch。
   rpc SetGiftSceneTypeEnabled(SetGiftSceneTypeEnabledRequest) returns (SetGiftSceneTypeEnabledResponse) {}
-  // 查询 App 范围内的 Gift Operator Audit。
+  // 查询 Gift Operator Audit。
   rpc ListGiftOperatorAudits(ListGiftOperatorAuditsRequest) returns (ListGiftOperatorAuditsResponse) {}
 }

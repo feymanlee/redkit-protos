@@ -8,8 +8,8 @@ package giftpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -201,8 +201,6 @@ type GiftEvent struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 事件 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 事件类型。
 	EventType *string `protobuf:"bytes,3,opt,name=event_type,json=eventType,proto3,oneof" json:"event_type,omitempty"`
 	// 礼物 ID。
@@ -258,13 +256,6 @@ func (*GiftEvent) Descriptor() ([]byte, []int) {
 func (x *GiftEvent) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftEvent) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -337,8 +328,6 @@ type GiftStat struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 统计 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 统计日期，格式 YYYY-MM-DD。
 	Day *string `protobuf:"bytes,3,opt,name=day,proto3,oneof" json:"day,omitempty"`
 	// 场景类型。
@@ -406,13 +395,6 @@ func (*GiftStat) Descriptor() ([]byte, []int) {
 func (x *GiftStat) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftStat) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -741,15 +723,13 @@ func (x *GiftEventFilter) GetOccurredTo() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListGiftEventsRequest carries trusted App scope, typed filters and stable paging.
+// ListGiftEventsRequest carries typed filters and stable paging.
 type ListGiftEventsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGiftEvents 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *GiftEventFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -784,13 +764,6 @@ func (*ListGiftEventsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_stats_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListGiftEventsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListGiftEventsRequest) GetFilter() *GiftEventFilter {
 	if x != nil {
 		return x.Filter
@@ -798,7 +771,7 @@ func (x *ListGiftEventsRequest) GetFilter() *GiftEventFilter {
 	return nil
 }
 
-func (x *ListGiftEventsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListGiftEventsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -905,15 +878,13 @@ func (x *GiftStatFilter) GetPaymentSources() []string {
 	return nil
 }
 
-// ListGiftStatsRequest carries trusted App scope, typed filters and stable paging.
+// ListGiftStatsRequest carries typed filters and stable paging.
 type ListGiftStatsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGiftStats 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *GiftStatFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -948,13 +919,6 @@ func (*ListGiftStatsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_stats_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ListGiftStatsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListGiftStatsRequest) GetFilter() *GiftStatFilter {
 	if x != nil {
 		return x.Filter
@@ -962,7 +926,7 @@ func (x *ListGiftStatsRequest) GetFilter() *GiftStatFilter {
 	return nil
 }
 
-func (x *ListGiftStatsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListGiftStatsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1419,8 +1383,6 @@ func (x *GiftOverviewCountSection) GetMetric() *GiftOverviewMetric {
 // GetGiftOverviewRequest uses inclusive business days in Asia/Shanghai.
 type GetGiftOverviewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetGiftOverview 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// start_day 指定 GetGiftOverview 统计或结算周期的起点。
 	StartDay string `protobuf:"bytes,2,opt,name=start_day,json=startDay,proto3" json:"start_day,omitempty"`
 	// end_day 指定 GetGiftOverview 统计或结算周期的终点。
@@ -1457,13 +1419,6 @@ func (x *GetGiftOverviewRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetGiftOverviewRequest.ProtoReflect.Descriptor instead.
 func (*GetGiftOverviewRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_stats_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *GetGiftOverviewRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetGiftOverviewRequest) GetStartDay() string {
@@ -1566,26 +1521,23 @@ var File_gift_v1_stats_proto protoreflect.FileDescriptor
 
 const file_gift_v1_stats_proto_rawDesc = "" +
 	"\n" +
-	"\x13gift/v1/stats.proto\x12\agift.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x16gift/v1/backpack.proto\x1a\x12gift/v1/send.proto\x1a\x18gift/v1/settlement.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xcd\x04\n" +
+	"\x13gift/v1/stats.proto\x12\agift.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x16gift/v1/backpack.proto\x1a\x12gift/v1/send.proto\x1a\x18gift/v1/settlement.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xa6\x04\n" +
 	"\tGiftEvent\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"event_type\x18\x03 \x01(\tH\x02R\teventType\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x04 \x01(\rH\x03R\x06giftId\x88\x01\x01\x12)\n" +
-	"\x0esend_record_id\x18\x05 \x01(\x04H\x04R\fsendRecordId\x88\x01\x01\x12)\n" +
-	"\x0esender_user_id\x18\x06 \x01(\x04H\x05R\fsenderUserId\x88\x01\x01\x12/\n" +
-	"\x11recipient_user_id\x18\a \x01(\x04H\x06R\x0frecipientUserId\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\b \x01(\rH\aR\n" +
+	"event_type\x18\x03 \x01(\tH\x01R\teventType\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x04 \x01(\rH\x02R\x06giftId\x88\x01\x01\x12)\n" +
+	"\x0esend_record_id\x18\x05 \x01(\x04H\x03R\fsendRecordId\x88\x01\x01\x12)\n" +
+	"\x0esender_user_id\x18\x06 \x01(\x04H\x04R\fsenderUserId\x88\x01\x01\x12/\n" +
+	"\x11recipient_user_id\x18\a \x01(\x04H\x05R\x0frecipientUserId\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\b \x01(\rH\x06R\n" +
 	"operatorId\x88\x01\x01\x12\x1d\n" +
-	"\amessage\x18\t \x01(\tH\bR\amessage\x88\x01\x01\x12\x1f\n" +
+	"\amessage\x18\t \x01(\tH\aR\amessage\x88\x01\x01\x12\x1f\n" +
 	"\bmetadata\x18\n" +
-	" \x01(\tH\tR\bmetadata\x88\x01\x01\x12?\n" +
+	" \x01(\tH\bR\bmetadata\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
-	"R\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\r\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\tR\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\r\n" +
 	"\v_event_typeB\n" +
 	"\n" +
 	"\b_gift_idB\x11\n" +
@@ -1596,32 +1548,30 @@ const file_gift_v1_stats_proto_rawDesc = "" +
 	"\n" +
 	"\b_messageB\v\n" +
 	"\t_metadataB\r\n" +
-	"\v_created_at\"\x81\a\n" +
+	"\v_created_at\"\xda\x06\n" +
 	"\bGiftStat\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x15\n" +
-	"\x03day\x18\x03 \x01(\tH\x02R\x03day\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x15\n" +
+	"\x03day\x18\x03 \x01(\tH\x01R\x03day\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"scene_type\x18\x04 \x01(\tH\x03R\tsceneType\x88\x01\x01\x12\x1e\n" +
-	"\bscene_id\x18\x05 \x01(\tH\x04R\asceneId\x88\x01\x01\x12/\n" +
-	"\x11recipient_user_id\x18\x06 \x01(\x04H\x05R\x0frecipientUserId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\a \x01(\rH\x06R\x06giftId\x88\x01\x01\x12\"\n" +
+	"scene_type\x18\x04 \x01(\tH\x02R\tsceneType\x88\x01\x01\x12\x1e\n" +
+	"\bscene_id\x18\x05 \x01(\tH\x03R\asceneId\x88\x01\x01\x12/\n" +
+	"\x11recipient_user_id\x18\x06 \x01(\x04H\x04R\x0frecipientUserId\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\a \x01(\rH\x05R\x06giftId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"send_count\x18\b \x01(\x04H\aR\tsendCount\x88\x01\x01\x12&\n" +
-	"\fsender_count\x18\t \x01(\x04H\bR\vsenderCount\x88\x01\x01\x12(\n" +
+	"send_count\x18\b \x01(\x04H\x06R\tsendCount\x88\x01\x01\x12&\n" +
+	"\fsender_count\x18\t \x01(\x04H\aR\vsenderCount\x88\x01\x01\x12(\n" +
 	"\rgift_quantity\x18\n" +
-	" \x01(\x04H\tR\fgiftQuantity\x88\x01\x01\x12&\n" +
-	"\ftotal_amount\x18\v \x01(\x03H\n" +
-	"R\vtotalAmount\x88\x01\x01\x12\x1d\n" +
-	"\adiamond\x18\f \x01(\x03H\vR\adiamond\x88\x01\x01\x12\x17\n" +
-	"\x04coin\x18\r \x01(\x03H\fR\x04coin\x88\x01\x01\x12,\n" +
-	"\x0fplatform_amount\x18\x0e \x01(\x03H\rR\x0eplatformAmount\x88\x01\x01\x12.\n" +
-	"\x10recipient_amount\x18\x0f \x01(\x03H\x0eR\x0frecipientAmount\x88\x01\x01\x12*\n" +
-	"\x0epayment_source\x18\x10 \x01(\tH\x0fR\rpaymentSource\x88\x01\x01\x12?\n" +
+	" \x01(\x04H\bR\fgiftQuantity\x88\x01\x01\x12&\n" +
+	"\ftotal_amount\x18\v \x01(\x03H\tR\vtotalAmount\x88\x01\x01\x12\x1d\n" +
+	"\adiamond\x18\f \x01(\x03H\n" +
+	"R\adiamond\x88\x01\x01\x12\x17\n" +
+	"\x04coin\x18\r \x01(\x03H\vR\x04coin\x88\x01\x01\x12,\n" +
+	"\x0fplatform_amount\x18\x0e \x01(\x03H\fR\x0eplatformAmount\x88\x01\x01\x12.\n" +
+	"\x10recipient_amount\x18\x0f \x01(\x03H\rR\x0frecipientAmount\x88\x01\x01\x12*\n" +
+	"\x0epayment_source\x18\x10 \x01(\tH\x0eR\rpaymentSource\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x06\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x06\n" +
 	"\x04_dayB\r\n" +
 	"\v_scene_typeB\v\n" +
 	"\t_scene_idB\x14\n" +
@@ -1665,12 +1615,10 @@ const file_gift_v1_stats_proto_rawDesc = "" +
 	"\x12_recipient_user_idB\x0e\n" +
 	"\f_operator_idB\x10\n" +
 	"\x0e_occurred_fromB\x0e\n" +
-	"\f_occurred_to\"\xbf\x01\n" +
-	"\x15ListGiftEventsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x120\n" +
+	"\f_occurred_to\"\x86\x01\n" +
+	"\x15ListGiftEventsRequest\x120\n" +
 	"\x06filter\x18\x02 \x01(\v2\x18.gift.v1.GiftEventFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"\xf8\x02\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xf8\x02\n" +
 	"\x0eGiftStatFilter\x12*\n" +
 	"\tstart_day\x18\x01 \x01(\tB\b\xfaB\x05r\x03\x98\x01\n" +
 	"H\x00R\bstartDay\x88\x01\x01\x12&\n" +
@@ -1690,12 +1638,10 @@ const file_gift_v1_stats_proto_rawDesc = "" +
 	"\b_gift_idB\x14\n" +
 	"\x12_recipient_user_idB\r\n" +
 	"\v_scene_typeB\v\n" +
-	"\t_scene_id\"\xbd\x01\n" +
-	"\x14ListGiftStatsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12/\n" +
+	"\t_scene_id\"\x84\x01\n" +
+	"\x14ListGiftStatsRequest\x12/\n" +
 	"\x06filter\x18\x02 \x01(\v2\x17.gift.v1.GiftStatFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"\xf5\x01\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xf5\x01\n" +
 	"\x11GiftOverviewRange\x12\x1b\n" +
 	"\tstart_day\x18\x01 \x01(\tR\bstartDay\x12\x17\n" +
 	"\aend_day\x18\x02 \x01(\tR\x06endDay\x12?\n" +
@@ -1728,12 +1674,10 @@ const file_gift_v1_stats_proto_rawDesc = "" +
 	"\bstatuses\x18\x05 \x03(\v2$.gift.v1.GiftOverviewBreakdownMetricR\bstatuses\"\x96\x01\n" +
 	"\x18GiftOverviewCountSection\x12E\n" +
 	"\favailability\x18\x01 \x01(\x0e2!.gift.v1.GiftOverviewAvailabilityR\favailability\x123\n" +
-	"\x06metric\x18\x02 \x01(\v2\x1b.gift.v1.GiftOverviewMetricR\x06metric\"\x87\x01\n" +
-	"\x16GetGiftOverviewRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1b\n" +
+	"\x06metric\x18\x02 \x01(\v2\x1b.gift.v1.GiftOverviewMetricR\x06metric\"N\n" +
+	"\x16GetGiftOverviewRequest\x12\x1b\n" +
 	"\tstart_day\x18\x02 \x01(\tR\bstartDay\x12\x17\n" +
-	"\aend_day\x18\x03 \x01(\tR\x06endDayB\t\n" +
-	"\a_app_id\"\xe9\x02\n" +
+	"\aend_day\x18\x03 \x01(\tR\x06endDay\"\xe9\x02\n" +
 	"\x14GiftOverviewResponse\x120\n" +
 	"\x05state\x18\x01 \x01(\x0e2\x1a.gift.v1.GiftOverviewStateR\x05state\x120\n" +
 	"\x05range\x18\x02 \x01(\v2\x1a.gift.v1.GiftOverviewRangeR\x05range\x126\n" +
@@ -1793,11 +1737,10 @@ var file_gift_v1_stats_proto_goTypes = []any{
 	(*GetGiftOverviewRequest)(nil),        // 17: gift.v1.GetGiftOverviewRequest
 	(*GiftOverviewResponse)(nil),          // 18: gift.v1.GiftOverviewResponse
 	(*timestamppb.Timestamp)(nil),         // 19: google.protobuf.Timestamp
-	(v1.AppId)(0),                         // 20: common.v1.AppId
-	(*v11.PagingRequest)(nil),             // 21: common.pagination.v1.PagingRequest
-	(*GiftSendFilter)(nil),                // 22: gift.v1.GiftSendFilter
-	(*BackpackTransactionFilter)(nil),     // 23: gift.v1.BackpackTransactionFilter
-	(*GiftReconciliationIssueFilter)(nil), // 24: gift.v1.GiftReconciliationIssueFilter
+	(*v1.PagingRequest)(nil),              // 20: common.pagination.v1.PagingRequest
+	(*GiftSendFilter)(nil),                // 21: gift.v1.GiftSendFilter
+	(*BackpackTransactionFilter)(nil),     // 22: gift.v1.BackpackTransactionFilter
+	(*GiftReconciliationIssueFilter)(nil), // 23: gift.v1.GiftReconciliationIssueFilter
 }
 var file_gift_v1_stats_proto_depIdxs = []int32{
 	19, // 0: gift.v1.GiftEvent.created_at:type_name -> google.protobuf.Timestamp
@@ -1806,38 +1749,35 @@ var file_gift_v1_stats_proto_depIdxs = []int32{
 	4,  // 3: gift.v1.ListGiftStatResponse.items:type_name -> gift.v1.GiftStat
 	19, // 4: gift.v1.GiftEventFilter.occurred_from:type_name -> google.protobuf.Timestamp
 	19, // 5: gift.v1.GiftEventFilter.occurred_to:type_name -> google.protobuf.Timestamp
-	20, // 6: gift.v1.ListGiftEventsRequest.app_id:type_name -> common.v1.AppId
-	7,  // 7: gift.v1.ListGiftEventsRequest.filter:type_name -> gift.v1.GiftEventFilter
-	21, // 8: gift.v1.ListGiftEventsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	20, // 9: gift.v1.ListGiftStatsRequest.app_id:type_name -> common.v1.AppId
-	9,  // 10: gift.v1.ListGiftStatsRequest.filter:type_name -> gift.v1.GiftStatFilter
-	21, // 11: gift.v1.ListGiftStatsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	19, // 12: gift.v1.GiftOverviewRange.occurred_from:type_name -> google.protobuf.Timestamp
-	19, // 13: gift.v1.GiftOverviewRange.occurred_to:type_name -> google.protobuf.Timestamp
-	2,  // 14: gift.v1.GiftOverviewDrilldown.destination:type_name -> gift.v1.GiftOverviewDrilldownDestination
-	22, // 15: gift.v1.GiftOverviewDrilldown.send_filter:type_name -> gift.v1.GiftSendFilter
-	23, // 16: gift.v1.GiftOverviewDrilldown.backpack_transaction_filter:type_name -> gift.v1.BackpackTransactionFilter
-	24, // 17: gift.v1.GiftOverviewDrilldown.reconciliation_filter:type_name -> gift.v1.GiftReconciliationIssueFilter
-	12, // 18: gift.v1.GiftOverviewMetric.drilldown:type_name -> gift.v1.GiftOverviewDrilldown
-	12, // 19: gift.v1.GiftOverviewBreakdownMetric.drilldown:type_name -> gift.v1.GiftOverviewDrilldown
-	1,  // 20: gift.v1.GiftOverviewSendSection.availability:type_name -> gift.v1.GiftOverviewAvailability
-	13, // 21: gift.v1.GiftOverviewSendSection.all_sends:type_name -> gift.v1.GiftOverviewMetric
-	13, // 22: gift.v1.GiftOverviewSendSection.succeeded_sends:type_name -> gift.v1.GiftOverviewMetric
-	14, // 23: gift.v1.GiftOverviewSendSection.sources:type_name -> gift.v1.GiftOverviewBreakdownMetric
-	14, // 24: gift.v1.GiftOverviewSendSection.statuses:type_name -> gift.v1.GiftOverviewBreakdownMetric
-	1,  // 25: gift.v1.GiftOverviewCountSection.availability:type_name -> gift.v1.GiftOverviewAvailability
-	13, // 26: gift.v1.GiftOverviewCountSection.metric:type_name -> gift.v1.GiftOverviewMetric
-	20, // 27: gift.v1.GetGiftOverviewRequest.app_id:type_name -> common.v1.AppId
-	0,  // 28: gift.v1.GiftOverviewResponse.state:type_name -> gift.v1.GiftOverviewState
-	11, // 29: gift.v1.GiftOverviewResponse.range:type_name -> gift.v1.GiftOverviewRange
-	15, // 30: gift.v1.GiftOverviewResponse.sends:type_name -> gift.v1.GiftOverviewSendSection
-	16, // 31: gift.v1.GiftOverviewResponse.open_reconciliation_issues:type_name -> gift.v1.GiftOverviewCountSection
-	16, // 32: gift.v1.GiftOverviewResponse.backpack_adjustments:type_name -> gift.v1.GiftOverviewCountSection
-	33, // [33:33] is the sub-list for method output_type
-	33, // [33:33] is the sub-list for method input_type
-	33, // [33:33] is the sub-list for extension type_name
-	33, // [33:33] is the sub-list for extension extendee
-	0,  // [0:33] is the sub-list for field type_name
+	7,  // 6: gift.v1.ListGiftEventsRequest.filter:type_name -> gift.v1.GiftEventFilter
+	20, // 7: gift.v1.ListGiftEventsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	9,  // 8: gift.v1.ListGiftStatsRequest.filter:type_name -> gift.v1.GiftStatFilter
+	20, // 9: gift.v1.ListGiftStatsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	19, // 10: gift.v1.GiftOverviewRange.occurred_from:type_name -> google.protobuf.Timestamp
+	19, // 11: gift.v1.GiftOverviewRange.occurred_to:type_name -> google.protobuf.Timestamp
+	2,  // 12: gift.v1.GiftOverviewDrilldown.destination:type_name -> gift.v1.GiftOverviewDrilldownDestination
+	21, // 13: gift.v1.GiftOverviewDrilldown.send_filter:type_name -> gift.v1.GiftSendFilter
+	22, // 14: gift.v1.GiftOverviewDrilldown.backpack_transaction_filter:type_name -> gift.v1.BackpackTransactionFilter
+	23, // 15: gift.v1.GiftOverviewDrilldown.reconciliation_filter:type_name -> gift.v1.GiftReconciliationIssueFilter
+	12, // 16: gift.v1.GiftOverviewMetric.drilldown:type_name -> gift.v1.GiftOverviewDrilldown
+	12, // 17: gift.v1.GiftOverviewBreakdownMetric.drilldown:type_name -> gift.v1.GiftOverviewDrilldown
+	1,  // 18: gift.v1.GiftOverviewSendSection.availability:type_name -> gift.v1.GiftOverviewAvailability
+	13, // 19: gift.v1.GiftOverviewSendSection.all_sends:type_name -> gift.v1.GiftOverviewMetric
+	13, // 20: gift.v1.GiftOverviewSendSection.succeeded_sends:type_name -> gift.v1.GiftOverviewMetric
+	14, // 21: gift.v1.GiftOverviewSendSection.sources:type_name -> gift.v1.GiftOverviewBreakdownMetric
+	14, // 22: gift.v1.GiftOverviewSendSection.statuses:type_name -> gift.v1.GiftOverviewBreakdownMetric
+	1,  // 23: gift.v1.GiftOverviewCountSection.availability:type_name -> gift.v1.GiftOverviewAvailability
+	13, // 24: gift.v1.GiftOverviewCountSection.metric:type_name -> gift.v1.GiftOverviewMetric
+	0,  // 25: gift.v1.GiftOverviewResponse.state:type_name -> gift.v1.GiftOverviewState
+	11, // 26: gift.v1.GiftOverviewResponse.range:type_name -> gift.v1.GiftOverviewRange
+	15, // 27: gift.v1.GiftOverviewResponse.sends:type_name -> gift.v1.GiftOverviewSendSection
+	16, // 28: gift.v1.GiftOverviewResponse.open_reconciliation_issues:type_name -> gift.v1.GiftOverviewCountSection
+	16, // 29: gift.v1.GiftOverviewResponse.backpack_adjustments:type_name -> gift.v1.GiftOverviewCountSection
+	30, // [30:30] is the sub-list for method output_type
+	30, // [30:30] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_gift_v1_stats_proto_init() }
@@ -1851,10 +1791,7 @@ func file_gift_v1_stats_proto_init() {
 	file_gift_v1_stats_proto_msgTypes[0].OneofWrappers = []any{}
 	file_gift_v1_stats_proto_msgTypes[1].OneofWrappers = []any{}
 	file_gift_v1_stats_proto_msgTypes[4].OneofWrappers = []any{}
-	file_gift_v1_stats_proto_msgTypes[5].OneofWrappers = []any{}
 	file_gift_v1_stats_proto_msgTypes[6].OneofWrappers = []any{}
-	file_gift_v1_stats_proto_msgTypes[7].OneofWrappers = []any{}
-	file_gift_v1_stats_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

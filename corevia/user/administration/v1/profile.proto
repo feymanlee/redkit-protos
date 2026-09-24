@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package user.administration.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
 import "user/administration/v1/types.proto";
@@ -20,18 +19,14 @@ service UserProfileService {
 }
 // GetCurrentUserRequest 标识待查询的 CurrentUser。
 message GetCurrentUserRequest {
-  // app_id 限定 GetCurrentUser 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
 }
 // GetPublicProfileRequest 标识待查询的 PublicProfile。
 message GetPublicProfileRequest {
-  // app_id 限定 GetPublicProfile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // GetPublicProfileRequest 使用以下一种查询表达式。
   oneof query {
-    // user_id 标识当前 App 内关联的 User。
+    // user_id 标识关联的 User。
     uint64 user_id = 2;
     // user_code 提供 GetPublicProfile 对外稳定使用的业务编码。
     string user_code = 3;
@@ -39,8 +34,6 @@ message GetPublicProfileRequest {
 }
 // BatchGetPublicProfilesRequest 定义执行 BatchGetPublicProfiles 的命令参数。
 message BatchGetPublicProfilesRequest {
-  // app_id 限定 BatchGetPublicProfiles 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // user_ids 列出本次请求关联的 User 标识。
   repeated uint64 user_ids = 2;
 }
@@ -64,9 +57,7 @@ message ProfilePatch {
 }
 // UpdateProfileRequest 定义更新 Profile 的命令参数。
 message UpdateProfileRequest {
-  // app_id 限定 UpdateProfile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // data 承载 UpdateProfile 对应阶段的结构化业务内容。
   ProfilePatch data = 3;

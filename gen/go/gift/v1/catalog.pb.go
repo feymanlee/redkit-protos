@@ -9,8 +9,8 @@ package giftpb
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	v1 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
-	v12 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -447,8 +447,6 @@ type GiftCategory struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 分类 ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 分类名称。
 	Name *string `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// 分类编码。
@@ -500,13 +498,6 @@ func (*GiftCategory) Descriptor() ([]byte, []int) {
 func (x *GiftCategory) GetId() uint32 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftCategory) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -565,8 +556,6 @@ type Gift struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 礼物 ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 分类 ID。
 	CategoryId *uint32 `protobuf:"varint,3,opt,name=category_id,json=categoryId,proto3,oneof" json:"category_id,omitempty"`
 	// 礼物名称。
@@ -623,13 +612,13 @@ type Gift struct {
 	EmergencyOffline *GiftEmergencyOffline `protobuf:"bytes,29,opt,name=emergency_offline,json=emergencyOffline,proto3" json:"emergency_offline,omitempty"`
 	// 不可逆归档事实；未归档时为空。
 	Archive *GiftArchive `protobuf:"bytes,30,opt,name=archive,proto3" json:"archive,omitempty"`
-	// Active Revision 的结构化 Scene Type allowlist；空表示允许当前 App 所有已启用类型。
+	// Active Revision 的结构化 Scene Type allowlist；空表示允许所有已启用类型。
 	SceneTypeCodes []string `protobuf:"bytes,31,rep,name=scene_type_codes,json=sceneTypeCodes,proto3" json:"scene_type_codes,omitempty"`
 	// 礼物展示等级，取值 COMMON、LUXURY 或 EFFECT。
 	GiftTier *string `protobuf:"bytes,32,opt,name=gift_tier,json=giftTier,proto3,oneof" json:"gift_tier,omitempty"`
 	// 结构化特效资源清单；空集合表示仅使用 animation 素材。
 	Effects []*GiftEffect `protobuf:"bytes,33,rep,name=effects,proto3" json:"effects,omitempty"`
-	// App 级陈列位投放；不含房间 Scene ID。
+	// 陈列位投放；不含房间 Scene ID。
 	DisplayPlacements []*GiftDisplayPlacement `protobuf:"bytes,34,rep,name=display_placements,json=displayPlacements,proto3" json:"display_placements,omitempty"`
 	// 多语言名称与描述；默认 locale 在非空清单中必填。
 	Locales []*GiftLocaleText `protobuf:"bytes,35,rep,name=locales,proto3" json:"locales,omitempty"`
@@ -678,13 +667,6 @@ func (*Gift) Descriptor() ([]byte, []int) {
 func (x *Gift) GetId() uint32 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *Gift) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1012,7 +994,7 @@ func (x *GiftEffect) GetFileReferenceVersion() uint64 {
 	return 0
 }
 
-// GiftDisplayPlacement is one App-level merchandising placement on a Gift Draft or immutable Revision.
+// GiftDisplayPlacement is one merchandising placement on a Gift Draft or immutable Revision.
 type GiftDisplayPlacement struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// slot_code 是稳定陈列位编码，例如 RECOMMENDED、HOT 或 NEW。
@@ -1380,7 +1362,7 @@ type GiftPatch struct {
 	GiftTier *string `protobuf:"bytes,17,opt,name=gift_tier,json=giftTier,proto3,oneof" json:"gift_tier,omitempty"`
 	// effects 设置结构化特效资源清单；提供时整体替换 Draft 中的既有清单。
 	Effects []*GiftEffect `protobuf:"bytes,18,rep,name=effects,proto3" json:"effects,omitempty"`
-	// display_placements 设置 App 级陈列位投放；提供时整体替换。
+	// display_placements 设置 陈列位投放；提供时整体替换。
 	DisplayPlacements []*GiftDisplayPlacement `protobuf:"bytes,19,rep,name=display_placements,json=displayPlacements,proto3" json:"display_placements,omitempty"`
 	// locales 设置多语言文案；提供时整体替换，默认 locale 必填。
 	Locales []*GiftLocaleText `protobuf:"bytes,20,rep,name=locales,proto3" json:"locales,omitempty"`
@@ -1636,8 +1618,6 @@ type GiftDraft struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,1,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
-	// app_id 限定 GiftDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// category_id 标识关联的 Category。
 	CategoryId uint32 `protobuf:"varint,3,opt,name=category_id,json=categoryId,proto3" json:"category_id,omitempty"`
 	// name 提供 GiftDraft 面向展示或识别的名称。
@@ -1682,7 +1662,7 @@ type GiftDraft struct {
 	GiftTier string `protobuf:"bytes,23,opt,name=gift_tier,json=giftTier,proto3" json:"gift_tier,omitempty"`
 	// effects 列出 Draft 当前配置的结构化特效资源。
 	Effects []*GiftEffect `protobuf:"bytes,24,rep,name=effects,proto3" json:"effects,omitempty"`
-	// display_placements 列出 Draft 当前配置的 App 级陈列位投放。
+	// display_placements 列出 Draft 当前配置的 陈列位投放。
 	DisplayPlacements []*GiftDisplayPlacement `protobuf:"bytes,25,rep,name=display_placements,json=displayPlacements,proto3" json:"display_placements,omitempty"`
 	// locales 列出 Draft 当前配置的多语言文案。
 	Locales []*GiftLocaleText `protobuf:"bytes,26,rep,name=locales,proto3" json:"locales,omitempty"`
@@ -1731,13 +1711,6 @@ func (*GiftDraft) Descriptor() ([]byte, []int) {
 func (x *GiftDraft) GetGiftId() uint32 {
 	if x != nil {
 		return x.GiftId
-	}
-	return 0
-}
-
-func (x *GiftDraft) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -1945,8 +1918,6 @@ type GiftRevision struct {
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,2,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
-	// app_id 限定 GiftRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// revision_no 是 GiftRevision 对外关联与审计使用的业务编号。
 	RevisionNo uint32 `protobuf:"varint,4,opt,name=revision_no,json=revisionNo,proto3" json:"revision_no,omitempty"`
 	// category_id 标识关联的 Category。
@@ -2007,7 +1978,7 @@ type GiftRevision struct {
 	GiftTier string `protobuf:"bytes,32,opt,name=gift_tier,json=giftTier,proto3" json:"gift_tier,omitempty"`
 	// effects 列出该不可变 Revision 快照中的结构化特效资源。
 	Effects []*GiftEffect `protobuf:"bytes,33,rep,name=effects,proto3" json:"effects,omitempty"`
-	// display_placements 列出该不可变 Revision 快照中的 App 级陈列位投放。
+	// display_placements 列出该不可变 Revision 快照中的 陈列位投放。
 	DisplayPlacements []*GiftDisplayPlacement `protobuf:"bytes,34,rep,name=display_placements,json=displayPlacements,proto3" json:"display_placements,omitempty"`
 	// locales 列出该不可变 Revision 快照中的多语言文案。
 	Locales []*GiftLocaleText `protobuf:"bytes,35,rep,name=locales,proto3" json:"locales,omitempty"`
@@ -2059,13 +2030,6 @@ func (x *GiftRevision) GetId() uint64 {
 func (x *GiftRevision) GetGiftId() uint32 {
 	if x != nil {
 		return x.GiftId
-	}
-	return 0
-}
-
-func (x *GiftRevision) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -2313,8 +2277,6 @@ type GiftRevisionSchedule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GiftRevisionSchedule。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GiftRevisionSchedule 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,3,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
 	// revision_id 标识关联的 Revision。
@@ -2376,13 +2338,6 @@ func (*GiftRevisionSchedule) Descriptor() ([]byte, []int) {
 func (x *GiftRevisionSchedule) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *GiftRevisionSchedule) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -2613,8 +2568,6 @@ type GiftSceneType struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GiftSceneType。
 	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// code 提供 GiftSceneType 对外稳定使用的业务编码。
 	Code string `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	// name 提供 GiftSceneType 面向展示或识别的名称。
@@ -2662,13 +2615,6 @@ func (*GiftSceneType) Descriptor() ([]byte, []int) {
 func (x *GiftSceneType) GetId() uint32 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *GiftSceneType) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -2868,9 +2814,7 @@ func (x *ListGiftSceneTypesResponse) GetTotal() uint64 {
 type CreateGiftSceneTypeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// data 承载 CreateGiftSceneType 对应阶段的结构化业务内容。
-	Data *GiftSceneTypeCreateData `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	// app_id 限定 CreateGiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Data          *GiftSceneTypeCreateData `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2912,13 +2856,6 @@ func (x *CreateGiftSceneTypeRequest) GetData() *GiftSceneTypeCreateData {
 	return nil
 }
 
-func (x *CreateGiftSceneTypeRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // UpdateGiftSceneTypeRequest 定义更新 GiftSceneType 的命令参数。
 type UpdateGiftSceneTypeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2927,9 +2864,7 @@ type UpdateGiftSceneTypeRequest struct {
 	// data 承载 UpdateGiftSceneType 对应阶段的结构化业务内容。
 	Data *GiftSceneTypePatch `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	// update_mask 指定本次请求允许局部更新的字段路径。
-	UpdateMask *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
-	// app_id 限定 UpdateGiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2985,20 +2920,11 @@ func (x *UpdateGiftSceneTypeRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
-func (x *UpdateGiftSceneTypeRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // DeleteGiftSceneTypeRequest 定义删除 GiftSceneType 的命令参数。
 type DeleteGiftSceneTypeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 DeleteGiftSceneType。
-	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 DeleteGiftSceneType 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Id            uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3040,20 +2966,11 @@ func (x *DeleteGiftSceneTypeRequest) GetId() uint32 {
 	return 0
 }
 
-func (x *DeleteGiftSceneTypeRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // GetGiftSceneTypeImpactRequest 标识待查询的 GiftSceneTypeImpact。
 type GetGiftSceneTypeImpactRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GetGiftSceneTypeImpact。
-	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GetGiftSceneTypeImpact 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Id            uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3093,13 +3010,6 @@ func (x *GetGiftSceneTypeImpactRequest) GetId() uint32 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *GetGiftSceneTypeImpactRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // GiftSceneTypeImpact 汇总 Gift Scene Type 变更影响的 Gift 与 Revision。
@@ -3180,9 +3090,7 @@ type SetGiftSceneTypeEnabledRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,5,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 SetGiftSceneTypeEnabled 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,7,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,6,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3257,13 +3165,6 @@ func (x *SetGiftSceneTypeEnabledRequest) GetRequestId() string {
 		return *x.RequestId
 	}
 	return ""
-}
-
-func (x *SetGiftSceneTypeEnabledRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // SetGiftSceneTypeEnabledResponse 承载 SetGiftSceneTypeEnabled 的返回结果。
@@ -3453,9 +3354,7 @@ func (x *ListGiftCategoryResponse) GetTotal() uint64 {
 type GetGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 礼物 ID。
-	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Id            uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3497,20 +3396,11 @@ func (x *GetGiftRequest) GetId() uint32 {
 	return 0
 }
 
-func (x *GetGiftRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // 创建礼物请求。
 type CreateGiftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 数据。
-	Data *GiftCreateData `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Data          *GiftCreateData `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3552,20 +3442,11 @@ func (x *CreateGiftRequest) GetData() *GiftCreateData {
 	return nil
 }
 
-func (x *CreateGiftRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // 创建礼物分类请求。
 type CreateGiftCategoryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 数据。
-	Data *GiftCategoryCreateData `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Data          *GiftCategoryCreateData `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3607,13 +3488,6 @@ func (x *CreateGiftCategoryRequest) GetData() *GiftCategoryCreateData {
 	return nil
 }
 
-func (x *CreateGiftCategoryRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // 更新礼物请求。
 type UpdateGiftDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -3622,9 +3496,7 @@ type UpdateGiftDraftRequest struct {
 	// 数据。
 	Data *GiftPatch `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	// 更新字段掩码。
-	UpdateMask *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v11.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3680,20 +3552,11 @@ func (x *UpdateGiftDraftRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
-func (x *UpdateGiftDraftRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // DiscardGiftDraftRequest removes working state; never-published identities are removed too.
 type DiscardGiftDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 DiscardGiftDraft。
-	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 DiscardGiftDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Id            uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3735,13 +3598,6 @@ func (x *DiscardGiftDraftRequest) GetId() uint32 {
 	return 0
 }
 
-func (x *DiscardGiftDraftRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // PublishGiftDraftRequest publishes one immutable Revision immediately or at a future instant.
 type PublishGiftDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -3755,8 +3611,6 @@ type PublishGiftDraftRequest struct {
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
 	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 PublishGiftDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v11.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// effective_at 记录 PublishGiftDraft 对应业务阶段的时间点。
 	EffectiveAt   *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=effective_at,json=effectiveAt,proto3,oneof" json:"effective_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -3826,13 +3680,6 @@ func (x *PublishGiftDraftRequest) GetRequestId() string {
 		return *x.RequestId
 	}
 	return ""
-}
-
-func (x *PublishGiftDraftRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 func (x *PublishGiftDraftRequest) GetEffectiveAt() *timestamppb.Timestamp {
@@ -3920,10 +3767,8 @@ type ListGiftRevisionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ListGiftRevisions。
 	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ListGiftRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v12.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3965,14 +3810,7 @@ func (x *ListGiftRevisionsRequest) GetId() uint32 {
 	return 0
 }
 
-func (x *ListGiftRevisionsRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
-func (x *ListGiftRevisionsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListGiftRevisionsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -4043,10 +3881,8 @@ type CompareGiftRevisionsRequest struct {
 	BaseRevisionId uint64 `protobuf:"varint,2,opt,name=base_revision_id,json=baseRevisionId,proto3" json:"base_revision_id,omitempty"`
 	// head_revision_id 是被对比的 Revision。
 	HeadRevisionId uint64 `protobuf:"varint,3,opt,name=head_revision_id,json=headRevisionId,proto3" json:"head_revision_id,omitempty"`
-	// app_id 限定 CompareGiftRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CompareGiftRevisionsRequest) Reset() {
@@ -4098,13 +3934,6 @@ func (x *CompareGiftRevisionsRequest) GetHeadRevisionId() uint64 {
 		return x.HeadRevisionId
 	}
 	return 0
-}
-
-func (x *CompareGiftRevisionsRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // GiftRevisionFieldChange is one field-level difference between two immutable Revisions.
@@ -4311,8 +4140,6 @@ func (x *GiftCatalogImportRow) GetCreateIfMissing() bool {
 // ApplyCatalogImportRequest submits an all-or-nothing catalog draft import.
 type ApplyCatalogImportRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApplyCatalogImport 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v11.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -4355,13 +4182,6 @@ func (x *ApplyCatalogImportRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ApplyCatalogImportRequest.ProtoReflect.Descriptor instead.
 func (*ApplyCatalogImportRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_catalog_proto_rawDescGZIP(), []int{41}
-}
-
-func (x *ApplyCatalogImportRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 func (x *ApplyCatalogImportRequest) GetOperatorId() uint32 {
@@ -4539,9 +4359,7 @@ type CancelScheduledGiftRevisionRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 CancelScheduledGiftRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4609,13 +4427,6 @@ func (x *CancelScheduledGiftRevisionRequest) GetRequestId() string {
 		return *x.RequestId
 	}
 	return ""
-}
-
-func (x *CancelScheduledGiftRevisionRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // CancelScheduledGiftRevisionResponse 承载 CancelScheduledGiftRevision 的返回结果。
@@ -4703,9 +4514,7 @@ type EmergencyOfflineGiftRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 EmergencyOfflineGift 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4773,13 +4582,6 @@ func (x *EmergencyOfflineGiftRequest) GetRequestId() string {
 		return *x.RequestId
 	}
 	return ""
-}
-
-func (x *EmergencyOfflineGiftRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // EmergencyOfflineGiftResponse 承载 EmergencyOfflineGift 的返回结果。
@@ -4850,9 +4652,7 @@ func (x *EmergencyOfflineGiftResponse) GetReplayed() bool {
 type GetGiftArchivePreflightRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GetGiftArchivePreflight。
-	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GetGiftArchivePreflight 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Id            uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4892,13 +4692,6 @@ func (x *GetGiftArchivePreflightRequest) GetId() uint32 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *GetGiftArchivePreflightRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // GiftArchivePreflight 返回 Gift Archive 前置检查及阻塞原因。
@@ -5004,9 +4797,7 @@ type ArchiveGiftRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// app_id 限定 ArchiveGift 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v11.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5074,13 +4865,6 @@ func (x *ArchiveGiftRequest) GetRequestId() string {
 		return *x.RequestId
 	}
 	return ""
-}
-
-func (x *ArchiveGiftRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
 }
 
 // ArchiveGiftResponse 承载 ArchiveGift 的返回结果。
@@ -5155,9 +4939,7 @@ type UpdateGiftCategoryRequest struct {
 	// 数据。
 	Data *GiftCategoryPatch `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	// 更新字段掩码。
-	UpdateMask *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
-	// 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v11.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5213,13 +4995,6 @@ func (x *UpdateGiftCategoryRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
 	return nil
 }
 
-func (x *UpdateGiftCategoryRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // DisableGiftCategoryRequest performs one idempotent governed state change.
 type DisableGiftCategoryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -5232,9 +5007,7 @@ type DisableGiftCategoryRequest struct {
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
-	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
-	// App ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-	AppId         *v11.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RequestId     *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5304,13 +5077,6 @@ func (x *DisableGiftCategoryRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *DisableGiftCategoryRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 // DisableGiftCategoryResponse returns the current Category and the immutable audit fact.
 type DisableGiftCategoryResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -5375,13 +5141,11 @@ func (x *DisableGiftCategoryResponse) GetReplayed() bool {
 	return false
 }
 
-// GiftOperatorAudit is an immutable, App-scoped, secret-free governance fact.
+// GiftOperatorAudit is an immutable, secret-free governance fact.
 type GiftOperatorAudit struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GiftOperatorAudit。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GiftOperatorAudit 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// action 指定本次状态推进采用的业务动作。
@@ -5441,13 +5205,6 @@ func (*GiftOperatorAudit) Descriptor() ([]byte, []int) {
 func (x *GiftOperatorAudit) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *GiftOperatorAudit) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -5620,15 +5377,13 @@ func (x *GiftOperatorAuditFilter) GetOccurredTo() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListGiftOperatorAuditsRequest lists immutable audit facts inside one App.
+// ListGiftOperatorAuditsRequest lists immutable audit facts.
 type ListGiftOperatorAuditsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGiftOperatorAudits 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v11.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *GiftOperatorAuditFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v12.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -5663,13 +5418,6 @@ func (*ListGiftOperatorAuditsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_catalog_proto_rawDescGZIP(), []int{57}
 }
 
-func (x *ListGiftOperatorAuditsRequest) GetAppId() v11.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v11.AppId(0)
-}
-
 func (x *ListGiftOperatorAuditsRequest) GetFilter() *GiftOperatorAuditFilter {
 	if x != nil {
 		return x.Filter
@@ -5677,7 +5425,7 @@ func (x *ListGiftOperatorAuditsRequest) GetFilter() *GiftOperatorAuditFilter {
 	return nil
 }
 
-func (x *ListGiftOperatorAuditsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListGiftOperatorAuditsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -5743,21 +5491,19 @@ var File_gift_v1_catalog_proto protoreflect.FileDescriptor
 
 const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\n" +
-	"\x15gift/v1/catalog.proto\x12\agift.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19common/file/v1/file.proto\x1a\x17validate/validate.proto\"\xaa\x03\n" +
+	"\x15gift/v1/catalog.proto\x12\agift.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19common/file/v1/file.proto\x1a\x17validate/validate.proto\"\x83\x03\n" +
 	"\fGiftCategory\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x17\n" +
-	"\x04code\x18\x04 \x01(\tH\x03R\x04code\x88\x01\x01\x12\x17\n" +
-	"\x04sort\x18\x05 \x01(\rH\x04R\x04sort\x88\x01\x01\x12\x1d\n" +
-	"\aenabled\x18\x06 \x01(\bH\x05R\aenabled\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\a \x01(\tH\x06R\x06remark\x88\x01\x01\x12?\n" +
+	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x03 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\x04 \x01(\tH\x02R\x04code\x88\x01\x01\x12\x17\n" +
+	"\x04sort\x18\x05 \x01(\rH\x03R\x04sort\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\x06 \x01(\bH\x04R\aenabled\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\a \x01(\tH\x05R\x06remark\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\aR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\bR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\a\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\aR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_codeB\a\n" +
 	"\x05_sortB\n" +
@@ -5765,58 +5511,56 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\b_enabledB\t\n" +
 	"\a_remarkB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xbc\x11\n" +
+	"\v_updated_at\"\x95\x11\n" +
 	"\x04Gift\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12$\n" +
-	"\vcategory_id\x18\x03 \x01(\rH\x02R\n" +
+	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12$\n" +
+	"\vcategory_id\x18\x03 \x01(\rH\x01R\n" +
 	"categoryId\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x04 \x01(\tH\x03R\x04name\x88\x01\x01\x12\x17\n" +
-	"\x04code\x18\x05 \x01(\tH\x04R\x04code\x88\x01\x01\x12%\n" +
-	"\ficon_file_id\x18\x06 \x01(\x04H\x05R\n" +
+	"\x04name\x18\x04 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\x05 \x01(\tH\x03R\x04code\x88\x01\x01\x12%\n" +
+	"\ficon_file_id\x18\x06 \x01(\x04H\x04R\n" +
 	"iconFileId\x88\x01\x01\x120\n" +
-	"\x05price\x18\a \x01(\x03B\x15\xbaG\x12\x92\x02\x0f虚拟币价格H\x06R\x05price\x88\x01\x01\x12\x1d\n" +
-	"\aenabled\x18\b \x01(\bH\aR\aenabled\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\t \x01(\tH\bR\x06remark\x88\x01\x01\x12/\n" +
+	"\x05price\x18\a \x01(\x03B\x15\xbaG\x12\x92\x02\x0f虚拟币价格H\x05R\x05price\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\b \x01(\bH\x06R\aenabled\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\t \x01(\tH\aR\x06remark\x88\x01\x01\x12/\n" +
 	"\x11animation_file_id\x18\n" +
-	" \x01(\x04H\tR\x0fanimationFileId\x88\x01\x01\x12\x17\n" +
-	"\x04sort\x18\v \x01(\rH\n" +
-	"R\x04sort\x88\x01\x01\x12\x17\n" +
-	"\x04tags\x18\f \x01(\tH\vR\x04tags\x88\x01\x01\x12&\n" +
-	"\fmax_quantity\x18\r \x01(\rH\fR\vmaxQuantity\x88\x01\x01\x12$\n" +
-	"\vdaily_limit\x18\x0e \x01(\rH\rR\n" +
+	" \x01(\x04H\bR\x0fanimationFileId\x88\x01\x01\x12\x17\n" +
+	"\x04sort\x18\v \x01(\rH\tR\x04sort\x88\x01\x01\x12\x17\n" +
+	"\x04tags\x18\f \x01(\tH\n" +
+	"R\x04tags\x88\x01\x01\x12&\n" +
+	"\fmax_quantity\x18\r \x01(\rH\vR\vmaxQuantity\x88\x01\x01\x12$\n" +
+	"\vdaily_limit\x18\x0e \x01(\rH\fR\n" +
 	"dailyLimit\x88\x01\x01\x12(\n" +
-	"\rplatform_rate\x18\x0f \x01(\rH\x0eR\fplatformRate\x88\x01\x01\x12*\n" +
-	"\x0erecipient_rate\x18\x10 \x01(\rH\x0fR\rrecipientRate\x88\x01\x01\x12<\n" +
-	"\tonline_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\bonlineAt\x88\x01\x01\x12>\n" +
+	"\rplatform_rate\x18\x0f \x01(\rH\rR\fplatformRate\x88\x01\x01\x12*\n" +
+	"\x0erecipient_rate\x18\x10 \x01(\rH\x0eR\rrecipientRate\x88\x01\x01\x12<\n" +
+	"\tonline_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\bonlineAt\x88\x01\x01\x12>\n" +
 	"\n" +
-	"offline_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tofflineAt\x88\x01\x01\x12,\n" +
+	"offline_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tofflineAt\x88\x01\x01\x12,\n" +
 	"\x04icon\x18\x13 \x01(\v2\x18.common.file.v1.FileViewR\x04icon\x126\n" +
 	"\tanimation\x18\x14 \x01(\v2\x18.common.file.v1.FileViewR\tanimation\x12(\n" +
 	"\x05draft\x18\x15 \x01(\v2\x12.gift.v1.GiftDraftR\x05draft\x12>\n" +
 	"\x0factive_revision\x18\x16 \x01(\v2\x15.gift.v1.GiftRevisionR\x0eactiveRevision\x121\n" +
-	"\x12active_revision_id\x18\x17 \x01(\x04H\x12R\x10activeRevisionId\x88\x01\x01\x12#\n" +
+	"\x12active_revision_id\x18\x17 \x01(\x04H\x11R\x10activeRevisionId\x88\x01\x01\x12#\n" +
 	"\rhas_published\x18\x18 \x01(\bR\fhasPublished\x12D\n" +
 	"\x12scheduled_revision\x18\x19 \x01(\v2\x15.gift.v1.GiftRevisionR\x11scheduledRevision\x127\n" +
-	"\x15scheduled_revision_id\x18\x1a \x01(\x04H\x13R\x13scheduledRevisionId\x88\x01\x01\x129\n" +
+	"\x15scheduled_revision_id\x18\x1a \x01(\x04H\x12R\x13scheduledRevisionId\x88\x01\x01\x129\n" +
 	"\bschedule\x18\x1b \x01(\v2\x1d.gift.v1.GiftRevisionScheduleR\bschedule\x12G\n" +
 	"\x10lifecycle_status\x18\x1c \x01(\x0e2\x1c.gift.v1.GiftLifecycleStatusR\x0flifecycleStatus\x12J\n" +
 	"\x11emergency_offline\x18\x1d \x01(\v2\x1d.gift.v1.GiftEmergencyOfflineR\x10emergencyOffline\x12.\n" +
 	"\aarchive\x18\x1e \x01(\v2\x14.gift.v1.GiftArchiveR\aarchive\x12(\n" +
 	"\x10scene_type_codes\x18\x1f \x03(\tR\x0esceneTypeCodes\x12?\n" +
-	"\tgift_tier\x18  \x01(\tB\x1d\xfaB\x1ar\x18R\x06COMMONR\x06LUXURYR\x06EFFECTH\x14R\bgiftTier\x88\x01\x01\x12-\n" +
+	"\tgift_tier\x18  \x01(\tB\x1d\xfaB\x1ar\x18R\x06COMMONR\x06LUXURYR\x06EFFECTH\x13R\bgiftTier\x88\x01\x01\x12-\n" +
 	"\aeffects\x18! \x03(\v2\x13.gift.v1.GiftEffectR\aeffects\x12L\n" +
 	"\x12display_placements\x18\" \x03(\v2\x1d.gift.v1.GiftDisplayPlacementR\x11displayPlacements\x121\n" +
 	"\alocales\x18# \x03(\v2\x17.gift.v1.GiftLocaleTextR\alocales\x128\n" +
-	"\tgift_kind\x18$ \x01(\tB\x16\xfaB\x13r\x11R\bSTANDARDR\x05COMBOH\x15R\bgiftKind\x88\x01\x01\x127\n" +
+	"\tgift_kind\x18$ \x01(\tB\x16\xfaB\x13r\x11R\bSTANDARDR\x05COMBOH\x14R\bgiftKind\x88\x01\x01\x127\n" +
 	"\vcombo_items\x18% \x03(\v2\x16.gift.v1.GiftComboItemR\n" +
 	"comboItems\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x16R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x15R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x17R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x0e\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x16R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x0e\n" +
 	"\f_category_idB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_codeB\x0f\n" +
@@ -5931,11 +5675,10 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"_gift_kind\"N\n" +
 	"\x0eGiftCreateData\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12(\n" +
-	"\x05draft\x18\x02 \x01(\v2\x12.gift.v1.GiftPatchR\x05draft\"\xb1\n" +
+	"\x05draft\x18\x02 \x01(\v2\x12.gift.v1.GiftPatchR\x05draft\"\x9a\n" +
 	"\n" +
 	"\tGiftDraft\x12\x17\n" +
-	"\agift_id\x18\x01 \x01(\rR\x06giftId\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12\x1f\n" +
+	"\agift_id\x18\x01 \x01(\rR\x06giftId\x12\x1f\n" +
 	"\vcategory_id\x18\x03 \x01(\rR\n" +
 	"categoryId\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12 \n" +
@@ -5974,11 +5717,10 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\f\n" +
 	"\n" +
 	"_online_atB\r\n" +
-	"\v_offline_at\"\xb7\f\n" +
+	"\v_offline_at\"\xa0\f\n" +
 	"\fGiftRevision\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x17\n" +
-	"\agift_id\x18\x02 \x01(\rR\x06giftId\x12\x15\n" +
-	"\x06app_id\x18\x03 \x01(\rR\x05appId\x12\x1f\n" +
+	"\agift_id\x18\x02 \x01(\rR\x06giftId\x12\x1f\n" +
 	"\vrevision_no\x18\x04 \x01(\rR\n" +
 	"revisionNo\x12\x1f\n" +
 	"\vcategory_id\x18\x05 \x01(\rR\n" +
@@ -6024,10 +5766,9 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\n" +
 	"_online_atB\r\n" +
 	"\v_offline_atB\r\n" +
-	"\v_request_id\"\x88\x06\n" +
+	"\v_request_id\"\xf1\x05\n" +
 	"\x14GiftRevisionSchedule\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x17\n" +
 	"\agift_id\x18\x03 \x01(\rR\x06giftId\x12\x1f\n" +
 	"\vrevision_id\x18\x04 \x01(\x04R\n" +
 	"revisionId\x12;\n" +
@@ -6063,10 +5804,9 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x04sort\x18\x03 \x01(\rH\x00R\x04sort\x88\x01\x01\x12\x1b\n" +
 	"\x06remark\x18\x04 \x01(\tH\x01R\x06remark\x88\x01\x01B\a\n" +
 	"\x05_sortB\t\n" +
-	"\a_remark\"\xf0\x01\n" +
+	"\a_remark\"\xd9\x01\n" +
 	"\rGiftSceneType\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
 	"\x04code\x18\x03 \x01(\tR\x04code\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
 	"\aenabled\x18\x05 \x01(\bR\aenabled\x12:\n" +
@@ -6082,32 +5822,24 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x05_name\"`\n" +
 	"\x1aListGiftSceneTypesResponse\x12,\n" +
 	"\x05items\x18\x01 \x03(\v2\x16.gift.v1.GiftSceneTypeR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x8b\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"R\n" +
 	"\x1aCreateGiftSceneTypeRequest\x124\n" +
-	"\x04data\x18\x01 \x01(\v2 .gift.v1.GiftSceneTypeCreateDataR\x04data\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xd3\x01\n" +
+	"\x04data\x18\x01 \x01(\v2 .gift.v1.GiftSceneTypeCreateDataR\x04data\"\x9a\x01\n" +
 	"\x1aUpdateGiftSceneTypeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12/\n" +
 	"\x04data\x18\x02 \x01(\v2\x1b.gift.v1.GiftSceneTypePatchR\x04data\x12;\n" +
 	"\vupdate_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
-	"updateMask\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"e\n" +
+	"updateMask\",\n" +
 	"\x1aDeleteGiftSceneTypeRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"h\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"/\n" +
 	"\x1dGetGiftSceneTypeImpactRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x90\x01\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"\x90\x01\n" +
 	"\x13GiftSceneTypeImpact\x125\n" +
 	"\n" +
 	"scene_type\x18\x01 \x01(\v2\x16.gift.v1.GiftSceneTypeR\tsceneType\x12#\n" +
 	"\x05gifts\x18\x02 \x03(\v2\r.gift.v1.GiftR\x05gifts\x12\x1d\n" +
 	"\n" +
-	"gift_count\x18\x03 \x01(\x04R\tgiftCount\"\x92\x02\n" +
+	"gift_count\x18\x03 \x01(\x04R\tgiftCount\"\xd9\x01\n" +
 	"\x1eSetGiftSceneTypeEnabledRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x18\n" +
 	"\aenabled\x18\x02 \x01(\bR\aenabled\x12\x1f\n" +
@@ -6116,10 +5848,8 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\a \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\xdc\x01\n" +
+	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xdc\x01\n" +
 	"\x1fSetGiftSceneTypeEnabledResponse\x125\n" +
 	"\n" +
 	"scene_type\x18\x01 \x01(\v2\x16.gift.v1.GiftSceneTypeR\tsceneType\x124\n" +
@@ -6131,30 +5861,20 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\"]\n" +
 	"\x18ListGiftCategoryResponse\x12+\n" +
 	"\x05items\x18\x01 \x03(\v2\x15.gift.v1.GiftCategoryR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"Y\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\" \n" +
 	"\x0eGetGiftRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"y\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"@\n" +
 	"\x11CreateGiftRequest\x12+\n" +
-	"\x04data\x18\x01 \x01(\v2\x17.gift.v1.GiftCreateDataR\x04data\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x89\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x17.gift.v1.GiftCreateDataR\x04data\"P\n" +
 	"\x19CreateGiftCategoryRequest\x123\n" +
-	"\x04data\x18\x01 \x01(\v2\x1f.gift.v1.GiftCategoryCreateDataR\x04data\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xc6\x01\n" +
+	"\x04data\x18\x01 \x01(\v2\x1f.gift.v1.GiftCategoryCreateDataR\x04data\"\x8d\x01\n" +
 	"\x16UpdateGiftDraftRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12&\n" +
 	"\x04data\x18\x02 \x01(\v2\x12.gift.v1.GiftPatchR\x04data\x12;\n" +
 	"\vupdate_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
-	"updateMask\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"b\n" +
+	"updateMask\")\n" +
 	"\x17DiscardGiftDraftRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xc6\x02\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"\x8d\x02\n" +
 	"\x17PublishGiftDraftRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
@@ -6162,31 +5882,25 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01\x12B\n" +
-	"\feffective_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x02R\veffectiveAt\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_idB\x0f\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12B\n" +
+	"\feffective_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x01R\veffectiveAt\x88\x01\x01B\r\n" +
+	"\v_request_idB\x0f\n" +
 	"\r_effective_at\"\xbe\x01\n" +
 	"\x18PublishGiftDraftResponse\x12!\n" +
 	"\x04gift\x18\x01 \x01(\v2\r.gift.v1.GiftR\x04gift\x121\n" +
 	"\brevision\x18\x02 \x01(\v2\x15.gift.v1.GiftRevisionR\brevision\x120\n" +
 	"\x05audit\x18\x03 \x01(\v2\x1a.gift.v1.GiftOperatorAuditR\x05audit\x12\x1a\n" +
-	"\breplayed\x18\x04 \x01(\bR\breplayed\"\xa0\x01\n" +
+	"\breplayed\x18\x04 \x01(\bR\breplayed\"g\n" +
 	"\x18ListGiftRevisionsRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"^\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12;\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"^\n" +
 	"\x19ListGiftRevisionsResponse\x12+\n" +
 	"\x05items\x18\x01 \x03(\v2\x15.gift.v1.GiftRevisionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xc3\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x8a\x01\n" +
 	"\x1bCompareGiftRevisionsRequest\x12\x17\n" +
 	"\agift_id\x18\x01 \x01(\rR\x06giftId\x12(\n" +
 	"\x10base_revision_id\x18\x02 \x01(\x04R\x0ebaseRevisionId\x12(\n" +
-	"\x10head_revision_id\x18\x03 \x01(\x04R\x0eheadRevisionId\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"]\n" +
+	"\x10head_revision_id\x18\x03 \x01(\x04R\x0eheadRevisionId\"]\n" +
 	"\x17GiftRevisionFieldChange\x12\x14\n" +
 	"\x05field\x18\x01 \x01(\tR\x05field\x12\x16\n" +
 	"\x06before\x18\x02 \x01(\tR\x06before\x12\x14\n" +
@@ -6200,17 +5914,15 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x04code\x18\x01 \x01(\tB\n" +
 	"\xfaB\ar\x05\x10\x01\x18\x80\x01R\x04code\x122\n" +
 	"\x05draft\x18\x02 \x01(\v2\x12.gift.v1.GiftPatchB\b\xfaB\x05\x8a\x01\x02\x10\x01R\x05draft\x12*\n" +
-	"\x11create_if_missing\x18\x03 \x01(\bR\x0fcreateIfMissing\"\x96\x02\n" +
-	"\x19ApplyCatalogImportRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"\x11create_if_missing\x18\x03 \x01(\bR\x0fcreateIfMissing\"\xdd\x01\n" +
+	"\x19ApplyCatalogImportRequest\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x01R\trequestId\x88\x01\x01\x121\n" +
-	"\x04rows\x18\x06 \x03(\v2\x1d.gift.v1.GiftCatalogImportRowR\x04rowsB\t\n" +
-	"\a_app_idB\r\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x121\n" +
+	"\x04rows\x18\x06 \x03(\v2\x1d.gift.v1.GiftCatalogImportRowR\x04rowsB\r\n" +
 	"\v_request_id\"\x83\x01\n" +
 	"\x18ApplyCatalogImportResult\x12#\n" +
 	"\rcreated_count\x18\x01 \x01(\rR\fcreatedCount\x12#\n" +
@@ -6220,7 +5932,7 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x1aApplyCatalogImportResponse\x129\n" +
 	"\x06result\x18\x01 \x01(\v2!.gift.v1.ApplyCatalogImportResultR\x06result\x120\n" +
 	"\x05audit\x18\x02 \x01(\v2\x1a.gift.v1.GiftOperatorAuditR\x05audit\x12\x1a\n" +
-	"\breplayed\x18\x03 \x01(\bR\breplayed\"\xfc\x01\n" +
+	"\breplayed\x18\x03 \x01(\bR\breplayed\"\xc3\x01\n" +
 	"\"CancelScheduledGiftRevisionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
@@ -6228,15 +5940,13 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\xc9\x01\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xc9\x01\n" +
 	"#CancelScheduledGiftRevisionResponse\x12!\n" +
 	"\x04gift\x18\x01 \x01(\v2\r.gift.v1.GiftR\x04gift\x121\n" +
 	"\brevision\x18\x02 \x01(\v2\x15.gift.v1.GiftRevisionR\brevision\x120\n" +
 	"\x05audit\x18\x03 \x01(\v2\x1a.gift.v1.GiftOperatorAuditR\x05audit\x12\x1a\n" +
-	"\breplayed\x18\x04 \x01(\bR\breplayed\"\xf5\x01\n" +
+	"\breplayed\x18\x04 \x01(\bR\breplayed\"\xbc\x01\n" +
 	"\x1bEmergencyOfflineGiftRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
@@ -6244,18 +5954,14 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\x8f\x01\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\x8f\x01\n" +
 	"\x1cEmergencyOfflineGiftResponse\x12!\n" +
 	"\x04gift\x18\x01 \x01(\v2\r.gift.v1.GiftR\x04gift\x120\n" +
 	"\x05audit\x18\x02 \x01(\v2\x1a.gift.v1.GiftOperatorAuditR\x05audit\x12\x1a\n" +
-	"\breplayed\x18\x03 \x01(\bR\breplayed\"i\n" +
+	"\breplayed\x18\x03 \x01(\bR\breplayed\"0\n" +
 	"\x1eGetGiftArchivePreflightRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xb0\x02\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"\xb0\x02\n" +
 	"\x14GiftArchivePreflight\x12\x17\n" +
 	"\agift_id\x18\x01 \x01(\rR\x06giftId\x12\x1f\n" +
 	"\vcan_archive\x18\x02 \x01(\bR\n" +
@@ -6263,7 +5969,7 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x1bavailable_backpack_quantity\x18\x03 \x01(\x04R\x19availableBackpackQuantity\x12/\n" +
 	"\x14in_flight_send_count\x18\x04 \x01(\x04R\x11inFlightSendCount\x124\n" +
 	"\x16has_scheduled_revision\x18\x05 \x01(\bR\x14hasScheduledRevision\x127\n" +
-	"\bblockers\x18\x06 \x03(\x0e2\x1b.gift.v1.GiftArchiveBlockerR\bblockers\"\xec\x01\n" +
+	"\bblockers\x18\x06 \x03(\x0e2\x1b.gift.v1.GiftArchiveBlockerR\bblockers\"\xb3\x01\n" +
 	"\x12ArchiveGiftRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
@@ -6271,21 +5977,17 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\x86\x01\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\x86\x01\n" +
 	"\x13ArchiveGiftResponse\x12!\n" +
 	"\x04gift\x18\x01 \x01(\v2\r.gift.v1.GiftR\x04gift\x120\n" +
 	"\x05audit\x18\x02 \x01(\v2\x1a.gift.v1.GiftOperatorAuditR\x05audit\x12\x1a\n" +
-	"\breplayed\x18\x03 \x01(\bR\breplayed\"\xd1\x01\n" +
+	"\breplayed\x18\x03 \x01(\bR\breplayed\"\x98\x01\n" +
 	"\x19UpdateGiftCategoryRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12.\n" +
 	"\x04data\x18\x02 \x01(\v2\x1a.gift.v1.GiftCategoryPatchR\x04data\x12;\n" +
 	"\vupdate_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
-	"updateMask\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xf4\x01\n" +
+	"updateMask\"\xbb\x01\n" +
 	"\x1aDisableGiftCategoryRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
@@ -6293,17 +5995,14 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01B\r\n" +
-	"\v_request_idB\t\n" +
-	"\a_app_id\"\x9e\x01\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\x9e\x01\n" +
 	"\x1bDisableGiftCategoryResponse\x121\n" +
 	"\bcategory\x18\x01 \x01(\v2\x15.gift.v1.GiftCategoryR\bcategory\x120\n" +
 	"\x05audit\x18\x02 \x01(\v2\x1a.gift.v1.GiftOperatorAuditR\x05audit\x12\x1a\n" +
-	"\breplayed\x18\x03 \x01(\bR\breplayed\"\xa8\x04\n" +
+	"\breplayed\x18\x03 \x01(\bR\breplayed\"\x91\x04\n" +
 	"\x11GiftOperatorAudit\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x128\n" +
 	"\x06action\x18\x04 \x01(\x0e2 .gift.v1.GiftOperatorAuditActionR\x06action\x12G\n" +
@@ -6335,12 +6034,10 @@ const file_gift_v1_catalog_proto_rawDesc = "" +
 	"\f_operator_idB\x0e\n" +
 	"\f_resource_idB\x10\n" +
 	"\x0e_occurred_fromB\x0e\n" +
-	"\f_occurred_to\"\xcf\x01\n" +
-	"\x1dListGiftOperatorAuditsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x128\n" +
+	"\f_occurred_to\"\x96\x01\n" +
+	"\x1dListGiftOperatorAuditsRequest\x128\n" +
 	"\x06filter\x18\x02 \x01(\v2 .gift.v1.GiftOperatorAuditFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"h\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"h\n" +
 	"\x1eListGiftOperatorAuditsResponse\x120\n" +
 	"\x05items\x18\x01 \x03(\v2\x1a.gift.v1.GiftOperatorAuditR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05total*\xd6\x01\n" +
@@ -6477,9 +6174,8 @@ var file_gift_v1_catalog_proto_goTypes = []any{
 	(*ListGiftOperatorAuditsResponse)(nil),      // 64: gift.v1.ListGiftOperatorAuditsResponse
 	(*timestamppb.Timestamp)(nil),               // 65: google.protobuf.Timestamp
 	(*v1.FileView)(nil),                         // 66: common.file.v1.FileView
-	(v11.AppId)(0),                              // 67: common.v1.AppId
-	(*fieldmaskpb.FieldMask)(nil),               // 68: google.protobuf.FieldMask
-	(*v12.PagingRequest)(nil),                   // 69: common.pagination.v1.PagingRequest
+	(*fieldmaskpb.FieldMask)(nil),               // 67: google.protobuf.FieldMask
+	(*v11.PagingRequest)(nil),                   // 68: common.pagination.v1.PagingRequest
 }
 var file_gift_v1_catalog_proto_depIdxs = []int32{
 	65,  // 0: gift.v1.GiftCategory.created_at:type_name -> google.protobuf.Timestamp
@@ -6542,79 +6238,58 @@ var file_gift_v1_catalog_proto_depIdxs = []int32{
 	65,  // 57: gift.v1.GiftSceneType.updated_at:type_name -> google.protobuf.Timestamp
 	21,  // 58: gift.v1.ListGiftSceneTypesResponse.items:type_name -> gift.v1.GiftSceneType
 	22,  // 59: gift.v1.CreateGiftSceneTypeRequest.data:type_name -> gift.v1.GiftSceneTypeCreateData
-	67,  // 60: gift.v1.CreateGiftSceneTypeRequest.app_id:type_name -> common.v1.AppId
-	23,  // 61: gift.v1.UpdateGiftSceneTypeRequest.data:type_name -> gift.v1.GiftSceneTypePatch
-	68,  // 62: gift.v1.UpdateGiftSceneTypeRequest.update_mask:type_name -> google.protobuf.FieldMask
-	67,  // 63: gift.v1.UpdateGiftSceneTypeRequest.app_id:type_name -> common.v1.AppId
-	67,  // 64: gift.v1.DeleteGiftSceneTypeRequest.app_id:type_name -> common.v1.AppId
-	67,  // 65: gift.v1.GetGiftSceneTypeImpactRequest.app_id:type_name -> common.v1.AppId
-	21,  // 66: gift.v1.GiftSceneTypeImpact.scene_type:type_name -> gift.v1.GiftSceneType
-	7,   // 67: gift.v1.GiftSceneTypeImpact.gifts:type_name -> gift.v1.Gift
-	67,  // 68: gift.v1.SetGiftSceneTypeEnabledRequest.app_id:type_name -> common.v1.AppId
-	21,  // 69: gift.v1.SetGiftSceneTypeEnabledResponse.scene_type:type_name -> gift.v1.GiftSceneType
-	29,  // 70: gift.v1.SetGiftSceneTypeEnabledResponse.impact:type_name -> gift.v1.GiftSceneTypeImpact
-	61,  // 71: gift.v1.SetGiftSceneTypeEnabledResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	7,   // 72: gift.v1.ListGiftResponse.items:type_name -> gift.v1.Gift
-	6,   // 73: gift.v1.ListGiftCategoryResponse.items:type_name -> gift.v1.GiftCategory
-	67,  // 74: gift.v1.GetGiftRequest.app_id:type_name -> common.v1.AppId
-	15,  // 75: gift.v1.CreateGiftRequest.data:type_name -> gift.v1.GiftCreateData
-	67,  // 76: gift.v1.CreateGiftRequest.app_id:type_name -> common.v1.AppId
-	20,  // 77: gift.v1.CreateGiftCategoryRequest.data:type_name -> gift.v1.GiftCategoryCreateData
-	67,  // 78: gift.v1.CreateGiftCategoryRequest.app_id:type_name -> common.v1.AppId
-	14,  // 79: gift.v1.UpdateGiftDraftRequest.data:type_name -> gift.v1.GiftPatch
-	68,  // 80: gift.v1.UpdateGiftDraftRequest.update_mask:type_name -> google.protobuf.FieldMask
-	67,  // 81: gift.v1.UpdateGiftDraftRequest.app_id:type_name -> common.v1.AppId
-	67,  // 82: gift.v1.DiscardGiftDraftRequest.app_id:type_name -> common.v1.AppId
-	67,  // 83: gift.v1.PublishGiftDraftRequest.app_id:type_name -> common.v1.AppId
-	65,  // 84: gift.v1.PublishGiftDraftRequest.effective_at:type_name -> google.protobuf.Timestamp
-	7,   // 85: gift.v1.PublishGiftDraftResponse.gift:type_name -> gift.v1.Gift
-	17,  // 86: gift.v1.PublishGiftDraftResponse.revision:type_name -> gift.v1.GiftRevision
-	61,  // 87: gift.v1.PublishGiftDraftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	67,  // 88: gift.v1.ListGiftRevisionsRequest.app_id:type_name -> common.v1.AppId
-	69,  // 89: gift.v1.ListGiftRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	17,  // 90: gift.v1.ListGiftRevisionsResponse.items:type_name -> gift.v1.GiftRevision
-	67,  // 91: gift.v1.CompareGiftRevisionsRequest.app_id:type_name -> common.v1.AppId
-	44,  // 92: gift.v1.CompareGiftRevisionsResponse.changes:type_name -> gift.v1.GiftRevisionFieldChange
-	14,  // 93: gift.v1.GiftCatalogImportRow.draft:type_name -> gift.v1.GiftPatch
-	67,  // 94: gift.v1.ApplyCatalogImportRequest.app_id:type_name -> common.v1.AppId
-	46,  // 95: gift.v1.ApplyCatalogImportRequest.rows:type_name -> gift.v1.GiftCatalogImportRow
-	48,  // 96: gift.v1.ApplyCatalogImportResponse.result:type_name -> gift.v1.ApplyCatalogImportResult
-	61,  // 97: gift.v1.ApplyCatalogImportResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	67,  // 98: gift.v1.CancelScheduledGiftRevisionRequest.app_id:type_name -> common.v1.AppId
-	7,   // 99: gift.v1.CancelScheduledGiftRevisionResponse.gift:type_name -> gift.v1.Gift
-	17,  // 100: gift.v1.CancelScheduledGiftRevisionResponse.revision:type_name -> gift.v1.GiftRevision
-	61,  // 101: gift.v1.CancelScheduledGiftRevisionResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	67,  // 102: gift.v1.EmergencyOfflineGiftRequest.app_id:type_name -> common.v1.AppId
-	7,   // 103: gift.v1.EmergencyOfflineGiftResponse.gift:type_name -> gift.v1.Gift
-	61,  // 104: gift.v1.EmergencyOfflineGiftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	67,  // 105: gift.v1.GetGiftArchivePreflightRequest.app_id:type_name -> common.v1.AppId
-	2,   // 106: gift.v1.GiftArchivePreflight.blockers:type_name -> gift.v1.GiftArchiveBlocker
-	67,  // 107: gift.v1.ArchiveGiftRequest.app_id:type_name -> common.v1.AppId
-	7,   // 108: gift.v1.ArchiveGiftResponse.gift:type_name -> gift.v1.Gift
-	61,  // 109: gift.v1.ArchiveGiftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	19,  // 110: gift.v1.UpdateGiftCategoryRequest.data:type_name -> gift.v1.GiftCategoryPatch
-	68,  // 111: gift.v1.UpdateGiftCategoryRequest.update_mask:type_name -> google.protobuf.FieldMask
-	67,  // 112: gift.v1.UpdateGiftCategoryRequest.app_id:type_name -> common.v1.AppId
-	67,  // 113: gift.v1.DisableGiftCategoryRequest.app_id:type_name -> common.v1.AppId
-	6,   // 114: gift.v1.DisableGiftCategoryResponse.category:type_name -> gift.v1.GiftCategory
-	61,  // 115: gift.v1.DisableGiftCategoryResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	3,   // 116: gift.v1.GiftOperatorAudit.action:type_name -> gift.v1.GiftOperatorAuditAction
-	4,   // 117: gift.v1.GiftOperatorAudit.resource_type:type_name -> gift.v1.GiftOperatorAuditResource
-	5,   // 118: gift.v1.GiftOperatorAudit.result:type_name -> gift.v1.GiftOperatorAuditResult
-	65,  // 119: gift.v1.GiftOperatorAudit.occurred_at:type_name -> google.protobuf.Timestamp
-	3,   // 120: gift.v1.GiftOperatorAuditFilter.actions:type_name -> gift.v1.GiftOperatorAuditAction
-	4,   // 121: gift.v1.GiftOperatorAuditFilter.resource_types:type_name -> gift.v1.GiftOperatorAuditResource
-	65,  // 122: gift.v1.GiftOperatorAuditFilter.occurred_from:type_name -> google.protobuf.Timestamp
-	65,  // 123: gift.v1.GiftOperatorAuditFilter.occurred_to:type_name -> google.protobuf.Timestamp
-	67,  // 124: gift.v1.ListGiftOperatorAuditsRequest.app_id:type_name -> common.v1.AppId
-	62,  // 125: gift.v1.ListGiftOperatorAuditsRequest.filter:type_name -> gift.v1.GiftOperatorAuditFilter
-	69,  // 126: gift.v1.ListGiftOperatorAuditsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	61,  // 127: gift.v1.ListGiftOperatorAuditsResponse.items:type_name -> gift.v1.GiftOperatorAudit
-	128, // [128:128] is the sub-list for method output_type
-	128, // [128:128] is the sub-list for method input_type
-	128, // [128:128] is the sub-list for extension type_name
-	128, // [128:128] is the sub-list for extension extendee
-	0,   // [0:128] is the sub-list for field type_name
+	23,  // 60: gift.v1.UpdateGiftSceneTypeRequest.data:type_name -> gift.v1.GiftSceneTypePatch
+	67,  // 61: gift.v1.UpdateGiftSceneTypeRequest.update_mask:type_name -> google.protobuf.FieldMask
+	21,  // 62: gift.v1.GiftSceneTypeImpact.scene_type:type_name -> gift.v1.GiftSceneType
+	7,   // 63: gift.v1.GiftSceneTypeImpact.gifts:type_name -> gift.v1.Gift
+	21,  // 64: gift.v1.SetGiftSceneTypeEnabledResponse.scene_type:type_name -> gift.v1.GiftSceneType
+	29,  // 65: gift.v1.SetGiftSceneTypeEnabledResponse.impact:type_name -> gift.v1.GiftSceneTypeImpact
+	61,  // 66: gift.v1.SetGiftSceneTypeEnabledResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	7,   // 67: gift.v1.ListGiftResponse.items:type_name -> gift.v1.Gift
+	6,   // 68: gift.v1.ListGiftCategoryResponse.items:type_name -> gift.v1.GiftCategory
+	15,  // 69: gift.v1.CreateGiftRequest.data:type_name -> gift.v1.GiftCreateData
+	20,  // 70: gift.v1.CreateGiftCategoryRequest.data:type_name -> gift.v1.GiftCategoryCreateData
+	14,  // 71: gift.v1.UpdateGiftDraftRequest.data:type_name -> gift.v1.GiftPatch
+	67,  // 72: gift.v1.UpdateGiftDraftRequest.update_mask:type_name -> google.protobuf.FieldMask
+	65,  // 73: gift.v1.PublishGiftDraftRequest.effective_at:type_name -> google.protobuf.Timestamp
+	7,   // 74: gift.v1.PublishGiftDraftResponse.gift:type_name -> gift.v1.Gift
+	17,  // 75: gift.v1.PublishGiftDraftResponse.revision:type_name -> gift.v1.GiftRevision
+	61,  // 76: gift.v1.PublishGiftDraftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	68,  // 77: gift.v1.ListGiftRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	17,  // 78: gift.v1.ListGiftRevisionsResponse.items:type_name -> gift.v1.GiftRevision
+	44,  // 79: gift.v1.CompareGiftRevisionsResponse.changes:type_name -> gift.v1.GiftRevisionFieldChange
+	14,  // 80: gift.v1.GiftCatalogImportRow.draft:type_name -> gift.v1.GiftPatch
+	46,  // 81: gift.v1.ApplyCatalogImportRequest.rows:type_name -> gift.v1.GiftCatalogImportRow
+	48,  // 82: gift.v1.ApplyCatalogImportResponse.result:type_name -> gift.v1.ApplyCatalogImportResult
+	61,  // 83: gift.v1.ApplyCatalogImportResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	7,   // 84: gift.v1.CancelScheduledGiftRevisionResponse.gift:type_name -> gift.v1.Gift
+	17,  // 85: gift.v1.CancelScheduledGiftRevisionResponse.revision:type_name -> gift.v1.GiftRevision
+	61,  // 86: gift.v1.CancelScheduledGiftRevisionResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	7,   // 87: gift.v1.EmergencyOfflineGiftResponse.gift:type_name -> gift.v1.Gift
+	61,  // 88: gift.v1.EmergencyOfflineGiftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	2,   // 89: gift.v1.GiftArchivePreflight.blockers:type_name -> gift.v1.GiftArchiveBlocker
+	7,   // 90: gift.v1.ArchiveGiftResponse.gift:type_name -> gift.v1.Gift
+	61,  // 91: gift.v1.ArchiveGiftResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	19,  // 92: gift.v1.UpdateGiftCategoryRequest.data:type_name -> gift.v1.GiftCategoryPatch
+	67,  // 93: gift.v1.UpdateGiftCategoryRequest.update_mask:type_name -> google.protobuf.FieldMask
+	6,   // 94: gift.v1.DisableGiftCategoryResponse.category:type_name -> gift.v1.GiftCategory
+	61,  // 95: gift.v1.DisableGiftCategoryResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	3,   // 96: gift.v1.GiftOperatorAudit.action:type_name -> gift.v1.GiftOperatorAuditAction
+	4,   // 97: gift.v1.GiftOperatorAudit.resource_type:type_name -> gift.v1.GiftOperatorAuditResource
+	5,   // 98: gift.v1.GiftOperatorAudit.result:type_name -> gift.v1.GiftOperatorAuditResult
+	65,  // 99: gift.v1.GiftOperatorAudit.occurred_at:type_name -> google.protobuf.Timestamp
+	3,   // 100: gift.v1.GiftOperatorAuditFilter.actions:type_name -> gift.v1.GiftOperatorAuditAction
+	4,   // 101: gift.v1.GiftOperatorAuditFilter.resource_types:type_name -> gift.v1.GiftOperatorAuditResource
+	65,  // 102: gift.v1.GiftOperatorAuditFilter.occurred_from:type_name -> google.protobuf.Timestamp
+	65,  // 103: gift.v1.GiftOperatorAuditFilter.occurred_to:type_name -> google.protobuf.Timestamp
+	62,  // 104: gift.v1.ListGiftOperatorAuditsRequest.filter:type_name -> gift.v1.GiftOperatorAuditFilter
+	68,  // 105: gift.v1.ListGiftOperatorAuditsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	61,  // 106: gift.v1.ListGiftOperatorAuditsResponse.items:type_name -> gift.v1.GiftOperatorAudit
+	107, // [107:107] is the sub-list for method output_type
+	107, // [107:107] is the sub-list for method input_type
+	107, // [107:107] is the sub-list for extension type_name
+	107, // [107:107] is the sub-list for extension extendee
+	0,   // [0:107] is the sub-list for field type_name
 }
 
 func init() { file_gift_v1_catalog_proto_init() }
@@ -6632,29 +6307,15 @@ func file_gift_v1_catalog_proto_init() {
 	file_gift_v1_catalog_proto_msgTypes[13].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[14].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[17].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[19].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[20].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[21].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[22].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[24].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[28].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[29].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[30].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[31].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[32].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[33].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[35].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[37].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[41].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[44].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[46].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[48].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[50].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[52].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[53].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[55].OneofWrappers = []any{}
 	file_gift_v1_catalog_proto_msgTypes[56].OneofWrappers = []any{}
-	file_gift_v1_catalog_proto_msgTypes[57].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

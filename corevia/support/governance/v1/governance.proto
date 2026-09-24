@@ -116,8 +116,6 @@ enum GovernanceFailureCategory {
 message GovernanceEvent {
   // id 标识关联的 GovernanceEvent。
   uint64 id = 1;
-  // app_id 限定 GovernanceEvent 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // operator_id 标识关联的后台 Operator。
   uint64 operator_id = 3;
   // operation_type 区分 GovernanceEvent 的业务类型。
@@ -146,8 +144,6 @@ message GovernanceEvent {
 
 // ListGovernanceEventsRequest selects immutable history for one authoritative target.
 message ListGovernanceEventsRequest {
-  // app_id 限定 ListGovernanceEvents 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // target_type 区分 ListGovernanceEvents 的业务类型。
   GovernanceTargetType target_type = 2;
   // target_id 标识关联的 Target。

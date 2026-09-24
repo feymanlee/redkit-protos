@@ -42,17 +42,17 @@ type RewardServiceClient interface {
 	GrantReward(ctx context.Context, in *GrantRewardRequest, opts ...grpc.CallOption) (*GrantRewardResponse, error)
 	// GetRewardGrant looks up the original accepted Grant by either supported identity.
 	GetRewardGrant(ctx context.Context, in *GetRewardGrantRequest, opts ...grpc.CallOption) (*RewardGrant, error)
-	// ListRewardGrants provides an App-scoped operational observation view.
+	// ListRewardGrants provides an operational observation view.
 	ListRewardGrants(ctx context.Context, in *ListRewardGrantsRequest, opts ...grpc.CallOption) (*ListRewardGrantsResponse, error)
 	// GetRewardGrantObservation returns immutable intent and fulfillment history.
 	GetRewardGrantObservation(ctx context.Context, in *GetRewardGrantObservationRequest, opts ...grpc.CallOption) (*RewardGrantObservation, error)
-	// ListActionRequiredRewardItems returns the App-scoped manual recovery queue.
+	// ListActionRequiredRewardItems returns the manual recovery queue.
 	ListActionRequiredRewardItems(ctx context.Context, in *ListActionRequiredRewardItemsRequest, opts ...grpc.CallOption) (*ListActionRequiredRewardItemsResponse, error)
 	// ReplayRewardItem safely redelivers the frozen command for one original Item.
 	ReplayRewardItem(ctx context.Context, in *ReplayRewardItemRequest, opts ...grpc.CallOption) (*ReplayRewardItemResponse, error)
 	// CreateManualRewardGrant records an Operator request without accepting it.
 	CreateManualRewardGrant(ctx context.Context, in *CreateManualRewardGrantRequest, opts ...grpc.CallOption) (*CreateManualRewardGrantResponse, error)
-	// ListPendingManualRewardGrants returns Pending and Stale entries for the App-scoped review work view.
+	// ListPendingManualRewardGrants returns Pending and Stale entries for the review work view.
 	ListPendingManualRewardGrants(ctx context.Context, in *ListPendingManualRewardGrantsRequest, opts ...grpc.CallOption) (*ListPendingManualRewardGrantsResponse, error)
 	// ApproveManualRewardGrant accepts a request reviewed by another Operator.
 	ApproveManualRewardGrant(ctx context.Context, in *ApproveManualRewardGrantRequest, opts ...grpc.CallOption) (*ManualRewardGrant, error)
@@ -190,17 +190,17 @@ type RewardServiceServer interface {
 	GrantReward(context.Context, *GrantRewardRequest) (*GrantRewardResponse, error)
 	// GetRewardGrant looks up the original accepted Grant by either supported identity.
 	GetRewardGrant(context.Context, *GetRewardGrantRequest) (*RewardGrant, error)
-	// ListRewardGrants provides an App-scoped operational observation view.
+	// ListRewardGrants provides an operational observation view.
 	ListRewardGrants(context.Context, *ListRewardGrantsRequest) (*ListRewardGrantsResponse, error)
 	// GetRewardGrantObservation returns immutable intent and fulfillment history.
 	GetRewardGrantObservation(context.Context, *GetRewardGrantObservationRequest) (*RewardGrantObservation, error)
-	// ListActionRequiredRewardItems returns the App-scoped manual recovery queue.
+	// ListActionRequiredRewardItems returns the manual recovery queue.
 	ListActionRequiredRewardItems(context.Context, *ListActionRequiredRewardItemsRequest) (*ListActionRequiredRewardItemsResponse, error)
 	// ReplayRewardItem safely redelivers the frozen command for one original Item.
 	ReplayRewardItem(context.Context, *ReplayRewardItemRequest) (*ReplayRewardItemResponse, error)
 	// CreateManualRewardGrant records an Operator request without accepting it.
 	CreateManualRewardGrant(context.Context, *CreateManualRewardGrantRequest) (*CreateManualRewardGrantResponse, error)
-	// ListPendingManualRewardGrants returns Pending and Stale entries for the App-scoped review work view.
+	// ListPendingManualRewardGrants returns Pending and Stale entries for the review work view.
 	ListPendingManualRewardGrants(context.Context, *ListPendingManualRewardGrantsRequest) (*ListPendingManualRewardGrantsResponse, error)
 	// ApproveManualRewardGrant accepts a request reviewed by another Operator.
 	ApproveManualRewardGrant(context.Context, *ApproveManualRewardGrantRequest) (*ManualRewardGrant, error)

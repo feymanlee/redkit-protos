@@ -137,10 +137,6 @@ type DataAccessAuditLog struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 数据访问审计日志ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 数据访问审计日志ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
-	// App名称。
-	AppName *string `protobuf:"bytes,3,opt,name=app_name,json=appName,proto3,oneof" json:"app_name,omitempty"` // App名称
 	// 后台人员 ID。
 	OperatorId *uint32 `protobuf:"varint,4,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"`
 	// 账号名。
@@ -224,20 +220,6 @@ func (x *DataAccessAuditLog) GetId() uint32 {
 		return *x.Id
 	}
 	return 0
-}
-
-func (x *DataAccessAuditLog) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *DataAccessAuditLog) GetAppName() string {
-	if x != nil && x.AppName != nil {
-		return *x.AppName
-	}
-	return ""
 }
 
 func (x *DataAccessAuditLog) GetOperatorId() uint32 {
@@ -578,45 +560,43 @@ var File_core_audit_v1_data_access_audit_log_proto protoreflect.FileDescriptor
 
 const file_core_audit_v1_data_access_audit_log_proto_rawDesc = "" +
 	"\n" +
-	")core/audit/v1/data_access_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x17validate/validate.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1acore/audit/v1/common.proto\"\xf8\x14\n" +
+	")core/audit/v1/data_access_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x17validate/validate.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1acore/audit/v1/common.proto\"\xff\x13\n" +
 	"\x12DataAccessAuditLog\x12,\n" +
-	"\x02id\x18\x01 \x01(\rB\x17\xbaG\x14\x92\x02\x11API审计日志IDH\x00R\x02id\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x01R\x05appId\x88\x01\x01\x12/\n" +
-	"\bapp_name\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\tApp名称H\x02R\aappName\x88\x01\x01\x12;\n" +
-	"\voperator_id\x18\x04 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x03R\n" +
+	"\x02id\x18\x01 \x01(\rB\x17\xbaG\x14\x92\x02\x11API审计日志IDH\x00R\x02id\x88\x01\x01\x12;\n" +
+	"\voperator_id\x18\x04 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x01R\n" +
 	"operatorId\x88\x01\x01\x120\n" +
-	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t账号名H\x04R\busername\x88\x01\x01\x12G\n" +
+	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t账号名H\x02R\busername\x88\x01\x01\x12G\n" +
 	"\n" +
 	"ip_address\x18\n" +
-	" \x01(\tB#\xbaG \x92\x02\x1d操作IP地址（IPv4/IPv6）H\x05R\tipAddress\x88\x01\x01\x12P\n" +
+	" \x01(\tB#\xbaG \x92\x02\x1d操作IP地址（IPv4/IPv6）H\x03R\tipAddress\x88\x01\x01\x12P\n" +
 	"\n" +
-	"request_id\x18\v \x01(\tB,\xbaG)\x92\x02&全局请求ID（关联网关日志）H\x06R\trequestId\x88\x01\x01\x12W\n" +
-	"\vdata_source\x18\f \x01(\tB1\xbaG.\x92\x02+数据源类型（mysql/redis/mongodb/es）H\aR\n" +
+	"request_id\x18\v \x01(\tB,\xbaG)\x92\x02&全局请求ID（关联网关日志）H\x04R\trequestId\x88\x01\x01\x12W\n" +
+	"\vdata_source\x18\f \x01(\tB1\xbaG.\x92\x02+数据源类型（mysql/redis/mongodb/es）H\x05R\n" +
 	"dataSource\x88\x01\x01\x12o\n" +
 	"\n" +
-	"table_name\x18\r \x01(\tBK\xbaGH\x92\x02E数据表名（如 sys_operators/order_info，Redis 为 key 前缀）H\bR\ttableName\x88\x01\x01\x12j\n" +
-	"\adata_id\x18\x0e \x01(\tBL\xbaGI\x92\x02F数据主键ID（如用户ID/订单ID，兼容不同表主键类型）H\tR\x06dataId\x88\x01\x01\x12\x8d\x01\n" +
-	"\vaccess_type\x18\x14 \x01(\x0e2,.core.audit.v1.DataAccessAuditLog.AccessTypeB9\xbaG6\x92\x023数据访问类型（SELECT/INSERT/UPDATE/DELETE）H\n" +
-	"R\n" +
+	"table_name\x18\r \x01(\tBK\xbaGH\x92\x02E数据表名（如 sys_operators/order_info，Redis 为 key 前缀）H\x06R\ttableName\x88\x01\x01\x12j\n" +
+	"\adata_id\x18\x0e \x01(\tBL\xbaGI\x92\x02F数据主键ID（如用户ID/订单ID，兼容不同表主键类型）H\aR\x06dataId\x88\x01\x01\x12\x8d\x01\n" +
+	"\vaccess_type\x18\x14 \x01(\x0e2,.core.audit.v1.DataAccessAuditLog.AccessTypeB9\xbaG6\x92\x023数据访问类型（SELECT/INSERT/UPDATE/DELETE）H\bR\n" +
 	"accessType\x88\x01\x01\x12K\n" +
 	"\n" +
-	"sql_digest\x18\x15 \x01(\tB'\xbaG$\x92\x02!执行的SQL语句摘要（MD5）H\vR\tsqlDigest\x88\x01\x01\x12X\n" +
-	"\bsql_text\x18\x16 \x01(\tB8\xbaG5\x92\x022执行的SQL语句（脱敏后，Redis为命令）H\fR\asqlText\x88\x01\x01\x12Y\n" +
-	"\raffected_rows\x18\x17 \x01(\rB/\xbaG,\x92\x02)影响行数（Redis为影响key数量）H\rR\faffectedRows\x88\x01\x01\x12L\n" +
+	"sql_digest\x18\x15 \x01(\tB'\xbaG$\x92\x02!执行的SQL语句摘要（MD5）H\tR\tsqlDigest\x88\x01\x01\x12X\n" +
+	"\bsql_text\x18\x16 \x01(\tB8\xbaG5\x92\x022执行的SQL语句（脱敏后，Redis为命令）H\n" +
+	"R\asqlText\x88\x01\x01\x12Y\n" +
+	"\raffected_rows\x18\x17 \x01(\rB/\xbaG,\x92\x02)影响行数（Redis为影响key数量）H\vR\faffectedRows\x88\x01\x01\x12L\n" +
 	"\n" +
-	"latency_ms\x18\x18 \x01(\rB(\xfaB\a*\x05\x18\x80\xdd\xdb\x01\xbaG\x1b\x92\x02\x18延迟时间（毫秒）H\x0eR\tlatencyMs\x88\x01\x01\x127\n" +
-	"\asuccess\x18\x19 \x01(\bB\x18\xbaG\x15\x92\x02\x12操作是否成功H\x0fR\asuccess\x88\x01\x01\x12e\n" +
-	"\x0fsensitive_level\x18\x1a \x01(\x0e2\x1d.core.audit.v1.SensitiveLevelB\x18\xbaG\x15\x92\x02\x12数据敏感级别H\x10R\x0esensitiveLevel\x88\x01\x01\x12;\n" +
-	"\vdata_masked\x18\x1e \x01(\bB\x15\xbaG\x12\x92\x02\x0f是否已脱敏H\x11R\n" +
+	"latency_ms\x18\x18 \x01(\rB(\xfaB\a*\x05\x18\x80\xdd\xdb\x01\xbaG\x1b\x92\x02\x18延迟时间（毫秒）H\fR\tlatencyMs\x88\x01\x01\x127\n" +
+	"\asuccess\x18\x19 \x01(\bB\x18\xbaG\x15\x92\x02\x12操作是否成功H\rR\asuccess\x88\x01\x01\x12e\n" +
+	"\x0fsensitive_level\x18\x1a \x01(\x0e2\x1d.core.audit.v1.SensitiveLevelB\x18\xbaG\x15\x92\x02\x12数据敏感级别H\x0eR\x0esensitiveLevel\x88\x01\x01\x12;\n" +
+	"\vdata_masked\x18\x1e \x01(\bB\x15\xbaG\x12\x92\x02\x0f是否已脱敏H\x0fR\n" +
 	"dataMasked\x88\x01\x01\x12`\n" +
-	"\rmasking_rules\x18\x1f \x01(\tB6\xbaG3\x92\x020脱敏规则（JSON：{\"phone\":\"mask_last_4\"}）H\x12R\fmaskingRules\x88\x01\x01\x12b\n" +
-	"\x10business_purpose\x18  \x01(\tB2\xfaB\x17r\x15\x10\x052\x11^\\w+:[a-z0-9_-]+$\xbaG\x15\x92\x02\x12业务处理目的H\x13R\x0fbusinessPurpose\x88\x01\x01\x12B\n" +
-	"\rdata_category\x18\" \x01(\tB\x18\xbaG\x15\x92\x02\x12数据分类标签H\x14R\fdataCategory\x88\x01\x01\x123\n" +
-	"\adb_user\x18# \x01(\tB\x15\xbaG\x12\x92\x02\x0f数据库用户H\x15R\x06dbUser\x88\x01\x01\x12\\\n" +
-	"\blog_hash\x18( \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\x16R\alogHash\x88\x01\x01\x12~\n" +
-	"\tsignature\x18) \x01(\fB[\xbaGX\x92\x02U日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）H\x17R\tsignature\x88\x01\x01\x12X\n" +
+	"\rmasking_rules\x18\x1f \x01(\tB6\xbaG3\x92\x020脱敏规则（JSON：{\"phone\":\"mask_last_4\"}）H\x10R\fmaskingRules\x88\x01\x01\x12b\n" +
+	"\x10business_purpose\x18  \x01(\tB2\xfaB\x17r\x15\x10\x052\x11^\\w+:[a-z0-9_-]+$\xbaG\x15\x92\x02\x12业务处理目的H\x11R\x0fbusinessPurpose\x88\x01\x01\x12B\n" +
+	"\rdata_category\x18\" \x01(\tB\x18\xbaG\x15\x92\x02\x12数据分类标签H\x12R\fdataCategory\x88\x01\x01\x123\n" +
+	"\adb_user\x18# \x01(\tB\x15\xbaG\x12\x92\x02\x0f数据库用户H\x13R\x06dbUser\x88\x01\x01\x12\\\n" +
+	"\blog_hash\x18( \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\x14R\alogHash\x88\x01\x01\x12w\n" +
+	"\tsignature\x18) \x01(\fBT\xbaGQ\x92\x02N日志数字签名（ECDSA，签名内容：operator_id+created_at+log_hash）H\x15R\tsignature\x88\x01\x01\x12X\n" +
 	"\n" +
-	"created_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x18R\tcreatedAt\x88\x01\x01\"\xf4\x01\n" +
+	"created_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x16R\tcreatedAt\x88\x01\x01\"\xf4\x01\n" +
 	"\n" +
 	"AccessType\x12\x1b\n" +
 	"\x17ACCESS_TYPE_UNSPECIFIED\x10\x00\x12\n" +
@@ -643,9 +623,7 @@ const file_core_audit_v1_data_access_audit_log_proto_rawDesc = "" +
 	"\x04SCAN\x10\r\x12\x13\n" +
 	"\x0fADMIN_OPERATION\x10\x0e\x12\t\n" +
 	"\x05OTHER\x10dB\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
-	"\t_app_nameB\x0e\n" +
+	"\x03_idB\x0e\n" +
 	"\f_operator_idB\v\n" +
 	"\t_usernameB\r\n" +
 	"\v_ip_addressB\r\n" +

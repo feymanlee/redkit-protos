@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// UserLifecycleAdminService 是 App-scoped 的 User 生命周期观察与受控恢复 BFF。
+// UserLifecycleAdminService 是 User 生命周期观察与受控恢复 BFF。
 type UserLifecycleAdminServiceClient interface {
 	// 查询 LifecycleOperation 列表。
 	ListLifecycleOperations(ctx context.Context, in *AdminListLifecycleOperationsRequest, opts ...grpc.CallOption) (*v1.ListLifecycleOperationsResponse, error)
@@ -69,7 +69,7 @@ func (c *userLifecycleAdminServiceClient) RetryLifecycleOperation(ctx context.Co
 // All implementations must embed UnimplementedUserLifecycleAdminServiceServer
 // for forward compatibility.
 //
-// UserLifecycleAdminService 是 App-scoped 的 User 生命周期观察与受控恢复 BFF。
+// UserLifecycleAdminService 是 User 生命周期观察与受控恢复 BFF。
 type UserLifecycleAdminServiceServer interface {
 	// 查询 LifecycleOperation 列表。
 	ListLifecycleOperations(context.Context, *AdminListLifecycleOperationsRequest) (*v1.ListLifecycleOperationsResponse, error)

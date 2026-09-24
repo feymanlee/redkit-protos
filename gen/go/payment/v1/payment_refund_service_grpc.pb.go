@@ -49,7 +49,7 @@ type PaymentRefundServiceClient interface {
 	RejectRefundRequest(ctx context.Context, in *ReviewRefundRequestRequest, opts ...grpc.CallOption) (*RefundRequest, error)
 	// 查询退款申请。
 	ListRefundRequests(ctx context.Context, in *ListRefundRequestsRequest, opts ...grpc.CallOption) (*ListRefundRequestsResponse, error)
-	// 配置 App/币种退款风险阈值。
+	// 配置币种退款风险阈值。
 	UpsertRefundRiskRule(ctx context.Context, in *UpsertRefundRiskRuleRequest, opts ...grpc.CallOption) (*RefundRiskRule, error)
 	// 查询退款风险阈值。
 	ListRefundRiskRules(ctx context.Context, in *ListRefundRiskRulesRequest, opts ...grpc.CallOption) (*ListRefundRiskRulesResponse, error)
@@ -173,7 +173,7 @@ type PaymentRefundServiceServer interface {
 	RejectRefundRequest(context.Context, *ReviewRefundRequestRequest) (*RefundRequest, error)
 	// 查询退款申请。
 	ListRefundRequests(context.Context, *ListRefundRequestsRequest) (*ListRefundRequestsResponse, error)
-	// 配置 App/币种退款风险阈值。
+	// 配置币种退款风险阈值。
 	UpsertRefundRiskRule(context.Context, *UpsertRefundRiskRuleRequest) (*RefundRiskRule, error)
 	// 查询退款风险阈值。
 	ListRefundRiskRules(context.Context, *ListRefundRiskRulesRequest) (*ListRefundRiskRulesResponse, error)

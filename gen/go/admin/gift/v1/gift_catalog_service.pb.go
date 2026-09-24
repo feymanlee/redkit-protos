@@ -67,7 +67,7 @@ type AdminGiftPatch struct {
 	GiftTier *string `protobuf:"bytes,17,opt,name=gift_tier,json=giftTier,proto3,oneof" json:"gift_tier,omitempty"`
 	// effects 设置结构化特效资源清单；提供时整体替换 Draft 中的既有清单。
 	Effects []*v1.GiftEffect `protobuf:"bytes,18,rep,name=effects,proto3" json:"effects,omitempty"`
-	// display_placements 设置 App 级陈列位投放；提供时整体替换。
+	// display_placements 设置 陈列位投放；提供时整体替换。
 	DisplayPlacements []*v1.GiftDisplayPlacement `protobuf:"bytes,19,rep,name=display_placements,json=displayPlacements,proto3" json:"display_placements,omitempty"`
 	// locales 设置多语言文案；提供时整体替换，默认 locale 必填。
 	Locales []*v1.GiftLocaleText `protobuf:"bytes,20,rep,name=locales,proto3" json:"locales,omitempty"`

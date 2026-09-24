@@ -211,7 +211,7 @@ message AdminSubmitSubscriptionAdjustmentRequest {
   .payment.v1.SubscriptionAdjustmentType type = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
   // subscription_id 标识关联的 Subscription。
   optional uint64 subscription_id = 2 [(validate.rules).uint64.gt = 0];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3 [(validate.rules).uint64.gt = 0];
   // plan_revision_id 标识关联的 PlanRevision。
   optional uint64 plan_revision_id = 4 [(validate.rules).uint64.gt = 0];
@@ -265,7 +265,7 @@ message AdminListProviderSubscriptionsRequest {
   repeated .payment.v1.PaymentProvider providers = 2 [(validate.rules).repeated = {max_items: 2, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
   // statuses 列出 ListProviderSubscriptions 关联的 ProviderSubscriptionStatus。
   repeated .payment.v1.ProviderSubscriptionStatus statuses = 3 [(validate.rules).repeated = {max_items: 6, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 4 [(validate.rules).uint64.gt = 0];
   // plan_revision_id 标识关联的 PlanRevision。
   optional uint64 plan_revision_id = 5 [(validate.rules).uint64.gt = 0];
@@ -281,7 +281,7 @@ message AdminGetProviderSubscriptionDetailRequest {
 message AdminVerifyProviderSubscriptionPurchaseRequest {
   // provider 标识本次能力使用的外部 Provider。
   .payment.v1.PaymentProvider provider = 1 [(validate.rules).enum = {defined_only: true, in: [3, 4]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // channel_revision_id 标识关联的 ChannelRevision。
   uint64 channel_revision_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];

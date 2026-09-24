@@ -7,8 +7,8 @@
 package filepb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,15 +27,14 @@ const (
 type CreateUploadSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 强类型业务用途。
-	Purpose v11.FilePurpose `protobuf:"varint,2,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
+	Purpose v1.FilePurpose `protobuf:"varint,2,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
 	// 文件归属主体类型。
-	OwnerType v11.FileOwnerType `protobuf:"varint,3,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
+	OwnerType v1.FileOwnerType `protobuf:"varint,3,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
 	// 文件归属主体 ID。
 	OwnerId uint64 `protobuf:"varint,4,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	// 创建主体类型。
-	CreatorType v11.FileCreatorType `protobuf:"varint,5,opt,name=creator_type,json=creatorType,proto3,enum=common.file.v1.FileCreatorType" json:"creator_type,omitempty"`
+	CreatorType v1.FileCreatorType `protobuf:"varint,5,opt,name=creator_type,json=creatorType,proto3,enum=common.file.v1.FileCreatorType" json:"creator_type,omitempty"`
 	// 创建主体 ID。
 	CreatorId uint64 `protobuf:"varint,6,opt,name=creator_id,json=creatorId,proto3" json:"creator_id,omitempty"`
 	// 原始文件名，仅用于内部审计。
@@ -86,25 +85,18 @@ func (*CreateUploadSessionRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_upload_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateUploadSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *CreateUploadSessionRequest) GetPurpose() v11.FilePurpose {
+func (x *CreateUploadSessionRequest) GetPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *CreateUploadSessionRequest) GetOwnerType() v11.FileOwnerType {
+func (x *CreateUploadSessionRequest) GetOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.OwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *CreateUploadSessionRequest) GetOwnerId() uint64 {
@@ -114,11 +106,11 @@ func (x *CreateUploadSessionRequest) GetOwnerId() uint64 {
 	return 0
 }
 
-func (x *CreateUploadSessionRequest) GetCreatorType() v11.FileCreatorType {
+func (x *CreateUploadSessionRequest) GetCreatorType() v1.FileCreatorType {
 	if x != nil {
 		return x.CreatorType
 	}
-	return v11.FileCreatorType(0)
+	return v1.FileCreatorType(0)
 }
 
 func (x *CreateUploadSessionRequest) GetCreatorId() uint64 {
@@ -236,7 +228,6 @@ func (x *CreateUploadSessionResponse) GetCredential() *TemporaryCredential {
 type CompleteUploadSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 会话号。
 	SessionNo string `protobuf:"bytes,2,opt,name=session_no,json=sessionNo,proto3" json:"session_no,omitempty"`
 	// Provider 返回的 ETag。
@@ -277,13 +268,6 @@ func (x *CompleteUploadSessionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CompleteUploadSessionRequest.ProtoReflect.Descriptor instead.
 func (*CompleteUploadSessionRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_upload_service_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CompleteUploadSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CompleteUploadSessionRequest) GetSessionNo() string {
@@ -364,7 +348,6 @@ func (x *CompleteUploadSessionResponse) GetFile() *File {
 type AbortUploadSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 会话号。
 	SessionNo string `protobuf:"bytes,2,opt,name=session_no,json=sessionNo,proto3" json:"session_no,omitempty"`
 	// 取消原因。
@@ -405,13 +388,6 @@ func (*AbortUploadSessionRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_upload_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *AbortUploadSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *AbortUploadSessionRequest) GetSessionNo() string {
 	if x != nil {
 		return x.SessionNo
@@ -437,7 +413,6 @@ func (x *AbortUploadSessionRequest) GetRequestId() string {
 type GetUploadSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 会话号。
 	SessionNo     string `protobuf:"bytes,2,opt,name=session_no,json=sessionNo,proto3" json:"session_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -474,13 +449,6 @@ func (*GetUploadSessionRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_upload_service_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetUploadSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetUploadSessionRequest) GetSessionNo() string {
 	if x != nil {
 		return x.SessionNo
@@ -492,9 +460,9 @@ func (x *GetUploadSessionRequest) GetSessionNo() string {
 type StoreServiceFileMetadata struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// purpose 指定 StoreServiceFileMetadata 数据或能力的预期用途。
-	Purpose v11.FilePurpose `protobuf:"varint,1,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
+	Purpose v1.FilePurpose `protobuf:"varint,1,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
 	// owner_type 区分 StoreServiceFileMetadata 的业务类型。
-	OwnerType v11.FileOwnerType `protobuf:"varint,2,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
+	OwnerType v1.FileOwnerType `protobuf:"varint,2,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
 	// owner_id 标识关联的 Owner。
 	OwnerId uint64 `protobuf:"varint,3,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	// creator_id 标识关联的 Creator。
@@ -547,18 +515,18 @@ func (*StoreServiceFileMetadata) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_upload_service_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *StoreServiceFileMetadata) GetPurpose() v11.FilePurpose {
+func (x *StoreServiceFileMetadata) GetPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *StoreServiceFileMetadata) GetOwnerType() v11.FileOwnerType {
+func (x *StoreServiceFileMetadata) GetOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.OwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *StoreServiceFileMetadata) GetOwnerId() uint64 {
@@ -627,8 +595,6 @@ func (x *StoreServiceFileMetadata) GetRequestId() string {
 // StoreServiceFileRequest streams one internal-service-owned file without exposing storage credentials.
 type StoreServiceFileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 StoreServiceFile 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// StoreServiceFileRequest 在以下 part 分支中选择一种。
 	//
 	// Types that are valid to be assigned to Part:
@@ -668,13 +634,6 @@ func (x *StoreServiceFileRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use StoreServiceFileRequest.ProtoReflect.Descriptor instead.
 func (*StoreServiceFileRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_upload_service_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *StoreServiceFileRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *StoreServiceFileRequest) GetPart() isStoreServiceFileRequest_Part {
@@ -724,9 +683,8 @@ var File_support_file_v1_upload_service_proto protoreflect.FileDescriptor
 
 const file_support_file_v1_upload_service_proto_rawDesc = "" +
 	"\n" +
-	"$support/file/v1/upload_service.proto\x12\x0fsupport.file.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1bsupport/file/v1/types.proto\"\xb6\x04\n" +
-	"\x1aCreateUploadSessionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x125\n" +
+	"$support/file/v1/upload_service.proto\x12\x0fsupport.file.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1bsupport/file/v1/types.proto\"\x8d\x04\n" +
+	"\x1aCreateUploadSessionRequest\x125\n" +
 	"\apurpose\x18\x02 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\apurpose\x12<\n" +
 	"\n" +
 	"owner_type\x18\x03 \x01(\x0e2\x1d.common.file.v1.FileOwnerTypeR\townerType\x12\x19\n" +
@@ -748,9 +706,8 @@ const file_support_file_v1_upload_service_proto_rawDesc = "" +
 	"\asession\x18\x01 \x01(\v2\x1e.support.file.v1.UploadSessionR\asession\x12D\n" +
 	"\n" +
 	"credential\x18\x02 \x01(\v2$.support.file.v1.TemporaryCredentialR\n" +
-	"credential\"\xb5\x01\n" +
-	"\x1cCompleteUploadSessionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"credential\"\x8c\x01\n" +
+	"\x1cCompleteUploadSessionRequest\x12\x1d\n" +
 	"\n" +
 	"session_no\x18\x02 \x01(\tR\tsessionNo\x12\x12\n" +
 	"\x04etag\x18\x03 \x01(\tR\x04etag\x12\x1a\n" +
@@ -758,16 +715,14 @@ const file_support_file_v1_upload_service_proto_rawDesc = "" +
 	"\n" +
 	"request_id\x18\x05 \x01(\tR\trequestId\"J\n" +
 	"\x1dCompleteUploadSessionResponse\x12)\n" +
-	"\x04file\x18\x01 \x01(\v2\x15.support.file.v1.FileR\x04file\"\x9a\x01\n" +
-	"\x19AbortUploadSessionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x04file\x18\x01 \x01(\v2\x15.support.file.v1.FileR\x04file\"q\n" +
+	"\x19AbortUploadSessionRequest\x12\x1d\n" +
 	"\n" +
 	"session_no\x18\x02 \x01(\tR\tsessionNo\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tR\trequestId\"a\n" +
-	"\x17GetUploadSessionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"request_id\x18\x04 \x01(\tR\trequestId\"8\n" +
+	"\x17GetUploadSessionRequest\x12\x1d\n" +
 	"\n" +
 	"session_no\x18\x02 \x01(\tR\tsessionNo\"\xc7\x03\n" +
 	"\x18StoreServiceFileMetadata\x125\n" +
@@ -786,9 +741,8 @@ const file_support_file_v1_upload_service_proto_rawDesc = "" +
 	"\x0fidempotency_key\x18\n" +
 	" \x01(\tR\x0eidempotencyKey\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\v \x01(\tR\trequestId\"\xab\x01\n" +
-	"\x17StoreServiceFileRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12G\n" +
+	"request_id\x18\v \x01(\tR\trequestId\"\x82\x01\n" +
+	"\x17StoreServiceFileRequest\x12G\n" +
 	"\bmetadata\x18\x02 \x01(\v2).support.file.v1.StoreServiceFileMetadataH\x00R\bmetadata\x12\x16\n" +
 	"\x05chunk\x18\x03 \x01(\fH\x00R\x05chunkB\x06\n" +
 	"\x04part2\xad\x04\n" +
@@ -822,44 +776,38 @@ var file_support_file_v1_upload_service_proto_goTypes = []any{
 	(*GetUploadSessionRequest)(nil),       // 5: support.file.v1.GetUploadSessionRequest
 	(*StoreServiceFileMetadata)(nil),      // 6: support.file.v1.StoreServiceFileMetadata
 	(*StoreServiceFileRequest)(nil),       // 7: support.file.v1.StoreServiceFileRequest
-	(v1.AppId)(0),                         // 8: common.v1.AppId
-	(v11.FilePurpose)(0),                  // 9: common.file.v1.FilePurpose
-	(v11.FileOwnerType)(0),                // 10: common.file.v1.FileOwnerType
-	(v11.FileCreatorType)(0),              // 11: common.file.v1.FileCreatorType
-	(*UploadSession)(nil),                 // 12: support.file.v1.UploadSession
-	(*TemporaryCredential)(nil),           // 13: support.file.v1.TemporaryCredential
-	(*File)(nil),                          // 14: support.file.v1.File
+	(v1.FilePurpose)(0),                   // 8: common.file.v1.FilePurpose
+	(v1.FileOwnerType)(0),                 // 9: common.file.v1.FileOwnerType
+	(v1.FileCreatorType)(0),               // 10: common.file.v1.FileCreatorType
+	(*UploadSession)(nil),                 // 11: support.file.v1.UploadSession
+	(*TemporaryCredential)(nil),           // 12: support.file.v1.TemporaryCredential
+	(*File)(nil),                          // 13: support.file.v1.File
 }
 var file_support_file_v1_upload_service_proto_depIdxs = []int32{
-	8,  // 0: support.file.v1.CreateUploadSessionRequest.app_id:type_name -> common.v1.AppId
-	9,  // 1: support.file.v1.CreateUploadSessionRequest.purpose:type_name -> common.file.v1.FilePurpose
-	10, // 2: support.file.v1.CreateUploadSessionRequest.owner_type:type_name -> common.file.v1.FileOwnerType
-	11, // 3: support.file.v1.CreateUploadSessionRequest.creator_type:type_name -> common.file.v1.FileCreatorType
-	12, // 4: support.file.v1.CreateUploadSessionResponse.session:type_name -> support.file.v1.UploadSession
-	13, // 5: support.file.v1.CreateUploadSessionResponse.credential:type_name -> support.file.v1.TemporaryCredential
-	8,  // 6: support.file.v1.CompleteUploadSessionRequest.app_id:type_name -> common.v1.AppId
-	14, // 7: support.file.v1.CompleteUploadSessionResponse.file:type_name -> support.file.v1.File
-	8,  // 8: support.file.v1.AbortUploadSessionRequest.app_id:type_name -> common.v1.AppId
-	8,  // 9: support.file.v1.GetUploadSessionRequest.app_id:type_name -> common.v1.AppId
-	9,  // 10: support.file.v1.StoreServiceFileMetadata.purpose:type_name -> common.file.v1.FilePurpose
-	10, // 11: support.file.v1.StoreServiceFileMetadata.owner_type:type_name -> common.file.v1.FileOwnerType
-	8,  // 12: support.file.v1.StoreServiceFileRequest.app_id:type_name -> common.v1.AppId
-	6,  // 13: support.file.v1.StoreServiceFileRequest.metadata:type_name -> support.file.v1.StoreServiceFileMetadata
-	0,  // 14: support.file.v1.FileUploadService.CreateUploadSession:input_type -> support.file.v1.CreateUploadSessionRequest
-	2,  // 15: support.file.v1.FileUploadService.CompleteUploadSession:input_type -> support.file.v1.CompleteUploadSessionRequest
-	4,  // 16: support.file.v1.FileUploadService.AbortUploadSession:input_type -> support.file.v1.AbortUploadSessionRequest
-	5,  // 17: support.file.v1.FileUploadService.GetUploadSession:input_type -> support.file.v1.GetUploadSessionRequest
-	7,  // 18: support.file.v1.FileUploadService.StoreServiceFile:input_type -> support.file.v1.StoreServiceFileRequest
-	1,  // 19: support.file.v1.FileUploadService.CreateUploadSession:output_type -> support.file.v1.CreateUploadSessionResponse
-	3,  // 20: support.file.v1.FileUploadService.CompleteUploadSession:output_type -> support.file.v1.CompleteUploadSessionResponse
-	12, // 21: support.file.v1.FileUploadService.AbortUploadSession:output_type -> support.file.v1.UploadSession
-	12, // 22: support.file.v1.FileUploadService.GetUploadSession:output_type -> support.file.v1.UploadSession
-	3,  // 23: support.file.v1.FileUploadService.StoreServiceFile:output_type -> support.file.v1.CompleteUploadSessionResponse
-	19, // [19:24] is the sub-list for method output_type
-	14, // [14:19] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	8,  // 0: support.file.v1.CreateUploadSessionRequest.purpose:type_name -> common.file.v1.FilePurpose
+	9,  // 1: support.file.v1.CreateUploadSessionRequest.owner_type:type_name -> common.file.v1.FileOwnerType
+	10, // 2: support.file.v1.CreateUploadSessionRequest.creator_type:type_name -> common.file.v1.FileCreatorType
+	11, // 3: support.file.v1.CreateUploadSessionResponse.session:type_name -> support.file.v1.UploadSession
+	12, // 4: support.file.v1.CreateUploadSessionResponse.credential:type_name -> support.file.v1.TemporaryCredential
+	13, // 5: support.file.v1.CompleteUploadSessionResponse.file:type_name -> support.file.v1.File
+	8,  // 6: support.file.v1.StoreServiceFileMetadata.purpose:type_name -> common.file.v1.FilePurpose
+	9,  // 7: support.file.v1.StoreServiceFileMetadata.owner_type:type_name -> common.file.v1.FileOwnerType
+	6,  // 8: support.file.v1.StoreServiceFileRequest.metadata:type_name -> support.file.v1.StoreServiceFileMetadata
+	0,  // 9: support.file.v1.FileUploadService.CreateUploadSession:input_type -> support.file.v1.CreateUploadSessionRequest
+	2,  // 10: support.file.v1.FileUploadService.CompleteUploadSession:input_type -> support.file.v1.CompleteUploadSessionRequest
+	4,  // 11: support.file.v1.FileUploadService.AbortUploadSession:input_type -> support.file.v1.AbortUploadSessionRequest
+	5,  // 12: support.file.v1.FileUploadService.GetUploadSession:input_type -> support.file.v1.GetUploadSessionRequest
+	7,  // 13: support.file.v1.FileUploadService.StoreServiceFile:input_type -> support.file.v1.StoreServiceFileRequest
+	1,  // 14: support.file.v1.FileUploadService.CreateUploadSession:output_type -> support.file.v1.CreateUploadSessionResponse
+	3,  // 15: support.file.v1.FileUploadService.CompleteUploadSession:output_type -> support.file.v1.CompleteUploadSessionResponse
+	11, // 16: support.file.v1.FileUploadService.AbortUploadSession:output_type -> support.file.v1.UploadSession
+	11, // 17: support.file.v1.FileUploadService.GetUploadSession:output_type -> support.file.v1.UploadSession
+	3,  // 18: support.file.v1.FileUploadService.StoreServiceFile:output_type -> support.file.v1.CompleteUploadSessionResponse
+	14, // [14:19] is the sub-list for method output_type
+	9,  // [9:14] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_support_file_v1_upload_service_proto_init() }

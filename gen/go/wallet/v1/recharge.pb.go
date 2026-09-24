@@ -8,8 +8,8 @@ package walletpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "github.com/google/gnostic/openapiv3"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -396,8 +396,6 @@ type RechargeStoreProductMapping struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 RechargeStoreProductMapping。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 RechargeStoreProductMapping 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// product_revision_id 标识关联的 ProductRevision。
 	ProductRevisionId *uint64 `protobuf:"varint,3,opt,name=product_revision_id,json=productRevisionId,proto3,oneof" json:"product_revision_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
@@ -449,13 +447,6 @@ func (*RechargeStoreProductMapping) Descriptor() ([]byte, []int) {
 func (x *RechargeStoreProductMapping) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *RechargeStoreProductMapping) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -578,8 +569,6 @@ type RechargeProduct struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 商品 ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 商品名称。
 	Name *string `protobuf:"bytes,3,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// 商品编码。
@@ -633,13 +622,6 @@ func (x *RechargeProduct) GetId() uint32 {
 	return 0
 }
 
-func (x *RechargeProduct) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
 func (x *RechargeProduct) GetName() string {
 	if x != nil && x.Name != nil {
 		return *x.Name
@@ -687,8 +669,6 @@ type RechargeProductRevision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 RechargeProductRevision。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 RechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// product_id 标识关联的 Product。
 	ProductId *uint32 `protobuf:"varint,3,opt,name=product_id,json=productId,proto3,oneof" json:"product_id,omitempty"`
 	// revision_no 是 RechargeProductRevision 对外关联与审计使用的业务编号。
@@ -764,13 +744,6 @@ func (*RechargeProductRevision) Descriptor() ([]byte, []int) {
 func (x *RechargeProductRevision) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *RechargeProductRevision) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -913,8 +886,6 @@ type RechargeOrder struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 订单 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 商品 ID。
@@ -986,13 +957,6 @@ func (*RechargeOrder) Descriptor() ([]byte, []int) {
 func (x *RechargeOrder) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *RechargeOrder) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1216,7 +1180,7 @@ func (x *ConsumerRechargeOffer) GetStoreProduct() *RechargeStoreProduct {
 	return nil
 }
 
-// 面向 BFF 的安全 Recharge Order，不暴露 App、User、Payment 或内部 Revision 身份。
+// 面向 BFF 的安全 Recharge Order，不暴露 User、Payment 或内部 Revision 身份。
 type ConsumerRechargeOrder struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// purchase_request_id 标识关联的 PurchaseRequest。
@@ -1352,7 +1316,7 @@ func (x *ConsumerRechargeOrder) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// 查询当前 App 可购买 Recharge Offer；App 和 User 只来自可信 metadata。
+// 查询可购买 Recharge Offer；User 只来自可信 metadata。
 type ListConsumerRechargeOffersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// client_platform 承载 ListConsumerRechargeOffers 关联的 RechargeClientPlatform。
@@ -1645,7 +1609,7 @@ func (x *StoreRechargePurchaseAction) GetStoreProduct() *RechargeStoreProduct {
 	return nil
 }
 
-// Payment 重新校验充值订单时使用的窄化请求；App 与 User 只来自可信 metadata。
+// Payment 重新校验充值订单时使用的窄化请求；User 只来自可信 metadata。
 type GetRechargeOrderForPaymentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// purchase_request_id 标识关联的 PurchaseRequest。
@@ -1694,9 +1658,7 @@ func (x *GetRechargeOrderForPaymentRequest) GetPurchaseRequestId() string {
 // Wallet 返回给 Payment 的权威充值订单事实，不作为 Consumer 响应。
 type RechargeOrderPaymentFact struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RechargeOrderPaymentFact 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// purchase_request_id 标识关联的 PurchaseRequest。
 	PurchaseRequestId string `protobuf:"bytes,3,opt,name=purchase_request_id,json=purchaseRequestId,proto3" json:"purchase_request_id,omitempty"`
@@ -1754,13 +1716,6 @@ func (x *RechargeOrderPaymentFact) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RechargeOrderPaymentFact.ProtoReflect.Descriptor instead.
 func (*RechargeOrderPaymentFact) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_recharge_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *RechargeOrderPaymentFact) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
 }
 
 func (x *RechargeOrderPaymentFact) GetUserId() uint64 {
@@ -1912,12 +1867,10 @@ func (x *ListRechargeProductResponse) GetTotal() uint64 {
 // ListRechargeProductRevisionRequest 定义 RechargeProductRevision 的筛选与分页参数。
 type ListRechargeProductRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// product_id 标识关联的 Product。
 	ProductId *uint32 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3,oneof" json:"product_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1952,13 +1905,6 @@ func (*ListRechargeProductRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_recharge_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *ListRechargeProductRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListRechargeProductRevisionRequest) GetProductId() uint32 {
 	if x != nil && x.ProductId != nil {
 		return *x.ProductId
@@ -1966,7 +1912,7 @@ func (x *ListRechargeProductRevisionRequest) GetProductId() uint32 {
 	return 0
 }
 
-func (x *ListRechargeProductRevisionRequest) GetPaging() *v11.PagingRequest {
+func (x *ListRechargeProductRevisionRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -2087,9 +2033,7 @@ func (x *ListRechargeOrderResponse) GetTotal() uint64 {
 type GetRechargeOrderRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// order_no 是 GetRechargeOrder 对外关联与审计使用的业务编号。
-	OrderNo string `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
-	// app_id 限定 GetRechargeOrder 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	OrderNo       string `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2131,18 +2075,9 @@ func (x *GetRechargeOrderRequest) GetOrderNo() string {
 	return ""
 }
 
-func (x *GetRechargeOrderRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // 创建充值商品 Revision 草稿；product_id 为空时同时创建稳定商品身份。
 type CreateRechargeProductRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// product_id 标识关联的 Product。
 	ProductId *uint32 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3,oneof" json:"product_id,omitempty"`
 	// name 提供 CreateRechargeProductRevision 面向展示或识别的名称。
@@ -2197,13 +2132,6 @@ func (x *CreateRechargeProductRevisionRequest) ProtoReflect() protoreflect.Messa
 // Deprecated: Use CreateRechargeProductRevisionRequest.ProtoReflect.Descriptor instead.
 func (*CreateRechargeProductRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_recharge_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *CreateRechargeProductRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateRechargeProductRevisionRequest) GetProductId() uint32 {
@@ -2286,8 +2214,6 @@ func (x *CreateRechargeProductRevisionRequest) GetStoreProducts() []*RechargeSto
 // 审批 Revision 并安排生效时间。
 type ApproveRechargeProductRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApproveRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// revision_id 标识关联的 Revision。
 	RevisionId uint64 `protobuf:"varint,2,opt,name=revision_id,json=revisionId,proto3" json:"revision_id,omitempty"`
 	// effective_at 记录 ApproveRechargeProductRevision 对应业务阶段的时间点。
@@ -2328,13 +2254,6 @@ func (*ApproveRechargeProductRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_recharge_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *ApproveRechargeProductRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ApproveRechargeProductRevisionRequest) GetRevisionId() uint64 {
 	if x != nil {
 		return x.RevisionId
@@ -2359,8 +2278,6 @@ func (x *ApproveRechargeProductRevisionRequest) GetGovernance() *WalletGovernanc
 // 创建充值订单请求。
 type CreateRechargeOrderRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 商品 ID。
@@ -2399,13 +2316,6 @@ func (*CreateRechargeOrderRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_recharge_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *CreateRechargeOrderRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateRechargeOrderRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -2425,8 +2335,6 @@ type CloseRechargeOrderRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 订单号。
 	OrderNo string `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// Trusted governance identity for Admin closure.
 	Governance    *WalletGovernanceIdentity `protobuf:"bytes,3,opt,name=governance,proto3,oneof" json:"governance,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2470,13 +2378,6 @@ func (x *CloseRechargeOrderRequest) GetOrderNo() string {
 	return ""
 }
 
-func (x *CloseRechargeOrderRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CloseRechargeOrderRequest) GetGovernance() *WalletGovernanceIdentity {
 	if x != nil {
 		return x.Governance
@@ -2489,8 +2390,6 @@ type CreditRechargeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 稳定事件 ID。
 	EventId string `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 充值订单号。
 	OrderNo string `protobuf:"bytes,3,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
 	// 支付单号。
@@ -2536,13 +2435,6 @@ func (x *CreditRechargeRequest) GetEventId() string {
 	return ""
 }
 
-func (x *CreditRechargeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreditRechargeRequest) GetOrderNo() string {
 	if x != nil {
 		return x.OrderNo
@@ -2565,21 +2457,19 @@ const file_wallet_v1_recharge_proto_rawDesc = "" +
 	"\x14RechargeStoreProduct\x12 \n" +
 	"\fstore_app_id\x18\x01 \x01(\tR\n" +
 	"storeAppId\x12\x10\n" +
-	"\x03sku\x18\x02 \x01(\tR\x03sku\"\xa8\x04\n" +
+	"\x03sku\x18\x02 \x01(\tR\x03sku\"\x81\x04\n" +
 	"\x1bRechargeStoreProductMapping\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x123\n" +
-	"\x13product_revision_id\x18\x03 \x01(\x04H\x02R\x11productRevisionId\x88\x01\x01\x12<\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x123\n" +
+	"\x13product_revision_id\x18\x03 \x01(\x04H\x01R\x11productRevisionId\x88\x01\x01\x12<\n" +
 	"\bprovider\x18\x04 \x01(\x0e2 .wallet.v1.RechargeStoreProviderR\bprovider\x12 \n" +
 	"\fstore_app_id\x18\x05 \x01(\tR\n" +
 	"storeAppId\x12\x10\n" +
 	"\x03sku\x18\x06 \x01(\tR\x03sku\x12F\n" +
-	"\x0eavailable_from\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x03R\ravailableFrom\x88\x01\x01\x12H\n" +
-	"\x0favailable_until\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x04R\x0eavailableUntil\x88\x01\x01\x12?\n" +
+	"\x0eavailable_from\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x02R\ravailableFrom\x88\x01\x01\x12H\n" +
+	"\x0favailable_until\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x03R\x0eavailableUntil\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x16\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x04R\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x16\n" +
 	"\x14_product_revision_idB\x11\n" +
 	"\x0f_available_fromB\x12\n" +
 	"\x10_available_untilB\r\n" +
@@ -2591,56 +2481,53 @@ const file_wallet_v1_recharge_proto_rawDesc = "" +
 	"\xfaB\ar\x05\x10\x01\x18\xff\x01R\n" +
 	"storeAppId\x12\x1c\n" +
 	"\x03sku\x18\x03 \x01(\tB\n" +
-	"\xfaB\ar\x05\x10\x01\x18\xff\x01R\x03sku\"\xe8\x03\n" +
+	"\xfaB\ar\x05\x10\x01\x18\xff\x01R\x03sku\"\xc1\x03\n" +
 	"\x0fRechargeProduct\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x17\n" +
-	"\x04code\x18\x04 \x01(\tH\x03R\x04code\x88\x01\x01\x121\n" +
-	"\x12active_revision_id\x18\x05 \x01(\x04H\x04R\x10activeRevisionId\x88\x01\x01\x12P\n" +
-	"\x0factive_revision\x18\x06 \x01(\v2\".wallet.v1.RechargeProductRevisionH\x05R\x0eactiveRevision\x88\x01\x01\x12?\n" +
+	"\x02id\x18\x01 \x01(\rH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x03 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\x04 \x01(\tH\x02R\x04code\x88\x01\x01\x121\n" +
+	"\x12active_revision_id\x18\x05 \x01(\x04H\x03R\x10activeRevisionId\x88\x01\x01\x12P\n" +
+	"\x0factive_revision\x18\x06 \x01(\v2\".wallet.v1.RechargeProductRevisionH\x04R\x0eactiveRevision\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\aR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\a\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_codeB\x15\n" +
 	"\x13_active_revision_idB\x12\n" +
 	"\x10_active_revisionB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xb2\v\n" +
+	"\v_updated_at\"\x8b\v\n" +
 	"\x17RechargeProductRevision\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"product_id\x18\x03 \x01(\rH\x02R\tproductId\x88\x01\x01\x12$\n" +
-	"\vrevision_no\x18\x04 \x01(\rH\x03R\n" +
+	"product_id\x18\x03 \x01(\rH\x01R\tproductId\x88\x01\x01\x12$\n" +
+	"\vrevision_no\x18\x04 \x01(\rH\x02R\n" +
 	"revisionNo\x88\x01\x01\x125\n" +
-	"\x06amount\x18\x05 \x01(\x03B\x18\xbaG\x15\x92\x02\x12现金金额，分H\x04R\x06amount\x88\x01\x01\x12*\n" +
-	"\x0ediamond_amount\x18\x06 \x01(\x03H\x05R\rdiamondAmount\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\a \x01(\tH\x06R\bcurrency\x88\x01\x01\x12\x1d\n" +
-	"\aenabled\x18\b \x01(\bH\aR\aenabled\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\t \x01(\tH\bR\x06remark\x88\x01\x01\x12F\n" +
+	"\x06amount\x18\x05 \x01(\x03B\x18\xbaG\x15\x92\x02\x12现金金额，分H\x03R\x06amount\x88\x01\x01\x12*\n" +
+	"\x0ediamond_amount\x18\x06 \x01(\x03H\x04R\rdiamondAmount\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\a \x01(\tH\x05R\bcurrency\x88\x01\x01\x12\x1d\n" +
+	"\aenabled\x18\b \x01(\bH\x06R\aenabled\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\t \x01(\tH\aR\x06remark\x88\x01\x01\x12F\n" +
 	"\x06status\x18\n" +
-	" \x01(\x0e2).wallet.v1.RechargeProductRevision.StatusH\tR\x06status\x88\x01\x01\x12&\n" +
-	"\frequester_id\x18\v \x01(\rH\n" +
-	"R\vrequesterId\x88\x01\x01\x12$\n" +
-	"\vapprover_id\x18\f \x01(\rH\vR\n" +
+	" \x01(\x0e2).wallet.v1.RechargeProductRevision.StatusH\bR\x06status\x88\x01\x01\x12&\n" +
+	"\frequester_id\x18\v \x01(\rH\tR\vrequesterId\x88\x01\x01\x12$\n" +
+	"\vapprover_id\x18\f \x01(\rH\n" +
+	"R\n" +
 	"approverId\x88\x01\x01\x12-\n" +
-	"\x10base_revision_id\x18\r \x01(\x04H\fR\x0ebaseRevisionId\x88\x01\x01\x12B\n" +
-	"\feffective_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\rR\veffectiveAt\x88\x01\x01\x12@\n" +
-	"\vapproved_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\n" +
+	"\x10base_revision_id\x18\r \x01(\x04H\vR\x0ebaseRevisionId\x88\x01\x01\x12B\n" +
+	"\feffective_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\fR\veffectiveAt\x88\x01\x01\x12@\n" +
+	"\vapproved_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\n" +
 	"approvedAt\x88\x01\x01\x12B\n" +
-	"\factivated_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\vactivatedAt\x88\x01\x01\x12.\n" +
-	"\x10failure_category\x18\x11 \x01(\tH\x10R\x0ffailureCategory\x88\x01\x01\x12H\n" +
-	"\x0favailable_until\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\x0eavailableUntil\x88\x01\x01\x12M\n" +
+	"\factivated_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\vactivatedAt\x88\x01\x01\x12.\n" +
+	"\x10failure_category\x18\x11 \x01(\tH\x0fR\x0ffailureCategory\x88\x01\x01\x12H\n" +
+	"\x0favailable_until\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\x0eavailableUntil\x88\x01\x01\x12M\n" +
 	"\x0estore_products\x18\x13 \x03(\v2&.wallet.v1.RechargeStoreProductMappingR\rstoreProducts\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\tupdatedAt\x88\x01\x01\"U\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\tupdatedAt\x88\x01\x01\"U\n" +
 	"\x06Status\x12\x16\n" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05DRAFT\x10\x01\x12\r\n" +
@@ -2648,8 +2535,7 @@ const file_wallet_v1_recharge_proto_rawDesc = "" +
 	"\tACTIVATED\x10\x03\x12\n" +
 	"\n" +
 	"\x06FAILED\x10\x04B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\r\n" +
+	"\x03_idB\r\n" +
 	"\v_product_idB\x0e\n" +
 	"\f_revision_noB\t\n" +
 	"\a_amountB\x11\n" +
@@ -2668,36 +2554,34 @@ const file_wallet_v1_recharge_proto_rawDesc = "" +
 	"\x11_failure_categoryB\x12\n" +
 	"\x10_available_untilB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x81\n" +
-	"\n" +
+	"\v_updated_at\"\xda\t\n" +
 	"\rRechargeOrder\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"product_id\x18\x04 \x01(\rH\x03R\tproductId\x88\x01\x01\x12\x1e\n" +
-	"\border_no\x18\x05 \x01(\tH\x04R\aorderNo\x88\x01\x01\x12\"\n" +
+	"product_id\x18\x04 \x01(\rH\x02R\tproductId\x88\x01\x01\x12\x1e\n" +
+	"\border_no\x18\x05 \x01(\tH\x03R\aorderNo\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x06 \x01(\tH\x05R\tpaymentNo\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\a \x01(\x03H\x06R\x06amount\x88\x01\x01\x12*\n" +
-	"\x0ediamond_amount\x18\b \x01(\x03H\aR\rdiamondAmount\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\t \x01(\tH\bR\bcurrency\x88\x01\x01\x12<\n" +
+	"payment_no\x18\x06 \x01(\tH\x04R\tpaymentNo\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\a \x01(\x03H\x05R\x06amount\x88\x01\x01\x12*\n" +
+	"\x0ediamond_amount\x18\b \x01(\x03H\x06R\rdiamondAmount\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\t \x01(\tH\aR\bcurrency\x88\x01\x01\x12<\n" +
 	"\x06status\x18\n" +
-	" \x01(\x0e2\x1f.wallet.v1.RechargeOrder.StatusH\tR\x06status\x88\x01\x01\x123\n" +
-	"\x13product_revision_id\x18\v \x01(\x04H\n" +
-	"R\x11productRevisionId\x88\x01\x01\x123\n" +
-	"\x13purchase_request_id\x18\f \x01(\tH\vR\x11purchaseRequestId\x88\x01\x01\x12\"\n" +
+	" \x01(\x0e2\x1f.wallet.v1.RechargeOrder.StatusH\bR\x06status\x88\x01\x01\x123\n" +
+	"\x13product_revision_id\x18\v \x01(\x04H\tR\x11productRevisionId\x88\x01\x01\x123\n" +
+	"\x13purchase_request_id\x18\f \x01(\tH\n" +
+	"R\x11purchaseRequestId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"offer_code\x18\r \x01(\tH\fR\tofferCode\x88\x01\x01\x12O\n" +
-	"\x0fclient_platform\x18\x0e \x01(\x0e2!.wallet.v1.RechargeClientPlatformH\rR\x0eclientPlatform\x88\x01\x01\x12>\n" +
+	"offer_code\x18\r \x01(\tH\vR\tofferCode\x88\x01\x01\x12O\n" +
+	"\x0fclient_platform\x18\x0e \x01(\x0e2!.wallet.v1.RechargeClientPlatformH\fR\x0eclientPlatform\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expires_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\texpiresAt\x88\x01\x01\x128\n" +
-	"\apaid_at\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\x06paidAt\x88\x01\x01\x12<\n" +
-	"\tclosed_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\bclosedAt\x88\x01\x01\x12?\n" +
+	"expires_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\texpiresAt\x88\x01\x01\x128\n" +
+	"\apaid_at\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\x06paidAt\x88\x01\x01\x12<\n" +
+	"\tclosed_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\bclosedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x12R\tupdatedAt\x88\x01\x01\"_\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01\"_\n" +
 	"\x06Status\x12\v\n" +
 	"\aCREATED\x10\x00\x12\r\n" +
 	"\tCREDITING\x10\x01\x12\f\n" +
@@ -2706,8 +2590,7 @@ const file_wallet_v1_recharge_proto_rawDesc = "" +
 	"\n" +
 	"\x06CLOSED\x10\x04\x12\f\n" +
 	"\bCANCELED\x10\x05B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\r\n" +
 	"\v_product_idB\v\n" +
@@ -2787,9 +2670,8 @@ const file_wallet_v1_recharge_proto_rawDesc = "" +
 	"\rstore_product\x18\x04 \x01(\v2\x1f.wallet.v1.RechargeStoreProductR\fstoreProduct\"_\n" +
 	"!GetRechargeOrderForPaymentRequest\x12:\n" +
 	"\x13purchase_request_id\x18\x01 \x01(\tB\n" +
-	"\xfaB\ar\x05\x10\x01\x18\x80\x01R\x11purchaseRequestId\"\xfd\x04\n" +
-	"\x18RechargeOrderPaymentFact\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\rR\x05appId\x12\x17\n" +
+	"\xfaB\ar\x05\x10\x01\x18\x80\x01R\x11purchaseRequestId\"\xe6\x04\n" +
+	"\x18RechargeOrderPaymentFact\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12.\n" +
 	"\x13purchase_request_id\x18\x03 \x01(\tR\x11purchaseRequestId\x12\x19\n" +
 	"\border_no\x18\x04 \x01(\tR\aorderNo\x12.\n" +
@@ -2810,74 +2692,62 @@ const file_wallet_v1_recharge_proto_rawDesc = "" +
 	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"e\n" +
 	"\x1bListRechargeProductResponse\x120\n" +
 	"\x05items\x18\x01 \x03(\v2\x1a.wallet.v1.RechargeProductR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xcd\x01\n" +
-	"\"ListRechargeProductRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\"\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x94\x01\n" +
+	"\"ListRechargeProductRevisionRequest\x12\"\n" +
 	"\n" +
-	"product_id\x18\x02 \x01(\rH\x01R\tproductId\x88\x01\x01\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_idB\r\n" +
+	"product_id\x18\x02 \x01(\rH\x00R\tproductId\x88\x01\x01\x12;\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\r\n" +
 	"\v_product_id\"u\n" +
 	"#ListRechargeProductRevisionResponse\x128\n" +
 	"\x05items\x18\x01 \x03(\v2\".wallet.v1.RechargeProductRevisionR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\"a\n" +
 	"\x19ListRechargeOrderResponse\x12.\n" +
 	"\x05items\x18\x01 \x03(\v2\x18.wallet.v1.RechargeOrderR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"w\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"9\n" +
 	"\x17GetRechargeOrderRequest\x12\x1e\n" +
-	"\border_no\x18\x01 \x01(\tB\x03\xe0A\x02R\aorderNo\x121\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02H\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xf7\x04\n" +
-	"$CreateRechargeProductRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\"\n" +
+	"\border_no\x18\x01 \x01(\tB\x03\xe0A\x02R\aorderNo\"\xbe\x04\n" +
+	"$CreateRechargeProductRevisionRequest\x12\"\n" +
 	"\n" +
-	"product_id\x18\x02 \x01(\rH\x01R\tproductId\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12\x17\n" +
-	"\x04code\x18\x04 \x01(\tH\x03R\x04code\x88\x01\x01\x12\x16\n" +
+	"product_id\x18\x02 \x01(\rH\x00R\tproductId\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x03 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\x04 \x01(\tH\x02R\x04code\x88\x01\x01\x12\x16\n" +
 	"\x06amount\x18\x05 \x01(\x03R\x06amount\x12%\n" +
 	"\x0ediamond_amount\x18\x06 \x01(\x03R\rdiamondAmount\x12\x1a\n" +
 	"\bcurrency\x18\a \x01(\tR\bcurrency\x12\x18\n" +
 	"\aenabled\x18\b \x01(\bR\aenabled\x12\x1b\n" +
-	"\x06remark\x18\t \x01(\tH\x04R\x06remark\x88\x01\x01\x12H\n" +
+	"\x06remark\x18\t \x01(\tH\x03R\x06remark\x88\x01\x01\x12H\n" +
 	"\n" +
 	"governance\x18\n" +
-	" \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x05R\n" +
+	" \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x04R\n" +
 	"governance\x88\x01\x01\x12H\n" +
-	"\x0favailable_until\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\x06R\x0eavailableUntil\x88\x01\x01\x12K\n" +
-	"\x0estore_products\x18\f \x03(\v2$.wallet.v1.RechargeStoreProductInputR\rstoreProductsB\t\n" +
-	"\a_app_idB\r\n" +
+	"\x0favailable_until\x18\v \x01(\v2\x1a.google.protobuf.TimestampH\x05R\x0eavailableUntil\x88\x01\x01\x12K\n" +
+	"\x0estore_products\x18\f \x03(\v2$.wallet.v1.RechargeStoreProductInputR\rstoreProductsB\r\n" +
 	"\v_product_idB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_codeB\t\n" +
 	"\a_remarkB\r\n" +
 	"\v_governanceB\x12\n" +
-	"\x10_available_until\"\x99\x02\n" +
-	"%ApproveRechargeProductRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"\x10_available_until\"\xe0\x01\n" +
+	"%ApproveRechargeProductRevisionRequest\x12\x1f\n" +
 	"\vrevision_id\x18\x02 \x01(\x04R\n" +
 	"revisionId\x12=\n" +
 	"\feffective_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\veffectiveAt\x12H\n" +
 	"\n" +
-	"governance\x18\x04 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
-	"governance\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
-	"\v_governance\"}\n" +
-	"\x1aCreateRechargeOrderRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"governance\x18\x04 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
+	"governance\x88\x01\x01B\r\n" +
+	"\v_governance\"T\n" +
+	"\x1aCreateRechargeOrderRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
-	"product_id\x18\x03 \x01(\rR\tproductId\"\xc8\x01\n" +
+	"product_id\x18\x03 \x01(\rR\tproductId\"\x8f\x01\n" +
 	"\x19CloseRechargeOrderRequest\x12\x19\n" +
-	"\border_no\x18\x01 \x01(\tR\aorderNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12H\n" +
+	"\border_no\x18\x01 \x01(\tR\aorderNo\x12H\n" +
 	"\n" +
-	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
-	"governance\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
-	"\v_governance\"\x95\x01\n" +
+	"governance\x18\x03 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
+	"governance\x88\x01\x01B\r\n" +
+	"\v_governance\"l\n" +
 	"\x15CreditRechargeRequest\x12\x19\n" +
-	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12\x19\n" +
 	"\border_no\x18\x03 \x01(\tR\aorderNo\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x04 \x01(\tR\tpaymentNo*\xd6\x01\n" +
@@ -2948,9 +2818,8 @@ var file_wallet_v1_recharge_proto_goTypes = []any{
 	(*CloseRechargeOrderRequest)(nil),               // 28: wallet.v1.CloseRechargeOrderRequest
 	(*CreditRechargeRequest)(nil),                   // 29: wallet.v1.CreditRechargeRequest
 	(*timestamppb.Timestamp)(nil),                   // 30: google.protobuf.Timestamp
-	(v1.AppId)(0),                                   // 31: common.v1.AppId
-	(*v11.PagingRequest)(nil),                       // 32: common.pagination.v1.PagingRequest
-	(*WalletGovernanceIdentity)(nil),                // 33: wallet.v1.WalletGovernanceIdentity
+	(*v1.PagingRequest)(nil),                        // 31: common.pagination.v1.PagingRequest
+	(*WalletGovernanceIdentity)(nil),                // 32: wallet.v1.WalletGovernanceIdentity
 }
 var file_wallet_v1_recharge_proto_depIdxs = []int32{
 	1,  // 0: wallet.v1.RechargeStoreProductMapping.provider:type_name -> wallet.v1.RechargeStoreProvider
@@ -2995,27 +2864,20 @@ var file_wallet_v1_recharge_proto_depIdxs = []int32{
 	30, // 39: wallet.v1.RechargeOrderPaymentFact.created_at:type_name -> google.protobuf.Timestamp
 	30, // 40: wallet.v1.RechargeOrderPaymentFact.updated_at:type_name -> google.protobuf.Timestamp
 	8,  // 41: wallet.v1.ListRechargeProductResponse.items:type_name -> wallet.v1.RechargeProduct
-	31, // 42: wallet.v1.ListRechargeProductRevisionRequest.app_id:type_name -> common.v1.AppId
-	32, // 43: wallet.v1.ListRechargeProductRevisionRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	9,  // 44: wallet.v1.ListRechargeProductRevisionResponse.items:type_name -> wallet.v1.RechargeProductRevision
-	10, // 45: wallet.v1.ListRechargeOrderResponse.items:type_name -> wallet.v1.RechargeOrder
-	31, // 46: wallet.v1.GetRechargeOrderRequest.app_id:type_name -> common.v1.AppId
-	31, // 47: wallet.v1.CreateRechargeProductRevisionRequest.app_id:type_name -> common.v1.AppId
-	33, // 48: wallet.v1.CreateRechargeProductRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	30, // 49: wallet.v1.CreateRechargeProductRevisionRequest.available_until:type_name -> google.protobuf.Timestamp
-	7,  // 50: wallet.v1.CreateRechargeProductRevisionRequest.store_products:type_name -> wallet.v1.RechargeStoreProductInput
-	31, // 51: wallet.v1.ApproveRechargeProductRevisionRequest.app_id:type_name -> common.v1.AppId
-	30, // 52: wallet.v1.ApproveRechargeProductRevisionRequest.effective_at:type_name -> google.protobuf.Timestamp
-	33, // 53: wallet.v1.ApproveRechargeProductRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	31, // 54: wallet.v1.CreateRechargeOrderRequest.app_id:type_name -> common.v1.AppId
-	31, // 55: wallet.v1.CloseRechargeOrderRequest.app_id:type_name -> common.v1.AppId
-	33, // 56: wallet.v1.CloseRechargeOrderRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	31, // 57: wallet.v1.CreditRechargeRequest.app_id:type_name -> common.v1.AppId
-	58, // [58:58] is the sub-list for method output_type
-	58, // [58:58] is the sub-list for method input_type
-	58, // [58:58] is the sub-list for extension type_name
-	58, // [58:58] is the sub-list for extension extendee
-	0,  // [0:58] is the sub-list for field type_name
+	31, // 42: wallet.v1.ListRechargeProductRevisionRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	9,  // 43: wallet.v1.ListRechargeProductRevisionResponse.items:type_name -> wallet.v1.RechargeProductRevision
+	10, // 44: wallet.v1.ListRechargeOrderResponse.items:type_name -> wallet.v1.RechargeOrder
+	32, // 45: wallet.v1.CreateRechargeProductRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	30, // 46: wallet.v1.CreateRechargeProductRevisionRequest.available_until:type_name -> google.protobuf.Timestamp
+	7,  // 47: wallet.v1.CreateRechargeProductRevisionRequest.store_products:type_name -> wallet.v1.RechargeStoreProductInput
+	30, // 48: wallet.v1.ApproveRechargeProductRevisionRequest.effective_at:type_name -> google.protobuf.Timestamp
+	32, // 49: wallet.v1.ApproveRechargeProductRevisionRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	32, // 50: wallet.v1.CloseRechargeOrderRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	51, // [51:51] is the sub-list for method output_type
+	51, // [51:51] is the sub-list for method input_type
+	51, // [51:51] is the sub-list for extension type_name
+	51, // [51:51] is the sub-list for extension extendee
+	0,  // [0:51] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_recharge_proto_init() }
@@ -3030,7 +2892,6 @@ func file_wallet_v1_recharge_proto_init() {
 	file_wallet_v1_recharge_proto_msgTypes[5].OneofWrappers = []any{}
 	file_wallet_v1_recharge_proto_msgTypes[6].OneofWrappers = []any{}
 	file_wallet_v1_recharge_proto_msgTypes[16].OneofWrappers = []any{}
-	file_wallet_v1_recharge_proto_msgTypes[19].OneofWrappers = []any{}
 	file_wallet_v1_recharge_proto_msgTypes[20].OneofWrappers = []any{}
 	file_wallet_v1_recharge_proto_msgTypes[21].OneofWrappers = []any{}
 	file_wallet_v1_recharge_proto_msgTypes[23].OneofWrappers = []any{}

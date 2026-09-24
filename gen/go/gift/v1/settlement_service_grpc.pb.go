@@ -34,9 +34,9 @@ const (
 //
 // 礼物结算服务。
 type GiftSettlementServiceClient interface {
-	// 按 typed filter 分页查询当前 App 的 Settlement Record 快照；只读，不修改结算事实。
+	// 按 typed filter 分页查询 Settlement Record 快照；只读，不修改结算事实。
 	ListGiftSettlementRecords(ctx context.Context, in *ListGiftSettlementRecordsRequest, opts ...grpc.CallOption) (*ListGiftSettlementRecordResponse, error)
-	// 查询当前 App 的 Settlement Reconciliation Issue。
+	// 查询 Settlement Reconciliation Issue。
 	ListGiftReconciliationIssues(ctx context.Context, in *ListGiftReconciliationIssuesRequest, opts ...grpc.CallOption) (*ListGiftReconciliationIssuesResponse, error)
 	// 查询一个 Issue 的普通详情和证据。
 	GetGiftReconciliationIssue(ctx context.Context, in *GetGiftReconciliationIssueRequest, opts ...grpc.CallOption) (*GiftReconciliationIssue, error)
@@ -134,9 +134,9 @@ func (c *giftSettlementServiceClient) ReconcileGiftSettlement(ctx context.Contex
 //
 // 礼物结算服务。
 type GiftSettlementServiceServer interface {
-	// 按 typed filter 分页查询当前 App 的 Settlement Record 快照；只读，不修改结算事实。
+	// 按 typed filter 分页查询 Settlement Record 快照；只读，不修改结算事实。
 	ListGiftSettlementRecords(context.Context, *ListGiftSettlementRecordsRequest) (*ListGiftSettlementRecordResponse, error)
-	// 查询当前 App 的 Settlement Reconciliation Issue。
+	// 查询 Settlement Reconciliation Issue。
 	ListGiftReconciliationIssues(context.Context, *ListGiftReconciliationIssuesRequest) (*ListGiftReconciliationIssuesResponse, error)
 	// 查询一个 Issue 的普通详情和证据。
 	GetGiftReconciliationIssue(context.Context, *GetGiftReconciliationIssueRequest) (*GiftReconciliationIssue, error)

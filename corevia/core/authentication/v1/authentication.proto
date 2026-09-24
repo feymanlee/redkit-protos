@@ -97,8 +97,6 @@ enum TokenCategory {
 message ResolveEffectiveAccessRequest {
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 1;
-  // app_id 限定 ResolveEffectiveAccess 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // claimed_role 记录调用方声明但仍需授权校验的 Role。
   optional string claimed_role = 3;
   // resource 指定本次查询、导出或操作面向的资源类型。
@@ -111,7 +109,7 @@ message ResolveEffectiveAccessRequest {
 message ResolveEffectiveAccessResponse {
   // allowed 显式表示 ResolveEffectiveAccess 是否满足该条件。
   bool allowed = 1;
-  // permission_codes 列出当前主体在 App Scope 内生效的 Permission Code。
+  // permission_codes 列出当前主体生效的 Permission Code。
   repeated string permission_codes = 2;
 }
 
@@ -299,11 +297,6 @@ message RegisterOperatorRequest {
   string password = 2 [ (gnostic.openapi.v3.property) = {
       description: "登入密码"
     }]; // 登入密码
-
-  // App代码。
-  string app_code = 3 [ (gnostic.openapi.v3.property) = {
-      description: "App代码"
-    }]; // App代码
 
   // 电子邮件地址。
   optional string email = 4 [ (gnostic.openapi.v3.property) = {

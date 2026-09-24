@@ -6,9 +6,9 @@ import "gift/v1/settlement.proto";
 
 // 礼物结算服务。
 service GiftSettlementService {
-  // 按 typed filter 分页查询当前 App 的 Settlement Record 快照；只读，不修改结算事实。
+  // 按 typed filter 分页查询 Settlement Record 快照；只读，不修改结算事实。
   rpc ListGiftSettlementRecords(ListGiftSettlementRecordsRequest) returns (ListGiftSettlementRecordResponse) {}
-  // 查询当前 App 的 Settlement Reconciliation Issue。
+  // 查询 Settlement Reconciliation Issue。
   rpc ListGiftReconciliationIssues(ListGiftReconciliationIssuesRequest) returns (ListGiftReconciliationIssuesResponse) {}
   // 查询一个 Issue 的普通详情和证据。
   rpc GetGiftReconciliationIssue(GetGiftReconciliationIssueRequest) returns (GiftReconciliationIssue) {}

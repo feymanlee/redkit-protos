@@ -71,7 +71,7 @@ message GiftExportFilter {
 
 // GiftCatalogExportFilter selects catalog rows for asynchronous export.
 message GiftCatalogExportFilter {
-  // gift_ids 为空时导出当前 App 全部 Gift 身份。
+  // gift_ids 为空时导出全部 Gift 身份。
   repeated uint32 gift_ids = 1;
   // only_published 为 true 时仅导出曾经发布过的 Gift。
   optional bool only_published = 2;
@@ -81,8 +81,6 @@ message GiftCatalogExportFilter {
 message GiftExportJob {
   // id 标识关联的 GiftExportJob。
   uint64 id = 1;
-  // app_id 限定 GiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // requested_by 标识触发或负责 GiftExportJob 对应业务阶段的主体。
   uint32 requested_by = 3;
   // export_type 区分 GiftExportJob 的业务类型。
@@ -119,8 +117,6 @@ message GiftExportJob {
 
 // CreateGiftExportJobRequest 定义创建 GiftExportJob 的幂等命令参数。
 message CreateGiftExportJobRequest {
-  // app_id 限定 CreateGiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 2;
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -151,8 +147,6 @@ message GiftExportJobFilter {
 
 // ListGiftExportJobsRequest 定义 GiftExportJobs 的筛选与分页参数。
 message ListGiftExportJobsRequest {
-  // app_id 限定 ListGiftExportJobs 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   GiftExportJobFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -169,8 +163,6 @@ message ListGiftExportJobsResponse {
 
 // GetGiftExportJobRequest 标识待查询的 GiftExportJob。
 message GetGiftExportJobRequest {
-  // app_id 限定 GetGiftExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // id 标识关联的 GetGiftExportJob。
   uint64 id = 2;
 }
@@ -189,8 +181,6 @@ message GiftExportDownloadGrant {
 
 // CreateGiftExportDownloadGrantRequest 定义创建 GiftExportDownloadGrant 的幂等命令参数。
 message CreateGiftExportDownloadGrantRequest {
-  // app_id 限定 CreateGiftExportDownloadGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 2;
   // job_id 标识关联的 Job。
@@ -203,8 +193,6 @@ message CreateGiftExportDownloadGrantRequest {
 
 // RedeemGiftExportDownloadGrantRequest 定义执行 RedeemGiftExportDownloadGrant 的幂等管理命令参数。
 message RedeemGiftExportDownloadGrantRequest {
-  // app_id 限定 RedeemGiftExportDownloadGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 2;
   // token 承载敏感凭据或校验材料，不得写入普通日志。

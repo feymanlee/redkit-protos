@@ -89,8 +89,6 @@ message PaymentRiskPolicyRevision {
 
   // id 标识关联的 PaymentRiskPolicyRevision。
   uint64 id = 1;
-  // app_id 限定 PaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // revision_no 是 PaymentRiskPolicyRevision 对外关联与审计使用的业务编号。
   uint64 revision_no = 3;
   // name 提供 PaymentRiskPolicyRevision 面向展示或识别的名称。
@@ -147,8 +145,6 @@ message PaymentRiskReview {
 
   // id 标识关联的 PaymentRiskReview。
   uint64 id = 1;
-  // app_id 限定 PaymentRiskReview 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // decision_id 标识关联的 Decision。
   uint64 decision_id = 3;
   // payment_no 是 PaymentRiskReview 对外关联与审计使用的业务编号。
@@ -189,8 +185,6 @@ message PaymentRiskDecision {
 
   // id 标识关联的 PaymentRiskDecision。
   uint64 id = 1;
-  // app_id 限定 PaymentRiskDecision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // payment_no 是 PaymentRiskDecision 对外关联与审计使用的业务编号。
   string payment_no = 3;
   // business_identity 记录外部或上游系统用于稳定关联 PaymentRiskDecision 的身份。
@@ -213,8 +207,6 @@ message PaymentRiskDecision {
 
 // CreatePaymentRiskPolicyRevisionRequest 定义创建 PaymentRiskPolicyRevision 的幂等命令参数。
 message CreatePaymentRiskPolicyRevisionRequest {
-  // app_id 限定 CreatePaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // name 提供 CreatePaymentRiskPolicyRevision 面向展示或识别的名称。
   string name = 2;
   // review_ttl_seconds 以秒表示对应流程的持续时间或上限。
@@ -233,8 +225,6 @@ message CreatePaymentRiskPolicyRevisionRequest {
 
 // PublishPaymentRiskPolicyRevisionRequest 定义发布 PaymentRiskPolicyRevision 的幂等管理命令参数。
 message PublishPaymentRiskPolicyRevisionRequest {
-  // app_id 限定 PublishPaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -249,8 +239,6 @@ message PublishPaymentRiskPolicyRevisionRequest {
 
 // ListPaymentRiskPolicyRevisionsRequest 定义 PaymentRiskPolicyRevisions 的筛选与分页参数。
 message ListPaymentRiskPolicyRevisionsRequest {
-  // app_id 限定 ListPaymentRiskPolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
 }
@@ -265,8 +253,6 @@ message ListPaymentRiskPolicyRevisionsResponse {
 
 // GetPaymentRiskDecisionRequest 标识待查询的 PaymentRiskDecision。
 message GetPaymentRiskDecisionRequest {
-  // app_id 限定 GetPaymentRiskDecision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // payment_no 是 GetPaymentRiskDecision 对外关联与审计使用的业务编号。
   string payment_no = 2;
 }
@@ -281,8 +267,6 @@ message PaymentRiskReviewFilter {
 
 // ListPaymentRiskReviewsRequest 定义 PaymentRiskReviews 的筛选与分页参数。
 message ListPaymentRiskReviewsRequest {
-  // app_id 限定 ListPaymentRiskReviews 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   PaymentRiskReviewFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -299,8 +283,6 @@ message ListPaymentRiskReviewsResponse {
 
 // DecidePaymentRiskReviewRequest 定义执行 DecidePaymentRiskReview 的幂等管理命令参数。
 message DecidePaymentRiskReviewRequest {
-  // app_id 限定 DecidePaymentRiskReview 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // review_id 标识关联的 Review。
   uint64 review_id = 2;
   // approve 显式表示 DecidePaymentRiskReview 是否满足该条件。
@@ -341,8 +323,6 @@ message PaymentAnalyticsFilter {
 
 // GetPaymentAnalyticsRequest 标识待查询的 PaymentAnalytics。
 message GetPaymentAnalyticsRequest {
-  // app_id 限定 GetPaymentAnalytics 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // window_from 指定 GetPaymentAnalytics 查询或生效区间的起始边界。
   google.protobuf.Timestamp window_from = 2;
   // window_to 指定 GetPaymentAnalytics 查询或生效区间的结束边界。

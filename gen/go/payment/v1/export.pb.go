@@ -7,8 +7,8 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -187,8 +187,6 @@ type PaymentExportJob struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// job_no 是 PaymentExportJob 对外关联与审计使用的业务编号。
 	JobNo string `protobuf:"bytes,1,opt,name=job_no,json=jobNo,proto3" json:"job_no,omitempty"`
-	// app_id 限定 PaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint64 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// status 表示 PaymentExportJob 当前可观察的生命周期状态。
@@ -252,13 +250,6 @@ func (x *PaymentExportJob) GetJobNo() string {
 		return x.JobNo
 	}
 	return ""
-}
-
-func (x *PaymentExportJob) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PaymentExportJob) GetOperatorId() uint64 {
@@ -348,8 +339,6 @@ func (x *PaymentExportJob) GetCompletedAt() *timestamppb.Timestamp {
 // CreatePaymentExportJobRequest 定义创建 PaymentExportJob 的幂等命令参数。
 type CreatePaymentExportJobRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreatePaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint64 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
@@ -394,13 +383,6 @@ func (*CreatePaymentExportJobRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_export_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreatePaymentExportJobRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreatePaymentExportJobRequest) GetOperatorId() uint64 {
 	if x != nil {
 		return x.OperatorId
@@ -439,8 +421,6 @@ func (x *CreatePaymentExportJobRequest) GetRequestId() string {
 // GetPaymentExportJobRequest 标识待查询的 PaymentExportJob。
 type GetPaymentExportJobRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetPaymentExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// job_no 是 GetPaymentExportJob 对外关联与审计使用的业务编号。
 	JobNo         string `protobuf:"bytes,2,opt,name=job_no,json=jobNo,proto3" json:"job_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -477,13 +457,6 @@ func (*GetPaymentExportJobRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_export_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetPaymentExportJobRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetPaymentExportJobRequest) GetJobNo() string {
 	if x != nil {
 		return x.JobNo
@@ -495,7 +468,7 @@ func (x *GetPaymentExportJobRequest) GetJobNo() string {
 type ListPaymentExportJobsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -530,7 +503,7 @@ func (*ListPaymentExportJobsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_export_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ListPaymentExportJobsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListPaymentExportJobsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -595,8 +568,6 @@ func (x *ListPaymentExportJobsResponse) GetTotal() uint64 {
 // CreatePaymentExportDownloadRequest 定义创建 PaymentExportDownload 的命令参数。
 type CreatePaymentExportDownloadRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreatePaymentExportDownload 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint64 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// job_no 是 CreatePaymentExportDownload 对外关联与审计使用的业务编号。
@@ -635,13 +606,6 @@ func (x *CreatePaymentExportDownloadRequest) ProtoReflect() protoreflect.Message
 // Deprecated: Use CreatePaymentExportDownloadRequest.ProtoReflect.Descriptor instead.
 func (*CreatePaymentExportDownloadRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_export_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *CreatePaymentExportDownloadRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreatePaymentExportDownloadRequest) GetOperatorId() uint64 {
@@ -734,10 +698,9 @@ var File_payment_v1_export_proto protoreflect.FileDescriptor
 const file_payment_v1_export_proto_rawDesc = "" +
 	"\n" +
 	"\x17payment/v1/export.proto\x12\n" +
-	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a'payment/v1/payment_administration.proto\"\xb6\x05\n" +
+	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a'payment/v1/payment_administration.proto\"\x8d\x05\n" +
 	"\x10PaymentExportJob\x12\x15\n" +
-	"\x06job_no\x18\x01 \x01(\tR\x05jobNo\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x06job_no\x18\x01 \x01(\tR\x05jobNo\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\x04R\n" +
 	"operatorId\x12:\n" +
 	"\x06status\x18\x04 \x01(\x0e2\".payment.v1.PaymentExportJobStatusR\x06status\x127\n" +
@@ -757,34 +720,28 @@ const file_payment_v1_export_proto_rawDesc = "" +
 	"\fcompleted_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\x02R\vcompletedAt\x88\x01\x01B\x0f\n" +
 	"\r_failure_codeB\r\n" +
 	"\v_started_atB\x0f\n" +
-	"\r_completed_at\"\xb2\x02\n" +
-	"\x1dCreatePaymentExportJobRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"\r_completed_at\"\xf9\x01\n" +
+	"\x1dCreatePaymentExportJobRequest\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x04R\n" +
 	"operatorId\x127\n" +
 	"\x06filter\x18\x03 \x01(\v2\x1f.payment.v1.PaymentSearchFilterR\x06filter\x126\n" +
 	"\x06fields\x18\x04 \x03(\x0e2\x1e.payment.v1.PaymentExportFieldR\x06fields\x12'\n" +
 	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tR\trequestIdB\t\n" +
-	"\a_app_id\"l\n" +
-	"\x1aGetPaymentExportJobRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x15\n" +
-	"\x06job_no\x18\x02 \x01(\tR\x05jobNoB\t\n" +
-	"\a_app_id\"[\n" +
+	"request_id\x18\x06 \x01(\tR\trequestId\"3\n" +
+	"\x1aGetPaymentExportJobRequest\x12\x15\n" +
+	"\x06job_no\x18\x02 \x01(\tR\x05jobNo\"[\n" +
 	"\x1cListPaymentExportJobsRequest\x12;\n" +
 	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"i\n" +
 	"\x1dListPaymentExportJobsResponse\x122\n" +
 	"\x05items\x18\x01 \x03(\v2\x1c.payment.v1.PaymentExportJobR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xb4\x01\n" +
-	"\"CreatePaymentExportDownloadRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"{\n" +
+	"\"CreatePaymentExportDownloadRequest\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\x04R\n" +
 	"operatorId\x12\x15\n" +
 	"\x06job_no\x18\x03 \x01(\tR\x05jobNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tR\trequestIdB\t\n" +
-	"\a_app_id\"{\n" +
+	"request_id\x18\x04 \x01(\tR\trequestId\"{\n" +
 	"\x15PaymentExportDownload\x12\x15\n" +
 	"\x06job_no\x18\x01 \x01(\tR\x05jobNo\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x129\n" +
@@ -848,32 +805,27 @@ var file_payment_v1_export_proto_goTypes = []any{
 	(*ListPaymentExportJobsResponse)(nil),      // 6: payment.v1.ListPaymentExportJobsResponse
 	(*CreatePaymentExportDownloadRequest)(nil), // 7: payment.v1.CreatePaymentExportDownloadRequest
 	(*PaymentExportDownload)(nil),              // 8: payment.v1.PaymentExportDownload
-	(v1.AppId)(0),                              // 9: common.v1.AppId
-	(*PaymentSearchFilter)(nil),                // 10: payment.v1.PaymentSearchFilter
-	(*timestamppb.Timestamp)(nil),              // 11: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),                  // 12: common.pagination.v1.PagingRequest
+	(*PaymentSearchFilter)(nil),                // 9: payment.v1.PaymentSearchFilter
+	(*timestamppb.Timestamp)(nil),              // 10: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),                   // 11: common.pagination.v1.PagingRequest
 }
 var file_payment_v1_export_proto_depIdxs = []int32{
-	9,  // 0: payment.v1.PaymentExportJob.app_id:type_name -> common.v1.AppId
-	0,  // 1: payment.v1.PaymentExportJob.status:type_name -> payment.v1.PaymentExportJobStatus
-	10, // 2: payment.v1.PaymentExportJob.filter:type_name -> payment.v1.PaymentSearchFilter
-	1,  // 3: payment.v1.PaymentExportJob.fields:type_name -> payment.v1.PaymentExportField
-	11, // 4: payment.v1.PaymentExportJob.created_at:type_name -> google.protobuf.Timestamp
-	11, // 5: payment.v1.PaymentExportJob.started_at:type_name -> google.protobuf.Timestamp
-	11, // 6: payment.v1.PaymentExportJob.completed_at:type_name -> google.protobuf.Timestamp
-	9,  // 7: payment.v1.CreatePaymentExportJobRequest.app_id:type_name -> common.v1.AppId
-	10, // 8: payment.v1.CreatePaymentExportJobRequest.filter:type_name -> payment.v1.PaymentSearchFilter
-	1,  // 9: payment.v1.CreatePaymentExportJobRequest.fields:type_name -> payment.v1.PaymentExportField
-	9,  // 10: payment.v1.GetPaymentExportJobRequest.app_id:type_name -> common.v1.AppId
-	12, // 11: payment.v1.ListPaymentExportJobsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	2,  // 12: payment.v1.ListPaymentExportJobsResponse.items:type_name -> payment.v1.PaymentExportJob
-	9,  // 13: payment.v1.CreatePaymentExportDownloadRequest.app_id:type_name -> common.v1.AppId
-	11, // 14: payment.v1.PaymentExportDownload.expires_at:type_name -> google.protobuf.Timestamp
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	0,  // 0: payment.v1.PaymentExportJob.status:type_name -> payment.v1.PaymentExportJobStatus
+	9,  // 1: payment.v1.PaymentExportJob.filter:type_name -> payment.v1.PaymentSearchFilter
+	1,  // 2: payment.v1.PaymentExportJob.fields:type_name -> payment.v1.PaymentExportField
+	10, // 3: payment.v1.PaymentExportJob.created_at:type_name -> google.protobuf.Timestamp
+	10, // 4: payment.v1.PaymentExportJob.started_at:type_name -> google.protobuf.Timestamp
+	10, // 5: payment.v1.PaymentExportJob.completed_at:type_name -> google.protobuf.Timestamp
+	9,  // 6: payment.v1.CreatePaymentExportJobRequest.filter:type_name -> payment.v1.PaymentSearchFilter
+	1,  // 7: payment.v1.CreatePaymentExportJobRequest.fields:type_name -> payment.v1.PaymentExportField
+	11, // 8: payment.v1.ListPaymentExportJobsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	2,  // 9: payment.v1.ListPaymentExportJobsResponse.items:type_name -> payment.v1.PaymentExportJob
+	10, // 10: payment.v1.PaymentExportDownload.expires_at:type_name -> google.protobuf.Timestamp
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_export_proto_init() }
@@ -883,9 +835,6 @@ func file_payment_v1_export_proto_init() {
 	}
 	file_payment_v1_payment_administration_proto_init()
 	file_payment_v1_export_proto_msgTypes[0].OneofWrappers = []any{}
-	file_payment_v1_export_proto_msgTypes[1].OneofWrappers = []any{}
-	file_payment_v1_export_proto_msgTypes[2].OneofWrappers = []any{}
-	file_payment_v1_export_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

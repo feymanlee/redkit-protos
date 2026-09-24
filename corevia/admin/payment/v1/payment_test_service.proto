@@ -36,7 +36,7 @@ message AdminCreatePaymentRequest {
 
 // AdminPaymentPatch 承载 Payment 的局部管理修正；presence 表示是否修改。
 message AdminPaymentPatch {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // payment_no 是 PaymentPatch 对外关联与审计使用的业务编号。
   optional string payment_no = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];

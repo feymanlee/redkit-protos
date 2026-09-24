@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on VerificationAudit with the rules defined
@@ -62,8 +58,6 @@ func (m *VerificationAudit) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -235,8 +229,6 @@ func (m *SendCodeRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -512,8 +504,6 @@ func (m *VerifyCodeRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Phone
 
 	// no validation rules for Purpose
@@ -759,8 +749,6 @@ func (m *ConsumeVerificationTicketRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for Phone
 
@@ -1161,8 +1149,6 @@ func (m *ListVerificationAuditsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1324,8 +1310,6 @@ func (m *GetVerificationAuditRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for AuditId
 
 	if len(errors) > 0 {
@@ -1432,8 +1416,6 @@ func (m *RevealVerificationRecipientPhoneRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for AuditId
 

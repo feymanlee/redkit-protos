@@ -13,7 +13,6 @@ import "support/file/v1/types.proto";
 // GetFileRequest 查询 Support 内部 File 详情。
 message GetFileRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // File ID。
   uint64 id = 2;
 }
@@ -38,10 +37,8 @@ message FileFilter {
   google.protobuf.Timestamp created_to = 8;
 }
 
-// ListFilesRequest 查询当前 App 的 File。
+// ListFilesRequest 查询 File。
 message ListFilesRequest {
-  // app_id 限定 ListFiles 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   FileFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -78,10 +75,8 @@ message UploadSessionFilter {
   google.protobuf.Timestamp created_to = 9;
 }
 
-// ListUploadSessionsRequest 查询当前 App 的 Upload Session。
+// ListUploadSessionsRequest 查询 Upload Session。
 message ListUploadSessionsRequest {
-  // app_id 限定 ListUploadSessions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   UploadSessionFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -96,10 +91,9 @@ message ListUploadSessionsResponse {
   uint64 total = 2;
 }
 
-// PublishStandaloneFileRequest 显式发布一个 App 公共资源。
+// PublishStandaloneFileRequest 显式发布一个公共资源。
 message PublishStandaloneFileRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // File ID。
   uint64 file_id = 2;
   // 后台操作员 ID。
@@ -115,7 +109,6 @@ message PublishStandaloneFileRequest {
 // RevokeFileRequest 永久阻断一个 File 的公共访问。
 message RevokeFileRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // File ID。
   uint64 file_id = 2;
   // 后台操作员 ID。
@@ -156,10 +149,8 @@ message FileReferenceFilter {
   google.protobuf.Timestamp created_to = 8;
 }
 
-// ListFileReferencesRequest 查询当前 App 的业务引用投影。
+// ListFileReferencesRequest 查询业务引用投影。
 message ListFileReferencesRequest {
-  // app_id 限定 ListFileReferences 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   FileReferenceFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -192,10 +183,8 @@ message FileEventFilter {
   google.protobuf.Timestamp occurred_to = 7;
 }
 
-// ListFileEventsRequest 查询当前 App 的不可变 File Event。
+// ListFileEventsRequest 查询不可变 File Event。
 message ListFileEventsRequest {
-  // app_id 限定 ListFileEvents 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   FileEventFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -216,10 +205,8 @@ message FileReviewAttemptFilter {
   google.protobuf.Timestamp created_to = 5;
 }
 
-// ListFileReviewAttemptsRequest 查询当前 App 的历史 Review Attempt。
+// ListFileReviewAttemptsRequest 查询历史 Review Attempt。
 message ListFileReviewAttemptsRequest {
-  // app_id 限定 ListFileReviewAttempts 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   FileReviewAttemptFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -236,8 +223,6 @@ message ListFileReviewAttemptsResponse {
 
 // CreateFilePolicyDraftRequest 创建一个不可变 Policy Draft Revision。
 message CreateFilePolicyDraftRequest {
-  // app_id 限定 CreateFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // purpose 指定 CreateFilePolicyDraft 数据或能力的预期用途。
   common.file.v1.FilePurpose purpose = 2 [(google.api.field_behavior) = REQUIRED];
   // enabled 显式表示 CreateFilePolicyDraft 是否满足该条件。
@@ -260,8 +245,6 @@ message CreateFilePolicyDraftRequest {
 
 // PreflightFilePolicyDraftRequest 对一个 Draft Revision 执行结构化预检。
 message PreflightFilePolicyDraftRequest {
-  // app_id 限定 PreflightFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
   // 后台操作员 ID。
@@ -276,8 +259,6 @@ message PreflightFilePolicyDraftRequest {
 
 // ActivateFilePolicyDraftRequest 激活一个已通过预检的 Draft Revision。
 message ActivateFilePolicyDraftRequest {
-  // app_id 限定 ActivateFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
   // operator_id 标识关联的后台 Operator。
@@ -292,8 +273,6 @@ message ActivateFilePolicyDraftRequest {
 
 // DiscardFilePolicyDraftRequest 丢弃一个从未激活或使用的 Draft Revision。
 message DiscardFilePolicyDraftRequest {
-  // app_id 限定 DiscardFilePolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
   // operator_id 标识关联的后台 Operator。
@@ -306,10 +285,8 @@ message DiscardFilePolicyDraftRequest {
   string request_id = 6 [(google.api.field_behavior) = REQUIRED];
 }
 
-// ListFilePolicyRevisionsRequest 查询当前 App 的不可变 Policy 历史。
+// ListFilePolicyRevisionsRequest 查询不可变 Policy 历史。
 message ListFilePolicyRevisionsRequest {
-  // app_id 限定 ListFilePolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // purpose 指定 ListFilePolicyRevisions 数据或能力的预期用途。
   common.file.v1.FilePurpose purpose = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -326,8 +303,6 @@ message ListFilePolicyRevisionsResponse {
 
 // CreateStorageProviderDraftRequest 创建一个不可变 Provider Draft Revision。
 message CreateStorageProviderDraftRequest {
-  // app_id 限定 CreateStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // 非零时在指定历史 Revision 的稳定 Provider 身份下创建下一版。
   uint64 source_revision_id = 2;
   // provider 标识本次能力使用的外部 Provider。
@@ -364,8 +339,6 @@ message CreateStorageProviderDraftRequest {
 
 // PreflightStorageProviderDraftRequest 对 Provider Draft 执行真实能力预检。
 message PreflightStorageProviderDraftRequest {
-  // app_id 限定 PreflightStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
   // operator_id 标识关联的后台 Operator。
@@ -380,8 +353,6 @@ message PreflightStorageProviderDraftRequest {
 
 // ActivateStorageProviderDraftRequest 激活一个已通过预检的 Provider Draft。
 message ActivateStorageProviderDraftRequest {
-  // app_id 限定 ActivateStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
   // operator_id 标识关联的后台 Operator。
@@ -396,8 +367,6 @@ message ActivateStorageProviderDraftRequest {
 
 // DiscardStorageProviderDraftRequest 丢弃未激活或使用的 Provider Draft。
 message DiscardStorageProviderDraftRequest {
-  // app_id 限定 DiscardStorageProviderDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2 [(google.api.field_behavior) = REQUIRED];
   // operator_id 标识关联的后台 Operator。
@@ -410,10 +379,8 @@ message DiscardStorageProviderDraftRequest {
   string request_id = 6 [(google.api.field_behavior) = REQUIRED];
 }
 
-// ListStorageProviderRevisionsRequest 查询当前 App 的 Provider Revision 历史。
+// ListStorageProviderRevisionsRequest 查询 Provider Revision 历史。
 message ListStorageProviderRevisionsRequest {
-  // app_id 限定 ListStorageProviderRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // provider 标识本次能力使用的外部 Provider。
   StorageProvider provider = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -431,7 +398,6 @@ message ListStorageProviderRevisionsResponse {
 // CreateReconciliationBatchRequest 创建一次只读存储对账。
 message CreateReconciliationBatchRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // 待对账对象存储。
   StorageProvider provider = 2;
   // 后台操作员 ID。
@@ -466,10 +432,8 @@ message ReconciliationBatchFilter {
   google.protobuf.Timestamp created_to = 5;
 }
 
-// ListReconciliationBatchesRequest 查询当前 App 的对账批次。
+// ListReconciliationBatchesRequest 查询对账批次。
 message ListReconciliationBatchesRequest {
-  // app_id 限定 ListReconciliationBatches 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   ReconciliationBatchFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -498,10 +462,8 @@ message ReconciliationItemFilter {
   google.protobuf.Timestamp created_to = 5;
 }
 
-// ListReconciliationItemsRequest 查询当前 App 的对账差异。
+// ListReconciliationItemsRequest 查询对账差异。
 message ListReconciliationItemsRequest {
-  // app_id 限定 ListReconciliationItems 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   ReconciliationItemFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -532,10 +494,8 @@ message FileTaskFilter {
   google.protobuf.Timestamp created_to = 6;
 }
 
-// ListFileTasksRequest 查询当前 App 的异步治理任务。
+// ListFileTasksRequest 查询异步治理任务。
 message ListFileTasksRequest {
-  // app_id 限定 ListFileTasks 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   FileTaskFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -545,7 +505,6 @@ message ListFileTasksRequest {
 // RetryFileTaskRequest 将失败任务重新放入待处理队列。
 message RetryFileTaskRequest {
   // 具体业务 App。
-  common.v1.AppId app_id = 1;
   // 任务 ID。
   uint64 task_id = 2;
   // 后台操作员 ID。

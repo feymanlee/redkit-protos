@@ -242,7 +242,7 @@ type AdminWalletDebtWriteOffFilter struct {
 	Status *v11.WalletDebtWriteOff_Status `protobuf:"varint,1,opt,name=status,proto3,enum=wallet.v1.WalletDebtWriteOff_Status,oneof" json:"status,omitempty"`
 	// requester_id 标识关联的 Requester。
 	RequesterId *uint32 `protobuf:"varint,2,opt,name=requester_id,json=requesterId,proto3,oneof" json:"requester_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// debt_id 标识关联的 Debt。
 	DebtId *uint64 `protobuf:"varint,4,opt,name=debt_id,json=debtId,proto3,oneof" json:"debt_id,omitempty"`

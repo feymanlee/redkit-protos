@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	usertypespb "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = usertypespb.AuthenticationMethod(0)
 )
@@ -64,28 +60,6 @@ func (m *GetAuthenticationOptionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _GetAuthenticationOptionsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetAuthenticationOptionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetAuthenticationOptionsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if len(errors) > 0 {
 		return GetAuthenticationOptionsRequestMultiError(errors)
@@ -167,10 +141,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetAuthenticationOptionsRequestValidationError{}
-
-var _GetAuthenticationOptionsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on AuthenticationOptions with the rules
 // defined in the proto definition for this message. If any rules are
@@ -699,28 +669,6 @@ func (m *RegisterRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _RegisterRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RegisterRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RegisterRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetClient() == nil {
 		err := RegisterRequestValidationError{
 			field:  "Client",
@@ -949,10 +897,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RegisterRequestValidationError{}
-
-var _RegisterRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on AuthenticationResult with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1513,28 +1457,6 @@ func (m *LoginRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _LoginRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := LoginRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := LoginRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetClient() == nil {
 		err := LoginRequestValidationError{
 			field:  "Client",
@@ -1804,10 +1726,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = LoginRequestValidationError{}
-
-var _LoginRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on LoginChallenge with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -2221,28 +2139,6 @@ func (m *ResendLoginChallengeRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ResendLoginChallengeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ResendLoginChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ResendLoginChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetChallengeToken()); l < 32 || l > 512 {
 		err := ResendLoginChallengeRequestValidationError{
 			field:  "ChallengeToken",
@@ -2386,10 +2282,6 @@ var _ interface {
 	ErrorName() string
 } = ResendLoginChallengeRequestValidationError{}
 
-var _ResendLoginChallengeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on CompleteLoginChallengeRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2411,28 +2303,6 @@ func (m *CompleteLoginChallengeRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CompleteLoginChallengeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompleteLoginChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompleteLoginChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetChallengeToken()); l < 32 || l > 512 {
 		err := CompleteLoginChallengeRequestValidationError{
@@ -2632,10 +2502,6 @@ var _ interface {
 	ErrorName() string
 } = CompleteLoginChallengeRequestValidationError{}
 
-var _CompleteLoginChallengeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RefreshTokenRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2657,28 +2523,6 @@ func (m *RefreshTokenRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RefreshTokenRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RefreshTokenRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RefreshTokenRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetRefreshToken()); l < 32 || l > 512 {
 		err := RefreshTokenRequestValidationError{
@@ -2793,10 +2637,6 @@ var _ interface {
 	ErrorName() string
 } = RefreshTokenRequestValidationError{}
 
-var _RefreshTokenRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on LogoutRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -2818,28 +2658,6 @@ func (m *LogoutRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _LogoutRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := LogoutRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := LogoutRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetIdempotencyKey()); l < 1 || l > 128 {
 		err := LogoutRequestValidationError{
@@ -2930,10 +2748,6 @@ var _ interface {
 	ErrorName() string
 } = LogoutRequestValidationError{}
 
-var _LogoutRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on StartPasswordResetRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2955,28 +2769,6 @@ func (m *StartPasswordResetRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _StartPasswordResetRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := StartPasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := StartPasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if !_StartPasswordResetRequest_Phone_Pattern.MatchString(m.GetPhone()) {
 		err := StartPasswordResetRequestValidationError{
@@ -3090,10 +2882,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = StartPasswordResetRequestValidationError{}
-
-var _StartPasswordResetRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _StartPasswordResetRequest_Phone_Pattern = regexp.MustCompile("^\\+[1-9][0-9]{7,14}$")
 
@@ -3253,28 +3041,6 @@ func (m *CompletePasswordResetChallengeRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _CompletePasswordResetChallengeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompletePasswordResetChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompletePasswordResetChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetContinuationToken()); l < 32 || l > 512 {
 		err := CompletePasswordResetChallengeRequestValidationError{
 			field:  "ContinuationToken",
@@ -3420,10 +3186,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CompletePasswordResetChallengeRequestValidationError{}
-
-var _CompletePasswordResetChallengeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on PasswordResetAuthorization with the
 // rules defined in the proto definition for this message. If any rules are
@@ -3580,28 +3342,6 @@ func (m *CompletePasswordResetRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _CompletePasswordResetRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompletePasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompletePasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetPasswordResetToken()); l < 32 || l > 512 {
 		err := CompletePasswordResetRequestValidationError{
 			field:  "PasswordResetToken",
@@ -3716,10 +3456,6 @@ var _ interface {
 	ErrorName() string
 } = CompletePasswordResetRequestValidationError{}
 
-var _CompletePasswordResetRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on CompleteRequiredPasswordResetRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
@@ -3742,28 +3478,6 @@ func (m *CompleteRequiredPasswordResetRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CompleteRequiredPasswordResetRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompleteRequiredPasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompleteRequiredPasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetActionToken()); l < 32 || l > 512 {
 		err := CompleteRequiredPasswordResetRequestValidationError{
@@ -3879,7 +3593,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CompleteRequiredPasswordResetRequestValidationError{}
-
-var _CompleteRequiredPasswordResetRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}

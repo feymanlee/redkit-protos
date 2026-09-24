@@ -50,7 +50,7 @@ const (
 	WalletErrorReason_OPERATION_PROCESSING WalletErrorReason = 406
 	// 流水必须由其事实服务的补偿流程处置，不能使用通用冲正。
 	WalletErrorReason_TRANSACTION_NOT_REVERSIBLE WalletErrorReason = 407
-	// 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+	// 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
 	WalletErrorReason_RECHARGE_OFFER_UNAVAILABLE WalletErrorReason = 408
 	// Store App、Provider、SKU 与发布时间窗解析到了多个 Revision，必须失败关闭。
 	WalletErrorReason_RECHARGE_STORE_MAPPING_AMBIGUOUS WalletErrorReason = 409

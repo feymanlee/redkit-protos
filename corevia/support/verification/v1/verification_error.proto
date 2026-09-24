@@ -22,9 +22,9 @@ enum VerificationErrorReason {
   NOT_FOUND = 5 [(errors.code) = 404];
   // 状态冲突。
   CONFLICT = 6 [(errors.code) = 409];
-  // Recipient Phone 无法按 App 默认区域规范化为有效 E.164。
+  // Recipient Phone 无法按平台默认区域规范化为有效 E.164。
   INVALID_RECIPIENT_PHONE = 7 [(errors.code) = 400];
-  // 当前 App 没有可用于 Verification Runtime 的完整 Active Release。
+  // 没有可用于 Verification Runtime 的完整 Active Release。
   SUPPORT_CONFIGURATION_NOT_READY = 8 [(errors.code) = 503];
   // 服务内部错误。
   INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];

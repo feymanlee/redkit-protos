@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on UserExportJob with the rules defined in
@@ -62,8 +58,6 @@ func (m *UserExportJob) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for OperatorId
 
@@ -466,32 +460,6 @@ func (m *CreateUserExportJobRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.AppId != nil {
-
-		if _, ok := _CreateUserExportJobRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-			err := CreateUserExportJobRequestValidationError{
-				field:  "AppId",
-				reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-			err := CreateUserExportJobRequestValidationError{
-				field:  "AppId",
-				reason: "value must be one of the defined enum values",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
 	if len(errors) > 0 {
 		return CreateUserExportJobRequestMultiError(errors)
 	}
@@ -572,10 +540,6 @@ var _ interface {
 	ErrorName() string
 } = CreateUserExportJobRequestValidationError{}
 
-var _CreateUserExportJobRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ListUserExportJobsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -625,32 +589,6 @@ func (m *ListUserExportJobsRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-
-		if _, ok := _ListUserExportJobsRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-			err := ListUserExportJobsRequestValidationError{
-				field:  "AppId",
-				reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-			err := ListUserExportJobsRequestValidationError{
-				field:  "AppId",
-				reason: "value must be one of the defined enum values",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
 	}
 
 	if len(errors) > 0 {
@@ -732,10 +670,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListUserExportJobsRequestValidationError{}
-
-var _ListUserExportJobsRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListUserExportJobsResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -941,32 +875,6 @@ func (m *GetUserExportDownloadRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.AppId != nil {
-
-		if _, ok := _GetUserExportDownloadRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-			err := GetUserExportDownloadRequestValidationError{
-				field:  "AppId",
-				reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-		if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-			err := GetUserExportDownloadRequestValidationError{
-				field:  "AppId",
-				reason: "value must be one of the defined enum values",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
 	if len(errors) > 0 {
 		return GetUserExportDownloadRequestMultiError(errors)
 	}
@@ -1047,10 +955,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUserExportDownloadRequestValidationError{}
-
-var _GetUserExportDownloadRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on UserExportDownload with the rules
 // defined in the proto definition for this message. If any rules are

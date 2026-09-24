@@ -8,7 +8,6 @@ package paymentpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -97,9 +96,7 @@ func (ClosureParticipantStatus) EnumDescriptor() ([]byte, []int) {
 // PrepareClosureRequest 定义执行 PrepareClosure 的命令参数。
 type PrepareClosureRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PrepareClosure 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 PrepareClosure 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -137,13 +134,6 @@ func (*PrepareClosureRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_closure_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PrepareClosureRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PrepareClosureRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -161,9 +151,7 @@ func (x *PrepareClosureRequest) GetClosureNo() string {
 // ApplyClosureRequest 定义应用 Closure 的命令参数。
 type ApplyClosureRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApplyClosure 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 ApplyClosure 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -201,13 +189,6 @@ func (*ApplyClosureRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_closure_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ApplyClosureRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ApplyClosureRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -225,9 +206,7 @@ func (x *ApplyClosureRequest) GetClosureNo() string {
 // CancelClosureRequest 定义取消 Closure 的命令参数。
 type CancelClosureRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CancelClosure 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 CancelClosure 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -265,13 +244,6 @@ func (*CancelClosureRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_closure_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CancelClosureRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CancelClosureRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -289,9 +261,7 @@ func (x *CancelClosureRequest) GetClosureNo() string {
 // GetClosureStatusRequest 标识待查询的 ClosureStatus。
 type GetClosureStatusRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetClosureStatus 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 GetClosureStatus 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -327,13 +297,6 @@ func (x *GetClosureStatusRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetClosureStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetClosureStatusRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_closure_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *GetClosureStatusRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetClosureStatusRequest) GetUserId() uint64 {
@@ -417,9 +380,7 @@ func (x *ClosureBlocker) GetOwningReference() string {
 // ClosureParticipantState 表示所属 bounded context 对 User Deletion 的当前处理状态。
 type ClosureParticipantState struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ClosureParticipantState 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 ClosureParticipantState 对外关联与审计使用的业务编号。
 	ClosureNo string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -475,13 +436,6 @@ func (x *ClosureParticipantState) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ClosureParticipantState.ProtoReflect.Descriptor instead.
 func (*ClosureParticipantState) Descriptor() ([]byte, []int) {
 	return file_payment_v1_closure_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ClosureParticipantState) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ClosureParticipantState) GetUserId() uint64 {
@@ -573,27 +527,23 @@ var File_payment_v1_closure_proto protoreflect.FileDescriptor
 const file_payment_v1_closure_proto_rawDesc = "" +
 	"\n" +
 	"\x18payment/v1/closure.proto\x12\n" +
-	"payment.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xa2\x01\n" +
-	"\x15PrepareClosureRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"payment.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"j\n" +
+	"\x15PrepareClosureRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
-	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"\xa0\x01\n" +
-	"\x13ApplyClosureRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"h\n" +
+	"\x13ApplyClosureRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
-	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"\xa1\x01\n" +
-	"\x14CancelClosureRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"i\n" +
+	"\x14CancelClosureRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
-	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"\xa4\x01\n" +
-	"\x17GetClosureStatusRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"l\n" +
+	"\x17GetClosureStatusRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
@@ -601,9 +551,8 @@ const file_payment_v1_closure_proto_rawDesc = "" +
 	"\x0eClosureBlocker\x12\x1a\n" +
 	"\bcategory\x18\x01 \x01(\tR\bcategory\x12\x14\n" +
 	"\x05count\x18\x02 \x01(\rR\x05count\x12)\n" +
-	"\x10owning_reference\x18\x03 \x01(\tR\x0fowningReference\"\xdb\x04\n" +
-	"\x17ClosureParticipantState\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x10owning_reference\x18\x03 \x01(\tR\x0fowningReference\"\xb2\x04\n" +
+	"\x17ClosureParticipantState\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
 	"closure_no\x18\x03 \x01(\tR\tclosureNo\x12<\n" +
@@ -660,33 +609,27 @@ var file_payment_v1_closure_proto_goTypes = []any{
 	(*GetClosureStatusRequest)(nil), // 4: payment.v1.GetClosureStatusRequest
 	(*ClosureBlocker)(nil),          // 5: payment.v1.ClosureBlocker
 	(*ClosureParticipantState)(nil), // 6: payment.v1.ClosureParticipantState
-	(v1.AppId)(0),                   // 7: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),   // 8: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),   // 7: google.protobuf.Timestamp
 }
 var file_payment_v1_closure_proto_depIdxs = []int32{
-	7,  // 0: payment.v1.PrepareClosureRequest.app_id:type_name -> common.v1.AppId
-	7,  // 1: payment.v1.ApplyClosureRequest.app_id:type_name -> common.v1.AppId
-	7,  // 2: payment.v1.CancelClosureRequest.app_id:type_name -> common.v1.AppId
-	7,  // 3: payment.v1.GetClosureStatusRequest.app_id:type_name -> common.v1.AppId
-	7,  // 4: payment.v1.ClosureParticipantState.app_id:type_name -> common.v1.AppId
-	0,  // 5: payment.v1.ClosureParticipantState.status:type_name -> payment.v1.ClosureParticipantStatus
-	5,  // 6: payment.v1.ClosureParticipantState.blockers:type_name -> payment.v1.ClosureBlocker
-	8,  // 7: payment.v1.ClosureParticipantState.lease_until:type_name -> google.protobuf.Timestamp
-	8,  // 8: payment.v1.ClosureParticipantState.updated_at:type_name -> google.protobuf.Timestamp
-	8,  // 9: payment.v1.ClosureParticipantState.completed_at:type_name -> google.protobuf.Timestamp
-	1,  // 10: payment.v1.PaymentClosureService.PrepareClosure:input_type -> payment.v1.PrepareClosureRequest
-	2,  // 11: payment.v1.PaymentClosureService.ApplyClosure:input_type -> payment.v1.ApplyClosureRequest
-	3,  // 12: payment.v1.PaymentClosureService.CancelClosure:input_type -> payment.v1.CancelClosureRequest
-	4,  // 13: payment.v1.PaymentClosureService.GetClosureStatus:input_type -> payment.v1.GetClosureStatusRequest
-	6,  // 14: payment.v1.PaymentClosureService.PrepareClosure:output_type -> payment.v1.ClosureParticipantState
-	6,  // 15: payment.v1.PaymentClosureService.ApplyClosure:output_type -> payment.v1.ClosureParticipantState
-	6,  // 16: payment.v1.PaymentClosureService.CancelClosure:output_type -> payment.v1.ClosureParticipantState
-	6,  // 17: payment.v1.PaymentClosureService.GetClosureStatus:output_type -> payment.v1.ClosureParticipantState
-	14, // [14:18] is the sub-list for method output_type
-	10, // [10:14] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	0, // 0: payment.v1.ClosureParticipantState.status:type_name -> payment.v1.ClosureParticipantStatus
+	5, // 1: payment.v1.ClosureParticipantState.blockers:type_name -> payment.v1.ClosureBlocker
+	7, // 2: payment.v1.ClosureParticipantState.lease_until:type_name -> google.protobuf.Timestamp
+	7, // 3: payment.v1.ClosureParticipantState.updated_at:type_name -> google.protobuf.Timestamp
+	7, // 4: payment.v1.ClosureParticipantState.completed_at:type_name -> google.protobuf.Timestamp
+	1, // 5: payment.v1.PaymentClosureService.PrepareClosure:input_type -> payment.v1.PrepareClosureRequest
+	2, // 6: payment.v1.PaymentClosureService.ApplyClosure:input_type -> payment.v1.ApplyClosureRequest
+	3, // 7: payment.v1.PaymentClosureService.CancelClosure:input_type -> payment.v1.CancelClosureRequest
+	4, // 8: payment.v1.PaymentClosureService.GetClosureStatus:input_type -> payment.v1.GetClosureStatusRequest
+	6, // 9: payment.v1.PaymentClosureService.PrepareClosure:output_type -> payment.v1.ClosureParticipantState
+	6, // 10: payment.v1.PaymentClosureService.ApplyClosure:output_type -> payment.v1.ClosureParticipantState
+	6, // 11: payment.v1.PaymentClosureService.CancelClosure:output_type -> payment.v1.ClosureParticipantState
+	6, // 12: payment.v1.PaymentClosureService.GetClosureStatus:output_type -> payment.v1.ClosureParticipantState
+	9, // [9:13] is the sub-list for method output_type
+	5, // [5:9] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_closure_proto_init() }

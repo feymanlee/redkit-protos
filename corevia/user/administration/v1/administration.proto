@@ -12,13 +12,13 @@ import "validate/validate.proto";
 
 // UserAdministrationService 提供后台专用的 User 查询与处置，不承担后台权限校验。
 service UserAdministrationService {
-  // SearchUsers 在具体 App 内执行结构化用户搜索和筛选。
+  // SearchUsers 执行结构化用户搜索和筛选。
   rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
   // CreateUser 创建一个 PENDING User，不建立任何 Credential。
   rpc CreateUser(CreateUserRequest) returns (User);
   // GetUser 按 user_id 或 user_code 查询 User。
   rpc GetUser(GetUserRequest) returns (User);
-  // ListUsers 分页查询具体 App 内的 Users。
+  // ListUsers 分页查询 Users。
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
   // ChangeUserCode 校验 verification_ticket 后变更 UserCode。
   rpc ChangeUserCode(ChangeUserCodeRequest) returns (User);
@@ -50,19 +50,15 @@ service UserAdministrationService {
 
 // CreateUserRequest 定义创建 User 的幂等命令参数。
 message CreateUserRequest {
-  // app_id 限定 CreateUser 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 2;
 }
 
 // GetUserRequest 标识待查询的 User。
 message GetUserRequest {
-  // app_id 限定 GetUser 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // GetUserRequest 使用以下一种查询表达式。
   oneof query {
-    // user_id 标识当前 App 内关联的 User。
+    // user_id 标识关联的 User。
     uint64 user_id = 2;
     // user_code 提供 GetUser 对外稳定使用的业务编码。
     string user_code = 3;
@@ -71,8 +67,6 @@ message GetUserRequest {
 
 // ListUsersRequest 定义 Users 的筛选与分页参数。
 message ListUsersRequest {
-  // app_id 限定 ListUsers 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
 }
@@ -87,9 +81,7 @@ message ListUsersResponse {
 
 // ChangeUserCodeRequest 定义执行 ChangeUserCode 的幂等管理命令参数。
 message ChangeUserCodeRequest {
-  // app_id 限定 ChangeUserCode 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // user_code 提供 ChangeUserCode 对外稳定使用的业务编码。
   string user_code = 3;
@@ -101,9 +93,7 @@ message ChangeUserCodeRequest {
 
 // GetUserDeletionRequest 标识待查询的 UserDeletion。
 message GetUserDeletionRequest {
-  // app_id 限定 GetUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 
@@ -187,9 +177,7 @@ message UserDeletionParticipantBlocker {
 message UserDeletion {
   // deletion_no 是 UserDeletion 对外关联与审计使用的业务编号。
   string deletion_no = 1;
-  // app_id 限定 UserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // status 表示 UserDeletion 当前可观察的生命周期状态。
   UserDeletionStatus status = 4;
@@ -221,9 +209,7 @@ message UserDeletion {
 
 // CancelAdministrativeUserDeletionRequest 定义取消 AdministrativeUserDeletion 的幂等管理命令参数。
 message CancelAdministrativeUserDeletionRequest {
-  // app_id 限定 CancelAdministrativeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
@@ -233,8 +219,6 @@ message CancelAdministrativeUserDeletionRequest {
 
 // RetryAdministrativeUserDeletionRequest 定义重试 AdministrativeUserDeletion 的幂等管理命令参数。
 message RetryAdministrativeUserDeletionRequest {
-  // app_id 限定 RetryAdministrativeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // deletion_no 是 RetryAdministrativeUserDeletion 对外关联与审计使用的业务编号。
   string deletion_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -261,9 +245,7 @@ enum ProfileModerationField {
 
 // ModerateUserProfileRequest 区分直接清空和恢复系统默认值的字段。
 message ModerateUserProfileRequest {
-  // app_id 限定 ModerateUserProfile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // clear_fields 列出 ModerateUserProfile 关联的 ProfileModerationField。
   repeated ProfileModerationField clear_fields = 3 [(validate.rules).repeated = {max_items: 5, unique: true, items: {enum: {defined_only: true, not_in: [0]}}}];
@@ -277,9 +259,7 @@ message ModerateUserProfileRequest {
 
 // ResetUserCodeRequest 不包含替代 Code；新值只能由 User 服务生成。
 message ResetUserCodeRequest {
-  // app_id 限定 ResetUserCode 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
@@ -289,9 +269,7 @@ message ResetUserCodeRequest {
 
 // BeginAdministrativeUserDeletionRequest 不接受 User 验证票据，也不能绕过冷静期。
 message BeginAdministrativeUserDeletionRequest {
-  // app_id 限定 BeginAdministrativeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
@@ -301,9 +279,7 @@ message BeginAdministrativeUserDeletionRequest {
 
 // RequirePasswordResetRequest 不携带新密码；Operator 只能要求 User 自行重设。
 message RequirePasswordResetRequest {
-  // app_id 限定 RequirePasswordReset 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
@@ -313,9 +289,7 @@ message RequirePasswordResetRequest {
 
 // RevokeCredentialRequest 是后台专用的 Credential 安全处置，不接受 User 验证票据。
 message RevokeCredentialRequest {
-  // app_id 限定 RevokeCredential 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // credential_id 标识关联的 Credential。
   uint64 credential_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
@@ -327,9 +301,7 @@ message RevokeCredentialRequest {
 
 // ResetMFARequest 是后台专用的 MFA 安全处置，不接受或返回 MFA Secret。
 message ResetMFARequest {
-  // app_id 限定 ResetMFA 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 512}];
@@ -339,9 +311,7 @@ message ResetMFARequest {
 
 // RevokeDeviceTrustRequest 是后台专用的设备处置，同时撤销该设备的 Session。
 message RevokeDeviceTrustRequest {
-  // app_id 限定 RevokeDeviceTrust 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // device_id 标识关联的 Device。
   uint64 device_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
@@ -381,11 +351,9 @@ enum UserReactivationReason {
   USER_REACTIVATION_REASON_OTHER = 4;
 }
 
-// SuspendUserRequest 携带可信 App scope、标准原因、可选说明和幂等键。
+// SuspendUserRequest 携带标准原因、可选说明和幂等键。
 message SuspendUserRequest {
-  // app_id 限定 SuspendUser 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason_code 提供机器可判断的业务原因分类。
   UserSuspensionReason reason_code = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
@@ -399,9 +367,7 @@ message SuspendUserRequest {
 
 // ReactivateUserRequest 携带人工复核原因、可选说明和幂等键。
 message ReactivateUserRequest {
-  // app_id 限定 ReactivateUser 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // reason_code 提供机器可判断的业务原因分类。
   UserReactivationReason reason_code = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
@@ -462,8 +428,6 @@ message UserSearchFilter {
 
 // SearchUsersRequest 携带待与可信 metadata 匹配的领域 App 身份、结构化查询和分页参数。
 message SearchUsersRequest {
-  // app_id 是 User Search Projection 的具体 App 资源定位身份。
-  common.v1.AppId app_id = 1;
   // search 为空时列出当前筛选范围内的 User。
   UserSearchQuery search = 2;
   // filter 为空时不增加 User 或安全筛选。

@@ -57,10 +57,6 @@ func (m *AppSdkPaymentAction) validate(all bool) error {
 
 	var errors []error
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.PartnerId != nil {
 		// no validation rules for PartnerId
 	}

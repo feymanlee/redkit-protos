@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on PreflightCoinRewardRequest with the
@@ -60,17 +56,6 @@ func (m *PreflightCoinRewardRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := PreflightCoinRewardRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if _, ok := WalletCurrency_name[int32(m.GetCurrency())]; !ok {
 		err := PreflightCoinRewardRequestValidationError{
@@ -196,8 +181,6 @@ func (m *PreflightCoinRewardResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Currency
 
 	// no validation rules for Amount
@@ -304,17 +287,6 @@ func (m *GrantCoinRewardRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GrantCoinRewardRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := GrantCoinRewardRequestValidationError{
@@ -450,8 +422,6 @@ func (m *GrantCoinRewardResponse) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 

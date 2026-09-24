@@ -38,7 +38,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// ConfigurationService exposes App-scoped immutable Support Configuration Draft governance.
+// ConfigurationService exposes immutable Support Configuration Draft governance.
 type ConfigurationServiceClient interface {
 	// GetConfigurationReadiness returns migration, Revision, Draft and Release readiness.
 	GetConfigurationReadiness(ctx context.Context, in *GetConfigurationReadinessRequest, opts ...grpc.CallOption) (*ConfigurationReadiness, error)
@@ -198,7 +198,7 @@ func (c *configurationServiceClient) RollbackConfigurationRelease(ctx context.Co
 // All implementations must embed UnimplementedConfigurationServiceServer
 // for forward compatibility.
 //
-// ConfigurationService exposes App-scoped immutable Support Configuration Draft governance.
+// ConfigurationService exposes immutable Support Configuration Draft governance.
 type ConfigurationServiceServer interface {
 	// GetConfigurationReadiness returns migration, Revision, Draft and Release readiness.
 	GetConfigurationReadiness(context.Context, *GetConfigurationReadinessRequest) (*ConfigurationReadiness, error)

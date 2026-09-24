@@ -7,8 +7,8 @@
 package filepb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -999,17 +999,16 @@ type UploadSession struct {
 	// 会话 ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 会话号。
 	SessionNo string `protobuf:"bytes,3,opt,name=session_no,json=sessionNo,proto3" json:"session_no,omitempty"`
 	// 文件用途。
-	Purpose v11.FilePurpose `protobuf:"varint,4,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
+	Purpose v1.FilePurpose `protobuf:"varint,4,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
 	// 文件归属主体类型。
-	OwnerType v11.FileOwnerType `protobuf:"varint,5,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
+	OwnerType v1.FileOwnerType `protobuf:"varint,5,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
 	// 文件归属主体 ID；App Owner 使用 App 数值。
 	OwnerId uint64 `protobuf:"varint,6,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	// 创建主体类型。
-	CreatorType v11.FileCreatorType `protobuf:"varint,7,opt,name=creator_type,json=creatorType,proto3,enum=common.file.v1.FileCreatorType" json:"creator_type,omitempty"`
+	CreatorType v1.FileCreatorType `protobuf:"varint,7,opt,name=creator_type,json=creatorType,proto3,enum=common.file.v1.FileCreatorType" json:"creator_type,omitempty"`
 	// 创建主体 ID。
 	CreatorId uint64 `protobuf:"varint,8,opt,name=creator_id,json=creatorId,proto3" json:"creator_id,omitempty"`
 	// 原始文件名，仅用于 Support 审计。
@@ -1091,13 +1090,6 @@ func (x *UploadSession) GetId() uint64 {
 	return 0
 }
 
-func (x *UploadSession) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UploadSession) GetSessionNo() string {
 	if x != nil {
 		return x.SessionNo
@@ -1105,18 +1097,18 @@ func (x *UploadSession) GetSessionNo() string {
 	return ""
 }
 
-func (x *UploadSession) GetPurpose() v11.FilePurpose {
+func (x *UploadSession) GetPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *UploadSession) GetOwnerType() v11.FileOwnerType {
+func (x *UploadSession) GetOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.OwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *UploadSession) GetOwnerId() uint64 {
@@ -1126,11 +1118,11 @@ func (x *UploadSession) GetOwnerId() uint64 {
 	return 0
 }
 
-func (x *UploadSession) GetCreatorType() v11.FileCreatorType {
+func (x *UploadSession) GetCreatorType() v1.FileCreatorType {
 	if x != nil {
 		return x.CreatorType
 	}
-	return v11.FileCreatorType(0)
+	return v1.FileCreatorType(0)
 }
 
 func (x *UploadSession) GetCreatorId() uint64 {
@@ -1279,25 +1271,24 @@ type File struct {
 	// File ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 强类型用途。
-	Purpose v11.FilePurpose `protobuf:"varint,3,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
+	Purpose v1.FilePurpose `protobuf:"varint,3,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
 	// 归属主体类型。
-	OwnerType v11.FileOwnerType `protobuf:"varint,4,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
+	OwnerType v1.FileOwnerType `protobuf:"varint,4,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
 	// 归属主体 ID。
 	OwnerId uint64 `protobuf:"varint,5,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	// 创建主体类型。
-	CreatorType v11.FileCreatorType `protobuf:"varint,6,opt,name=creator_type,json=creatorType,proto3,enum=common.file.v1.FileCreatorType" json:"creator_type,omitempty"`
+	CreatorType v1.FileCreatorType `protobuf:"varint,6,opt,name=creator_type,json=creatorType,proto3,enum=common.file.v1.FileCreatorType" json:"creator_type,omitempty"`
 	// 创建主体 ID。
 	CreatorId uint64 `protobuf:"varint,7,opt,name=creator_id,json=creatorId,proto3" json:"creator_id,omitempty"`
 	// 分发等级。
-	Visibility v11.FileVisibility `protobuf:"varint,8,opt,name=visibility,proto3,enum=common.file.v1.FileVisibility" json:"visibility,omitempty"`
+	Visibility v1.FileVisibility `protobuf:"varint,8,opt,name=visibility,proto3,enum=common.file.v1.FileVisibility" json:"visibility,omitempty"`
 	// 启用方式。
 	ActivationMode FileActivationMode `protobuf:"varint,9,opt,name=activation_mode,json=activationMode,proto3,enum=support.file.v1.FileActivationMode" json:"activation_mode,omitempty"`
 	// 可用状态。
-	Status v11.FileStatus `protobuf:"varint,10,opt,name=status,proto3,enum=common.file.v1.FileStatus" json:"status,omitempty"`
+	Status v1.FileStatus `protobuf:"varint,10,opt,name=status,proto3,enum=common.file.v1.FileStatus" json:"status,omitempty"`
 	// 发布原因。
-	PublicationMode v11.FilePublicationMode `protobuf:"varint,11,opt,name=publication_mode,json=publicationMode,proto3,enum=common.file.v1.FilePublicationMode" json:"publication_mode,omitempty"`
+	PublicationMode v1.FilePublicationMode `protobuf:"varint,11,opt,name=publication_mode,json=publicationMode,proto3,enum=common.file.v1.FilePublicationMode" json:"publication_mode,omitempty"`
 	// 可信检测内容类型。
 	ContentType string `protobuf:"bytes,12,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
 	// 规范扩展名。
@@ -1369,25 +1360,18 @@ func (x *File) GetId() uint64 {
 	return 0
 }
 
-func (x *File) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *File) GetPurpose() v11.FilePurpose {
+func (x *File) GetPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *File) GetOwnerType() v11.FileOwnerType {
+func (x *File) GetOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.OwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *File) GetOwnerId() uint64 {
@@ -1397,11 +1381,11 @@ func (x *File) GetOwnerId() uint64 {
 	return 0
 }
 
-func (x *File) GetCreatorType() v11.FileCreatorType {
+func (x *File) GetCreatorType() v1.FileCreatorType {
 	if x != nil {
 		return x.CreatorType
 	}
-	return v11.FileCreatorType(0)
+	return v1.FileCreatorType(0)
 }
 
 func (x *File) GetCreatorId() uint64 {
@@ -1411,11 +1395,11 @@ func (x *File) GetCreatorId() uint64 {
 	return 0
 }
 
-func (x *File) GetVisibility() v11.FileVisibility {
+func (x *File) GetVisibility() v1.FileVisibility {
 	if x != nil {
 		return x.Visibility
 	}
-	return v11.FileVisibility(0)
+	return v1.FileVisibility(0)
 }
 
 func (x *File) GetActivationMode() FileActivationMode {
@@ -1425,18 +1409,18 @@ func (x *File) GetActivationMode() FileActivationMode {
 	return FileActivationMode_FILE_ACTIVATION_MODE_UNSPECIFIED
 }
 
-func (x *File) GetStatus() v11.FileStatus {
+func (x *File) GetStatus() v1.FileStatus {
 	if x != nil {
 		return x.Status
 	}
-	return v11.FileStatus(0)
+	return v1.FileStatus(0)
 }
 
-func (x *File) GetPublicationMode() v11.FilePublicationMode {
+func (x *File) GetPublicationMode() v1.FilePublicationMode {
 	if x != nil {
 		return x.PublicationMode
 	}
-	return v11.FilePublicationMode(0)
+	return v1.FilePublicationMode(0)
 }
 
 func (x *File) GetContentType() string {
@@ -1550,17 +1534,16 @@ type FileDescriptor struct {
 	// File ID。
 	FileId uint64 `protobuf:"varint,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 强类型用途。
-	Purpose v11.FilePurpose `protobuf:"varint,3,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
+	Purpose v1.FilePurpose `protobuf:"varint,3,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
 	// 归属主体类型。
-	OwnerType v11.FileOwnerType `protobuf:"varint,4,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
+	OwnerType v1.FileOwnerType `protobuf:"varint,4,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
 	// 归属主体 ID。
 	OwnerId uint64 `protobuf:"varint,5,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
 	// 可用状态。
-	Status v11.FileStatus `protobuf:"varint,6,opt,name=status,proto3,enum=common.file.v1.FileStatus" json:"status,omitempty"`
+	Status v1.FileStatus `protobuf:"varint,6,opt,name=status,proto3,enum=common.file.v1.FileStatus" json:"status,omitempty"`
 	// 分发等级。
-	Visibility    v11.FileVisibility `protobuf:"varint,7,opt,name=visibility,proto3,enum=common.file.v1.FileVisibility" json:"visibility,omitempty"`
+	Visibility    v1.FileVisibility `protobuf:"varint,7,opt,name=visibility,proto3,enum=common.file.v1.FileVisibility" json:"visibility,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1602,25 +1585,18 @@ func (x *FileDescriptor) GetFileId() uint64 {
 	return 0
 }
 
-func (x *FileDescriptor) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *FileDescriptor) GetPurpose() v11.FilePurpose {
+func (x *FileDescriptor) GetPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *FileDescriptor) GetOwnerType() v11.FileOwnerType {
+func (x *FileDescriptor) GetOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.OwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *FileDescriptor) GetOwnerId() uint64 {
@@ -1630,18 +1606,18 @@ func (x *FileDescriptor) GetOwnerId() uint64 {
 	return 0
 }
 
-func (x *FileDescriptor) GetStatus() v11.FileStatus {
+func (x *FileDescriptor) GetStatus() v1.FileStatus {
 	if x != nil {
 		return x.Status
 	}
-	return v11.FileStatus(0)
+	return v1.FileStatus(0)
 }
 
-func (x *FileDescriptor) GetVisibility() v11.FileVisibility {
+func (x *FileDescriptor) GetVisibility() v1.FileVisibility {
 	if x != nil {
 		return x.Visibility
 	}
-	return v11.FileVisibility(0)
+	return v1.FileVisibility(0)
 }
 
 // FileReferenceLocator 唯一描述一个业务字段引用位置。
@@ -1832,7 +1808,6 @@ type FileEvent struct {
 	// 事件 ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 事件类型。
 	EventType FileEventType `protobuf:"varint,3,opt,name=event_type,json=eventType,proto3,enum=support.file.v1.FileEventType" json:"event_type,omitempty"`
 	// 关联 File ID。
@@ -1844,7 +1819,7 @@ type FileEvent struct {
 	// 请求链标识。
 	RequestId string `protobuf:"bytes,7,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	// 操作主体类型。
-	ActorType v11.FileCreatorType `protobuf:"varint,8,opt,name=actor_type,json=actorType,proto3,enum=common.file.v1.FileCreatorType" json:"actor_type,omitempty"`
+	ActorType v1.FileCreatorType `protobuf:"varint,8,opt,name=actor_type,json=actorType,proto3,enum=common.file.v1.FileCreatorType" json:"actor_type,omitempty"`
 	// 操作主体 ID。
 	ActorId uint64 `protobuf:"varint,9,opt,name=actor_id,json=actorId,proto3" json:"actor_id,omitempty"`
 	// 状态迁移前值。
@@ -1900,13 +1875,6 @@ func (x *FileEvent) GetId() uint64 {
 	return 0
 }
 
-func (x *FileEvent) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *FileEvent) GetEventType() FileEventType {
 	if x != nil {
 		return x.EventType
@@ -1942,11 +1910,11 @@ func (x *FileEvent) GetRequestId() string {
 	return ""
 }
 
-func (x *FileEvent) GetActorType() v11.FileCreatorType {
+func (x *FileEvent) GetActorType() v1.FileCreatorType {
 	if x != nil {
 		return x.ActorType
 	}
-	return v11.FileCreatorType(0)
+	return v1.FileCreatorType(0)
 }
 
 func (x *FileEvent) GetActorId() uint64 {
@@ -2003,8 +1971,6 @@ type FileReviewAttempt struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 FileReviewAttempt。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 FileReviewAttempt 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// file_id 标识关联的 File。
 	FileId uint64 `protobuf:"varint,3,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// reviewer 标识触发或负责 FileReviewAttempt 对应业务阶段的主体。
@@ -2062,13 +2028,6 @@ func (x *FileReviewAttempt) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *FileReviewAttempt) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *FileReviewAttempt) GetFileId() uint64 {
@@ -2204,7 +2163,6 @@ type FilePolicyPreflight struct {
 	// id 标识关联的 FilePolicyPreflight。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// revision_id 标识关联的 Revision。
 	RevisionId uint64 `protobuf:"varint,3,opt,name=revision_id,json=revisionId,proto3" json:"revision_id,omitempty"`
 	// status 表示 FilePolicyPreflight 当前可观察的生命周期状态。
@@ -2258,13 +2216,6 @@ func (x *FilePolicyPreflight) GetId() uint64 {
 	return 0
 }
 
-func (x *FilePolicyPreflight) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *FilePolicyPreflight) GetRevisionId() uint64 {
 	if x != nil {
 		return x.RevisionId
@@ -2312,14 +2263,12 @@ type FilePolicyRevision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 FilePolicyRevision。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 FilePolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 稳定 Policy 身份 ID。
 	PolicyId uint64 `protobuf:"varint,3,opt,name=policy_id,json=policyId,proto3" json:"policy_id,omitempty"`
 	// revision_no 是 FilePolicyRevision 对外关联与审计使用的业务编号。
 	RevisionNo uint32 `protobuf:"varint,4,opt,name=revision_no,json=revisionNo,proto3" json:"revision_no,omitempty"`
 	// 文件用途。
-	Purpose v11.FilePurpose `protobuf:"varint,5,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
+	Purpose v1.FilePurpose `protobuf:"varint,5,opt,name=purpose,proto3,enum=common.file.v1.FilePurpose" json:"purpose,omitempty"`
 	// 是否允许该用途。
 	Enabled bool `protobuf:"varint,6,opt,name=enabled,proto3" json:"enabled,omitempty"`
 	// 收紧后的最大字节数；零表示沿用代码基线。
@@ -2327,7 +2276,7 @@ type FilePolicyRevision struct {
 	// 收紧后的 MIME 白名单。
 	AllowedContentTypes []string `protobuf:"bytes,8,rep,name=allowed_content_types,json=allowedContentTypes,proto3" json:"allowed_content_types,omitempty"`
 	// owner_type 区分 FilePolicyRevision 的业务类型。
-	OwnerType v11.FileOwnerType `protobuf:"varint,9,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
+	OwnerType v1.FileOwnerType `protobuf:"varint,9,opt,name=owner_type,json=ownerType,proto3,enum=common.file.v1.FileOwnerType" json:"owner_type,omitempty"`
 	// visibility 限定资源对调用方或终端用户的可见范围。
 	Visibility string `protobuf:"bytes,10,opt,name=visibility,proto3" json:"visibility,omitempty"`
 	// 备注。
@@ -2385,13 +2334,6 @@ func (x *FilePolicyRevision) GetId() uint64 {
 	return 0
 }
 
-func (x *FilePolicyRevision) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *FilePolicyRevision) GetPolicyId() uint64 {
 	if x != nil {
 		return x.PolicyId
@@ -2406,11 +2348,11 @@ func (x *FilePolicyRevision) GetRevisionNo() uint32 {
 	return 0
 }
 
-func (x *FilePolicyRevision) GetPurpose() v11.FilePurpose {
+func (x *FilePolicyRevision) GetPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
 func (x *FilePolicyRevision) GetEnabled() bool {
@@ -2434,11 +2376,11 @@ func (x *FilePolicyRevision) GetAllowedContentTypes() []string {
 	return nil
 }
 
-func (x *FilePolicyRevision) GetOwnerType() v11.FileOwnerType {
+func (x *FilePolicyRevision) GetOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.OwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *FilePolicyRevision) GetVisibility() string {
@@ -2566,8 +2508,6 @@ type StorageProviderPreflight struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 StorageProviderPreflight。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 StorageProviderPreflight 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// revision_id 标识关联的 Revision。
 	RevisionId uint64 `protobuf:"varint,3,opt,name=revision_id,json=revisionId,proto3" json:"revision_id,omitempty"`
 	// status 表示 StorageProviderPreflight 当前可观察的生命周期状态。
@@ -2621,13 +2561,6 @@ func (x *StorageProviderPreflight) GetId() uint64 {
 	return 0
 }
 
-func (x *StorageProviderPreflight) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *StorageProviderPreflight) GetRevisionId() uint64 {
 	if x != nil {
 		return x.RevisionId
@@ -2670,20 +2603,19 @@ func (x *StorageProviderPreflight) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// StorageProviderRevision 是一个 App 的不可变对象存储和 CDN 配置。
+// StorageProviderRevision 是不可变的对象存储和 CDN 配置。
 type StorageProviderRevision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 StorageProviderRevision。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 稳定 Provider 身份 ID。
 	ProviderId uint64 `protobuf:"varint,3,opt,name=provider_id,json=providerId,proto3" json:"provider_id,omitempty"`
 	// revision_no 是 StorageProviderRevision 对外关联与审计使用的业务编号。
 	RevisionNo uint32 `protobuf:"varint,4,opt,name=revision_no,json=revisionNo,proto3" json:"revision_no,omitempty"`
 	// 对象存储实现。
 	Provider StorageProvider `protobuf:"varint,5,opt,name=provider,proto3,enum=support.file.v1.StorageProvider" json:"provider,omitempty"`
-	// 是否为 App 默认配置。
+	// 是否为平台默认配置。
 	IsDefault bool `protobuf:"varint,6,opt,name=is_default,json=isDefault,proto3" json:"is_default,omitempty"`
 	// 是否启用。
 	Enabled bool `protobuf:"varint,7,opt,name=enabled,proto3" json:"enabled,omitempty"`
@@ -2758,13 +2690,6 @@ func (x *StorageProviderRevision) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *StorageProviderRevision) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *StorageProviderRevision) GetProviderId() uint64 {
@@ -2920,7 +2845,6 @@ type FileTask struct {
 	// 任务 ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 任务类型。
 	TaskType FileTaskType `protobuf:"varint,3,opt,name=task_type,json=taskType,proto3,enum=support.file.v1.FileTaskType" json:"task_type,omitempty"`
 	// 任务状态。
@@ -2984,13 +2908,6 @@ func (x *FileTask) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *FileTask) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *FileTask) GetTaskType() FileTaskType {
@@ -3083,7 +3000,6 @@ type ReconciliationBatch struct {
 	// 批次 ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 对象存储实现。
 	Provider StorageProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=support.file.v1.StorageProvider" json:"provider,omitempty"`
 	// 批次号。
@@ -3141,13 +3057,6 @@ func (x *ReconciliationBatch) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *ReconciliationBatch) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReconciliationBatch) GetProvider() StorageProvider {
@@ -3221,7 +3130,6 @@ type ReconciliationItem struct {
 	// 批次 ID。
 	BatchId uint64 `protobuf:"varint,2,opt,name=batch_id,json=batchId,proto3" json:"batch_id,omitempty"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 关联 File ID。
 	FileId uint64 `protobuf:"varint,4,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// 关联 Stored Object ID。
@@ -3282,13 +3190,6 @@ func (x *ReconciliationItem) GetBatchId() uint64 {
 		return x.BatchId
 	}
 	return 0
-}
-
-func (x *ReconciliationItem) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReconciliationItem) GetFileId() uint64 {
@@ -3362,11 +3263,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\rpresigned_url\x18\v \x01(\tR\fpresignedUrl\x1a:\n" +
 	"\fHeadersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x9d\n" +
-	"\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf4\t\n" +
 	"\rUploadSession\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1d\n" +
 	"\n" +
 	"session_no\x18\x03 \x01(\tR\tsessionNo\x125\n" +
 	"\apurpose\x18\x04 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\apurpose\x12<\n" +
@@ -3399,11 +3298,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"updated_at\x18\x18 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12<\n" +
 	"\bprovider\x18\x19 \x01(\x0e2 .support.file.v1.StorageProviderR\bprovider\x12,\n" +
 	"\x12policy_revision_id\x18\x1a \x01(\x04R\x10policyRevisionId\x120\n" +
-	"\x14provider_revision_id\x18\x1b \x01(\x04R\x12providerRevisionId\"\x83\n" +
-	"\n" +
+	"\x14provider_revision_id\x18\x1b \x01(\x04R\x12providerRevisionId\"\xda\t\n" +
 	"\x04File\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x125\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x125\n" +
 	"\apurpose\x18\x03 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\apurpose\x12<\n" +
 	"\n" +
 	"owner_type\x18\x04 \x01(\x0e2\x1d.common.file.v1.FileOwnerTypeR\townerType\x12\x19\n" +
@@ -3438,10 +3335,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"created_at\x18\x18 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
 	"updated_at\x18\x19 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x120\n" +
-	"\x14provider_revision_id\x18\x1a \x01(\x04R\x12providerRevisionId\"\xd6\x02\n" +
+	"\x14provider_revision_id\x18\x1a \x01(\x04R\x12providerRevisionId\"\xad\x02\n" +
 	"\x0eFileDescriptor\x12\x17\n" +
-	"\afile_id\x18\x01 \x01(\x04R\x06fileId\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x125\n" +
+	"\afile_id\x18\x01 \x01(\x04R\x06fileId\x125\n" +
 	"\apurpose\x18\x03 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\apurpose\x12<\n" +
 	"\n" +
 	"owner_type\x18\x04 \x01(\x0e2\x1d.common.file.v1.FileOwnerTypeR\townerType\x12\x19\n" +
@@ -3467,10 +3363,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xe6\x04\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xbd\x04\n" +
 	"\tFileEvent\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12=\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12=\n" +
 	"\n" +
 	"event_type\x18\x03 \x01(\x0e2\x1e.support.file.v1.FileEventTypeR\teventType\x12\x17\n" +
 	"\afile_id\x18\x04 \x01(\x04R\x06fileId\x12\x1d\n" +
@@ -3490,10 +3385,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\ffailure_code\x18\r \x01(\tR\vfailureCode\x12\x1a\n" +
 	"\bmetadata\x18\x0e \x01(\tR\bmetadata\x12;\n" +
 	"\voccurred_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"occurredAt\"\x89\x03\n" +
+	"occurredAt\"\xe0\x02\n" +
 	"\x11FileReviewAttempt\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x17\n" +
 	"\afile_id\x18\x03 \x01(\x04R\x06fileId\x12\x1a\n" +
 	"\breviewer\x18\x04 \x01(\tR\breviewer\x12\x1d\n" +
 	"\n" +
@@ -3510,10 +3404,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\x18FilePolicyPreflightCheck\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12B\n" +
 	"\x06status\x18\x02 \x01(\x0e2*.support.file.v1.FilePolicyPreflightStatusR\x06status\x12\x18\n" +
-	"\amessage\x18\x03 \x01(\tR\amessage\"\xf4\x02\n" +
+	"\amessage\x18\x03 \x01(\tR\amessage\"\xcb\x02\n" +
 	"\x13FilePolicyPreflight\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\vrevision_id\x18\x03 \x01(\x04R\n" +
 	"revisionId\x12B\n" +
 	"\x06status\x18\x04 \x01(\x0e2*.support.file.v1.FilePolicyPreflightStatusR\x06status\x12 \n" +
@@ -3522,10 +3415,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\voperator_id\x18\a \x01(\x04R\n" +
 	"operatorId\x129\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd5\x05\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xac\x05\n" +
 	"\x12FilePolicyRevision\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1b\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1b\n" +
 	"\tpolicy_id\x18\x03 \x01(\x04R\bpolicyId\x12\x1f\n" +
 	"\vrevision_no\x18\x04 \x01(\rR\n" +
 	"revisionNo\x125\n" +
@@ -3551,10 +3443,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\x1dStorageProviderPreflightCheck\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12G\n" +
 	"\x06status\x18\x02 \x01(\x0e2/.support.file.v1.StorageProviderPreflightStatusR\x06status\x12\x18\n" +
-	"\amessage\x18\x03 \x01(\tR\amessage\"\x83\x03\n" +
+	"\amessage\x18\x03 \x01(\tR\amessage\"\xda\x02\n" +
 	"\x18StorageProviderPreflight\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\vrevision_id\x18\x03 \x01(\x04R\n" +
 	"revisionId\x12G\n" +
 	"\x06status\x18\x04 \x01(\x0e2/.support.file.v1.StorageProviderPreflightStatusR\x06status\x12 \n" +
@@ -3563,10 +3454,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\voperator_id\x18\a \x01(\x04R\n" +
 	"operatorId\x129\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x84\a\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xdb\x06\n" +
 	"\x17StorageProviderRevision\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\vprovider_id\x18\x03 \x01(\x04R\n" +
 	"providerId\x12\x1f\n" +
 	"\vrevision_no\x18\x04 \x01(\rR\n" +
@@ -3595,10 +3485,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\x06active\x18\x14 \x01(\bR\x06active\x12=\n" +
 	"\factivated_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampR\vactivatedAt\x12%\n" +
 	"\x0echanged_fields\x18\x16 \x03(\tR\rchangedFields\x12%\n" +
-	"\x0edefault_active\x18\x17 \x01(\bR\rdefaultActive\"\xcf\x04\n" +
+	"\x0edefault_active\x18\x17 \x01(\bR\rdefaultActive\"\xa6\x04\n" +
 	"\bFileTask\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12:\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12:\n" +
 	"\ttask_type\x18\x03 \x01(\x0e2\x1d.support.file.v1.FileTaskTypeR\btaskType\x127\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x1f.support.file.v1.FileTaskStatusR\x06status\x12\x17\n" +
 	"\afile_id\x18\x05 \x01(\x04R\x06fileId\x12(\n" +
@@ -3613,10 +3502,9 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x8a\x04\n" +
+	"updated_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xe1\x03\n" +
 	"\x13ReconciliationBatch\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12<\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12<\n" +
 	"\bprovider\x18\x03 \x01(\x0e2 .support.file.v1.StorageProviderR\bprovider\x12\x19\n" +
 	"\bbatch_no\x18\x04 \x01(\tR\abatchNo\x12=\n" +
 	"\x06status\x18\x05 \x01(\x0e2%.support.file.v1.ReconciliationStatusR\x06status\x12#\n" +
@@ -3628,11 +3516,10 @@ const file_support_file_v1_types_proto_rawDesc = "" +
 	"\fcompleted_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\x129\n" +
 	"\n" +
-	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x91\x03\n" +
+	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xe8\x02\n" +
 	"\x12ReconciliationItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x19\n" +
-	"\bbatch_id\x18\x02 \x01(\x04R\abatchId\x12'\n" +
-	"\x06app_id\x18\x03 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\bbatch_id\x18\x02 \x01(\x04R\abatchId\x12\x17\n" +
 	"\afile_id\x18\x04 \x01(\x04R\x06fileId\x12(\n" +
 	"\x10stored_object_id\x18\x05 \x01(\x04R\x0estoredObjectId\x12V\n" +
 	"\x0fdifference_type\x18\x06 \x01(\x0e2-.support.file.v1.ReconciliationDifferenceTypeR\x0edifferenceType\x12\x1a\n" +
@@ -3782,99 +3669,86 @@ var file_support_file_v1_types_proto_goTypes = []any{
 	(*ReconciliationItem)(nil),            // 29: support.file.v1.ReconciliationItem
 	nil,                                   // 30: support.file.v1.TemporaryCredential.HeadersEntry
 	(*timestamppb.Timestamp)(nil),         // 31: google.protobuf.Timestamp
-	(v1.AppId)(0),                         // 32: common.v1.AppId
-	(v11.FilePurpose)(0),                  // 33: common.file.v1.FilePurpose
-	(v11.FileOwnerType)(0),                // 34: common.file.v1.FileOwnerType
-	(v11.FileCreatorType)(0),              // 35: common.file.v1.FileCreatorType
-	(v11.FileVisibility)(0),               // 36: common.file.v1.FileVisibility
-	(v11.FileStatus)(0),                   // 37: common.file.v1.FileStatus
-	(v11.FilePublicationMode)(0),          // 38: common.file.v1.FilePublicationMode
+	(v1.FilePurpose)(0),                   // 32: common.file.v1.FilePurpose
+	(v1.FileOwnerType)(0),                 // 33: common.file.v1.FileOwnerType
+	(v1.FileCreatorType)(0),               // 34: common.file.v1.FileCreatorType
+	(v1.FileVisibility)(0),                // 35: common.file.v1.FileVisibility
+	(v1.FileStatus)(0),                    // 36: common.file.v1.FileStatus
+	(v1.FilePublicationMode)(0),           // 37: common.file.v1.FilePublicationMode
 }
 var file_support_file_v1_types_proto_depIdxs = []int32{
 	31, // 0: support.file.v1.TemporaryCredential.expires_at:type_name -> google.protobuf.Timestamp
 	30, // 1: support.file.v1.TemporaryCredential.headers:type_name -> support.file.v1.TemporaryCredential.HeadersEntry
-	32, // 2: support.file.v1.UploadSession.app_id:type_name -> common.v1.AppId
-	33, // 3: support.file.v1.UploadSession.purpose:type_name -> common.file.v1.FilePurpose
-	34, // 4: support.file.v1.UploadSession.owner_type:type_name -> common.file.v1.FileOwnerType
-	35, // 5: support.file.v1.UploadSession.creator_type:type_name -> common.file.v1.FileCreatorType
-	1,  // 6: support.file.v1.UploadSession.status:type_name -> support.file.v1.UploadSessionStatus
-	31, // 7: support.file.v1.UploadSession.credential_expires_at:type_name -> google.protobuf.Timestamp
-	31, // 8: support.file.v1.UploadSession.complete_before:type_name -> google.protobuf.Timestamp
-	31, // 9: support.file.v1.UploadSession.completed_at:type_name -> google.protobuf.Timestamp
-	31, // 10: support.file.v1.UploadSession.aborted_at:type_name -> google.protobuf.Timestamp
-	31, // 11: support.file.v1.UploadSession.created_at:type_name -> google.protobuf.Timestamp
-	31, // 12: support.file.v1.UploadSession.updated_at:type_name -> google.protobuf.Timestamp
-	0,  // 13: support.file.v1.UploadSession.provider:type_name -> support.file.v1.StorageProvider
-	32, // 14: support.file.v1.File.app_id:type_name -> common.v1.AppId
-	33, // 15: support.file.v1.File.purpose:type_name -> common.file.v1.FilePurpose
-	34, // 16: support.file.v1.File.owner_type:type_name -> common.file.v1.FileOwnerType
-	35, // 17: support.file.v1.File.creator_type:type_name -> common.file.v1.FileCreatorType
-	36, // 18: support.file.v1.File.visibility:type_name -> common.file.v1.FileVisibility
-	2,  // 19: support.file.v1.File.activation_mode:type_name -> support.file.v1.FileActivationMode
-	37, // 20: support.file.v1.File.status:type_name -> common.file.v1.FileStatus
-	38, // 21: support.file.v1.File.publication_mode:type_name -> common.file.v1.FilePublicationMode
-	31, // 22: support.file.v1.File.published_at:type_name -> google.protobuf.Timestamp
-	31, // 23: support.file.v1.File.revoked_at:type_name -> google.protobuf.Timestamp
-	31, // 24: support.file.v1.File.orphaned_at:type_name -> google.protobuf.Timestamp
-	31, // 25: support.file.v1.File.created_at:type_name -> google.protobuf.Timestamp
-	31, // 26: support.file.v1.File.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 27: support.file.v1.FileDescriptor.app_id:type_name -> common.v1.AppId
-	33, // 28: support.file.v1.FileDescriptor.purpose:type_name -> common.file.v1.FilePurpose
-	34, // 29: support.file.v1.FileDescriptor.owner_type:type_name -> common.file.v1.FileOwnerType
-	37, // 30: support.file.v1.FileDescriptor.status:type_name -> common.file.v1.FileStatus
-	36, // 31: support.file.v1.FileDescriptor.visibility:type_name -> common.file.v1.FileVisibility
-	17, // 32: support.file.v1.FileReference.locator:type_name -> support.file.v1.FileReferenceLocator
-	5,  // 33: support.file.v1.FileReference.status:type_name -> support.file.v1.FileReferenceStatus
-	31, // 34: support.file.v1.FileReference.created_at:type_name -> google.protobuf.Timestamp
-	31, // 35: support.file.v1.FileReference.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 36: support.file.v1.FileEvent.app_id:type_name -> common.v1.AppId
-	6,  // 37: support.file.v1.FileEvent.event_type:type_name -> support.file.v1.FileEventType
-	35, // 38: support.file.v1.FileEvent.actor_type:type_name -> common.file.v1.FileCreatorType
-	17, // 39: support.file.v1.FileEvent.reference_locator:type_name -> support.file.v1.FileReferenceLocator
-	31, // 40: support.file.v1.FileEvent.occurred_at:type_name -> google.protobuf.Timestamp
-	32, // 41: support.file.v1.FileReviewAttempt.app_id:type_name -> common.v1.AppId
-	31, // 42: support.file.v1.FileReviewAttempt.created_at:type_name -> google.protobuf.Timestamp
-	11, // 43: support.file.v1.FilePolicyPreflightCheck.status:type_name -> support.file.v1.FilePolicyPreflightStatus
-	32, // 44: support.file.v1.FilePolicyPreflight.app_id:type_name -> common.v1.AppId
-	11, // 45: support.file.v1.FilePolicyPreflight.status:type_name -> support.file.v1.FilePolicyPreflightStatus
-	21, // 46: support.file.v1.FilePolicyPreflight.checks:type_name -> support.file.v1.FilePolicyPreflightCheck
-	31, // 47: support.file.v1.FilePolicyPreflight.created_at:type_name -> google.protobuf.Timestamp
-	32, // 48: support.file.v1.FilePolicyRevision.app_id:type_name -> common.v1.AppId
-	33, // 49: support.file.v1.FilePolicyRevision.purpose:type_name -> common.file.v1.FilePurpose
-	34, // 50: support.file.v1.FilePolicyRevision.owner_type:type_name -> common.file.v1.FileOwnerType
-	31, // 51: support.file.v1.FilePolicyRevision.created_at:type_name -> google.protobuf.Timestamp
-	22, // 52: support.file.v1.FilePolicyRevision.latest_preflight:type_name -> support.file.v1.FilePolicyPreflight
-	31, // 53: support.file.v1.FilePolicyRevision.activated_at:type_name -> google.protobuf.Timestamp
-	12, // 54: support.file.v1.StorageProviderPreflightCheck.status:type_name -> support.file.v1.StorageProviderPreflightStatus
-	32, // 55: support.file.v1.StorageProviderPreflight.app_id:type_name -> common.v1.AppId
-	12, // 56: support.file.v1.StorageProviderPreflight.status:type_name -> support.file.v1.StorageProviderPreflightStatus
-	24, // 57: support.file.v1.StorageProviderPreflight.checks:type_name -> support.file.v1.StorageProviderPreflightCheck
-	31, // 58: support.file.v1.StorageProviderPreflight.created_at:type_name -> google.protobuf.Timestamp
-	32, // 59: support.file.v1.StorageProviderRevision.app_id:type_name -> common.v1.AppId
-	0,  // 60: support.file.v1.StorageProviderRevision.provider:type_name -> support.file.v1.StorageProvider
-	31, // 61: support.file.v1.StorageProviderRevision.created_at:type_name -> google.protobuf.Timestamp
-	25, // 62: support.file.v1.StorageProviderRevision.latest_preflight:type_name -> support.file.v1.StorageProviderPreflight
-	31, // 63: support.file.v1.StorageProviderRevision.activated_at:type_name -> google.protobuf.Timestamp
-	32, // 64: support.file.v1.FileTask.app_id:type_name -> common.v1.AppId
-	7,  // 65: support.file.v1.FileTask.task_type:type_name -> support.file.v1.FileTaskType
-	8,  // 66: support.file.v1.FileTask.status:type_name -> support.file.v1.FileTaskStatus
-	31, // 67: support.file.v1.FileTask.available_at:type_name -> google.protobuf.Timestamp
-	31, // 68: support.file.v1.FileTask.created_at:type_name -> google.protobuf.Timestamp
-	31, // 69: support.file.v1.FileTask.updated_at:type_name -> google.protobuf.Timestamp
-	32, // 70: support.file.v1.ReconciliationBatch.app_id:type_name -> common.v1.AppId
-	0,  // 71: support.file.v1.ReconciliationBatch.provider:type_name -> support.file.v1.StorageProvider
-	9,  // 72: support.file.v1.ReconciliationBatch.status:type_name -> support.file.v1.ReconciliationStatus
-	31, // 73: support.file.v1.ReconciliationBatch.started_at:type_name -> google.protobuf.Timestamp
-	31, // 74: support.file.v1.ReconciliationBatch.completed_at:type_name -> google.protobuf.Timestamp
-	31, // 75: support.file.v1.ReconciliationBatch.created_at:type_name -> google.protobuf.Timestamp
-	32, // 76: support.file.v1.ReconciliationItem.app_id:type_name -> common.v1.AppId
-	10, // 77: support.file.v1.ReconciliationItem.difference_type:type_name -> support.file.v1.ReconciliationDifferenceType
-	31, // 78: support.file.v1.ReconciliationItem.created_at:type_name -> google.protobuf.Timestamp
-	79, // [79:79] is the sub-list for method output_type
-	79, // [79:79] is the sub-list for method input_type
-	79, // [79:79] is the sub-list for extension type_name
-	79, // [79:79] is the sub-list for extension extendee
-	0,  // [0:79] is the sub-list for field type_name
+	32, // 2: support.file.v1.UploadSession.purpose:type_name -> common.file.v1.FilePurpose
+	33, // 3: support.file.v1.UploadSession.owner_type:type_name -> common.file.v1.FileOwnerType
+	34, // 4: support.file.v1.UploadSession.creator_type:type_name -> common.file.v1.FileCreatorType
+	1,  // 5: support.file.v1.UploadSession.status:type_name -> support.file.v1.UploadSessionStatus
+	31, // 6: support.file.v1.UploadSession.credential_expires_at:type_name -> google.protobuf.Timestamp
+	31, // 7: support.file.v1.UploadSession.complete_before:type_name -> google.protobuf.Timestamp
+	31, // 8: support.file.v1.UploadSession.completed_at:type_name -> google.protobuf.Timestamp
+	31, // 9: support.file.v1.UploadSession.aborted_at:type_name -> google.protobuf.Timestamp
+	31, // 10: support.file.v1.UploadSession.created_at:type_name -> google.protobuf.Timestamp
+	31, // 11: support.file.v1.UploadSession.updated_at:type_name -> google.protobuf.Timestamp
+	0,  // 12: support.file.v1.UploadSession.provider:type_name -> support.file.v1.StorageProvider
+	32, // 13: support.file.v1.File.purpose:type_name -> common.file.v1.FilePurpose
+	33, // 14: support.file.v1.File.owner_type:type_name -> common.file.v1.FileOwnerType
+	34, // 15: support.file.v1.File.creator_type:type_name -> common.file.v1.FileCreatorType
+	35, // 16: support.file.v1.File.visibility:type_name -> common.file.v1.FileVisibility
+	2,  // 17: support.file.v1.File.activation_mode:type_name -> support.file.v1.FileActivationMode
+	36, // 18: support.file.v1.File.status:type_name -> common.file.v1.FileStatus
+	37, // 19: support.file.v1.File.publication_mode:type_name -> common.file.v1.FilePublicationMode
+	31, // 20: support.file.v1.File.published_at:type_name -> google.protobuf.Timestamp
+	31, // 21: support.file.v1.File.revoked_at:type_name -> google.protobuf.Timestamp
+	31, // 22: support.file.v1.File.orphaned_at:type_name -> google.protobuf.Timestamp
+	31, // 23: support.file.v1.File.created_at:type_name -> google.protobuf.Timestamp
+	31, // 24: support.file.v1.File.updated_at:type_name -> google.protobuf.Timestamp
+	32, // 25: support.file.v1.FileDescriptor.purpose:type_name -> common.file.v1.FilePurpose
+	33, // 26: support.file.v1.FileDescriptor.owner_type:type_name -> common.file.v1.FileOwnerType
+	36, // 27: support.file.v1.FileDescriptor.status:type_name -> common.file.v1.FileStatus
+	35, // 28: support.file.v1.FileDescriptor.visibility:type_name -> common.file.v1.FileVisibility
+	17, // 29: support.file.v1.FileReference.locator:type_name -> support.file.v1.FileReferenceLocator
+	5,  // 30: support.file.v1.FileReference.status:type_name -> support.file.v1.FileReferenceStatus
+	31, // 31: support.file.v1.FileReference.created_at:type_name -> google.protobuf.Timestamp
+	31, // 32: support.file.v1.FileReference.updated_at:type_name -> google.protobuf.Timestamp
+	6,  // 33: support.file.v1.FileEvent.event_type:type_name -> support.file.v1.FileEventType
+	34, // 34: support.file.v1.FileEvent.actor_type:type_name -> common.file.v1.FileCreatorType
+	17, // 35: support.file.v1.FileEvent.reference_locator:type_name -> support.file.v1.FileReferenceLocator
+	31, // 36: support.file.v1.FileEvent.occurred_at:type_name -> google.protobuf.Timestamp
+	31, // 37: support.file.v1.FileReviewAttempt.created_at:type_name -> google.protobuf.Timestamp
+	11, // 38: support.file.v1.FilePolicyPreflightCheck.status:type_name -> support.file.v1.FilePolicyPreflightStatus
+	11, // 39: support.file.v1.FilePolicyPreflight.status:type_name -> support.file.v1.FilePolicyPreflightStatus
+	21, // 40: support.file.v1.FilePolicyPreflight.checks:type_name -> support.file.v1.FilePolicyPreflightCheck
+	31, // 41: support.file.v1.FilePolicyPreflight.created_at:type_name -> google.protobuf.Timestamp
+	32, // 42: support.file.v1.FilePolicyRevision.purpose:type_name -> common.file.v1.FilePurpose
+	33, // 43: support.file.v1.FilePolicyRevision.owner_type:type_name -> common.file.v1.FileOwnerType
+	31, // 44: support.file.v1.FilePolicyRevision.created_at:type_name -> google.protobuf.Timestamp
+	22, // 45: support.file.v1.FilePolicyRevision.latest_preflight:type_name -> support.file.v1.FilePolicyPreflight
+	31, // 46: support.file.v1.FilePolicyRevision.activated_at:type_name -> google.protobuf.Timestamp
+	12, // 47: support.file.v1.StorageProviderPreflightCheck.status:type_name -> support.file.v1.StorageProviderPreflightStatus
+	12, // 48: support.file.v1.StorageProviderPreflight.status:type_name -> support.file.v1.StorageProviderPreflightStatus
+	24, // 49: support.file.v1.StorageProviderPreflight.checks:type_name -> support.file.v1.StorageProviderPreflightCheck
+	31, // 50: support.file.v1.StorageProviderPreflight.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 51: support.file.v1.StorageProviderRevision.provider:type_name -> support.file.v1.StorageProvider
+	31, // 52: support.file.v1.StorageProviderRevision.created_at:type_name -> google.protobuf.Timestamp
+	25, // 53: support.file.v1.StorageProviderRevision.latest_preflight:type_name -> support.file.v1.StorageProviderPreflight
+	31, // 54: support.file.v1.StorageProviderRevision.activated_at:type_name -> google.protobuf.Timestamp
+	7,  // 55: support.file.v1.FileTask.task_type:type_name -> support.file.v1.FileTaskType
+	8,  // 56: support.file.v1.FileTask.status:type_name -> support.file.v1.FileTaskStatus
+	31, // 57: support.file.v1.FileTask.available_at:type_name -> google.protobuf.Timestamp
+	31, // 58: support.file.v1.FileTask.created_at:type_name -> google.protobuf.Timestamp
+	31, // 59: support.file.v1.FileTask.updated_at:type_name -> google.protobuf.Timestamp
+	0,  // 60: support.file.v1.ReconciliationBatch.provider:type_name -> support.file.v1.StorageProvider
+	9,  // 61: support.file.v1.ReconciliationBatch.status:type_name -> support.file.v1.ReconciliationStatus
+	31, // 62: support.file.v1.ReconciliationBatch.started_at:type_name -> google.protobuf.Timestamp
+	31, // 63: support.file.v1.ReconciliationBatch.completed_at:type_name -> google.protobuf.Timestamp
+	31, // 64: support.file.v1.ReconciliationBatch.created_at:type_name -> google.protobuf.Timestamp
+	10, // 65: support.file.v1.ReconciliationItem.difference_type:type_name -> support.file.v1.ReconciliationDifferenceType
+	31, // 66: support.file.v1.ReconciliationItem.created_at:type_name -> google.protobuf.Timestamp
+	67, // [67:67] is the sub-list for method output_type
+	67, // [67:67] is the sub-list for method input_type
+	67, // [67:67] is the sub-list for extension type_name
+	67, // [67:67] is the sub-list for extension extendee
+	0,  // [0:67] is the sub-list for field type_name
 }
 
 func init() { file_support_file_v1_types_proto_init() }

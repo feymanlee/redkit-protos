@@ -169,9 +169,7 @@ message RecoveryRequestEvent {
 message RecoveryRequest {
   // request_no 是 Recovery 对外关联与审计使用的业务编号。
   string request_no = 1;
-  // app_id 限定 Recovery 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // masked_new_phone 承载按约定地区规则规范化的手机号码。
   string masked_new_phone = 4;
@@ -229,9 +227,7 @@ message RecoveryRequest {
 
 // SubmitRecoveryRequestRequest 定义提交 RecoveryRequest 的幂等管理命令参数。
 message SubmitRecoveryRequestRequest {
-  // app_id 限定 SubmitRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // new_phone 承载按约定地区规则规范化的手机号码。
   string new_phone = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {pattern: "^\\+[1-9][0-9]{7,14}$", max_len: 16}];
@@ -249,8 +245,6 @@ message SubmitRecoveryRequestResponse {
 
 // CreateTrustedDeviceRecoveryChallengeRequest 定义创建 TrustedDeviceRecoveryChallenge 的命令参数。
 message CreateTrustedDeviceRecoveryChallengeRequest {
-  // app_id 限定 CreateTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // continuation_token 来自统一非枚举提交响应；服务端只保存其摘要。
   string continuation_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
   // device_id 标识关联的 Device。
@@ -259,8 +253,6 @@ message CreateTrustedDeviceRecoveryChallengeRequest {
 
 // VerifyTrustedDeviceRecoveryChallengeRequest 定义校验 TrustedDeviceRecoveryChallenge 的命令参数。
 message VerifyTrustedDeviceRecoveryChallengeRequest {
-  // app_id 限定 VerifyTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
   string continuation_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
   // device_id 标识关联的 Device。
@@ -275,8 +267,6 @@ message VerifyTrustedDeviceRecoveryChallengeRequest {
 
 // SubmitPaymentRecoveryEvidenceRequest 定义提交 PaymentRecoveryEvidence 的幂等管理命令参数。
 message SubmitPaymentRecoveryEvidenceRequest {
-  // app_id 限定 SubmitPaymentRecoveryEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
   string continuation_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
   // provider 标识本次能力使用的外部 Provider。
@@ -291,7 +281,7 @@ message SubmitPaymentRecoveryEvidenceRequest {
 message RecoveryRequestFilter {
   // request_no 是 RecoveryRequestFilter 对外关联与审计使用的业务编号。
   optional string request_no = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 2 [(validate.rules).uint64.gt = 0];
   // status 表示 RecoveryRequestFilter 当前可观察的生命周期状态。
   optional RecoveryRequestStatus status = 3 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
@@ -303,8 +293,6 @@ message RecoveryRequestFilter {
 
 // ListRecoveryRequestsRequest 定义 RecoveryRequests 的筛选与分页参数。
 message ListRecoveryRequestsRequest {
-  // app_id 限定 ListRecoveryRequests 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
   // filter 限定本次查询采用的筛选条件。
@@ -321,16 +309,12 @@ message ListRecoveryRequestsResponse {
 
 // GetRecoveryRequestRequest 标识待查询的 RecoveryRequest。
 message GetRecoveryRequestRequest {
-  // app_id 限定 GetRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // request_no 是 GetRecoveryRequest 对外关联与审计使用的业务编号。
   string request_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
 }
 
 // AcceptRecoveryRequestRequest 定义执行 AcceptRecoveryRequest 的幂等管理命令参数。
 message AcceptRecoveryRequestRequest {
-  // app_id 限定 AcceptRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // request_no 是 AcceptRecoveryRequest 对外关联与审计使用的业务编号。
   string request_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -341,8 +325,6 @@ message AcceptRecoveryRequestRequest {
 
 // ApproveRecoveryRequestRequest 定义批准 RecoveryRequest 的幂等管理命令参数。
 message ApproveRecoveryRequestRequest {
-  // app_id 限定 ApproveRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // request_no 是 ApproveRecoveryRequest 对外关联与审计使用的业务编号。
   string request_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -353,8 +335,6 @@ message ApproveRecoveryRequestRequest {
 
 // RejectRecoveryRequestRequest 定义拒绝 RecoveryRequest 的幂等管理命令参数。
 message RejectRecoveryRequestRequest {
-  // app_id 限定 RejectRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // request_no 是 RejectRecoveryRequest 对外关联与审计使用的业务编号。
   string request_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -365,8 +345,6 @@ message RejectRecoveryRequestRequest {
 
 // ClaimRecoveryGrantRequest 定义执行 ClaimRecoveryGrant 的命令参数。
 message ClaimRecoveryGrantRequest {
-  // app_id 限定 ClaimRecoveryGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
   string continuation_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
 }
@@ -381,8 +359,6 @@ message ClaimRecoveryGrantResponse {
 
 // CompleteRecoveryRequestRequest 定义完成 RecoveryRequest 的幂等管理命令参数。
 message CompleteRecoveryRequestRequest {
-  // app_id 限定 CompleteRecoveryRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
   string grant = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 256}];
   // new_phone 承载按约定地区规则规范化的手机号码。

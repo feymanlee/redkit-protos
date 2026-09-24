@@ -43,16 +43,12 @@ service OperatorService {
 
 // ListOperatorsRequest 定义 Operators 的筛选与分页参数。
 message ListOperatorsRequest {
-  // app_id 限定 ListOperators 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
 }
 
 // CountOperatorsRequest 定义执行 CountOperators 的命令参数。
 message CountOperatorsRequest {
-  // app_id 限定 CountOperators 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
 }
@@ -89,15 +85,6 @@ message Operator {
   optional uint32 id = 1 [
     (gnostic.openapi.v3.property) = {description: "后台人员ID"}
   ];  // 后台人员ID
-
-  // AppID。
-  optional uint32 app_id = 2 [
-    (gnostic.openapi.v3.property) = {description: "AppID"}
-  ];  // AppID
-  // App名称。
-  optional string app_name = 3 [
-    (gnostic.openapi.v3.property) = {description: "App名称"}
-  ];  // App名称
 
   // 角色ID。
   optional uint32 role_id = 12 [
@@ -219,7 +206,6 @@ message Operator {
     (gnostic.openapi.v3.property) = {description: "获赞数"}
   ]; // 获赞数
 
-
   // 创建者后台人员ID。
   optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者后台人员ID"}]; // 创建者后台人员ID
   // 更新者后台人员ID。
@@ -235,7 +221,7 @@ message Operator {
   optional google.protobuf.Timestamp deleted_at = 202 [ (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
 }
 
-// Self-service profile data. Operator, App, status, roles, and credentials are
+// Self-service profile data. Operator, status, roles, and credentials are
 // intentionally absent and are mutated only through administrative commands.
 message OperatorProfile {
   // nickname 承载用户资料或其脱敏展示值，按个人信息保护。
@@ -264,8 +250,6 @@ message OperatorProfile {
 message UpdateOperatorProfileRequest {
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 1;
-  // app_id 限定 UpdateOperatorProfile 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // data 承载 UpdateOperatorProfile 对应阶段的结构化业务内容。
   OperatorProfile data = 3 [(google.api.field_behavior) = REQUIRED];
   // update_mask 指定本次请求允许局部更新的字段路径。
@@ -300,8 +284,6 @@ message GetOperatorRequest {
     }
   ]; // 视图字段过滤器，用于控制返回的字段
 
-  // app_id 限定 GetOperator 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 40;
 }
 
 // 创建后台人员 - 请求
@@ -356,11 +338,6 @@ message DeleteOperatorRequest {
   optional uint32 deleted_by = 100 [
     (gnostic.openapi.v3.property) = {description: "删除者后台人员ID"}
   ]; // 删除者后台人员ID
-
-  // Required App scope for the aggregate deletion.
-  optional uint32 app_id = 40 [
-    (gnostic.openapi.v3.property) = {description: "AppID scope"}
-  ];
 }
 
 // 后台人员是否存在 - 请求
@@ -376,8 +353,6 @@ message OperatorExistsRequest {
       (gnostic.openapi.v3.property) = {description: "后台人员登录名", read_only: true}]; // 后台人员登录名
   }
 
-  // app_id 限定 OperatorExists 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 40;
 }
 // 后台人员是否存在 - 答复
 message OperatorExistsResponse {
@@ -422,12 +397,7 @@ message EditOperatorPasswordRequest {
     }
   ]; // 新密码
 
-  // app_id 限定 EditOperatorPassword 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 3 [
-    (gnostic.openapi.v3.property) = {description: "AppID scope"}
-  ];
 }
-
 
 // 修改后台人员密码（需要验证旧密码） - 请求
 message ChangePasswordRequest {
@@ -473,7 +443,6 @@ message BindEmailRequest {
     (gnostic.openapi.v3.property) = { description: "邮箱验证码（可选）" }
   ];
 }
-
 
 // verify contact请求。
 message VerifyContactRequest {

@@ -8,8 +8,7 @@ package userinternalpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -82,9 +81,7 @@ func (VerificationKeyStatus) EnumDescriptor() ([]byte, []int) {
 // CheckSessionRequest 定义执行 CheckSession 的命令参数。
 type CheckSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CheckSession 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// session_id 标识关联的 Session。
 	SessionId string `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
@@ -124,13 +121,6 @@ func (*CheckSessionRequest) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_session_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CheckSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CheckSessionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -158,9 +148,9 @@ type CheckSessionResponse struct {
 	// valid 显式表示 CheckSession 是否满足该条件。
 	Valid bool `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
 	// user_status 表示 CheckSession 当前可观察的生命周期状态。
-	UserStatus v11.UserStatus `protobuf:"varint,2,opt,name=user_status,json=userStatus,proto3,enum=user.types.v1.UserStatus" json:"user_status,omitempty"`
+	UserStatus v1.UserStatus `protobuf:"varint,2,opt,name=user_status,json=userStatus,proto3,enum=user.types.v1.UserStatus" json:"user_status,omitempty"`
 	// session_status 表示 CheckSession 当前可观察的生命周期状态。
-	SessionStatus v11.SessionStatus `protobuf:"varint,3,opt,name=session_status,json=sessionStatus,proto3,enum=user.types.v1.SessionStatus" json:"session_status,omitempty"`
+	SessionStatus v1.SessionStatus `protobuf:"varint,3,opt,name=session_status,json=sessionStatus,proto3,enum=user.types.v1.SessionStatus" json:"session_status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -202,18 +192,18 @@ func (x *CheckSessionResponse) GetValid() bool {
 	return false
 }
 
-func (x *CheckSessionResponse) GetUserStatus() v11.UserStatus {
+func (x *CheckSessionResponse) GetUserStatus() v1.UserStatus {
 	if x != nil {
 		return x.UserStatus
 	}
-	return v11.UserStatus(0)
+	return v1.UserStatus(0)
 }
 
-func (x *CheckSessionResponse) GetSessionStatus() v11.SessionStatus {
+func (x *CheckSessionResponse) GetSessionStatus() v1.SessionStatus {
 	if x != nil {
 		return x.SessionStatus
 	}
-	return v11.SessionStatus(0)
+	return v1.SessionStatus(0)
 }
 
 // AccessTokenVerificationKey 描述 Access Token 验签公钥及其生效窗口。
@@ -309,9 +299,7 @@ func (x *AccessTokenVerificationKey) GetExpiresAt() *timestamppb.Timestamp {
 
 // GetAccessTokenVerificationKeysRequest 标识待查询的 AccessTokenVerificationKeys。
 type GetAccessTokenVerificationKeysRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetAccessTokenVerificationKeys 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -344,13 +332,6 @@ func (x *GetAccessTokenVerificationKeysRequest) ProtoReflect() protoreflect.Mess
 // Deprecated: Use GetAccessTokenVerificationKeysRequest.ProtoReflect.Descriptor instead.
 func (*GetAccessTokenVerificationKeysRequest) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_session_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *GetAccessTokenVerificationKeysRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // GetAccessTokenVerificationKeysResponse 承载 GetAccessTokenVerificationKeys 的返回结果。
@@ -412,9 +393,8 @@ var File_user_internal_v1_session_proto protoreflect.FileDescriptor
 
 const file_user_internal_v1_session_proto_rawDesc = "" +
 	"\n" +
-	"\x1euser/internal/v1/session.proto\x12\x10user.internal.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xd0\x01\n" +
-	"\x13CheckSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x1euser/internal/v1/session.proto\x12\x10user.internal.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\x98\x01\n" +
+	"\x13CheckSessionRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12+\n" +
 	"\n" +
@@ -434,9 +414,8 @@ const file_user_internal_v1_session_proto_rawDesc = "" +
 	"\n" +
 	"not_before\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tnotBefore\x129\n" +
 	"\n" +
-	"expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"_\n" +
-	"%GetAccessTokenVerificationKeysRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\"\xa7\x01\n" +
+	"expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"'\n" +
+	"%GetAccessTokenVerificationKeysRequest\"\xa7\x01\n" +
 	"&GetAccessTokenVerificationKeysResponse\x12@\n" +
 	"\x04keys\x18\x01 \x03(\v2,.user.internal.v1.AccessTokenVerificationKeyR\x04keys\x12;\n" +
 	"\vcache_until\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
@@ -471,30 +450,27 @@ var file_user_internal_v1_session_proto_goTypes = []any{
 	(*AccessTokenVerificationKey)(nil),             // 3: user.internal.v1.AccessTokenVerificationKey
 	(*GetAccessTokenVerificationKeysRequest)(nil),  // 4: user.internal.v1.GetAccessTokenVerificationKeysRequest
 	(*GetAccessTokenVerificationKeysResponse)(nil), // 5: user.internal.v1.GetAccessTokenVerificationKeysResponse
-	(v1.AppId)(0),                 // 6: common.v1.AppId
-	(v11.UserStatus)(0),           // 7: user.types.v1.UserStatus
-	(v11.SessionStatus)(0),        // 8: user.types.v1.SessionStatus
-	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
+	(v1.UserStatus)(0),                             // 6: user.types.v1.UserStatus
+	(v1.SessionStatus)(0),                          // 7: user.types.v1.SessionStatus
+	(*timestamppb.Timestamp)(nil),                  // 8: google.protobuf.Timestamp
 }
 var file_user_internal_v1_session_proto_depIdxs = []int32{
-	6,  // 0: user.internal.v1.CheckSessionRequest.app_id:type_name -> common.v1.AppId
-	7,  // 1: user.internal.v1.CheckSessionResponse.user_status:type_name -> user.types.v1.UserStatus
-	8,  // 2: user.internal.v1.CheckSessionResponse.session_status:type_name -> user.types.v1.SessionStatus
-	0,  // 3: user.internal.v1.AccessTokenVerificationKey.status:type_name -> user.internal.v1.VerificationKeyStatus
-	9,  // 4: user.internal.v1.AccessTokenVerificationKey.not_before:type_name -> google.protobuf.Timestamp
-	9,  // 5: user.internal.v1.AccessTokenVerificationKey.expires_at:type_name -> google.protobuf.Timestamp
-	6,  // 6: user.internal.v1.GetAccessTokenVerificationKeysRequest.app_id:type_name -> common.v1.AppId
-	3,  // 7: user.internal.v1.GetAccessTokenVerificationKeysResponse.keys:type_name -> user.internal.v1.AccessTokenVerificationKey
-	9,  // 8: user.internal.v1.GetAccessTokenVerificationKeysResponse.cache_until:type_name -> google.protobuf.Timestamp
-	1,  // 9: user.internal.v1.UserSessionIntrospectionService.CheckSession:input_type -> user.internal.v1.CheckSessionRequest
-	4,  // 10: user.internal.v1.UserSessionIntrospectionService.GetAccessTokenVerificationKeys:input_type -> user.internal.v1.GetAccessTokenVerificationKeysRequest
-	2,  // 11: user.internal.v1.UserSessionIntrospectionService.CheckSession:output_type -> user.internal.v1.CheckSessionResponse
-	5,  // 12: user.internal.v1.UserSessionIntrospectionService.GetAccessTokenVerificationKeys:output_type -> user.internal.v1.GetAccessTokenVerificationKeysResponse
-	11, // [11:13] is the sub-list for method output_type
-	9,  // [9:11] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	6, // 0: user.internal.v1.CheckSessionResponse.user_status:type_name -> user.types.v1.UserStatus
+	7, // 1: user.internal.v1.CheckSessionResponse.session_status:type_name -> user.types.v1.SessionStatus
+	0, // 2: user.internal.v1.AccessTokenVerificationKey.status:type_name -> user.internal.v1.VerificationKeyStatus
+	8, // 3: user.internal.v1.AccessTokenVerificationKey.not_before:type_name -> google.protobuf.Timestamp
+	8, // 4: user.internal.v1.AccessTokenVerificationKey.expires_at:type_name -> google.protobuf.Timestamp
+	3, // 5: user.internal.v1.GetAccessTokenVerificationKeysResponse.keys:type_name -> user.internal.v1.AccessTokenVerificationKey
+	8, // 6: user.internal.v1.GetAccessTokenVerificationKeysResponse.cache_until:type_name -> google.protobuf.Timestamp
+	1, // 7: user.internal.v1.UserSessionIntrospectionService.CheckSession:input_type -> user.internal.v1.CheckSessionRequest
+	4, // 8: user.internal.v1.UserSessionIntrospectionService.GetAccessTokenVerificationKeys:input_type -> user.internal.v1.GetAccessTokenVerificationKeysRequest
+	2, // 9: user.internal.v1.UserSessionIntrospectionService.CheckSession:output_type -> user.internal.v1.CheckSessionResponse
+	5, // 10: user.internal.v1.UserSessionIntrospectionService.GetAccessTokenVerificationKeys:output_type -> user.internal.v1.GetAccessTokenVerificationKeysResponse
+	9, // [9:11] is the sub-list for method output_type
+	7, // [7:9] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_user_internal_v1_session_proto_init() }

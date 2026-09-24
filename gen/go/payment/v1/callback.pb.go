@@ -7,8 +7,7 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/callback/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/callback/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -29,8 +28,6 @@ type PaymentCallback struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 回调 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 支付渠道。
 	Provider *PaymentProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=payment.v1.PaymentProvider,oneof" json:"provider,omitempty"`
 	// 支付单号。
@@ -98,13 +95,6 @@ func (*PaymentCallback) Descriptor() ([]byte, []int) {
 func (x *PaymentCallback) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *PaymentCallback) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -221,8 +211,6 @@ type CallbackVerificationCandidate struct {
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// revision_key 在约定作用域内稳定定位 CallbackVerificationCandidate。
 	RevisionKey string `protobuf:"bytes,2,opt,name=revision_key,json=revisionKey,proto3" json:"revision_key,omitempty"`
-	// app_id 限定 CallbackVerificationCandidate 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// channel_id 标识关联的 Channel。
 	ChannelId uint32 `protobuf:"varint,4,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
@@ -283,13 +271,6 @@ func (x *CallbackVerificationCandidate) GetRevisionKey() string {
 		return x.RevisionKey
 	}
 	return ""
-}
-
-func (x *CallbackVerificationCandidate) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
 }
 
 func (x *CallbackVerificationCandidate) GetChannelId() uint32 {
@@ -468,7 +449,7 @@ func (x *CallbackReprocessAttempt) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// Payment 内部的 App-scoped Callback Reprocess 命令。
+// Payment 内部的 Callback Reprocess 命令。
 type ReprocessPaymentCallbackRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// callback_id 标识关联的 Callback。
@@ -477,8 +458,6 @@ type ReprocessPaymentCallbackRequest struct {
 	OperatorId uint32 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
-	// app_id 限定 ReprocessPaymentCallback 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
 	RequestId *string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3,oneof" json:"request_id,omitempty"`
 	// operation_no 为审计与幂等重放稳定标识本次管理操作。
@@ -536,13 +515,6 @@ func (x *ReprocessPaymentCallbackRequest) GetReason() string {
 		return x.Reason
 	}
 	return ""
-}
-
-func (x *ReprocessPaymentCallbackRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReprocessPaymentCallbackRequest) GetRequestId() string {
@@ -738,7 +710,7 @@ func (x *HandleProviderCallbackRequest) GetHeaders() string {
 type HandleCallbackEventRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// event 为已验签、已入口去重的统一回调事件。
-	Event         *v11.CallbackEvent `protobuf:"bytes,1,opt,name=event,proto3" json:"event,omitempty"`
+	Event         *v1.CallbackEvent `protobuf:"bytes,1,opt,name=event,proto3" json:"event,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -773,7 +745,7 @@ func (*HandleCallbackEventRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_callback_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *HandleCallbackEventRequest) GetEvent() *v11.CallbackEvent {
+func (x *HandleCallbackEventRequest) GetEvent() *v1.CallbackEvent {
 	if x != nil {
 		return x.Event
 	}
@@ -784,7 +756,7 @@ func (x *HandleCallbackEventRequest) GetEvent() *v11.CallbackEvent {
 type HandleCallbackEventResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// invoke 为可编程结局。
-	Invoke        *v11.CallbackInvokeResult `protobuf:"bytes,1,opt,name=invoke,proto3" json:"invoke,omitempty"`
+	Invoke        *v1.CallbackInvokeResult `protobuf:"bytes,1,opt,name=invoke,proto3" json:"invoke,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -819,7 +791,7 @@ func (*HandleCallbackEventResponse) Descriptor() ([]byte, []int) {
 	return file_payment_v1_callback_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *HandleCallbackEventResponse) GetInvoke() *v11.CallbackInvokeResult {
+func (x *HandleCallbackEventResponse) GetInvoke() *v1.CallbackInvokeResult {
 	if x != nil {
 		return x.Invoke
 	}
@@ -895,34 +867,32 @@ var File_payment_v1_callback_proto protoreflect.FileDescriptor
 const file_payment_v1_callback_proto_rawDesc = "" +
 	"\n" +
 	"\x19payment/v1/callback.proto\x12\n" +
-	"payment.v1\x1a\x17callback/v1/event.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bpayment/v1/governance.proto\x1a\x1epayment/v1/payment_types.proto\"\xe5\b\n" +
+	"payment.v1\x1a\x17callback/v1/event.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bpayment/v1/governance.proto\x1a\x1epayment/v1/payment_types.proto\"\xbe\b\n" +
 	"\x0fPaymentCallback\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12<\n" +
-	"\bprovider\x18\x03 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x02R\bprovider\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12<\n" +
+	"\bprovider\x18\x03 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x01R\bprovider\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x04 \x01(\tH\x03R\tpaymentNo\x88\x01\x01\x12/\n" +
-	"\x11provider_trade_no\x18\x05 \x01(\tH\x04R\x0fproviderTradeNo\x88\x01\x01\x12\"\n" +
+	"payment_no\x18\x04 \x01(\tH\x02R\tpaymentNo\x88\x01\x01\x12/\n" +
+	"\x11provider_trade_no\x18\x05 \x01(\tH\x03R\x0fproviderTradeNo\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"event_type\x18\x06 \x01(\tH\x05R\teventType\x88\x01\x01\x12\x1f\n" +
-	"\bverified\x18\a \x01(\bH\x06R\bverified\x88\x01\x01\x12*\n" +
-	"\x0eprocess_status\x18\b \x01(\tH\aR\rprocessStatus\x88\x01\x01\x12(\n" +
-	"\rerror_message\x18\t \x01(\tH\bR\ferrorMessage\x88\x01\x01\x12R\n" +
+	"event_type\x18\x06 \x01(\tH\x04R\teventType\x88\x01\x01\x12\x1f\n" +
+	"\bverified\x18\a \x01(\bH\x05R\bverified\x88\x01\x01\x12*\n" +
+	"\x0eprocess_status\x18\b \x01(\tH\x06R\rprocessStatus\x88\x01\x01\x12(\n" +
+	"\rerror_message\x18\t \x01(\tH\aR\ferrorMessage\x88\x01\x01\x12R\n" +
 	"\x11masked_diagnostic\x18\n" +
-	" \x01(\v2 .payment.v1.MaskedDiagnosticDataH\tR\x10maskedDiagnostic\x88\x01\x01\x12Z\n" +
+	" \x01(\v2 .payment.v1.MaskedDiagnosticDataH\bR\x10maskedDiagnostic\x88\x01\x01\x12Z\n" +
 	"\x13candidate_revisions\x18\v \x03(\v2).payment.v1.CallbackVerificationCandidateR\x12candidateRevisions\x125\n" +
-	"\x14matched_revision_key\x18\f \x01(\tH\n" +
-	"R\x12matchedRevisionKey\x88\x01\x01\x12S\n" +
+	"\x14matched_revision_key\x18\f \x01(\tH\tR\x12matchedRevisionKey\x88\x01\x01\x12S\n" +
 	"\x12reprocess_attempts\x18\r \x03(\v2$.payment.v1.CallbackReprocessAttemptR\x11reprocessAttempts\x12-\n" +
 	"\x12reprocess_eligible\x18\x0e \x01(\bR\x11reprocessEligible\x12$\n" +
-	"\vnext_action\x18\x0f \x01(\tH\vR\n" +
+	"\vnext_action\x18\x0f \x01(\tH\n" +
+	"R\n" +
 	"nextAction\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\rR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\v\n" +
 	"\t_providerB\r\n" +
 	"\v_payment_noB\x14\n" +
 	"\x12_provider_trade_noB\r\n" +
@@ -934,11 +904,10 @@ const file_payment_v1_callback_proto_rawDesc = "" +
 	"\x15_matched_revision_keyB\x0e\n" +
 	"\f_next_actionB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xe9\x03\n" +
+	"\v_updated_at\"\xd2\x03\n" +
 	"\x1dCallbackVerificationCandidate\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x04R\x02id\x12!\n" +
-	"\frevision_key\x18\x02 \x01(\tR\vrevisionKey\x12\x15\n" +
-	"\x06app_id\x18\x03 \x01(\rR\x05appId\x12\x1d\n" +
+	"\frevision_key\x18\x02 \x01(\tR\vrevisionKey\x12\x1d\n" +
 	"\n" +
 	"channel_id\x18\x04 \x01(\rR\tchannelId\x127\n" +
 	"\bprovider\x18\x05 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12A\n" +
@@ -969,18 +938,16 @@ const file_payment_v1_callback_proto_rawDesc = "" +
 	"\f_error_classB\n" +
 	"\n" +
 	"\b_messageB\x17\n" +
-	"\x15_matched_revision_key\"\xa0\x02\n" +
+	"\x15_matched_revision_key\"\xe7\x01\n" +
 	"\x1fReprocessPaymentCallbackRequest\x12\x1f\n" +
 	"\vcallback_id\x18\x01 \x01(\x04R\n" +
 	"callbackId\x12\x1f\n" +
 	"\voperator_id\x18\x02 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
-	"\x06reason\x18\x03 \x01(\tR\x06reason\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\"\n" +
+	"\x06reason\x18\x03 \x01(\tR\x06reason\x12\"\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tH\x01R\trequestId\x88\x01\x01\x12&\n" +
-	"\foperation_no\x18\x06 \x01(\tH\x02R\voperationNo\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"request_id\x18\x05 \x01(\tH\x00R\trequestId\x88\x01\x01\x12&\n" +
+	"\foperation_no\x18\x06 \x01(\tH\x01R\voperationNo\x88\x01\x01B\r\n" +
 	"\v_request_idB\x0f\n" +
 	"\r_operation_no\"\x9b\x01\n" +
 	" ReprocessPaymentCallbackResponse\x127\n" +
@@ -1038,9 +1005,8 @@ var file_payment_v1_callback_proto_goTypes = []any{
 	(PaymentProvider)(0),                     // 10: payment.v1.PaymentProvider
 	(*MaskedDiagnosticData)(nil),             // 11: payment.v1.MaskedDiagnosticData
 	(*timestamppb.Timestamp)(nil),            // 12: google.protobuf.Timestamp
-	(v1.AppId)(0),                            // 13: common.v1.AppId
-	(*v11.CallbackEvent)(nil),                // 14: callback.v1.CallbackEvent
-	(*v11.CallbackInvokeResult)(nil),         // 15: callback.v1.CallbackInvokeResult
+	(*v1.CallbackEvent)(nil),                 // 13: callback.v1.CallbackEvent
+	(*v1.CallbackInvokeResult)(nil),          // 14: callback.v1.CallbackInvokeResult
 }
 var file_payment_v1_callback_proto_depIdxs = []int32{
 	10, // 0: payment.v1.PaymentCallback.provider:type_name -> payment.v1.PaymentProvider
@@ -1054,18 +1020,17 @@ var file_payment_v1_callback_proto_depIdxs = []int32{
 	12, // 8: payment.v1.CallbackVerificationCandidate.effective_until:type_name -> google.protobuf.Timestamp
 	12, // 9: payment.v1.CallbackVerificationCandidate.captured_at:type_name -> google.protobuf.Timestamp
 	12, // 10: payment.v1.CallbackReprocessAttempt.created_at:type_name -> google.protobuf.Timestamp
-	13, // 11: payment.v1.ReprocessPaymentCallbackRequest.app_id:type_name -> common.v1.AppId
-	0,  // 12: payment.v1.ReprocessPaymentCallbackResponse.callback:type_name -> payment.v1.PaymentCallback
-	2,  // 13: payment.v1.ReprocessPaymentCallbackResponse.attempt:type_name -> payment.v1.CallbackReprocessAttempt
-	0,  // 14: payment.v1.ListPaymentCallbackResponse.items:type_name -> payment.v1.PaymentCallback
-	10, // 15: payment.v1.HandleProviderCallbackRequest.provider:type_name -> payment.v1.PaymentProvider
-	14, // 16: payment.v1.HandleCallbackEventRequest.event:type_name -> callback.v1.CallbackEvent
-	15, // 17: payment.v1.HandleCallbackEventResponse.invoke:type_name -> callback.v1.CallbackInvokeResult
-	18, // [18:18] is the sub-list for method output_type
-	18, // [18:18] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	0,  // 11: payment.v1.ReprocessPaymentCallbackResponse.callback:type_name -> payment.v1.PaymentCallback
+	2,  // 12: payment.v1.ReprocessPaymentCallbackResponse.attempt:type_name -> payment.v1.CallbackReprocessAttempt
+	0,  // 13: payment.v1.ListPaymentCallbackResponse.items:type_name -> payment.v1.PaymentCallback
+	10, // 14: payment.v1.HandleProviderCallbackRequest.provider:type_name -> payment.v1.PaymentProvider
+	13, // 15: payment.v1.HandleCallbackEventRequest.event:type_name -> callback.v1.CallbackEvent
+	14, // 16: payment.v1.HandleCallbackEventResponse.invoke:type_name -> callback.v1.CallbackInvokeResult
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_callback_proto_init() }

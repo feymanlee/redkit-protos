@@ -59,8 +59,6 @@ func (m *ResolveEffectiveAccessRequest) validate(all bool) error {
 
 	// no validation rules for OperatorId
 
-	// no validation rules for AppId
-
 	if m.ClaimedRole != nil {
 		// no validation rules for ClaimedRole
 	}
@@ -955,8 +953,6 @@ func (m *RegisterOperatorRequest) validate(all bool) error {
 	// no validation rules for Username
 
 	// no validation rules for Password
-
-	// no validation rules for AppCode
 
 	if m.Email != nil {
 		// no validation rules for Email

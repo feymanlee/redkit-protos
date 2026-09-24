@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package user.consumer.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
@@ -122,8 +121,6 @@ message UserRecovery {
 
 // StartUserRecoveryRequest 定义启动 UserRecovery 的幂等管理命令参数。
 message StartUserRecoveryRequest {
-  // app_id 限定 StartUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // StartUserRecoveryRequest 使用以下一种方式定位目标资源。
   oneof user_locator {
     option (validate.required) = true;
@@ -150,16 +147,12 @@ message StartUserRecoveryResponse {
 
 // GetUserRecoveryRequest 标识待查询的 UserRecovery。
 message GetUserRecoveryRequest {
-  // app_id 限定 GetUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
 }
 
 // CancelUserRecoveryRequest 定义取消 UserRecovery 的幂等管理命令参数。
 message CancelUserRecoveryRequest {
-  // app_id 限定 CancelUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -168,8 +161,6 @@ message CancelUserRecoveryRequest {
 
 // CreateTrustedDeviceRecoveryChallengeRequest 定义创建 TrustedDeviceRecoveryChallenge 的幂等命令参数。
 message CreateTrustedDeviceRecoveryChallengeRequest {
-  // app_id 限定 CreateTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // device_id 标识关联的 Device。
@@ -190,8 +181,6 @@ message TrustedDeviceRecoveryChallenge {
 
 // VerifyTrustedDeviceRecoveryChallengeRequest 定义校验 TrustedDeviceRecoveryChallenge 的幂等管理命令参数。
 message VerifyTrustedDeviceRecoveryChallengeRequest {
-  // app_id 限定 VerifyTrustedDeviceRecoveryChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // device_id 标识关联的 Device。
@@ -208,8 +197,6 @@ message VerifyTrustedDeviceRecoveryChallengeRequest {
 
 // SubmitPaymentRecoveryEvidenceRequest 定义提交 PaymentRecoveryEvidence 的幂等管理命令参数。
 message SubmitPaymentRecoveryEvidenceRequest {
-  // app_id 限定 SubmitPaymentRecoveryEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // provider 标识本次能力使用的外部 Provider。
@@ -222,8 +209,6 @@ message SubmitPaymentRecoveryEvidenceRequest {
 
 // ClaimRecoveryGrantRequest 定义执行 ClaimRecoveryGrant 的幂等管理命令参数。
 message ClaimRecoveryGrantRequest {
-  // app_id 限定 ClaimRecoveryGrant 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // recovery_continuation 承载流程继续所需的短期校验凭据，不得写入普通日志。
   string recovery_continuation = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -240,8 +225,6 @@ message RecoveryGrant {
 
 // CompleteUserRecoveryRequest 定义完成 UserRecovery 的幂等管理命令参数。
 message CompleteUserRecoveryRequest {
-  // app_id 限定 CompleteUserRecovery 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // grant 承载完成 User Recovery 所需的一次性授权凭据，不得写入普通日志。
   string grant = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // new_phone 承载按约定地区规则规范化的手机号码。

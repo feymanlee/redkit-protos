@@ -7,8 +7,8 @@
 package filepb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -28,7 +28,6 @@ const (
 type GetFileViewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// File ID。
 	FileId        uint64 `protobuf:"varint,2,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -65,13 +64,6 @@ func (*GetFileViewRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_access_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetFileViewRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetFileViewRequest) GetFileId() uint64 {
 	if x != nil {
 		return x.FileId
@@ -83,7 +75,6 @@ func (x *GetFileViewRequest) GetFileId() uint64 {
 type BatchGetFileViewsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// File ID 列表。
 	FileIds       []uint64 `protobuf:"varint,2,rep,packed,name=file_ids,json=fileIds,proto3" json:"file_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -120,13 +111,6 @@ func (*BatchGetFileViewsRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_access_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *BatchGetFileViewsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *BatchGetFileViewsRequest) GetFileIds() []uint64 {
 	if x != nil {
 		return x.FileIds
@@ -140,7 +124,7 @@ type FileViewResult struct {
 	// File ID。
 	FileId uint64 `protobuf:"varint,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// 解析成功时的安全展示对象。
-	View *v11.FileView `protobuf:"bytes,2,opt,name=view,proto3" json:"view,omitempty"`
+	View *v1.FileView `protobuf:"bytes,2,opt,name=view,proto3" json:"view,omitempty"`
 	// 解析失败的标准错误原因。
 	ErrorReason string `protobuf:"bytes,3,opt,name=error_reason,json=errorReason,proto3" json:"error_reason,omitempty"`
 	// 适合调用方日志的简短错误信息。
@@ -186,7 +170,7 @@ func (x *FileViewResult) GetFileId() uint64 {
 	return 0
 }
 
-func (x *FileViewResult) GetView() *v11.FileView {
+func (x *FileViewResult) GetView() *v1.FileView {
 	if x != nil {
 		return x.View
 	}
@@ -257,13 +241,12 @@ func (x *BatchGetFileViewsResponse) GetResults() []*FileViewResult {
 type ValidateFileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 具体业务 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// File ID。
 	FileId uint64 `protobuf:"varint,2,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// 业务字段要求的 Purpose。
-	ExpectedPurpose v11.FilePurpose `protobuf:"varint,3,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
+	ExpectedPurpose v1.FilePurpose `protobuf:"varint,3,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
 	// 业务字段要求的 Owner 类型。
-	ExpectedOwnerType v11.FileOwnerType `protobuf:"varint,4,opt,name=expected_owner_type,json=expectedOwnerType,proto3,enum=common.file.v1.FileOwnerType" json:"expected_owner_type,omitempty"`
+	ExpectedOwnerType v1.FileOwnerType `protobuf:"varint,4,opt,name=expected_owner_type,json=expectedOwnerType,proto3,enum=common.file.v1.FileOwnerType" json:"expected_owner_type,omitempty"`
 	// 业务字段要求的 Owner ID。
 	ExpectedOwnerId uint64 `protobuf:"varint,5,opt,name=expected_owner_id,json=expectedOwnerId,proto3" json:"expected_owner_id,omitempty"`
 	unknownFields   protoimpl.UnknownFields
@@ -300,13 +283,6 @@ func (*ValidateFileRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_access_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ValidateFileRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ValidateFileRequest) GetFileId() uint64 {
 	if x != nil {
 		return x.FileId
@@ -314,18 +290,18 @@ func (x *ValidateFileRequest) GetFileId() uint64 {
 	return 0
 }
 
-func (x *ValidateFileRequest) GetExpectedPurpose() v11.FilePurpose {
+func (x *ValidateFileRequest) GetExpectedPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.ExpectedPurpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *ValidateFileRequest) GetExpectedOwnerType() v11.FileOwnerType {
+func (x *ValidateFileRequest) GetExpectedOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.ExpectedOwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *ValidateFileRequest) GetExpectedOwnerId() uint64 {
@@ -341,9 +317,9 @@ type FileValidationItem struct {
 	// file_id 标识关联的 File。
 	FileId uint64 `protobuf:"varint,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// expected_purpose 指定 FileValidationItem 数据或能力的预期用途。
-	ExpectedPurpose v11.FilePurpose `protobuf:"varint,2,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
+	ExpectedPurpose v1.FilePurpose `protobuf:"varint,2,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
 	// expected_owner_type 区分 FileValidationItem 的业务类型。
-	ExpectedOwnerType v11.FileOwnerType `protobuf:"varint,3,opt,name=expected_owner_type,json=expectedOwnerType,proto3,enum=common.file.v1.FileOwnerType" json:"expected_owner_type,omitempty"`
+	ExpectedOwnerType v1.FileOwnerType `protobuf:"varint,3,opt,name=expected_owner_type,json=expectedOwnerType,proto3,enum=common.file.v1.FileOwnerType" json:"expected_owner_type,omitempty"`
 	// expected_owner_id 标识关联的 ExpectedOwner。
 	ExpectedOwnerId uint64 `protobuf:"varint,4,opt,name=expected_owner_id,json=expectedOwnerId,proto3" json:"expected_owner_id,omitempty"`
 	unknownFields   protoimpl.UnknownFields
@@ -387,18 +363,18 @@ func (x *FileValidationItem) GetFileId() uint64 {
 	return 0
 }
 
-func (x *FileValidationItem) GetExpectedPurpose() v11.FilePurpose {
+func (x *FileValidationItem) GetExpectedPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.ExpectedPurpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *FileValidationItem) GetExpectedOwnerType() v11.FileOwnerType {
+func (x *FileValidationItem) GetExpectedOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.ExpectedOwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *FileValidationItem) GetExpectedOwnerId() uint64 {
@@ -412,9 +388,7 @@ func (x *FileValidationItem) GetExpectedOwnerId() uint64 {
 type BatchValidateFilesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 校验项。
-	Items []*FileValidationItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
-	// 具体业务 App。
-	AppId         v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	Items         []*FileValidationItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -454,13 +428,6 @@ func (x *BatchValidateFilesRequest) GetItems() []*FileValidationItem {
 		return x.Items
 	}
 	return nil
-}
-
-func (x *BatchValidateFilesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // FileValidationResult 表示一个 File 的独立校验结果。
@@ -594,12 +561,10 @@ func (x *BatchValidateFilesResponse) GetResults() []*FileValidationResult {
 // CreateFileDownloadAuthorizationRequest requests one short-lived protected-file URL.
 type CreateFileDownloadAuthorizationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateFileDownloadAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// file_id 标识关联的 File。
 	FileId uint64 `protobuf:"varint,2,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// expected_purpose 指定 CreateFileDownloadAuthorization 数据或能力的预期用途。
-	ExpectedPurpose v11.FilePurpose `protobuf:"varint,3,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
+	ExpectedPurpose v1.FilePurpose `protobuf:"varint,3,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -634,13 +599,6 @@ func (*CreateFileDownloadAuthorizationRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_access_service_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *CreateFileDownloadAuthorizationRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateFileDownloadAuthorizationRequest) GetFileId() uint64 {
 	if x != nil {
 		return x.FileId
@@ -648,11 +606,11 @@ func (x *CreateFileDownloadAuthorizationRequest) GetFileId() uint64 {
 	return 0
 }
 
-func (x *CreateFileDownloadAuthorizationRequest) GetExpectedPurpose() v11.FilePurpose {
+func (x *CreateFileDownloadAuthorizationRequest) GetExpectedPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.ExpectedPurpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
 // FileDownloadAuthorization is never persisted by the calling domain.
@@ -722,14 +680,12 @@ func (x *FileDownloadAuthorization) GetExpiresAt() *timestamppb.Timestamp {
 // IssueProtectedDownloadRequest 为一个已知绑定的受保护 File 签发短期下载地址。
 type IssueProtectedDownloadRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 IssueProtectedDownload 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// file_id 标识关联的 File。
 	FileId uint64 `protobuf:"varint,2,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	// expected_purpose 指定 IssueProtectedDownload 数据或能力的预期用途。
-	ExpectedPurpose v11.FilePurpose `protobuf:"varint,3,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
+	ExpectedPurpose v1.FilePurpose `protobuf:"varint,3,opt,name=expected_purpose,json=expectedPurpose,proto3,enum=common.file.v1.FilePurpose" json:"expected_purpose,omitempty"`
 	// expected_owner_type 区分 IssueProtectedDownload 的业务类型。
-	ExpectedOwnerType v11.FileOwnerType `protobuf:"varint,4,opt,name=expected_owner_type,json=expectedOwnerType,proto3,enum=common.file.v1.FileOwnerType" json:"expected_owner_type,omitempty"`
+	ExpectedOwnerType v1.FileOwnerType `protobuf:"varint,4,opt,name=expected_owner_type,json=expectedOwnerType,proto3,enum=common.file.v1.FileOwnerType" json:"expected_owner_type,omitempty"`
 	// expected_owner_id 标识关联的 ExpectedOwner。
 	ExpectedOwnerId uint64 `protobuf:"varint,5,opt,name=expected_owner_id,json=expectedOwnerId,proto3" json:"expected_owner_id,omitempty"`
 	// request_id 用于关联同一次请求或异步处理链路。
@@ -770,13 +726,6 @@ func (*IssueProtectedDownloadRequest) Descriptor() ([]byte, []int) {
 	return file_support_file_v1_access_service_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *IssueProtectedDownloadRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *IssueProtectedDownloadRequest) GetFileId() uint64 {
 	if x != nil {
 		return x.FileId
@@ -784,18 +733,18 @@ func (x *IssueProtectedDownloadRequest) GetFileId() uint64 {
 	return 0
 }
 
-func (x *IssueProtectedDownloadRequest) GetExpectedPurpose() v11.FilePurpose {
+func (x *IssueProtectedDownloadRequest) GetExpectedPurpose() v1.FilePurpose {
 	if x != nil {
 		return x.ExpectedPurpose
 	}
-	return v11.FilePurpose(0)
+	return v1.FilePurpose(0)
 }
 
-func (x *IssueProtectedDownloadRequest) GetExpectedOwnerType() v11.FileOwnerType {
+func (x *IssueProtectedDownloadRequest) GetExpectedOwnerType() v1.FileOwnerType {
 	if x != nil {
 		return x.ExpectedOwnerType
 	}
-	return v11.FileOwnerType(0)
+	return v1.FileOwnerType(0)
 }
 
 func (x *IssueProtectedDownloadRequest) GetExpectedOwnerId() uint64 {
@@ -878,12 +827,10 @@ var File_support_file_v1_access_service_proto protoreflect.FileDescriptor
 
 const file_support_file_v1_access_service_proto_rawDesc = "" +
 	"\n" +
-	"$support/file/v1/access_service.proto\x12\x0fsupport.file.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bsupport/file/v1/types.proto\"V\n" +
-	"\x12GetFileViewRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
-	"\afile_id\x18\x02 \x01(\x04R\x06fileId\"^\n" +
-	"\x18BatchGetFileViewsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"$support/file/v1/access_service.proto\x12\x0fsupport.file.v1\x1a\x19common/file/v1/file.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bsupport/file/v1/types.proto\"-\n" +
+	"\x12GetFileViewRequest\x12\x17\n" +
+	"\afile_id\x18\x02 \x01(\x04R\x06fileId\"5\n" +
+	"\x18BatchGetFileViewsRequest\x12\x19\n" +
 	"\bfile_ids\x18\x02 \x03(\x04R\afileIds\"\x9f\x01\n" +
 	"\x0eFileViewResult\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\x04R\x06fileId\x12,\n" +
@@ -891,9 +838,8 @@ const file_support_file_v1_access_service_proto_rawDesc = "" +
 	"\ferror_reason\x18\x03 \x01(\tR\verrorReason\x12#\n" +
 	"\rerror_message\x18\x04 \x01(\tR\ferrorMessage\"V\n" +
 	"\x19BatchGetFileViewsResponse\x129\n" +
-	"\aresults\x18\x01 \x03(\v2\x1f.support.file.v1.FileViewResultR\aresults\"\x9a\x02\n" +
-	"\x13ValidateFileRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\aresults\x18\x01 \x03(\v2\x1f.support.file.v1.FileViewResultR\aresults\"\xf1\x01\n" +
+	"\x13ValidateFileRequest\x12\x17\n" +
 	"\afile_id\x18\x02 \x01(\x04R\x06fileId\x12F\n" +
 	"\x10expected_purpose\x18\x03 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\x0fexpectedPurpose\x12M\n" +
 	"\x13expected_owner_type\x18\x04 \x01(\x0e2\x1d.common.file.v1.FileOwnerTypeR\x11expectedOwnerType\x12*\n" +
@@ -902,10 +848,9 @@ const file_support_file_v1_access_service_proto_rawDesc = "" +
 	"\afile_id\x18\x01 \x01(\x04R\x06fileId\x12F\n" +
 	"\x10expected_purpose\x18\x02 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\x0fexpectedPurpose\x12M\n" +
 	"\x13expected_owner_type\x18\x03 \x01(\x0e2\x1d.common.file.v1.FileOwnerTypeR\x11expectedOwnerType\x12*\n" +
-	"\x11expected_owner_id\x18\x04 \x01(\x04R\x0fexpectedOwnerId\"\x7f\n" +
+	"\x11expected_owner_id\x18\x04 \x01(\x04R\x0fexpectedOwnerId\"V\n" +
 	"\x19BatchValidateFilesRequest\x129\n" +
-	"\x05items\x18\x01 \x03(\v2#.support.file.v1.FileValidationItemR\x05items\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"\xce\x01\n" +
+	"\x05items\x18\x01 \x03(\v2#.support.file.v1.FileValidationItemR\x05items\"\xce\x01\n" +
 	"\x14FileValidationResult\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\x04R\x06fileId\x12\x14\n" +
 	"\x05valid\x18\x02 \x01(\bR\x05valid\x12?\n" +
@@ -915,18 +860,16 @@ const file_support_file_v1_access_service_proto_rawDesc = "" +
 	"\ferror_reason\x18\x04 \x01(\tR\verrorReason\x12#\n" +
 	"\rerror_message\x18\x05 \x01(\tR\ferrorMessage\"]\n" +
 	"\x1aBatchValidateFilesResponse\x12?\n" +
-	"\aresults\x18\x01 \x03(\v2%.support.file.v1.FileValidationResultR\aresults\"\xb2\x01\n" +
-	"&CreateFileDownloadAuthorizationRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\aresults\x18\x01 \x03(\v2%.support.file.v1.FileValidationResultR\aresults\"\x89\x01\n" +
+	"&CreateFileDownloadAuthorizationRequest\x12\x17\n" +
 	"\afile_id\x18\x02 \x01(\x04R\x06fileId\x12F\n" +
 	"\x10expected_purpose\x18\x03 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\x0fexpectedPurpose\"\x81\x01\n" +
 	"\x19FileDownloadAuthorization\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\x04R\x06fileId\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\x129\n" +
 	"\n" +
-	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xe6\x02\n" +
-	"\x1dIssueProtectedDownloadRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xbd\x02\n" +
+	"\x1dIssueProtectedDownloadRequest\x12\x17\n" +
 	"\afile_id\x18\x02 \x01(\x04R\x06fileId\x12F\n" +
 	"\x10expected_purpose\x18\x03 \x01(\x0e2\x1b.common.file.v1.FilePurposeR\x0fexpectedPurpose\x12M\n" +
 	"\x13expected_owner_type\x18\x04 \x01(\x0e2\x1d.common.file.v1.FileOwnerTypeR\x11expectedOwnerType\x12*\n" +
@@ -974,51 +917,44 @@ var file_support_file_v1_access_service_proto_goTypes = []any{
 	(*FileDownloadAuthorization)(nil),              // 10: support.file.v1.FileDownloadAuthorization
 	(*IssueProtectedDownloadRequest)(nil),          // 11: support.file.v1.IssueProtectedDownloadRequest
 	(*IssueProtectedDownloadResponse)(nil),         // 12: support.file.v1.IssueProtectedDownloadResponse
-	(v1.AppId)(0),                                  // 13: common.v1.AppId
-	(*v11.FileView)(nil),                           // 14: common.file.v1.FileView
-	(v11.FilePurpose)(0),                           // 15: common.file.v1.FilePurpose
-	(v11.FileOwnerType)(0),                         // 16: common.file.v1.FileOwnerType
-	(*FileDescriptor)(nil),                         // 17: support.file.v1.FileDescriptor
-	(*timestamppb.Timestamp)(nil),                  // 18: google.protobuf.Timestamp
+	(*v1.FileView)(nil),                            // 13: common.file.v1.FileView
+	(v1.FilePurpose)(0),                            // 14: common.file.v1.FilePurpose
+	(v1.FileOwnerType)(0),                          // 15: common.file.v1.FileOwnerType
+	(*FileDescriptor)(nil),                         // 16: support.file.v1.FileDescriptor
+	(*timestamppb.Timestamp)(nil),                  // 17: google.protobuf.Timestamp
 }
 var file_support_file_v1_access_service_proto_depIdxs = []int32{
-	13, // 0: support.file.v1.GetFileViewRequest.app_id:type_name -> common.v1.AppId
-	13, // 1: support.file.v1.BatchGetFileViewsRequest.app_id:type_name -> common.v1.AppId
-	14, // 2: support.file.v1.FileViewResult.view:type_name -> common.file.v1.FileView
-	2,  // 3: support.file.v1.BatchGetFileViewsResponse.results:type_name -> support.file.v1.FileViewResult
-	13, // 4: support.file.v1.ValidateFileRequest.app_id:type_name -> common.v1.AppId
-	15, // 5: support.file.v1.ValidateFileRequest.expected_purpose:type_name -> common.file.v1.FilePurpose
-	16, // 6: support.file.v1.ValidateFileRequest.expected_owner_type:type_name -> common.file.v1.FileOwnerType
-	15, // 7: support.file.v1.FileValidationItem.expected_purpose:type_name -> common.file.v1.FilePurpose
-	16, // 8: support.file.v1.FileValidationItem.expected_owner_type:type_name -> common.file.v1.FileOwnerType
-	5,  // 9: support.file.v1.BatchValidateFilesRequest.items:type_name -> support.file.v1.FileValidationItem
-	13, // 10: support.file.v1.BatchValidateFilesRequest.app_id:type_name -> common.v1.AppId
-	17, // 11: support.file.v1.FileValidationResult.descriptor:type_name -> support.file.v1.FileDescriptor
-	7,  // 12: support.file.v1.BatchValidateFilesResponse.results:type_name -> support.file.v1.FileValidationResult
-	13, // 13: support.file.v1.CreateFileDownloadAuthorizationRequest.app_id:type_name -> common.v1.AppId
-	15, // 14: support.file.v1.CreateFileDownloadAuthorizationRequest.expected_purpose:type_name -> common.file.v1.FilePurpose
-	18, // 15: support.file.v1.FileDownloadAuthorization.expires_at:type_name -> google.protobuf.Timestamp
-	13, // 16: support.file.v1.IssueProtectedDownloadRequest.app_id:type_name -> common.v1.AppId
-	15, // 17: support.file.v1.IssueProtectedDownloadRequest.expected_purpose:type_name -> common.file.v1.FilePurpose
-	16, // 18: support.file.v1.IssueProtectedDownloadRequest.expected_owner_type:type_name -> common.file.v1.FileOwnerType
-	18, // 19: support.file.v1.IssueProtectedDownloadResponse.expires_at:type_name -> google.protobuf.Timestamp
-	0,  // 20: support.file.v1.FileAccessService.GetFileView:input_type -> support.file.v1.GetFileViewRequest
-	1,  // 21: support.file.v1.FileAccessService.BatchGetFileViews:input_type -> support.file.v1.BatchGetFileViewsRequest
-	4,  // 22: support.file.v1.FileAccessService.ValidateFile:input_type -> support.file.v1.ValidateFileRequest
-	6,  // 23: support.file.v1.FileAccessService.BatchValidateFiles:input_type -> support.file.v1.BatchValidateFilesRequest
-	9,  // 24: support.file.v1.FileAccessService.CreateDownloadAuthorization:input_type -> support.file.v1.CreateFileDownloadAuthorizationRequest
-	11, // 25: support.file.v1.FileAccessService.IssueProtectedDownload:input_type -> support.file.v1.IssueProtectedDownloadRequest
-	14, // 26: support.file.v1.FileAccessService.GetFileView:output_type -> common.file.v1.FileView
-	3,  // 27: support.file.v1.FileAccessService.BatchGetFileViews:output_type -> support.file.v1.BatchGetFileViewsResponse
-	17, // 28: support.file.v1.FileAccessService.ValidateFile:output_type -> support.file.v1.FileDescriptor
-	8,  // 29: support.file.v1.FileAccessService.BatchValidateFiles:output_type -> support.file.v1.BatchValidateFilesResponse
-	10, // 30: support.file.v1.FileAccessService.CreateDownloadAuthorization:output_type -> support.file.v1.FileDownloadAuthorization
-	12, // 31: support.file.v1.FileAccessService.IssueProtectedDownload:output_type -> support.file.v1.IssueProtectedDownloadResponse
-	26, // [26:32] is the sub-list for method output_type
-	20, // [20:26] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	13, // 0: support.file.v1.FileViewResult.view:type_name -> common.file.v1.FileView
+	2,  // 1: support.file.v1.BatchGetFileViewsResponse.results:type_name -> support.file.v1.FileViewResult
+	14, // 2: support.file.v1.ValidateFileRequest.expected_purpose:type_name -> common.file.v1.FilePurpose
+	15, // 3: support.file.v1.ValidateFileRequest.expected_owner_type:type_name -> common.file.v1.FileOwnerType
+	14, // 4: support.file.v1.FileValidationItem.expected_purpose:type_name -> common.file.v1.FilePurpose
+	15, // 5: support.file.v1.FileValidationItem.expected_owner_type:type_name -> common.file.v1.FileOwnerType
+	5,  // 6: support.file.v1.BatchValidateFilesRequest.items:type_name -> support.file.v1.FileValidationItem
+	16, // 7: support.file.v1.FileValidationResult.descriptor:type_name -> support.file.v1.FileDescriptor
+	7,  // 8: support.file.v1.BatchValidateFilesResponse.results:type_name -> support.file.v1.FileValidationResult
+	14, // 9: support.file.v1.CreateFileDownloadAuthorizationRequest.expected_purpose:type_name -> common.file.v1.FilePurpose
+	17, // 10: support.file.v1.FileDownloadAuthorization.expires_at:type_name -> google.protobuf.Timestamp
+	14, // 11: support.file.v1.IssueProtectedDownloadRequest.expected_purpose:type_name -> common.file.v1.FilePurpose
+	15, // 12: support.file.v1.IssueProtectedDownloadRequest.expected_owner_type:type_name -> common.file.v1.FileOwnerType
+	17, // 13: support.file.v1.IssueProtectedDownloadResponse.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 14: support.file.v1.FileAccessService.GetFileView:input_type -> support.file.v1.GetFileViewRequest
+	1,  // 15: support.file.v1.FileAccessService.BatchGetFileViews:input_type -> support.file.v1.BatchGetFileViewsRequest
+	4,  // 16: support.file.v1.FileAccessService.ValidateFile:input_type -> support.file.v1.ValidateFileRequest
+	6,  // 17: support.file.v1.FileAccessService.BatchValidateFiles:input_type -> support.file.v1.BatchValidateFilesRequest
+	9,  // 18: support.file.v1.FileAccessService.CreateDownloadAuthorization:input_type -> support.file.v1.CreateFileDownloadAuthorizationRequest
+	11, // 19: support.file.v1.FileAccessService.IssueProtectedDownload:input_type -> support.file.v1.IssueProtectedDownloadRequest
+	13, // 20: support.file.v1.FileAccessService.GetFileView:output_type -> common.file.v1.FileView
+	3,  // 21: support.file.v1.FileAccessService.BatchGetFileViews:output_type -> support.file.v1.BatchGetFileViewsResponse
+	16, // 22: support.file.v1.FileAccessService.ValidateFile:output_type -> support.file.v1.FileDescriptor
+	8,  // 23: support.file.v1.FileAccessService.BatchValidateFiles:output_type -> support.file.v1.BatchValidateFilesResponse
+	10, // 24: support.file.v1.FileAccessService.CreateDownloadAuthorization:output_type -> support.file.v1.FileDownloadAuthorization
+	12, // 25: support.file.v1.FileAccessService.IssueProtectedDownload:output_type -> support.file.v1.IssueProtectedDownloadResponse
+	20, // [20:26] is the sub-list for method output_type
+	14, // [14:20] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_support_file_v1_access_service_proto_init() }

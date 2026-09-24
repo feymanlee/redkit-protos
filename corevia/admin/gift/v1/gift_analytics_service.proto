@@ -10,15 +10,15 @@ import "validate/validate.proto";
 
 // 礼物分析管理服务。
 service GiftAnalyticsService {
-  // 查询当前 App 的礼物运营概览。
+  // 查询礼物运营概览。
   rpc GetGiftOverview(AdminGetGiftOverviewRequest) returns (.gift.v1.GiftOverviewResponse) {
     option (google.api.http) = {get: "/admin/v1/gift-overview"};
   }
-  // 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+  // 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
   rpc ListGiftStats(AdminListGiftStatsRequest) returns (.gift.v1.ListGiftStatResponse) {
     option (google.api.http) = {get: "/admin/v1/gift-stats"};
   }
-  // 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+  // 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
   rpc ListGiftEvents(AdminListGiftEventsRequest) returns (.gift.v1.ListGiftEventResponse) {
     option (google.api.http) = {get: "/admin/v1/gift-events"};
   }

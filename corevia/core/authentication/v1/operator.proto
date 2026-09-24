@@ -23,9 +23,6 @@ message OperatorMetadata {
   // 后台人员ID。
   uint64 operator_id = 2 [ (gnostic.openapi.v3.property) = {description: "后台人员ID"}]; // 后台人员ID
 
-  // AppID。
-  uint64 app_id = 3 [ (gnostic.openapi.v3.property) = {description: "AppID"}]; // AppID
-
   // 数据权限范围策略。
   core.operator.v1.DataScope data_scope = 4 [ (gnostic.openapi.v3.property) = {description: "数据权限范围策略"}]; // 数据权限范围策略
 

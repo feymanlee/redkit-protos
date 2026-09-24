@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on ProviderBill with the rules defined in
@@ -62,8 +58,6 @@ func (m *ProviderBill) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for Provider
 
@@ -292,8 +286,6 @@ func (m *ReconciliationBatch) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for Provider
 
@@ -567,8 +559,6 @@ func (m *ReconciliationFinding) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for BatchId
 
 	// no validation rules for LocalAmount
@@ -818,8 +808,6 @@ func (m *ReconciliationFindingAction) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for FindingId
 
 	// no validation rules for FromStatus
@@ -984,10 +972,6 @@ func (m *ReconciliationItem) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.BatchId != nil {
@@ -1165,8 +1149,6 @@ func (m *ImportProviderBillRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Provider
 
 	// no validation rules for BillDate
@@ -1288,8 +1270,6 @@ func (m *CreateReconciliationBatchRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Provider
 
 	// no validation rules for BillDate
@@ -1404,8 +1384,6 @@ func (m *GetReconciliationBatchRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for BatchId
 
 	if len(errors) > 0 {
@@ -1511,8 +1489,6 @@ func (m *ListReconciliationBatchesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -1798,8 +1774,6 @@ func (m *ListReconciliationFindingsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -2095,8 +2069,6 @@ func (m *GetReconciliationFindingRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for FindingId
 
 	if len(errors) > 0 {
@@ -2368,8 +2340,6 @@ func (m *MutateReconciliationFindingRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for FindingId
 

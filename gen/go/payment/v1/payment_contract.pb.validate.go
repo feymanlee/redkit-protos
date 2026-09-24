@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on Payment with the rules defined in the
@@ -62,10 +58,6 @@ func (m *Payment) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -409,10 +401,6 @@ func (m *PaymentEvent) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.PaymentNo != nil {
@@ -975,8 +963,6 @@ func (m *RechargeFulfillmentIdentity) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for OrderNo
 
@@ -2321,10 +2307,6 @@ func (m *ReplayDeliveryFailureRequest) validate(all bool) error {
 
 	// no validation rules for Reason
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.RequestId != nil {
 		// no validation rules for RequestId
 	}
@@ -2665,10 +2647,6 @@ func (m *CreatePaymentRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return CreatePaymentRequestMultiError(errors)
 	}
@@ -2772,10 +2750,6 @@ func (m *GetPaymentRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for PaymentNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetPaymentRequestMultiError(errors)
@@ -2891,10 +2865,6 @@ func (m *ClosePaymentRequest) validate(all bool) error {
 
 	// no validation rules for Remark
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ClosePaymentRequestMultiError(errors)
 	}
@@ -2998,10 +2968,6 @@ func (m *SimulatePaymentSuccessRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for PaymentNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return SimulatePaymentSuccessRequestMultiError(errors)
@@ -3530,10 +3496,6 @@ func (m *ReplayPaymentOutboxEventRequest) validate(all bool) error {
 	// no validation rules for RequestId
 
 	// no validation rules for OperationNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return ReplayPaymentOutboxEventRequestMultiError(errors)

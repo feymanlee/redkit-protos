@@ -8,7 +8,6 @@ package paymentpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -85,9 +84,7 @@ func (RecoveryPaymentEvidenceResult) EnumDescriptor() ([]byte, []int) {
 // VerifyRecoveryPaymentEvidenceRequest 定义校验 RecoveryPaymentEvidence 的命令参数。
 type VerifyRecoveryPaymentEvidenceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 VerifyRecoveryPaymentEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// recovery_request_no 是 VerifyRecoveryPaymentEvidence 对外关联与审计使用的业务编号。
 	RecoveryRequestNo string `protobuf:"bytes,3,opt,name=recovery_request_no,json=recoveryRequestNo,proto3" json:"recovery_request_no,omitempty"`
@@ -129,13 +126,6 @@ func (x *VerifyRecoveryPaymentEvidenceRequest) ProtoReflect() protoreflect.Messa
 // Deprecated: Use VerifyRecoveryPaymentEvidenceRequest.ProtoReflect.Descriptor instead.
 func (*VerifyRecoveryPaymentEvidenceRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_recovery_evidence_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *VerifyRecoveryPaymentEvidenceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *VerifyRecoveryPaymentEvidenceRequest) GetUserId() uint64 {
@@ -242,9 +232,8 @@ var File_payment_v1_recovery_evidence_proto protoreflect.FileDescriptor
 const file_payment_v1_recovery_evidence_proto_rawDesc = "" +
 	"\n" +
 	"\"payment/v1/recovery_evidence.proto\x12\n" +
-	"payment.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\x1a\x17validate/validate.proto\"\xf5\x02\n" +
-	"$VerifyRecoveryPaymentEvidenceRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"payment.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\x1a\x17validate/validate.proto\"\xbd\x02\n" +
+	"$VerifyRecoveryPaymentEvidenceRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12<\n" +
 	"\x13recovery_request_no\x18\x03 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\x11recoveryRequestNo\x12D\n" +
@@ -285,22 +274,20 @@ var file_payment_v1_recovery_evidence_proto_goTypes = []any{
 	(RecoveryPaymentEvidenceResult)(0),           // 0: payment.v1.RecoveryPaymentEvidenceResult
 	(*VerifyRecoveryPaymentEvidenceRequest)(nil), // 1: payment.v1.VerifyRecoveryPaymentEvidenceRequest
 	(*RecoveryPaymentEvidenceProof)(nil),         // 2: payment.v1.RecoveryPaymentEvidenceProof
-	(v1.AppId)(0),                                // 3: common.v1.AppId
-	(PaymentProvider)(0),                         // 4: payment.v1.PaymentProvider
-	(*timestamppb.Timestamp)(nil),                // 5: google.protobuf.Timestamp
+	(PaymentProvider)(0),                         // 3: payment.v1.PaymentProvider
+	(*timestamppb.Timestamp)(nil),                // 4: google.protobuf.Timestamp
 }
 var file_payment_v1_recovery_evidence_proto_depIdxs = []int32{
-	3, // 0: payment.v1.VerifyRecoveryPaymentEvidenceRequest.app_id:type_name -> common.v1.AppId
-	4, // 1: payment.v1.VerifyRecoveryPaymentEvidenceRequest.provider:type_name -> payment.v1.PaymentProvider
-	0, // 2: payment.v1.RecoveryPaymentEvidenceProof.result:type_name -> payment.v1.RecoveryPaymentEvidenceResult
-	5, // 3: payment.v1.RecoveryPaymentEvidenceProof.verified_at:type_name -> google.protobuf.Timestamp
-	1, // 4: payment.v1.PaymentRecoveryEvidenceService.VerifyRecoveryPaymentEvidence:input_type -> payment.v1.VerifyRecoveryPaymentEvidenceRequest
-	2, // 5: payment.v1.PaymentRecoveryEvidenceService.VerifyRecoveryPaymentEvidence:output_type -> payment.v1.RecoveryPaymentEvidenceProof
-	5, // [5:6] is the sub-list for method output_type
-	4, // [4:5] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	3, // 0: payment.v1.VerifyRecoveryPaymentEvidenceRequest.provider:type_name -> payment.v1.PaymentProvider
+	0, // 1: payment.v1.RecoveryPaymentEvidenceProof.result:type_name -> payment.v1.RecoveryPaymentEvidenceResult
+	4, // 2: payment.v1.RecoveryPaymentEvidenceProof.verified_at:type_name -> google.protobuf.Timestamp
+	1, // 3: payment.v1.PaymentRecoveryEvidenceService.VerifyRecoveryPaymentEvidence:input_type -> payment.v1.VerifyRecoveryPaymentEvidenceRequest
+	2, // 4: payment.v1.PaymentRecoveryEvidenceService.VerifyRecoveryPaymentEvidence:output_type -> payment.v1.RecoveryPaymentEvidenceProof
+	4, // [4:5] is the sub-list for method output_type
+	3, // [3:4] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_recovery_evidence_proto_init() }

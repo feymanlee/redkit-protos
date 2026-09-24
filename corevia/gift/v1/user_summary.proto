@@ -2,16 +2,13 @@ syntax = "proto3";
 
 package gift.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
 // GetUserGiftSummaryRequest 标识待查询的 UserGiftSummary。
 message GetUserGiftSummaryRequest {
-  // app_id 限定 GetUserGiftSummary 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 

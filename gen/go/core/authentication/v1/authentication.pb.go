@@ -244,8 +244,6 @@ type ResolveEffectiveAccessRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
-	// app_id 限定 ResolveEffectiveAccess 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// claimed_role 记录调用方声明但仍需授权校验的 Role。
 	ClaimedRole *string `protobuf:"bytes,3,opt,name=claimed_role,json=claimedRole,proto3,oneof" json:"claimed_role,omitempty"`
 	// resource 指定本次查询、导出或操作面向的资源类型。
@@ -293,13 +291,6 @@ func (x *ResolveEffectiveAccessRequest) GetOperatorId() uint32 {
 	return 0
 }
 
-func (x *ResolveEffectiveAccessRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
-}
-
 func (x *ResolveEffectiveAccessRequest) GetClaimedRole() string {
 	if x != nil && x.ClaimedRole != nil {
 		return *x.ClaimedRole
@@ -326,7 +317,7 @@ type ResolveEffectiveAccessResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// allowed 显式表示 ResolveEffectiveAccess 是否满足该条件。
 	Allowed bool `protobuf:"varint,1,opt,name=allowed,proto3" json:"allowed,omitempty"`
-	// permission_codes 列出当前主体在 App Scope 内生效的 Permission Code。
+	// permission_codes 列出当前主体生效的 Permission Code。
 	PermissionCodes []string `protobuf:"bytes,2,rep,name=permission_codes,json=permissionCodes,proto3" json:"permission_codes,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -905,8 +896,6 @@ type RegisterOperatorRequest struct {
 	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"` // 后台人员名
 	// 登入密码。
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"` // 登入密码
-	// App代码。
-	AppCode string `protobuf:"bytes,3,opt,name=app_code,json=appCode,proto3" json:"app_code,omitempty"` // App代码
 	// 电子邮件地址。
 	Email *string `protobuf:"bytes,4,opt,name=email,proto3,oneof" json:"email,omitempty"` // 电子邮件地址
 	// 客户端类型。
@@ -955,13 +944,6 @@ func (x *RegisterOperatorRequest) GetUsername() string {
 func (x *RegisterOperatorRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
-	}
-	return ""
-}
-
-func (x *RegisterOperatorRequest) GetAppCode() string {
-	if x != nil {
-		return x.AppCode
 	}
 	return ""
 }
@@ -1533,11 +1515,10 @@ var File_core_authentication_v1_authentication_proto protoreflect.FileDescriptor
 
 const file_core_authentication_v1_authentication_proto_rawDesc = "" +
 	"\n" +
-	"+core/authentication/v1/authentication.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fcore/operator/v1/operator.proto\x1a+core/authentication/v1/operator_token.proto\"\xe6\x01\n" +
+	"+core/authentication/v1/authentication.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fcore/operator/v1/operator.proto\x1a+core/authentication/v1/operator_token.proto\"\xcf\x01\n" +
 	"\x1dResolveEffectiveAccessRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\rR\n" +
-	"operatorId\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12&\n" +
+	"operatorId\x12&\n" +
 	"\fclaimed_role\x18\x03 \x01(\tH\x00R\vclaimedRole\x88\x01\x01\x12\x1f\n" +
 	"\bresource\x18\x04 \x01(\tH\x01R\bresource\x88\x01\x01\x12\x1b\n" +
 	"\x06action\x18\x05 \x01(\tH\x02R\x06action\x88\x01\x01B\x0f\n" +
@@ -1622,11 +1603,10 @@ const file_core_authentication_v1_authentication_proto_rawDesc = "" +
 	"\n" +
 	"is_blocked\x18\x03 \x01(\bB+\xbaG(\x92\x02%令牌是否被阻塞/列入黑名单R\tisBlockedB\n" +
 	"\n" +
-	"\b_payload\"\xd8\x02\n" +
+	"\b_payload\"\xac\x02\n" +
 	"\x17RegisterOperatorRequest\x121\n" +
 	"\busername\x18\x01 \x01(\tB\x15\xbaG\x12\x92\x02\x0f后台人员名R\busername\x12.\n" +
-	"\bpassword\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f登入密码R\bpassword\x12*\n" +
-	"\bapp_code\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\tApp代码R\aappCode\x123\n" +
+	"\bpassword\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f登入密码R\bpassword\x123\n" +
 	"\x05email\x18\x04 \x01(\tB\x18\xbaG\x15\x92\x02\x12电子邮件地址H\x00R\x05email\x88\x01\x01\x12_\n" +
 	"\vclient_type\x18\x05 \x01(\x0e2\".core.authentication.v1.ClientTypeB\x15\xbaG\x12\x92\x02\x0f客户端类型H\x01R\n" +
 	"clientType\x88\x01\x01B\b\n" +

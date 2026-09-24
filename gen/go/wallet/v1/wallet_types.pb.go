@@ -7,7 +7,6 @@
 package walletpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "github.com/google/gnostic/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -265,10 +264,6 @@ type Wallet struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 钱包 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
-	// 应用名称。
-	AppName *string `protobuf:"bytes,3,opt,name=app_name,json=appName,proto3,oneof" json:"app_name,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 币种；未指定时返回用户聚合余额。
@@ -330,20 +325,6 @@ func (x *Wallet) GetId() uint64 {
 		return *x.Id
 	}
 	return 0
-}
-
-func (x *Wallet) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *Wallet) GetAppName() string {
-	if x != nil && x.AppName != nil {
-		return *x.AppName
-	}
-	return ""
 }
 
 func (x *Wallet) GetUserId() uint64 {
@@ -428,8 +409,6 @@ type WalletFreeze struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 冻结 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 钱包 ID。
@@ -509,13 +488,6 @@ func (*WalletFreeze) Descriptor() ([]byte, []int) {
 func (x *WalletFreeze) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletFreeze) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -670,8 +642,6 @@ func (x *WalletFreeze) GetUpdatedAt() *timestamppb.Timestamp {
 // 冻结钱包请求。
 type FreezeWalletRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 冻结金额。
@@ -726,13 +696,6 @@ func (x *FreezeWalletRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use FreezeWalletRequest.ProtoReflect.Descriptor instead.
 func (*FreezeWalletRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_wallet_types_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *FreezeWalletRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *FreezeWalletRequest) GetUserId() uint64 {
@@ -821,8 +784,6 @@ type UnfreezeWalletRequest struct {
 	IdempotencyKey string `protobuf:"bytes,2,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	// 备注。
 	Remark *string `protobuf:"bytes,3,opt,name=remark,proto3,oneof" json:"remark,omitempty"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// Trusted governance identity for Admin-initiated unfreezes.
 	Governance    *WalletGovernanceIdentity `protobuf:"bytes,5,opt,name=governance,proto3,oneof" json:"governance,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -880,13 +841,6 @@ func (x *UnfreezeWalletRequest) GetRemark() string {
 	return ""
 }
 
-func (x *UnfreezeWalletRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UnfreezeWalletRequest) GetGovernance() *WalletGovernanceIdentity {
 	if x != nil {
 		return x.Governance
@@ -898,37 +852,33 @@ var File_wallet_v1_wallet_types_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_wallet_types_proto_rawDesc = "" +
 	"\n" +
-	"\x1cwallet/v1/wallet_types.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x95\x01\n" +
+	"\x1cwallet/v1/wallet_types.proto\x12\twallet.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x95\x01\n" +
 	"\x18WalletGovernanceIdentity\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
 	"\x06reason\x18\x02 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x03 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tR\trequestId\"\xa8\x06\n" +
+	"request_id\x18\x04 \x01(\tR\trequestId\"\xd4\x05\n" +
 	"\x06Wallet\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1e\n" +
-	"\bapp_name\x18\x03 \x01(\tH\x02R\aappName\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x04 \x01(\x04H\x03R\x06userId\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\x05 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x04R\bcurrency\x88\x01\x01\x12F\n" +
-	"\abalance\x18\x06 \x01(\x03B'\xbaG$\x92\x02!虚拟币总余额，最小单位H\x05R\abalance\x88\x01\x01\x12*\n" +
-	"\x0efrozen_balance\x18\a \x01(\x03H\x06R\rfrozenBalance\x88\x01\x01\x120\n" +
-	"\x11available_balance\x18\b \x01(\x03H\aR\x10availableBalance\x88\x01\x01\x12\x1d\n" +
-	"\adiamond\x18\t \x01(\x03H\bR\adiamond\x88\x01\x01\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x04 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\x05 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x02R\bcurrency\x88\x01\x01\x12F\n" +
+	"\abalance\x18\x06 \x01(\x03B'\xbaG$\x92\x02!虚拟币总余额，最小单位H\x03R\abalance\x88\x01\x01\x12*\n" +
+	"\x0efrozen_balance\x18\a \x01(\x03H\x04R\rfrozenBalance\x88\x01\x01\x120\n" +
+	"\x11available_balance\x18\b \x01(\x03H\x05R\x10availableBalance\x88\x01\x01\x12\x1d\n" +
+	"\adiamond\x18\t \x01(\x03H\x06R\adiamond\x88\x01\x01\x12\x17\n" +
 	"\x04coin\x18\n" +
-	" \x01(\x03H\tR\x04coin\x88\x01\x01\x12*\n" +
-	"\x0efrozen_diamond\x18\v \x01(\x03H\n" +
-	"R\rfrozenDiamond\x88\x01\x01\x12$\n" +
-	"\vfrozen_coin\x18\f \x01(\x03H\vR\n" +
+	" \x01(\x03H\aR\x04coin\x88\x01\x01\x12*\n" +
+	"\x0efrozen_diamond\x18\v \x01(\x03H\bR\rfrozenDiamond\x88\x01\x01\x12$\n" +
+	"\vfrozen_coin\x18\f \x01(\x03H\tR\n" +
 	"frozenCoin\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\n" +
+	"R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\rR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
-	"\t_app_nameB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\v\n" +
 	"\t_currencyB\n" +
@@ -942,41 +892,38 @@ const file_wallet_v1_wallet_types_proto_rawDesc = "" +
 	"\x0f_frozen_diamondB\x0e\n" +
 	"\f_frozen_coinB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xa1\n" +
-	"\n" +
+	"\v_updated_at\"\xfa\t\n" +
 	"\fWalletFreeze\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12 \n" +
-	"\twallet_id\x18\x04 \x01(\x04H\x03R\bwalletId\x88\x01\x01\x12 \n" +
-	"\tfreeze_no\x18\x05 \x01(\tH\x04R\bfreezeNo\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x06 \x01(\x03H\x05R\x06amount\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\a \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x06R\bcurrency\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\b \x01(\tH\aR\x06status\x88\x01\x01\x12\x1e\n" +
-	"\bbiz_type\x18\t \x01(\tH\bR\abizType\x88\x01\x01\x12\x1a\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12 \n" +
+	"\twallet_id\x18\x04 \x01(\x04H\x02R\bwalletId\x88\x01\x01\x12 \n" +
+	"\tfreeze_no\x18\x05 \x01(\tH\x03R\bfreezeNo\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\x06 \x01(\x03H\x04R\x06amount\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\a \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x05R\bcurrency\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\b \x01(\tH\x06R\x06status\x88\x01\x01\x12\x1e\n" +
+	"\bbiz_type\x18\t \x01(\tH\aR\abizType\x88\x01\x01\x12\x1a\n" +
 	"\x06biz_id\x18\n" +
-	" \x01(\tH\tR\x05bizId\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\v \x01(\tH\n" +
-	"R\x0eidempotencyKey\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\f \x01(\tH\vR\x06remark\x88\x01\x01\x12\x1d\n" +
-	"\adiamond\x18\r \x01(\x03H\fR\adiamond\x88\x01\x01\x12\x17\n" +
-	"\x04coin\x18\x0e \x01(\x03H\rR\x04coin\x88\x01\x01\x12:\n" +
-	"\x06source\x18\x0f \x01(\x0e2\x1d.wallet.v1.WalletFreezeSourceH\x0eR\x06source\x88\x01\x01\x12P\n" +
-	"\x0erelease_policy\x18\x10 \x01(\x0e2$.wallet.v1.WalletFreezeReleasePolicyH\x0fR\rreleasePolicy\x88\x01\x01\x12>\n" +
+	" \x01(\tH\bR\x05bizId\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\v \x01(\tH\tR\x0eidempotencyKey\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\f \x01(\tH\n" +
+	"R\x06remark\x88\x01\x01\x12\x1d\n" +
+	"\adiamond\x18\r \x01(\x03H\vR\adiamond\x88\x01\x01\x12\x17\n" +
+	"\x04coin\x18\x0e \x01(\x03H\fR\x04coin\x88\x01\x01\x12:\n" +
+	"\x06source\x18\x0f \x01(\x0e2\x1d.wallet.v1.WalletFreezeSourceH\rR\x06source\x88\x01\x01\x12P\n" +
+	"\x0erelease_policy\x18\x10 \x01(\x0e2$.wallet.v1.WalletFreezeReleasePolicyH\x0eR\rreleasePolicy\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expires_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\texpiresAt\x88\x01\x01\x12C\n" +
-	"\rreview_due_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\vreviewDueAt\x88\x01\x01\x12$\n" +
-	"\voperator_id\x18\x13 \x01(\rH\x12R\n" +
+	"expires_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\texpiresAt\x88\x01\x01\x12C\n" +
+	"\rreview_due_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\vreviewDueAt\x88\x01\x01\x12$\n" +
+	"\voperator_id\x18\x13 \x01(\rH\x11R\n" +
 	"operatorId\x88\x01\x01\x12\x1b\n" +
-	"\x06reason\x18\x14 \x01(\tH\x13R\x06reason\x88\x01\x01\x12@\n" +
-	"\vreleased_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\n" +
+	"\x06reason\x18\x14 \x01(\tH\x12R\x06reason\x88\x01\x01\x12@\n" +
+	"\vreleased_at\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampH\x13R\n" +
 	"releasedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x15R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x14R\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x16R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x15R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\f\n" +
 	"\n" +
@@ -1001,9 +948,8 @@ const file_wallet_v1_wallet_types_proto_rawDesc = "" +
 	"\a_reasonB\x0e\n" +
 	"\f_released_atB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x9f\x05\n" +
-	"\x13FreezeWalletRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\v_updated_at\"\xf6\x04\n" +
+	"\x13FreezeWalletRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\x03R\x06amount\x12:\n" +
 	"\bcurrency\x18\x04 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x00R\bcurrency\x88\x01\x01\x12\x19\n" +
@@ -1024,17 +970,15 @@ const file_wallet_v1_wallet_types_proto_rawDesc = "" +
 	"\v_governanceB\x11\n" +
 	"\x0f_release_policyB\r\n" +
 	"\v_expires_atB\x10\n" +
-	"\x0e_review_due_at\"\x97\x02\n" +
+	"\x0e_review_due_at\"\xde\x01\n" +
 	"\x15UnfreezeWalletRequest\x12\x1b\n" +
 	"\tfreeze_no\x18\x01 \x01(\tR\bfreezeNo\x12'\n" +
 	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\x12\x1b\n" +
-	"\x06remark\x18\x03 \x01(\tH\x00R\x06remark\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01\x12H\n" +
+	"\x06remark\x18\x03 \x01(\tH\x00R\x06remark\x88\x01\x01\x12H\n" +
 	"\n" +
-	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x02R\n" +
+	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
 	"governance\x88\x01\x01B\t\n" +
-	"\a_remarkB\t\n" +
-	"\a_app_idB\r\n" +
+	"\a_remarkB\r\n" +
 	"\v_governance*\x83\x01\n" +
 	"\x0eWalletCurrency\x12\x1f\n" +
 	"\x1bWALLET_CURRENCY_UNSPECIFIED\x10\x00\x12\x1b\n" +
@@ -1076,7 +1020,6 @@ var file_wallet_v1_wallet_types_proto_goTypes = []any{
 	(*FreezeWalletRequest)(nil),      // 6: wallet.v1.FreezeWalletRequest
 	(*UnfreezeWalletRequest)(nil),    // 7: wallet.v1.UnfreezeWalletRequest
 	(*timestamppb.Timestamp)(nil),    // 8: google.protobuf.Timestamp
-	(v1.AppId)(0),                    // 9: common.v1.AppId
 }
 var file_wallet_v1_wallet_types_proto_depIdxs = []int32{
 	0,  // 0: wallet.v1.Wallet.currency:type_name -> wallet.v1.WalletCurrency
@@ -1090,19 +1033,17 @@ var file_wallet_v1_wallet_types_proto_depIdxs = []int32{
 	8,  // 8: wallet.v1.WalletFreeze.released_at:type_name -> google.protobuf.Timestamp
 	8,  // 9: wallet.v1.WalletFreeze.created_at:type_name -> google.protobuf.Timestamp
 	8,  // 10: wallet.v1.WalletFreeze.updated_at:type_name -> google.protobuf.Timestamp
-	9,  // 11: wallet.v1.FreezeWalletRequest.app_id:type_name -> common.v1.AppId
-	0,  // 12: wallet.v1.FreezeWalletRequest.currency:type_name -> wallet.v1.WalletCurrency
-	3,  // 13: wallet.v1.FreezeWalletRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	2,  // 14: wallet.v1.FreezeWalletRequest.release_policy:type_name -> wallet.v1.WalletFreezeReleasePolicy
-	8,  // 15: wallet.v1.FreezeWalletRequest.expires_at:type_name -> google.protobuf.Timestamp
-	8,  // 16: wallet.v1.FreezeWalletRequest.review_due_at:type_name -> google.protobuf.Timestamp
-	9,  // 17: wallet.v1.UnfreezeWalletRequest.app_id:type_name -> common.v1.AppId
-	3,  // 18: wallet.v1.UnfreezeWalletRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	19, // [19:19] is the sub-list for method output_type
-	19, // [19:19] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	0,  // 11: wallet.v1.FreezeWalletRequest.currency:type_name -> wallet.v1.WalletCurrency
+	3,  // 12: wallet.v1.FreezeWalletRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	2,  // 13: wallet.v1.FreezeWalletRequest.release_policy:type_name -> wallet.v1.WalletFreezeReleasePolicy
+	8,  // 14: wallet.v1.FreezeWalletRequest.expires_at:type_name -> google.protobuf.Timestamp
+	8,  // 15: wallet.v1.FreezeWalletRequest.review_due_at:type_name -> google.protobuf.Timestamp
+	3,  // 16: wallet.v1.UnfreezeWalletRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	17, // [17:17] is the sub-list for method output_type
+	17, // [17:17] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_wallet_types_proto_init() }

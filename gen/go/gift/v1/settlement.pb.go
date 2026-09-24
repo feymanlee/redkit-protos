@@ -7,8 +7,8 @@
 package giftpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -216,8 +216,6 @@ type GiftSettlementRecord struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 记录 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 送礼记录 ID。
 	SendRecordId *uint64 `protobuf:"varint,3,opt,name=send_record_id,json=sendRecordId,proto3,oneof" json:"send_record_id,omitempty"`
 	// 礼物 ID。
@@ -287,13 +285,6 @@ func (*GiftSettlementRecord) Descriptor() ([]byte, []int) {
 func (x *GiftSettlementRecord) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *GiftSettlementRecord) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -583,15 +574,13 @@ func (x *GiftSettlementRecordFilter) GetOccurredTo() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListGiftSettlementRecordsRequest carries trusted App scope, typed filters and stable paging.
+// ListGiftSettlementRecordsRequest carries typed filters and stable paging.
 type ListGiftSettlementRecordsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGiftSettlementRecords 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *GiftSettlementRecordFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -626,13 +615,6 @@ func (*ListGiftSettlementRecordsRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_settlement_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ListGiftSettlementRecordsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListGiftSettlementRecordsRequest) GetFilter() *GiftSettlementRecordFilter {
 	if x != nil {
 		return x.Filter
@@ -640,7 +622,7 @@ func (x *ListGiftSettlementRecordsRequest) GetFilter() *GiftSettlementRecordFilt
 	return nil
 }
 
-func (x *ListGiftSettlementRecordsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListGiftSettlementRecordsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -738,20 +720,18 @@ func (x *GiftSettlementReconciliationEvidence) GetGiftRevisionId() uint64 {
 	return 0
 }
 
-// GiftReconciliationIssue is one App-scoped logical inconsistency for one successful Send.
+// GiftReconciliationIssue is one logical inconsistency for one successful Send.
 type GiftReconciliationIssue struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GiftReconciliationIssue。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// send_record_id 标识关联的 SendRecord。
 	SendRecordId uint64 `protobuf:"varint,3,opt,name=send_record_id,json=sendRecordId,proto3" json:"send_record_id,omitempty"`
 	// gift_id 标识关联的 Gift。
 	GiftId uint32 `protobuf:"varint,4,opt,name=gift_id,json=giftId,proto3" json:"gift_id,omitempty"`
 	// recipient_id 标识关联的 Recipient。
 	RecipientId string `protobuf:"bytes,5,opt,name=recipient_id,json=recipientId,proto3" json:"recipient_id,omitempty"`
-	// recipient_user_id 标识当前 App 内关联的 User。
+	// recipient_user_id 标识关联的 User。
 	RecipientUserId uint64 `protobuf:"varint,6,opt,name=recipient_user_id,json=recipientUserId,proto3" json:"recipient_user_id,omitempty"`
 	// issue_type 区分 GiftReconciliationIssue 的业务类型。
 	IssueType GiftReconciliationIssueType `protobuf:"varint,7,opt,name=issue_type,json=issueType,proto3,enum=gift.v1.GiftReconciliationIssueType" json:"issue_type,omitempty"`
@@ -816,13 +796,6 @@ func (*GiftReconciliationIssue) Descriptor() ([]byte, []int) {
 func (x *GiftReconciliationIssue) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *GiftReconciliationIssue) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -951,8 +924,6 @@ type GiftReconciliationIssueNote struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 GiftReconciliationIssueNote。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 GiftReconciliationIssueNote 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// issue_id 标识关联的 Issue。
 	IssueId uint64 `protobuf:"varint,3,opt,name=issue_id,json=issueId,proto3" json:"issue_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1002,13 +973,6 @@ func (*GiftReconciliationIssueNote) Descriptor() ([]byte, []int) {
 func (x *GiftReconciliationIssueNote) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *GiftReconciliationIssueNote) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -1158,12 +1122,10 @@ func (x *GiftReconciliationIssueFilter) GetOccurredTo() *timestamppb.Timestamp {
 // ListGiftReconciliationIssuesRequest 定义 GiftReconciliationIssues 的筛选与分页参数。
 type ListGiftReconciliationIssuesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListGiftReconciliationIssues 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *GiftReconciliationIssueFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1198,13 +1160,6 @@ func (*ListGiftReconciliationIssuesRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_settlement_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListGiftReconciliationIssuesRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListGiftReconciliationIssuesRequest) GetFilter() *GiftReconciliationIssueFilter {
 	if x != nil {
 		return x.Filter
@@ -1212,7 +1167,7 @@ func (x *ListGiftReconciliationIssuesRequest) GetFilter() *GiftReconciliationIss
 	return nil
 }
 
-func (x *ListGiftReconciliationIssuesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListGiftReconciliationIssuesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1277,8 +1232,6 @@ func (x *ListGiftReconciliationIssuesResponse) GetTotal() uint64 {
 // GetGiftReconciliationIssueRequest 标识待查询的 GiftReconciliationIssue。
 type GetGiftReconciliationIssueRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetGiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// id 标识关联的 GetGiftReconciliationIssue。
 	Id            uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1313,13 +1266,6 @@ func (x *GetGiftReconciliationIssueRequest) ProtoReflect() protoreflect.Message 
 // Deprecated: Use GetGiftReconciliationIssueRequest.ProtoReflect.Descriptor instead.
 func (*GetGiftReconciliationIssueRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_settlement_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *GetGiftReconciliationIssueRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetGiftReconciliationIssueRequest) GetId() uint64 {
@@ -1396,8 +1342,6 @@ func (x *GiftReconciliationIssueAuditDetails) GetAudits() []*GiftOperatorAudit {
 // AcknowledgeGiftReconciliationIssueRequest 定义执行 AcknowledgeGiftReconciliationIssue 的幂等管理命令参数。
 type AcknowledgeGiftReconciliationIssueRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AcknowledgeGiftReconciliationIssue 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// id 标识关联的 AcknowledgeGiftReconciliationIssue。
 	Id uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1442,13 +1386,6 @@ func (*AcknowledgeGiftReconciliationIssueRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_settlement_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *AcknowledgeGiftReconciliationIssueRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *AcknowledgeGiftReconciliationIssueRequest) GetId() uint64 {
 	if x != nil {
 		return x.Id
@@ -1487,8 +1424,6 @@ func (x *AcknowledgeGiftReconciliationIssueRequest) GetRequestId() string {
 // AddGiftReconciliationIssueNoteRequest 定义执行 AddGiftReconciliationIssueNote 的幂等管理命令参数。
 type AddGiftReconciliationIssueNoteRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AddGiftReconciliationIssueNote 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// id 标识关联的 AddGiftReconciliationIssueNote。
 	Id uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1533,13 +1468,6 @@ func (*AddGiftReconciliationIssueNoteRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_settlement_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *AddGiftReconciliationIssueNoteRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *AddGiftReconciliationIssueNoteRequest) GetId() uint64 {
 	if x != nil {
 		return x.Id
@@ -1578,8 +1506,6 @@ func (x *AddGiftReconciliationIssueNoteRequest) GetRequestId() string {
 // ReconcileGiftSettlementRequest 定义核对 GiftSettlement 的幂等管理命令参数。
 type ReconcileGiftSettlementRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ReconcileGiftSettlement 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// issue_id 标识关联的 Issue。
 	IssueId uint64 `protobuf:"varint,2,opt,name=issue_id,json=issueId,proto3" json:"issue_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1622,13 +1548,6 @@ func (x *ReconcileGiftSettlementRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ReconcileGiftSettlementRequest.ProtoReflect.Descriptor instead.
 func (*ReconcileGiftSettlementRequest) Descriptor() ([]byte, []int) {
 	return file_gift_v1_settlement_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *ReconcileGiftSettlementRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReconcileGiftSettlementRequest) GetIssueId() uint64 {
@@ -1825,33 +1744,31 @@ var File_gift_v1_settlement_proto protoreflect.FileDescriptor
 
 const file_gift_v1_settlement_proto_rawDesc = "" +
 	"\n" +
-	"\x18gift/v1/settlement.proto\x12\agift.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x16gift/v1/backpack.proto\x1a\x15gift/v1/catalog.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa3\b\n" +
+	"\x18gift/v1/settlement.proto\x12\agift.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x16gift/v1/backpack.proto\x1a\x15gift/v1/catalog.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xfc\a\n" +
 	"\x14GiftSettlementRecord\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12)\n" +
-	"\x0esend_record_id\x18\x03 \x01(\x04H\x02R\fsendRecordId\x88\x01\x01\x12\x1c\n" +
-	"\agift_id\x18\x04 \x01(\rH\x03R\x06giftId\x88\x01\x01\x12)\n" +
-	"\x0esender_user_id\x18\x05 \x01(\x04H\x04R\fsenderUserId\x88\x01\x01\x12/\n" +
-	"\x11recipient_user_id\x18\x06 \x01(\x04H\x05R\x0frecipientUserId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12)\n" +
+	"\x0esend_record_id\x18\x03 \x01(\x04H\x01R\fsendRecordId\x88\x01\x01\x12\x1c\n" +
+	"\agift_id\x18\x04 \x01(\rH\x02R\x06giftId\x88\x01\x01\x12)\n" +
+	"\x0esender_user_id\x18\x05 \x01(\x04H\x03R\fsenderUserId\x88\x01\x01\x12/\n" +
+	"\x11recipient_user_id\x18\x06 \x01(\x04H\x04R\x0frecipientUserId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"scene_type\x18\a \x01(\tH\x06R\tsceneType\x88\x01\x01\x12\x1e\n" +
-	"\bscene_id\x18\b \x01(\tH\aR\asceneId\x88\x01\x01\x12&\n" +
-	"\ftotal_amount\x18\t \x01(\x03H\bR\vtotalAmount\x88\x01\x01\x12,\n" +
+	"scene_type\x18\a \x01(\tH\x05R\tsceneType\x88\x01\x01\x12\x1e\n" +
+	"\bscene_id\x18\b \x01(\tH\x06R\asceneId\x88\x01\x01\x12&\n" +
+	"\ftotal_amount\x18\t \x01(\x03H\aR\vtotalAmount\x88\x01\x01\x12,\n" +
 	"\x0fplatform_amount\x18\n" +
-	" \x01(\x03H\tR\x0eplatformAmount\x88\x01\x01\x12.\n" +
-	"\x10recipient_amount\x18\v \x01(\x03H\n" +
-	"R\x0frecipientAmount\x88\x01\x01\x12(\n" +
-	"\rplatform_rate\x18\f \x01(\rH\vR\fplatformRate\x88\x01\x01\x12*\n" +
-	"\x0erecipient_rate\x18\r \x01(\rH\fR\rrecipientRate\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\x0e \x01(\tH\rR\x06status\x88\x01\x01\x12'\n" +
-	"\rwallet_biz_id\x18\x0f \x01(\tH\x0eR\vwalletBizId\x88\x01\x01\x12*\n" +
-	"\x0epayment_source\x18\x10 \x01(\tH\x0fR\rpaymentSource\x88\x01\x01\x12?\n" +
+	" \x01(\x03H\bR\x0eplatformAmount\x88\x01\x01\x12.\n" +
+	"\x10recipient_amount\x18\v \x01(\x03H\tR\x0frecipientAmount\x88\x01\x01\x12(\n" +
+	"\rplatform_rate\x18\f \x01(\rH\n" +
+	"R\fplatformRate\x88\x01\x01\x12*\n" +
+	"\x0erecipient_rate\x18\r \x01(\rH\vR\rrecipientRate\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x0e \x01(\tH\fR\x06status\x88\x01\x01\x12'\n" +
+	"\rwallet_biz_id\x18\x0f \x01(\tH\rR\vwalletBizId\x88\x01\x01\x12*\n" +
+	"\x0epayment_source\x18\x10 \x01(\tH\x0eR\rpaymentSource\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x11\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x11\n" +
 	"\x0f_send_record_idB\n" +
 	"\n" +
 	"\b_gift_idB\x11\n" +
@@ -1892,12 +1809,10 @@ const file_gift_v1_settlement_proto_rawDesc = "" +
 	"\x12_recipient_user_idB\r\n" +
 	"\v_scene_typeB\x10\n" +
 	"\x0e_occurred_fromB\x0e\n" +
-	"\f_occurred_to\"\xd5\x01\n" +
-	" ListGiftSettlementRecordsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
+	"\f_occurred_to\"\x9c\x01\n" +
+	" ListGiftSettlementRecordsRequest\x12;\n" +
 	"\x06filter\x18\x02 \x01(\v2#.gift.v1.GiftSettlementRecordFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"\x95\x03\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\x95\x03\n" +
 	"$GiftSettlementReconciliationEvidence\x129\n" +
 	"\bexpected\x18\x01 \x01(\v2\x1d.gift.v1.GiftSettlementRecordR\bexpected\x129\n" +
 	"\bobserved\x18\x02 \x03(\v2\x1d.gift.v1.GiftSettlementRecordR\bobserved\x12K\n" +
@@ -1906,10 +1821,9 @@ const file_gift_v1_settlement_proto_rawDesc = "" +
 	"\n" +
 	"checked_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcheckedAt\x12-\n" +
 	"\x10gift_revision_id\x18\x06 \x01(\x04H\x00R\x0egiftRevisionId\x88\x01\x01B\x13\n" +
-	"\x11_gift_revision_id\"\xe4\b\n" +
+	"\x11_gift_revision_id\"\xcd\b\n" +
 	"\x17GiftReconciliationIssue\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12$\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12$\n" +
 	"\x0esend_record_id\x18\x03 \x01(\x04R\fsendRecordId\x12\x17\n" +
 	"\agift_id\x18\x04 \x01(\rR\x06giftId\x12!\n" +
 	"\frecipient_id\x18\x05 \x01(\tR\vrecipientId\x12*\n" +
@@ -1935,10 +1849,9 @@ const file_gift_v1_settlement_proto_rawDesc = "" +
 	"updated_at\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x12\n" +
 	"\x10_acknowledged_byB\x12\n" +
 	"\x10_acknowledged_atB\x0e\n" +
-	"\f_resolved_at\"\xa5\x02\n" +
+	"\f_resolved_at\"\x8e\x02\n" +
 	"\x1bGiftReconciliationIssueNote\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x19\n" +
 	"\bissue_id\x18\x03 \x01(\x04R\aissueId\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\rR\n" +
 	"operatorId\x12\x12\n" +
@@ -1965,55 +1878,45 @@ const file_gift_v1_settlement_proto_rawDesc = "" +
 	"\n" +
 	"\b_gift_idB\x10\n" +
 	"\x0e_occurred_fromB\x0e\n" +
-	"\f_occurred_to\"\xdb\x01\n" +
-	"#ListGiftReconciliationIssuesRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12>\n" +
+	"\f_occurred_to\"\xa2\x01\n" +
+	"#ListGiftReconciliationIssuesRequest\x12>\n" +
 	"\x06filter\x18\x02 \x01(\v2&.gift.v1.GiftReconciliationIssueFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"t\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"t\n" +
 	"$ListGiftReconciliationIssuesResponse\x126\n" +
 	"\x05items\x18\x01 \x03(\v2 .gift.v1.GiftReconciliationIssueR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"l\n" +
-	"!GetGiftReconciliationIssueRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\x04R\x02idB\t\n" +
-	"\a_app_id\"\xcd\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"3\n" +
+	"!GetGiftReconciliationIssueRequest\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\x04R\x02id\"\xcd\x01\n" +
 	"#GiftReconciliationIssueAuditDetails\x126\n" +
 	"\x05issue\x18\x01 \x01(\v2 .gift.v1.GiftReconciliationIssueR\x05issue\x12:\n" +
 	"\x05notes\x18\x02 \x03(\v2$.gift.v1.GiftReconciliationIssueNoteR\x05notes\x122\n" +
-	"\x06audits\x18\x03 \x03(\v2\x1a.gift.v1.GiftOperatorAuditR\x06audits\"\xff\x01\n" +
-	")AcknowledgeGiftReconciliationIssueRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x0e\n" +
+	"\x06audits\x18\x03 \x03(\v2\x1a.gift.v1.GiftOperatorAuditR\x06audits\"\xc6\x01\n" +
+	")AcknowledgeGiftReconciliationIssueRequest\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x12\n" +
 	"\x04note\x18\x04 \x01(\tR\x04note\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x01R\trequestId\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
-	"\v_request_id\"\xfb\x01\n" +
-	"%AddGiftReconciliationIssueNoteRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x0e\n" +
+	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xc2\x01\n" +
+	"%AddGiftReconciliationIssueNoteRequest\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\x04R\x02id\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x12\n" +
 	"\x04note\x18\x04 \x01(\tR\x04note\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x01R\trequestId\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
-	"\v_request_id\"\x83\x02\n" +
-	"\x1eReconcileGiftSettlementRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x19\n" +
+	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
+	"\v_request_id\"\xca\x01\n" +
+	"\x1eReconcileGiftSettlementRequest\x12\x19\n" +
 	"\bissue_id\x18\x02 \x01(\x04R\aissueId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12\x16\n" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tH\x01R\trequestId\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"request_id\x18\x06 \x01(\tH\x00R\trequestId\x88\x01\x01B\r\n" +
 	"\v_request_id\"\xe7\x01\n" +
 	"%GiftReconciliationIssueActionResponse\x126\n" +
 	"\x05issue\x18\x01 \x01(\v2 .gift.v1.GiftReconciliationIssueR\x05issue\x128\n" +
@@ -2083,10 +1986,9 @@ var file_gift_v1_settlement_proto_goTypes = []any{
 	(*GiftReconciliationIssueActionResponse)(nil),     // 18: gift.v1.GiftReconciliationIssueActionResponse
 	(*ReconcileGiftSettlementResponse)(nil),           // 19: gift.v1.ReconcileGiftSettlementResponse
 	(*timestamppb.Timestamp)(nil),                     // 20: google.protobuf.Timestamp
-	(v1.AppId)(0),                                     // 21: common.v1.AppId
-	(*v11.PagingRequest)(nil),                         // 22: common.pagination.v1.PagingRequest
-	(*GiftBackpackTransactionItem)(nil),               // 23: gift.v1.GiftBackpackTransactionItem
-	(*GiftOperatorAudit)(nil),                         // 24: gift.v1.GiftOperatorAudit
+	(*v1.PagingRequest)(nil),                          // 21: common.pagination.v1.PagingRequest
+	(*GiftBackpackTransactionItem)(nil),               // 22: gift.v1.GiftBackpackTransactionItem
+	(*GiftOperatorAudit)(nil),                         // 23: gift.v1.GiftOperatorAudit
 }
 var file_gift_v1_settlement_proto_depIdxs = []int32{
 	20, // 0: gift.v1.GiftSettlementRecord.created_at:type_name -> google.protobuf.Timestamp
@@ -2094,52 +1996,46 @@ var file_gift_v1_settlement_proto_depIdxs = []int32{
 	3,  // 2: gift.v1.ListGiftSettlementRecordResponse.items:type_name -> gift.v1.GiftSettlementRecord
 	20, // 3: gift.v1.GiftSettlementRecordFilter.occurred_from:type_name -> google.protobuf.Timestamp
 	20, // 4: gift.v1.GiftSettlementRecordFilter.occurred_to:type_name -> google.protobuf.Timestamp
-	21, // 5: gift.v1.ListGiftSettlementRecordsRequest.app_id:type_name -> common.v1.AppId
-	5,  // 6: gift.v1.ListGiftSettlementRecordsRequest.filter:type_name -> gift.v1.GiftSettlementRecordFilter
-	22, // 7: gift.v1.ListGiftSettlementRecordsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	3,  // 8: gift.v1.GiftSettlementReconciliationEvidence.expected:type_name -> gift.v1.GiftSettlementRecord
-	3,  // 9: gift.v1.GiftSettlementReconciliationEvidence.observed:type_name -> gift.v1.GiftSettlementRecord
-	23, // 10: gift.v1.GiftSettlementReconciliationEvidence.backpack_items:type_name -> gift.v1.GiftBackpackTransactionItem
-	20, // 11: gift.v1.GiftSettlementReconciliationEvidence.checked_at:type_name -> google.protobuf.Timestamp
-	1,  // 12: gift.v1.GiftReconciliationIssue.issue_type:type_name -> gift.v1.GiftReconciliationIssueType
-	2,  // 13: gift.v1.GiftReconciliationIssue.status:type_name -> gift.v1.GiftReconciliationIssueStatus
-	0,  // 14: gift.v1.GiftReconciliationIssue.latest_result:type_name -> gift.v1.SettlementReconciliationResult
-	7,  // 15: gift.v1.GiftReconciliationIssue.first_evidence:type_name -> gift.v1.GiftSettlementReconciliationEvidence
-	7,  // 16: gift.v1.GiftReconciliationIssue.latest_evidence:type_name -> gift.v1.GiftSettlementReconciliationEvidence
-	20, // 17: gift.v1.GiftReconciliationIssue.acknowledged_at:type_name -> google.protobuf.Timestamp
-	20, // 18: gift.v1.GiftReconciliationIssue.resolved_at:type_name -> google.protobuf.Timestamp
-	20, // 19: gift.v1.GiftReconciliationIssue.first_detected_at:type_name -> google.protobuf.Timestamp
-	20, // 20: gift.v1.GiftReconciliationIssue.last_checked_at:type_name -> google.protobuf.Timestamp
-	20, // 21: gift.v1.GiftReconciliationIssue.created_at:type_name -> google.protobuf.Timestamp
-	20, // 22: gift.v1.GiftReconciliationIssue.updated_at:type_name -> google.protobuf.Timestamp
-	20, // 23: gift.v1.GiftReconciliationIssueNote.created_at:type_name -> google.protobuf.Timestamp
-	1,  // 24: gift.v1.GiftReconciliationIssueFilter.issue_types:type_name -> gift.v1.GiftReconciliationIssueType
-	2,  // 25: gift.v1.GiftReconciliationIssueFilter.statuses:type_name -> gift.v1.GiftReconciliationIssueStatus
-	20, // 26: gift.v1.GiftReconciliationIssueFilter.occurred_from:type_name -> google.protobuf.Timestamp
-	20, // 27: gift.v1.GiftReconciliationIssueFilter.occurred_to:type_name -> google.protobuf.Timestamp
-	21, // 28: gift.v1.ListGiftReconciliationIssuesRequest.app_id:type_name -> common.v1.AppId
-	10, // 29: gift.v1.ListGiftReconciliationIssuesRequest.filter:type_name -> gift.v1.GiftReconciliationIssueFilter
-	22, // 30: gift.v1.ListGiftReconciliationIssuesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	8,  // 31: gift.v1.ListGiftReconciliationIssuesResponse.items:type_name -> gift.v1.GiftReconciliationIssue
-	21, // 32: gift.v1.GetGiftReconciliationIssueRequest.app_id:type_name -> common.v1.AppId
-	8,  // 33: gift.v1.GiftReconciliationIssueAuditDetails.issue:type_name -> gift.v1.GiftReconciliationIssue
-	9,  // 34: gift.v1.GiftReconciliationIssueAuditDetails.notes:type_name -> gift.v1.GiftReconciliationIssueNote
-	24, // 35: gift.v1.GiftReconciliationIssueAuditDetails.audits:type_name -> gift.v1.GiftOperatorAudit
-	21, // 36: gift.v1.AcknowledgeGiftReconciliationIssueRequest.app_id:type_name -> common.v1.AppId
-	21, // 37: gift.v1.AddGiftReconciliationIssueNoteRequest.app_id:type_name -> common.v1.AppId
-	21, // 38: gift.v1.ReconcileGiftSettlementRequest.app_id:type_name -> common.v1.AppId
-	8,  // 39: gift.v1.GiftReconciliationIssueActionResponse.issue:type_name -> gift.v1.GiftReconciliationIssue
-	9,  // 40: gift.v1.GiftReconciliationIssueActionResponse.note:type_name -> gift.v1.GiftReconciliationIssueNote
-	24, // 41: gift.v1.GiftReconciliationIssueActionResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	0,  // 42: gift.v1.ReconcileGiftSettlementResponse.result:type_name -> gift.v1.SettlementReconciliationResult
-	8,  // 43: gift.v1.ReconcileGiftSettlementResponse.issue:type_name -> gift.v1.GiftReconciliationIssue
-	3,  // 44: gift.v1.ReconcileGiftSettlementResponse.settlements:type_name -> gift.v1.GiftSettlementRecord
-	24, // 45: gift.v1.ReconcileGiftSettlementResponse.audit:type_name -> gift.v1.GiftOperatorAudit
-	46, // [46:46] is the sub-list for method output_type
-	46, // [46:46] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	5,  // 5: gift.v1.ListGiftSettlementRecordsRequest.filter:type_name -> gift.v1.GiftSettlementRecordFilter
+	21, // 6: gift.v1.ListGiftSettlementRecordsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	3,  // 7: gift.v1.GiftSettlementReconciliationEvidence.expected:type_name -> gift.v1.GiftSettlementRecord
+	3,  // 8: gift.v1.GiftSettlementReconciliationEvidence.observed:type_name -> gift.v1.GiftSettlementRecord
+	22, // 9: gift.v1.GiftSettlementReconciliationEvidence.backpack_items:type_name -> gift.v1.GiftBackpackTransactionItem
+	20, // 10: gift.v1.GiftSettlementReconciliationEvidence.checked_at:type_name -> google.protobuf.Timestamp
+	1,  // 11: gift.v1.GiftReconciliationIssue.issue_type:type_name -> gift.v1.GiftReconciliationIssueType
+	2,  // 12: gift.v1.GiftReconciliationIssue.status:type_name -> gift.v1.GiftReconciliationIssueStatus
+	0,  // 13: gift.v1.GiftReconciliationIssue.latest_result:type_name -> gift.v1.SettlementReconciliationResult
+	7,  // 14: gift.v1.GiftReconciliationIssue.first_evidence:type_name -> gift.v1.GiftSettlementReconciliationEvidence
+	7,  // 15: gift.v1.GiftReconciliationIssue.latest_evidence:type_name -> gift.v1.GiftSettlementReconciliationEvidence
+	20, // 16: gift.v1.GiftReconciliationIssue.acknowledged_at:type_name -> google.protobuf.Timestamp
+	20, // 17: gift.v1.GiftReconciliationIssue.resolved_at:type_name -> google.protobuf.Timestamp
+	20, // 18: gift.v1.GiftReconciliationIssue.first_detected_at:type_name -> google.protobuf.Timestamp
+	20, // 19: gift.v1.GiftReconciliationIssue.last_checked_at:type_name -> google.protobuf.Timestamp
+	20, // 20: gift.v1.GiftReconciliationIssue.created_at:type_name -> google.protobuf.Timestamp
+	20, // 21: gift.v1.GiftReconciliationIssue.updated_at:type_name -> google.protobuf.Timestamp
+	20, // 22: gift.v1.GiftReconciliationIssueNote.created_at:type_name -> google.protobuf.Timestamp
+	1,  // 23: gift.v1.GiftReconciliationIssueFilter.issue_types:type_name -> gift.v1.GiftReconciliationIssueType
+	2,  // 24: gift.v1.GiftReconciliationIssueFilter.statuses:type_name -> gift.v1.GiftReconciliationIssueStatus
+	20, // 25: gift.v1.GiftReconciliationIssueFilter.occurred_from:type_name -> google.protobuf.Timestamp
+	20, // 26: gift.v1.GiftReconciliationIssueFilter.occurred_to:type_name -> google.protobuf.Timestamp
+	10, // 27: gift.v1.ListGiftReconciliationIssuesRequest.filter:type_name -> gift.v1.GiftReconciliationIssueFilter
+	21, // 28: gift.v1.ListGiftReconciliationIssuesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	8,  // 29: gift.v1.ListGiftReconciliationIssuesResponse.items:type_name -> gift.v1.GiftReconciliationIssue
+	8,  // 30: gift.v1.GiftReconciliationIssueAuditDetails.issue:type_name -> gift.v1.GiftReconciliationIssue
+	9,  // 31: gift.v1.GiftReconciliationIssueAuditDetails.notes:type_name -> gift.v1.GiftReconciliationIssueNote
+	23, // 32: gift.v1.GiftReconciliationIssueAuditDetails.audits:type_name -> gift.v1.GiftOperatorAudit
+	8,  // 33: gift.v1.GiftReconciliationIssueActionResponse.issue:type_name -> gift.v1.GiftReconciliationIssue
+	9,  // 34: gift.v1.GiftReconciliationIssueActionResponse.note:type_name -> gift.v1.GiftReconciliationIssueNote
+	23, // 35: gift.v1.GiftReconciliationIssueActionResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	0,  // 36: gift.v1.ReconcileGiftSettlementResponse.result:type_name -> gift.v1.SettlementReconciliationResult
+	8,  // 37: gift.v1.ReconcileGiftSettlementResponse.issue:type_name -> gift.v1.GiftReconciliationIssue
+	3,  // 38: gift.v1.ReconcileGiftSettlementResponse.settlements:type_name -> gift.v1.GiftSettlementRecord
+	23, // 39: gift.v1.ReconcileGiftSettlementResponse.audit:type_name -> gift.v1.GiftOperatorAudit
+	40, // [40:40] is the sub-list for method output_type
+	40, // [40:40] is the sub-list for method input_type
+	40, // [40:40] is the sub-list for extension type_name
+	40, // [40:40] is the sub-list for extension extendee
+	0,  // [0:40] is the sub-list for field type_name
 }
 
 func init() { file_gift_v1_settlement_proto_init() }
@@ -2151,13 +2047,10 @@ func file_gift_v1_settlement_proto_init() {
 	file_gift_v1_catalog_proto_init()
 	file_gift_v1_settlement_proto_msgTypes[0].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[2].OneofWrappers = []any{}
-	file_gift_v1_settlement_proto_msgTypes[3].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[4].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[5].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[6].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[7].OneofWrappers = []any{}
-	file_gift_v1_settlement_proto_msgTypes[8].OneofWrappers = []any{}
-	file_gift_v1_settlement_proto_msgTypes[10].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[12].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[13].OneofWrappers = []any{}
 	file_gift_v1_settlement_proto_msgTypes[14].OneofWrappers = []any{}

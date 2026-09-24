@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on GiftSettlementRecord with the rules
@@ -63,10 +59,6 @@ func (m *GiftSettlementRecord) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.SendRecordId != nil {
@@ -681,10 +673,6 @@ func (m *ListGiftSettlementRecordsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListGiftSettlementRecordsRequestMultiError(errors)
 	}
@@ -1025,8 +1013,6 @@ func (m *GiftReconciliationIssue) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for SendRecordId
 
@@ -1391,8 +1377,6 @@ func (m *GiftReconciliationIssueNote) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for IssueId
 
@@ -1778,10 +1762,6 @@ func (m *ListGiftReconciliationIssuesRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListGiftReconciliationIssuesRequestMultiError(errors)
 	}
@@ -2029,10 +2009,6 @@ func (m *GetGiftReconciliationIssueRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetGiftReconciliationIssueRequestMultiError(errors)
@@ -2350,10 +2326,6 @@ func (m *AcknowledgeGiftReconciliationIssueRequest) validate(all bool) error {
 
 	// no validation rules for OperationNo
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.RequestId != nil {
 		// no validation rules for RequestId
 	}
@@ -2471,10 +2443,6 @@ func (m *AddGiftReconciliationIssueNoteRequest) validate(all bool) error {
 
 	// no validation rules for OperationNo
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.RequestId != nil {
 		// no validation rules for RequestId
 	}
@@ -2590,10 +2558,6 @@ func (m *ReconcileGiftSettlementRequest) validate(all bool) error {
 	// no validation rules for Reason
 
 	// no validation rules for OperationNo
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId

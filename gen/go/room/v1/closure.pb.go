@@ -8,7 +8,6 @@ package roompb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -97,9 +96,7 @@ func (RoomClosureParticipantStatus) EnumDescriptor() ([]byte, []int) {
 // PrepareClosureRequest 定义执行 PrepareClosure 的命令参数。
 type PrepareClosureRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PrepareClosure 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 PrepareClosure 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -137,13 +134,6 @@ func (*PrepareClosureRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_closure_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PrepareClosureRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PrepareClosureRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -161,9 +151,7 @@ func (x *PrepareClosureRequest) GetClosureNo() string {
 // ApplyClosureRequest 定义应用 Closure 的命令参数。
 type ApplyClosureRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApplyClosure 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 ApplyClosure 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -201,13 +189,6 @@ func (*ApplyClosureRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_closure_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ApplyClosureRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ApplyClosureRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -225,9 +206,7 @@ func (x *ApplyClosureRequest) GetClosureNo() string {
 // CancelClosureRequest 定义取消 Closure 的命令参数。
 type CancelClosureRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CancelClosure 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 CancelClosure 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -265,13 +244,6 @@ func (*CancelClosureRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_closure_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CancelClosureRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CancelClosureRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -289,9 +261,7 @@ func (x *CancelClosureRequest) GetClosureNo() string {
 // GetClosureStatusRequest 标识待查询的 ClosureStatus。
 type GetClosureStatusRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetClosureStatus 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是 GetClosureStatus 对外关联与审计使用的业务编号。
 	ClosureNo     string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -327,13 +297,6 @@ func (x *GetClosureStatusRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetClosureStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetClosureStatusRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_closure_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *GetClosureStatusRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetClosureStatusRequest) GetUserId() uint64 {
@@ -417,9 +380,7 @@ func (x *RoomClosureBlocker) GetOwningReference() string {
 // RoomClosureParticipantState 表示 Room 对 User Deletion 的当前处理状态。
 type RoomClosureParticipantState struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// closure_no 是对外关联与审计使用的业务编号。
 	ClosureNo string `protobuf:"bytes,3,opt,name=closure_no,json=closureNo,proto3" json:"closure_no,omitempty"`
@@ -475,13 +436,6 @@ func (x *RoomClosureParticipantState) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RoomClosureParticipantState.ProtoReflect.Descriptor instead.
 func (*RoomClosureParticipantState) Descriptor() ([]byte, []int) {
 	return file_room_v1_closure_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *RoomClosureParticipantState) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RoomClosureParticipantState) GetUserId() uint64 {
@@ -572,27 +526,23 @@ var File_room_v1_closure_proto protoreflect.FileDescriptor
 
 const file_room_v1_closure_proto_rawDesc = "" +
 	"\n" +
-	"\x15room/v1/closure.proto\x12\aroom.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\xa2\x01\n" +
-	"\x15PrepareClosureRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x15room/v1/closure.proto\x12\aroom.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"j\n" +
+	"\x15PrepareClosureRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
-	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"\xa0\x01\n" +
-	"\x13ApplyClosureRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"h\n" +
+	"\x13ApplyClosureRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
-	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"\xa1\x01\n" +
-	"\x14CancelClosureRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"i\n" +
+	"\x14CancelClosureRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
-	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"\xa4\x01\n" +
-	"\x17GetClosureStatusRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"closure_no\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\tclosureNo\"l\n" +
+	"\x17GetClosureStatusRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12,\n" +
 	"\n" +
@@ -600,9 +550,8 @@ const file_room_v1_closure_proto_rawDesc = "" +
 	"\x12RoomClosureBlocker\x12\x1a\n" +
 	"\bcategory\x18\x01 \x01(\tR\bcategory\x12\x14\n" +
 	"\x05count\x18\x02 \x01(\rR\x05count\x12)\n" +
-	"\x10owning_reference\x18\x03 \x01(\tR\x0fowningReference\"\xe1\x04\n" +
-	"\x1bRoomClosureParticipantState\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x10owning_reference\x18\x03 \x01(\tR\x0fowningReference\"\xb8\x04\n" +
+	"\x1bRoomClosureParticipantState\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
 	"closure_no\x18\x03 \x01(\tR\tclosureNo\x12=\n" +
@@ -657,33 +606,27 @@ var file_room_v1_closure_proto_goTypes = []any{
 	(*GetClosureStatusRequest)(nil),     // 4: room.v1.GetClosureStatusRequest
 	(*RoomClosureBlocker)(nil),          // 5: room.v1.RoomClosureBlocker
 	(*RoomClosureParticipantState)(nil), // 6: room.v1.RoomClosureParticipantState
-	(v1.AppId)(0),                       // 7: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),       // 8: google.protobuf.Timestamp
+	(*timestamppb.Timestamp)(nil),       // 7: google.protobuf.Timestamp
 }
 var file_room_v1_closure_proto_depIdxs = []int32{
-	7,  // 0: room.v1.PrepareClosureRequest.app_id:type_name -> common.v1.AppId
-	7,  // 1: room.v1.ApplyClosureRequest.app_id:type_name -> common.v1.AppId
-	7,  // 2: room.v1.CancelClosureRequest.app_id:type_name -> common.v1.AppId
-	7,  // 3: room.v1.GetClosureStatusRequest.app_id:type_name -> common.v1.AppId
-	7,  // 4: room.v1.RoomClosureParticipantState.app_id:type_name -> common.v1.AppId
-	0,  // 5: room.v1.RoomClosureParticipantState.status:type_name -> room.v1.RoomClosureParticipantStatus
-	5,  // 6: room.v1.RoomClosureParticipantState.blockers:type_name -> room.v1.RoomClosureBlocker
-	8,  // 7: room.v1.RoomClosureParticipantState.lease_until:type_name -> google.protobuf.Timestamp
-	8,  // 8: room.v1.RoomClosureParticipantState.updated_at:type_name -> google.protobuf.Timestamp
-	8,  // 9: room.v1.RoomClosureParticipantState.completed_at:type_name -> google.protobuf.Timestamp
-	1,  // 10: room.v1.RoomClosureService.PrepareClosure:input_type -> room.v1.PrepareClosureRequest
-	2,  // 11: room.v1.RoomClosureService.ApplyClosure:input_type -> room.v1.ApplyClosureRequest
-	3,  // 12: room.v1.RoomClosureService.CancelClosure:input_type -> room.v1.CancelClosureRequest
-	4,  // 13: room.v1.RoomClosureService.GetClosureStatus:input_type -> room.v1.GetClosureStatusRequest
-	6,  // 14: room.v1.RoomClosureService.PrepareClosure:output_type -> room.v1.RoomClosureParticipantState
-	6,  // 15: room.v1.RoomClosureService.ApplyClosure:output_type -> room.v1.RoomClosureParticipantState
-	6,  // 16: room.v1.RoomClosureService.CancelClosure:output_type -> room.v1.RoomClosureParticipantState
-	6,  // 17: room.v1.RoomClosureService.GetClosureStatus:output_type -> room.v1.RoomClosureParticipantState
-	14, // [14:18] is the sub-list for method output_type
-	10, // [10:14] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	0, // 0: room.v1.RoomClosureParticipantState.status:type_name -> room.v1.RoomClosureParticipantStatus
+	5, // 1: room.v1.RoomClosureParticipantState.blockers:type_name -> room.v1.RoomClosureBlocker
+	7, // 2: room.v1.RoomClosureParticipantState.lease_until:type_name -> google.protobuf.Timestamp
+	7, // 3: room.v1.RoomClosureParticipantState.updated_at:type_name -> google.protobuf.Timestamp
+	7, // 4: room.v1.RoomClosureParticipantState.completed_at:type_name -> google.protobuf.Timestamp
+	1, // 5: room.v1.RoomClosureService.PrepareClosure:input_type -> room.v1.PrepareClosureRequest
+	2, // 6: room.v1.RoomClosureService.ApplyClosure:input_type -> room.v1.ApplyClosureRequest
+	3, // 7: room.v1.RoomClosureService.CancelClosure:input_type -> room.v1.CancelClosureRequest
+	4, // 8: room.v1.RoomClosureService.GetClosureStatus:input_type -> room.v1.GetClosureStatusRequest
+	6, // 9: room.v1.RoomClosureService.PrepareClosure:output_type -> room.v1.RoomClosureParticipantState
+	6, // 10: room.v1.RoomClosureService.ApplyClosure:output_type -> room.v1.RoomClosureParticipantState
+	6, // 11: room.v1.RoomClosureService.CancelClosure:output_type -> room.v1.RoomClosureParticipantState
+	6, // 12: room.v1.RoomClosureService.GetClosureStatus:output_type -> room.v1.RoomClosureParticipantState
+	9, // [9:13] is the sub-list for method output_type
+	5, // [5:9] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_room_v1_closure_proto_init() }

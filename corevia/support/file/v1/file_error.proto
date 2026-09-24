@@ -24,7 +24,7 @@ enum FileErrorReason {
   VERIFICATION_FAILED = 6 [(errors.code) = 422];
   // File 尚未达到 READY 状态。
   FILE_NOT_READY = 7 [(errors.code) = 409];
-  // App、Purpose 或 Owner 与业务预期不匹配。
+  // Purpose 或 Owner 与业务预期不匹配。
   FILE_BINDING_MISMATCH = 8 [(errors.code) = 409];
   // 上传请求或字节额度已耗尽。
   UPLOAD_QUOTA_EXCEEDED = 9 [(errors.code) = 429];
@@ -32,7 +32,7 @@ enum FileErrorReason {
   STALE_REFERENCE_VERSION = 10 [(errors.code) = 409];
   // 当前调用没有执行操作所需权限。
   FORBIDDEN = 11 [(errors.code) = 403];
-  // 当前 App/Purpose 缺少可用的 Active File Policy Revision。
+  // 当前 Purpose 缺少可用的 Active File Policy Revision。
   FILE_CONFIGURATION_NOT_READY = 12 [(errors.code) = 503];
   // Support 内部错误。
   INTERNAL_SERVER_ERROR = 2000 [(errors.code) = 500];

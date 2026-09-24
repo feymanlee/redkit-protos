@@ -7,8 +7,8 @@
 package walletpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -30,8 +30,6 @@ type RechargeRefund struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 退款记录 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 充值订单号。
@@ -97,13 +95,6 @@ func (*RechargeRefund) Descriptor() ([]byte, []int) {
 func (x *RechargeRefund) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *RechargeRefund) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -211,8 +202,6 @@ type WalletUserDebt struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 欠款 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 欠款单号。
@@ -282,13 +271,6 @@ func (*WalletUserDebt) Descriptor() ([]byte, []int) {
 func (x *WalletUserDebt) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletUserDebt) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -408,7 +390,7 @@ func (x *WalletUserDebt) GetUpdatedAt() *timestamppb.Timestamp {
 // WalletUserDebtFilter 定义可组合的查询筛选条件。
 type WalletUserDebtFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// status 表示 WalletUserDebtFilter 当前可观察的生命周期状态。
 	Status *string `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`
@@ -508,10 +490,8 @@ func (x *WalletUserDebtFilter) GetPaymentNo() string {
 // ListWalletUserDebtsRequest 定义 WalletUserDebts 的筛选与分页参数。
 type ListWalletUserDebtsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListWalletUserDebts 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter        *WalletUserDebtFilter `protobuf:"bytes,3,opt,name=filter,proto3,oneof" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -548,14 +528,7 @@ func (*ListWalletUserDebtsRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_refund_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ListWalletUserDebtsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListWalletUserDebtsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListWalletUserDebtsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -577,9 +550,7 @@ type PrepareRechargeRefundRequest struct {
 	// 退款单号。
 	RefundNo string `protobuf:"bytes,2,opt,name=refund_no,json=refundNo,proto3" json:"refund_no,omitempty"`
 	// 现金退款金额，分。
-	RefundAmount int64 `protobuf:"varint,3,opt,name=refund_amount,json=refundAmount,proto3" json:"refund_amount,omitempty"`
-	// 应用 ID。
-	AppId         *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RefundAmount  int64 `protobuf:"varint,3,opt,name=refund_amount,json=refundAmount,proto3" json:"refund_amount,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -635,20 +606,11 @@ func (x *PrepareRechargeRefundRequest) GetRefundAmount() int64 {
 	return 0
 }
 
-func (x *PrepareRechargeRefundRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // 确认充值退款请求。
 type ConfirmRechargeRefundRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 退款单号。
-	RefundNo string `protobuf:"bytes,1,opt,name=refund_no,json=refundNo,proto3" json:"refund_no,omitempty"`
-	// 应用 ID。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RefundNo      string `protobuf:"bytes,1,opt,name=refund_no,json=refundNo,proto3" json:"refund_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -690,13 +652,6 @@ func (x *ConfirmRechargeRefundRequest) GetRefundNo() string {
 	return ""
 }
 
-func (x *ConfirmRechargeRefundRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // 应用充值退款请求。
 type ApplyRechargeRefundRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -707,9 +662,7 @@ type ApplyRechargeRefundRequest struct {
 	// 现金退款金额，分。
 	RefundAmount int64 `protobuf:"varint,3,opt,name=refund_amount,json=refundAmount,proto3" json:"refund_amount,omitempty"`
 	// 是否渠道强制退款；为 true 时余额不足会记录欠款。
-	Force bool `protobuf:"varint,4,opt,name=force,proto3" json:"force,omitempty"`
-	// 应用 ID。
-	AppId         *v1.AppId `protobuf:"varint,5,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Force         bool `protobuf:"varint,4,opt,name=force,proto3" json:"force,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -772,20 +725,11 @@ func (x *ApplyRechargeRefundRequest) GetForce() bool {
 	return false
 }
 
-func (x *ApplyRechargeRefundRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // 取消充值退款请求。
 type CancelRechargeRefundRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 退款单号。
-	RefundNo string `protobuf:"bytes,1,opt,name=refund_no,json=refundNo,proto3" json:"refund_no,omitempty"`
-	// 应用 ID。
-	AppId         *v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	RefundNo      string `protobuf:"bytes,1,opt,name=refund_no,json=refundNo,proto3" json:"refund_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -827,43 +771,34 @@ func (x *CancelRechargeRefundRequest) GetRefundNo() string {
 	return ""
 }
 
-func (x *CancelRechargeRefundRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 var File_wallet_v1_refund_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_refund_proto_rawDesc = "" +
 	"\n" +
-	"\x16wallet/v1/refund.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xc7\x06\n" +
+	"\x16wallet/v1/refund.proto\x12\twallet.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xa0\x06\n" +
 	"\x0eRechargeRefund\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\x1e\n" +
-	"\border_no\x18\x04 \x01(\tH\x03R\aorderNo\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1e\n" +
+	"\border_no\x18\x04 \x01(\tH\x02R\aorderNo\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x05 \x01(\tH\x04R\tpaymentNo\x88\x01\x01\x12 \n" +
-	"\trefund_no\x18\x06 \x01(\tH\x05R\brefundNo\x88\x01\x01\x12(\n" +
-	"\rrefund_amount\x18\a \x01(\x03H\x06R\frefundAmount\x88\x01\x01\x12*\n" +
-	"\x0ediamond_amount\x18\b \x01(\x03H\aR\rdiamondAmount\x88\x01\x01\x12 \n" +
-	"\tfreeze_no\x18\t \x01(\tH\bR\bfreezeNo\x88\x01\x01\x12\x1b\n" +
+	"payment_no\x18\x05 \x01(\tH\x03R\tpaymentNo\x88\x01\x01\x12 \n" +
+	"\trefund_no\x18\x06 \x01(\tH\x04R\brefundNo\x88\x01\x01\x12(\n" +
+	"\rrefund_amount\x18\a \x01(\x03H\x05R\frefundAmount\x88\x01\x01\x12*\n" +
+	"\x0ediamond_amount\x18\b \x01(\x03H\x06R\rdiamondAmount\x88\x01\x01\x12 \n" +
+	"\tfreeze_no\x18\t \x01(\tH\aR\bfreezeNo\x88\x01\x01\x12\x1b\n" +
 	"\x06status\x18\n" +
-	" \x01(\tH\tR\x06status\x88\x01\x01\x12,\n" +
-	"\x0fdeducted_amount\x18\v \x01(\x03H\n" +
-	"R\x0edeductedAmount\x88\x01\x01\x12$\n" +
-	"\vdebt_amount\x18\f \x01(\x03H\vR\n" +
+	" \x01(\tH\bR\x06status\x88\x01\x01\x12,\n" +
+	"\x0fdeducted_amount\x18\v \x01(\x03H\tR\x0edeductedAmount\x88\x01\x01\x12$\n" +
+	"\vdebt_amount\x18\f \x01(\x03H\n" +
+	"R\n" +
 	"debtAmount\x88\x01\x01\x12\x1c\n" +
-	"\adebt_no\x18\r \x01(\tH\fR\x06debtNo\x88\x01\x01\x12\x19\n" +
-	"\x05force\x18\x0e \x01(\bH\rR\x05force\x88\x01\x01\x12?\n" +
+	"\adebt_no\x18\r \x01(\tH\vR\x06debtNo\x88\x01\x01\x12\x19\n" +
+	"\x05force\x18\x0e \x01(\bH\fR\x05force\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\rR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\v\n" +
 	"\t_order_noB\r\n" +
@@ -881,34 +816,32 @@ const file_wallet_v1_refund_proto_rawDesc = "" +
 	"\b_debt_noB\b\n" +
 	"\x06_forceB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xe1\a\n" +
+	"\v_updated_at\"\xba\a\n" +
 	"\x0eWalletUserDebt\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12\x1c\n" +
-	"\adebt_no\x18\x04 \x01(\tH\x03R\x06debtNo\x88\x01\x01\x12$\n" +
-	"\vsource_type\x18\x05 \x01(\tH\x04R\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12\x1c\n" +
+	"\adebt_no\x18\x04 \x01(\tH\x02R\x06debtNo\x88\x01\x01\x12$\n" +
+	"\vsource_type\x18\x05 \x01(\tH\x03R\n" +
 	"sourceType\x88\x01\x01\x12 \n" +
-	"\tsource_id\x18\x06 \x01(\tH\x05R\bsourceId\x88\x01\x01\x12\"\n" +
+	"\tsource_id\x18\x06 \x01(\tH\x04R\bsourceId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\a \x01(\tH\x06R\tpaymentNo\x88\x01\x01\x12\x1e\n" +
-	"\border_no\x18\b \x01(\tH\aR\aorderNo\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\t \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\bR\bcurrency\x88\x01\x01\x12\x1b\n" +
+	"payment_no\x18\a \x01(\tH\x05R\tpaymentNo\x88\x01\x01\x12\x1e\n" +
+	"\border_no\x18\b \x01(\tH\x06R\aorderNo\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\t \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\aR\bcurrency\x88\x01\x01\x12\x1b\n" +
 	"\x06amount\x18\n" +
-	" \x01(\x03H\tR\x06amount\x88\x01\x01\x12(\n" +
-	"\rrepaid_amount\x18\v \x01(\x03H\n" +
-	"R\frepaidAmount\x88\x01\x01\x12\x1b\n" +
-	"\x06status\x18\f \x01(\tH\vR\x06status\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\r \x01(\tH\fR\x0eidempotencyKey\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\x0e \x01(\tH\rR\x06remark\x88\x01\x01\x121\n" +
-	"\x12written_off_amount\x18\x0f \x01(\x03H\x0eR\x10writtenOffAmount\x88\x01\x01\x122\n" +
-	"\x12outstanding_amount\x18\x10 \x01(\x03H\x0fR\x11outstandingAmount\x88\x01\x01\x12?\n" +
+	" \x01(\x03H\bR\x06amount\x88\x01\x01\x12(\n" +
+	"\rrepaid_amount\x18\v \x01(\x03H\tR\frepaidAmount\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\f \x01(\tH\n" +
+	"R\x06status\x88\x01\x01\x12,\n" +
+	"\x0fidempotency_key\x18\r \x01(\tH\vR\x0eidempotencyKey\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\x0e \x01(\tH\fR\x06remark\x88\x01\x01\x121\n" +
+	"\x12written_off_amount\x18\x0f \x01(\x03H\rR\x10writtenOffAmount\x88\x01\x01\x122\n" +
+	"\x12outstanding_amount\x18\x10 \x01(\x03H\x0eR\x11outstandingAmount\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\n" +
 	"\n" +
@@ -946,36 +879,26 @@ const file_wallet_v1_refund_proto_rawDesc = "" +
 	"\r_created_fromB\r\n" +
 	"\v_created_toB\v\n" +
 	"\t_order_noB\r\n" +
-	"\v_payment_no\"\xdb\x01\n" +
-	"\x1aListWalletUserDebtsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
+	"\v_payment_no\"\xa2\x01\n" +
+	"\x1aListWalletUserDebtsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12<\n" +
-	"\x06filter\x18\x03 \x01(\v2\x1f.wallet.v1.WalletUserDebtFilterH\x01R\x06filter\x88\x01\x01B\t\n" +
-	"\a_app_idB\t\n" +
-	"\a_filter\"\xb8\x01\n" +
+	"\x06filter\x18\x03 \x01(\v2\x1f.wallet.v1.WalletUserDebtFilterH\x00R\x06filter\x88\x01\x01B\t\n" +
+	"\a_filter\"\x7f\n" +
 	"\x1cPrepareRechargeRefundRequest\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12\x1b\n" +
 	"\trefund_no\x18\x02 \x01(\tR\brefundNo\x12#\n" +
-	"\rrefund_amount\x18\x03 \x01(\x03R\frefundAmount\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"t\n" +
+	"\rrefund_amount\x18\x03 \x01(\x03R\frefundAmount\";\n" +
 	"\x1cConfirmRechargeRefundRequest\x12\x1b\n" +
-	"\trefund_no\x18\x01 \x01(\tR\brefundNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\xcc\x01\n" +
+	"\trefund_no\x18\x01 \x01(\tR\brefundNo\"\x93\x01\n" +
 	"\x1aApplyRechargeRefundRequest\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12\x1b\n" +
 	"\trefund_no\x18\x02 \x01(\tR\brefundNo\x12#\n" +
 	"\rrefund_amount\x18\x03 \x01(\x03R\frefundAmount\x12\x14\n" +
-	"\x05force\x18\x04 \x01(\bR\x05force\x12,\n" +
-	"\x06app_id\x18\x05 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"s\n" +
+	"\x05force\x18\x04 \x01(\bR\x05force\":\n" +
 	"\x1bCancelRechargeRefundRequest\x12\x1b\n" +
-	"\trefund_no\x18\x01 \x01(\tR\brefundNo\x12,\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_idB\x9f\x01\n" +
+	"\trefund_no\x18\x01 \x01(\tR\brefundNoB\x9f\x01\n" +
 	"\rcom.wallet.v1B\vRefundProtoP\x01Z<github.com/feymanlee/redkit-protos/gen/go/wallet/v1;walletpb\xa2\x02\x03WXX\xaa\x02\tWallet.V1\xca\x02\tWallet\\V1\xe2\x02\x15Wallet\\V1\\GPBMetadata\xea\x02\n" +
 	"Wallet::V1b\x06proto3"
 
@@ -1003,8 +926,7 @@ var file_wallet_v1_refund_proto_goTypes = []any{
 	(*CancelRechargeRefundRequest)(nil),  // 7: wallet.v1.CancelRechargeRefundRequest
 	(*timestamppb.Timestamp)(nil),        // 8: google.protobuf.Timestamp
 	(WalletCurrency)(0),                  // 9: wallet.v1.WalletCurrency
-	(v1.AppId)(0),                        // 10: common.v1.AppId
-	(*v11.PagingRequest)(nil),            // 11: common.pagination.v1.PagingRequest
+	(*v1.PagingRequest)(nil),             // 10: common.pagination.v1.PagingRequest
 }
 var file_wallet_v1_refund_proto_depIdxs = []int32{
 	8,  // 0: wallet.v1.RechargeRefund.created_at:type_name -> google.protobuf.Timestamp
@@ -1014,18 +936,13 @@ var file_wallet_v1_refund_proto_depIdxs = []int32{
 	8,  // 4: wallet.v1.WalletUserDebt.updated_at:type_name -> google.protobuf.Timestamp
 	8,  // 5: wallet.v1.WalletUserDebtFilter.created_from:type_name -> google.protobuf.Timestamp
 	8,  // 6: wallet.v1.WalletUserDebtFilter.created_to:type_name -> google.protobuf.Timestamp
-	10, // 7: wallet.v1.ListWalletUserDebtsRequest.app_id:type_name -> common.v1.AppId
-	11, // 8: wallet.v1.ListWalletUserDebtsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	2,  // 9: wallet.v1.ListWalletUserDebtsRequest.filter:type_name -> wallet.v1.WalletUserDebtFilter
-	10, // 10: wallet.v1.PrepareRechargeRefundRequest.app_id:type_name -> common.v1.AppId
-	10, // 11: wallet.v1.ConfirmRechargeRefundRequest.app_id:type_name -> common.v1.AppId
-	10, // 12: wallet.v1.ApplyRechargeRefundRequest.app_id:type_name -> common.v1.AppId
-	10, // 13: wallet.v1.CancelRechargeRefundRequest.app_id:type_name -> common.v1.AppId
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	10, // 7: wallet.v1.ListWalletUserDebtsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	2,  // 8: wallet.v1.ListWalletUserDebtsRequest.filter:type_name -> wallet.v1.WalletUserDebtFilter
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_refund_proto_init() }
@@ -1038,10 +955,6 @@ func file_wallet_v1_refund_proto_init() {
 	file_wallet_v1_refund_proto_msgTypes[1].OneofWrappers = []any{}
 	file_wallet_v1_refund_proto_msgTypes[2].OneofWrappers = []any{}
 	file_wallet_v1_refund_proto_msgTypes[3].OneofWrappers = []any{}
-	file_wallet_v1_refund_proto_msgTypes[4].OneofWrappers = []any{}
-	file_wallet_v1_refund_proto_msgTypes[5].OneofWrappers = []any{}
-	file_wallet_v1_refund_proto_msgTypes[6].OneofWrappers = []any{}
-	file_wallet_v1_refund_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

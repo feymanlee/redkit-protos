@@ -9,9 +9,9 @@ import "ops/v1/ops_content.proto";
 import "ops/v1/placement.proto";
 import "validate/validate.proto";
 
-// OpsPlacementAdminService 在 App Scope 下管理投放位注册；由 Admin BFF 聚合调用。
+// OpsPlacementAdminService 管理投放位注册；由 Admin BFF 聚合调用。
 service OpsPlacementAdminService {
-  // 查询当前 App 投放位列表。
+  // 查询投放位列表。
   rpc ListPlacements(.common.pagination.v1.PagingRequest) returns (ListPlacementResponse) {}
   // 创建投放位。
   rpc CreatePlacement(CreatePlacementRequest) returns (Placement) {}
@@ -19,7 +19,7 @@ service OpsPlacementAdminService {
   rpc UpdatePlacement(UpdatePlacementRequest) returns (Placement) {}
 }
 
-// OpsContentAdminService 在 App Scope 下管理运营投放内容生命周期。
+// OpsContentAdminService 管理运营投放内容生命周期。
 service OpsContentAdminService {
   // 查询运营内容列表。
   rpc ListOpsContentItems(ListOpsContentItemsRequest) returns (ListOpsContentItemResponse) {}
@@ -37,7 +37,7 @@ service OpsContentAdminService {
 
 // CreatePlacementRequest 创建投放位。
 message CreatePlacementRequest {
-  // code 是 App 内稳定投放位代码。
+  // code 是稳定的投放位代码。
   string code = 1 [(validate.rules).string.min_len = 1];
   // kind 是投放位形态。
   PlacementKind kind = 2;

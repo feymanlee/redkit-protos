@@ -8,8 +8,7 @@ package userconsumerpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -29,10 +28,8 @@ const (
 // ListSessionsRequest 定义 Sessions 的筛选与分页参数。
 type ListSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListSessions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// page 返回继续分页所需的游标和结果规模信息。
-	Page          *v11.CursorPageRequest `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page          *v1.CursorPageRequest `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,14 +64,7 @@ func (*ListSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListSessionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListSessionsRequest) GetPage() *v11.CursorPageRequest {
+func (x *ListSessionsRequest) GetPage() *v1.CursorPageRequest {
 	if x != nil {
 		return x.Page
 	}
@@ -85,9 +75,9 @@ func (x *ListSessionsRequest) GetPage() *v11.CursorPageRequest {
 type ListSessionsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// items 包含本次返回或处理的业务条目。
-	Items []*v11.Session `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Items []*v1.Session `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	// page 返回继续分页所需的游标和结果规模信息。
-	Page          *v11.CursorPageResponse `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page          *v1.CursorPageResponse `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -122,14 +112,14 @@ func (*ListSessionsResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ListSessionsResponse) GetItems() []*v11.Session {
+func (x *ListSessionsResponse) GetItems() []*v1.Session {
 	if x != nil {
 		return x.Items
 	}
 	return nil
 }
 
-func (x *ListSessionsResponse) GetPage() *v11.CursorPageResponse {
+func (x *ListSessionsResponse) GetPage() *v1.CursorPageResponse {
 	if x != nil {
 		return x.Page
 	}
@@ -139,8 +129,6 @@ func (x *ListSessionsResponse) GetPage() *v11.CursorPageResponse {
 // RevokeSessionRequest 定义撤销 Session 的幂等管理命令参数。
 type RevokeSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeSession 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识关联的 Session。
 	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -179,13 +167,6 @@ func (*RevokeSessionRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *RevokeSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeSessionRequest) GetSessionId() string {
 	if x != nil {
 		return x.SessionId
@@ -203,8 +184,6 @@ func (x *RevokeSessionRequest) GetIdempotencyKey() string {
 // RevokeOtherSessionsRequest 定义撤销 OtherSessions 的幂等管理命令参数。
 type RevokeOtherSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeOtherSessions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -243,13 +222,6 @@ func (*RevokeOtherSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *RevokeOtherSessionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeOtherSessionsRequest) GetStepUpToken() string {
 	if x != nil {
 		return x.StepUpToken
@@ -267,8 +239,6 @@ func (x *RevokeOtherSessionsRequest) GetIdempotencyKey() string {
 // RevokeAllSessionsRequest 定义撤销 AllSessions 的幂等管理命令参数。
 type RevokeAllSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeAllSessions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -307,13 +277,6 @@ func (*RevokeAllSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *RevokeAllSessionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeAllSessionsRequest) GetStepUpToken() string {
 	if x != nil {
 		return x.StepUpToken
@@ -331,10 +294,8 @@ func (x *RevokeAllSessionsRequest) GetIdempotencyKey() string {
 // ListDevicesRequest 定义 Devices 的筛选与分页参数。
 type ListDevicesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListDevices 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// page 返回继续分页所需的游标和结果规模信息。
-	Page          *v11.CursorPageRequest `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page          *v1.CursorPageRequest `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -369,14 +330,7 @@ func (*ListDevicesRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListDevicesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListDevicesRequest) GetPage() *v11.CursorPageRequest {
+func (x *ListDevicesRequest) GetPage() *v1.CursorPageRequest {
 	if x != nil {
 		return x.Page
 	}
@@ -387,9 +341,9 @@ func (x *ListDevicesRequest) GetPage() *v11.CursorPageRequest {
 type ListDevicesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// items 包含本次返回或处理的业务条目。
-	Items []*v11.Device `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Items []*v1.Device `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	// page 返回继续分页所需的游标和结果规模信息。
-	Page          *v11.CursorPageResponse `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page          *v1.CursorPageResponse `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -424,14 +378,14 @@ func (*ListDevicesResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListDevicesResponse) GetItems() []*v11.Device {
+func (x *ListDevicesResponse) GetItems() []*v1.Device {
 	if x != nil {
 		return x.Items
 	}
 	return nil
 }
 
-func (x *ListDevicesResponse) GetPage() *v11.CursorPageResponse {
+func (x *ListDevicesResponse) GetPage() *v1.CursorPageResponse {
 	if x != nil {
 		return x.Page
 	}
@@ -441,8 +395,6 @@ func (x *ListDevicesResponse) GetPage() *v11.CursorPageResponse {
 // RevokeDeviceRequest 定义撤销 Device 的幂等管理命令参数。
 type RevokeDeviceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeDevice 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// device_id 标识关联的 Device。
 	DeviceId uint64 `protobuf:"varint,2,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -483,13 +435,6 @@ func (*RevokeDeviceRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *RevokeDeviceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeDeviceRequest) GetDeviceId() uint64 {
 	if x != nil {
 		return x.DeviceId
@@ -517,7 +462,7 @@ type RevokeDeviceResponse struct {
 	// current_session_revoked 显式表示 RevokeDevice 是否满足该条件。
 	CurrentSessionRevoked bool `protobuf:"varint,1,opt,name=current_session_revoked,json=currentSessionRevoked,proto3" json:"current_session_revoked,omitempty"`
 	// tokens 承载 RevokeDevice 关联的 TokenPair。
-	Tokens        *v11.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens        *v1.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -559,7 +504,7 @@ func (x *RevokeDeviceResponse) GetCurrentSessionRevoked() bool {
 	return false
 }
 
-func (x *RevokeDeviceResponse) GetTokens() *v11.TokenPair {
+func (x *RevokeDeviceResponse) GetTokens() *v1.TokenPair {
 	if x != nil {
 		return x.Tokens
 	}
@@ -569,8 +514,6 @@ func (x *RevokeDeviceResponse) GetTokens() *v11.TokenPair {
 // RegisterCurrentDeviceRecoveryKeyRequest 定义执行 RegisterCurrentDeviceRecoveryKey 的幂等管理命令参数。
 type RegisterCurrentDeviceRecoveryKeyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RegisterCurrentDeviceRecoveryKey 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// public_key 在约定作用域内稳定定位 RegisterCurrentDeviceRecoveryKey。
 	PublicKey []byte `protobuf:"bytes,2,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty"`
 	// proof_signature 承载敏感凭据或校验材料，不得写入普通日志。
@@ -613,13 +556,6 @@ func (*RegisterCurrentDeviceRecoveryKeyRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *RegisterCurrentDeviceRecoveryKeyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RegisterCurrentDeviceRecoveryKeyRequest) GetPublicKey() []byte {
 	if x != nil {
 		return x.PublicKey
@@ -651,8 +587,6 @@ func (x *RegisterCurrentDeviceRecoveryKeyRequest) GetIdempotencyKey() string {
 // RemoveCurrentDeviceRecoveryKeyRequest 定义删除 CurrentDeviceRecoveryKey 的命令参数。
 type RemoveCurrentDeviceRecoveryKeyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RemoveCurrentDeviceRecoveryKey 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -691,13 +625,6 @@ func (*RemoveCurrentDeviceRecoveryKeyRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_session_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *RemoveCurrentDeviceRecoveryKeyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RemoveCurrentDeviceRecoveryKeyRequest) GetStepUpToken() string {
 	if x != nil {
 		return x.StepUpToken
@@ -716,50 +643,42 @@ var File_user_consumer_v1_session_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_session_proto_rawDesc = "" +
 	"\n" +
-	"\x1euser/consumer/v1/session.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\x83\x01\n" +
-	"\x13ListSessionsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x124\n" +
+	"\x1euser/consumer/v1/session.proto\x12\x10user.consumer.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"K\n" +
+	"\x13ListSessionsRequest\x124\n" +
 	"\x04page\x18\x02 \x01(\v2 .user.types.v1.CursorPageRequestR\x04page\"{\n" +
 	"\x14ListSessionsResponse\x12,\n" +
 	"\x05items\x18\x01 \x03(\v2\x16.user.types.v1.SessionR\x05items\x125\n" +
-	"\x04page\x18\x02 \x01(\v2!.user.types.v1.CursorPageResponseR\x04page\"\xb3\x01\n" +
-	"\x14RevokeSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12+\n" +
+	"\x04page\x18\x02 \x01(\v2!.user.types.v1.CursorPageResponseR\x04page\"{\n" +
+	"\x14RevokeSessionRequest\x12+\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\tsessionId\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xbf\x01\n" +
-	"\x1aRevokeOtherSessionsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x87\x01\n" +
+	"\x1aRevokeOtherSessionsRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xbd\x01\n" +
-	"\x18RevokeAllSessionsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x85\x01\n" +
+	"\x18RevokeAllSessionsRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x82\x01\n" +
-	"\x12ListDevicesRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x124\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"J\n" +
+	"\x12ListDevicesRequest\x124\n" +
 	"\x04page\x18\x02 \x01(\v2 .user.types.v1.CursorPageRequestR\x04page\"y\n" +
 	"\x13ListDevicesResponse\x12+\n" +
 	"\x05items\x18\x01 \x03(\v2\x15.user.types.v1.DeviceR\x05items\x125\n" +
-	"\x04page\x18\x02 \x01(\v2!.user.types.v1.CursorPageResponseR\x04page\"\xe1\x01\n" +
-	"\x13RevokeDeviceRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12'\n" +
+	"\x04page\x18\x02 \x01(\v2!.user.types.v1.CursorPageResponseR\x04page\"\xa9\x01\n" +
+	"\x13RevokeDeviceRequest\x12'\n" +
 	"\tdevice_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\bdeviceId\x121\n" +
 	"\rstep_up_token\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
 	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x80\x01\n" +
 	"\x14RevokeDeviceResponse\x126\n" +
 	"\x17current_session_revoked\x18\x01 \x01(\bR\x15currentSessionRevoked\x120\n" +
-	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\xb0\x02\n" +
-	"'RegisterCurrentDeviceRecoveryKeyRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12+\n" +
+	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\xf8\x01\n" +
+	"'RegisterCurrentDeviceRecoveryKeyRequest\x12+\n" +
 	"\n" +
 	"public_key\x18\x02 \x01(\fB\f\xe0A\x02\xfaB\x06z\x04\x10 \x18 R\tpublicKey\x125\n" +
 	"\x0fproof_signature\x18\x03 \x01(\fB\f\xe0A\x02\xfaB\x06z\x04\x10@\x18@R\x0eproofSignature\x121\n" +
 	"\rstep_up_token\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xca\x01\n" +
-	"%RemoveCurrentDeviceRecoveryKeyRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x92\x01\n" +
+	"%RemoveCurrentDeviceRecoveryKeyRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey2\xa3\x06\n" +
 	"\x16ConsumerSessionService\x12]\n" +
@@ -798,51 +717,42 @@ var file_user_consumer_v1_session_proto_goTypes = []any{
 	(*RevokeDeviceResponse)(nil),                    // 8: user.consumer.v1.RevokeDeviceResponse
 	(*RegisterCurrentDeviceRecoveryKeyRequest)(nil), // 9: user.consumer.v1.RegisterCurrentDeviceRecoveryKeyRequest
 	(*RemoveCurrentDeviceRecoveryKeyRequest)(nil),   // 10: user.consumer.v1.RemoveCurrentDeviceRecoveryKeyRequest
-	(v1.AppId)(0),                                   // 11: common.v1.AppId
-	(*v11.CursorPageRequest)(nil),                   // 12: user.types.v1.CursorPageRequest
-	(*v11.Session)(nil),                             // 13: user.types.v1.Session
-	(*v11.CursorPageResponse)(nil),                  // 14: user.types.v1.CursorPageResponse
-	(*v11.Device)(nil),                              // 15: user.types.v1.Device
-	(*v11.TokenPair)(nil),                           // 16: user.types.v1.TokenPair
-	(*emptypb.Empty)(nil),                           // 17: google.protobuf.Empty
+	(*v1.CursorPageRequest)(nil),                    // 11: user.types.v1.CursorPageRequest
+	(*v1.Session)(nil),                              // 12: user.types.v1.Session
+	(*v1.CursorPageResponse)(nil),                   // 13: user.types.v1.CursorPageResponse
+	(*v1.Device)(nil),                               // 14: user.types.v1.Device
+	(*v1.TokenPair)(nil),                            // 15: user.types.v1.TokenPair
+	(*emptypb.Empty)(nil),                           // 16: google.protobuf.Empty
 }
 var file_user_consumer_v1_session_proto_depIdxs = []int32{
-	11, // 0: user.consumer.v1.ListSessionsRequest.app_id:type_name -> common.v1.AppId
-	12, // 1: user.consumer.v1.ListSessionsRequest.page:type_name -> user.types.v1.CursorPageRequest
-	13, // 2: user.consumer.v1.ListSessionsResponse.items:type_name -> user.types.v1.Session
-	14, // 3: user.consumer.v1.ListSessionsResponse.page:type_name -> user.types.v1.CursorPageResponse
-	11, // 4: user.consumer.v1.RevokeSessionRequest.app_id:type_name -> common.v1.AppId
-	11, // 5: user.consumer.v1.RevokeOtherSessionsRequest.app_id:type_name -> common.v1.AppId
-	11, // 6: user.consumer.v1.RevokeAllSessionsRequest.app_id:type_name -> common.v1.AppId
-	11, // 7: user.consumer.v1.ListDevicesRequest.app_id:type_name -> common.v1.AppId
-	12, // 8: user.consumer.v1.ListDevicesRequest.page:type_name -> user.types.v1.CursorPageRequest
-	15, // 9: user.consumer.v1.ListDevicesResponse.items:type_name -> user.types.v1.Device
-	14, // 10: user.consumer.v1.ListDevicesResponse.page:type_name -> user.types.v1.CursorPageResponse
-	11, // 11: user.consumer.v1.RevokeDeviceRequest.app_id:type_name -> common.v1.AppId
-	16, // 12: user.consumer.v1.RevokeDeviceResponse.tokens:type_name -> user.types.v1.TokenPair
-	11, // 13: user.consumer.v1.RegisterCurrentDeviceRecoveryKeyRequest.app_id:type_name -> common.v1.AppId
-	11, // 14: user.consumer.v1.RemoveCurrentDeviceRecoveryKeyRequest.app_id:type_name -> common.v1.AppId
-	0,  // 15: user.consumer.v1.ConsumerSessionService.ListSessions:input_type -> user.consumer.v1.ListSessionsRequest
-	2,  // 16: user.consumer.v1.ConsumerSessionService.RevokeSession:input_type -> user.consumer.v1.RevokeSessionRequest
-	3,  // 17: user.consumer.v1.ConsumerSessionService.RevokeOtherSessions:input_type -> user.consumer.v1.RevokeOtherSessionsRequest
-	4,  // 18: user.consumer.v1.ConsumerSessionService.RevokeAllSessions:input_type -> user.consumer.v1.RevokeAllSessionsRequest
-	5,  // 19: user.consumer.v1.ConsumerSessionService.ListDevices:input_type -> user.consumer.v1.ListDevicesRequest
-	7,  // 20: user.consumer.v1.ConsumerSessionService.RevokeDevice:input_type -> user.consumer.v1.RevokeDeviceRequest
-	9,  // 21: user.consumer.v1.ConsumerSessionService.RegisterCurrentDeviceRecoveryKey:input_type -> user.consumer.v1.RegisterCurrentDeviceRecoveryKeyRequest
-	10, // 22: user.consumer.v1.ConsumerSessionService.RemoveCurrentDeviceRecoveryKey:input_type -> user.consumer.v1.RemoveCurrentDeviceRecoveryKeyRequest
-	1,  // 23: user.consumer.v1.ConsumerSessionService.ListSessions:output_type -> user.consumer.v1.ListSessionsResponse
-	17, // 24: user.consumer.v1.ConsumerSessionService.RevokeSession:output_type -> google.protobuf.Empty
-	16, // 25: user.consumer.v1.ConsumerSessionService.RevokeOtherSessions:output_type -> user.types.v1.TokenPair
-	17, // 26: user.consumer.v1.ConsumerSessionService.RevokeAllSessions:output_type -> google.protobuf.Empty
-	6,  // 27: user.consumer.v1.ConsumerSessionService.ListDevices:output_type -> user.consumer.v1.ListDevicesResponse
-	8,  // 28: user.consumer.v1.ConsumerSessionService.RevokeDevice:output_type -> user.consumer.v1.RevokeDeviceResponse
-	15, // 29: user.consumer.v1.ConsumerSessionService.RegisterCurrentDeviceRecoveryKey:output_type -> user.types.v1.Device
-	15, // 30: user.consumer.v1.ConsumerSessionService.RemoveCurrentDeviceRecoveryKey:output_type -> user.types.v1.Device
-	23, // [23:31] is the sub-list for method output_type
-	15, // [15:23] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	11, // 0: user.consumer.v1.ListSessionsRequest.page:type_name -> user.types.v1.CursorPageRequest
+	12, // 1: user.consumer.v1.ListSessionsResponse.items:type_name -> user.types.v1.Session
+	13, // 2: user.consumer.v1.ListSessionsResponse.page:type_name -> user.types.v1.CursorPageResponse
+	11, // 3: user.consumer.v1.ListDevicesRequest.page:type_name -> user.types.v1.CursorPageRequest
+	14, // 4: user.consumer.v1.ListDevicesResponse.items:type_name -> user.types.v1.Device
+	13, // 5: user.consumer.v1.ListDevicesResponse.page:type_name -> user.types.v1.CursorPageResponse
+	15, // 6: user.consumer.v1.RevokeDeviceResponse.tokens:type_name -> user.types.v1.TokenPair
+	0,  // 7: user.consumer.v1.ConsumerSessionService.ListSessions:input_type -> user.consumer.v1.ListSessionsRequest
+	2,  // 8: user.consumer.v1.ConsumerSessionService.RevokeSession:input_type -> user.consumer.v1.RevokeSessionRequest
+	3,  // 9: user.consumer.v1.ConsumerSessionService.RevokeOtherSessions:input_type -> user.consumer.v1.RevokeOtherSessionsRequest
+	4,  // 10: user.consumer.v1.ConsumerSessionService.RevokeAllSessions:input_type -> user.consumer.v1.RevokeAllSessionsRequest
+	5,  // 11: user.consumer.v1.ConsumerSessionService.ListDevices:input_type -> user.consumer.v1.ListDevicesRequest
+	7,  // 12: user.consumer.v1.ConsumerSessionService.RevokeDevice:input_type -> user.consumer.v1.RevokeDeviceRequest
+	9,  // 13: user.consumer.v1.ConsumerSessionService.RegisterCurrentDeviceRecoveryKey:input_type -> user.consumer.v1.RegisterCurrentDeviceRecoveryKeyRequest
+	10, // 14: user.consumer.v1.ConsumerSessionService.RemoveCurrentDeviceRecoveryKey:input_type -> user.consumer.v1.RemoveCurrentDeviceRecoveryKeyRequest
+	1,  // 15: user.consumer.v1.ConsumerSessionService.ListSessions:output_type -> user.consumer.v1.ListSessionsResponse
+	16, // 16: user.consumer.v1.ConsumerSessionService.RevokeSession:output_type -> google.protobuf.Empty
+	15, // 17: user.consumer.v1.ConsumerSessionService.RevokeOtherSessions:output_type -> user.types.v1.TokenPair
+	16, // 18: user.consumer.v1.ConsumerSessionService.RevokeAllSessions:output_type -> google.protobuf.Empty
+	6,  // 19: user.consumer.v1.ConsumerSessionService.ListDevices:output_type -> user.consumer.v1.ListDevicesResponse
+	8,  // 20: user.consumer.v1.ConsumerSessionService.RevokeDevice:output_type -> user.consumer.v1.RevokeDeviceResponse
+	14, // 21: user.consumer.v1.ConsumerSessionService.RegisterCurrentDeviceRecoveryKey:output_type -> user.types.v1.Device
+	14, // 22: user.consumer.v1.ConsumerSessionService.RemoveCurrentDeviceRecoveryKey:output_type -> user.types.v1.Device
+	15, // [15:23] is the sub-list for method output_type
+	7,  // [7:15] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_user_consumer_v1_session_proto_init() }

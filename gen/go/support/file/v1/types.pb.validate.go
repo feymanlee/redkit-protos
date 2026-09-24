@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	filepb "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = filepb.FilePurpose(0)
 )
@@ -217,8 +213,6 @@ func (m *UploadSession) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for SessionNo
 
@@ -533,8 +527,6 @@ func (m *File) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for Purpose
 
 	// no validation rules for OwnerType
@@ -818,8 +810,6 @@ func (m *FileDescriptor) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for FileId
-
-	// no validation rules for AppId
 
 	// no validation rules for Purpose
 
@@ -1240,8 +1230,6 @@ func (m *FileEvent) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for EventType
 
 	// no validation rules for FileId
@@ -1422,8 +1410,6 @@ func (m *FileReviewAttempt) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for FileId
 
@@ -1682,8 +1668,6 @@ func (m *FilePolicyPreflight) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionId
 
 	// no validation rules for Status
@@ -1858,8 +1842,6 @@ func (m *FilePolicyRevision) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for PolicyId
 
@@ -2181,8 +2163,6 @@ func (m *StorageProviderPreflight) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionId
 
 	// no validation rules for Status
@@ -2357,8 +2337,6 @@ func (m *StorageProviderRevision) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for ProviderId
 
@@ -2585,8 +2563,6 @@ func (m *FileTask) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for TaskType
 
 	// no validation rules for Status
@@ -2793,8 +2769,6 @@ func (m *ReconciliationBatch) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for Provider
 
 	// no validation rules for BatchNo
@@ -2999,8 +2973,6 @@ func (m *ReconciliationItem) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for BatchId
-
-	// no validation rules for AppId
 
 	// no validation rules for FileId
 

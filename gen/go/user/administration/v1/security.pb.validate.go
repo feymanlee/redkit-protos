@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on EnrollMFARequest with the rules defined
@@ -60,8 +56,6 @@ func (m *EnrollMFARequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -277,8 +271,6 @@ func (m *ConfirmMFARequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for FactorId
@@ -389,8 +381,6 @@ func (m *DisableMFARequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for VerificationTicket
@@ -498,8 +488,6 @@ func (m *GenerateRecoveryCodesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -712,8 +700,6 @@ func (m *ListSecurityEventsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -986,8 +972,6 @@ func (m *UnlockUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for Reason
@@ -1095,8 +1079,6 @@ func (m *ListAdminActionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -1371,8 +1353,6 @@ func (m *SecurityNotice) validate(all bool) error {
 
 	// no validation rules for NoticeNo
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for Type
@@ -1584,28 +1564,6 @@ func (m *ListSecurityNoticesRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ListSecurityNoticesRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListSecurityNoticesRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListSecurityNoticesRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetUserId() <= 0 {
 		err := ListSecurityNoticesRequestValidationError{
 			field:  "UserId",
@@ -1725,10 +1683,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListSecurityNoticesRequestValidationError{}
-
-var _ListSecurityNoticesRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListSecurityNoticesResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -1891,28 +1845,6 @@ func (m *ResendSecurityNoticeRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ResendSecurityNoticeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ResendSecurityNoticeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ResendSecurityNoticeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetUserId() <= 0 {
 		err := ResendSecurityNoticeRequestValidationError{
 			field:  "UserId",
@@ -2038,10 +1970,6 @@ var _ interface {
 	ErrorName() string
 } = ResendSecurityNoticeRequestValidationError{}
 
-var _ResendSecurityNoticeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on GetSecurityStateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2063,28 +1991,6 @@ func (m *GetSecurityStateRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _GetSecurityStateRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetSecurityStateRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetSecurityStateRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := GetSecurityStateRequestValidationError{
@@ -2176,7 +2082,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetSecurityStateRequestValidationError{}
-
-var _GetSecurityStateRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}

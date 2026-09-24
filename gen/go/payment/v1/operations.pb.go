@@ -7,8 +7,8 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -683,8 +683,6 @@ func (x *PaymentOperationsSummary) GetGeneratedAt() *timestamppb.Timestamp {
 // GetPaymentOperationsSummaryRequest 标识待查询的 PaymentOperationsSummary。
 type GetPaymentOperationsSummaryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetPaymentOperationsSummary 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// window_from 指定 GetPaymentOperationsSummary 查询或生效区间的起始边界。
 	WindowFrom *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=window_from,json=windowFrom,proto3,oneof" json:"window_from,omitempty"`
 	// window_to 指定 GetPaymentOperationsSummary 查询或生效区间的结束边界。
@@ -721,13 +719,6 @@ func (x *GetPaymentOperationsSummaryRequest) ProtoReflect() protoreflect.Message
 // Deprecated: Use GetPaymentOperationsSummaryRequest.ProtoReflect.Descriptor instead.
 func (*GetPaymentOperationsSummaryRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_operations_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *GetPaymentOperationsSummaryRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetPaymentOperationsSummaryRequest) GetWindowFrom() *timestamppb.Timestamp {
@@ -830,11 +821,9 @@ func (x *WorkQueueFilter) GetSlaBreached() bool {
 type ListPaymentWorkQueueRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,1,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
-	Filter *WorkQueueFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
-	// app_id 限定 ListPaymentWorkQueue 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *v1.AppId `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
+	Filter        *WorkQueueFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -869,7 +858,7 @@ func (*ListPaymentWorkQueueRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_operations_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListPaymentWorkQueueRequest) GetPaging() *v11.PagingRequest {
+func (x *ListPaymentWorkQueueRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -881,13 +870,6 @@ func (x *ListPaymentWorkQueueRequest) GetFilter() *WorkQueueFilter {
 		return x.Filter
 	}
 	return nil
-}
-
-func (x *ListPaymentWorkQueueRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // WorkQueueResourceLink 提供 Work Queue 条目关联资源的稳定定位信息。
@@ -1193,8 +1175,6 @@ func (x *ListPaymentWorkQueueResponse) GetSourceStates() []*WorkQueueSourceState
 // MutatePaymentWorkQueueItemRequest 定义变更 PaymentWorkQueueItem 的幂等管理命令参数。
 type MutatePaymentWorkQueueItemRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 MutatePaymentWorkQueueItem 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// source_type 区分 MutatePaymentWorkQueueItem 的业务类型。
 	SourceType WorkQueueSourceType `protobuf:"varint,2,opt,name=source_type,json=sourceType,proto3,enum=payment.v1.WorkQueueSourceType" json:"source_type,omitempty"`
 	// resource_id 标识关联的 Resource。
@@ -1243,13 +1223,6 @@ func (x *MutatePaymentWorkQueueItemRequest) ProtoReflect() protoreflect.Message 
 // Deprecated: Use MutatePaymentWorkQueueItemRequest.ProtoReflect.Descriptor instead.
 func (*MutatePaymentWorkQueueItemRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_operations_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *MutatePaymentWorkQueueItemRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *MutatePaymentWorkQueueItemRequest) GetSourceType() WorkQueueSourceType {
@@ -1351,13 +1324,11 @@ const file_payment_v1_operations_proto_rawDesc = "" +
 	"\x12queue_sla_breached\x18\x0f \x01(\x04R\x10queueSlaBreached\x12C\n" +
 	"\tproviders\x18\x10 \x03(\v2%.payment.v1.ProviderOperationsSummaryR\tproviders\x12E\n" +
 	"\rqueue_sources\x18\x11 \x03(\v2 .payment.v1.WorkQueueSourceStateR\fqueueSources\x12>\n" +
-	"\fgenerated_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampR\vgeneratedAt\"\xfb\x01\n" +
-	"\"GetPaymentOperationsSummaryRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12@\n" +
-	"\vwindow_from\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampH\x01R\n" +
+	"\fgenerated_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampR\vgeneratedAt\"\xc2\x01\n" +
+	"\"GetPaymentOperationsSummaryRequest\x12@\n" +
+	"\vwindow_from\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\n" +
 	"windowFrom\x88\x01\x01\x12<\n" +
-	"\twindow_to\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x02R\bwindowTo\x88\x01\x01B\t\n" +
-	"\a_app_idB\x0e\n" +
+	"\twindow_to\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x01R\bwindowTo\x88\x01\x01B\x0e\n" +
 	"\f_window_fromB\f\n" +
 	"\n" +
 	"_window_to\"\xe2\x02\n" +
@@ -1370,12 +1341,10 @@ const file_payment_v1_operations_proto_rawDesc = "" +
 	"\x14assignee_operator_id\x18\x04 \x01(\rH\x00R\x12assigneeOperatorId\x88\x01\x01\x12&\n" +
 	"\fsla_breached\x18\x05 \x01(\bH\x01R\vslaBreached\x88\x01\x01B\x17\n" +
 	"\x15_assignee_operator_idB\x0f\n" +
-	"\r_sla_breached\"\xc8\x01\n" +
+	"\r_sla_breached\"\x8f\x01\n" +
 	"\x1bListPaymentWorkQueueRequest\x12;\n" +
 	"\x06paging\x18\x01 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x123\n" +
-	"\x06filter\x18\x02 \x01(\v2\x1b.payment.v1.WorkQueueFilterR\x06filter\x12,\n" +
-	"\x06app_id\x18\x03 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x90\x01\n" +
+	"\x06filter\x18\x02 \x01(\v2\x1b.payment.v1.WorkQueueFilterR\x06filter\"\x90\x01\n" +
 	"\x15WorkQueueResourceLink\x12#\n" +
 	"\rresource_type\x18\x01 \x01(\tR\fresourceType\x12\x1f\n" +
 	"\vresource_id\x18\x02 \x01(\tR\n" +
@@ -1410,22 +1379,20 @@ const file_payment_v1_operations_proto_rawDesc = "" +
 	"\x1cListPaymentWorkQueueResponse\x126\n" +
 	"\x05items\x18\x01 \x03(\v2 .payment.v1.PaymentWorkQueueItemR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\x12E\n" +
-	"\rsource_states\x18\x03 \x03(\v2 .payment.v1.WorkQueueSourceStateR\fsourceStates\"\xb5\x03\n" +
-	"!MutatePaymentWorkQueueItemRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12@\n" +
+	"\rsource_states\x18\x03 \x03(\v2 .payment.v1.WorkQueueSourceStateR\fsourceStates\"\xfc\x02\n" +
+	"!MutatePaymentWorkQueueItemRequest\x12@\n" +
 	"\vsource_type\x18\x02 \x01(\x0e2\x1f.payment.v1.WorkQueueSourceTypeR\n" +
 	"sourceType\x12\x1f\n" +
 	"\vresource_id\x18\x03 \x01(\tR\n" +
 	"resourceId\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\rR\n" +
 	"operatorId\x125\n" +
-	"\x14assignee_operator_id\x18\x05 \x01(\rH\x01R\x12assigneeOperatorId\x88\x01\x01\x12)\n" +
+	"\x14assignee_operator_id\x18\x05 \x01(\rH\x00R\x12assigneeOperatorId\x88\x01\x01\x12)\n" +
 	"\x10expected_version\x18\x06 \x01(\x04R\x0fexpectedVersion\x12\x16\n" +
 	"\x06reason\x18\a \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\b \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\t \x01(\tR\voperationNoB\t\n" +
-	"\a_app_idB\x17\n" +
+	"\foperation_no\x18\t \x01(\tR\voperationNoB\x17\n" +
 	"\x15_assignee_operator_id*\xa7\x03\n" +
 	"\x13WorkQueueSourceType\x12&\n" +
 	"\"WORK_QUEUE_SOURCE_TYPE_UNSPECIFIED\x10\x00\x12)\n" +
@@ -1489,8 +1456,7 @@ var file_payment_v1_operations_proto_goTypes = []any{
 	(*ListPaymentWorkQueueResponse)(nil),       // 13: payment.v1.ListPaymentWorkQueueResponse
 	(*MutatePaymentWorkQueueItemRequest)(nil),  // 14: payment.v1.MutatePaymentWorkQueueItemRequest
 	(*timestamppb.Timestamp)(nil),              // 15: google.protobuf.Timestamp
-	(v1.AppId)(0),                              // 16: common.v1.AppId
-	(*v11.PagingRequest)(nil),                  // 17: common.pagination.v1.PagingRequest
+	(*v1.PagingRequest)(nil),                   // 16: common.pagination.v1.PagingRequest
 }
 var file_payment_v1_operations_proto_depIdxs = []int32{
 	3,  // 0: payment.v1.OperationsSectionState.availability:type_name -> payment.v1.OperationsSectionAvailability
@@ -1501,31 +1467,28 @@ var file_payment_v1_operations_proto_depIdxs = []int32{
 	6,  // 5: payment.v1.PaymentOperationsSummary.providers:type_name -> payment.v1.ProviderOperationsSummary
 	5,  // 6: payment.v1.PaymentOperationsSummary.queue_sources:type_name -> payment.v1.WorkQueueSourceState
 	15, // 7: payment.v1.PaymentOperationsSummary.generated_at:type_name -> google.protobuf.Timestamp
-	16, // 8: payment.v1.GetPaymentOperationsSummaryRequest.app_id:type_name -> common.v1.AppId
-	15, // 9: payment.v1.GetPaymentOperationsSummaryRequest.window_from:type_name -> google.protobuf.Timestamp
-	15, // 10: payment.v1.GetPaymentOperationsSummaryRequest.window_to:type_name -> google.protobuf.Timestamp
-	0,  // 11: payment.v1.WorkQueueFilter.source_types:type_name -> payment.v1.WorkQueueSourceType
-	1,  // 12: payment.v1.WorkQueueFilter.priorities:type_name -> payment.v1.WorkQueuePriority
-	2,  // 13: payment.v1.WorkQueueFilter.statuses:type_name -> payment.v1.WorkQueueCoordinationStatus
-	17, // 14: payment.v1.ListPaymentWorkQueueRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	9,  // 15: payment.v1.ListPaymentWorkQueueRequest.filter:type_name -> payment.v1.WorkQueueFilter
-	16, // 16: payment.v1.ListPaymentWorkQueueRequest.app_id:type_name -> common.v1.AppId
-	0,  // 17: payment.v1.PaymentWorkQueueItem.source_type:type_name -> payment.v1.WorkQueueSourceType
-	1,  // 18: payment.v1.PaymentWorkQueueItem.priority:type_name -> payment.v1.WorkQueuePriority
-	15, // 19: payment.v1.PaymentWorkQueueItem.due_at:type_name -> google.protobuf.Timestamp
-	2,  // 20: payment.v1.PaymentWorkQueueItem.coordination_status:type_name -> payment.v1.WorkQueueCoordinationStatus
-	11, // 21: payment.v1.PaymentWorkQueueItem.resource_link:type_name -> payment.v1.WorkQueueResourceLink
-	15, // 22: payment.v1.PaymentWorkQueueItem.created_at:type_name -> google.protobuf.Timestamp
-	15, // 23: payment.v1.PaymentWorkQueueItem.updated_at:type_name -> google.protobuf.Timestamp
-	12, // 24: payment.v1.ListPaymentWorkQueueResponse.items:type_name -> payment.v1.PaymentWorkQueueItem
-	5,  // 25: payment.v1.ListPaymentWorkQueueResponse.source_states:type_name -> payment.v1.WorkQueueSourceState
-	16, // 26: payment.v1.MutatePaymentWorkQueueItemRequest.app_id:type_name -> common.v1.AppId
-	0,  // 27: payment.v1.MutatePaymentWorkQueueItemRequest.source_type:type_name -> payment.v1.WorkQueueSourceType
-	28, // [28:28] is the sub-list for method output_type
-	28, // [28:28] is the sub-list for method input_type
-	28, // [28:28] is the sub-list for extension type_name
-	28, // [28:28] is the sub-list for extension extendee
-	0,  // [0:28] is the sub-list for field type_name
+	15, // 8: payment.v1.GetPaymentOperationsSummaryRequest.window_from:type_name -> google.protobuf.Timestamp
+	15, // 9: payment.v1.GetPaymentOperationsSummaryRequest.window_to:type_name -> google.protobuf.Timestamp
+	0,  // 10: payment.v1.WorkQueueFilter.source_types:type_name -> payment.v1.WorkQueueSourceType
+	1,  // 11: payment.v1.WorkQueueFilter.priorities:type_name -> payment.v1.WorkQueuePriority
+	2,  // 12: payment.v1.WorkQueueFilter.statuses:type_name -> payment.v1.WorkQueueCoordinationStatus
+	16, // 13: payment.v1.ListPaymentWorkQueueRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	9,  // 14: payment.v1.ListPaymentWorkQueueRequest.filter:type_name -> payment.v1.WorkQueueFilter
+	0,  // 15: payment.v1.PaymentWorkQueueItem.source_type:type_name -> payment.v1.WorkQueueSourceType
+	1,  // 16: payment.v1.PaymentWorkQueueItem.priority:type_name -> payment.v1.WorkQueuePriority
+	15, // 17: payment.v1.PaymentWorkQueueItem.due_at:type_name -> google.protobuf.Timestamp
+	2,  // 18: payment.v1.PaymentWorkQueueItem.coordination_status:type_name -> payment.v1.WorkQueueCoordinationStatus
+	11, // 19: payment.v1.PaymentWorkQueueItem.resource_link:type_name -> payment.v1.WorkQueueResourceLink
+	15, // 20: payment.v1.PaymentWorkQueueItem.created_at:type_name -> google.protobuf.Timestamp
+	15, // 21: payment.v1.PaymentWorkQueueItem.updated_at:type_name -> google.protobuf.Timestamp
+	12, // 22: payment.v1.ListPaymentWorkQueueResponse.items:type_name -> payment.v1.PaymentWorkQueueItem
+	5,  // 23: payment.v1.ListPaymentWorkQueueResponse.source_states:type_name -> payment.v1.WorkQueueSourceState
+	0,  // 24: payment.v1.MutatePaymentWorkQueueItemRequest.source_type:type_name -> payment.v1.WorkQueueSourceType
+	25, // [25:25] is the sub-list for method output_type
+	25, // [25:25] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_operations_proto_init() }
@@ -1536,7 +1499,6 @@ func file_payment_v1_operations_proto_init() {
 	file_payment_v1_operations_proto_msgTypes[0].OneofWrappers = []any{}
 	file_payment_v1_operations_proto_msgTypes[4].OneofWrappers = []any{}
 	file_payment_v1_operations_proto_msgTypes[5].OneofWrappers = []any{}
-	file_payment_v1_operations_proto_msgTypes[6].OneofWrappers = []any{}
 	file_payment_v1_operations_proto_msgTypes[7].OneofWrappers = []any{}
 	file_payment_v1_operations_proto_msgTypes[8].OneofWrappers = []any{}
 	file_payment_v1_operations_proto_msgTypes[10].OneofWrappers = []any{}

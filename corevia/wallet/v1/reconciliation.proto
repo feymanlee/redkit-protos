@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package wallet.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "wallet/v1/adjustment.proto";
@@ -28,8 +27,6 @@ enum WalletReconciliationInvestigationStatus {
 message WalletReconciliationBatch {
   // 批次 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 对账币种。
   optional WalletCurrency currency = 3;
   // 批次号。
@@ -72,8 +69,6 @@ message WalletReconciliationItem {
   optional uint64 id = 1;
   // 批次 ID。
   optional uint64 batch_id = 2;
-  // 应用 ID。
-  optional uint32 app_id = 3;
   // 用户 ID。
   optional uint64 user_id = 4;
   // 币种。
@@ -116,8 +111,6 @@ message WalletReconciliationItem {
 message WalletEvent {
   // 事件 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 事件类型。
@@ -159,8 +152,6 @@ message WalletEvent {
 }
 // 创建对账批次请求。
 message CreateWalletReconciliationBatchRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 对账币种。
   optional WalletCurrency currency = 2;
   // Trusted governance identity for Admin execution.
@@ -169,8 +160,6 @@ message CreateWalletReconciliationBatchRequest {
 
 // 重试失败的对账批次。
 message RetryWalletReconciliationBatchRequest {
-  // app_id 限定 RetryWalletReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // batch_id 标识关联的 Batch。
   uint64 batch_id = 2 [(google.api.field_behavior) = REQUIRED];
   // governance 承载 RetryWalletReconciliationBatch 关联的 WalletGovernanceIdentity。
@@ -179,8 +168,6 @@ message RetryWalletReconciliationBatchRequest {
 
 // 为对账差异追加人工调查与处置引用。
 message ResolveWalletReconciliationItemRequest {
-  // app_id 限定 ResolveWalletReconciliationItem 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // item_id 标识关联的 Item。
   uint64 item_id = 2 [(google.api.field_behavior) = REQUIRED];
   // investigation 记录人工调查过程与结论摘要，供审计复核。

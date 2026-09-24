@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on SettlementStatement with the rules
@@ -62,8 +58,6 @@ func (m *SettlementStatement) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for Provider
 
@@ -440,8 +434,6 @@ func (m *SettlementDiscrepancy) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for StatementId
 
@@ -1162,8 +1154,6 @@ func (m *ImportSettlementStatementRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Provider
 
 	// no validation rules for PeriodStart
@@ -1372,8 +1362,6 @@ func (m *ListSettlementStatementsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -1660,8 +1648,6 @@ func (m *GetSettlementStatementRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for StatementId
 
 	if len(errors) > 0 {
@@ -1767,8 +1753,6 @@ func (m *MutateSettlementDiscrepancyRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DiscrepancyId
 
@@ -1896,8 +1880,6 @@ func (m *Dispute) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for Provider
 
@@ -2803,8 +2785,6 @@ func (m *RecordProviderDisputeRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Provider
 
 	// no validation rules for ProviderCaseId
@@ -3009,8 +2989,6 @@ func (m *ListDisputesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -3297,8 +3275,6 @@ func (m *GetDisputeRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DisputeId
 
 	if len(errors) > 0 {
@@ -3402,8 +3378,6 @@ func (m *RefreshDisputeRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DisputeId
 
@@ -3514,8 +3488,6 @@ func (m *AddDisputeEvidenceRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DisputeId
 
@@ -3635,8 +3607,6 @@ func (m *RemoveDisputeEvidenceRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DisputeId
 
 	// no validation rules for EvidenceId
@@ -3752,8 +3722,6 @@ func (m *SubmitDisputeEvidenceRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for DisputeId
 
 	// no validation rules for OperatorId
@@ -3864,8 +3832,6 @@ func (m *ApplyChargebackRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for DisputeId
 

@@ -16,7 +16,7 @@ import "payment/v1/refund.proto";
 import "payment/v1/risk.proto";
 import "payment/v1/subscription.proto";
 
-// PaymentSearchFilter is the typed, App-scoped administration search contract.
+// PaymentSearchFilter is the typed administration search contract.
 message PaymentSearchFilter {
   // payment_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
   optional string payment_no = 1;
@@ -26,7 +26,7 @@ message PaymentSearchFilter {
   optional string refund_no = 3;
   // provider_trade_no 是 PaymentSearchFilter 对外关联与审计使用的业务编号。
   optional string provider_trade_no = 4;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 5;
   // created_from 指定 PaymentSearchFilter 查询或生效区间的起始边界。
   optional google.protobuf.Timestamp created_from = 6;
@@ -82,8 +82,6 @@ message PaymentDetailSectionState {
 message GetPaymentDetailRequest {
   // payment_no 是 GetPaymentDetail 对外关联与审计使用的业务编号。
   string payment_no = 1;
-  // app_id 限定 GetPaymentDetail 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
 }
 
 // ChannelCapabilitySnapshot 区分 Revision 声明、Provider 实现上限与两者交集。
@@ -138,8 +136,6 @@ message ProviderStateRefresh {
 message RefreshPaymentProviderStateRequest {
   // payment_no 是 RefreshPaymentProviderState 对外关联与审计使用的业务编号。
   string payment_no = 1;
-  // app_id 限定 RefreshPaymentProviderState 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 3;
   // request_id 用于关联同一次请求或异步处理链路。
@@ -160,8 +156,6 @@ message RefreshPaymentProviderStateResponse {
 message RefreshRefundProviderStateRequest {
   // refund_no 是 RefreshRefundProviderState 对外关联与审计使用的业务编号。
   string refund_no = 1;
-  // app_id 限定 RefreshRefundProviderState 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 3;
   // request_id 用于关联同一次请求或异步处理链路。
@@ -239,10 +233,8 @@ message PaymentDetail {
 
 // GetUserPaymentSummaryRequest 标识待查询的 UserPaymentSummary。
 message GetUserPaymentSummaryRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1;
-  // app_id 限定 GetUserPaymentSummary 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
 }
 
 // UserPaymentCurrencySummary 表示面向查询的汇总投影。

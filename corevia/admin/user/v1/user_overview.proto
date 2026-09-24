@@ -10,7 +10,7 @@ import "user/administration/v1/types.proto";
 import "validate/validate.proto";
 import "wallet/v1/user_summary.proto";
 
-// UserOverviewService assembles a transient, App-scoped view without owning downstream facts.
+// UserOverviewService assembles a transient view without owning downstream facts.
 service UserOverviewService {
   // 查询 UserOverview。
   rpc GetUserOverview(GetUserOverviewRequest) returns (UserOverview) {
@@ -27,13 +27,13 @@ service UserOverviewService {
 
 // GetUserOverviewRequest 标识待查询的 UserOverview。
 message GetUserOverviewRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 
 // GetUserOverviewSectionRequest 标识待查询的 UserOverviewSection。
 message GetUserOverviewSectionRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // section 承载 GetUserOverviewSection 关联的 UserOverviewSection。
   UserOverviewSection section = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
@@ -85,7 +85,7 @@ enum UserOverviewDestination {
 message UserOverviewDrilldown {
   // destination 承载 UserOverviewDrilldown 关联的 UserOverviewDestination。
   UserOverviewDestination destination = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
 }
 

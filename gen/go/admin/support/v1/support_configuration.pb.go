@@ -26,7 +26,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// AdminGetConfigurationReadinessRequest selects the authenticated App's readiness view.
+// AdminGetConfigurationReadinessRequest selects the readiness view.
 type AdminGetConfigurationReadinessRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -63,7 +63,7 @@ func (*AdminGetConfigurationReadinessRequest) Descriptor() ([]byte, []int) {
 	return file_admin_support_v1_support_configuration_proto_rawDescGZIP(), []int{0}
 }
 
-// AdminCreateConfigurationDraftRequest creates an editable Draft for the authenticated App.
+// AdminCreateConfigurationDraftRequest creates an editable Draft.
 type AdminCreateConfigurationDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// default_locale 指定内容展示或消息投递采用的语言区域。
@@ -863,7 +863,7 @@ func (x *AdminExecuteDeliveryProbeRequest) GetRequestId() string {
 	return ""
 }
 
-// AdminListConfigurationReleasesRequest selects the authenticated App's Release history.
+// AdminListConfigurationReleasesRequest selects the Release history.
 type AdminListConfigurationReleasesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields

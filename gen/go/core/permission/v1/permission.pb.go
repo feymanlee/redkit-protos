@@ -76,59 +76,6 @@ func (Permission_Status) EnumDescriptor() ([]byte, []int) {
 	return file_core_permission_v1_permission_proto_rawDescGZIP(), []int{0, 0}
 }
 
-// Scope 限定规则或资源的生效作用域。
-type Permission_Scope int32
-
-const (
-	// 未提供有效取值；调用方不得据此推断业务状态。
-	Permission_SCOPE_UNSPECIFIED Permission_Scope = 0
-	// PLATFORM 仅在 PLATFORM 作用域内生效。
-	Permission_PLATFORM Permission_Scope = 1
-	// APP 仅在 APP 作用域内生效。
-	Permission_APP Permission_Scope = 2
-)
-
-// Enum value maps for Permission_Scope.
-var (
-	Permission_Scope_name = map[int32]string{
-		0: "SCOPE_UNSPECIFIED",
-		1: "PLATFORM",
-		2: "APP",
-	}
-	Permission_Scope_value = map[string]int32{
-		"SCOPE_UNSPECIFIED": 0,
-		"PLATFORM":          1,
-		"APP":               2,
-	}
-)
-
-func (x Permission_Scope) Enum() *Permission_Scope {
-	p := new(Permission_Scope)
-	*p = x
-	return p
-}
-
-func (x Permission_Scope) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (Permission_Scope) Descriptor() protoreflect.EnumDescriptor {
-	return file_core_permission_v1_permission_proto_enumTypes[1].Descriptor()
-}
-
-func (Permission_Scope) Type() protoreflect.EnumType {
-	return &file_core_permission_v1_permission_proto_enumTypes[1]
-}
-
-func (x Permission_Scope) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use Permission_Scope.Descriptor instead.
-func (Permission_Scope) EnumDescriptor() ([]byte, []int) {
-	return file_core_permission_v1_permission_proto_rawDescGZIP(), []int{0, 1}
-}
-
 // 资源类型
 type ListPermissionResourcesRequest_ResourceType int32
 
@@ -170,11 +117,11 @@ func (x ListPermissionResourcesRequest_ResourceType) String() string {
 }
 
 func (ListPermissionResourcesRequest_ResourceType) Descriptor() protoreflect.EnumDescriptor {
-	return file_core_permission_v1_permission_proto_enumTypes[2].Descriptor()
+	return file_core_permission_v1_permission_proto_enumTypes[1].Descriptor()
 }
 
 func (ListPermissionResourcesRequest_ResourceType) Type() protoreflect.EnumType {
-	return &file_core_permission_v1_permission_proto_enumTypes[2]
+	return &file_core_permission_v1_permission_proto_enumTypes[1]
 }
 
 func (x ListPermissionResourcesRequest_ResourceType) Number() protoreflect.EnumNumber {
@@ -189,6 +136,7 @@ func (ListPermissionResourcesRequest_ResourceType) EnumDescriptor() ([]byte, []i
 // 权限点
 type Permission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
+	// Scope 枚举（编号 0-2）已随平台收敛为单一 App 删除，见 ADR 0075；不得复用这些编号或名称。
 	// 权限点ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 权限点ID
 	// 权限点名称（如：删除用户）。
@@ -201,9 +149,6 @@ type Permission struct {
 	Status *Permission_Status `protobuf:"varint,5,opt,name=status,proto3,enum=core.permission.v1.Permission_Status,oneof" json:"status,omitempty"` // 状态
 	// 分组ID。
 	GroupId *uint32 `protobuf:"varint,6,opt,name=group_id,json=groupId,proto3,oneof" json:"group_id,omitempty"` // 分组ID
-	// Permission grant scope. Platform permissions may only be granted to
-	// platform system roles; App permissions may be granted inside an App.
-	Scope *Permission_Scope `protobuf:"varint,8,opt,name=scope,proto3,enum=core.permission.v1.Permission_Scope,oneof" json:"scope,omitempty"`
 	// 分组名称。
 	GroupName *string `protobuf:"bytes,7,opt,name=group_name,json=groupName,proto3,oneof" json:"group_name,omitempty"` // 分组名称
 	// 关联的菜单ID。
@@ -296,13 +241,6 @@ func (x *Permission) GetGroupId() uint32 {
 		return *x.GroupId
 	}
 	return 0
-}
-
-func (x *Permission) GetScope() Permission_Scope {
-	if x != nil && x.Scope != nil {
-		return *x.Scope
-	}
-	return Permission_SCOPE_UNSPECIFIED
 }
 
 func (x *Permission) GetGroupName() string {
@@ -1187,8 +1125,7 @@ var File_core_permission_v1_permission_proto protoreflect.FileDescriptor
 
 const file_core_permission_v1_permission_proto_rawDesc = "" +
 	"\n" +
-	"#core/permission/v1/permission.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\x1a)core/permission/v1/permission_group.proto\"\xb5\n" +
-	"\n" +
+	"#core/permission/v1/permission.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\x1a)core/permission/v1/permission_group.proto\"\x9c\t\n" +
 	"\n" +
 	"Permission\x12&\n" +
 	"\x02id\x18\x01 \x01(\rB\x11\xbaG\x0e\x92\x02\v权限点IDH\x00R\x02id\x88\x01\x01\x12F\n" +
@@ -1196,40 +1133,34 @@ const file_core_permission_v1_permission_proto_rawDesc = "" +
 	"\x04code\x18\x03 \x01(\tB2\xbaG/\x92\x02,权限点唯一编码（如：user.delete）H\x02R\x04code\x88\x01\x01\x123\n" +
 	"\vdescription\x18\x04 \x01(\tB\f\xbaG\t\x92\x02\x06描述H\x03R\vdescription\x88\x01\x01\x12P\n" +
 	"\x06status\x18\x05 \x01(\x0e2%.core.permission.v1.Permission.StatusB\f\xbaG\t\x92\x02\x06状态H\x04R\x06status\x88\x01\x01\x12.\n" +
-	"\bgroup_id\x18\x06 \x01(\rB\x0e\xbaG\v\x92\x02\b分组IDH\x05R\agroupId\x88\x01\x01\x12V\n" +
-	"\x05scope\x18\b \x01(\x0e2$.core.permission.v1.Permission.ScopeB\x15\xbaG\x12\x92\x02\x0f权限作用域H\x06R\x05scope\x88\x01\x01\x126\n" +
+	"\bgroup_id\x18\x06 \x01(\rB\x0e\xbaG\v\x92\x02\b分组IDH\x05R\agroupId\x88\x01\x01\x126\n" +
 	"\n" +
-	"group_name\x18\a \x01(\tB\x12\xbaG\x0f\x92\x02\f分组名称H\aR\tgroupName\x88\x01\x01\x122\n" +
+	"group_name\x18\a \x01(\tB\x12\xbaG\x0f\x92\x02\f分组名称H\x06R\tgroupName\x88\x01\x01\x122\n" +
 	"\bmenu_ids\x18\n" +
 	" \x03(\rB\x17\xbaG\x14\x92\x02\x11关联的菜单IDR\amenuIds\x123\n" +
 	"\aapi_ids\x18\v \x03(\rB\x1a\xbaG\x17\x92\x02\x14关联的API资源IDR\x06apiIds\x12;\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x17\xbaG\x14\x92\x02\x11创建者用户IDH\bR\tcreatedBy\x88\x01\x01\x12;\n" +
+	"created_by\x18d \x01(\rB\x17\xbaG\x14\x92\x02\x11创建者用户IDH\aR\tcreatedBy\x88\x01\x01\x12;\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x17\xbaG\x14\x92\x02\x11更新者用户IDH\tR\tupdatedBy\x88\x01\x01\x12;\n" +
+	"updated_by\x18e \x01(\rB\x17\xbaG\x14\x92\x02\x11更新者用户IDH\bR\tupdatedBy\x88\x01\x01\x12;\n" +
 	"\n" +
-	"deleted_by\x18f \x01(\rB\x17\xbaG\x14\x92\x02\x11删除者用户IDH\n" +
-	"R\tdeletedBy\x88\x01\x01\x12S\n" +
+	"deleted_by\x18f \x01(\rB\x17\xbaG\x14\x92\x02\x11删除者用户IDH\tR\tdeletedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\vR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\n" +
+	"R\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\fR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\vR\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\rR\tdeletedAt\x88\x01\x01\"\x19\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\fR\tdeletedAt\x88\x01\x01\"\x19\n" +
 	"\x06Status\x12\a\n" +
 	"\x03OFF\x10\x00\x12\x06\n" +
-	"\x02ON\x10\x01\"5\n" +
-	"\x05Scope\x12\x15\n" +
-	"\x11SCOPE_UNSPECIFIED\x10\x00\x12\f\n" +
-	"\bPLATFORM\x10\x01\x12\a\n" +
-	"\x03APP\x10\x02B\x05\n" +
+	"\x02ON\x10\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\a\n" +
 	"\x05_codeB\x0e\n" +
 	"\f_descriptionB\t\n" +
 	"\a_statusB\v\n" +
-	"\t_group_idB\b\n" +
-	"\x06_scopeB\r\n" +
+	"\t_group_idB\r\n" +
 	"\v_group_nameB\r\n" +
 	"\v_created_byB\r\n" +
 	"\v_updated_byB\r\n" +
@@ -1321,77 +1252,75 @@ func file_core_permission_v1_permission_proto_rawDescGZIP() []byte {
 	return file_core_permission_v1_permission_proto_rawDescData
 }
 
-var file_core_permission_v1_permission_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_core_permission_v1_permission_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_core_permission_v1_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_core_permission_v1_permission_proto_goTypes = []any{
 	(Permission_Status)(0),                           // 0: core.permission.v1.Permission.Status
-	(Permission_Scope)(0),                            // 1: core.permission.v1.Permission.Scope
-	(ListPermissionResourcesRequest_ResourceType)(0), // 2: core.permission.v1.ListPermissionResourcesRequest.ResourceType
-	(*Permission)(nil),                               // 3: core.permission.v1.Permission
-	(*ListPermissionResponse)(nil),                   // 4: core.permission.v1.ListPermissionResponse
-	(*GetPermissionRequest)(nil),                     // 5: core.permission.v1.GetPermissionRequest
-	(*CreatePermissionRequest)(nil),                  // 6: core.permission.v1.CreatePermissionRequest
-	(*UpdatePermissionRequest)(nil),                  // 7: core.permission.v1.UpdatePermissionRequest
-	(*DeletePermissionRequest)(nil),                  // 8: core.permission.v1.DeletePermissionRequest
-	(*CountPermissionResponse)(nil),                  // 9: core.permission.v1.CountPermissionResponse
-	(*BatchCreatePermissionRequest)(nil),             // 10: core.permission.v1.BatchCreatePermissionRequest
-	(*BatchCreatePermissionResponse)(nil),            // 11: core.permission.v1.BatchCreatePermissionResponse
-	(*SyncPermissionsRequest)(nil),                   // 12: core.permission.v1.SyncPermissionsRequest
-	(*ListPermissionCodesByIdsRequest)(nil),          // 13: core.permission.v1.ListPermissionCodesByIdsRequest
-	(*ListPermissionCodesByIdsResponse)(nil),         // 14: core.permission.v1.ListPermissionCodesByIdsResponse
-	(*ListPermissionResourcesRequest)(nil),           // 15: core.permission.v1.ListPermissionResourcesRequest
-	(*PermissionResourceIds)(nil),                    // 16: core.permission.v1.PermissionResourceIds
-	(*ListPermissionResourcesResponse)(nil),          // 17: core.permission.v1.ListPermissionResourcesResponse
-	nil,                                              // 18: core.permission.v1.ListPermissionResourcesResponse.ResourcesEntry
-	(*timestamppb.Timestamp)(nil),                    // 19: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil),                    // 20: google.protobuf.FieldMask
-	(*PermissionGroup)(nil),                          // 21: core.permission.v1.PermissionGroup
-	(*v1.PagingRequest)(nil),                         // 22: common.pagination.v1.PagingRequest
-	(*emptypb.Empty)(nil),                            // 23: google.protobuf.Empty
+	(ListPermissionResourcesRequest_ResourceType)(0), // 1: core.permission.v1.ListPermissionResourcesRequest.ResourceType
+	(*Permission)(nil),                               // 2: core.permission.v1.Permission
+	(*ListPermissionResponse)(nil),                   // 3: core.permission.v1.ListPermissionResponse
+	(*GetPermissionRequest)(nil),                     // 4: core.permission.v1.GetPermissionRequest
+	(*CreatePermissionRequest)(nil),                  // 5: core.permission.v1.CreatePermissionRequest
+	(*UpdatePermissionRequest)(nil),                  // 6: core.permission.v1.UpdatePermissionRequest
+	(*DeletePermissionRequest)(nil),                  // 7: core.permission.v1.DeletePermissionRequest
+	(*CountPermissionResponse)(nil),                  // 8: core.permission.v1.CountPermissionResponse
+	(*BatchCreatePermissionRequest)(nil),             // 9: core.permission.v1.BatchCreatePermissionRequest
+	(*BatchCreatePermissionResponse)(nil),            // 10: core.permission.v1.BatchCreatePermissionResponse
+	(*SyncPermissionsRequest)(nil),                   // 11: core.permission.v1.SyncPermissionsRequest
+	(*ListPermissionCodesByIdsRequest)(nil),          // 12: core.permission.v1.ListPermissionCodesByIdsRequest
+	(*ListPermissionCodesByIdsResponse)(nil),         // 13: core.permission.v1.ListPermissionCodesByIdsResponse
+	(*ListPermissionResourcesRequest)(nil),           // 14: core.permission.v1.ListPermissionResourcesRequest
+	(*PermissionResourceIds)(nil),                    // 15: core.permission.v1.PermissionResourceIds
+	(*ListPermissionResourcesResponse)(nil),          // 16: core.permission.v1.ListPermissionResourcesResponse
+	nil,                                              // 17: core.permission.v1.ListPermissionResourcesResponse.ResourcesEntry
+	(*timestamppb.Timestamp)(nil),                    // 18: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),                    // 19: google.protobuf.FieldMask
+	(*PermissionGroup)(nil),                          // 20: core.permission.v1.PermissionGroup
+	(*v1.PagingRequest)(nil),                         // 21: common.pagination.v1.PagingRequest
+	(*emptypb.Empty)(nil),                            // 22: google.protobuf.Empty
 }
 var file_core_permission_v1_permission_proto_depIdxs = []int32{
 	0,  // 0: core.permission.v1.Permission.status:type_name -> core.permission.v1.Permission.Status
-	1,  // 1: core.permission.v1.Permission.scope:type_name -> core.permission.v1.Permission.Scope
-	19, // 2: core.permission.v1.Permission.created_at:type_name -> google.protobuf.Timestamp
-	19, // 3: core.permission.v1.Permission.updated_at:type_name -> google.protobuf.Timestamp
-	19, // 4: core.permission.v1.Permission.deleted_at:type_name -> google.protobuf.Timestamp
-	3,  // 5: core.permission.v1.ListPermissionResponse.items:type_name -> core.permission.v1.Permission
-	20, // 6: core.permission.v1.GetPermissionRequest.view_mask:type_name -> google.protobuf.FieldMask
-	3,  // 7: core.permission.v1.CreatePermissionRequest.data:type_name -> core.permission.v1.Permission
-	3,  // 8: core.permission.v1.UpdatePermissionRequest.data:type_name -> core.permission.v1.Permission
-	20, // 9: core.permission.v1.UpdatePermissionRequest.update_mask:type_name -> google.protobuf.FieldMask
-	3,  // 10: core.permission.v1.BatchCreatePermissionRequest.data:type_name -> core.permission.v1.Permission
-	3,  // 11: core.permission.v1.BatchCreatePermissionResponse.data:type_name -> core.permission.v1.Permission
-	3,  // 12: core.permission.v1.SyncPermissionsRequest.permissions:type_name -> core.permission.v1.Permission
-	21, // 13: core.permission.v1.SyncPermissionsRequest.permission_groups:type_name -> core.permission.v1.PermissionGroup
-	2,  // 14: core.permission.v1.ListPermissionResourcesRequest.resource_types:type_name -> core.permission.v1.ListPermissionResourcesRequest.ResourceType
-	18, // 15: core.permission.v1.ListPermissionResourcesResponse.resources:type_name -> core.permission.v1.ListPermissionResourcesResponse.ResourcesEntry
-	16, // 16: core.permission.v1.ListPermissionResourcesResponse.ResourcesEntry.value:type_name -> core.permission.v1.PermissionResourceIds
-	22, // 17: core.permission.v1.PermissionService.List:input_type -> common.pagination.v1.PagingRequest
-	22, // 18: core.permission.v1.PermissionService.Count:input_type -> common.pagination.v1.PagingRequest
-	5,  // 19: core.permission.v1.PermissionService.Get:input_type -> core.permission.v1.GetPermissionRequest
-	6,  // 20: core.permission.v1.PermissionService.Create:input_type -> core.permission.v1.CreatePermissionRequest
-	7,  // 21: core.permission.v1.PermissionService.Update:input_type -> core.permission.v1.UpdatePermissionRequest
-	8,  // 22: core.permission.v1.PermissionService.Delete:input_type -> core.permission.v1.DeletePermissionRequest
-	10, // 23: core.permission.v1.PermissionService.BatchCreate:input_type -> core.permission.v1.BatchCreatePermissionRequest
-	12, // 24: core.permission.v1.PermissionService.SyncPermissions:input_type -> core.permission.v1.SyncPermissionsRequest
-	15, // 25: core.permission.v1.PermissionService.ListPermissionResources:input_type -> core.permission.v1.ListPermissionResourcesRequest
-	13, // 26: core.permission.v1.PermissionService.ListPermissionCodesByIds:input_type -> core.permission.v1.ListPermissionCodesByIdsRequest
-	4,  // 27: core.permission.v1.PermissionService.List:output_type -> core.permission.v1.ListPermissionResponse
-	9,  // 28: core.permission.v1.PermissionService.Count:output_type -> core.permission.v1.CountPermissionResponse
-	3,  // 29: core.permission.v1.PermissionService.Get:output_type -> core.permission.v1.Permission
-	23, // 30: core.permission.v1.PermissionService.Create:output_type -> google.protobuf.Empty
-	23, // 31: core.permission.v1.PermissionService.Update:output_type -> google.protobuf.Empty
-	23, // 32: core.permission.v1.PermissionService.Delete:output_type -> google.protobuf.Empty
-	11, // 33: core.permission.v1.PermissionService.BatchCreate:output_type -> core.permission.v1.BatchCreatePermissionResponse
-	23, // 34: core.permission.v1.PermissionService.SyncPermissions:output_type -> google.protobuf.Empty
-	17, // 35: core.permission.v1.PermissionService.ListPermissionResources:output_type -> core.permission.v1.ListPermissionResourcesResponse
-	14, // 36: core.permission.v1.PermissionService.ListPermissionCodesByIds:output_type -> core.permission.v1.ListPermissionCodesByIdsResponse
-	27, // [27:37] is the sub-list for method output_type
-	17, // [17:27] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	18, // 1: core.permission.v1.Permission.created_at:type_name -> google.protobuf.Timestamp
+	18, // 2: core.permission.v1.Permission.updated_at:type_name -> google.protobuf.Timestamp
+	18, // 3: core.permission.v1.Permission.deleted_at:type_name -> google.protobuf.Timestamp
+	2,  // 4: core.permission.v1.ListPermissionResponse.items:type_name -> core.permission.v1.Permission
+	19, // 5: core.permission.v1.GetPermissionRequest.view_mask:type_name -> google.protobuf.FieldMask
+	2,  // 6: core.permission.v1.CreatePermissionRequest.data:type_name -> core.permission.v1.Permission
+	2,  // 7: core.permission.v1.UpdatePermissionRequest.data:type_name -> core.permission.v1.Permission
+	19, // 8: core.permission.v1.UpdatePermissionRequest.update_mask:type_name -> google.protobuf.FieldMask
+	2,  // 9: core.permission.v1.BatchCreatePermissionRequest.data:type_name -> core.permission.v1.Permission
+	2,  // 10: core.permission.v1.BatchCreatePermissionResponse.data:type_name -> core.permission.v1.Permission
+	2,  // 11: core.permission.v1.SyncPermissionsRequest.permissions:type_name -> core.permission.v1.Permission
+	20, // 12: core.permission.v1.SyncPermissionsRequest.permission_groups:type_name -> core.permission.v1.PermissionGroup
+	1,  // 13: core.permission.v1.ListPermissionResourcesRequest.resource_types:type_name -> core.permission.v1.ListPermissionResourcesRequest.ResourceType
+	17, // 14: core.permission.v1.ListPermissionResourcesResponse.resources:type_name -> core.permission.v1.ListPermissionResourcesResponse.ResourcesEntry
+	15, // 15: core.permission.v1.ListPermissionResourcesResponse.ResourcesEntry.value:type_name -> core.permission.v1.PermissionResourceIds
+	21, // 16: core.permission.v1.PermissionService.List:input_type -> common.pagination.v1.PagingRequest
+	21, // 17: core.permission.v1.PermissionService.Count:input_type -> common.pagination.v1.PagingRequest
+	4,  // 18: core.permission.v1.PermissionService.Get:input_type -> core.permission.v1.GetPermissionRequest
+	5,  // 19: core.permission.v1.PermissionService.Create:input_type -> core.permission.v1.CreatePermissionRequest
+	6,  // 20: core.permission.v1.PermissionService.Update:input_type -> core.permission.v1.UpdatePermissionRequest
+	7,  // 21: core.permission.v1.PermissionService.Delete:input_type -> core.permission.v1.DeletePermissionRequest
+	9,  // 22: core.permission.v1.PermissionService.BatchCreate:input_type -> core.permission.v1.BatchCreatePermissionRequest
+	11, // 23: core.permission.v1.PermissionService.SyncPermissions:input_type -> core.permission.v1.SyncPermissionsRequest
+	14, // 24: core.permission.v1.PermissionService.ListPermissionResources:input_type -> core.permission.v1.ListPermissionResourcesRequest
+	12, // 25: core.permission.v1.PermissionService.ListPermissionCodesByIds:input_type -> core.permission.v1.ListPermissionCodesByIdsRequest
+	3,  // 26: core.permission.v1.PermissionService.List:output_type -> core.permission.v1.ListPermissionResponse
+	8,  // 27: core.permission.v1.PermissionService.Count:output_type -> core.permission.v1.CountPermissionResponse
+	2,  // 28: core.permission.v1.PermissionService.Get:output_type -> core.permission.v1.Permission
+	22, // 29: core.permission.v1.PermissionService.Create:output_type -> google.protobuf.Empty
+	22, // 30: core.permission.v1.PermissionService.Update:output_type -> google.protobuf.Empty
+	22, // 31: core.permission.v1.PermissionService.Delete:output_type -> google.protobuf.Empty
+	10, // 32: core.permission.v1.PermissionService.BatchCreate:output_type -> core.permission.v1.BatchCreatePermissionResponse
+	22, // 33: core.permission.v1.PermissionService.SyncPermissions:output_type -> google.protobuf.Empty
+	16, // 34: core.permission.v1.PermissionService.ListPermissionResources:output_type -> core.permission.v1.ListPermissionResourcesResponse
+	13, // 35: core.permission.v1.PermissionService.ListPermissionCodesByIds:output_type -> core.permission.v1.ListPermissionCodesByIdsResponse
+	26, // [26:36] is the sub-list for method output_type
+	16, // [16:26] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_core_permission_v1_permission_proto_init() }
@@ -1416,7 +1345,7 @@ func file_core_permission_v1_permission_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_permission_v1_permission_proto_rawDesc), len(file_core_permission_v1_permission_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      2,
 			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,

@@ -8,8 +8,8 @@ package useradministrationpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -261,9 +261,7 @@ func (SecurityNoticeStatus) EnumDescriptor() ([]byte, []int) {
 // EnrollMFARequest 定义执行 EnrollMFA 的幂等管理命令参数。
 type EnrollMFARequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 EnrollMFA 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,3,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
@@ -301,13 +299,6 @@ func (x *EnrollMFARequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use EnrollMFARequest.ProtoReflect.Descriptor instead.
 func (*EnrollMFARequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *EnrollMFARequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *EnrollMFARequest) GetUserId() uint64 {
@@ -398,9 +389,7 @@ func (x *EnrollMFAResponse) GetProvisioningUri() string {
 // ConfirmMFARequest 定义执行 ConfirmMFA 的幂等管理命令参数。
 type ConfirmMFARequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ConfirmMFA 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// factor_id 标识关联的 Factor。
 	FactorId string `protobuf:"bytes,3,opt,name=factor_id,json=factorId,proto3" json:"factor_id,omitempty"`
@@ -442,13 +431,6 @@ func (*ConfirmMFARequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ConfirmMFARequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ConfirmMFARequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -480,9 +462,7 @@ func (x *ConfirmMFARequest) GetIdempotencyKey() string {
 // DisableMFARequest 定义停用 MFA 的幂等管理命令参数。
 type DisableMFARequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 DisableMFA 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
 	VerificationTicket string `protobuf:"bytes,3,opt,name=verification_ticket,json=verificationTicket,proto3" json:"verification_ticket,omitempty"`
@@ -522,13 +502,6 @@ func (*DisableMFARequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *DisableMFARequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *DisableMFARequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -553,9 +526,7 @@ func (x *DisableMFARequest) GetIdempotencyKey() string {
 // GenerateRecoveryCodesRequest 定义执行 GenerateRecoveryCodes 的幂等管理命令参数。
 type GenerateRecoveryCodesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GenerateRecoveryCodes 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,3,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
@@ -593,13 +564,6 @@ func (x *GenerateRecoveryCodesRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GenerateRecoveryCodesRequest.ProtoReflect.Descriptor instead.
 func (*GenerateRecoveryCodesRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *GenerateRecoveryCodesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GenerateRecoveryCodesRequest) GetUserId() uint64 {
@@ -672,12 +636,10 @@ func (x *GenerateRecoveryCodesResponse) GetCodes() []string {
 // ListSecurityEventsRequest 定义 SecurityEvents 的筛选与分页参数。
 type ListSecurityEventsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListSecurityEvents 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -712,13 +674,6 @@ func (*ListSecurityEventsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ListSecurityEventsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSecurityEventsRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -726,7 +681,7 @@ func (x *ListSecurityEventsRequest) GetUserId() uint64 {
 	return 0
 }
 
-func (x *ListSecurityEventsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSecurityEventsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -791,9 +746,7 @@ func (x *ListSecurityEventsResponse) GetTotal() uint64 {
 // UnlockUserRequest 定义执行 UnlockUser 的幂等管理命令参数。
 type UnlockUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UnlockUser 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -833,13 +786,6 @@ func (*UnlockUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *UnlockUserRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UnlockUserRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -864,12 +810,10 @@ func (x *UnlockUserRequest) GetIdempotencyKey() string {
 // ListAdminActionsRequest 定义 AdminActions 的筛选与分页参数。
 type ListAdminActionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListAdminActions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -904,13 +848,6 @@ func (*ListAdminActionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ListAdminActionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListAdminActionsRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -918,7 +855,7 @@ func (x *ListAdminActionsRequest) GetUserId() uint64 {
 	return 0
 }
 
-func (x *ListAdminActionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListAdminActionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -985,9 +922,7 @@ type SecurityNotice struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// notice_no 是 SecurityNotice 对外关联与审计使用的业务编号。
 	NoticeNo string `protobuf:"bytes,1,opt,name=notice_no,json=noticeNo,proto3" json:"notice_no,omitempty"`
-	// app_id 限定 SecurityNotice 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// type 区分 SecurityNotice 的业务类型。
 	Type SecurityNoticeType `protobuf:"varint,4,opt,name=type,proto3,enum=user.administration.v1.SecurityNoticeType" json:"type,omitempty"`
@@ -1056,13 +991,6 @@ func (x *SecurityNotice) GetNoticeNo() string {
 		return x.NoticeNo
 	}
 	return ""
-}
-
-func (x *SecurityNotice) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SecurityNotice) GetUserId() uint64 {
@@ -1173,12 +1101,10 @@ func (x *SecurityNotice) GetResendable() bool {
 // ListSecurityNoticesRequest 定义 SecurityNotices 的筛选与分页参数。
 type ListSecurityNoticesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListSecurityNotices 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1213,13 +1139,6 @@ func (*ListSecurityNoticesRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ListSecurityNoticesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSecurityNoticesRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1227,7 +1146,7 @@ func (x *ListSecurityNoticesRequest) GetUserId() uint64 {
 	return 0
 }
 
-func (x *ListSecurityNoticesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSecurityNoticesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1292,9 +1211,7 @@ func (x *ListSecurityNoticesResponse) GetTotal() uint64 {
 // ResendSecurityNoticeRequest 定义执行 ResendSecurityNotice 的幂等管理命令参数。
 type ResendSecurityNoticeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResendSecurityNotice 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// notice_no 是 ResendSecurityNotice 对外关联与审计使用的业务编号。
 	NoticeNo string `protobuf:"bytes,3,opt,name=notice_no,json=noticeNo,proto3" json:"notice_no,omitempty"`
@@ -1336,13 +1253,6 @@ func (*ResendSecurityNoticeRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *ResendSecurityNoticeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ResendSecurityNoticeRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1374,9 +1284,7 @@ func (x *ResendSecurityNoticeRequest) GetIdempotencyKey() string {
 // GetSecurityStateRequest 标识待查询的 SecurityState。
 type GetSecurityStateRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetSecurityState 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1412,13 +1320,6 @@ func (*GetSecurityStateRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_security_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *GetSecurityStateRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetSecurityStateRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1430,56 +1331,48 @@ var File_user_administration_v1_security_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_security_proto_rawDesc = "" +
 	"\n" +
-	"%user/administration/v1/security.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"\xae\x01\n" +
-	"\x10EnrollMFARequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"%user/administration/v1/security.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"\x85\x01\n" +
+	"\x10EnrollMFARequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12'\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tR\x0eidempotencyKey\x12/\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tR\x12verificationTicket\"s\n" +
 	"\x11EnrollMFAResponse\x12\x1b\n" +
 	"\tfactor_id\x18\x01 \x01(\tR\bfactorId\x12\x16\n" +
 	"\x06secret\x18\x02 \x01(\tR\x06secret\x12)\n" +
-	"\x10provisioning_uri\x18\x03 \x01(\tR\x0fprovisioningUri\"\xaf\x01\n" +
-	"\x11ConfirmMFARequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x10provisioning_uri\x18\x03 \x01(\tR\x0fprovisioningUri\"\x86\x01\n" +
+	"\x11ConfirmMFARequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tfactor_id\x18\x03 \x01(\tR\bfactorId\x12\x12\n" +
 	"\x04code\x18\x04 \x01(\tR\x04code\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\xaf\x01\n" +
-	"\x11DisableMFARequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\x86\x01\n" +
+	"\x11DisableMFARequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12/\n" +
 	"\x13verification_ticket\x18\x03 \x01(\tR\x12verificationTicket\x12'\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\xba\x01\n" +
-	"\x1cGenerateRecoveryCodesRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\x91\x01\n" +
+	"\x1cGenerateRecoveryCodesRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12'\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tR\x0eidempotencyKey\x12/\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tR\x12verificationTicket\"5\n" +
 	"\x1dGenerateRecoveryCodesResponse\x12\x14\n" +
-	"\x05codes\x18\x01 \x03(\tR\x05codes\"\x9a\x01\n" +
-	"\x19ListSecurityEventsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x05codes\x18\x01 \x03(\tR\x05codes\"q\n" +
+	"\x19ListSecurityEventsRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"o\n" +
 	"\x1aListSecurityEventsResponse\x12;\n" +
 	"\x05items\x18\x01 \x03(\v2%.user.administration.v1.SecurityEventR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x96\x01\n" +
-	"\x11UnlockUserRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"m\n" +
+	"\x11UnlockUserRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\x12'\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"\x98\x01\n" +
-	"\x17ListAdminActionsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tR\x0eidempotencyKey\"o\n" +
+	"\x17ListAdminActionsRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"k\n" +
 	"\x18ListAdminActionsResponse\x129\n" +
 	"\x05items\x18\x01 \x03(\v2#.user.administration.v1.AdminActionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa3\x06\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xfa\x05\n" +
 	"\x0eSecurityNotice\x12\x1b\n" +
-	"\tnotice_no\x18\x01 \x01(\tR\bnoticeNo\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\tnotice_no\x18\x01 \x01(\tR\bnoticeNo\x12\x17\n" +
 	"\auser_id\x18\x03 \x01(\x04R\x06userId\x12>\n" +
 	"\x04type\x18\x04 \x01(\x0e2*.user.administration.v1.SecurityNoticeTypeR\x04type\x12Z\n" +
 	"\x0erecipient_role\x18\x05 \x01(\x0e23.user.administration.v1.SecurityNoticeRecipientRoleR\rrecipientRole\x12#\n" +
@@ -1500,24 +1393,21 @@ const file_user_administration_v1_security_proto_rawDesc = "" +
 	"attempt_no\x18\x10 \x01(\rR\tattemptNo\x12\x1e\n" +
 	"\n" +
 	"resendable\x18\x11 \x01(\bR\n" +
-	"resendable\"\xb6\x01\n" +
-	"\x1aListSecurityNoticesRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"resendable\"~\n" +
+	"\x1aListSecurityNoticesRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"q\n" +
 	"\x1bListSecurityNoticesResponse\x12<\n" +
 	"\x05items\x18\x01 \x03(\v2&.user.administration.v1.SecurityNoticeR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\x84\x02\n" +
-	"\x1bResendSecurityNoticeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xcc\x01\n" +
+	"\x1bResendSecurityNoticeRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12)\n" +
 	"\tnotice_no\x18\x03 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x01\x18@R\bnoticeNo\x12%\n" +
 	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"v\n" +
-	"\x17GetSecurityStateRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\">\n" +
+	"\x17GetSecurityStateRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId*\x88\a\n" +
 	"\x12SecurityNoticeType\x12$\n" +
@@ -1601,63 +1491,51 @@ var file_user_administration_v1_security_proto_goTypes = []any{
 	(*ListSecurityNoticesResponse)(nil),   // 16: user.administration.v1.ListSecurityNoticesResponse
 	(*ResendSecurityNoticeRequest)(nil),   // 17: user.administration.v1.ResendSecurityNoticeRequest
 	(*GetSecurityStateRequest)(nil),       // 18: user.administration.v1.GetSecurityStateRequest
-	(v1.AppId)(0),                         // 19: common.v1.AppId
-	(*v11.PagingRequest)(nil),             // 20: common.pagination.v1.PagingRequest
-	(*SecurityEvent)(nil),                 // 21: user.administration.v1.SecurityEvent
-	(*AdminAction)(nil),                   // 22: user.administration.v1.AdminAction
-	(*timestamppb.Timestamp)(nil),         // 23: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                 // 24: google.protobuf.Empty
-	(*SecurityState)(nil),                 // 25: user.administration.v1.SecurityState
+	(*v1.PagingRequest)(nil),              // 19: common.pagination.v1.PagingRequest
+	(*SecurityEvent)(nil),                 // 20: user.administration.v1.SecurityEvent
+	(*AdminAction)(nil),                   // 21: user.administration.v1.AdminAction
+	(*timestamppb.Timestamp)(nil),         // 22: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                 // 23: google.protobuf.Empty
+	(*SecurityState)(nil),                 // 24: user.administration.v1.SecurityState
 }
 var file_user_administration_v1_security_proto_depIdxs = []int32{
-	19, // 0: user.administration.v1.EnrollMFARequest.app_id:type_name -> common.v1.AppId
-	19, // 1: user.administration.v1.ConfirmMFARequest.app_id:type_name -> common.v1.AppId
-	19, // 2: user.administration.v1.DisableMFARequest.app_id:type_name -> common.v1.AppId
-	19, // 3: user.administration.v1.GenerateRecoveryCodesRequest.app_id:type_name -> common.v1.AppId
-	19, // 4: user.administration.v1.ListSecurityEventsRequest.app_id:type_name -> common.v1.AppId
-	20, // 5: user.administration.v1.ListSecurityEventsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	21, // 6: user.administration.v1.ListSecurityEventsResponse.items:type_name -> user.administration.v1.SecurityEvent
-	19, // 7: user.administration.v1.UnlockUserRequest.app_id:type_name -> common.v1.AppId
-	19, // 8: user.administration.v1.ListAdminActionsRequest.app_id:type_name -> common.v1.AppId
-	20, // 9: user.administration.v1.ListAdminActionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	22, // 10: user.administration.v1.ListAdminActionsResponse.items:type_name -> user.administration.v1.AdminAction
-	19, // 11: user.administration.v1.SecurityNotice.app_id:type_name -> common.v1.AppId
-	0,  // 12: user.administration.v1.SecurityNotice.type:type_name -> user.administration.v1.SecurityNoticeType
-	1,  // 13: user.administration.v1.SecurityNotice.recipient_role:type_name -> user.administration.v1.SecurityNoticeRecipientRole
-	2,  // 14: user.administration.v1.SecurityNotice.status:type_name -> user.administration.v1.SecurityNoticeStatus
-	23, // 15: user.administration.v1.SecurityNotice.created_at:type_name -> google.protobuf.Timestamp
-	23, // 16: user.administration.v1.SecurityNotice.updated_at:type_name -> google.protobuf.Timestamp
-	23, // 17: user.administration.v1.SecurityNotice.completed_at:type_name -> google.protobuf.Timestamp
-	19, // 18: user.administration.v1.ListSecurityNoticesRequest.app_id:type_name -> common.v1.AppId
-	20, // 19: user.administration.v1.ListSecurityNoticesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	14, // 20: user.administration.v1.ListSecurityNoticesResponse.items:type_name -> user.administration.v1.SecurityNotice
-	19, // 21: user.administration.v1.ResendSecurityNoticeRequest.app_id:type_name -> common.v1.AppId
-	19, // 22: user.administration.v1.GetSecurityStateRequest.app_id:type_name -> common.v1.AppId
-	3,  // 23: user.administration.v1.UserSecurityService.EnrollMFA:input_type -> user.administration.v1.EnrollMFARequest
-	5,  // 24: user.administration.v1.UserSecurityService.ConfirmMFA:input_type -> user.administration.v1.ConfirmMFARequest
-	6,  // 25: user.administration.v1.UserSecurityService.DisableMFA:input_type -> user.administration.v1.DisableMFARequest
-	7,  // 26: user.administration.v1.UserSecurityService.GenerateRecoveryCodes:input_type -> user.administration.v1.GenerateRecoveryCodesRequest
-	9,  // 27: user.administration.v1.UserSecurityService.ListSecurityEvents:input_type -> user.administration.v1.ListSecurityEventsRequest
-	11, // 28: user.administration.v1.UserSecurityService.UnlockUser:input_type -> user.administration.v1.UnlockUserRequest
-	12, // 29: user.administration.v1.UserSecurityService.ListAdminActions:input_type -> user.administration.v1.ListAdminActionsRequest
-	15, // 30: user.administration.v1.UserSecurityService.ListSecurityNotices:input_type -> user.administration.v1.ListSecurityNoticesRequest
-	17, // 31: user.administration.v1.UserSecurityService.ResendSecurityNotice:input_type -> user.administration.v1.ResendSecurityNoticeRequest
-	18, // 32: user.administration.v1.UserSecurityService.GetSecurityState:input_type -> user.administration.v1.GetSecurityStateRequest
-	4,  // 33: user.administration.v1.UserSecurityService.EnrollMFA:output_type -> user.administration.v1.EnrollMFAResponse
-	24, // 34: user.administration.v1.UserSecurityService.ConfirmMFA:output_type -> google.protobuf.Empty
-	24, // 35: user.administration.v1.UserSecurityService.DisableMFA:output_type -> google.protobuf.Empty
-	8,  // 36: user.administration.v1.UserSecurityService.GenerateRecoveryCodes:output_type -> user.administration.v1.GenerateRecoveryCodesResponse
-	10, // 37: user.administration.v1.UserSecurityService.ListSecurityEvents:output_type -> user.administration.v1.ListSecurityEventsResponse
-	24, // 38: user.administration.v1.UserSecurityService.UnlockUser:output_type -> google.protobuf.Empty
-	13, // 39: user.administration.v1.UserSecurityService.ListAdminActions:output_type -> user.administration.v1.ListAdminActionsResponse
-	16, // 40: user.administration.v1.UserSecurityService.ListSecurityNotices:output_type -> user.administration.v1.ListSecurityNoticesResponse
-	14, // 41: user.administration.v1.UserSecurityService.ResendSecurityNotice:output_type -> user.administration.v1.SecurityNotice
-	25, // 42: user.administration.v1.UserSecurityService.GetSecurityState:output_type -> user.administration.v1.SecurityState
-	33, // [33:43] is the sub-list for method output_type
-	23, // [23:33] is the sub-list for method input_type
-	23, // [23:23] is the sub-list for extension type_name
-	23, // [23:23] is the sub-list for extension extendee
-	0,  // [0:23] is the sub-list for field type_name
+	19, // 0: user.administration.v1.ListSecurityEventsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	20, // 1: user.administration.v1.ListSecurityEventsResponse.items:type_name -> user.administration.v1.SecurityEvent
+	19, // 2: user.administration.v1.ListAdminActionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	21, // 3: user.administration.v1.ListAdminActionsResponse.items:type_name -> user.administration.v1.AdminAction
+	0,  // 4: user.administration.v1.SecurityNotice.type:type_name -> user.administration.v1.SecurityNoticeType
+	1,  // 5: user.administration.v1.SecurityNotice.recipient_role:type_name -> user.administration.v1.SecurityNoticeRecipientRole
+	2,  // 6: user.administration.v1.SecurityNotice.status:type_name -> user.administration.v1.SecurityNoticeStatus
+	22, // 7: user.administration.v1.SecurityNotice.created_at:type_name -> google.protobuf.Timestamp
+	22, // 8: user.administration.v1.SecurityNotice.updated_at:type_name -> google.protobuf.Timestamp
+	22, // 9: user.administration.v1.SecurityNotice.completed_at:type_name -> google.protobuf.Timestamp
+	19, // 10: user.administration.v1.ListSecurityNoticesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	14, // 11: user.administration.v1.ListSecurityNoticesResponse.items:type_name -> user.administration.v1.SecurityNotice
+	3,  // 12: user.administration.v1.UserSecurityService.EnrollMFA:input_type -> user.administration.v1.EnrollMFARequest
+	5,  // 13: user.administration.v1.UserSecurityService.ConfirmMFA:input_type -> user.administration.v1.ConfirmMFARequest
+	6,  // 14: user.administration.v1.UserSecurityService.DisableMFA:input_type -> user.administration.v1.DisableMFARequest
+	7,  // 15: user.administration.v1.UserSecurityService.GenerateRecoveryCodes:input_type -> user.administration.v1.GenerateRecoveryCodesRequest
+	9,  // 16: user.administration.v1.UserSecurityService.ListSecurityEvents:input_type -> user.administration.v1.ListSecurityEventsRequest
+	11, // 17: user.administration.v1.UserSecurityService.UnlockUser:input_type -> user.administration.v1.UnlockUserRequest
+	12, // 18: user.administration.v1.UserSecurityService.ListAdminActions:input_type -> user.administration.v1.ListAdminActionsRequest
+	15, // 19: user.administration.v1.UserSecurityService.ListSecurityNotices:input_type -> user.administration.v1.ListSecurityNoticesRequest
+	17, // 20: user.administration.v1.UserSecurityService.ResendSecurityNotice:input_type -> user.administration.v1.ResendSecurityNoticeRequest
+	18, // 21: user.administration.v1.UserSecurityService.GetSecurityState:input_type -> user.administration.v1.GetSecurityStateRequest
+	4,  // 22: user.administration.v1.UserSecurityService.EnrollMFA:output_type -> user.administration.v1.EnrollMFAResponse
+	23, // 23: user.administration.v1.UserSecurityService.ConfirmMFA:output_type -> google.protobuf.Empty
+	23, // 24: user.administration.v1.UserSecurityService.DisableMFA:output_type -> google.protobuf.Empty
+	8,  // 25: user.administration.v1.UserSecurityService.GenerateRecoveryCodes:output_type -> user.administration.v1.GenerateRecoveryCodesResponse
+	10, // 26: user.administration.v1.UserSecurityService.ListSecurityEvents:output_type -> user.administration.v1.ListSecurityEventsResponse
+	23, // 27: user.administration.v1.UserSecurityService.UnlockUser:output_type -> google.protobuf.Empty
+	13, // 28: user.administration.v1.UserSecurityService.ListAdminActions:output_type -> user.administration.v1.ListAdminActionsResponse
+	16, // 29: user.administration.v1.UserSecurityService.ListSecurityNotices:output_type -> user.administration.v1.ListSecurityNoticesResponse
+	14, // 30: user.administration.v1.UserSecurityService.ResendSecurityNotice:output_type -> user.administration.v1.SecurityNotice
+	24, // 31: user.administration.v1.UserSecurityService.GetSecurityState:output_type -> user.administration.v1.SecurityState
+	22, // [22:32] is the sub-list for method output_type
+	12, // [12:22] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_security_proto_init() }

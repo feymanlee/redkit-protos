@@ -910,9 +910,9 @@ type CreateRoomRequest struct {
 	Description string `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	// cover_file_id 为封面 File ID 字符串。
 	CoverFileId string `protobuf:"bytes,5,opt,name=cover_file_id,json=coverFileId,proto3" json:"cover_file_id,omitempty"`
-	// seat_count 可空，空则用 App 默认。
+	// seat_count 可空，空则用平台默认。
 	SeatCount *uint32 `protobuf:"varint,6,opt,name=seat_count,json=seatCount,proto3,oneof" json:"seat_count,omitempty"`
-	// audience_limit 可空，空则用 App 默认。
+	// audience_limit 可空，空则用平台默认。
 	AudienceLimit *uint32 `protobuf:"varint,7,opt,name=audience_limit,json=audienceLimit,proto3,oneof" json:"audience_limit,omitempty"`
 	// idempotency_key 幂等键。
 	IdempotencyKey string `protobuf:"bytes,8,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`

@@ -11,8 +11,6 @@ import "google/protobuf/timestamp.proto";
 message GiftBackpackBalance {
   // 余额 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 礼物 ID。
@@ -41,8 +39,6 @@ message GiftBackpackBalance {
 message GiftBackpackBatch {
   // 批次 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 礼物 ID。
@@ -97,8 +93,6 @@ message GiftBackpackBatch {
 message GiftBackpackTransaction {
   // 流水 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 礼物 ID。
@@ -151,8 +145,6 @@ message GiftBackpackTransaction {
 message GiftBackpackTransactionItem {
   // 明细 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 背包流水 ID。
   optional uint64 transaction_id = 3;
   // 批次 ID。
@@ -240,9 +232,9 @@ enum BackpackAdjustmentDirection {
   BACKPACK_ADJUSTMENT_DIRECTION_DECREASE = 2;
 }
 
-// BackpackBalanceFilter requires an exact User identity inside the selected App.
+// BackpackBalanceFilter requires an exact User identity.
 message BackpackBalanceFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1;
   // gift_id 标识关联的 Gift。
   optional uint32 gift_id = 2;
@@ -250,7 +242,7 @@ message BackpackBalanceFilter {
 
 // BackpackBatchFilter contains bounded, typed workbench filters.
 message BackpackBatchFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1;
   // gift_id 标识关联的 Gift。
   optional uint32 gift_id = 2;
@@ -267,7 +259,7 @@ message BackpackBatchFilter {
 // BackpackTransactionFilter contains bounded, typed immutable-history filters.
 // user_id=0 selects all Users in the already-scoped App; non-zero selects one exact User.
 message BackpackTransactionFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1;
   // gift_id 标识关联的 Gift。
   optional uint32 gift_id = 2;
@@ -281,8 +273,6 @@ message BackpackTransactionFilter {
 
 // ListBackpackBalancesRequest 定义 BackpackBalances 的筛选与分页参数。
 message ListBackpackBalancesRequest {
-  // app_id 限定 ListBackpackBalances 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   BackpackBalanceFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -291,8 +281,6 @@ message ListBackpackBalancesRequest {
 
 // ListBackpackBatchesRequest 定义 BackpackBatches 的筛选与分页参数。
 message ListBackpackBatchesRequest {
-  // app_id 限定 ListBackpackBatches 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   BackpackBatchFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -301,8 +289,6 @@ message ListBackpackBatchesRequest {
 
 // ListBackpackTransactionsRequest 定义 BackpackTransactions 的筛选与分页参数。
 message ListBackpackTransactionsRequest {
-  // app_id 限定 ListBackpackTransactions 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   BackpackTransactionFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -311,8 +297,6 @@ message ListBackpackTransactionsRequest {
 
 // ListBackpackTransactionItemsRequest 定义 BackpackTransactionItems 的筛选与分页参数。
 message ListBackpackTransactionItemsRequest {
-  // app_id 限定 ListBackpackTransactionItems 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // transaction_id 标识关联的 Transaction。
   uint64 transaction_id = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -321,9 +305,7 @@ message ListBackpackTransactionItemsRequest {
 
 // AdjustBackpackGiftRequest performs one single-User, single-Gift corrective command.
 message AdjustBackpackGiftRequest {
-  // app_id 限定 AdjustBackpackGift 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // gift_id 标识关联的 Gift。
   uint32 gift_id = 3;
@@ -359,8 +341,6 @@ message AdjustBackpackGiftResponse {
 
 // 发放背包礼物请求。
 message GrantBackpackGiftRequest {
-  // 应用 ID。
-  optional common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 礼物 ID。
@@ -389,8 +369,6 @@ message GrantBackpackGiftRequest {
 
 // 扣回背包礼物请求。
 message RevokeBackpackGiftRequest {
-  // 应用 ID。
-  optional common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 礼物 ID。
@@ -417,8 +395,6 @@ message RevokeBackpackGiftRequest {
 
 // 处理过期背包礼物请求。
 message ExpireBackpackItemsRequest {
-  // 应用 ID；同步调用使用具体 App，省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 1;
   // 用户 ID，0 表示全部用户。
   optional uint64 user_id = 2;
   // 礼物 ID，0 表示全部礼物。

@@ -8,8 +8,7 @@ package userinternalpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -25,17 +24,15 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// UserReference 在内部服务间稳定引用当前 App 内的 User。
+// UserReference 在内部服务间稳定引用 User。
 type UserReference struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UserReference 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// user_code 提供 UserReference 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,4,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
 	// status 表示 UserReference 当前可观察的生命周期状态。
-	Status v11.UserStatus `protobuf:"varint,5,opt,name=status,proto3,enum=user.types.v1.UserStatus" json:"status,omitempty"`
+	Status v1.UserStatus `protobuf:"varint,5,opt,name=status,proto3,enum=user.types.v1.UserStatus" json:"status,omitempty"`
 	// can_initiate_business 显式表示 UserReference 是否满足该条件。
 	CanInitiateBusiness bool `protobuf:"varint,6,opt,name=can_initiate_business,json=canInitiateBusiness,proto3" json:"can_initiate_business,omitempty"`
 	// can_receive_business 显式表示 UserReference 是否满足该条件。
@@ -74,13 +71,6 @@ func (*UserReference) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_identity_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *UserReference) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UserReference) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -95,11 +85,11 @@ func (x *UserReference) GetUserCode() string {
 	return ""
 }
 
-func (x *UserReference) GetStatus() v11.UserStatus {
+func (x *UserReference) GetStatus() v1.UserStatus {
 	if x != nil {
 		return x.Status
 	}
-	return v11.UserStatus(0)
+	return v1.UserStatus(0)
 }
 
 func (x *UserReference) GetCanInitiateBusiness() bool {
@@ -119,9 +109,7 @@ func (x *UserReference) GetCanReceiveBusiness() bool {
 // ResolveUserIdentityRequest 定义处置 UserIdentity 的命令参数。
 type ResolveUserIdentityRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResolveUserIdentity 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -155,13 +143,6 @@ func (x *ResolveUserIdentityRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ResolveUserIdentityRequest.ProtoReflect.Descriptor instead.
 func (*ResolveUserIdentityRequest) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_identity_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ResolveUserIdentityRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ResolveUserIdentityRequest) GetUserId() uint64 {
@@ -220,8 +201,6 @@ func (x *ResolveUserIdentityResponse) GetUser() *UserReference {
 // BatchResolveUsersRequest 定义执行 BatchResolveUsers 的命令参数。
 type BatchResolveUsersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BatchResolveUsers 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// user_ids 列出本次请求关联的 User 标识。
 	UserIds       []uint64 `protobuf:"varint,2,rep,packed,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -256,13 +235,6 @@ func (x *BatchResolveUsersRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use BatchResolveUsersRequest.ProtoReflect.Descriptor instead.
 func (*BatchResolveUsersRequest) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_identity_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *BatchResolveUsersRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *BatchResolveUsersRequest) GetUserIds() []uint64 {
@@ -321,8 +293,6 @@ func (x *BatchResolveUsersResponse) GetItems() []*UserReference {
 // BatchGetPublicProfilesRequest 定义执行 BatchGetPublicProfiles 的命令参数。
 type BatchGetPublicProfilesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BatchGetPublicProfiles 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// user_ids 列出本次请求关联的 User 标识。
 	UserIds       []uint64 `protobuf:"varint,2,rep,packed,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -359,13 +329,6 @@ func (*BatchGetPublicProfilesRequest) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_identity_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *BatchGetPublicProfilesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *BatchGetPublicProfilesRequest) GetUserIds() []uint64 {
 	if x != nil {
 		return x.UserIds
@@ -377,7 +340,7 @@ func (x *BatchGetPublicProfilesRequest) GetUserIds() []uint64 {
 type BatchGetPublicProfilesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// items 包含本次返回或处理的业务条目。
-	Items         []*v11.PublicProfile `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Items         []*v1.PublicProfile `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -412,7 +375,7 @@ func (*BatchGetPublicProfilesResponse) Descriptor() ([]byte, []int) {
 	return file_user_internal_v1_identity_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *BatchGetPublicProfilesResponse) GetItems() []*v11.PublicProfile {
+func (x *BatchGetPublicProfilesResponse) GetItems() []*v1.PublicProfile {
 	if x != nil {
 		return x.Items
 	}
@@ -423,27 +386,23 @@ var File_user_internal_v1_identity_proto protoreflect.FileDescriptor
 
 const file_user_internal_v1_identity_proto_rawDesc = "" +
 	"\n" +
-	"\x1fuser/internal/v1/identity.proto\x12\x10user.internal.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xa0\x02\n" +
-	"\rUserReference\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x1fuser/internal/v1/identity.proto\x12\x10user.internal.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"\xf7\x01\n" +
+	"\rUserReference\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tuser_code\x18\x04 \x01(\tR\buserCode\x121\n" +
 	"\x06status\x18\x05 \x01(\x0e2\x19.user.types.v1.UserStatusR\x06status\x122\n" +
 	"\x15can_initiate_business\x18\x06 \x01(\bR\x13canInitiateBusiness\x120\n" +
-	"\x14can_receive_business\x18\a \x01(\bR\x12canReceiveBusinessJ\x04\b\x03\x10\x04R\x11canonical_user_id\"y\n" +
-	"\x1aResolveUserIdentityRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x14can_receive_business\x18\a \x01(\bR\x12canReceiveBusinessJ\x04\b\x03\x10\x04R\x11canonical_user_id\"A\n" +
+	"\x1aResolveUserIdentityRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"R\n" +
 	"\x1bResolveUserIdentityResponse\x123\n" +
-	"\x04user\x18\x01 \x01(\v2\x1f.user.internal.v1.UserReferenceR\x04user\"\x85\x01\n" +
-	"\x18BatchResolveUsersRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\x04user\x18\x01 \x01(\v2\x1f.user.internal.v1.UserReferenceR\x04user\"M\n" +
+	"\x18BatchResolveUsersRequest\x121\n" +
 	"\buser_ids\x18\x02 \x03(\x04B\x16\xe0A\x02\xfaB\x10\x92\x01\r\b\x01\x10\xc8\x01\x18\x01\"\x042\x02 \x00R\auserIds\"R\n" +
 	"\x19BatchResolveUsersResponse\x125\n" +
-	"\x05items\x18\x01 \x03(\v2\x1f.user.internal.v1.UserReferenceR\x05items\"\x8a\x01\n" +
-	"\x1dBatchGetPublicProfilesRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\x05items\x18\x01 \x03(\v2\x1f.user.internal.v1.UserReferenceR\x05items\"R\n" +
+	"\x1dBatchGetPublicProfilesRequest\x121\n" +
 	"\buser_ids\x18\x02 \x03(\x04B\x16\xe0A\x02\xfaB\x10\x92\x01\r\b\x01\x10\xc8\x01\x18\x01\"\x042\x02 \x00R\auserIds\"T\n" +
 	"\x1eBatchGetPublicProfilesResponse\x122\n" +
 	"\x05items\x18\x01 \x03(\v2\x1c.user.types.v1.PublicProfileR\x05items2\xf9\x02\n" +
@@ -474,30 +433,25 @@ var file_user_internal_v1_identity_proto_goTypes = []any{
 	(*BatchResolveUsersResponse)(nil),      // 4: user.internal.v1.BatchResolveUsersResponse
 	(*BatchGetPublicProfilesRequest)(nil),  // 5: user.internal.v1.BatchGetPublicProfilesRequest
 	(*BatchGetPublicProfilesResponse)(nil), // 6: user.internal.v1.BatchGetPublicProfilesResponse
-	(v1.AppId)(0),                          // 7: common.v1.AppId
-	(v11.UserStatus)(0),                    // 8: user.types.v1.UserStatus
-	(*v11.PublicProfile)(nil),              // 9: user.types.v1.PublicProfile
+	(v1.UserStatus)(0),                     // 7: user.types.v1.UserStatus
+	(*v1.PublicProfile)(nil),               // 8: user.types.v1.PublicProfile
 }
 var file_user_internal_v1_identity_proto_depIdxs = []int32{
-	7,  // 0: user.internal.v1.UserReference.app_id:type_name -> common.v1.AppId
-	8,  // 1: user.internal.v1.UserReference.status:type_name -> user.types.v1.UserStatus
-	7,  // 2: user.internal.v1.ResolveUserIdentityRequest.app_id:type_name -> common.v1.AppId
-	0,  // 3: user.internal.v1.ResolveUserIdentityResponse.user:type_name -> user.internal.v1.UserReference
-	7,  // 4: user.internal.v1.BatchResolveUsersRequest.app_id:type_name -> common.v1.AppId
-	0,  // 5: user.internal.v1.BatchResolveUsersResponse.items:type_name -> user.internal.v1.UserReference
-	7,  // 6: user.internal.v1.BatchGetPublicProfilesRequest.app_id:type_name -> common.v1.AppId
-	9,  // 7: user.internal.v1.BatchGetPublicProfilesResponse.items:type_name -> user.types.v1.PublicProfile
-	1,  // 8: user.internal.v1.UserIdentityQueryService.ResolveUserIdentity:input_type -> user.internal.v1.ResolveUserIdentityRequest
-	3,  // 9: user.internal.v1.UserIdentityQueryService.BatchResolveUsers:input_type -> user.internal.v1.BatchResolveUsersRequest
-	5,  // 10: user.internal.v1.UserIdentityQueryService.BatchGetPublicProfiles:input_type -> user.internal.v1.BatchGetPublicProfilesRequest
-	2,  // 11: user.internal.v1.UserIdentityQueryService.ResolveUserIdentity:output_type -> user.internal.v1.ResolveUserIdentityResponse
-	4,  // 12: user.internal.v1.UserIdentityQueryService.BatchResolveUsers:output_type -> user.internal.v1.BatchResolveUsersResponse
-	6,  // 13: user.internal.v1.UserIdentityQueryService.BatchGetPublicProfiles:output_type -> user.internal.v1.BatchGetPublicProfilesResponse
-	11, // [11:14] is the sub-list for method output_type
-	8,  // [8:11] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	7, // 0: user.internal.v1.UserReference.status:type_name -> user.types.v1.UserStatus
+	0, // 1: user.internal.v1.ResolveUserIdentityResponse.user:type_name -> user.internal.v1.UserReference
+	0, // 2: user.internal.v1.BatchResolveUsersResponse.items:type_name -> user.internal.v1.UserReference
+	8, // 3: user.internal.v1.BatchGetPublicProfilesResponse.items:type_name -> user.types.v1.PublicProfile
+	1, // 4: user.internal.v1.UserIdentityQueryService.ResolveUserIdentity:input_type -> user.internal.v1.ResolveUserIdentityRequest
+	3, // 5: user.internal.v1.UserIdentityQueryService.BatchResolveUsers:input_type -> user.internal.v1.BatchResolveUsersRequest
+	5, // 6: user.internal.v1.UserIdentityQueryService.BatchGetPublicProfiles:input_type -> user.internal.v1.BatchGetPublicProfilesRequest
+	2, // 7: user.internal.v1.UserIdentityQueryService.ResolveUserIdentity:output_type -> user.internal.v1.ResolveUserIdentityResponse
+	4, // 8: user.internal.v1.UserIdentityQueryService.BatchResolveUsers:output_type -> user.internal.v1.BatchResolveUsersResponse
+	6, // 9: user.internal.v1.UserIdentityQueryService.BatchGetPublicProfiles:output_type -> user.internal.v1.BatchGetPublicProfilesResponse
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_user_internal_v1_identity_proto_init() }

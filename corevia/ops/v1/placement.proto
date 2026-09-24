@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package ops.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
@@ -22,13 +21,11 @@ enum PlacementKind {
   PLACEMENT_KIND_OTHER = 5;
 }
 
-// Placement 是 App 内由稳定 code 标识的运营投放位注册事实。
+// Placement 是由稳定 code 标识的运营投放位注册事实。
 message Placement {
-  // placement_id 是当前 App 内投放位的数字标识。
+  // placement_id 是投放位的数字标识。
   uint64 placement_id = 1;
-  // app_id 归属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // code 是 App 内稳定投放位代码，创建后不可修改。
+  // code 是稳定的投放位代码，创建后不可修改。
   string code = 3;
   // kind 是投放位形态。
   PlacementKind kind = 4;
@@ -44,7 +41,7 @@ message Placement {
   google.protobuf.Timestamp updated_at = 9;
 }
 
-// ListPlacementResponse 返回当前 App 的投放位列表。
+// ListPlacementResponse 返回投放位列表。
 message ListPlacementResponse {
   // items 是按 code 排序的投放位列表。
   repeated Placement items = 1;

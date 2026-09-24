@@ -33,15 +33,15 @@ const (
 //
 // UserRecoveryAdminService 暴露所选 App 的 Recovery 初审队列。
 type UserRecoveryAdminServiceClient interface {
-	// ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	ListRecoveryRequests(ctx context.Context, in *AdminListRecoveryRequestsRequest, opts ...grpc.CallOption) (*v1.ListRecoveryRequestsResponse, error)
-	// GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	GetRecoveryRequest(ctx context.Context, in *AdminGetRecoveryRequestRequest, opts ...grpc.CallOption) (*v1.RecoveryRequest, error)
-	// AcceptRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// AcceptRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	AcceptRecoveryRequest(ctx context.Context, in *AdminAcceptRecoveryRequestRequest, opts ...grpc.CallOption) (*v1.RecoveryRequest, error)
 	// ApproveRecoveryRequest 受 user:recovery:approve 控制；Grant 明文永不经过 Admin 边界。
 	ApproveRecoveryRequest(ctx context.Context, in *AdminApproveRecoveryRequestRequest, opts ...grpc.CallOption) (*v1.RecoveryRequest, error)
-	// RejectRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// RejectRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	RejectRecoveryRequest(ctx context.Context, in *AdminRejectRecoveryRequestRequest, opts ...grpc.CallOption) (*v1.RecoveryRequest, error)
 }
 
@@ -109,15 +109,15 @@ func (c *userRecoveryAdminServiceClient) RejectRecoveryRequest(ctx context.Conte
 //
 // UserRecoveryAdminService 暴露所选 App 的 Recovery 初审队列。
 type UserRecoveryAdminServiceServer interface {
-	// ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// ListRecoveryRequests 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	ListRecoveryRequests(context.Context, *AdminListRecoveryRequestsRequest) (*v1.ListRecoveryRequestsResponse, error)
-	// GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生 App scope。
+	// GetRecoveryRequest 受 user:recovery:view 控制，并从可信 Operator 上下文派生。
 	GetRecoveryRequest(context.Context, *AdminGetRecoveryRequestRequest) (*v1.RecoveryRequest, error)
-	// AcceptRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// AcceptRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	AcceptRecoveryRequest(context.Context, *AdminAcceptRecoveryRequestRequest) (*v1.RecoveryRequest, error)
 	// ApproveRecoveryRequest 受 user:recovery:approve 控制；Grant 明文永不经过 Admin 边界。
 	ApproveRecoveryRequest(context.Context, *AdminApproveRecoveryRequestRequest) (*v1.RecoveryRequest, error)
-	// RejectRecoveryRequest 受 user:recovery:review 控制；App 与 Operator 均从可信上下文派生。
+	// RejectRecoveryRequest 受 user:recovery:review 控制；Operator 从可信上下文派生。
 	RejectRecoveryRequest(context.Context, *AdminRejectRecoveryRequestRequest) (*v1.RecoveryRequest, error)
 	mustEmbedUnimplementedUserRecoveryAdminServiceServer()
 }

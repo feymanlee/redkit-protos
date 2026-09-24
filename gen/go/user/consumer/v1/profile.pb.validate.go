@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on ChangeUserCodeRequest with the rules
@@ -60,28 +56,6 @@ func (m *ChangeUserCodeRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ChangeUserCodeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ChangeUserCodeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ChangeUserCodeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetUserCode()); l < 3 || l > 20 {
 		err := ChangeUserCodeRequestValidationError{
@@ -195,10 +169,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ChangeUserCodeRequestValidationError{}
-
-var _ChangeUserCodeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ChangeUserCodeResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -382,28 +352,6 @@ func (m *GetCurrentUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _GetCurrentUserRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetCurrentUserRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetCurrentUserRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if len(errors) > 0 {
 		return GetCurrentUserRequestMultiError(errors)
 	}
@@ -483,10 +431,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetCurrentUserRequestValidationError{}
-
-var _GetCurrentUserRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on CurrentUser with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -834,28 +778,6 @@ func (m *UpdateProfileRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _UpdateProfileRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := UpdateProfileRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := UpdateProfileRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetData() == nil {
 		err := UpdateProfileRequestValidationError{
 			field:  "Data",
@@ -1027,10 +949,6 @@ var _ interface {
 	ErrorName() string
 } = UpdateProfileRequestValidationError{}
 
-var _UpdateProfileRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on GetPublicProfileRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1052,28 +970,6 @@ func (m *GetPublicProfileRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _GetPublicProfileRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetPublicProfileRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetPublicProfileRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	oneofQueryPresent := false
 	switch v := m.Query.(type) {
@@ -1218,7 +1114,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetPublicProfileRequestValidationError{}
-
-var _GetPublicProfileRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}

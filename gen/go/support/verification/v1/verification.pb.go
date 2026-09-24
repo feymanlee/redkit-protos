@@ -7,8 +7,8 @@
 package verificationpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -236,8 +236,6 @@ type VerificationAudit struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 审计记录 ID。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// App ID。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID，匿名流程为 0。
 	UserId uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 验证目标脱敏展示值。
@@ -319,13 +317,6 @@ func (x *VerificationAudit) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *VerificationAudit) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *VerificationAudit) GetUserId() uint64 {
@@ -478,8 +469,6 @@ func (x *VerificationAudit) GetMaxAttempts() uint32 {
 // SendCodeRequest 请求发送短信验证码。
 type SendCodeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// App ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID，匿名流程为 0。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// E.164 格式手机号。
@@ -524,13 +513,6 @@ func (x *SendCodeRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SendCodeRequest.ProtoReflect.Descriptor instead.
 func (*SendCodeRequest) Descriptor() ([]byte, []int) {
 	return file_support_verification_v1_verification_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *SendCodeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *SendCodeRequest) GetUserId() uint64 {
@@ -651,8 +633,6 @@ func (x *SendCodeResponse) GetResendAt() *timestamppb.Timestamp {
 // VerifyCodeRequest 请求校验验证码。
 type VerifyCodeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// App ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// E.164 格式手机号。
 	Phone string `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
 	// 验证用途。
@@ -695,13 +675,6 @@ func (x *VerifyCodeRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use VerifyCodeRequest.ProtoReflect.Descriptor instead.
 func (*VerifyCodeRequest) Descriptor() ([]byte, []int) {
 	return file_support_verification_v1_verification_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *VerifyCodeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *VerifyCodeRequest) GetPhone() string {
@@ -797,8 +770,6 @@ func (x *VerifyCodeResponse) GetExpiresAt() *timestamppb.Timestamp {
 // ConsumeVerificationTicketRequest 请求消费一次性验证票据。
 type ConsumeVerificationTicketRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// App ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// E.164 格式手机号。
 	Phone string `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
 	// 验证用途。
@@ -841,13 +812,6 @@ func (x *ConsumeVerificationTicketRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ConsumeVerificationTicketRequest.ProtoReflect.Descriptor instead.
 func (*ConsumeVerificationTicketRequest) Descriptor() ([]byte, []int) {
 	return file_support_verification_v1_verification_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ConsumeVerificationTicketRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ConsumeVerificationTicketRequest) GetPhone() string {
@@ -940,7 +904,7 @@ type VerificationAuditFilter struct {
 	Event *VerificationAuditEvent `protobuf:"varint,2,opt,name=event,proto3,enum=support.verification.v1.VerificationAuditEvent,oneof" json:"event,omitempty"`
 	// result 承载 VerificationAuditFilter 关联的 VerificationAuditResult。
 	Result *VerificationAuditResult `protobuf:"varint,3,opt,name=result,proto3,enum=support.verification.v1.VerificationAuditResult,oneof" json:"result,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,4,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// recipient_phone 承载按约定地区规则规范化的手机号码。
 	RecipientPhone string `protobuf:"bytes,5,opt,name=recipient_phone,json=recipientPhone,proto3" json:"recipient_phone,omitempty"`
@@ -1031,15 +995,13 @@ func (x *VerificationAuditFilter) GetCreatedTo() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListVerificationAuditsRequest carries App scope, typed filters, and bounded paging.
+// ListVerificationAuditsRequest carries typed filters and bounded paging.
 type ListVerificationAuditsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListVerificationAudits 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *VerificationAuditFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1074,13 +1036,6 @@ func (*ListVerificationAuditsRequest) Descriptor() ([]byte, []int) {
 	return file_support_verification_v1_verification_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListVerificationAuditsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListVerificationAuditsRequest) GetFilter() *VerificationAuditFilter {
 	if x != nil {
 		return x.Filter
@@ -1088,18 +1043,16 @@ func (x *ListVerificationAuditsRequest) GetFilter() *VerificationAuditFilter {
 	return nil
 }
 
-func (x *ListVerificationAuditsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListVerificationAuditsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
 	return nil
 }
 
-// GetVerificationAuditRequest selects one App-scoped audit fact.
+// GetVerificationAuditRequest selects one audit fact.
 type GetVerificationAuditRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetVerificationAudit 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// audit_id 标识关联的 Audit。
 	AuditId       uint64 `protobuf:"varint,2,opt,name=audit_id,json=auditId,proto3" json:"audit_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1136,13 +1089,6 @@ func (*GetVerificationAuditRequest) Descriptor() ([]byte, []int) {
 	return file_support_verification_v1_verification_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetVerificationAuditRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetVerificationAuditRequest) GetAuditId() uint64 {
 	if x != nil {
 		return x.AuditId
@@ -1153,8 +1099,6 @@ func (x *GetVerificationAuditRequest) GetAuditId() uint64 {
 // RevealVerificationRecipientPhoneRequest explicitly selects FULL display for one audit fact.
 type RevealVerificationRecipientPhoneRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevealVerificationRecipientPhone 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// audit_id 标识关联的 Audit。
 	AuditId       uint64 `protobuf:"varint,2,opt,name=audit_id,json=auditId,proto3" json:"audit_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1189,13 +1133,6 @@ func (x *RevealVerificationRecipientPhoneRequest) ProtoReflect() protoreflect.Me
 // Deprecated: Use RevealVerificationRecipientPhoneRequest.ProtoReflect.Descriptor instead.
 func (*RevealVerificationRecipientPhoneRequest) Descriptor() ([]byte, []int) {
 	return file_support_verification_v1_verification_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *RevealVerificationRecipientPhoneRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RevealVerificationRecipientPhoneRequest) GetAuditId() uint64 {
@@ -1319,10 +1256,9 @@ var File_support_verification_v1_verification_proto protoreflect.FileDescriptor
 
 const file_support_verification_v1_verification_proto_rawDesc = "" +
 	"\n" +
-	"*support/verification/v1/verification.proto\x12\x17support.verification.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xfc\a\n" +
+	"*support/verification/v1/verification.proto\x12\x17support.verification.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd3\a\n" +
 	"\x11VerificationAudit\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x17\n" +
 	"\auser_id\x18\x03 \x01(\x04R\x06userId\x12!\n" +
 	"\fmasked_phone\x18\x04 \x01(\tR\vmaskedPhone\x12F\n" +
 	"\apurpose\x18\x05 \x01(\x0e2,.support.verification.v1.VerificationPurposeR\apurpose\x12E\n" +
@@ -1349,9 +1285,8 @@ const file_support_verification_v1_verification_proto_rawDesc = "" +
 	"\x10code_ttl_seconds\x18\x14 \x01(\rR\x0ecodeTtlSeconds\x12,\n" +
 	"\x12ticket_ttl_seconds\x18\x15 \x01(\rR\x10ticketTtlSeconds\x12)\n" +
 	"\x10cooldown_seconds\x18\x16 \x01(\rR\x0fcooldownSeconds\x12!\n" +
-	"\fmax_attempts\x18\x17 \x01(\rR\vmaxAttempts\"\x91\x02\n" +
-	"\x0fSendCodeRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\fmax_attempts\x18\x17 \x01(\rR\vmaxAttempts\"\xe8\x01\n" +
+	"\x0fSendCodeRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x14\n" +
 	"\x05phone\x18\x03 \x01(\tR\x05phone\x12F\n" +
 	"\apurpose\x18\x04 \x01(\x0e2,.support.verification.v1.VerificationPurposeR\apurpose\x12\x1d\n" +
@@ -1364,9 +1299,8 @@ const file_support_verification_v1_verification_proto_rawDesc = "" +
 	"\fmasked_phone\x18\x02 \x01(\tR\vmaskedPhone\x129\n" +
 	"\n" +
 	"expires_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x127\n" +
-	"\tresend_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\bresendAt\"\xf0\x01\n" +
-	"\x11VerifyCodeRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x14\n" +
+	"\tresend_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\bresendAt\"\xc7\x01\n" +
+	"\x11VerifyCodeRequest\x12\x14\n" +
 	"\x05phone\x18\x02 \x01(\tR\x05phone\x12F\n" +
 	"\apurpose\x18\x03 \x01(\x0e2,.support.verification.v1.VerificationPurposeR\apurpose\x12\x12\n" +
 	"\x04code\x18\x04 \x01(\tR\x04code\x12!\n" +
@@ -1376,9 +1310,8 @@ const file_support_verification_v1_verification_proto_rawDesc = "" +
 	"\x12VerifyCodeResponse\x12/\n" +
 	"\x13verification_ticket\x18\x01 \x01(\tR\x12verificationTicket\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x9c\x02\n" +
-	" ConsumeVerificationTicketRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x14\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xf3\x01\n" +
+	" ConsumeVerificationTicketRequest\x12\x14\n" +
 	"\x05phone\x18\x02 \x01(\tR\x05phone\x12F\n" +
 	"\apurpose\x18\x03 \x01(\x0e2,.support.verification.v1.VerificationPurposeR\apurpose\x12/\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tR\x12verificationTicket\x12\x1d\n" +
@@ -1401,16 +1334,13 @@ const file_support_verification_v1_verification_proto_rawDesc = "" +
 	"\x06_eventB\t\n" +
 	"\a_resultB\n" +
 	"\n" +
-	"\b_user_id\"\xcf\x01\n" +
-	"\x1dListVerificationAuditsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12H\n" +
+	"\b_user_id\"\xa6\x01\n" +
+	"\x1dListVerificationAuditsRequest\x12H\n" +
 	"\x06filter\x18\x02 \x01(\v20.support.verification.v1.VerificationAuditFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"a\n" +
-	"\x1bGetVerificationAuditRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
-	"\baudit_id\x18\x02 \x01(\x04R\aauditId\"m\n" +
-	"'RevealVerificationRecipientPhoneRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"8\n" +
+	"\x1bGetVerificationAuditRequest\x12\x19\n" +
+	"\baudit_id\x18\x02 \x01(\x04R\aauditId\"D\n" +
+	"'RevealVerificationRecipientPhoneRequest\x12\x19\n" +
 	"\baudit_id\x18\x02 \x01(\x04R\aauditId\"n\n" +
 	"(RevealVerificationRecipientPhoneResponse\x12\x19\n" +
 	"\baudit_id\x18\x01 \x01(\x04R\aauditId\x12'\n" +
@@ -1483,53 +1413,45 @@ var file_support_verification_v1_verification_proto_goTypes = []any{
 	(*RevealVerificationRecipientPhoneRequest)(nil),  // 13: support.verification.v1.RevealVerificationRecipientPhoneRequest
 	(*RevealVerificationRecipientPhoneResponse)(nil), // 14: support.verification.v1.RevealVerificationRecipientPhoneResponse
 	(*ListVerificationAuditsResponse)(nil),           // 15: support.verification.v1.ListVerificationAuditsResponse
-	(v1.AppId)(0),                                    // 16: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),                    // 17: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),                        // 18: common.pagination.v1.PagingRequest
+	(*timestamppb.Timestamp)(nil),                    // 16: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),                         // 17: common.pagination.v1.PagingRequest
 }
 var file_support_verification_v1_verification_proto_depIdxs = []int32{
-	16, // 0: support.verification.v1.VerificationAudit.app_id:type_name -> common.v1.AppId
-	0,  // 1: support.verification.v1.VerificationAudit.purpose:type_name -> support.verification.v1.VerificationPurpose
-	1,  // 2: support.verification.v1.VerificationAudit.event:type_name -> support.verification.v1.VerificationAuditEvent
-	2,  // 3: support.verification.v1.VerificationAudit.result:type_name -> support.verification.v1.VerificationAuditResult
-	17, // 4: support.verification.v1.VerificationAudit.created_at:type_name -> google.protobuf.Timestamp
-	16, // 5: support.verification.v1.SendCodeRequest.app_id:type_name -> common.v1.AppId
-	0,  // 6: support.verification.v1.SendCodeRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
-	17, // 7: support.verification.v1.SendCodeResponse.expires_at:type_name -> google.protobuf.Timestamp
-	17, // 8: support.verification.v1.SendCodeResponse.resend_at:type_name -> google.protobuf.Timestamp
-	16, // 9: support.verification.v1.VerifyCodeRequest.app_id:type_name -> common.v1.AppId
-	0,  // 10: support.verification.v1.VerifyCodeRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
-	17, // 11: support.verification.v1.VerifyCodeResponse.expires_at:type_name -> google.protobuf.Timestamp
-	16, // 12: support.verification.v1.ConsumeVerificationTicketRequest.app_id:type_name -> common.v1.AppId
-	0,  // 13: support.verification.v1.ConsumeVerificationTicketRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
-	0,  // 14: support.verification.v1.VerificationAuditFilter.purpose:type_name -> support.verification.v1.VerificationPurpose
-	1,  // 15: support.verification.v1.VerificationAuditFilter.event:type_name -> support.verification.v1.VerificationAuditEvent
-	2,  // 16: support.verification.v1.VerificationAuditFilter.result:type_name -> support.verification.v1.VerificationAuditResult
-	17, // 17: support.verification.v1.VerificationAuditFilter.created_from:type_name -> google.protobuf.Timestamp
-	17, // 18: support.verification.v1.VerificationAuditFilter.created_to:type_name -> google.protobuf.Timestamp
-	16, // 19: support.verification.v1.ListVerificationAuditsRequest.app_id:type_name -> common.v1.AppId
-	10, // 20: support.verification.v1.ListVerificationAuditsRequest.filter:type_name -> support.verification.v1.VerificationAuditFilter
-	18, // 21: support.verification.v1.ListVerificationAuditsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	16, // 22: support.verification.v1.GetVerificationAuditRequest.app_id:type_name -> common.v1.AppId
-	16, // 23: support.verification.v1.RevealVerificationRecipientPhoneRequest.app_id:type_name -> common.v1.AppId
-	3,  // 24: support.verification.v1.ListVerificationAuditsResponse.items:type_name -> support.verification.v1.VerificationAudit
-	4,  // 25: support.verification.v1.VerificationService.SendCode:input_type -> support.verification.v1.SendCodeRequest
-	6,  // 26: support.verification.v1.VerificationService.VerifyCode:input_type -> support.verification.v1.VerifyCodeRequest
-	8,  // 27: support.verification.v1.VerificationService.ConsumeVerificationTicket:input_type -> support.verification.v1.ConsumeVerificationTicketRequest
-	11, // 28: support.verification.v1.VerificationService.ListVerificationAudits:input_type -> support.verification.v1.ListVerificationAuditsRequest
-	12, // 29: support.verification.v1.VerificationService.GetVerificationAudit:input_type -> support.verification.v1.GetVerificationAuditRequest
-	13, // 30: support.verification.v1.VerificationService.RevealVerificationRecipientPhone:input_type -> support.verification.v1.RevealVerificationRecipientPhoneRequest
-	5,  // 31: support.verification.v1.VerificationService.SendCode:output_type -> support.verification.v1.SendCodeResponse
-	7,  // 32: support.verification.v1.VerificationService.VerifyCode:output_type -> support.verification.v1.VerifyCodeResponse
-	9,  // 33: support.verification.v1.VerificationService.ConsumeVerificationTicket:output_type -> support.verification.v1.ConsumeVerificationTicketResponse
-	15, // 34: support.verification.v1.VerificationService.ListVerificationAudits:output_type -> support.verification.v1.ListVerificationAuditsResponse
-	3,  // 35: support.verification.v1.VerificationService.GetVerificationAudit:output_type -> support.verification.v1.VerificationAudit
-	14, // 36: support.verification.v1.VerificationService.RevealVerificationRecipientPhone:output_type -> support.verification.v1.RevealVerificationRecipientPhoneResponse
-	31, // [31:37] is the sub-list for method output_type
-	25, // [25:31] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	0,  // 0: support.verification.v1.VerificationAudit.purpose:type_name -> support.verification.v1.VerificationPurpose
+	1,  // 1: support.verification.v1.VerificationAudit.event:type_name -> support.verification.v1.VerificationAuditEvent
+	2,  // 2: support.verification.v1.VerificationAudit.result:type_name -> support.verification.v1.VerificationAuditResult
+	16, // 3: support.verification.v1.VerificationAudit.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 4: support.verification.v1.SendCodeRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
+	16, // 5: support.verification.v1.SendCodeResponse.expires_at:type_name -> google.protobuf.Timestamp
+	16, // 6: support.verification.v1.SendCodeResponse.resend_at:type_name -> google.protobuf.Timestamp
+	0,  // 7: support.verification.v1.VerifyCodeRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
+	16, // 8: support.verification.v1.VerifyCodeResponse.expires_at:type_name -> google.protobuf.Timestamp
+	0,  // 9: support.verification.v1.ConsumeVerificationTicketRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
+	0,  // 10: support.verification.v1.VerificationAuditFilter.purpose:type_name -> support.verification.v1.VerificationPurpose
+	1,  // 11: support.verification.v1.VerificationAuditFilter.event:type_name -> support.verification.v1.VerificationAuditEvent
+	2,  // 12: support.verification.v1.VerificationAuditFilter.result:type_name -> support.verification.v1.VerificationAuditResult
+	16, // 13: support.verification.v1.VerificationAuditFilter.created_from:type_name -> google.protobuf.Timestamp
+	16, // 14: support.verification.v1.VerificationAuditFilter.created_to:type_name -> google.protobuf.Timestamp
+	10, // 15: support.verification.v1.ListVerificationAuditsRequest.filter:type_name -> support.verification.v1.VerificationAuditFilter
+	17, // 16: support.verification.v1.ListVerificationAuditsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	3,  // 17: support.verification.v1.ListVerificationAuditsResponse.items:type_name -> support.verification.v1.VerificationAudit
+	4,  // 18: support.verification.v1.VerificationService.SendCode:input_type -> support.verification.v1.SendCodeRequest
+	6,  // 19: support.verification.v1.VerificationService.VerifyCode:input_type -> support.verification.v1.VerifyCodeRequest
+	8,  // 20: support.verification.v1.VerificationService.ConsumeVerificationTicket:input_type -> support.verification.v1.ConsumeVerificationTicketRequest
+	11, // 21: support.verification.v1.VerificationService.ListVerificationAudits:input_type -> support.verification.v1.ListVerificationAuditsRequest
+	12, // 22: support.verification.v1.VerificationService.GetVerificationAudit:input_type -> support.verification.v1.GetVerificationAuditRequest
+	13, // 23: support.verification.v1.VerificationService.RevealVerificationRecipientPhone:input_type -> support.verification.v1.RevealVerificationRecipientPhoneRequest
+	5,  // 24: support.verification.v1.VerificationService.SendCode:output_type -> support.verification.v1.SendCodeResponse
+	7,  // 25: support.verification.v1.VerificationService.VerifyCode:output_type -> support.verification.v1.VerifyCodeResponse
+	9,  // 26: support.verification.v1.VerificationService.ConsumeVerificationTicket:output_type -> support.verification.v1.ConsumeVerificationTicketResponse
+	15, // 27: support.verification.v1.VerificationService.ListVerificationAudits:output_type -> support.verification.v1.ListVerificationAuditsResponse
+	3,  // 28: support.verification.v1.VerificationService.GetVerificationAudit:output_type -> support.verification.v1.VerificationAudit
+	14, // 29: support.verification.v1.VerificationService.RevealVerificationRecipientPhone:output_type -> support.verification.v1.RevealVerificationRecipientPhoneResponse
+	24, // [24:30] is the sub-list for method output_type
+	18, // [18:24] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_support_verification_v1_verification_proto_init() }

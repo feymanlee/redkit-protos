@@ -13,10 +13,16 @@ help:
 	@echo "make publish-artifacts - copy OpenAPI/TS/api_catalog into corevia"
 	@echo "COREVIA_ROOT=$(COREVIA_ROOT)"
 
-check:
+check: check-single-app
 	@bash scripts/check_export_policy.sh
 	@cd corevia && buf lint
 	@cd corevia && buf build
+
+# 正向守卫：契约中不得再出现平台 App 身份（ADR 0075）
+check-single-app:
+	@tmp="$$(mktemp -d)"; trap 'rm -rf "$$tmp"' EXIT; \
+	cd corevia && buf build --as-file-descriptor-set -o "$$tmp/descriptor-set.bin"; \
+	cd "$(CURDIR)" && go run ./scripts/check_single_app_policy -descriptor-set "$$tmp/descriptor-set.bin"
 
 build: check
 	@cd examples/consumer/their && buf build

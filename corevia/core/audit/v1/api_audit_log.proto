@@ -34,12 +34,6 @@ message ApiAuditLog {
   // 接口审计日志ID。
   optional uint32 id = 1 [ (gnostic.openapi.v3.property) = {description: "接口审计日志ID"}]; // 接口审计日志ID
 
-  // AppID。
-  optional uint32 app_id = 2 [ (gnostic.openapi.v3.property) = {description: "AppID"}];  // AppID
-
-  // App名称。
-  optional string app_name = 3 [ (gnostic.openapi.v3.property) = {description: "App名称"}]; // App名称
-
   // 后台人员 ID。
   optional uint32 operator_id = 4 [ (gnostic.openapi.v3.property) = {description: "后台人员 ID"}];
 
@@ -131,7 +125,7 @@ message ApiAuditLog {
   optional string log_hash = 40 [ (gnostic.openapi.v3.property).description = "日志内容哈希（SHA256，十六进制字符串）"]; // 日志哈希
 
   // 日志数字签名。
-  optional bytes signature = 41 [ (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）"]; // 日志数字签名
+  optional bytes signature = 41 [ (gnostic.openapi.v3.property).description = "日志数字签名（ECDSA，签名内容：operator_id+created_at+log_hash）"]; // 日志数字签名
 
   // ========== 时间字段 ==========
 

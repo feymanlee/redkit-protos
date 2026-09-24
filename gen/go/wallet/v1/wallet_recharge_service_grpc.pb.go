@@ -47,13 +47,13 @@ const (
 //
 // 钱包充值服务。
 type WalletRechargeServiceClient interface {
-	// 查询当前 App 和 User 可购买的 Recharge Offer。
+	// 查询用户可购买的 Recharge Offer。
 	ListConsumerRechargeOffers(ctx context.Context, in *ListConsumerRechargeOffersRequest, opts ...grpc.CallOption) (*ListConsumerRechargeOffersResponse, error)
 	// 按 Purchase Request ID 创建或恢复权威 Recharge Order。
 	CreateOrGetConsumerRechargeOrder(ctx context.Context, in *CreateOrGetConsumerRechargeOrderRequest, opts ...grpc.CallOption) (*ConsumerRechargeOrder, error)
 	// 创建或恢复绑定精确 Store SKU 的 Recharge Purchase Action。
 	PrepareStoreRechargePurchase(ctx context.Context, in *PrepareStoreRechargePurchaseRequest, opts ...grpc.CallOption) (*StoreRechargePurchaseAction, error)
-	// 供 Payment 按可信 App/User/Purchase Request 重新加载权威 Recharge Order。
+	// 供 Payment 按可信 User 与 Purchase Request 重新加载权威 Recharge Order。
 	GetRechargeOrderForPayment(ctx context.Context, in *GetRechargeOrderForPaymentRequest, opts ...grpc.CallOption) (*RechargeOrderPaymentFact, error)
 	// 预处理充值退款并冻结待扣回虚拟币。
 	PrepareRechargeRefund(ctx context.Context, in *PrepareRechargeRefundRequest, opts ...grpc.CallOption) (*RechargeRefund, error)
@@ -279,13 +279,13 @@ func (c *walletRechargeServiceClient) MarkRechargeCreditFailed(ctx context.Conte
 //
 // 钱包充值服务。
 type WalletRechargeServiceServer interface {
-	// 查询当前 App 和 User 可购买的 Recharge Offer。
+	// 查询用户可购买的 Recharge Offer。
 	ListConsumerRechargeOffers(context.Context, *ListConsumerRechargeOffersRequest) (*ListConsumerRechargeOffersResponse, error)
 	// 按 Purchase Request ID 创建或恢复权威 Recharge Order。
 	CreateOrGetConsumerRechargeOrder(context.Context, *CreateOrGetConsumerRechargeOrderRequest) (*ConsumerRechargeOrder, error)
 	// 创建或恢复绑定精确 Store SKU 的 Recharge Purchase Action。
 	PrepareStoreRechargePurchase(context.Context, *PrepareStoreRechargePurchaseRequest) (*StoreRechargePurchaseAction, error)
-	// 供 Payment 按可信 App/User/Purchase Request 重新加载权威 Recharge Order。
+	// 供 Payment 按可信 User 与 Purchase Request 重新加载权威 Recharge Order。
 	GetRechargeOrderForPayment(context.Context, *GetRechargeOrderForPaymentRequest) (*RechargeOrderPaymentFact, error)
 	// 预处理充值退款并冻结待扣回虚拟币。
 	PrepareRechargeRefund(context.Context, *PrepareRechargeRefundRequest) (*RechargeRefund, error)

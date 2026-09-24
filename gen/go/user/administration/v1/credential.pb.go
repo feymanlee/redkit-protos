@@ -7,8 +7,8 @@
 package useradministrationpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -27,12 +27,10 @@ const (
 // ListCredentialsRequest 定义 Credentials 的筛选与分页参数。
 type ListCredentialsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListCredentials 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,13 +65,6 @@ func (*ListCredentialsRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_credential_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListCredentialsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListCredentialsRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -81,7 +72,7 @@ func (x *ListCredentialsRequest) GetUserId() uint64 {
 	return 0
 }
 
-func (x *ListCredentialsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListCredentialsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -164,9 +155,7 @@ func (x *ListCredentialsResponse) GetUsableItemIds() []uint64 {
 // BindCredentialRequest 定义绑定 Credential 的幂等管理命令参数。
 type BindCredentialRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BindCredential 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// type 区分 BindCredential 的业务类型。
 	Type CredentialType `protobuf:"varint,3,opt,name=type,proto3,enum=user.administration.v1.CredentialType" json:"type,omitempty"`
@@ -212,13 +201,6 @@ func (x *BindCredentialRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use BindCredentialRequest.ProtoReflect.Descriptor instead.
 func (*BindCredentialRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_credential_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *BindCredentialRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *BindCredentialRequest) GetUserId() uint64 {
@@ -273,9 +255,7 @@ func (x *BindCredentialRequest) GetIdempotencyKey() string {
 // UnbindCredentialRequest 定义解绑 Credential 的幂等管理命令参数。
 type UnbindCredentialRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UnbindCredential 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// credential_id 标识关联的 Credential。
 	CredentialId uint64 `protobuf:"varint,3,opt,name=credential_id,json=credentialId,proto3" json:"credential_id,omitempty"`
@@ -317,13 +297,6 @@ func (*UnbindCredentialRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_credential_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *UnbindCredentialRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *UnbindCredentialRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -355,9 +328,7 @@ func (x *UnbindCredentialRequest) GetIdempotencyKey() string {
 // ChangePasswordRequest 定义执行 ChangePassword 的幂等管理命令参数。
 type ChangePasswordRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ChangePassword 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// old_password 承载敏感凭据或校验材料，不得写入普通日志。
 	OldPassword string `protobuf:"bytes,3,opt,name=old_password,json=oldPassword,proto3" json:"old_password,omitempty"`
@@ -399,13 +370,6 @@ func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_credential_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ChangePasswordRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ChangePasswordRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -437,8 +401,6 @@ func (x *ChangePasswordRequest) GetIdempotencyKey() string {
 // ResetPasswordRequest 定义重置 Password 的幂等管理命令参数。
 type ResetPasswordRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResetPassword 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// identifier 记录外部系统用于定位当前资源的稳定标识。
 	Identifier string `protobuf:"bytes,2,opt,name=identifier,proto3" json:"identifier,omitempty"`
 	// new_password 承载敏感凭据或校验材料，不得写入普通日志。
@@ -481,13 +443,6 @@ func (*ResetPasswordRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_credential_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ResetPasswordRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ResetPasswordRequest) GetIdentifier() string {
 	if x != nil {
 		return x.Identifier
@@ -519,9 +474,7 @@ func (x *ResetPasswordRequest) GetIdempotencyKey() string {
 // ListCredentialPIIRequest 定义 CredentialPII 的筛选与分页参数。
 type ListCredentialPIIRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListCredentialPII 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason        string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -557,13 +510,6 @@ func (x *ListCredentialPIIRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListCredentialPIIRequest.ProtoReflect.Descriptor instead.
 func (*ListCredentialPIIRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_credential_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *ListCredentialPIIRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ListCredentialPIIRequest) GetUserId() uint64 {
@@ -630,18 +576,16 @@ var File_user_administration_v1_credential_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_credential_proto_rawDesc = "" +
 	"\n" +
-	"'user/administration/v1/credential.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\"user/administration/v1/types.proto\"\x97\x01\n" +
-	"\x16ListCredentialsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"'user/administration/v1/credential.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\"user/administration/v1/types.proto\"n\n" +
+	"\x16ListCredentialsRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xb4\x01\n" +
 	"\x17ListCredentialsResponse\x128\n" +
 	"\x05items\x18\x01 \x03(\v2\".user.administration.v1.CredentialR\x05items\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x04R\x05total\x12!\n" +
 	"\fusable_count\x18\x03 \x01(\x04R\vusableCount\x12&\n" +
-	"\x0fusable_item_ids\x18\x04 \x03(\x04R\rusableItemIds\"\xce\x02\n" +
-	"\x15BindCredentialRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fusable_item_ids\x18\x04 \x03(\x04R\rusableItemIds\"\xa5\x02\n" +
+	"\x15BindCredentialRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12:\n" +
 	"\x04type\x18\x03 \x01(\x0e2&.user.administration.v1.CredentialTypeR\x04type\x12\x1e\n" +
 	"\n" +
@@ -650,29 +594,25 @@ const file_user_administration_v1_credential_proto_rawDesc = "" +
 	"\x06secret\x18\x05 \x01(\tR\x06secret\x12/\n" +
 	"\x13verification_ticket\x18\x06 \x01(\tR\x12verificationTicket\x12%\n" +
 	"\x0eprovider_token\x18\a \x01(\tR\rproviderToken\x12'\n" +
-	"\x0fidempotency_key\x18\b \x01(\tR\x0eidempotencyKey\"\xda\x01\n" +
-	"\x17UnbindCredentialRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\b \x01(\tR\x0eidempotencyKey\"\xb1\x01\n" +
+	"\x17UnbindCredentialRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12#\n" +
 	"\rcredential_id\x18\x03 \x01(\x04R\fcredentialId\x12/\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tR\x12verificationTicket\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\xc8\x01\n" +
-	"\x15ChangePasswordRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\x9f\x01\n" +
+	"\x15ChangePasswordRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12!\n" +
 	"\fold_password\x18\x03 \x01(\tR\voldPassword\x12!\n" +
 	"\fnew_password\x18\x04 \x01(\tR\vnewPassword\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\xdc\x01\n" +
-	"\x14ResetPasswordRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1e\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"\xb3\x01\n" +
+	"\x14ResetPasswordRequest\x12\x1e\n" +
 	"\n" +
 	"identifier\x18\x02 \x01(\tR\n" +
 	"identifier\x12!\n" +
 	"\fnew_password\x18\x03 \x01(\tR\vnewPassword\x12/\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tR\x12verificationTicket\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"t\n" +
-	"\x18ListCredentialPIIRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"K\n" +
+	"\x18ListCredentialPIIRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\"X\n" +
 	"\x19ListCredentialPIIResponse\x12;\n" +
@@ -708,41 +648,34 @@ var file_user_administration_v1_credential_proto_goTypes = []any{
 	(*ResetPasswordRequest)(nil),      // 5: user.administration.v1.ResetPasswordRequest
 	(*ListCredentialPIIRequest)(nil),  // 6: user.administration.v1.ListCredentialPIIRequest
 	(*ListCredentialPIIResponse)(nil), // 7: user.administration.v1.ListCredentialPIIResponse
-	(v1.AppId)(0),                     // 8: common.v1.AppId
-	(*v11.PagingRequest)(nil),         // 9: common.pagination.v1.PagingRequest
-	(*Credential)(nil),                // 10: user.administration.v1.Credential
-	(CredentialType)(0),               // 11: user.administration.v1.CredentialType
-	(*CredentialPII)(nil),             // 12: user.administration.v1.CredentialPII
-	(*emptypb.Empty)(nil),             // 13: google.protobuf.Empty
+	(*v1.PagingRequest)(nil),          // 8: common.pagination.v1.PagingRequest
+	(*Credential)(nil),                // 9: user.administration.v1.Credential
+	(CredentialType)(0),               // 10: user.administration.v1.CredentialType
+	(*CredentialPII)(nil),             // 11: user.administration.v1.CredentialPII
+	(*emptypb.Empty)(nil),             // 12: google.protobuf.Empty
 }
 var file_user_administration_v1_credential_proto_depIdxs = []int32{
-	8,  // 0: user.administration.v1.ListCredentialsRequest.app_id:type_name -> common.v1.AppId
-	9,  // 1: user.administration.v1.ListCredentialsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	10, // 2: user.administration.v1.ListCredentialsResponse.items:type_name -> user.administration.v1.Credential
-	8,  // 3: user.administration.v1.BindCredentialRequest.app_id:type_name -> common.v1.AppId
-	11, // 4: user.administration.v1.BindCredentialRequest.type:type_name -> user.administration.v1.CredentialType
-	8,  // 5: user.administration.v1.UnbindCredentialRequest.app_id:type_name -> common.v1.AppId
-	8,  // 6: user.administration.v1.ChangePasswordRequest.app_id:type_name -> common.v1.AppId
-	8,  // 7: user.administration.v1.ResetPasswordRequest.app_id:type_name -> common.v1.AppId
-	8,  // 8: user.administration.v1.ListCredentialPIIRequest.app_id:type_name -> common.v1.AppId
-	12, // 9: user.administration.v1.ListCredentialPIIResponse.items:type_name -> user.administration.v1.CredentialPII
-	0,  // 10: user.administration.v1.UserCredentialService.ListCredentials:input_type -> user.administration.v1.ListCredentialsRequest
-	2,  // 11: user.administration.v1.UserCredentialService.BindCredential:input_type -> user.administration.v1.BindCredentialRequest
-	3,  // 12: user.administration.v1.UserCredentialService.UnbindCredential:input_type -> user.administration.v1.UnbindCredentialRequest
-	4,  // 13: user.administration.v1.UserCredentialService.ChangePassword:input_type -> user.administration.v1.ChangePasswordRequest
-	5,  // 14: user.administration.v1.UserCredentialService.ResetPassword:input_type -> user.administration.v1.ResetPasswordRequest
-	6,  // 15: user.administration.v1.UserCredentialService.ListCredentialPII:input_type -> user.administration.v1.ListCredentialPIIRequest
-	1,  // 16: user.administration.v1.UserCredentialService.ListCredentials:output_type -> user.administration.v1.ListCredentialsResponse
-	10, // 17: user.administration.v1.UserCredentialService.BindCredential:output_type -> user.administration.v1.Credential
-	13, // 18: user.administration.v1.UserCredentialService.UnbindCredential:output_type -> google.protobuf.Empty
-	13, // 19: user.administration.v1.UserCredentialService.ChangePassword:output_type -> google.protobuf.Empty
-	13, // 20: user.administration.v1.UserCredentialService.ResetPassword:output_type -> google.protobuf.Empty
-	7,  // 21: user.administration.v1.UserCredentialService.ListCredentialPII:output_type -> user.administration.v1.ListCredentialPIIResponse
-	16, // [16:22] is the sub-list for method output_type
-	10, // [10:16] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	8,  // 0: user.administration.v1.ListCredentialsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	9,  // 1: user.administration.v1.ListCredentialsResponse.items:type_name -> user.administration.v1.Credential
+	10, // 2: user.administration.v1.BindCredentialRequest.type:type_name -> user.administration.v1.CredentialType
+	11, // 3: user.administration.v1.ListCredentialPIIResponse.items:type_name -> user.administration.v1.CredentialPII
+	0,  // 4: user.administration.v1.UserCredentialService.ListCredentials:input_type -> user.administration.v1.ListCredentialsRequest
+	2,  // 5: user.administration.v1.UserCredentialService.BindCredential:input_type -> user.administration.v1.BindCredentialRequest
+	3,  // 6: user.administration.v1.UserCredentialService.UnbindCredential:input_type -> user.administration.v1.UnbindCredentialRequest
+	4,  // 7: user.administration.v1.UserCredentialService.ChangePassword:input_type -> user.administration.v1.ChangePasswordRequest
+	5,  // 8: user.administration.v1.UserCredentialService.ResetPassword:input_type -> user.administration.v1.ResetPasswordRequest
+	6,  // 9: user.administration.v1.UserCredentialService.ListCredentialPII:input_type -> user.administration.v1.ListCredentialPIIRequest
+	1,  // 10: user.administration.v1.UserCredentialService.ListCredentials:output_type -> user.administration.v1.ListCredentialsResponse
+	9,  // 11: user.administration.v1.UserCredentialService.BindCredential:output_type -> user.administration.v1.Credential
+	12, // 12: user.administration.v1.UserCredentialService.UnbindCredential:output_type -> google.protobuf.Empty
+	12, // 13: user.administration.v1.UserCredentialService.ChangePassword:output_type -> google.protobuf.Empty
+	12, // 14: user.administration.v1.UserCredentialService.ResetPassword:output_type -> google.protobuf.Empty
+	7,  // 15: user.administration.v1.UserCredentialService.ListCredentialPII:output_type -> user.administration.v1.ListCredentialPIIResponse
+	10, // [10:16] is the sub-list for method output_type
+	4,  // [4:10] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_credential_proto_init() }

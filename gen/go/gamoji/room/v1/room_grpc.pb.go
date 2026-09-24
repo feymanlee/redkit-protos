@@ -47,7 +47,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // RoomService 是 Gamoji C 端语聊房入口 REST 契约（路径以本 proto 的 google.api.http 为唯一事实源）。
-// App 由 gamoji-bff 部署配置固定注入；客户端不自报 app_id。送礼仍调用既有 Gift 接口（scene_type=ROOM）。
+// 客户端不携带 App 身份；送礼仍调用既有 Gift 接口（scene_type=ROOM）。
 type RoomServiceClient interface {
 	// CreateRoom 创建房间。
 	CreateRoom(ctx context.Context, in *CreateRoomRequest, opts ...grpc.CallOption) (*RoomView, error)
@@ -316,7 +316,7 @@ func (c *roomServiceClient) RemoveModerator(ctx context.Context, in *ModeratorRe
 // for forward compatibility.
 //
 // RoomService 是 Gamoji C 端语聊房入口 REST 契约（路径以本 proto 的 google.api.http 为唯一事实源）。
-// App 由 gamoji-bff 部署配置固定注入；客户端不自报 app_id。送礼仍调用既有 Gift 接口（scene_type=ROOM）。
+// 客户端不携带 App 身份；送礼仍调用既有 Gift 接口（scene_type=ROOM）。
 type RoomServiceServer interface {
 	// CreateRoom 创建房间。
 	CreateRoom(context.Context, *CreateRoomRequest) (*RoomView, error)

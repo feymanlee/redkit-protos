@@ -27,8 +27,6 @@ message WalletAdjustment {
   }
   // 调账 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 调账币种。
@@ -64,8 +62,6 @@ message WalletAdjustment {
 }
 // 创建人工调账请求。
 message CreateWalletAdjustmentRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // 用户 ID。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED];
   // 调账币种。
@@ -90,8 +86,6 @@ message ReviewWalletAdjustmentRequest {
   uint32 reviewer_id = 2 [(google.api.field_behavior) = REQUIRED];
   // 审批备注。
   optional string review_note = 3;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 4;
   // Trusted governance identity for the review.
   optional WalletGovernanceIdentity governance = 5;
 }
@@ -102,8 +96,6 @@ message WithdrawWalletAdjustmentRequest {
   uint64 adjustment_id = 1 [(google.api.field_behavior) = REQUIRED];
   // requester_id 标识关联的 Requester。
   uint32 requester_id = 2 [(google.api.field_behavior) = REQUIRED];
-  // app_id 限定 WithdrawWalletAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 3;
   // governance 承载 WithdrawWalletAdjustment 关联的 WalletGovernanceIdentity。
   optional WalletGovernanceIdentity governance = 4;
 }
@@ -114,7 +106,7 @@ message WalletAdjustmentFilter {
   optional WalletAdjustment.Status status = 1;
   // requester_id 标识关联的 Requester。
   optional uint32 requester_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3;
   // 仅返回创建时间早于当前时间减去该秒数的申请。
   optional uint64 minimum_age_seconds = 4;
@@ -122,8 +114,6 @@ message WalletAdjustmentFilter {
 
 // 查询人工调账申请。
 message ListWalletAdjustmentsRequest {
-  // app_id 限定 ListWalletAdjustments 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
   // filter 限定本次查询采用的筛选条件。

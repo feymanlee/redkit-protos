@@ -149,8 +149,6 @@ func (Operator_Status) EnumDescriptor() ([]byte, []int) {
 // ListOperatorsRequest 定义 Operators 的筛选与分页参数。
 type ListOperatorsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListOperators 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -187,13 +185,6 @@ func (*ListOperatorsRequest) Descriptor() ([]byte, []int) {
 	return file_core_operator_v1_operator_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ListOperatorsRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
-}
-
 func (x *ListOperatorsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
@@ -204,8 +195,6 @@ func (x *ListOperatorsRequest) GetPaging() *v1.PagingRequest {
 // CountOperatorsRequest 定义执行 CountOperators 的命令参数。
 type CountOperatorsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CountOperators 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -242,13 +231,6 @@ func (*CountOperatorsRequest) Descriptor() ([]byte, []int) {
 	return file_core_operator_v1_operator_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CountOperatorsRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
-	}
-	return 0
-}
-
 func (x *CountOperatorsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
@@ -261,10 +243,6 @@ type Operator struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 后台人员ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 后台人员ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
-	// App名称。
-	AppName *string `protobuf:"bytes,3,opt,name=app_name,json=appName,proto3,oneof" json:"app_name,omitempty"` // App名称
 	// 角色ID。
 	RoleId *uint32 `protobuf:"varint,12,opt,name=role_id,json=roleId,proto3,oneof" json:"role_id,omitempty"` // 角色ID
 	// 角色ID列表。
@@ -368,20 +346,6 @@ func (x *Operator) GetId() uint32 {
 		return *x.Id
 	}
 	return 0
-}
-
-func (x *Operator) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *Operator) GetAppName() string {
-	if x != nil && x.AppName != nil {
-		return *x.AppName
-	}
-	return ""
 }
 
 func (x *Operator) GetRoleId() uint32 {
@@ -608,7 +572,7 @@ func (x *Operator) GetDeletedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// Self-service profile data. Operator, App, status, roles, and credentials are
+// Self-service profile data. Operator, status, roles, and credentials are
 // intentionally absent and are mutated only through administrative commands.
 type OperatorProfile struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -741,8 +705,6 @@ type UpdateOperatorProfileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
-	// app_id 限定 UpdateOperatorProfile 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// data 承载 UpdateOperatorProfile 对应阶段的结构化业务内容。
 	Data *OperatorProfile `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 	// update_mask 指定本次请求允许局部更新的字段路径。
@@ -784,13 +746,6 @@ func (*UpdateOperatorProfileRequest) Descriptor() ([]byte, []int) {
 func (x *UpdateOperatorProfileRequest) GetOperatorId() uint32 {
 	if x != nil {
 		return x.OperatorId
-	}
-	return 0
-}
-
-func (x *UpdateOperatorProfileRequest) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -875,9 +830,7 @@ type GetOperatorRequest struct {
 	//	*GetOperatorRequest_Username
 	QueryBy isGetOperatorRequest_QueryBy `protobuf_oneof:"query_by"`
 	// 读取字段掩码。
-	ViewMask *fieldmaskpb.FieldMask `protobuf:"bytes,100,opt,name=view_mask,json=viewMask,proto3,oneof" json:"view_mask,omitempty"` // 视图字段过滤器，用于控制返回的字段
-	// app_id 限定 GetOperator 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *uint32 `protobuf:"varint,40,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	ViewMask      *fieldmaskpb.FieldMask `protobuf:"bytes,100,opt,name=view_mask,json=viewMask,proto3,oneof" json:"view_mask,omitempty"` // 视图字段过滤器，用于控制返回的字段
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -942,13 +895,6 @@ func (x *GetOperatorRequest) GetViewMask() *fieldmaskpb.FieldMask {
 		return x.ViewMask
 	}
 	return nil
-}
-
-func (x *GetOperatorRequest) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
 }
 
 type isGetOperatorRequest_QueryBy interface {
@@ -1108,9 +1054,7 @@ type DeleteOperatorRequest struct {
 	//	*DeleteOperatorRequest_Username
 	QueryBy isDeleteOperatorRequest_QueryBy `protobuf_oneof:"query_by"`
 	// 删除者后台人员ID。
-	DeletedBy *uint32 `protobuf:"varint,100,opt,name=deleted_by,json=deletedBy,proto3,oneof" json:"deleted_by,omitempty"` // 删除者后台人员ID
-	// Required App scope for the aggregate deletion.
-	AppId         *uint32 `protobuf:"varint,40,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	DeletedBy     *uint32 `protobuf:"varint,100,opt,name=deleted_by,json=deletedBy,proto3,oneof" json:"deleted_by,omitempty"` // 删除者后台人员ID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1177,13 +1121,6 @@ func (x *DeleteOperatorRequest) GetDeletedBy() uint32 {
 	return 0
 }
 
-func (x *DeleteOperatorRequest) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
 type isDeleteOperatorRequest_QueryBy interface {
 	isDeleteOperatorRequest_QueryBy()
 }
@@ -1211,9 +1148,7 @@ type OperatorExistsRequest struct {
 	//
 	//	*OperatorExistsRequest_Id
 	//	*OperatorExistsRequest_Username
-	QueryBy isOperatorExistsRequest_QueryBy `protobuf_oneof:"query_by"`
-	// app_id 限定 OperatorExists 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *uint32 `protobuf:"varint,40,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	QueryBy       isOperatorExistsRequest_QueryBy `protobuf_oneof:"query_by"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1271,13 +1206,6 @@ func (x *OperatorExistsRequest) GetUsername() string {
 		}
 	}
 	return ""
-}
-
-func (x *OperatorExistsRequest) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
 }
 
 type isOperatorExistsRequest_QueryBy interface {
@@ -1488,9 +1416,7 @@ type EditOperatorPasswordRequest struct {
 	// 后台人员 ID。
 	OperatorId uint32 `protobuf:"varint,1,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 后台人员ID
 	// new password。
-	NewPassword string `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"` // 新密码
-	// app_id 限定 EditOperatorPassword 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         *uint32 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	NewPassword   string `protobuf:"bytes,2,opt,name=new_password,json=newPassword,proto3" json:"new_password,omitempty"` // 新密码
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1537,13 +1463,6 @@ func (x *EditOperatorPasswordRequest) GetNewPassword() string {
 		return x.NewPassword
 	}
 	return ""
-}
-
-func (x *EditOperatorPasswordRequest) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
 }
 
 // 修改后台人员密码（需要验证旧密码） - 请求
@@ -2054,59 +1973,55 @@ var File_core_operator_v1_operator_proto protoreflect.FileDescriptor
 
 const file_core_operator_v1_operator_proto_rawDesc = "" +
 	"\n" +
-	"\x1fcore/operator/v1/operator.proto\x12\x10core.operator.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a%common/pagination/v1/pagination.proto\x1a\x19common/file/v1/file.proto\"j\n" +
-	"\x14ListOperatorsRequest\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\rR\x05appId\x12;\n" +
-	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"k\n" +
-	"\x15CountOperatorsRequest\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\rR\x05appId\x12;\n" +
-	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xb6\x14\n" +
+	"\x1fcore/operator/v1/operator.proto\x12\x10core.operator.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a%common/pagination/v1/pagination.proto\x1a\x19common/file/v1/file.proto\"S\n" +
+	"\x14ListOperatorsRequest\x12;\n" +
+	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"T\n" +
+	"\x15CountOperatorsRequest\x12;\n" +
+	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xc4\x13\n" +
 	"\bOperator\x12)\n" +
-	"\x02id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDH\x00R\x02id\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x01R\x05appId\x88\x01\x01\x12/\n" +
-	"\bapp_name\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\tApp名称H\x02R\aappName\x88\x01\x01\x12,\n" +
-	"\arole_id\x18\f \x01(\rB\x0e\xbaG\v\x92\x02\b角色IDH\x03R\x06roleId\x88\x01\x01\x12/\n" +
+	"\x02id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDH\x00R\x02id\x88\x01\x01\x12,\n" +
+	"\arole_id\x18\f \x01(\rB\x0e\xbaG\v\x92\x02\b角色IDH\x01R\x06roleId\x88\x01\x01\x12/\n" +
 	"\brole_ids\x18\r \x03(\rB\x14\xbaG\x11\x92\x02\x0e角色ID列表R\aroleIds\x12+\n" +
 	"\x05roles\x18\x0e \x03(\tB\x15\xbaG\x12\x92\x02\x0f角色码列表R\x05roles\x127\n" +
 	"\n" +
 	"role_names\x18\x0f \x03(\tB\x18\xbaG\x15\x92\x02\x12角色名称列表R\troleNames\x126\n" +
-	"\busername\x18\x14 \x01(\tB\x15\xbaG\x12\x92\x02\x0f后台人员名H\x04R\busername\x88\x01\x01\x12-\n" +
-	"\bnickname\x18\x15 \x01(\tB\f\xbaG\t\x92\x02\x06昵称H\x05R\bnickname\x88\x01\x01\x123\n" +
-	"\brealname\x18\x16 \x01(\tB\x12\xbaG\x0f\x92\x02\f真实姓名H\x06R\brealname\x88\x01\x01\x12)\n" +
-	"\x0eavatar_file_id\x18\x17 \x01(\x04H\aR\favatarFileId\x88\x01\x01\x120\n" +
+	"\busername\x18\x14 \x01(\tB\x15\xbaG\x12\x92\x02\x0f后台人员名H\x02R\busername\x88\x01\x01\x12-\n" +
+	"\bnickname\x18\x15 \x01(\tB\f\xbaG\t\x92\x02\x06昵称H\x03R\bnickname\x88\x01\x01\x123\n" +
+	"\brealname\x18\x16 \x01(\tB\x12\xbaG\x0f\x92\x02\f真实姓名H\x04R\brealname\x88\x01\x01\x12)\n" +
+	"\x0eavatar_file_id\x18\x17 \x01(\x04H\x05R\favatarFileId\x88\x01\x01\x120\n" +
 	"\x06avatar\x18  \x01(\v2\x18.common.file.v1.FileViewR\x06avatar\x12'\n" +
-	"\x05email\x18\x18 \x01(\tB\f\xbaG\t\x92\x02\x06邮箱H\bR\x05email\x88\x01\x01\x12,\n" +
-	"\x06mobile\x18\x19 \x01(\tB\x0f\xbaG\f\x92\x02\t手机号H\tR\x06mobile\x88\x01\x01\x122\n" +
-	"\ttelephone\x18\x1a \x01(\tB\x0f\xbaG\f\x92\x02\t座机号H\n" +
-	"R\ttelephone\x88\x01\x01\x12L\n" +
-	"\x06gender\x18\x1b \x01(\x0e2!.core.operator.v1.Operator.GenderB\f\xbaG\t\x92\x02\x06性别H\vR\x06gender\x88\x01\x01\x12+\n" +
-	"\aaddress\x18\x1c \x01(\tB\f\xbaG\t\x92\x02\x06住址H\fR\aaddress\x88\x01\x01\x12/\n" +
-	"\x06region\x18\x1d \x01(\tB\x12\xbaG\x0f\x92\x02\f国家地区H\rR\x06region\x88\x01\x01\x129\n" +
-	"\vdescription\x18\x1e \x01(\tB\x12\xbaG\x0f\x92\x02\f个人描述H\x0eR\vdescription\x88\x01\x01\x12)\n" +
-	"\x06remark\x18\x1f \x01(\tB\f\xbaG\t\x92\x02\x06备注H\x0fR\x06remark\x88\x01\x01\x12]\n" +
-	"\rlast_login_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12最后登录时间H\x10R\vlastLoginAt\x88\x01\x01\x12=\n" +
-	"\rlast_login_ip\x183 \x01(\tB\x14\xbaG\x11\x92\x02\x0e最后登录IPH\x11R\vlastLoginIp\x88\x01\x01\x12L\n" +
-	"\x06status\x184 \x01(\x0e2!.core.operator.v1.Operator.StatusB\f\xbaG\t\x92\x02\x06状态H\x12R\x06status\x88\x01\x01\x12\\\n" +
-	"\flocked_until\x185 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12锁定截止时间H\x13R\vlockedUntil\x88\x01\x01\x122\n" +
-	"\tfollowers\x18P \x01(\x04B\x0f\xbaG\f\x92\x02\t粉丝数H\x14R\tfollowers\x88\x01\x01\x122\n" +
-	"\tfollowing\x18Q \x01(\x04B\x0f\xbaG\f\x92\x02\t关注数H\x15R\tfollowing\x88\x01\x01\x123\n" +
+	"\x05email\x18\x18 \x01(\tB\f\xbaG\t\x92\x02\x06邮箱H\x06R\x05email\x88\x01\x01\x12,\n" +
+	"\x06mobile\x18\x19 \x01(\tB\x0f\xbaG\f\x92\x02\t手机号H\aR\x06mobile\x88\x01\x01\x122\n" +
+	"\ttelephone\x18\x1a \x01(\tB\x0f\xbaG\f\x92\x02\t座机号H\bR\ttelephone\x88\x01\x01\x12L\n" +
+	"\x06gender\x18\x1b \x01(\x0e2!.core.operator.v1.Operator.GenderB\f\xbaG\t\x92\x02\x06性别H\tR\x06gender\x88\x01\x01\x12+\n" +
+	"\aaddress\x18\x1c \x01(\tB\f\xbaG\t\x92\x02\x06住址H\n" +
+	"R\aaddress\x88\x01\x01\x12/\n" +
+	"\x06region\x18\x1d \x01(\tB\x12\xbaG\x0f\x92\x02\f国家地区H\vR\x06region\x88\x01\x01\x129\n" +
+	"\vdescription\x18\x1e \x01(\tB\x12\xbaG\x0f\x92\x02\f个人描述H\fR\vdescription\x88\x01\x01\x12)\n" +
+	"\x06remark\x18\x1f \x01(\tB\f\xbaG\t\x92\x02\x06备注H\rR\x06remark\x88\x01\x01\x12]\n" +
+	"\rlast_login_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12最后登录时间H\x0eR\vlastLoginAt\x88\x01\x01\x12=\n" +
+	"\rlast_login_ip\x183 \x01(\tB\x14\xbaG\x11\x92\x02\x0e最后登录IPH\x0fR\vlastLoginIp\x88\x01\x01\x12L\n" +
+	"\x06status\x184 \x01(\x0e2!.core.operator.v1.Operator.StatusB\f\xbaG\t\x92\x02\x06状态H\x10R\x06status\x88\x01\x01\x12\\\n" +
+	"\flocked_until\x185 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12锁定截止时间H\x11R\vlockedUntil\x88\x01\x01\x122\n" +
+	"\tfollowers\x18P \x01(\x04B\x0f\xbaG\f\x92\x02\t粉丝数H\x12R\tfollowers\x88\x01\x01\x122\n" +
+	"\tfollowing\x18Q \x01(\x04B\x0f\xbaG\f\x92\x02\t关注数H\x13R\tfollowing\x88\x01\x01\x123\n" +
 	"\n" +
-	"post_count\x18Z \x01(\x04B\x0f\xbaG\f\x92\x02\t发帖数H\x16R\tpostCount\x88\x01\x01\x129\n" +
-	"\rcomment_count\x18[ \x01(\x04B\x0f\xbaG\f\x92\x02\t评论数H\x17R\fcommentCount\x88\x01\x01\x123\n" +
+	"post_count\x18Z \x01(\x04B\x0f\xbaG\f\x92\x02\t发帖数H\x14R\tpostCount\x88\x01\x01\x129\n" +
+	"\rcomment_count\x18[ \x01(\x04B\x0f\xbaG\f\x92\x02\t评论数H\x15R\fcommentCount\x88\x01\x01\x123\n" +
 	"\n" +
-	"like_count\x18\\ \x01(\x04B\x0f\xbaG\f\x92\x02\t获赞数H\x18R\tlikeCount\x88\x01\x01\x12A\n" +
+	"like_count\x18\\ \x01(\x04B\x0f\xbaG\f\x92\x02\t获赞数H\x16R\tlikeCount\x88\x01\x01\x12A\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\x19R\tcreatedBy\x88\x01\x01\x12A\n" +
+	"created_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17创建者后台人员IDH\x17R\tcreatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\x1aR\tupdatedBy\x88\x01\x01\x12A\n" +
+	"updated_by\x18e \x01(\rB\x1d\xbaG\x1a\x92\x02\x17更新者后台人员IDH\x18R\tupdatedBy\x88\x01\x01\x12A\n" +
 	"\n" +
-	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\x1bR\tdeletedBy\x88\x01\x01\x12S\n" +
+	"deleted_by\x18f \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\x19R\tdeletedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\x1cR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\x1aR\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x1dR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x1bR\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x1eR\tdeletedAt\x88\x01\x01\"*\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x1cR\tdeletedAt\x88\x01\x01\"*\n" +
 	"\x06Gender\x12\n" +
 	"\n" +
 	"\x06SECRET\x10\x00\x12\b\n" +
@@ -2123,9 +2038,7 @@ const file_core_operator_v1_operator_proto_rawDesc = "" +
 	"\aEXPIRED\x10\x04\x12\n" +
 	"\n" +
 	"\x06CLOSED\x10\tB\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
-	"\t_app_nameB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_role_idB\v\n" +
 	"\t_usernameB\v\n" +
@@ -2182,27 +2095,24 @@ const file_core_operator_v1_operator_proto_rawDesc = "" +
 	"\n" +
 	"\b_addressB\t\n" +
 	"\a_regionB\x0e\n" +
-	"\f_description\"\xcf\x01\n" +
+	"\f_description\"\xb8\x01\n" +
 	"\x1cUpdateOperatorProfileRequest\x12\x1f\n" +
 	"\voperator_id\x18\x01 \x01(\rR\n" +
-	"operatorId\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12:\n" +
+	"operatorId\x12:\n" +
 	"\x04data\x18\x03 \x01(\v2!.core.operator.v1.OperatorProfileB\x03\xe0A\x02R\x04data\x12;\n" +
 	"\vupdate_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
 	"updateMask\"^\n" +
 	"\x14ListOperatorResponse\x120\n" +
 	"\x05items\x18\x01 \x03(\v2\x1a.core.operator.v1.OperatorR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xb5\x02\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\x8e\x02\n" +
 	"\x12GetOperatorRequest\x12(\n" +
 	"\x02id\x18\x01 \x01(\rB\x16\xbaG\x13\x18\x01\x92\x02\x0e后台人员IDH\x00R\x02id\x12;\n" +
 	"\busername\x18\x02 \x01(\tB\x1d\xbaG\x1a\x18\x01\x92\x02\x15后台人员登录名H\x00R\busername\x12w\n" +
-	"\tview_mask\x18d \x01(\v2\x1a.google.protobuf.FieldMaskB9\xbaG6\x92\x023视图字段过滤器，用于控制返回的字段H\x01R\bviewMask\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18( \x01(\rH\x02R\x05appId\x88\x01\x01B\n" +
+	"\tview_mask\x18d \x01(\v2\x1a.google.protobuf.FieldMaskB9\xbaG6\x92\x023视图字段过滤器，用于控制返回的字段H\x01R\bviewMask\x88\x01\x01B\n" +
 	"\n" +
 	"\bquery_byB\f\n" +
 	"\n" +
-	"_view_maskB\t\n" +
-	"\a_app_id\"\x97\x01\n" +
+	"_view_mask\"\x97\x01\n" +
 	"\x15CreateOperatorRequest\x12.\n" +
 	"\x04data\x18\x01 \x01(\v2\x1a.core.operator.v1.OperatorR\x04data\x12A\n" +
 	"\bpassword\x18\x02 \x01(\tB \xbaG\x1d\x18\x01\x92\x02\x18后台人员登录密码H\x00R\bpassword\x88\x01\x01B\v\n" +
@@ -2213,24 +2123,20 @@ const file_core_operator_v1_operator_proto_rawDesc = "" +
 	"\bpassword\x18\x03 \x01(\tB \xbaG\x1d\x18\x01\x92\x02\x18后台人员登录密码H\x00R\bpassword\x88\x01\x01\x12s\n" +
 	"\vupdate_mask\x18\x04 \x01(\v2\x1a.google.protobuf.FieldMaskB6\xbaG3:\x16\x12\x14id,realname,username\x92\x02\x18要更新的字段列表R\n" +
 	"updateMaskB\v\n" +
-	"\t_password\"\x96\x02\n" +
+	"\t_password\"\xdc\x01\n" +
 	"\x15DeleteOperatorRequest\x12(\n" +
 	"\x02id\x18\x01 \x01(\rB\x16\xbaG\x13\x18\x01\x92\x02\x0e后台人员IDH\x00R\x02id\x12;\n" +
 	"\busername\x18\x02 \x01(\tB\x1d\xbaG\x1a\x18\x01\x92\x02\x15后台人员登录名H\x00R\busername\x12A\n" +
 	"\n" +
-	"deleted_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\x01R\tdeletedBy\x88\x01\x01\x12-\n" +
-	"\x06app_id\x18( \x01(\rB\x11\xbaG\x0e\x92\x02\vAppID scopeH\x02R\x05appId\x88\x01\x01B\n" +
+	"deleted_by\x18d \x01(\rB\x1d\xbaG\x1a\x92\x02\x17删除者后台人员IDH\x01R\tdeletedBy\x88\x01\x01B\n" +
 	"\n" +
 	"\bquery_byB\r\n" +
-	"\v_deleted_byB\t\n" +
-	"\a_app_id\"\xb1\x01\n" +
+	"\v_deleted_by\"\x8a\x01\n" +
 	"\x15OperatorExistsRequest\x12(\n" +
 	"\x02id\x18\x01 \x01(\rB\x16\xbaG\x13\x18\x01\x92\x02\x0e后台人员IDH\x00R\x02id\x12;\n" +
-	"\busername\x18\x02 \x01(\tB\x1d\xbaG\x1a\x18\x01\x92\x02\x15后台人员登录名H\x00R\busername\x12\x1a\n" +
-	"\x06app_id\x18( \x01(\rH\x01R\x05appId\x88\x01\x01B\n" +
+	"\busername\x18\x02 \x01(\tB\x1d\xbaG\x1a\x18\x01\x92\x02\x15后台人员登录名H\x00R\busernameB\n" +
 	"\n" +
-	"\bquery_byB\t\n" +
-	"\a_app_id\".\n" +
+	"\bquery_by\".\n" +
 	"\x16OperatorExistsResponse\x12\x14\n" +
 	"\x05exist\x18\x01 \x01(\bR\x05exist\"O\n" +
 	"\x1bBatchCreateOperatorsRequest\x120\n" +
@@ -2239,13 +2145,11 @@ const file_core_operator_v1_operator_proto_rawDesc = "" +
 	"\vcreated_ids\x18\x01 \x03(\x05B)\xbaG&\x92\x02#创建成功的后台人员ID列表R\n" +
 	"createdIds\",\n" +
 	"\x18GetOperatorsByIdsRequest\x12\x10\n" +
-	"\x03ids\x18\x01 \x03(\rR\x03ids\"\xc2\x01\n" +
+	"\x03ids\x18\x01 \x03(\rR\x03ids\"\x88\x01\n" +
 	"\x1bEditOperatorPasswordRequest\x125\n" +
 	"\voperator_id\x18\x01 \x01(\rB\x14\xbaG\x11\x92\x02\x0e后台人员IDR\n" +
 	"operatorId\x122\n" +
-	"\fnew_password\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t新密码R\vnewPassword\x12-\n" +
-	"\x06app_id\x18\x03 \x01(\rB\x11\xbaG\x0e\x92\x02\vAppID scopeH\x00R\x05appId\x88\x01\x01B\t\n" +
-	"\a_app_id\"\x7f\n" +
+	"\fnew_password\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t新密码R\vnewPassword\"\x7f\n" +
 	"\x15ChangePasswordRequest\x122\n" +
 	"\fold_password\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t旧密码R\voldPassword\x122\n" +
 	"\fnew_password\x18\x02 \x01(\tB\x0f\xbaG\f\x92\x02\t新密码R\vnewPassword\"\x97\x01\n" +
@@ -2403,7 +2307,6 @@ func file_core_operator_v1_operator_proto_init() {
 		(*OperatorExistsRequest_Id)(nil),
 		(*OperatorExistsRequest_Username)(nil),
 	}
-	file_core_operator_v1_operator_proto_msgTypes[15].OneofWrappers = []any{}
 	file_core_operator_v1_operator_proto_msgTypes[17].OneofWrappers = []any{
 		(*BindContactRequest_Phone)(nil),
 		(*BindContactRequest_Email)(nil),

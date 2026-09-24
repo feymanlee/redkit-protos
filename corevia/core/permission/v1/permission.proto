@@ -33,7 +33,6 @@ service PermissionService {
   // 删除权限点
   rpc Delete (DeletePermissionRequest) returns (google.protobuf.Empty) {}
 
-
   // 批量创建权限点
   rpc BatchCreate (BatchCreatePermissionRequest) returns (BatchCreatePermissionResponse) {}
 
@@ -57,16 +56,7 @@ message Permission {
     ON = 1;          // 启用
   }
 
-  // Scope 限定规则或资源的生效作用域。
-  enum Scope {
-    // 未提供有效取值；调用方不得据此推断业务状态。
-    SCOPE_UNSPECIFIED = 0;
-    // PLATFORM 仅在 PLATFORM 作用域内生效。
-    PLATFORM = 1;
-    // APP 仅在 APP 作用域内生效。
-    APP = 2;
-  }
-
+  // Scope 枚举（编号 0-2）已随平台收敛为单一 App 删除，见 ADR 0075；不得复用这些编号或名称。
   // 权限点ID。
   optional uint32 id = 1 [
     (gnostic.openapi.v3.property) = { description: "权限点ID" }
@@ -94,12 +84,6 @@ message Permission {
   optional uint32 group_id = 6 [
     (gnostic.openapi.v3.property) = {description: "分组ID"}
   ];  // 分组ID
-
-  // Permission grant scope. Platform permissions may only be granted to
-  // platform system roles; App permissions may be granted inside an App.
-  optional Scope scope = 8 [
-    (gnostic.openapi.v3.property) = {description: "权限作用域"}
-  ];
 
   // 分组名称。
   optional string group_name = 7 [

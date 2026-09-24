@@ -33,8 +33,6 @@ type PolicyEvaluationLog struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 策略评估日志ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 策略评估日志ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
 	// 后台人员 ID。
 	OperatorId *uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"`
 	// 权限点ID。
@@ -59,7 +57,7 @@ type PolicyEvaluationLog struct {
 	EvaluationContext *string `protobuf:"bytes,50,opt,name=evaluation_context,json=evaluationContext,proto3,oneof" json:"evaluation_context,omitempty"` // 决策上下文快照
 	// log_hash 用于校验 PolicyEvaluationLog 对应内容或版本的一致性。
 	LogHash *string `protobuf:"bytes,60,opt,name=log_hash,json=logHash,proto3,oneof" json:"log_hash,omitempty"` // 日志哈希
-	// 日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）。
+	// 日志数字签名（ECDSA，签名内容：operator_id+created_at+log_hash）。
 	Signature []byte `protobuf:"bytes,61,opt,name=signature,proto3,oneof" json:"signature,omitempty"` // 日志数字签名
 	// created_at 记录 PolicyEvaluationLog 的创建时间。
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,70,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"` // 日志创建时间
@@ -100,13 +98,6 @@ func (*PolicyEvaluationLog) Descriptor() ([]byte, []int) {
 func (x *PolicyEvaluationLog) GetId() uint32 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *PolicyEvaluationLog) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -393,31 +384,30 @@ var File_core_permission_v1_policy_evaluation_log_proto protoreflect.FileDescrip
 
 const file_core_permission_v1_policy_evaluation_log_proto_rawDesc = "" +
 	"\n" +
-	".core/permission/v1/policy_evaluation_log.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1egoogle/protobuf/duration.proto\x1a%common/pagination/v1/pagination.proto\"\xa0\v\n" +
+	".core/permission/v1/policy_evaluation_log.proto\x12\x12core.permission.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1egoogle/protobuf/duration.proto\x1a%common/pagination/v1/pagination.proto\"\xe5\n" +
+	"\n" +
 	"\x13PolicyEvaluationLog\x12/\n" +
-	"\x02id\x18\x01 \x01(\rB\x1a\xbaG\x17\x92\x02\x14策略评估日志IDH\x00R\x02id\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x01R\x05appId\x88\x01\x01\x12;\n" +
-	"\voperator_id\x18\x03 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x02R\n" +
+	"\x02id\x18\x01 \x01(\rB\x1a\xbaG\x17\x92\x02\x14策略评估日志IDH\x00R\x02id\x88\x01\x01\x12;\n" +
+	"\voperator_id\x18\x03 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x01R\n" +
 	"operatorId\x88\x01\x01\x12;\n" +
 	"\rpermission_id\x18\n" +
-	" \x01(\rB\x11\xbaG\x0e\x92\x02\v权限点IDH\x03R\fpermissionId\x88\x01\x01\x12E\n" +
-	"\tpolicy_id\x18\v \x01(\rB#\xbaG \x92\x02\x1d策略ID（可能无策略）H\x04R\bpolicyId\x88\x01\x01\x12=\n" +
-	"\frequest_path\x18\f \x01(\tB\x15\xbaG\x12\x92\x02\x0f请求API路径H\x05R\vrequestPath\x88\x01\x01\x12B\n" +
-	"\x0erequest_method\x18\r \x01(\tB\x16\xbaG\x13\x92\x02\x10请求HTTP方法H\x06R\rrequestMethod\x88\x01\x01\x12/\n" +
-	"\x06result\x18\x14 \x01(\bB\x12\xbaG\x0f\x92\x02\f是否通过H\aR\x06result\x88\x01\x01\x12K\n" +
-	"\x0eeffect_details\x18\x15 \x01(\tB\x1f\xbaG\x1c\x92\x02\x19评估详情/拒绝原因H\bR\reffectDetails\x88\x01\x01\x12:\n" +
-	"\tscope_sql\x18\x1e \x01(\tB\x18\xbaG\x15\x92\x02\x12生成的SQL条件H\tR\bscopeSql\x88\x01\x01\x12;\n" +
+	" \x01(\rB\x11\xbaG\x0e\x92\x02\v权限点IDH\x02R\fpermissionId\x88\x01\x01\x12E\n" +
+	"\tpolicy_id\x18\v \x01(\rB#\xbaG \x92\x02\x1d策略ID（可能无策略）H\x03R\bpolicyId\x88\x01\x01\x12=\n" +
+	"\frequest_path\x18\f \x01(\tB\x15\xbaG\x12\x92\x02\x0f请求API路径H\x04R\vrequestPath\x88\x01\x01\x12B\n" +
+	"\x0erequest_method\x18\r \x01(\tB\x16\xbaG\x13\x92\x02\x10请求HTTP方法H\x05R\rrequestMethod\x88\x01\x01\x12/\n" +
+	"\x06result\x18\x14 \x01(\bB\x12\xbaG\x0f\x92\x02\f是否通过H\x06R\x06result\x88\x01\x01\x12K\n" +
+	"\x0eeffect_details\x18\x15 \x01(\tB\x1f\xbaG\x1c\x92\x02\x19评估详情/拒绝原因H\aR\reffectDetails\x88\x01\x01\x12:\n" +
+	"\tscope_sql\x18\x1e \x01(\tB\x18\xbaG\x15\x92\x02\x12生成的SQL条件H\bR\bscopeSql\x88\x01\x01\x12;\n" +
 	"\n" +
-	"ip_address\x18( \x01(\tB\x17\xbaG\x14\x92\x02\x11操作者IP地址H\n" +
-	"R\tipAddress\x88\x01\x01\x12\\\n" +
-	"\btrace_id\x18) \x01(\tB<\xbaG9\x92\x026全局链路追踪ID（符合W3C TraceContext标准）H\vR\atraceId\x88\x01\x01\x12o\n" +
-	"\x12evaluation_context\x182 \x01(\tB;\xbaG8\x92\x025决策上下文快照(如用户属性、环境属性)H\fR\x11evaluationContext\x88\x01\x01\x12\\\n" +
-	"\blog_hash\x18< \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\rR\alogHash\x88\x01\x01\x12~\n" +
-	"\tsignature\x18= \x01(\fB[\xbaGX\x92\x02U日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）H\x0eR\tsignature\x88\x01\x01\x12X\n" +
+	"ip_address\x18( \x01(\tB\x17\xbaG\x14\x92\x02\x11操作者IP地址H\tR\tipAddress\x88\x01\x01\x12\\\n" +
+	"\btrace_id\x18) \x01(\tB<\xbaG9\x92\x026全局链路追踪ID（符合W3C TraceContext标准）H\n" +
+	"R\atraceId\x88\x01\x01\x12o\n" +
+	"\x12evaluation_context\x182 \x01(\tB;\xbaG8\x92\x025决策上下文快照(如用户属性、环境属性)H\vR\x11evaluationContext\x88\x01\x01\x12\\\n" +
+	"\blog_hash\x18< \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\fR\alogHash\x88\x01\x01\x12w\n" +
+	"\tsignature\x18= \x01(\fBT\xbaGQ\x92\x02N日志数字签名（ECDSA，签名内容：operator_id+created_at+log_hash）H\rR\tsignature\x88\x01\x01\x12X\n" +
 	"\n" +
-	"created_at\x18F \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x0fR\tcreatedAt\x88\x01\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x0e\n" +
+	"created_at\x18F \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x0eR\tcreatedAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x0e\n" +
 	"\f_operator_idB\x10\n" +
 	"\x0e_permission_idB\f\n" +
 	"\n" +

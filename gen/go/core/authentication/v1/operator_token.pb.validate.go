@@ -63,14 +63,6 @@ func (m *OperatorTokenPayload) validate(all bool) error {
 
 	// no validation rules for OperatorId
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
-	if m.OperatorAppId != nil {
-		// no validation rules for OperatorAppId
-	}
-
 	if m.ClientId != nil {
 		// no validation rules for ClientId
 	}
@@ -89,10 +81,6 @@ func (m *OperatorTokenPayload) validate(all bool) error {
 
 	if m.IsPlatformAdmin != nil {
 		// no validation rules for IsPlatformAdmin
-	}
-
-	if m.IsAppAdmin != nil {
-		// no validation rules for IsAppAdmin
 	}
 
 	if m.Jti != nil {

@@ -25,8 +25,6 @@ message Refund {
 
   // 退款单 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 支付单号。
@@ -60,8 +58,6 @@ message CreateRefundRequest {
   optional string reason = 3;
   // 幂等键。
   optional string idempotency_key = 4;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 5;
 }
 
 // 退款列表响应。
@@ -142,13 +138,11 @@ message RefundRequest {
 
   // id 标识关联的 Refund。
   uint64 id = 1;
-  // app_id 限定 Refund 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // operation_no 为审计与幂等重放稳定标识本次管理操作。
   string operation_no = 3;
   // payment_no 是 Refund 对外关联与审计使用的业务编号。
   string payment_no = 4;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 5;
   // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
   int64 amount = 6;
@@ -208,12 +202,10 @@ message RefundAvailability {
   RefundRequest.EntitlementImpact full_refund_entitlement_impact = 6;
 }
 
-// RefundRiskRule 按 App 和 ISO 4217 币种控制自动审批边界。
+// RefundRiskRule 按 ISO 4217 币种控制自动审批边界。
 message RefundRiskRule {
   // id 标识关联的 RefundRiskRule。
   uint64 id = 1;
-  // app_id 限定 RefundRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // currency 指定相关金额使用的币种或计量单位。
   string currency = 3;
   // auto_approve_max_amount 以对应 currency 的最小货币单位表示，不使用浮点数。
@@ -244,8 +236,6 @@ message SubmitRefundRequestRequest {
   uint32 operator_id = 6;
   // request_id 用于关联同一次请求或异步处理链路。
   string request_id = 7;
-  // app_id 限定 SubmitRefundRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 8;
 }
 
 // ReviewRefundRequestRequest 定义审核 RefundRequest 的幂等管理命令参数。
@@ -258,8 +248,6 @@ message ReviewRefundRequestRequest {
   optional string review_note = 3;
   // request_id 用于关联同一次请求或异步处理链路。
   string request_id = 4;
-  // app_id 限定 ReviewRefundRequest 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 5;
 }
 
 // RefundRequestFilter 定义可组合的查询筛选条件。
@@ -276,8 +264,6 @@ message ListRefundRequestsRequest {
   common.pagination.v1.PagingRequest paging = 1;
   // filter 限定本次查询采用的筛选条件。
   RefundRequestFilter filter = 2;
-  // app_id 限定 ListRefundRequests 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 3;
 }
 
 // ListRefundRequestsResponse 返回 RefundRequests 结果集合及分页信息。
@@ -302,16 +288,12 @@ message UpsertRefundRiskRuleRequest {
   uint32 operator_id = 5;
   // request_id 用于关联同一次请求或异步处理链路。
   string request_id = 6;
-  // app_id 限定 UpsertRefundRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 7;
 }
 
 // ListRefundRiskRulesRequest 定义 RefundRiskRules 的筛选与分页参数。
 message ListRefundRiskRulesRequest {
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 1;
-  // app_id 限定 ListRefundRiskRules 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
 }
 
 // ListRefundRiskRulesResponse 返回 RefundRiskRules 结果集合及分页信息。

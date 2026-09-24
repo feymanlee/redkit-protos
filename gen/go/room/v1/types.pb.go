@@ -7,7 +7,6 @@
 package roompb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -1000,8 +999,6 @@ type RoomRestriction struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识处置事实。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,3,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// session_id 在房间级处置时为空。
@@ -1063,13 +1060,6 @@ func (x *RoomRestriction) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *RoomRestriction) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RoomRestriction) GetRoomId() uint64 {
@@ -1153,7 +1143,7 @@ var File_room_v1_types_proto protoreflect.FileDescriptor
 
 const file_room_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x13room/v1/types.proto\x12\aroom.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8a\x02\n" +
+	"\x13room/v1/types.proto\x12\aroom.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8a\x02\n" +
 	"\x04Seat\x12\x1d\n" +
 	"\n" +
 	"seat_index\x18\x01 \x01(\rR\tseatIndex\x12(\n" +
@@ -1191,10 +1181,9 @@ const file_room_v1_types_proto_rawDesc = "" +
 	"\x11RtcChannelBinding\x12\x1a\n" +
 	"\bprovider\x18\x01 \x01(\tR\bprovider\x12\x1d\n" +
 	"\n" +
-	"channel_id\x18\x02 \x01(\tR\tchannelId\"\xd8\x04\n" +
+	"channel_id\x18\x02 \x01(\tR\tchannelId\"\xaf\x04\n" +
 	"\x0fRoomRestriction\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x17\n" +
 	"\aroom_id\x18\x03 \x01(\x04R\x06roomId\x12\"\n" +
 	"\n" +
 	"session_id\x18\x04 \x01(\x04H\x00R\tsessionId\x88\x01\x01\x12\x17\n" +
@@ -1300,7 +1289,6 @@ var file_room_v1_types_proto_goTypes = []any{
 	(*RtcChannelBinding)(nil),     // 14: room.v1.RtcChannelBinding
 	(*RoomRestriction)(nil),       // 15: room.v1.RoomRestriction
 	(*timestamppb.Timestamp)(nil), // 16: google.protobuf.Timestamp
-	(v1.AppId)(0),                 // 17: common.v1.AppId
 }
 var file_room_v1_types_proto_depIdxs = []int32{
 	5,  // 0: room.v1.Seat.state:type_name -> room.v1.SeatState
@@ -1311,18 +1299,17 @@ var file_room_v1_types_proto_depIdxs = []int32{
 	4,  // 5: room.v1.SessionMember.role:type_name -> room.v1.MemberRole
 	16, // 6: room.v1.SessionMember.joined_at:type_name -> google.protobuf.Timestamp
 	16, // 7: room.v1.LiveGroupBinding.created_at:type_name -> google.protobuf.Timestamp
-	17, // 8: room.v1.RoomRestriction.app_id:type_name -> common.v1.AppId
-	7,  // 9: room.v1.RoomRestriction.scope:type_name -> room.v1.RestrictionScope
-	8,  // 10: room.v1.RoomRestriction.kind:type_name -> room.v1.RestrictionKind
-	9,  // 11: room.v1.RoomRestriction.actor_type:type_name -> room.v1.RestrictionActorType
-	16, // 12: room.v1.RoomRestriction.expires_at:type_name -> google.protobuf.Timestamp
-	16, // 13: room.v1.RoomRestriction.revoked_at:type_name -> google.protobuf.Timestamp
-	16, // 14: room.v1.RoomRestriction.created_at:type_name -> google.protobuf.Timestamp
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	7,  // 8: room.v1.RoomRestriction.scope:type_name -> room.v1.RestrictionScope
+	8,  // 9: room.v1.RoomRestriction.kind:type_name -> room.v1.RestrictionKind
+	9,  // 10: room.v1.RoomRestriction.actor_type:type_name -> room.v1.RestrictionActorType
+	16, // 11: room.v1.RoomRestriction.expires_at:type_name -> google.protobuf.Timestamp
+	16, // 12: room.v1.RoomRestriction.revoked_at:type_name -> google.protobuf.Timestamp
+	16, // 13: room.v1.RoomRestriction.created_at:type_name -> google.protobuf.Timestamp
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_room_v1_types_proto_init() }

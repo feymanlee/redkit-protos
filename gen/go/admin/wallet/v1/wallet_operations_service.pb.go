@@ -803,7 +803,7 @@ func (x *WalletOperationsOverview) GetGeneratedAt() *timestamppb.Timestamp {
 // GetWalletUserWorkbenchRequest 标识待查询的 WalletUserWorkbench。
 type GetWalletUserWorkbenchRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1041,7 +1041,7 @@ func (x *WalletRechargeOrderDetail) GetDebts() []*v1.WalletUserDebt {
 // ListWalletUserFactsRequest 定义 WalletUserFacts 的筛选与分页参数。
 type ListWalletUserFactsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
@@ -1123,7 +1123,7 @@ func (x *ListWalletUserFactsRequest) GetCreatedTo() *timestamppb.Timestamp {
 // ListWalletUserGiftFactsRequest 定义 WalletUserGiftFacts 的筛选与分页参数。
 type ListWalletUserGiftFactsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`

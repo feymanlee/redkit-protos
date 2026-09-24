@@ -2,31 +2,22 @@ syntax = "proto3";
 
 package support.configuration.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "support/messaging/v1/messaging.proto";
 import "support/verification/v1/verification.proto";
 
-// DeliveryProbeOptionsWrapper exposes App-specific probe targets through the
+// DeliveryProbeOptionsWrapper exposes deployment-owned probe targets through the
 // bootstrap custom-config loader.
 message DeliveryProbeOptionsWrapper {
   // delivery_probe 承载 DeliveryProbeOptionsWrapper 关联的 DeliveryProbeOptions。
   DeliveryProbeOptions delivery_probe = 1;
 }
 
-// DeliveryProbeOptions contains deployment-owned targets for all Apps.
+// DeliveryProbeOptions contains deployment-owned probe targets.
 message DeliveryProbeOptions {
-  // apps 列出 DeliveryProbeOptions 关联的 AppDeliveryProbeOptions。
-  repeated AppDeliveryProbeOptions apps = 1;
-}
-
-// AppDeliveryProbeOptions binds probe targets to one concrete App.
-message AppDeliveryProbeOptions {
-  // app_id 限定 AppDeliveryProbeOptions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // targets 列出 AppDeliveryProbeOptions 关联的 DeliveryProbeDeploymentTarget。
-  repeated DeliveryProbeDeploymentTarget targets = 2;
+  // targets 列出 DeliveryProbeOptions 关联的 DeliveryProbeDeploymentTarget。
+  repeated DeliveryProbeDeploymentTarget targets = 1;
 }
 
 // DeliveryProbeDeploymentTarget is never returned directly to an Operator.
@@ -359,8 +350,6 @@ message SmsTemplateRevisionSummary {
 
 // CreateConfigurationDraftRequest creates an editable Draft from the current composition.
 message CreateConfigurationDraftRequest {
-  // app_id 限定 CreateConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // default_locale 指定内容展示或消息投递采用的语言区域。
   string default_locale = 2;
   // default_phone_region 指定号码、服务或业务规则采用的地区。
@@ -377,8 +366,6 @@ message CreateConfigurationDraftRequest {
 
 // CreateSmsChannelRevisionRequest creates and selects a new immutable Channel Revision.
 message CreateSmsChannelRevisionRequest {
-  // app_id 限定 CreateSmsChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
   // channel_code 提供 CreateSmsChannelRevision 对外稳定使用的业务编码。
@@ -413,8 +400,6 @@ message CreateSmsChannelRevisionRequest {
 
 // CreateSmsTemplateRevisionRequest creates and selects a new immutable Template Revision.
 message CreateSmsTemplateRevisionRequest {
-  // app_id 限定 CreateSmsTemplateRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
   // template_code 提供 CreateSmsTemplateRevision 对外稳定使用的业务编码。
@@ -445,8 +430,6 @@ message CreateSmsTemplateRevisionRequest {
 
 // UpdateVerificationPolicyDraftRequest atomically replaces Draft defaults and Verification policies.
 message UpdateVerificationPolicyDraftRequest {
-  // app_id 限定 UpdateVerificationPolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
   // default_locale 指定内容展示或消息投递采用的语言区域。
@@ -469,8 +452,6 @@ message UpdateVerificationPolicyDraftRequest {
 
 // PreflightConfigurationDraftRequest validates one editable Draft without provider delivery.
 message PreflightConfigurationDraftRequest {
-  // app_id 限定 PreflightConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -563,8 +544,6 @@ message DeliveryProbe {
 
 // GetDeliveryProbeReadinessRequest selects the current Draft probe view.
 message GetDeliveryProbeReadinessRequest {
-  // app_id 限定 GetDeliveryProbeReadiness 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
 }
@@ -587,8 +566,6 @@ message DeliveryProbeReadiness {
 
 // ExecuteDeliveryProbeRequest executes one Draft-only diagnostic delivery.
 message ExecuteDeliveryProbeRequest {
-  // app_id 限定 ExecuteDeliveryProbe 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
   // target_key 在约定作用域内稳定定位 ExecuteDeliveryProbe。
@@ -611,8 +588,6 @@ message ExecuteDeliveryProbeRequest {
 
 // DiscardConfigurationDraftRequest discards an unused operator Draft.
 message DiscardConfigurationDraftRequest {
-  // app_id 限定 DiscardConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -669,10 +644,8 @@ message ConfigurationRelease {
   google.protobuf.Timestamp activated_at = 15;
 }
 
-// ListConfigurationReleasesRequest selects one App's immutable history.
+// ListConfigurationReleasesRequest selects the immutable history.
 message ListConfigurationReleasesRequest {
-  // app_id 限定 ListConfigurationReleases 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
 }
 
 // ListConfigurationReleasesResponse returns newest-first Release snapshots.
@@ -683,8 +656,6 @@ message ListConfigurationReleasesResponse {
 
 // ActivateConfigurationDraftRequest publishes one fully validated Draft.
 message ActivateConfigurationDraftRequest {
-  // app_id 限定 ActivateConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // draft_id 标识关联的 Draft。
   uint64 draft_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -699,8 +670,6 @@ message ActivateConfigurationDraftRequest {
 
 // RollbackConfigurationReleaseRequest republishes one historical snapshot.
 message RollbackConfigurationReleaseRequest {
-  // app_id 限定 RollbackConfigurationRelease 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // release_id 标识关联的 Release。
   uint64 release_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -713,10 +682,9 @@ message RollbackConfigurationReleaseRequest {
   string request_id = 6;
 }
 
-// ConfigurationReadiness is the App-scoped migration and release-readiness view.
+// ConfigurationReadiness is the migration and release-readiness view.
 message ConfigurationReadiness {
   // Concrete App identity.
-  common.v1.AppId app_id = 1;
   // Migration state.
   ConfigurationMigrationStatus migration_status = 2;
   // Current migration Draft, when present.
@@ -741,8 +709,8 @@ message ConfigurationReadiness {
   bool configuration_writes_frozen = 12;
   // Configuration source expected by the running binary.
   ConfigurationRuntimeModel runtime_model = 13;
-  // Whether Gamoji and Pincp both have Active Releases.
-  bool all_apps_ready = 14;
+  // Whether the platform has an Active Configuration Release.
+  bool platform_release_ready = 14;
   // Safe failure category without credentials or provider responses.
   ConfigurationCutoverFailureCategory cutover_failure_category = 15;
   // Latest safe recovery outcome.
@@ -751,13 +719,11 @@ message ConfigurationReadiness {
   google.protobuf.Timestamp cutover_updated_at = 17;
 }
 
-// GetConfigurationReadinessRequest selects one App readiness view.
+// GetConfigurationReadinessRequest selects the readiness view.
 message GetConfigurationReadinessRequest {
-  // Concrete App identity.
-  common.v1.AppId app_id = 1;
 }
 
-// ConfigurationService exposes App-scoped immutable Support Configuration Draft governance.
+// ConfigurationService exposes immutable Support Configuration Draft governance.
 service ConfigurationService {
   // GetConfigurationReadiness returns migration, Revision, Draft and Release readiness.
   rpc GetConfigurationReadiness(GetConfigurationReadinessRequest) returns (ConfigurationReadiness);

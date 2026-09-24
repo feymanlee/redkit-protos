@@ -71,7 +71,7 @@ const (
 //
 // 支付服务。
 type PaymentServiceClient interface {
-	// 查询当前 App 与客户端平台可购买的固定期限订阅 Offer。
+	// 查询客户端平台可购买的固定期限订阅 Offer。
 	ListSubscriptionOffers(ctx context.Context, in *ListSubscriptionOffersRequest, opts ...grpc.CallOption) (*ListSubscriptionOffersResponse, error)
 	// 以 Payment 权威 Plan Revision 创建或恢复固定期限订阅 Provider Checkout。
 	StartFixedTermSubscriptionCheckout(ctx context.Context, in *StartFixedTermSubscriptionCheckoutRequest, opts ...grpc.CallOption) (*PurchaseView, error)
@@ -105,7 +105,7 @@ type PaymentServiceClient interface {
 	GetMySubscription(ctx context.Context, in *GetMySubscriptionRequest, opts ...grpc.CallOption) (*GetMySubscriptionResponse, error)
 	// 在公开 Attempt 栅栏仍为当前值时创建或恢复下一笔串行 Payment Attempt。
 	RetryMyPurchase(ctx context.Context, in *RetryMyPurchaseRequest, opts ...grpc.CallOption) (*PurchaseView, error)
-	// 查询当前已认证 User 在当前 App 与购买上下文下可见的公开 Payment Option。
+	// 查询当前已认证 User 在购买上下文下可见的公开 Payment Option。
 	ListPurchaseOptions(ctx context.Context, in *ListPurchaseOptionsRequest, opts ...grpc.CallOption) (*ListPurchaseOptionsResponse, error)
 	// 创建支付单。
 	CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*Payment, error)
@@ -123,7 +123,7 @@ type PaymentServiceClient interface {
 	GetPaymentDetail(ctx context.Context, in *GetPaymentDetailRequest, opts ...grpc.CallOption) (*PaymentDetail, error)
 	// 查询用户支付摘要，供 User Administration 临时聚合。
 	GetUserPaymentSummary(ctx context.Context, in *GetUserPaymentSummaryRequest, opts ...grpc.CallOption) (*UserPaymentSummary, error)
-	// 查询当前 App 的 Payment 运营总览。
+	// 查询 Payment 运营总览。
 	GetPaymentOperationsSummary(ctx context.Context, in *GetPaymentOperationsSummaryRequest, opts ...grpc.CallOption) (*PaymentOperationsSummary, error)
 	// 查询跨工作流待办投影。
 	ListPaymentWorkQueue(ctx context.Context, in *ListPaymentWorkQueueRequest, opts ...grpc.CallOption) (*ListPaymentWorkQueueResponse, error)
@@ -604,7 +604,7 @@ func (c *paymentServiceClient) HandleCallbackEvent(ctx context.Context, in *Hand
 //
 // 支付服务。
 type PaymentServiceServer interface {
-	// 查询当前 App 与客户端平台可购买的固定期限订阅 Offer。
+	// 查询客户端平台可购买的固定期限订阅 Offer。
 	ListSubscriptionOffers(context.Context, *ListSubscriptionOffersRequest) (*ListSubscriptionOffersResponse, error)
 	// 以 Payment 权威 Plan Revision 创建或恢复固定期限订阅 Provider Checkout。
 	StartFixedTermSubscriptionCheckout(context.Context, *StartFixedTermSubscriptionCheckoutRequest) (*PurchaseView, error)
@@ -638,7 +638,7 @@ type PaymentServiceServer interface {
 	GetMySubscription(context.Context, *GetMySubscriptionRequest) (*GetMySubscriptionResponse, error)
 	// 在公开 Attempt 栅栏仍为当前值时创建或恢复下一笔串行 Payment Attempt。
 	RetryMyPurchase(context.Context, *RetryMyPurchaseRequest) (*PurchaseView, error)
-	// 查询当前已认证 User 在当前 App 与购买上下文下可见的公开 Payment Option。
+	// 查询当前已认证 User 在购买上下文下可见的公开 Payment Option。
 	ListPurchaseOptions(context.Context, *ListPurchaseOptionsRequest) (*ListPurchaseOptionsResponse, error)
 	// 创建支付单。
 	CreatePayment(context.Context, *CreatePaymentRequest) (*Payment, error)
@@ -656,7 +656,7 @@ type PaymentServiceServer interface {
 	GetPaymentDetail(context.Context, *GetPaymentDetailRequest) (*PaymentDetail, error)
 	// 查询用户支付摘要，供 User Administration 临时聚合。
 	GetUserPaymentSummary(context.Context, *GetUserPaymentSummaryRequest) (*UserPaymentSummary, error)
-	// 查询当前 App 的 Payment 运营总览。
+	// 查询 Payment 运营总览。
 	GetPaymentOperationsSummary(context.Context, *GetPaymentOperationsSummaryRequest) (*PaymentOperationsSummary, error)
 	// 查询跨工作流待办投影。
 	ListPaymentWorkQueue(context.Context, *ListPaymentWorkQueueRequest) (*ListPaymentWorkQueueResponse, error)

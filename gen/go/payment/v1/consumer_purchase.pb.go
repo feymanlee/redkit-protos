@@ -563,8 +563,6 @@ func (SubscriptionManagementAction) EnumDescriptor() ([]byte, []int) {
 // AppSdkPaymentAction 描述客户端调用 App SDK 发起支付所需的参数。
 type AppSdkPaymentAction struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AppSdkPaymentAction 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// partner_id 标识关联的 Partner。
 	PartnerId *string `protobuf:"bytes,2,opt,name=partner_id,json=partnerId,proto3,oneof" json:"partner_id,omitempty"`
 	// prepay_id 标识关联的 Prepay。
@@ -611,13 +609,6 @@ func (x *AppSdkPaymentAction) ProtoReflect() protoreflect.Message {
 // Deprecated: Use AppSdkPaymentAction.ProtoReflect.Descriptor instead.
 func (*AppSdkPaymentAction) Descriptor() ([]byte, []int) {
 	return file_payment_v1_consumer_purchase_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *AppSdkPaymentAction) GetAppId() string {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return ""
 }
 
 func (x *AppSdkPaymentAction) GetPartnerId() string {
@@ -2316,7 +2307,7 @@ func (x *GoogleSubscriptionManagementAction) GetUrl() string {
 	return ""
 }
 
-// RestoreStorePurchasesRequest 仅接收 Store 返回的最小凭证集合，App 和 User 始终来自可信上下文。
+// RestoreStorePurchasesRequest 仅接收 Store 返回的最小凭证集合，User 始终来自可信上下文。
 type RestoreStorePurchasesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// items 包含本次返回或处理的业务条目。
@@ -2647,7 +2638,7 @@ func (*GetMyPurchaseRequest_PurchaseRequestId) isGetMyPurchaseRequest_Reference(
 
 func (*GetMyPurchaseRequest_PurchaseReference) isGetMyPurchaseRequest_Reference() {}
 
-// ListMyPurchasesRequest 使用 Payment 生成的不透明游标；App、User 和合并别名均不由客户端提供。
+// ListMyPurchasesRequest 使用 Payment 生成的不透明游标；User 与合并别名均不由客户端提供。
 type ListMyPurchasesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// page_size 限定单次查询允许返回的最大条目数。
@@ -3127,18 +3118,16 @@ var File_payment_v1_consumer_purchase_proto protoreflect.FileDescriptor
 const file_payment_v1_consumer_purchase_proto_rawDesc = "" +
 	"\n" +
 	"\"payment/v1/consumer_purchase.proto\x12\n" +
-	"payment.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x18payment/v1/channel.proto\x1a\x1dpayment/v1/subscription.proto\x1a\x17validate/validate.proto\"\x9b\x03\n" +
-	"\x13AppSdkPaymentAction\x12\x1a\n" +
-	"\x06app_id\x18\x01 \x01(\tH\x00R\x05appId\x88\x01\x01\x12\"\n" +
+	"payment.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x18payment/v1/channel.proto\x1a\x1dpayment/v1/subscription.proto\x1a\x17validate/validate.proto\"\xf4\x02\n" +
+	"\x13AppSdkPaymentAction\x12\"\n" +
 	"\n" +
-	"partner_id\x18\x02 \x01(\tH\x01R\tpartnerId\x88\x01\x01\x12 \n" +
-	"\tprepay_id\x18\x03 \x01(\tH\x02R\bprepayId\x88\x01\x01\x12(\n" +
-	"\rpackage_value\x18\x04 \x01(\tH\x03R\fpackageValue\x88\x01\x01\x12\x19\n" +
-	"\x05nonce\x18\x05 \x01(\tH\x04R\x05nonce\x88\x01\x01\x12!\n" +
-	"\ttimestamp\x18\x06 \x01(\tH\x05R\ttimestamp\x88\x01\x01\x12!\n" +
-	"\tsignature\x18\a \x01(\tH\x06R\tsignature\x88\x01\x01\x12&\n" +
-	"\forder_string\x18\b \x01(\tH\aR\vorderString\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"partner_id\x18\x02 \x01(\tH\x00R\tpartnerId\x88\x01\x01\x12 \n" +
+	"\tprepay_id\x18\x03 \x01(\tH\x01R\bprepayId\x88\x01\x01\x12(\n" +
+	"\rpackage_value\x18\x04 \x01(\tH\x02R\fpackageValue\x88\x01\x01\x12\x19\n" +
+	"\x05nonce\x18\x05 \x01(\tH\x03R\x05nonce\x88\x01\x01\x12!\n" +
+	"\ttimestamp\x18\x06 \x01(\tH\x04R\ttimestamp\x88\x01\x01\x12!\n" +
+	"\tsignature\x18\a \x01(\tH\x05R\tsignature\x88\x01\x01\x12&\n" +
+	"\forder_string\x18\b \x01(\tH\x06R\vorderString\x88\x01\x01B\r\n" +
 	"\v_partner_idB\f\n" +
 	"\n" +
 	"_prepay_idB\x10\n" +

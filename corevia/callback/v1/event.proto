@@ -17,8 +17,6 @@ message CallbackEvent {
   // event_type 为点分规范事件类型，不限支付。
   // 例：payment.succeeded、refund.result、subscription.renewed、dispute.opened、risk.alert、kyc.result。
   string event_type = 4;
-  // app_id 为业务归属 App；由验签通过的配置或载荷解析，不接受调用方自报。
-  uint32 app_id = 5;
   // occurred_at 为来源侧发生时间；未知时由 BFF 收到时间填充。
   google.protobuf.Timestamp occurred_at = 6;
   // verified_at 为入口验签通过时间。

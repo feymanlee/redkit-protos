@@ -29,7 +29,7 @@ const (
 //
 // Coin Reward 履约服务。
 type CoinRewardServiceClient interface {
-	// 预检一个 App 下的 Coin Reward 配置。
+	// 预检 Coin Reward 配置。
 	PreflightCoinReward(ctx context.Context, in *PreflightCoinRewardRequest, opts ...grpc.CallOption) (*PreflightCoinRewardResponse, error)
 	// 按稳定 Reward Item 身份幂等发放 Coin。
 	GrantCoinReward(ctx context.Context, in *GrantCoinRewardRequest, opts ...grpc.CallOption) (*GrantCoinRewardResponse, error)
@@ -69,7 +69,7 @@ func (c *coinRewardServiceClient) GrantCoinReward(ctx context.Context, in *Grant
 //
 // Coin Reward 履约服务。
 type CoinRewardServiceServer interface {
-	// 预检一个 App 下的 Coin Reward 配置。
+	// 预检 Coin Reward 配置。
 	PreflightCoinReward(context.Context, *PreflightCoinRewardRequest) (*PreflightCoinRewardResponse, error)
 	// 按稳定 Reward Item 身份幂等发放 Coin。
 	GrantCoinReward(context.Context, *GrantCoinRewardRequest) (*GrantCoinRewardResponse, error)

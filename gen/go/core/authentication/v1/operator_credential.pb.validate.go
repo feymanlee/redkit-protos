@@ -63,10 +63,6 @@ func (m *OperatorCredential) validate(all bool) error {
 		// no validation rules for OperatorId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.IdentityType != nil {
 		// no validation rules for IdentityType
 	}
@@ -929,8 +925,6 @@ func (m *ChangeCredentialRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for OperatorId
-
-	// no validation rules for AppId
 
 	// no validation rules for OldCredential
 

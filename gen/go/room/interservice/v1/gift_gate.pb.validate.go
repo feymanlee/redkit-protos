@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on ValidateSessionGiftTargetRequest with
@@ -61,28 +57,6 @@ func (m *ValidateSessionGiftTargetRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ValidateSessionGiftTargetRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ValidateSessionGiftTargetRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ValidateSessionGiftTargetRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetSessionId() <= 0 {
 		err := ValidateSessionGiftTargetRequestValidationError{
@@ -198,10 +172,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ValidateSessionGiftTargetRequestValidationError{}
-
-var _ValidateSessionGiftTargetRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ValidateSessionGiftTargetResponse with
 // the rules defined in the proto definition for this message. If any rules
@@ -339,28 +309,6 @@ func (m *PublishSessionSystemNoticeRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _PublishSessionSystemNoticeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := PublishSessionSystemNoticeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := PublishSessionSystemNoticeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetSessionId() <= 0 {
 		err := PublishSessionSystemNoticeRequestValidationError{
 			field:  "SessionId",
@@ -486,10 +434,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = PublishSessionSystemNoticeRequestValidationError{}
-
-var _PublishSessionSystemNoticeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on PublishSessionSystemNoticeResponse with
 // the rules defined in the proto definition for this message. If any rules

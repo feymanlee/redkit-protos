@@ -25,7 +25,7 @@ service SupportVerificationService {
   }
 }
 
-// AdminListVerificationAuditsRequest selects the authenticated App's Verification observations.
+// AdminListVerificationAuditsRequest selects the Verification observations.
 message AdminListVerificationAuditsRequest {
   // filter 限定本次查询采用的筛选条件。
   .support.verification.v1.VerificationAuditFilter filter = 1;

@@ -10,7 +10,7 @@ import "validate/validate.proto";
 
 // 礼物分账管理服务。
 service GiftSettlementService {
-  // 按 typed filter 分页查询当前 App 的 Settlement Record；只读，不提供编辑或覆盖。
+  // 按 typed filter 分页查询 Settlement Record；只读，不提供编辑或覆盖。
   rpc ListGiftSettlementRecords(AdminListGiftSettlementRecordsRequest) returns (.gift.v1.ListGiftSettlementRecordResponse) {
     option (google.api.http) = {get: "/admin/v1/gift-settlement-records"};
   }

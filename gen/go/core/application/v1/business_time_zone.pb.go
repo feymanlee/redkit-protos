@@ -7,9 +7,9 @@
 package applicationpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -22,29 +22,29 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// GetBusinessTimeZoneRequest identifies one concrete App.
-type GetBusinessTimeZoneRequest struct {
+// BusinessTimeZone 描述平台的固定业务日历。
+type BusinessTimeZone struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// App must match the trusted App Scope metadata.
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	// Canonical IANA time zone name.
+	IanaName      string `protobuf:"bytes,1,opt,name=iana_name,json=ianaName,proto3" json:"iana_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetBusinessTimeZoneRequest) Reset() {
-	*x = GetBusinessTimeZoneRequest{}
+func (x *BusinessTimeZone) Reset() {
+	*x = BusinessTimeZone{}
 	mi := &file_core_application_v1_business_time_zone_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetBusinessTimeZoneRequest) String() string {
+func (x *BusinessTimeZone) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetBusinessTimeZoneRequest) ProtoMessage() {}
+func (*BusinessTimeZone) ProtoMessage() {}
 
-func (x *GetBusinessTimeZoneRequest) ProtoReflect() protoreflect.Message {
+func (x *BusinessTimeZone) ProtoReflect() protoreflect.Message {
 	mi := &file_core_application_v1_business_time_zone_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -56,67 +56,12 @@ func (x *GetBusinessTimeZoneRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetBusinessTimeZoneRequest.ProtoReflect.Descriptor instead.
-func (*GetBusinessTimeZoneRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use BusinessTimeZone.ProtoReflect.Descriptor instead.
+func (*BusinessTimeZone) Descriptor() ([]byte, []int) {
 	return file_core_application_v1_business_time_zone_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetBusinessTimeZoneRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-// AppBusinessTimeZone describes an App's fixed business calendar.
-type AppBusinessTimeZone struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Concrete App identity.
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// Canonical IANA time zone name.
-	IanaName      string `protobuf:"bytes,2,opt,name=iana_name,json=ianaName,proto3" json:"iana_name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AppBusinessTimeZone) Reset() {
-	*x = AppBusinessTimeZone{}
-	mi := &file_core_application_v1_business_time_zone_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AppBusinessTimeZone) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AppBusinessTimeZone) ProtoMessage() {}
-
-func (x *AppBusinessTimeZone) ProtoReflect() protoreflect.Message {
-	mi := &file_core_application_v1_business_time_zone_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AppBusinessTimeZone.ProtoReflect.Descriptor instead.
-func (*AppBusinessTimeZone) Descriptor() ([]byte, []int) {
-	return file_core_application_v1_business_time_zone_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *AppBusinessTimeZone) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *AppBusinessTimeZone) GetIanaName() string {
+func (x *BusinessTimeZone) GetIanaName() string {
 	if x != nil {
 		return x.IanaName
 	}
@@ -127,14 +72,11 @@ var File_core_application_v1_business_time_zone_proto protoreflect.FileDescripto
 
 const file_core_application_v1_business_time_zone_proto_rawDesc = "" +
 	"\n" +
-	",core/application/v1/business_time_zone.proto\x12\x13core.application.v1\x1a\x16common/v1/common.proto\"E\n" +
-	"\x1aGetBusinessTimeZoneRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"[\n" +
-	"\x13AppBusinessTimeZone\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1b\n" +
-	"\tiana_name\x18\x02 \x01(\tR\bianaName2}\n" +
-	"\x17BusinessTimeZoneService\x12b\n" +
-	"\x03Get\x12/.core.application.v1.GetBusinessTimeZoneRequest\x1a(.core.application.v1.AppBusinessTimeZone\"\x00B\xeb\x01\n" +
+	",core/application/v1/business_time_zone.proto\x12\x13core.application.v1\x1a\x1bgoogle/protobuf/empty.proto\"/\n" +
+	"\x10BusinessTimeZone\x12\x1b\n" +
+	"\tiana_name\x18\x01 \x01(\tR\bianaName2a\n" +
+	"\x17BusinessTimeZoneService\x12F\n" +
+	"\x03Get\x12\x16.google.protobuf.Empty\x1a%.core.application.v1.BusinessTimeZone\"\x00B\xeb\x01\n" +
 	"\x17com.core.application.v1B\x15BusinessTimeZoneProtoP\x01ZKgithub.com/feymanlee/redkit-protos/gen/go/core/application/v1;applicationpb\xa2\x02\x03CAX\xaa\x02\x13Core.Application.V1\xca\x02\x13Core\\Application\\V1\xe2\x02\x1fCore\\Application\\V1\\GPBMetadata\xea\x02\x15Core::Application::V1b\x06proto3"
 
 var (
@@ -149,22 +91,19 @@ func file_core_application_v1_business_time_zone_proto_rawDescGZIP() []byte {
 	return file_core_application_v1_business_time_zone_proto_rawDescData
 }
 
-var file_core_application_v1_business_time_zone_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_core_application_v1_business_time_zone_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_core_application_v1_business_time_zone_proto_goTypes = []any{
-	(*GetBusinessTimeZoneRequest)(nil), // 0: core.application.v1.GetBusinessTimeZoneRequest
-	(*AppBusinessTimeZone)(nil),        // 1: core.application.v1.AppBusinessTimeZone
-	(v1.AppId)(0),                      // 2: common.v1.AppId
+	(*BusinessTimeZone)(nil), // 0: core.application.v1.BusinessTimeZone
+	(*emptypb.Empty)(nil),    // 1: google.protobuf.Empty
 }
 var file_core_application_v1_business_time_zone_proto_depIdxs = []int32{
-	2, // 0: core.application.v1.GetBusinessTimeZoneRequest.app_id:type_name -> common.v1.AppId
-	2, // 1: core.application.v1.AppBusinessTimeZone.app_id:type_name -> common.v1.AppId
-	0, // 2: core.application.v1.BusinessTimeZoneService.Get:input_type -> core.application.v1.GetBusinessTimeZoneRequest
-	1, // 3: core.application.v1.BusinessTimeZoneService.Get:output_type -> core.application.v1.AppBusinessTimeZone
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1, // 0: core.application.v1.BusinessTimeZoneService.Get:input_type -> google.protobuf.Empty
+	0, // 1: core.application.v1.BusinessTimeZoneService.Get:output_type -> core.application.v1.BusinessTimeZone
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_core_application_v1_business_time_zone_proto_init() }
@@ -178,7 +117,7 @@ func file_core_application_v1_business_time_zone_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_core_application_v1_business_time_zone_proto_rawDesc), len(file_core_application_v1_business_time_zone_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

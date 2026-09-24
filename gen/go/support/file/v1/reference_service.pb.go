@@ -7,7 +7,6 @@
 package filepb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -34,9 +33,7 @@ type AttachAndPublishRequest struct {
 	// 幂等操作号。
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// 请求链标识。
-	RequestId string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
-	// 具体业务 App。
-	AppId         v1.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	RequestId     string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -106,13 +103,6 @@ func (x *AttachAndPublishRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *AttachAndPublishRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // DetachReferenceRequest 解除一个版本化业务引用。
 type DetachReferenceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -125,9 +115,7 @@ type DetachReferenceRequest struct {
 	// 幂等操作号。
 	OperationNo string `protobuf:"bytes,4,opt,name=operation_no,json=operationNo,proto3" json:"operation_no,omitempty"`
 	// 请求链标识。
-	RequestId string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
-	// 具体业务 App。
-	AppId         v1.AppId `protobuf:"varint,6,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	RequestId     string `protobuf:"bytes,5,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -197,34 +185,25 @@ func (x *DetachReferenceRequest) GetRequestId() string {
 	return ""
 }
 
-func (x *DetachReferenceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 var File_support_file_v1_reference_service_proto protoreflect.FileDescriptor
 
 const file_support_file_v1_reference_service_proto_rawDesc = "" +
 	"\n" +
-	"'support/file/v1/reference_service.proto\x12\x0fsupport.file.v1\x1a\x16common/v1/common.proto\x1a\x1bsupport/file/v1/types.proto\"\x8b\x02\n" +
+	"'support/file/v1/reference_service.proto\x12\x0fsupport.file.v1\x1a\x1bsupport/file/v1/types.proto\"\xe2\x01\n" +
 	"\x17AttachAndPublishRequest\x12?\n" +
 	"\alocator\x18\x01 \x01(\v2%.support.file.v1.FileReferenceLocatorR\alocator\x12\x17\n" +
 	"\afile_id\x18\x02 \x01(\x04R\x06fileId\x12+\n" +
 	"\x11reference_version\x18\x03 \x01(\x04R\x10referenceVersion\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tR\trequestId\x12'\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"\x9b\x02\n" +
+	"request_id\x18\x05 \x01(\tR\trequestId\"\xf2\x01\n" +
 	"\x16DetachReferenceRequest\x12?\n" +
 	"\alocator\x18\x01 \x01(\v2%.support.file.v1.FileReferenceLocatorR\alocator\x12(\n" +
 	"\x10expected_file_id\x18\x02 \x01(\x04R\x0eexpectedFileId\x12+\n" +
 	"\x11reference_version\x18\x03 \x01(\x04R\x10referenceVersion\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tR\trequestId\x12'\n" +
-	"\x06app_id\x18\x06 \x01(\x0e2\x10.common.v1.AppIdR\x05appId2\xd0\x01\n" +
+	"request_id\x18\x05 \x01(\tR\trequestId2\xd0\x01\n" +
 	"\x14FileReferenceService\x12\\\n" +
 	"\x10AttachAndPublish\x12(.support.file.v1.AttachAndPublishRequest\x1a\x1e.support.file.v1.FileReference\x12Z\n" +
 	"\x0fDetachReference\x12'.support.file.v1.DetachReferenceRequest\x1a\x1e.support.file.v1.FileReferenceB\xcc\x01\n" +
@@ -247,23 +226,20 @@ var file_support_file_v1_reference_service_proto_goTypes = []any{
 	(*AttachAndPublishRequest)(nil), // 0: support.file.v1.AttachAndPublishRequest
 	(*DetachReferenceRequest)(nil),  // 1: support.file.v1.DetachReferenceRequest
 	(*FileReferenceLocator)(nil),    // 2: support.file.v1.FileReferenceLocator
-	(v1.AppId)(0),                   // 3: common.v1.AppId
-	(*FileReference)(nil),           // 4: support.file.v1.FileReference
+	(*FileReference)(nil),           // 3: support.file.v1.FileReference
 }
 var file_support_file_v1_reference_service_proto_depIdxs = []int32{
 	2, // 0: support.file.v1.AttachAndPublishRequest.locator:type_name -> support.file.v1.FileReferenceLocator
-	3, // 1: support.file.v1.AttachAndPublishRequest.app_id:type_name -> common.v1.AppId
-	2, // 2: support.file.v1.DetachReferenceRequest.locator:type_name -> support.file.v1.FileReferenceLocator
-	3, // 3: support.file.v1.DetachReferenceRequest.app_id:type_name -> common.v1.AppId
-	0, // 4: support.file.v1.FileReferenceService.AttachAndPublish:input_type -> support.file.v1.AttachAndPublishRequest
-	1, // 5: support.file.v1.FileReferenceService.DetachReference:input_type -> support.file.v1.DetachReferenceRequest
-	4, // 6: support.file.v1.FileReferenceService.AttachAndPublish:output_type -> support.file.v1.FileReference
-	4, // 7: support.file.v1.FileReferenceService.DetachReference:output_type -> support.file.v1.FileReference
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	2, // 1: support.file.v1.DetachReferenceRequest.locator:type_name -> support.file.v1.FileReferenceLocator
+	0, // 2: support.file.v1.FileReferenceService.AttachAndPublish:input_type -> support.file.v1.AttachAndPublishRequest
+	1, // 3: support.file.v1.FileReferenceService.DetachReference:input_type -> support.file.v1.DetachReferenceRequest
+	3, // 4: support.file.v1.FileReferenceService.AttachAndPublish:output_type -> support.file.v1.FileReference
+	3, // 5: support.file.v1.FileReferenceService.DetachReference:output_type -> support.file.v1.FileReference
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_support_file_v1_reference_service_proto_init() }

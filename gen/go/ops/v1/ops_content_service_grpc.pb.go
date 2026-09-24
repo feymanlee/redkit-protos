@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// OpsPlacementFeedService 仅供受信任 App BFF 在具体 App Scope 下读取已发布投放。
+// OpsPlacementFeedService 仅供受信任 App BFF 读取已发布投放。
 type OpsPlacementFeedServiceClient interface {
 	// ListPublishedPlacementContent 返回指定投放位在当前时间窗内的已发布内容；C 端客户端不得直连。
 	ListPublishedPlacementContent(ctx context.Context, in *PublishedPlacementFeedRequest, opts ...grpc.CallOption) (*PublishedPlacementFeedResponse, error)
@@ -54,7 +54,7 @@ func (c *opsPlacementFeedServiceClient) ListPublishedPlacementContent(ctx contex
 // All implementations must embed UnimplementedOpsPlacementFeedServiceServer
 // for forward compatibility.
 //
-// OpsPlacementFeedService 仅供受信任 App BFF 在具体 App Scope 下读取已发布投放。
+// OpsPlacementFeedService 仅供受信任 App BFF 读取已发布投放。
 type OpsPlacementFeedServiceServer interface {
 	// ListPublishedPlacementContent 返回指定投放位在当前时间窗内的已发布内容；C 端客户端不得直连。
 	ListPublishedPlacementContent(context.Context, *PublishedPlacementFeedRequest) (*PublishedPlacementFeedResponse, error)

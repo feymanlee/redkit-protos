@@ -31,7 +31,7 @@ const (
 //
 // RewardClosureService 暴露 User Closure 使用的窄 Ops participant 契约。
 type RewardClosureServiceClient interface {
-	// PrepareClosure 建立 App/User fence，并报告仍阻断注销的已受理 Item。
+	// PrepareClosure 建立 User fence，并报告仍阻断注销的已受理 Item。
 	PrepareClosure(ctx context.Context, in *PrepareClosureRequest, opts ...grpc.CallOption) (*ClosureParticipantState, error)
 	// ApplyClosure 重新检查 fence，只有所有已受理 Item 都终态后才收敛。
 	ApplyClosure(ctx context.Context, in *ApplyClosureRequest, opts ...grpc.CallOption) (*ClosureParticipantState, error)
@@ -95,7 +95,7 @@ func (c *rewardClosureServiceClient) GetClosureStatus(ctx context.Context, in *G
 //
 // RewardClosureService 暴露 User Closure 使用的窄 Ops participant 契约。
 type RewardClosureServiceServer interface {
-	// PrepareClosure 建立 App/User fence，并报告仍阻断注销的已受理 Item。
+	// PrepareClosure 建立 User fence，并报告仍阻断注销的已受理 Item。
 	PrepareClosure(context.Context, *PrepareClosureRequest) (*ClosureParticipantState, error)
 	// ApplyClosure 重新检查 fence，只有所有已受理 Item 都终态后才收敛。
 	ApplyClosure(context.Context, *ApplyClosureRequest) (*ClosureParticipantState, error)

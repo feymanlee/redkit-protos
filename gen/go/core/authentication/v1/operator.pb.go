@@ -83,8 +83,6 @@ type OperatorMetadata struct {
 	Type OperatorMetadata_OperatorType `protobuf:"varint,1,opt,name=type,proto3,enum=core.authentication.v1.OperatorMetadata_OperatorType" json:"type,omitempty"` // 操作者类型
 	// 后台人员ID。
 	OperatorId uint64 `protobuf:"varint,2,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"` // 后台人员ID
-	// AppID。
-	AppId uint64 `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"` // AppID
 	// 数据权限范围策略。
 	DataScope v1.DataScope `protobuf:"varint,4,opt,name=data_scope,json=dataScope,proto3,enum=core.operator.v1.DataScope" json:"data_scope,omitempty"` // 数据权限范围策略
 	// 用于存放少量的核心角色 ID 或标记位。
@@ -139,13 +137,6 @@ func (x *OperatorMetadata) GetType() OperatorMetadata_OperatorType {
 func (x *OperatorMetadata) GetOperatorId() uint64 {
 	if x != nil {
 		return x.OperatorId
-	}
-	return 0
-}
-
-func (x *OperatorMetadata) GetAppId() uint64 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -244,12 +235,11 @@ var File_core_authentication_v1_operator_proto protoreflect.FileDescriptor
 
 const file_core_authentication_v1_operator_proto_rawDesc = "" +
 	"\n" +
-	"%core/authentication/v1/operator.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1ccore/operator/v1/types.proto\"\xc4\x05\n" +
+	"%core/authentication/v1/operator.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1ccore/operator/v1/types.proto\"\xa0\x05\n" +
 	"\x10OperatorMetadata\x12`\n" +
 	"\x04type\x18\x01 \x01(\x0e25.core.authentication.v1.OperatorMetadata.OperatorTypeB\x15\xbaG\x12\x92\x02\x0f操作者类型R\x04type\x125\n" +
 	"\voperator_id\x18\x02 \x01(\x04B\x14\xbaG\x11\x92\x02\x0e后台人员IDR\n" +
-	"operatorId\x12\"\n" +
-	"\x06app_id\x18\x03 \x01(\x04B\v\xbaG\b\x92\x02\x05AppIDR\x05appId\x12Z\n" +
+	"operatorId\x12Z\n" +
 	"\n" +
 	"data_scope\x18\x04 \x01(\x0e2\x1b.core.operator.v1.DataScopeB\x1e\xbaG\x1b\x92\x02\x18数据权限范围策略R\tdataScope\x12R\n" +
 	"\brole_ids\x18\x05 \x03(\x04B7\xbaG4\x92\x021用于存放少量的核心角色 ID 或标记位R\aroleIds\x12I\n" +

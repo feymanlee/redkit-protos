@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on PaymentCallback with the rules defined
@@ -133,10 +129,6 @@ func (m *PaymentCallback) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Provider != nil {
@@ -377,8 +369,6 @@ func (m *CallbackVerificationCandidate) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for RevisionKey
-
-	// no validation rules for AppId
 
 	// no validation rules for ChannelId
 
@@ -740,10 +730,6 @@ func (m *ReprocessPaymentCallbackRequest) validate(all bool) error {
 	// no validation rules for OperatorId
 
 	// no validation rules for Reason
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId

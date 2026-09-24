@@ -165,7 +165,7 @@ func ErrorPurchaseNotRetryable(format string, args ...interface{}) *errors.Error
 	return errors.New(409, PaymentErrorReason_PURCHASE_NOT_RETRYABLE.String(), fmt.Sprintf(format, args...))
 }
 
-// 当前 App 与客户端平台下不存在可购买的固定期限 Subscription Offer。
+// 当前客户端平台下不存在可购买的固定期限 Subscription Offer。
 func IsSubscriptionOfferUnavailable(err error) bool {
 	if err == nil {
 		return false
@@ -174,7 +174,7 @@ func IsSubscriptionOfferUnavailable(err error) bool {
 	return e.Reason == PaymentErrorReason_SUBSCRIPTION_OFFER_UNAVAILABLE.String() && e.Code == 409
 }
 
-// 当前 App 与客户端平台下不存在可购买的固定期限 Subscription Offer。
+// 当前客户端平台下不存在可购买的固定期限 Subscription Offer。
 func ErrorSubscriptionOfferUnavailable(format string, args ...interface{}) *errors.Error {
 	return errors.New(409, PaymentErrorReason_SUBSCRIPTION_OFFER_UNAVAILABLE.String(), fmt.Sprintf(format, args...))
 }
@@ -193,7 +193,7 @@ func ErrorSubscriptionPurchaseExpired(format string, args ...interface{}) *error
 	return errors.New(409, PaymentErrorReason_SUBSCRIPTION_PURCHASE_EXPIRED.String(), fmt.Sprintf(format, args...))
 }
 
-// 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+// 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
 func IsRechargeOfferUnavailable(err error) bool {
 	if err == nil {
 		return false
@@ -202,7 +202,7 @@ func IsRechargeOfferUnavailable(err error) bool {
 	return e.Reason == PaymentErrorReason_RECHARGE_OFFER_UNAVAILABLE.String() && e.Code == 409
 }
 
-// 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+// 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
 func ErrorRechargeOfferUnavailable(format string, args ...interface{}) *errors.Error {
 	return errors.New(409, PaymentErrorReason_RECHARGE_OFFER_UNAVAILABLE.String(), fmt.Sprintf(format, args...))
 }

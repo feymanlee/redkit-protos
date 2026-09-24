@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on GiftBackpackBalance with the rules
@@ -63,10 +59,6 @@ func (m *GiftBackpackBalance) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -275,10 +267,6 @@ func (m *GiftBackpackBatch) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -570,10 +558,6 @@ func (m *GiftBackpackTransaction) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.UserId != nil {
 		// no validation rules for UserId
 	}
@@ -799,10 +783,6 @@ func (m *GiftBackpackTransactionItem) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.TransactionId != nil {
@@ -2076,10 +2056,6 @@ func (m *ListBackpackBalancesRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListBackpackBalancesRequestMultiError(errors)
 	}
@@ -2239,10 +2215,6 @@ func (m *ListBackpackBatchesRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -2405,10 +2377,6 @@ func (m *ListBackpackTransactionsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListBackpackTransactionsRequestMultiError(errors)
 	}
@@ -2544,10 +2512,6 @@ func (m *ListBackpackTransactionItemsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListBackpackTransactionItemsRequestMultiError(errors)
 	}
@@ -2667,10 +2631,6 @@ func (m *AdjustBackpackGiftRequest) validate(all bool) error {
 	// no validation rules for OperationNo
 
 	// no validation rules for OperatorId
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId
@@ -3016,10 +2976,6 @@ func (m *GrantBackpackGiftRequest) validate(all bool) error {
 
 	// no validation rules for IdempotencyKey
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.SourceId != nil {
 		// no validation rules for SourceId
 	}
@@ -3187,10 +3143,6 @@ func (m *RevokeBackpackGiftRequest) validate(all bool) error {
 
 	// no validation rules for IdempotencyKey
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.SourceType != nil {
 		// no validation rules for SourceType
 	}
@@ -3320,10 +3272,6 @@ func (m *ExpireBackpackItemsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if m.UserId != nil {
 		// no validation rules for UserId

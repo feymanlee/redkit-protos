@@ -76,7 +76,7 @@ type WalletServiceClient interface {
 	ListWalletUserDebts(ctx context.Context, in *ListWalletUserDebtsRequest, opts ...grpc.CallOption) (*ListWalletUserDebtResponse, error)
 	// 创建受审计的异步导出作业。
 	CreateExport(ctx context.Context, in *CreateWalletExportRequest, opts ...grpc.CallOption) (*WalletExportJob, error)
-	// 查询当前 App 的导出作业。
+	// 查询导出作业。
 	ListExports(ctx context.Context, in *ListWalletExportsRequest, opts ...grpc.CallOption) (*ListWalletExportsResponse, error)
 	// 重试失败的导出作业。
 	RetryExport(ctx context.Context, in *RetryWalletExportRequest, opts ...grpc.CallOption) (*WalletExportJob, error)
@@ -308,7 +308,7 @@ type WalletServiceServer interface {
 	ListWalletUserDebts(context.Context, *ListWalletUserDebtsRequest) (*ListWalletUserDebtResponse, error)
 	// 创建受审计的异步导出作业。
 	CreateExport(context.Context, *CreateWalletExportRequest) (*WalletExportJob, error)
-	// 查询当前 App 的导出作业。
+	// 查询导出作业。
 	ListExports(context.Context, *ListWalletExportsRequest) (*ListWalletExportsResponse, error)
 	// 重试失败的导出作业。
 	RetryExport(context.Context, *RetryWalletExportRequest) (*WalletExportJob, error)

@@ -32,8 +32,6 @@ message ProviderBill {
 
   // id 标识关联的 ProviderBill。
   uint64 id = 1;
-  // app_id 限定 ProviderBill 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 3;
   // bill_date 记录 ProviderBill 对应业务阶段的时间点。
@@ -101,8 +99,6 @@ message ReconciliationBatch {
 
   // id 标识关联的 ReconciliationBatch。
   uint64 id = 1;
-  // app_id 限定 ReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 3;
   // bill_date 记录 ReconciliationBatch 对应业务阶段的时间点。
@@ -174,8 +170,6 @@ message ReconciliationFinding {
 
   // id 标识关联的 ReconciliationFinding。
   uint64 id = 1;
-  // app_id 限定 ReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // batch_id 标识关联的 Batch。
   uint64 batch_id = 3;
   // provider_bill_row_id 标识关联的 ProviderBillRow。
@@ -220,8 +214,6 @@ message ReconciliationFinding {
 message ReconciliationFindingAction {
   // id 标识关联的 ReconciliationFindingAction。
   uint64 id = 1;
-  // app_id 限定 ReconciliationFindingAction 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // finding_id 标识关联的 Finding。
   uint64 finding_id = 3;
   // from_status 记录本次状态推进前的生命周期状态。
@@ -264,8 +256,6 @@ message ReconciliationItem {
   }
   // id 标识关联的 ReconciliationItem。
   optional uint64 id = 1;
-  // app_id 限定 ReconciliationItem 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // batch_id 标识关联的 Batch。
   optional uint64 batch_id = 3;
   // payment_no 是 ReconciliationItem 对外关联与审计使用的业务编号。
@@ -292,8 +282,6 @@ message ReconciliationItem {
 
 // ImportProviderBillRequest 定义导入 ProviderBill 的幂等管理命令参数。
 message ImportProviderBillRequest {
-  // app_id 限定 ImportProviderBill 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 2;
   // bill_date 记录 ImportProviderBill 对应业务阶段的时间点。
@@ -316,8 +304,6 @@ message ImportProviderBillRequest {
 
 // CreateReconciliationBatchRequest 定义创建 ReconciliationBatch 的幂等命令参数。
 message CreateReconciliationBatchRequest {
-  // app_id 限定 CreateReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 2;
   // bill_date 记录 CreateReconciliationBatch 对应业务阶段的时间点。
@@ -332,16 +318,12 @@ message CreateReconciliationBatchRequest {
 
 // GetReconciliationBatchRequest 标识待查询的 ReconciliationBatch。
 message GetReconciliationBatchRequest {
-  // app_id 限定 GetReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // batch_id 标识关联的 Batch。
   uint64 batch_id = 2;
 }
 
 // ListReconciliationBatchesRequest 定义 ReconciliationBatches 的筛选与分页参数。
 message ListReconciliationBatchesRequest {
-  // app_id 限定 ListReconciliationBatches 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   optional PaymentProvider provider = 2;
   // bill_date 记录 ListReconciliationBatches 对应业务阶段的时间点。
@@ -362,8 +344,6 @@ message ListReconciliationBatchResponse {
 
 // ListReconciliationFindingsRequest 定义 ReconciliationFindings 的筛选与分页参数。
 message ListReconciliationFindingsRequest {
-  // app_id 限定 ListReconciliationFindings 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // batch_id 标识关联的 Batch。
   optional uint64 batch_id = 2;
   // status 表示 ListReconciliationFindings 当前可观察的生命周期状态。
@@ -388,8 +368,6 @@ message ListReconciliationFindingsResponse {
 
 // GetReconciliationFindingRequest 标识待查询的 ReconciliationFinding。
 message GetReconciliationFindingRequest {
-  // app_id 限定 GetReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // finding_id 标识关联的 Finding。
   uint64 finding_id = 2;
 }
@@ -419,8 +397,6 @@ message MutateReconciliationFindingRequest {
     // RECONCILIATION_FINDING_ACTION_REOPEN 执行 REOPEN 业务动作。
     RECONCILIATION_FINDING_ACTION_REOPEN = 5;
   }
-  // app_id 限定 MutateReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // finding_id 标识关联的 Finding。
   uint64 finding_id = 2;
   // action 指定本次状态推进采用的业务动作。

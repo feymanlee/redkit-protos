@@ -26,7 +26,7 @@ const OperationOpsPlacementServiceListPlacements = "/admin.ops.v1.OpsPlacementSe
 const OperationOpsPlacementServiceUpdatePlacement = "/admin.ops.v1.OpsPlacementService/UpdatePlacement"
 
 type OpsPlacementServiceHTTPServer interface {
-	// CreatePlacement 创建投放位；code 在 App 内唯一且创建后不可改。
+	// CreatePlacement 创建投放位；code 唯一且创建后不可改。
 	CreatePlacement(context.Context, *AdminCreatePlacementRequest) (*v11.Placement, error)
 	// ListPlacements 查询投放位列表。
 	ListPlacements(context.Context, *v1.PagingRequest) (*v11.ListPlacementResponse, error)
@@ -108,7 +108,7 @@ func _OpsPlacementService_UpdatePlacement0_HTTP_Handler(srv OpsPlacementServiceH
 }
 
 type OpsPlacementServiceHTTPClient interface {
-	// CreatePlacement 创建投放位；code 在 App 内唯一且创建后不可改。
+	// CreatePlacement 创建投放位；code 唯一且创建后不可改。
 	CreatePlacement(ctx context.Context, req *AdminCreatePlacementRequest, opts ...http.CallOption) (rsp *v11.Placement, err error)
 	// ListPlacements 查询投放位列表。
 	ListPlacements(ctx context.Context, req *v1.PagingRequest, opts ...http.CallOption) (rsp *v11.ListPlacementResponse, err error)
@@ -124,7 +124,7 @@ func NewOpsPlacementServiceHTTPClient(client *http.Client) OpsPlacementServiceHT
 	return &OpsPlacementServiceHTTPClientImpl{client}
 }
 
-// CreatePlacement 创建投放位；code 在 App 内唯一且创建后不可改。
+// CreatePlacement 创建投放位；code 唯一且创建后不可改。
 func (c *OpsPlacementServiceHTTPClientImpl) CreatePlacement(ctx context.Context, in *AdminCreatePlacementRequest, opts ...http.CallOption) (*v11.Placement, error) {
 	var out v11.Placement
 	pattern := "/admin/v1/ops/placements"

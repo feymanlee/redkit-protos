@@ -2,11 +2,10 @@ syntax = "proto3";
 
 package user.administration.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/field_mask.proto";
 import "user/administration/v1/types.proto";
 
-// UserPolicyService 管理每个 App 的用户与认证策略。
+// UserPolicyService 管理平台的用户与认证策略。
 service UserPolicyService {
   // 查询 UserAppPolicy。
   rpc GetUserAppPolicy(GetUserAppPolicyRequest) returns (UserAppPolicy);
@@ -15,8 +14,6 @@ service UserPolicyService {
 }
 // GetUserAppPolicyRequest 标识待查询的 UserAppPolicy。
 message GetUserAppPolicyRequest {
-  // app_id 限定 GetUserAppPolicy 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
 }
 // UserAppPolicyPatch 描述对应能力的配置与约束。
 message UserAppPolicyPatch {
@@ -51,8 +48,6 @@ message UserAppPolicyPatch {
 }
 // UpdateUserAppPolicyRequest 定义更新 UserAppPolicy 的命令参数。
 message UpdateUserAppPolicyRequest {
-  // app_id 限定 UpdateUserAppPolicy 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // data 承载 UpdateUserAppPolicy 对应阶段的结构化业务内容。
   UserAppPolicyPatch data = 2;
   // update_mask 指定本次请求允许局部更新的字段路径。

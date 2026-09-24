@@ -88,14 +88,6 @@ func (m *Role) validate(all bool) error {
 		// no validation rules for Type
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
-	if m.AppName != nil {
-		// no validation rules for AppName
-	}
-
 	if m.CreatedBy != nil {
 		// no validation rules for CreatedBy
 	}
@@ -563,14 +555,6 @@ func (m *RoleMetadata) validate(all bool) error {
 		// no validation rules for SyncPolicy
 	}
 
-	if m.Scope != nil {
-		// no validation rules for Scope
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.CreatedBy != nil {
 		// no validation rules for CreatedBy
 	}
@@ -991,10 +975,6 @@ func (m *GetRoleRequest) validate(all bool) error {
 
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return GetRoleRequestMultiError(errors)
 	}
@@ -1286,10 +1266,6 @@ func (m *UpdateRoleRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return UpdateRoleRequestMultiError(errors)
 	}
@@ -1419,10 +1395,6 @@ func (m *DeleteRoleRequest) validate(all bool) error {
 		// no validation rules for Code
 	default:
 		_ = v // ensures v is used
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -2999,8 +2971,6 @@ func (m *CreateAppRoleFromTemplateRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for OperatorId
 
 	if len(errors) > 0 {
@@ -3108,8 +3078,6 @@ func (m *AssignRolesToOperatorRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for OperatorId
-
-	// no validation rules for AppId
 
 	// no validation rules for OperatedBy
 
@@ -3220,8 +3188,6 @@ func (m *AssignOperatorsToRoleRequest) validate(all bool) error {
 
 	// no validation rules for RoleId
 
-	// no validation rules for AppId
-
 	// no validation rules for OperatedBy
 
 	// no validation rules for Reason
@@ -3330,8 +3296,6 @@ func (m *GetOperatorRolesRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for OperatorId
-
-	// no validation rules for AppId
 
 	// no validation rules for IncludeExpired
 
@@ -4019,8 +3983,6 @@ func (m *UnassignRolesFromOperatorRequest) validate(all bool) error {
 
 	// no validation rules for OperatorId
 
-	// no validation rules for AppId
-
 	// no validation rules for OperatedBy
 
 	// no validation rules for RemoveAll
@@ -4242,8 +4204,6 @@ func (m *UnassignOperatorsFromRoleRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for RoleId
-
-	// no validation rules for AppId
 
 	// no validation rules for OperatorId
 

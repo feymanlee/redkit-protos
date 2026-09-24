@@ -50,7 +50,7 @@ type PaymentChannelServiceClient interface {
 	ListPaymentChannels(ctx context.Context, in *ListPaymentChannelsRequest, opts ...grpc.CallOption) (*ListPaymentChannelResponse, error)
 	// 查询 ChannelRevision 列表。
 	ListChannelRevisions(ctx context.Context, in *ListChannelRevisionsRequest, opts ...grpc.CallOption) (*ListChannelRevisionResponse, error)
-	// 为当前 App 创建不可变的 RoutingPolicyRevision 草稿。
+	// 创建不可变的 RoutingPolicyRevision 草稿。
 	CreateRoutingPolicyRevision(ctx context.Context, in *CreateRoutingPolicyRevisionRequest, opts ...grpc.CallOption) (*RoutingPolicyRevision, error)
 	// 校验候选渠道后创建不可变的公开 PaymentOptionRevision 草稿。
 	CreatePaymentOptionRevision(ctx context.Context, in *CreatePaymentOptionRevisionRequest, opts ...grpc.CallOption) (*PaymentOptionRevision, error)
@@ -222,7 +222,7 @@ type PaymentChannelServiceServer interface {
 	ListPaymentChannels(context.Context, *ListPaymentChannelsRequest) (*ListPaymentChannelResponse, error)
 	// 查询 ChannelRevision 列表。
 	ListChannelRevisions(context.Context, *ListChannelRevisionsRequest) (*ListChannelRevisionResponse, error)
-	// 为当前 App 创建不可变的 RoutingPolicyRevision 草稿。
+	// 创建不可变的 RoutingPolicyRevision 草稿。
 	CreateRoutingPolicyRevision(context.Context, *CreateRoutingPolicyRevisionRequest) (*RoutingPolicyRevision, error)
 	// 校验候选渠道后创建不可变的公开 PaymentOptionRevision 草稿。
 	CreatePaymentOptionRevision(context.Context, *CreatePaymentOptionRevisionRequest) (*PaymentOptionRevision, error)

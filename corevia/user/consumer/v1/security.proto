@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package user.consumer.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
@@ -37,8 +36,6 @@ service ConsumerSecurityService {
 
 // GetSecurityOverviewRequest 标识待查询的 SecurityOverview。
 message GetSecurityOverviewRequest {
-  // app_id 限定 GetSecurityOverview 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
 
 // StepUpPurpose 定义对应业务维度允许使用的离散取值。
@@ -115,8 +112,6 @@ message StepUpBinding {
 
 // StartStepUpAuthorizationRequest 定义启动 StepUpAuthorization 的幂等管理命令参数。
 message StartStepUpAuthorizationRequest {
-  // app_id 限定 StartStepUpAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // purpose 指定 StartStepUpAuthorization 数据或能力的预期用途。
   StepUpPurpose purpose = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // binding 承载 StartStepUpAuthorization 关联的 StepUpBinding。
@@ -145,8 +140,6 @@ message StepUpChallenge {
 
 // ResendStepUpChallengeRequest 定义执行 ResendStepUpChallenge 的幂等管理命令参数。
 message ResendStepUpChallengeRequest {
-  // app_id 限定 ResendStepUpChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
   string challenge_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -155,8 +148,6 @@ message ResendStepUpChallengeRequest {
 
 // CompleteStepUpAuthorizationRequest 定义完成 StepUpAuthorization 的幂等管理命令参数。
 message CompleteStepUpAuthorizationRequest {
-  // app_id 限定 CompleteStepUpAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
   string challenge_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // CompleteStepUpAuthorizationRequest 在以下身份或安全证明中选择一种。
@@ -201,8 +192,6 @@ message TotpEnrollment {
 
 // BeginTotpEnrollmentRequest 定义开始 TotpEnrollment 的幂等管理命令参数。
 message BeginTotpEnrollmentRequest {
-  // app_id 限定 BeginTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
   string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -211,8 +200,6 @@ message BeginTotpEnrollmentRequest {
 
 // ConfirmTotpEnrollmentRequest 定义执行 ConfirmTotpEnrollment 的幂等管理命令参数。
 message ConfirmTotpEnrollmentRequest {
-  // app_id 限定 ConfirmTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // factor_id 标识关联的 Factor。
   string factor_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
   // code 承载调用方输入的一次性验证码，不得写入普通日志。
@@ -231,8 +218,6 @@ message ConfirmTotpEnrollmentResponse {
 
 // BeginRequiredTotpEnrollmentRequest 定义开始 RequiredTotpEnrollment 的幂等管理命令参数。
 message BeginRequiredTotpEnrollmentRequest {
-  // app_id 限定 BeginRequiredTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // action_token 承载敏感凭据或校验材料，不得写入普通日志。
   string action_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -241,8 +226,6 @@ message BeginRequiredTotpEnrollmentRequest {
 
 // ConfirmRequiredTotpEnrollmentRequest 定义执行 ConfirmRequiredTotpEnrollment 的幂等管理命令参数。
 message ConfirmRequiredTotpEnrollmentRequest {
-  // app_id 限定 ConfirmRequiredTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // action_token 承载敏感凭据或校验材料，不得写入普通日志。
   string action_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // factor_id 标识关联的 Factor。
@@ -263,8 +246,6 @@ message ConfirmRequiredTotpEnrollmentResponse {
 
 // RegenerateRecoveryCodesRequest 定义执行 RegenerateRecoveryCodes 的幂等管理命令参数。
 message RegenerateRecoveryCodesRequest {
-  // app_id 限定 RegenerateRecoveryCodes 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
   string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -281,8 +262,6 @@ message RegenerateRecoveryCodesResponse {
 
 // DisableTotpRequest 定义停用 Totp 的幂等管理命令参数。
 message DisableTotpRequest {
-  // app_id 限定 DisableTotp 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
   string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -299,8 +278,6 @@ message SecurityMutationResponse {
 
 // ListSecurityActivitiesRequest 定义 SecurityActivities 的筛选与分页参数。
 message ListSecurityActivitiesRequest {
-  // app_id 限定 ListSecurityActivities 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // page 返回继续分页所需的游标和结果规模信息。
   user.types.v1.CursorPageRequest page = 2;
 }

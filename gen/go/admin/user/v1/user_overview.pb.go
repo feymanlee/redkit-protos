@@ -213,7 +213,7 @@ func (UserOverviewDestination) EnumDescriptor() ([]byte, []int) {
 // GetUserOverviewRequest 标识待查询的 UserOverview。
 type GetUserOverviewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -259,7 +259,7 @@ func (x *GetUserOverviewRequest) GetUserId() uint64 {
 // GetUserOverviewSectionRequest 标识待查询的 UserOverviewSection。
 type GetUserOverviewSectionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// section 承载 GetUserOverviewSection 关联的 UserOverviewSection。
 	Section       UserOverviewSection `protobuf:"varint,2,opt,name=section,proto3,enum=admin.user.v1.UserOverviewSection" json:"section,omitempty"`
@@ -316,7 +316,7 @@ type UserOverviewDrilldown struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// destination 承载 UserOverviewDrilldown 关联的 UserOverviewDestination。
 	Destination UserOverviewDestination `protobuf:"varint,1,opt,name=destination,proto3,enum=admin.user.v1.UserOverviewDestination" json:"destination,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

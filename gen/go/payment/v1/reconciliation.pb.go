@@ -7,8 +7,8 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -505,8 +505,6 @@ type ProviderBill struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ProviderBill。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ProviderBill 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// bill_date 记录 ProviderBill 对应业务阶段的时间点。
@@ -580,13 +578,6 @@ func (*ProviderBill) Descriptor() ([]byte, []int) {
 func (x *ProviderBill) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *ProviderBill) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -722,8 +713,6 @@ type ReconciliationBatch struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ReconciliationBatch。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// bill_date 记录 ReconciliationBatch 对应业务阶段的时间点。
@@ -799,13 +788,6 @@ func (*ReconciliationBatch) Descriptor() ([]byte, []int) {
 func (x *ReconciliationBatch) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *ReconciliationBatch) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -948,8 +930,6 @@ type ReconciliationFinding struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ReconciliationFinding。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// batch_id 标识关联的 Batch。
 	BatchId uint64 `protobuf:"varint,3,opt,name=batch_id,json=batchId,proto3" json:"batch_id,omitempty"`
 	// provider_bill_row_id 标识关联的 ProviderBillRow。
@@ -1025,13 +1005,6 @@ func (*ReconciliationFinding) Descriptor() ([]byte, []int) {
 func (x *ReconciliationFinding) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *ReconciliationFinding) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -1174,8 +1147,6 @@ type ReconciliationFindingAction struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ReconciliationFindingAction。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ReconciliationFindingAction 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// finding_id 标识关联的 Finding。
 	FindingId uint64 `protobuf:"varint,3,opt,name=finding_id,json=findingId,proto3" json:"finding_id,omitempty"`
 	// from_status 记录本次状态推进前的生命周期状态。
@@ -1235,13 +1206,6 @@ func (*ReconciliationFindingAction) Descriptor() ([]byte, []int) {
 func (x *ReconciliationFindingAction) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *ReconciliationFindingAction) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -1330,8 +1294,6 @@ type ReconciliationItem struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ReconciliationItem。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// app_id 限定 ReconciliationItem 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// batch_id 标识关联的 Batch。
 	BatchId *uint64 `protobuf:"varint,3,opt,name=batch_id,json=batchId,proto3,oneof" json:"batch_id,omitempty"`
 	// payment_no 是 ReconciliationItem 对外关联与审计使用的业务编号。
@@ -1391,13 +1353,6 @@ func (*ReconciliationItem) Descriptor() ([]byte, []int) {
 func (x *ReconciliationItem) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *ReconciliationItem) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -1482,8 +1437,6 @@ func (x *ReconciliationItem) GetCreatedAt() *timestamppb.Timestamp {
 // ImportProviderBillRequest 定义导入 ProviderBill 的幂等管理命令参数。
 type ImportProviderBillRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ImportProviderBill 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// bill_date 记录 ImportProviderBill 对应业务阶段的时间点。
@@ -1534,13 +1487,6 @@ func (x *ImportProviderBillRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ImportProviderBillRequest.ProtoReflect.Descriptor instead.
 func (*ImportProviderBillRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_reconciliation_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ImportProviderBillRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ImportProviderBillRequest) GetProvider() PaymentProvider {
@@ -1609,8 +1555,6 @@ func (x *ImportProviderBillRequest) GetRequestId() string {
 // CreateReconciliationBatchRequest 定义创建 ReconciliationBatch 的幂等命令参数。
 type CreateReconciliationBatchRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// bill_date 记录 CreateReconciliationBatch 对应业务阶段的时间点。
@@ -1655,13 +1599,6 @@ func (*CreateReconciliationBatchRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_reconciliation_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *CreateReconciliationBatchRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateReconciliationBatchRequest) GetProvider() PaymentProvider {
 	if x != nil {
 		return x.Provider
@@ -1700,8 +1637,6 @@ func (x *CreateReconciliationBatchRequest) GetRequestId() string {
 // GetReconciliationBatchRequest 标识待查询的 ReconciliationBatch。
 type GetReconciliationBatchRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetReconciliationBatch 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// batch_id 标识关联的 Batch。
 	BatchId       uint64 `protobuf:"varint,2,opt,name=batch_id,json=batchId,proto3" json:"batch_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1738,13 +1673,6 @@ func (*GetReconciliationBatchRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_reconciliation_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *GetReconciliationBatchRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetReconciliationBatchRequest) GetBatchId() uint64 {
 	if x != nil {
 		return x.BatchId
@@ -1755,8 +1683,6 @@ func (x *GetReconciliationBatchRequest) GetBatchId() uint64 {
 // ListReconciliationBatchesRequest 定义 ReconciliationBatches 的筛选与分页参数。
 type ListReconciliationBatchesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListReconciliationBatches 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider *PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider,oneof" json:"provider,omitempty"`
 	// bill_date 记录 ListReconciliationBatches 对应业务阶段的时间点。
@@ -1764,7 +1690,7 @@ type ListReconciliationBatchesRequest struct {
 	// status 表示 ListReconciliationBatches 当前可观察的生命周期状态。
 	Status *ReconciliationBatch_Status `protobuf:"varint,4,opt,name=status,proto3,enum=payment.v1.ReconciliationBatch_Status,oneof" json:"status,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,5,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,5,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1799,13 +1725,6 @@ func (*ListReconciliationBatchesRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_reconciliation_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *ListReconciliationBatchesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListReconciliationBatchesRequest) GetProvider() PaymentProvider {
 	if x != nil && x.Provider != nil {
 		return *x.Provider
@@ -1827,7 +1746,7 @@ func (x *ListReconciliationBatchesRequest) GetStatus() ReconciliationBatch_Statu
 	return ReconciliationBatch_RECONCILIATION_CREATED
 }
 
-func (x *ListReconciliationBatchesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListReconciliationBatchesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1892,8 +1811,6 @@ func (x *ListReconciliationBatchResponse) GetTotal() uint64 {
 // ListReconciliationFindingsRequest 定义 ReconciliationFindings 的筛选与分页参数。
 type ListReconciliationFindingsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListReconciliationFindings 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// batch_id 标识关联的 Batch。
 	BatchId *uint64 `protobuf:"varint,2,opt,name=batch_id,json=batchId,proto3,oneof" json:"batch_id,omitempty"`
 	// status 表示 ListReconciliationFindings 当前可观察的生命周期状态。
@@ -1905,7 +1822,7 @@ type ListReconciliationFindingsRequest struct {
 	// payment_no 是 ListReconciliationFindings 对外关联与审计使用的业务编号。
 	PaymentNo *string `protobuf:"bytes,6,opt,name=payment_no,json=paymentNo,proto3,oneof" json:"payment_no,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,7,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,7,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1938,13 +1855,6 @@ func (x *ListReconciliationFindingsRequest) ProtoReflect() protoreflect.Message 
 // Deprecated: Use ListReconciliationFindingsRequest.ProtoReflect.Descriptor instead.
 func (*ListReconciliationFindingsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_reconciliation_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *ListReconciliationFindingsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ListReconciliationFindingsRequest) GetBatchId() uint64 {
@@ -1982,7 +1892,7 @@ func (x *ListReconciliationFindingsRequest) GetPaymentNo() string {
 	return ""
 }
 
-func (x *ListReconciliationFindingsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListReconciliationFindingsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -2047,8 +1957,6 @@ func (x *ListReconciliationFindingsResponse) GetTotal() uint64 {
 // GetReconciliationFindingRequest 标识待查询的 ReconciliationFinding。
 type GetReconciliationFindingRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// finding_id 标识关联的 Finding。
 	FindingId     uint64 `protobuf:"varint,2,opt,name=finding_id,json=findingId,proto3" json:"finding_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2083,13 +1991,6 @@ func (x *GetReconciliationFindingRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetReconciliationFindingRequest.ProtoReflect.Descriptor instead.
 func (*GetReconciliationFindingRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_reconciliation_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *GetReconciliationFindingRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetReconciliationFindingRequest) GetFindingId() uint64 {
@@ -2157,8 +2058,6 @@ func (x *ReconciliationFindingDetail) GetActions() []*ReconciliationFindingActio
 // MutateReconciliationFindingRequest 定义变更 ReconciliationFinding 的幂等管理命令参数。
 type MutateReconciliationFindingRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 MutateReconciliationFinding 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// finding_id 标识关联的 Finding。
 	FindingId uint64 `protobuf:"varint,2,opt,name=finding_id,json=findingId,proto3" json:"finding_id,omitempty"`
 	// action 指定本次状态推进采用的业务动作。
@@ -2209,13 +2108,6 @@ func (x *MutateReconciliationFindingRequest) ProtoReflect() protoreflect.Message
 // Deprecated: Use MutateReconciliationFindingRequest.ProtoReflect.Descriptor instead.
 func (*MutateReconciliationFindingRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_reconciliation_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *MutateReconciliationFindingRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *MutateReconciliationFindingRequest) GetFindingId() uint64 {
@@ -2343,10 +2235,9 @@ var File_payment_v1_reconciliation_proto protoreflect.FileDescriptor
 const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\n" +
 	"\x1fpayment/v1/reconciliation.proto\x12\n" +
-	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\xd2\t\n" +
+	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\xbb\t\n" +
 	"\fProviderBill\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x127\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x127\n" +
 	"\bprovider\x18\x03 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12\x1b\n" +
 	"\tbill_date\x18\x04 \x01(\tR\bbillDate\x12D\n" +
 	"\vsource_type\x18\x05 \x01(\x0e2#.payment.v1.ProviderBill.SourceTypeR\n" +
@@ -2387,10 +2278,9 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\f_parse_errorB\x0e\n" +
 	"\f_received_byB\f\n" +
 	"\n" +
-	"_parsed_at\"\xf5\v\n" +
+	"_parsed_at\"\xde\v\n" +
 	"\x13ReconciliationBatch\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x127\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x127\n" +
 	"\bprovider\x18\x03 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12\x1b\n" +
 	"\tbill_date\x18\x04 \x01(\tR\bbillDate\x12>\n" +
 	"\x06status\x18\x05 \x01(\x0e2&.payment.v1.ReconciliationBatch.StatusR\x06status\x12\x1f\n" +
@@ -2435,10 +2325,9 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\r_initiated_byB\x0f\n" +
 	"\r_operation_noB\r\n" +
 	"\v_started_atB\x0f\n" +
-	"\r_completed_at\"\xc9\r\n" +
+	"\r_completed_at\"\xb2\r\n" +
 	"\x15ReconciliationFinding\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12\x19\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x19\n" +
 	"\bbatch_id\x18\x03 \x01(\x04R\abatchId\x124\n" +
 	"\x14provider_bill_row_id\x18\x04 \x01(\x04H\x00R\x11providerBillRowId\x88\x01\x01\x12\"\n" +
 	"\n" +
@@ -2487,10 +2376,9 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\t_evidenceB\t\n" +
 	"\a_reasonB\x17\n" +
 	"\x15_related_operation_noB\x0e\n" +
-	"\f_resolved_at\"\x9e\x05\n" +
+	"\f_resolved_at\"\x87\x05\n" +
 	"\x1bReconciliationFindingAction\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1d\n" +
 	"\n" +
 	"finding_id\x18\x03 \x01(\x04R\tfindingId\x12I\n" +
 	"\vfrom_status\x18\x04 \x01(\x0e2(.payment.v1.ReconciliationFinding.StatusR\n" +
@@ -2512,33 +2400,31 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\t_evidenceB\t\n" +
 	"\a_reasonB\x17\n" +
 	"\x15_related_operation_noB\r\n" +
-	"\v_request_id\"\x81\a\n" +
+	"\v_request_id\"\xda\x06\n" +
 	"\x12ReconciliationItem\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1e\n" +
-	"\bbatch_id\x18\x03 \x01(\x04H\x02R\abatchId\x88\x01\x01\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1e\n" +
+	"\bbatch_id\x18\x03 \x01(\x04H\x01R\abatchId\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"payment_no\x18\x04 \x01(\tH\x03R\tpaymentNo\x88\x01\x01\x12/\n" +
-	"\x11provider_trade_no\x18\x05 \x01(\tH\x04R\x0fproviderTradeNo\x88\x01\x01\x12&\n" +
-	"\flocal_amount\x18\x06 \x01(\x03H\x05R\vlocalAmount\x88\x01\x01\x12,\n" +
-	"\x0fprovider_amount\x18\a \x01(\x03H\x06R\x0eproviderAmount\x88\x01\x01\x12&\n" +
-	"\flocal_status\x18\b \x01(\tH\aR\vlocalStatus\x88\x01\x01\x12,\n" +
-	"\x0fprovider_status\x18\t \x01(\tH\bR\x0eproviderStatus\x88\x01\x01\x12[\n" +
+	"payment_no\x18\x04 \x01(\tH\x02R\tpaymentNo\x88\x01\x01\x12/\n" +
+	"\x11provider_trade_no\x18\x05 \x01(\tH\x03R\x0fproviderTradeNo\x88\x01\x01\x12&\n" +
+	"\flocal_amount\x18\x06 \x01(\x03H\x04R\vlocalAmount\x88\x01\x01\x12,\n" +
+	"\x0fprovider_amount\x18\a \x01(\x03H\x05R\x0eproviderAmount\x88\x01\x01\x12&\n" +
+	"\flocal_status\x18\b \x01(\tH\x06R\vlocalStatus\x88\x01\x01\x12,\n" +
+	"\x0fprovider_status\x18\t \x01(\tH\aR\x0eproviderStatus\x88\x01\x01\x12[\n" +
 	"\x0fdifference_type\x18\n" +
-	" \x01(\x0e2-.payment.v1.ReconciliationItem.DifferenceTypeH\tR\x0edifferenceType\x88\x01\x01\x12\x1b\n" +
-	"\x06remark\x18\v \x01(\tH\n" +
-	"R\x06remark\x88\x01\x01\x12\x1f\n" +
-	"\bcurrency\x18\f \x01(\tH\vR\bcurrency\x88\x01\x01\x12?\n" +
+	" \x01(\x0e2-.payment.v1.ReconciliationItem.DifferenceTypeH\bR\x0edifferenceType\x88\x01\x01\x12\x1b\n" +
+	"\x06remark\x18\v \x01(\tH\tR\x06remark\x88\x01\x01\x12\x1f\n" +
+	"\bcurrency\x18\f \x01(\tH\n" +
+	"R\bcurrency\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\fR\tcreatedAt\x88\x01\x01\"p\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\vR\tcreatedAt\x88\x01\x01\"p\n" +
 	"\x0eDifferenceType\x12\v\n" +
 	"\aMATCHED\x10\x00\x12\x11\n" +
 	"\rLOCAL_MISSING\x10\x01\x12\x14\n" +
 	"\x10PROVIDER_MISSING\x10\x02\x12\x13\n" +
 	"\x0fAMOUNT_MISMATCH\x10\x03\x12\x13\n" +
 	"\x0fSTATUS_MISMATCH\x10\x04:\x02\x18\x01B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
+	"\x03_idB\v\n" +
 	"\t_batch_idB\r\n" +
 	"\v_payment_noB\x14\n" +
 	"\x12_provider_trade_noB\x0f\n" +
@@ -2549,9 +2435,8 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\x10_difference_typeB\t\n" +
 	"\a_remarkB\v\n" +
 	"\t_currencyB\r\n" +
-	"\v_created_at\"\x84\x03\n" +
-	"\x19ImportProviderBillRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x127\n" +
+	"\v_created_at\"\xdb\x02\n" +
+	"\x19ImportProviderBillRequest\x127\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12\x1b\n" +
 	"\tbill_date\x18\x03 \x01(\tR\bbillDate\x12\x17\n" +
 	"\afile_id\x18\x04 \x01(\x04R\x06fileId\x12'\n" +
@@ -2563,21 +2448,18 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\foperation_no\x18\t \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\n" +
-	" \x01(\tR\trequestId\"\x84\x02\n" +
-	" CreateReconciliationBatchRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x127\n" +
+	" \x01(\tR\trequestId\"\xdb\x01\n" +
+	" CreateReconciliationBatchRequest\x127\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12\x1b\n" +
 	"\tbill_date\x18\x03 \x01(\tR\bbillDate\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\rR\n" +
 	"operatorId\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tR\trequestId\"c\n" +
-	"\x1dGetReconciliationBatchRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
-	"\bbatch_id\x18\x02 \x01(\x04R\abatchId\"\xd3\x02\n" +
-	" ListReconciliationBatchesRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12<\n" +
+	"request_id\x18\x06 \x01(\tR\trequestId\":\n" +
+	"\x1dGetReconciliationBatchRequest\x12\x19\n" +
+	"\bbatch_id\x18\x02 \x01(\x04R\abatchId\"\xaa\x02\n" +
+	" ListReconciliationBatchesRequest\x12<\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x00R\bprovider\x88\x01\x01\x12 \n" +
 	"\tbill_date\x18\x03 \x01(\tH\x01R\bbillDate\x88\x01\x01\x12C\n" +
 	"\x06status\x18\x04 \x01(\x0e2&.payment.v1.ReconciliationBatch.StatusH\x02R\x06status\x88\x01\x01\x12;\n" +
@@ -2588,9 +2470,8 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\a_status\"n\n" +
 	"\x1fListReconciliationBatchResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.payment.v1.ReconciliationBatchR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xff\x03\n" +
-	"!ListReconciliationFindingsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1e\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xd6\x03\n" +
+	"!ListReconciliationFindingsRequest\x12\x1e\n" +
 	"\bbatch_id\x18\x02 \x01(\x04H\x00R\abatchId\x88\x01\x01\x12E\n" +
 	"\x06status\x18\x03 \x01(\x0e2(.payment.v1.ReconciliationFinding.StatusH\x01R\x06status\x88\x01\x01\x12^\n" +
 	"\x0fdifference_type\x18\x04 \x01(\x0e20.payment.v1.ReconciliationFinding.DifferenceTypeH\x02R\x0edifferenceType\x88\x01\x01\x125\n" +
@@ -2605,16 +2486,14 @@ const file_payment_v1_reconciliation_proto_rawDesc = "" +
 	"\v_payment_no\"s\n" +
 	"\"ListReconciliationFindingsResponse\x127\n" +
 	"\x05items\x18\x01 \x03(\v2!.payment.v1.ReconciliationFindingR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"i\n" +
-	"\x1fGetReconciliationFindingRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"@\n" +
+	"\x1fGetReconciliationFindingRequest\x12\x1d\n" +
 	"\n" +
 	"finding_id\x18\x02 \x01(\x04R\tfindingId\"\x9d\x01\n" +
 	"\x1bReconciliationFindingDetail\x12;\n" +
 	"\afinding\x18\x01 \x01(\v2!.payment.v1.ReconciliationFindingR\afinding\x12A\n" +
-	"\aactions\x18\x02 \x03(\v2'.payment.v1.ReconciliationFindingActionR\aactions\"\xae\x06\n" +
-	"\"MutateReconciliationFindingRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\aactions\x18\x02 \x03(\v2'.payment.v1.ReconciliationFindingActionR\aactions\"\x85\x06\n" +
+	"\"MutateReconciliationFindingRequest\x12\x1d\n" +
 	"\n" +
 	"finding_id\x18\x02 \x01(\x04R\tfindingId\x12M\n" +
 	"\x06action\x18\x03 \x01(\x0e25.payment.v1.MutateReconciliationFindingRequest.ActionR\x06action\x125\n" +
@@ -2687,8 +2566,7 @@ var file_payment_v1_reconciliation_proto_goTypes = []any{
 	(*ListReconciliationItemResponse)(nil),         // 23: payment.v1.ListReconciliationItemResponse
 	(PaymentProvider)(0),                           // 24: payment.v1.PaymentProvider
 	(*timestamppb.Timestamp)(nil),                  // 25: google.protobuf.Timestamp
-	(v1.AppId)(0),                                  // 26: common.v1.AppId
-	(*v11.PagingRequest)(nil),                      // 27: common.pagination.v1.PagingRequest
+	(*v1.PagingRequest)(nil),                       // 26: common.pagination.v1.PagingRequest
 }
 var file_payment_v1_reconciliation_proto_depIdxs = []int32{
 	24, // 0: payment.v1.ProviderBill.provider:type_name -> payment.v1.PaymentProvider
@@ -2715,32 +2593,25 @@ var file_payment_v1_reconciliation_proto_depIdxs = []int32{
 	25, // 21: payment.v1.ReconciliationFindingAction.created_at:type_name -> google.protobuf.Timestamp
 	6,  // 22: payment.v1.ReconciliationItem.difference_type:type_name -> payment.v1.ReconciliationItem.DifferenceType
 	25, // 23: payment.v1.ReconciliationItem.created_at:type_name -> google.protobuf.Timestamp
-	26, // 24: payment.v1.ImportProviderBillRequest.app_id:type_name -> common.v1.AppId
-	24, // 25: payment.v1.ImportProviderBillRequest.provider:type_name -> payment.v1.PaymentProvider
-	26, // 26: payment.v1.CreateReconciliationBatchRequest.app_id:type_name -> common.v1.AppId
-	24, // 27: payment.v1.CreateReconciliationBatchRequest.provider:type_name -> payment.v1.PaymentProvider
-	26, // 28: payment.v1.GetReconciliationBatchRequest.app_id:type_name -> common.v1.AppId
-	26, // 29: payment.v1.ListReconciliationBatchesRequest.app_id:type_name -> common.v1.AppId
-	24, // 30: payment.v1.ListReconciliationBatchesRequest.provider:type_name -> payment.v1.PaymentProvider
-	2,  // 31: payment.v1.ListReconciliationBatchesRequest.status:type_name -> payment.v1.ReconciliationBatch.Status
-	27, // 32: payment.v1.ListReconciliationBatchesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	9,  // 33: payment.v1.ListReconciliationBatchResponse.items:type_name -> payment.v1.ReconciliationBatch
-	26, // 34: payment.v1.ListReconciliationFindingsRequest.app_id:type_name -> common.v1.AppId
-	5,  // 35: payment.v1.ListReconciliationFindingsRequest.status:type_name -> payment.v1.ReconciliationFinding.Status
-	4,  // 36: payment.v1.ListReconciliationFindingsRequest.difference_type:type_name -> payment.v1.ReconciliationFinding.DifferenceType
-	27, // 37: payment.v1.ListReconciliationFindingsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	10, // 38: payment.v1.ListReconciliationFindingsResponse.items:type_name -> payment.v1.ReconciliationFinding
-	26, // 39: payment.v1.GetReconciliationFindingRequest.app_id:type_name -> common.v1.AppId
-	10, // 40: payment.v1.ReconciliationFindingDetail.finding:type_name -> payment.v1.ReconciliationFinding
-	11, // 41: payment.v1.ReconciliationFindingDetail.actions:type_name -> payment.v1.ReconciliationFindingAction
-	26, // 42: payment.v1.MutateReconciliationFindingRequest.app_id:type_name -> common.v1.AppId
-	7,  // 43: payment.v1.MutateReconciliationFindingRequest.action:type_name -> payment.v1.MutateReconciliationFindingRequest.Action
-	12, // 44: payment.v1.ListReconciliationItemResponse.items:type_name -> payment.v1.ReconciliationItem
-	45, // [45:45] is the sub-list for method output_type
-	45, // [45:45] is the sub-list for method input_type
-	45, // [45:45] is the sub-list for extension type_name
-	45, // [45:45] is the sub-list for extension extendee
-	0,  // [0:45] is the sub-list for field type_name
+	24, // 24: payment.v1.ImportProviderBillRequest.provider:type_name -> payment.v1.PaymentProvider
+	24, // 25: payment.v1.CreateReconciliationBatchRequest.provider:type_name -> payment.v1.PaymentProvider
+	24, // 26: payment.v1.ListReconciliationBatchesRequest.provider:type_name -> payment.v1.PaymentProvider
+	2,  // 27: payment.v1.ListReconciliationBatchesRequest.status:type_name -> payment.v1.ReconciliationBatch.Status
+	26, // 28: payment.v1.ListReconciliationBatchesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	9,  // 29: payment.v1.ListReconciliationBatchResponse.items:type_name -> payment.v1.ReconciliationBatch
+	5,  // 30: payment.v1.ListReconciliationFindingsRequest.status:type_name -> payment.v1.ReconciliationFinding.Status
+	4,  // 31: payment.v1.ListReconciliationFindingsRequest.difference_type:type_name -> payment.v1.ReconciliationFinding.DifferenceType
+	26, // 32: payment.v1.ListReconciliationFindingsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	10, // 33: payment.v1.ListReconciliationFindingsResponse.items:type_name -> payment.v1.ReconciliationFinding
+	10, // 34: payment.v1.ReconciliationFindingDetail.finding:type_name -> payment.v1.ReconciliationFinding
+	11, // 35: payment.v1.ReconciliationFindingDetail.actions:type_name -> payment.v1.ReconciliationFindingAction
+	7,  // 36: payment.v1.MutateReconciliationFindingRequest.action:type_name -> payment.v1.MutateReconciliationFindingRequest.Action
+	12, // 37: payment.v1.ListReconciliationItemResponse.items:type_name -> payment.v1.ReconciliationItem
+	38, // [38:38] is the sub-list for method output_type
+	38, // [38:38] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_reconciliation_proto_init() }

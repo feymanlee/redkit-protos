@@ -30,11 +30,11 @@ enum PaymentErrorReason {
   PURCHASE_IDEMPOTENCY_CONFLICT = 904 [(errors.code) = 409];
   // Purchase 当前状态不允许创建下一 Payment Attempt。
   PURCHASE_NOT_RETRYABLE = 905 [(errors.code) = 409];
-  // 当前 App 与客户端平台下不存在可购买的固定期限 Subscription Offer。
+  // 当前客户端平台下不存在可购买的固定期限 Subscription Offer。
   SUBSCRIPTION_OFFER_UNAVAILABLE = 906 [(errors.code) = 409];
   // Payment 自有的 Subscription Purchase Order 已过业务有效期。
   SUBSCRIPTION_PURCHASE_EXPIRED = 907 [(errors.code) = 409];
-  // 当前 App、平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
+  // 当前平台或发布时间窗没有可购买的 Recharge Offer / Store SKU。
   RECHARGE_OFFER_UNAVAILABLE = 908 [(errors.code) = 409];
   // Store App、Provider、SKU 与发布时间窗解析到了多个 Recharge Revision。
   RECHARGE_STORE_MAPPING_AMBIGUOUS = 909 [(errors.code) = 409];

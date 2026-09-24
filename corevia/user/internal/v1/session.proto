@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package user.internal.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
@@ -18,9 +17,7 @@ service UserSessionIntrospectionService {
 
 // CheckSessionRequest 定义执行 CheckSession 的命令参数。
 message CheckSessionRequest {
-  // app_id 限定 CheckSession 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // session_id 标识关联的 Session。
   string session_id = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
@@ -66,8 +63,6 @@ message AccessTokenVerificationKey {
 
 // GetAccessTokenVerificationKeysRequest 标识待查询的 AccessTokenVerificationKeys。
 message GetAccessTokenVerificationKeysRequest {
-  // app_id 限定 GetAccessTokenVerificationKeys 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
 
 // GetAccessTokenVerificationKeysResponse 承载 GetAccessTokenVerificationKeys 的返回结果。

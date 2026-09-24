@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package room.internal.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "room/v1/types.proto";
 import "validate/validate.proto";
@@ -18,8 +17,6 @@ service RoomGiftGateService {
 
 // ValidateSessionGiftTargetRequest 校验某 User 能否作为本场 Gift Recipient。
 message ValidateSessionGiftTargetRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 是 Gift Scene ID 对应的 Room Session 稳定身份。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // sender_user_id 是送礼 User。
@@ -40,8 +37,6 @@ message ValidateSessionGiftTargetResponse {
 
 // PublishSessionSystemNoticeRequest 请求向直播群发送系统提示。
 message PublishSessionSystemNoticeRequest {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识场次。
   uint64 session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // notice_type 是稳定提示类型，例如 MEMBER_JOINED、SEAT_CHANGED、GIFT_SENT。

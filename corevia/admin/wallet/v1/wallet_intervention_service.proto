@@ -117,7 +117,7 @@ message AdminWalletInterventionFilter {
   }];
   // requester_id 标识关联的 Requester。
   optional uint32 requester_id = 3 [(validate.rules).uint32.gt = 0];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 4 [(validate.rules).uint64.gt = 0];
   // minimum_age_seconds 以秒表示对应流程的持续时间或上限。
   optional uint64 minimum_age_seconds = 5;

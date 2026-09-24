@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package room.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
@@ -23,9 +22,7 @@ service RoomClosureService {
 
 // PrepareClosureRequest 定义执行 PrepareClosure 的命令参数。
 message PrepareClosureRequest {
-  // app_id 限定 PrepareClosure 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // closure_no 是 PrepareClosure 对外关联与审计使用的业务编号。
   string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
@@ -33,9 +30,7 @@ message PrepareClosureRequest {
 
 // ApplyClosureRequest 定义应用 Closure 的命令参数。
 message ApplyClosureRequest {
-  // app_id 限定 ApplyClosure 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // closure_no 是 ApplyClosure 对外关联与审计使用的业务编号。
   string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
@@ -43,9 +38,7 @@ message ApplyClosureRequest {
 
 // CancelClosureRequest 定义取消 Closure 的命令参数。
 message CancelClosureRequest {
-  // app_id 限定 CancelClosure 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // closure_no 是 CancelClosure 对外关联与审计使用的业务编号。
   string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
@@ -53,9 +46,7 @@ message CancelClosureRequest {
 
 // GetClosureStatusRequest 标识待查询的 ClosureStatus。
 message GetClosureStatusRequest {
-  // app_id 限定 GetClosureStatus 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // closure_no 是 GetClosureStatus 对外关联与审计使用的业务编号。
   string closure_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
@@ -91,9 +82,7 @@ message RoomClosureBlocker {
 
 // RoomClosureParticipantState 表示 Room 对 User Deletion 的当前处理状态。
 message RoomClosureParticipantState {
-  // app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // closure_no 是对外关联与审计使用的业务编号。
   string closure_no = 3;

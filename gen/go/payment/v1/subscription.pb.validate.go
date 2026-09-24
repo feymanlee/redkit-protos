@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on SubscriptionProviderSku with the rules
@@ -171,10 +167,6 @@ func (m *SubscriptionPlan) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Name != nil {
@@ -413,10 +405,6 @@ func (m *SubscriptionPlanRevision) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.PlanId != nil {
 		// no validation rules for PlanId
 	}
@@ -623,10 +611,6 @@ func (m *UserSubscription) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -887,10 +871,6 @@ func (m *UserSubscriptionDetail) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -1293,8 +1273,6 @@ func (m *CreateSubscriptionRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for PlanId
@@ -1546,10 +1524,6 @@ func (m *GetUserSubscriptionDetailRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetUserSubscriptionDetailRequestMultiError(errors)
@@ -2055,10 +2029,6 @@ func (m *ProviderSubscription) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.UserId != nil {
 		// no validation rules for UserId
 	}
@@ -2522,10 +2492,6 @@ func (m *ProviderSubscriptionPeriod) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.ProviderSubscriptionRecordId != nil {
 		// no validation rules for ProviderSubscriptionRecordId
 	}
@@ -2814,10 +2780,6 @@ func (m *ProviderSubscriptionEvent) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.ProviderSubscriptionRecordId != nil {
@@ -3489,10 +3451,6 @@ func (m *ListProviderSubscriptionsRequest) validate(all bool) error {
 		// no validation rules for PlanRevisionId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListProviderSubscriptionsRequestMultiError(errors)
 	}
@@ -3741,10 +3699,6 @@ func (m *GetProviderSubscriptionDetailRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return GetProviderSubscriptionDetailRequestMultiError(errors)
 	}
@@ -3861,10 +3815,6 @@ func (m *VerifyProviderSubscriptionPurchaseRequest) validate(all bool) error {
 
 	// no validation rules for IdempotencyKey
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return VerifyProviderSubscriptionPurchaseRequestMultiError(errors)
 	}
@@ -3972,10 +3922,6 @@ func (m *ProcessProviderSubscriptionCallbackRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for CallbackId
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return ProcessProviderSubscriptionCallbackRequestMultiError(errors)
@@ -4092,10 +4038,6 @@ func (m *CancelProviderSubscriptionRequest) validate(all bool) error {
 		// no validation rules for RequestId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return CancelProviderSubscriptionRequestMultiError(errors)
 	}
@@ -4209,10 +4151,6 @@ func (m *RefreshProviderSubscriptionRequest) validate(all bool) error {
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -4506,10 +4444,6 @@ func (m *GetProviderSubscriptionAnalyticsRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -5230,10 +5164,6 @@ func (m *CreateSubscriptionPlanRequest) validate(all bool) error {
 
 	// no validation rules for OperatorId
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Reason != nil {
 		// no validation rules for Reason
 	}
@@ -5379,10 +5309,6 @@ func (m *ListSubscriptionPlanRevisionsRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -5672,10 +5598,6 @@ func (m *CreateSubscriptionPlanRevisionRequest) validate(all bool) error {
 		// no validation rules for RequestId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return CreateSubscriptionPlanRevisionRequestMultiError(errors)
 	}
@@ -5794,10 +5716,6 @@ func (m *PublishSubscriptionPlanRevisionRequest) validate(all bool) error {
 		// no validation rules for RequestId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return PublishSubscriptionPlanRevisionRequestMultiError(errors)
 	}
@@ -5904,10 +5822,6 @@ func (m *SubscriptionAdjustment) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.OperationNo != nil {
@@ -6251,10 +6165,6 @@ func (m *SubmitSubscriptionAdjustmentRequest) validate(all bool) error {
 		// no validation rules for RequestId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return SubmitSubscriptionAdjustmentRequestMultiError(errors)
 	}
@@ -6370,10 +6280,6 @@ func (m *ReviewSubscriptionAdjustmentRequest) validate(all bool) error {
 
 	if m.RequestId != nil {
 		// no validation rules for RequestId
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -6512,10 +6418,6 @@ func (m *ListSubscriptionAdjustmentsRequest) validate(all bool) error {
 
 	if m.SubscriptionId != nil {
 		// no validation rules for SubscriptionId
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -6767,10 +6669,6 @@ func (m *SubscriptionAdjustmentRiskRule) validate(all bool) error {
 		// no validation rules for Id
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Currency != nil {
 		// no validation rules for Currency
 	}
@@ -6972,10 +6870,6 @@ func (m *UpsertSubscriptionAdjustmentRiskRuleRequest) validate(all bool) error {
 		// no validation rules for RequestId
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return UpsertSubscriptionAdjustmentRiskRuleRequestMultiError(errors)
 	}
@@ -7109,10 +7003,6 @@ func (m *ListSubscriptionAdjustmentRiskRulesRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -7419,10 +7309,6 @@ func (m *UpdateSubscriptionPlanRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {

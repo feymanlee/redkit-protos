@@ -160,8 +160,6 @@ message SubscriptionProviderSku {
 message SubscriptionPlan {
   // 计划 ID。
   optional uint32 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 计划名称。
   optional string name = 3;
   // 计划编码。
@@ -188,8 +186,6 @@ message SubscriptionPlan {
 message SubscriptionPlanRevision {
   // id 标识关联的 SubscriptionPlanRevision。
   optional uint64 id = 1;
-  // app_id 限定 SubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // plan_id 标识关联的 Plan。
   optional uint32 plan_id = 3;
   // revision_no 是 SubscriptionPlanRevision 对外关联与审计使用的业务编号。
@@ -220,8 +216,6 @@ message SubscriptionPlanRevision {
 message UserSubscription {
   // 订阅 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 计划 ID。
@@ -248,8 +242,6 @@ message UserSubscription {
 message UserSubscriptionDetail {
   // 明细 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 用户订阅 ID。
@@ -315,8 +307,6 @@ message UserSubscriptionDetail {
 }
 // 创建订阅请求。
 message CreateSubscriptionRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 计划 ID。
@@ -337,8 +327,6 @@ message ListUserSubscriptionResponse {
 message GetUserSubscriptionDetailRequest {
   // 用户订阅 ID。
   uint64 id = 1;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 2;
 }
 
 // 用户订阅详情响应。
@@ -367,11 +355,9 @@ message GetUserSubscriptionDetailResponse {
 message ProviderSubscription {
   // id 标识关联的 ProviderSubscription。
   optional uint64 id = 1;
-  // app_id 限定 ProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3;
-  // original_user_id 标识当前 App 内关联的 User。
+  // original_user_id 标识关联的 User。
   optional uint64 original_user_id = 4;
   // user_subscription_id 标识关联的 UserSubscription。
   optional uint64 user_subscription_id = 5;
@@ -423,8 +409,6 @@ message ProviderSubscription {
 message ProviderSubscriptionPeriod {
   // id 标识关联的 ProviderSubscriptionPeriod。
   optional uint64 id = 1;
-  // app_id 限定 ProviderSubscriptionPeriod 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // provider_subscription_record_id 标识关联的 ProviderSubscriptionRecord。
   optional uint64 provider_subscription_record_id = 3;
   // provider 标识本次能力使用的外部 Provider。
@@ -433,7 +417,7 @@ message ProviderSubscriptionPeriod {
   optional string provider_transaction_id = 5;
   // product_sku 是外部商店或商品目录使用的稳定商品编码。
   optional string product_sku = 6;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 7;
   // plan_revision_id 标识关联的 PlanRevision。
   optional uint64 plan_revision_id = 8;
@@ -465,8 +449,6 @@ message ProviderSubscriptionPeriod {
 message ProviderSubscriptionEvent {
   // id 标识关联的 ProviderSubscriptionEvent。
   optional uint64 id = 1;
-  // app_id 限定 ProviderSubscriptionEvent 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // provider_subscription_record_id 标识关联的 ProviderSubscriptionRecord。
   optional uint64 provider_subscription_record_id = 3;
   // provider 标识本次能力使用的外部 Provider。
@@ -525,12 +507,10 @@ message ListProviderSubscriptionsRequest {
   repeated PaymentProvider providers = 2;
   // statuses 列出 ListProviderSubscriptions 关联的 ProviderSubscriptionStatus。
   repeated ProviderSubscriptionStatus statuses = 3;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 4;
   // plan_revision_id 标识关联的 PlanRevision。
   optional uint64 plan_revision_id = 5;
-  // app_id 限定 ListProviderSubscriptions 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 6;
 }
 
 // ListProviderSubscriptionsResponse 返回 ProviderSubscriptions 结果集合及分页信息。
@@ -545,15 +525,13 @@ message ListProviderSubscriptionsResponse {
 message GetProviderSubscriptionDetailRequest {
   // id 标识关联的 GetProviderSubscriptionDetail。
   uint64 id = 1;
-  // app_id 限定 GetProviderSubscriptionDetail 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
 }
 
 // VerifyProviderSubscriptionPurchaseRequest 定义校验 ProviderSubscriptionPurchase 的幂等管理命令参数。
 message VerifyProviderSubscriptionPurchaseRequest {
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // channel_revision_id 标识关联的 ChannelRevision。
   uint64 channel_revision_id = 3;
@@ -561,16 +539,12 @@ message VerifyProviderSubscriptionPurchaseRequest {
   string signed_purchase = 4;
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
   string idempotency_key = 5;
-  // app_id 限定 VerifyProviderSubscriptionPurchase 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 6;
 }
 
 // ProcessProviderSubscriptionCallbackRequest 定义执行 ProcessProviderSubscriptionCallback 的命令参数。
 message ProcessProviderSubscriptionCallbackRequest {
   // callback_id 标识关联的 Callback。
   uint64 callback_id = 1;
-  // app_id 限定 ProcessProviderSubscriptionCallback 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
 }
 
 // CancelProviderSubscriptionRequest 定义取消 ProviderSubscription 的幂等管理命令参数。
@@ -583,8 +557,6 @@ message CancelProviderSubscriptionRequest {
   string operation_no = 3;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 4;
-  // app_id 限定 CancelProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 5;
 }
 
 // RefreshProviderSubscriptionRequest 定义执行 RefreshProviderSubscription 的幂等管理命令参数。
@@ -597,8 +569,6 @@ message RefreshProviderSubscriptionRequest {
   string operation_no = 3;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 4;
-  // app_id 限定 RefreshProviderSubscription 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 5;
 }
 
 // ProviderSubscriptionAnalyticsGroup 按 Provider 与 Plan Revision 汇总 Subscription 指标。
@@ -623,8 +593,6 @@ message GetProviderSubscriptionAnalyticsRequest {
   google.protobuf.Timestamp started_at = 1;
   // ended_at 指定 GetProviderSubscriptionAnalytics 生效或查询区间的结束时间。
   google.protobuf.Timestamp ended_at = 2;
-  // app_id 限定 GetProviderSubscriptionAnalytics 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 3;
 }
 
 // GetProviderSubscriptionAnalyticsResponse 承载 GetProviderSubscriptionAnalytics 的返回结果。
@@ -677,8 +645,6 @@ message SubscriptionPlanRevisionDraft {
 message CreateSubscriptionPlanRequest {
   // 数据。
   SubscriptionPlanPatch data = 1;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 2;
   // 创建稳定 Plan 时同时创建的初始草稿版本。
   SubscriptionPlanRevisionDraft initial_revision = 3;
   // operator_id 标识关联的后台 Operator。
@@ -697,8 +663,6 @@ message ListSubscriptionPlanRevisionsRequest {
   uint32 plan_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
-  // app_id 限定 ListSubscriptionPlanRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 3;
 }
 
 // ListSubscriptionPlanRevisionsResponse 返回 SubscriptionPlanRevisions 结果集合及分页信息。
@@ -723,8 +687,6 @@ message CreateSubscriptionPlanRevisionRequest {
   string operation_no = 5;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 6;
-  // app_id 限定 CreateSubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 7;
 }
 
 // PublishSubscriptionPlanRevisionRequest 定义发布 SubscriptionPlanRevision 的幂等管理命令参数。
@@ -739,16 +701,12 @@ message PublishSubscriptionPlanRevisionRequest {
   string operation_no = 4;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 5;
-  // app_id 限定 PublishSubscriptionPlanRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 6;
 }
 
 // 一次幂等、可复核的人工订阅权益处置。
 message SubscriptionAdjustment {
   // id 标识关联的 SubscriptionAdjustment。
   optional uint64 id = 1;
-  // app_id 限定 SubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // operation_no 为审计与幂等重放稳定标识本次管理操作。
   optional string operation_no = 3;
   // type 区分 SubscriptionAdjustment 的业务类型。
@@ -757,7 +715,7 @@ message SubscriptionAdjustment {
   optional SubscriptionAdjustmentStatus status = 5;
   // subscription_id 标识关联的 Subscription。
   optional uint64 subscription_id = 6;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 7;
   // plan_id 标识关联的 Plan。
   optional uint32 plan_id = 8;
@@ -803,7 +761,7 @@ message SubmitSubscriptionAdjustmentRequest {
   SubscriptionAdjustmentType type = 1;
   // subscription_id 标识关联的 Subscription。
   optional uint64 subscription_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3;
   // plan_revision_id 标识关联的 PlanRevision。
   optional uint64 plan_revision_id = 4;
@@ -821,8 +779,6 @@ message SubmitSubscriptionAdjustmentRequest {
   uint32 operator_id = 10;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 11;
-  // app_id 限定 SubmitSubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 12;
 }
 
 // ReviewSubscriptionAdjustmentRequest 定义审核 SubscriptionAdjustment 的幂等管理命令参数。
@@ -835,8 +791,6 @@ message ReviewSubscriptionAdjustmentRequest {
   optional string review_note = 3;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 4;
-  // app_id 限定 ReviewSubscriptionAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 5;
 }
 
 // ListSubscriptionAdjustmentsRequest 定义 SubscriptionAdjustments 的筛选与分页参数。
@@ -847,8 +801,6 @@ message ListSubscriptionAdjustmentsRequest {
   repeated SubscriptionAdjustmentStatus statuses = 2;
   // subscription_id 标识关联的 Subscription。
   optional uint64 subscription_id = 3;
-  // app_id 限定 ListSubscriptionAdjustments 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 4;
 }
 
 // ListSubscriptionAdjustmentsResponse 返回 SubscriptionAdjustments 结果集合及分页信息。
@@ -859,12 +811,10 @@ message ListSubscriptionAdjustmentsResponse {
   uint64 total = 2;
 }
 
-// App + currency 维度的人工权益自动执行阈值。
+// 币种维度的人工权益自动执行阈值。
 message SubscriptionAdjustmentRiskRule {
   // id 标识关联的 SubscriptionAdjustmentRiskRule。
   optional uint64 id = 1;
-  // app_id 限定 SubscriptionAdjustmentRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // currency 指定相关金额使用的币种或计量单位。
   optional string currency = 3;
   // auto_approve_max_value 以对应 currency 的最小货币单位限定可自动批准的最高价值。
@@ -893,16 +843,12 @@ message UpsertSubscriptionAdjustmentRiskRuleRequest {
   uint32 operator_id = 5;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 6;
-  // app_id 限定 UpsertSubscriptionAdjustmentRiskRule 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 7;
 }
 
 // ListSubscriptionAdjustmentRiskRulesRequest 定义 SubscriptionAdjustmentRiskRules 的筛选与分页参数。
 message ListSubscriptionAdjustmentRiskRulesRequest {
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 1;
-  // app_id 限定 ListSubscriptionAdjustmentRiskRules 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2;
 }
 
 // ListSubscriptionAdjustmentRiskRulesResponse 返回 SubscriptionAdjustmentRiskRules 结果集合及分页信息。
@@ -921,6 +867,4 @@ message UpdateSubscriptionPlanRequest {
   SubscriptionPlanPatch data = 2;
   // 更新字段掩码。
   google.protobuf.FieldMask update_mask = 3;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 4;
 }

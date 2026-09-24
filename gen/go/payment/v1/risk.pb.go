@@ -7,8 +7,8 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -591,8 +591,6 @@ type PaymentRiskPolicyRevision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 PaymentRiskPolicyRevision。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 PaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// revision_no 是 PaymentRiskPolicyRevision 对外关联与审计使用的业务编号。
 	RevisionNo uint64 `protobuf:"varint,3,opt,name=revision_no,json=revisionNo,proto3" json:"revision_no,omitempty"`
 	// name 提供 PaymentRiskPolicyRevision 面向展示或识别的名称。
@@ -654,13 +652,6 @@ func (x *PaymentRiskPolicyRevision) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *PaymentRiskPolicyRevision) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PaymentRiskPolicyRevision) GetRevisionNo() uint64 {
@@ -827,8 +818,6 @@ type PaymentRiskReview struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 PaymentRiskReview。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 PaymentRiskReview 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// decision_id 标识关联的 Decision。
 	DecisionId uint64 `protobuf:"varint,3,opt,name=decision_id,json=decisionId,proto3" json:"decision_id,omitempty"`
 	// payment_no 是 PaymentRiskReview 对外关联与审计使用的业务编号。
@@ -890,13 +879,6 @@ func (x *PaymentRiskReview) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *PaymentRiskReview) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PaymentRiskReview) GetDecisionId() uint64 {
@@ -981,8 +963,6 @@ type PaymentRiskDecision struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 PaymentRiskDecision。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 PaymentRiskDecision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// payment_no 是 PaymentRiskDecision 对外关联与审计使用的业务编号。
 	PaymentNo string `protobuf:"bytes,3,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
 	// business_identity 记录外部或上游系统用于稳定关联 PaymentRiskDecision 的身份。
@@ -1040,13 +1020,6 @@ func (x *PaymentRiskDecision) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *PaymentRiskDecision) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PaymentRiskDecision) GetPaymentNo() string {
@@ -1115,8 +1088,6 @@ func (x *PaymentRiskDecision) GetCreatedAt() *timestamppb.Timestamp {
 // CreatePaymentRiskPolicyRevisionRequest 定义创建 PaymentRiskPolicyRevision 的幂等命令参数。
 type CreatePaymentRiskPolicyRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreatePaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// name 提供 CreatePaymentRiskPolicyRevision 面向展示或识别的名称。
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// review_ttl_seconds 以秒表示对应流程的持续时间或上限。
@@ -1163,13 +1134,6 @@ func (x *CreatePaymentRiskPolicyRevisionRequest) ProtoReflect() protoreflect.Mes
 // Deprecated: Use CreatePaymentRiskPolicyRevisionRequest.ProtoReflect.Descriptor instead.
 func (*CreatePaymentRiskPolicyRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_risk_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *CreatePaymentRiskPolicyRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreatePaymentRiskPolicyRevisionRequest) GetName() string {
@@ -1224,8 +1188,6 @@ func (x *CreatePaymentRiskPolicyRevisionRequest) GetOperationNo() string {
 // PublishPaymentRiskPolicyRevisionRequest 定义发布 PaymentRiskPolicyRevision 的幂等管理命令参数。
 type PublishPaymentRiskPolicyRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PublishPaymentRiskPolicyRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// revision_id 标识关联的 Revision。
 	RevisionId uint64 `protobuf:"varint,2,opt,name=revision_id,json=revisionId,proto3" json:"revision_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1270,13 +1232,6 @@ func (*PublishPaymentRiskPolicyRevisionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_risk_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *PublishPaymentRiskPolicyRevisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *PublishPaymentRiskPolicyRevisionRequest) GetRevisionId() uint64 {
 	if x != nil {
 		return x.RevisionId
@@ -1315,10 +1270,8 @@ func (x *PublishPaymentRiskPolicyRevisionRequest) GetOperationNo() string {
 // ListPaymentRiskPolicyRevisionsRequest 定义 PaymentRiskPolicyRevisions 的筛选与分页参数。
 type ListPaymentRiskPolicyRevisionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListPaymentRiskPolicyRevisions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1353,14 +1306,7 @@ func (*ListPaymentRiskPolicyRevisionsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_risk_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ListPaymentRiskPolicyRevisionsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListPaymentRiskPolicyRevisionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListPaymentRiskPolicyRevisionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1425,8 +1371,6 @@ func (x *ListPaymentRiskPolicyRevisionsResponse) GetTotal() uint64 {
 // GetPaymentRiskDecisionRequest 标识待查询的 PaymentRiskDecision。
 type GetPaymentRiskDecisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetPaymentRiskDecision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// payment_no 是 GetPaymentRiskDecision 对外关联与审计使用的业务编号。
 	PaymentNo     string `protobuf:"bytes,2,opt,name=payment_no,json=paymentNo,proto3" json:"payment_no,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1461,13 +1405,6 @@ func (x *GetPaymentRiskDecisionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetPaymentRiskDecisionRequest.ProtoReflect.Descriptor instead.
 func (*GetPaymentRiskDecisionRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_risk_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *GetPaymentRiskDecisionRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetPaymentRiskDecisionRequest) GetPaymentNo() string {
@@ -1535,12 +1472,10 @@ func (x *PaymentRiskReviewFilter) GetPaymentNo() string {
 // ListPaymentRiskReviewsRequest 定义 PaymentRiskReviews 的筛选与分页参数。
 type ListPaymentRiskReviewsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListPaymentRiskReviews 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *PaymentRiskReviewFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1575,13 +1510,6 @@ func (*ListPaymentRiskReviewsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_risk_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ListPaymentRiskReviewsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListPaymentRiskReviewsRequest) GetFilter() *PaymentRiskReviewFilter {
 	if x != nil {
 		return x.Filter
@@ -1589,7 +1517,7 @@ func (x *ListPaymentRiskReviewsRequest) GetFilter() *PaymentRiskReviewFilter {
 	return nil
 }
 
-func (x *ListPaymentRiskReviewsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListPaymentRiskReviewsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1654,8 +1582,6 @@ func (x *ListPaymentRiskReviewsResponse) GetTotal() uint64 {
 // DecidePaymentRiskReviewRequest 定义执行 DecidePaymentRiskReview 的幂等管理命令参数。
 type DecidePaymentRiskReviewRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 DecidePaymentRiskReview 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// review_id 标识关联的 Review。
 	ReviewId uint64 `protobuf:"varint,2,opt,name=review_id,json=reviewId,proto3" json:"review_id,omitempty"`
 	// approve 显式表示 DecidePaymentRiskReview 是否满足该条件。
@@ -1702,13 +1628,6 @@ func (x *DecidePaymentRiskReviewRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use DecidePaymentRiskReviewRequest.ProtoReflect.Descriptor instead.
 func (*DecidePaymentRiskReviewRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_risk_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *DecidePaymentRiskReviewRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *DecidePaymentRiskReviewRequest) GetReviewId() uint64 {
@@ -1836,8 +1755,6 @@ func (x *PaymentAnalyticsFilter) GetBizTypes() []string {
 // GetPaymentAnalyticsRequest 标识待查询的 PaymentAnalytics。
 type GetPaymentAnalyticsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetPaymentAnalytics 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// window_from 指定 GetPaymentAnalytics 查询或生效区间的起始边界。
 	WindowFrom *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=window_from,json=windowFrom,proto3" json:"window_from,omitempty"`
 	// window_to 指定 GetPaymentAnalytics 查询或生效区间的结束边界。
@@ -1878,13 +1795,6 @@ func (x *GetPaymentAnalyticsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetPaymentAnalyticsRequest.ProtoReflect.Descriptor instead.
 func (*GetPaymentAnalyticsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_risk_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *GetPaymentAnalyticsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetPaymentAnalyticsRequest) GetWindowFrom() *timestamppb.Timestamp {
@@ -2196,10 +2106,9 @@ const file_payment_v1_risk_proto_rawDesc = "" +
 	"\t_providerB\x1a\n" +
 	"\x18_error_rate_basis_pointsB\x17\n" +
 	"\x15_minimum_sample_countB\x19\n" +
-	"\x17_blacklist_subject_type\"\xdf\x05\n" +
+	"\x17_blacklist_subject_type\"\xb6\x05\n" +
 	"\x19PaymentRiskPolicyRevision\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\vrevision_no\x18\x03 \x01(\x04R\n" +
 	"revisionNo\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12D\n" +
@@ -2227,10 +2136,9 @@ const file_payment_v1_risk_proto_rawDesc = "" +
 	"\x0eobserved_value\x18\x02 \x01(\tR\robservedValue\x12\x1c\n" +
 	"\tthreshold\x18\x03 \x01(\tR\tthreshold\x12\x18\n" +
 	"\amatched\x18\x04 \x01(\bR\amatched\x12 \n" +
-	"\vexplanation\x18\x05 \x01(\tR\vexplanation\"\x87\x06\n" +
+	"\vexplanation\x18\x05 \x01(\tR\vexplanation\"\xde\x05\n" +
 	"\x11PaymentRiskReview\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1f\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1f\n" +
 	"\vdecision_id\x18\x03 \x01(\x04R\n" +
 	"decisionId\x12\x1d\n" +
 	"\n" +
@@ -2258,10 +2166,9 @@ const file_payment_v1_risk_proto_rawDesc = "" +
 	"\x15_reviewer_operator_idB\x10\n" +
 	"\x0e_review_reasonB\x0f\n" +
 	"\r_operation_noB\x0e\n" +
-	"\f_reviewed_at\"\xa6\x05\n" +
+	"\f_reviewed_at\"\xfd\x04\n" +
 	"\x13PaymentRiskDecision\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x03 \x01(\tR\tpaymentNo\x12+\n" +
 	"\x11business_identity\x18\x04 \x01(\tR\x10businessIdentity\x121\n" +
@@ -2281,9 +2188,8 @@ const file_payment_v1_risk_proto_rawDesc = "" +
 	"\x0fREVIEW_REQUIRED\x10\x03B\x15\n" +
 	"\x13_policy_revision_idB\x15\n" +
 	"\x13_policy_revision_noB\t\n" +
-	"\a_review\"\xdb\x02\n" +
-	"&CreatePaymentRiskPolicyRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x12\n" +
+	"\a_review\"\xa2\x02\n" +
+	"&CreatePaymentRiskPolicyRevisionRequest\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12,\n" +
 	"\x12review_ttl_seconds\x18\x03 \x01(\rR\x10reviewTtlSeconds\x121\n" +
 	"\x05rules\x18\x04 \x03(\v2\x1b.payment.v1.PaymentRiskRuleR\x05rules\x12\x1f\n" +
@@ -2292,10 +2198,8 @@ const file_payment_v1_risk_proto_rawDesc = "" +
 	"\vexplanation\x18\x06 \x01(\tR\vexplanation\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\a \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\b \x01(\tR\voperationNoB\t\n" +
-	"\a_app_id\"\x88\x02\n" +
-	"'PublishPaymentRiskPolicyRevisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1f\n" +
+	"\foperation_no\x18\b \x01(\tR\voperationNo\"\xcf\x01\n" +
+	"'PublishPaymentRiskPolicyRevisionRequest\x12\x1f\n" +
 	"\vrevision_id\x18\x02 \x01(\x04R\n" +
 	"revisionId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
@@ -2303,35 +2207,27 @@ const file_payment_v1_risk_proto_rawDesc = "" +
 	"\vexplanation\x18\x04 \x01(\tR\vexplanation\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\x05 \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\x06 \x01(\tR\voperationNoB\t\n" +
-	"\a_app_id\"\x9d\x01\n" +
-	"%ListPaymentRiskPolicyRevisionsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
-	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"{\n" +
+	"\foperation_no\x18\x06 \x01(\tR\voperationNo\"d\n" +
+	"%ListPaymentRiskPolicyRevisionsRequest\x12;\n" +
+	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"{\n" +
 	"&ListPaymentRiskPolicyRevisionsResponse\x12;\n" +
 	"\x05items\x18\x01 \x03(\v2%.payment.v1.PaymentRiskPolicyRevisionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"w\n" +
-	"\x1dGetPaymentRiskDecisionRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1d\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\">\n" +
+	"\x1dGetPaymentRiskDecisionRequest\x12\x1d\n" +
 	"\n" +
-	"payment_no\x18\x02 \x01(\tR\tpaymentNoB\t\n" +
-	"\a_app_id\"\x8e\x01\n" +
+	"payment_no\x18\x02 \x01(\tR\tpaymentNo\"\x8e\x01\n" +
 	"\x17PaymentRiskReviewFilter\x12@\n" +
 	"\bstatuses\x18\x01 \x03(\x0e2$.payment.v1.PaymentRiskReview.StatusR\bstatuses\x12\"\n" +
 	"\n" +
 	"payment_no\x18\x02 \x01(\tH\x00R\tpaymentNo\x88\x01\x01B\r\n" +
-	"\v_payment_no\"\xd2\x01\n" +
-	"\x1dListPaymentRiskReviewsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
+	"\v_payment_no\"\x99\x01\n" +
+	"\x1dListPaymentRiskReviewsRequest\x12;\n" +
 	"\x06filter\x18\x02 \x01(\v2#.payment.v1.PaymentRiskReviewFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06pagingB\t\n" +
-	"\a_app_id\"k\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"k\n" +
 	"\x1eListPaymentRiskReviewsResponse\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.payment.v1.PaymentRiskReviewR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xb6\x02\n" +
-	"\x1eDecidePaymentRiskReviewRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12\x1b\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xfd\x01\n" +
+	"\x1eDecidePaymentRiskReviewRequest\x12\x1b\n" +
 	"\treview_id\x18\x02 \x01(\x04R\breviewId\x12\x18\n" +
 	"\aapprove\x18\x03 \x01(\bR\aapprove\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\rR\n" +
@@ -2340,23 +2236,20 @@ const file_payment_v1_risk_proto_rawDesc = "" +
 	"\x06reason\x18\x06 \x01(\tR\x06reason\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\a \x01(\tR\trequestId\x12!\n" +
-	"\foperation_no\x18\b \x01(\tR\voperationNoB\t\n" +
-	"\a_app_id\"\xc5\x01\n" +
+	"\foperation_no\x18\b \x01(\tR\voperationNo\"\xc5\x01\n" +
 	"\x16PaymentAnalyticsFilter\x12\x1e\n" +
 	"\n" +
 	"currencies\x18\x01 \x03(\tR\n" +
 	"currencies\x129\n" +
 	"\tproviders\x18\x02 \x03(\x0e2\x1b.payment.v1.PaymentProviderR\tproviders\x123\n" +
 	"\amethods\x18\x03 \x03(\x0e2\x19.payment.v1.PaymentMethodR\amethods\x12\x1b\n" +
-	"\tbiz_types\x18\x04 \x03(\tR\bbizTypes\"\xc3\x02\n" +
-	"\x1aGetPaymentAnalyticsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
+	"\tbiz_types\x18\x04 \x03(\tR\bbizTypes\"\x8a\x02\n" +
+	"\x1aGetPaymentAnalyticsRequest\x12;\n" +
 	"\vwindow_from\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"windowFrom\x127\n" +
 	"\twindow_to\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\bwindowTo\x12:\n" +
 	"\x06bucket\x18\x04 \x01(\x0e2\".payment.v1.PaymentAnalyticsBucketR\x06bucket\x12:\n" +
-	"\x06filter\x18\x05 \x01(\v2\".payment.v1.PaymentAnalyticsFilterR\x06filterB\t\n" +
-	"\a_app_id\"\xf5\x04\n" +
+	"\x06filter\x18\x05 \x01(\v2\".payment.v1.PaymentAnalyticsFilterR\x06filter\"\xf5\x04\n" +
 	"\x15PaymentAnalyticsPoint\x12=\n" +
 	"\fbucket_start\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\vbucketStart\x12\x1a\n" +
 	"\bcurrency\x18\x02 \x01(\tR\bcurrency\x127\n" +
@@ -2428,65 +2321,54 @@ var file_payment_v1_risk_proto_goTypes = []any{
 	(*PaymentAnalyticsPoint)(nil),                   // 23: payment.v1.PaymentAnalyticsPoint
 	(*GetPaymentAnalyticsResponse)(nil),             // 24: payment.v1.GetPaymentAnalyticsResponse
 	(PaymentProvider)(0),                            // 25: payment.v1.PaymentProvider
-	(v1.AppId)(0),                                   // 26: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),                   // 27: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),                       // 28: common.pagination.v1.PagingRequest
-	(PaymentMethod)(0),                              // 29: payment.v1.PaymentMethod
+	(*timestamppb.Timestamp)(nil),                   // 26: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),                        // 27: common.pagination.v1.PagingRequest
+	(PaymentMethod)(0),                              // 28: payment.v1.PaymentMethod
 }
 var file_payment_v1_risk_proto_depIdxs = []int32{
 	1,  // 0: payment.v1.PaymentRiskRule.type:type_name -> payment.v1.PaymentRiskRule.Type
 	2,  // 1: payment.v1.PaymentRiskRule.action:type_name -> payment.v1.PaymentRiskRule.Action
 	25, // 2: payment.v1.PaymentRiskRule.provider:type_name -> payment.v1.PaymentProvider
 	3,  // 3: payment.v1.PaymentRiskRule.blacklist_subject_type:type_name -> payment.v1.PaymentRiskRule.BlacklistSubjectType
-	26, // 4: payment.v1.PaymentRiskPolicyRevision.app_id:type_name -> common.v1.AppId
-	4,  // 5: payment.v1.PaymentRiskPolicyRevision.status:type_name -> payment.v1.PaymentRiskPolicyRevision.Status
-	7,  // 6: payment.v1.PaymentRiskPolicyRevision.rules:type_name -> payment.v1.PaymentRiskRule
-	27, // 7: payment.v1.PaymentRiskPolicyRevision.created_at:type_name -> google.protobuf.Timestamp
-	27, // 8: payment.v1.PaymentRiskPolicyRevision.published_at:type_name -> google.protobuf.Timestamp
-	26, // 9: payment.v1.PaymentRiskReview.app_id:type_name -> common.v1.AppId
-	5,  // 10: payment.v1.PaymentRiskReview.status:type_name -> payment.v1.PaymentRiskReview.Status
-	27, // 11: payment.v1.PaymentRiskReview.expires_at:type_name -> google.protobuf.Timestamp
-	27, // 12: payment.v1.PaymentRiskReview.created_at:type_name -> google.protobuf.Timestamp
-	27, // 13: payment.v1.PaymentRiskReview.updated_at:type_name -> google.protobuf.Timestamp
-	27, // 14: payment.v1.PaymentRiskReview.reviewed_at:type_name -> google.protobuf.Timestamp
-	26, // 15: payment.v1.PaymentRiskDecision.app_id:type_name -> common.v1.AppId
-	6,  // 16: payment.v1.PaymentRiskDecision.outcome:type_name -> payment.v1.PaymentRiskDecision.Outcome
-	9,  // 17: payment.v1.PaymentRiskDecision.signals:type_name -> payment.v1.PaymentRiskSignalSnapshot
-	10, // 18: payment.v1.PaymentRiskDecision.review:type_name -> payment.v1.PaymentRiskReview
-	27, // 19: payment.v1.PaymentRiskDecision.created_at:type_name -> google.protobuf.Timestamp
-	26, // 20: payment.v1.CreatePaymentRiskPolicyRevisionRequest.app_id:type_name -> common.v1.AppId
-	7,  // 21: payment.v1.CreatePaymentRiskPolicyRevisionRequest.rules:type_name -> payment.v1.PaymentRiskRule
-	26, // 22: payment.v1.PublishPaymentRiskPolicyRevisionRequest.app_id:type_name -> common.v1.AppId
-	26, // 23: payment.v1.ListPaymentRiskPolicyRevisionsRequest.app_id:type_name -> common.v1.AppId
-	28, // 24: payment.v1.ListPaymentRiskPolicyRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	8,  // 25: payment.v1.ListPaymentRiskPolicyRevisionsResponse.items:type_name -> payment.v1.PaymentRiskPolicyRevision
-	26, // 26: payment.v1.GetPaymentRiskDecisionRequest.app_id:type_name -> common.v1.AppId
-	5,  // 27: payment.v1.PaymentRiskReviewFilter.statuses:type_name -> payment.v1.PaymentRiskReview.Status
-	26, // 28: payment.v1.ListPaymentRiskReviewsRequest.app_id:type_name -> common.v1.AppId
-	17, // 29: payment.v1.ListPaymentRiskReviewsRequest.filter:type_name -> payment.v1.PaymentRiskReviewFilter
-	28, // 30: payment.v1.ListPaymentRiskReviewsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	10, // 31: payment.v1.ListPaymentRiskReviewsResponse.items:type_name -> payment.v1.PaymentRiskReview
-	26, // 32: payment.v1.DecidePaymentRiskReviewRequest.app_id:type_name -> common.v1.AppId
-	25, // 33: payment.v1.PaymentAnalyticsFilter.providers:type_name -> payment.v1.PaymentProvider
-	29, // 34: payment.v1.PaymentAnalyticsFilter.methods:type_name -> payment.v1.PaymentMethod
-	26, // 35: payment.v1.GetPaymentAnalyticsRequest.app_id:type_name -> common.v1.AppId
-	27, // 36: payment.v1.GetPaymentAnalyticsRequest.window_from:type_name -> google.protobuf.Timestamp
-	27, // 37: payment.v1.GetPaymentAnalyticsRequest.window_to:type_name -> google.protobuf.Timestamp
-	0,  // 38: payment.v1.GetPaymentAnalyticsRequest.bucket:type_name -> payment.v1.PaymentAnalyticsBucket
-	21, // 39: payment.v1.GetPaymentAnalyticsRequest.filter:type_name -> payment.v1.PaymentAnalyticsFilter
-	27, // 40: payment.v1.PaymentAnalyticsPoint.bucket_start:type_name -> google.protobuf.Timestamp
-	25, // 41: payment.v1.PaymentAnalyticsPoint.provider:type_name -> payment.v1.PaymentProvider
-	29, // 42: payment.v1.PaymentAnalyticsPoint.method:type_name -> payment.v1.PaymentMethod
-	27, // 43: payment.v1.GetPaymentAnalyticsResponse.window_from:type_name -> google.protobuf.Timestamp
-	27, // 44: payment.v1.GetPaymentAnalyticsResponse.window_to:type_name -> google.protobuf.Timestamp
-	0,  // 45: payment.v1.GetPaymentAnalyticsResponse.bucket:type_name -> payment.v1.PaymentAnalyticsBucket
-	23, // 46: payment.v1.GetPaymentAnalyticsResponse.points:type_name -> payment.v1.PaymentAnalyticsPoint
-	27, // 47: payment.v1.GetPaymentAnalyticsResponse.generated_at:type_name -> google.protobuf.Timestamp
-	48, // [48:48] is the sub-list for method output_type
-	48, // [48:48] is the sub-list for method input_type
-	48, // [48:48] is the sub-list for extension type_name
-	48, // [48:48] is the sub-list for extension extendee
-	0,  // [0:48] is the sub-list for field type_name
+	4,  // 4: payment.v1.PaymentRiskPolicyRevision.status:type_name -> payment.v1.PaymentRiskPolicyRevision.Status
+	7,  // 5: payment.v1.PaymentRiskPolicyRevision.rules:type_name -> payment.v1.PaymentRiskRule
+	26, // 6: payment.v1.PaymentRiskPolicyRevision.created_at:type_name -> google.protobuf.Timestamp
+	26, // 7: payment.v1.PaymentRiskPolicyRevision.published_at:type_name -> google.protobuf.Timestamp
+	5,  // 8: payment.v1.PaymentRiskReview.status:type_name -> payment.v1.PaymentRiskReview.Status
+	26, // 9: payment.v1.PaymentRiskReview.expires_at:type_name -> google.protobuf.Timestamp
+	26, // 10: payment.v1.PaymentRiskReview.created_at:type_name -> google.protobuf.Timestamp
+	26, // 11: payment.v1.PaymentRiskReview.updated_at:type_name -> google.protobuf.Timestamp
+	26, // 12: payment.v1.PaymentRiskReview.reviewed_at:type_name -> google.protobuf.Timestamp
+	6,  // 13: payment.v1.PaymentRiskDecision.outcome:type_name -> payment.v1.PaymentRiskDecision.Outcome
+	9,  // 14: payment.v1.PaymentRiskDecision.signals:type_name -> payment.v1.PaymentRiskSignalSnapshot
+	10, // 15: payment.v1.PaymentRiskDecision.review:type_name -> payment.v1.PaymentRiskReview
+	26, // 16: payment.v1.PaymentRiskDecision.created_at:type_name -> google.protobuf.Timestamp
+	7,  // 17: payment.v1.CreatePaymentRiskPolicyRevisionRequest.rules:type_name -> payment.v1.PaymentRiskRule
+	27, // 18: payment.v1.ListPaymentRiskPolicyRevisionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	8,  // 19: payment.v1.ListPaymentRiskPolicyRevisionsResponse.items:type_name -> payment.v1.PaymentRiskPolicyRevision
+	5,  // 20: payment.v1.PaymentRiskReviewFilter.statuses:type_name -> payment.v1.PaymentRiskReview.Status
+	17, // 21: payment.v1.ListPaymentRiskReviewsRequest.filter:type_name -> payment.v1.PaymentRiskReviewFilter
+	27, // 22: payment.v1.ListPaymentRiskReviewsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	10, // 23: payment.v1.ListPaymentRiskReviewsResponse.items:type_name -> payment.v1.PaymentRiskReview
+	25, // 24: payment.v1.PaymentAnalyticsFilter.providers:type_name -> payment.v1.PaymentProvider
+	28, // 25: payment.v1.PaymentAnalyticsFilter.methods:type_name -> payment.v1.PaymentMethod
+	26, // 26: payment.v1.GetPaymentAnalyticsRequest.window_from:type_name -> google.protobuf.Timestamp
+	26, // 27: payment.v1.GetPaymentAnalyticsRequest.window_to:type_name -> google.protobuf.Timestamp
+	0,  // 28: payment.v1.GetPaymentAnalyticsRequest.bucket:type_name -> payment.v1.PaymentAnalyticsBucket
+	21, // 29: payment.v1.GetPaymentAnalyticsRequest.filter:type_name -> payment.v1.PaymentAnalyticsFilter
+	26, // 30: payment.v1.PaymentAnalyticsPoint.bucket_start:type_name -> google.protobuf.Timestamp
+	25, // 31: payment.v1.PaymentAnalyticsPoint.provider:type_name -> payment.v1.PaymentProvider
+	28, // 32: payment.v1.PaymentAnalyticsPoint.method:type_name -> payment.v1.PaymentMethod
+	26, // 33: payment.v1.GetPaymentAnalyticsResponse.window_from:type_name -> google.protobuf.Timestamp
+	26, // 34: payment.v1.GetPaymentAnalyticsResponse.window_to:type_name -> google.protobuf.Timestamp
+	0,  // 35: payment.v1.GetPaymentAnalyticsResponse.bucket:type_name -> payment.v1.PaymentAnalyticsBucket
+	23, // 36: payment.v1.GetPaymentAnalyticsResponse.points:type_name -> payment.v1.PaymentAnalyticsPoint
+	26, // 37: payment.v1.GetPaymentAnalyticsResponse.generated_at:type_name -> google.protobuf.Timestamp
+	38, // [38:38] is the sub-list for method output_type
+	38, // [38:38] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_risk_proto_init() }
@@ -2499,14 +2381,7 @@ func file_payment_v1_risk_proto_init() {
 	file_payment_v1_risk_proto_msgTypes[1].OneofWrappers = []any{}
 	file_payment_v1_risk_proto_msgTypes[3].OneofWrappers = []any{}
 	file_payment_v1_risk_proto_msgTypes[4].OneofWrappers = []any{}
-	file_payment_v1_risk_proto_msgTypes[5].OneofWrappers = []any{}
-	file_payment_v1_risk_proto_msgTypes[6].OneofWrappers = []any{}
-	file_payment_v1_risk_proto_msgTypes[7].OneofWrappers = []any{}
-	file_payment_v1_risk_proto_msgTypes[9].OneofWrappers = []any{}
 	file_payment_v1_risk_proto_msgTypes[10].OneofWrappers = []any{}
-	file_payment_v1_risk_proto_msgTypes[11].OneofWrappers = []any{}
-	file_payment_v1_risk_proto_msgTypes[13].OneofWrappers = []any{}
-	file_payment_v1_risk_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

@@ -60,15 +60,6 @@ message RolePermission {
     (gnostic.openapi.v3.property) = {description: "状态"}
   ];  // 状态
 
-  // AppID，0代表系统全局角色。
-  optional uint32 app_id = 40 [
-    (gnostic.openapi.v3.property) = {description: "AppID，0代表系统全局角色"}
-  ];  // AppID，0代表系统全局角色
-  // App名称。
-  optional string app_name = 41 [
-    (gnostic.openapi.v3.property) = {description: "App名称"}
-  ];  // App名称
-
   // 创建者用户ID。
   optional uint32 created_by = 100 [ (gnostic.openapi.v3.property) = {description: "创建者用户ID"}]; // 创建者用户ID
   // 更新者用户ID。

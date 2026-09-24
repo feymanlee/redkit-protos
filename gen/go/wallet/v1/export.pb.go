@@ -8,7 +8,7 @@ package walletpb
 
 import (
 	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -463,7 +463,7 @@ func (x *WalletExportSort) GetDirection() v1.Sorting_Direction {
 // WalletBalanceExportFilter 定义可组合的查询筛选条件。
 type WalletBalanceExportFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency      *WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
@@ -518,7 +518,7 @@ func (x *WalletBalanceExportFilter) GetCurrency() WalletCurrency {
 // WalletTransactionExportFilter 定义可组合的查询筛选条件。
 type WalletTransactionExportFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
 	Currency *WalletCurrency `protobuf:"varint,2,opt,name=currency,proto3,enum=wallet.v1.WalletCurrency,oneof" json:"currency,omitempty"`
@@ -609,7 +609,7 @@ func (x *WalletTransactionExportFilter) GetCreatedTo() *timestamppb.Timestamp {
 // WalletDebtExportFilter 定义可组合的查询筛选条件。
 type WalletDebtExportFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// status 表示 WalletDebtExportFilter 当前可观察的生命周期状态。
 	Status *string `protobuf:"bytes,2,opt,name=status,proto3,oneof" json:"status,omitempty"`
@@ -691,7 +691,7 @@ func (x *WalletDebtExportFilter) GetCreatedTo() *timestamppb.Timestamp {
 // WalletAdjustmentExportFilter 定义可组合的查询筛选条件。
 type WalletAdjustmentExportFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// status 表示 WalletAdjustmentExportFilter 当前可观察的生命周期状态。
 	Status *WalletAdjustment_Status `protobuf:"varint,2,opt,name=status,proto3,enum=wallet.v1.WalletAdjustment_Status,oneof" json:"status,omitempty"`
@@ -775,7 +775,7 @@ type WalletReconciliationDifferenceExportFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// batch_id 标识关联的 Batch。
 	BatchId *uint64 `protobuf:"varint,1,opt,name=batch_id,json=batchId,proto3,oneof" json:"batch_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// diff_type 区分 WalletReconciliationDifferenceExportFilter 的业务类型。
 	DiffType *string `protobuf:"bytes,3,opt,name=diff_type,json=diffType,proto3,oneof" json:"diff_type,omitempty"`
@@ -1031,8 +1031,6 @@ type WalletExportJob struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 WalletExportJob。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 WalletExportJob 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v11.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// export_no 是 WalletExportJob 对外关联与审计使用的业务编号。
 	ExportNo string `protobuf:"bytes,3,opt,name=export_no,json=exportNo,proto3" json:"export_no,omitempty"`
 	// query 承载 WalletExportJob 关联的 WalletExportQuery。
@@ -1104,13 +1102,6 @@ func (x *WalletExportJob) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *WalletExportJob) GetAppId() v11.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v11.AppId(0)
 }
 
 func (x *WalletExportJob) GetExportNo() string {
@@ -1228,8 +1219,6 @@ func (x *WalletExportJob) GetUpdatedAt() *timestamppb.Timestamp {
 // CreateWalletExportRequest 定义创建 WalletExport 的幂等命令参数。
 type CreateWalletExportRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateWalletExport 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v11.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// query 承载 CreateWalletExport 关联的 WalletExportQuery。
 	Query *WalletExportQuery `protobuf:"bytes,2,opt,name=query,proto3" json:"query,omitempty"`
 	// requester_id 标识关联的 Requester。
@@ -1274,13 +1263,6 @@ func (*CreateWalletExportRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_export_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *CreateWalletExportRequest) GetAppId() v11.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v11.AppId(0)
-}
-
 func (x *CreateWalletExportRequest) GetQuery() *WalletExportQuery {
 	if x != nil {
 		return x.Query
@@ -1319,8 +1301,6 @@ func (x *CreateWalletExportRequest) GetRequestId() string {
 // ListWalletExportsRequest 定义 WalletExports 的筛选与分页参数。
 type ListWalletExportsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListWalletExports 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v11.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
 	Paging *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	// resource 指定本次查询、导出或操作面向的资源类型。
@@ -1359,13 +1339,6 @@ func (x *ListWalletExportsRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ListWalletExportsRequest.ProtoReflect.Descriptor instead.
 func (*ListWalletExportsRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_export_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *ListWalletExportsRequest) GetAppId() v11.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v11.AppId(0)
 }
 
 func (x *ListWalletExportsRequest) GetPaging() *v1.PagingRequest {
@@ -1447,8 +1420,6 @@ func (x *ListWalletExportsResponse) GetTotal() uint64 {
 // RetryWalletExportRequest 定义重试 WalletExport 的幂等管理命令参数。
 type RetryWalletExportRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RetryWalletExport 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v11.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// export_id 标识关联的 Export。
 	ExportId uint64 `protobuf:"varint,2,opt,name=export_id,json=exportId,proto3" json:"export_id,omitempty"`
 	// requester_id 标识关联的 Requester。
@@ -1493,13 +1464,6 @@ func (*RetryWalletExportRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_export_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *RetryWalletExportRequest) GetAppId() v11.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v11.AppId(0)
-}
-
 func (x *RetryWalletExportRequest) GetExportId() uint64 {
 	if x != nil {
 		return x.ExportId
@@ -1538,8 +1502,6 @@ func (x *RetryWalletExportRequest) GetRequestId() string {
 // GetWalletExportDownloadRequest 标识待查询的 WalletExportDownload。
 type GetWalletExportDownloadRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetWalletExportDownload 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v11.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// export_id 标识关联的 Export。
 	ExportId uint64 `protobuf:"varint,2,opt,name=export_id,json=exportId,proto3" json:"export_id,omitempty"`
 	// requester_id 标识关联的 Requester。
@@ -1578,13 +1540,6 @@ func (x *GetWalletExportDownloadRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetWalletExportDownloadRequest.ProtoReflect.Descriptor instead.
 func (*GetWalletExportDownloadRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_export_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *GetWalletExportDownloadRequest) GetAppId() v11.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v11.AppId(0)
 }
 
 func (x *GetWalletExportDownloadRequest) GetExportId() uint64 {
@@ -1746,10 +1701,9 @@ const file_wallet_v1_export_proto_rawDesc = "" +
 	"\x19reconciliation_difference\x18\x06 \x01(\v25.wallet.v1.WalletReconciliationDifferenceExportFilterH\x00R\x18reconciliationDifference\x125\n" +
 	"\asorting\x18\a \x03(\v2\x1b.wallet.v1.WalletExportSortR\asorting\x124\n" +
 	"\x06fields\x18\b \x03(\x0e2\x1c.wallet.v1.WalletExportFieldR\x06fieldsB\b\n" +
-	"\x06filter\"\xab\x06\n" +
+	"\x06filter\"\x82\x06\n" +
 	"\x0fWalletExportJob\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1b\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1b\n" +
 	"\texport_no\x18\x03 \x01(\tR\bexportNo\x122\n" +
 	"\x05query\x18\x04 \x01(\v2\x1c.wallet.v1.WalletExportQueryR\x05query\x12;\n" +
 	"\vsnapshot_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
@@ -1771,17 +1725,15 @@ const file_wallet_v1_export_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x95\x02\n" +
-	"\x19CreateWalletExportRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x127\n" +
+	"updated_at\x18\x12 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xe7\x01\n" +
+	"\x19CreateWalletExportRequest\x127\n" +
 	"\x05query\x18\x02 \x01(\v2\x1c.wallet.v1.WalletExportQueryB\x03\xe0A\x02R\x05query\x12&\n" +
 	"\frequester_id\x18\x03 \x01(\rB\x03\xe0A\x02R\vrequesterId\x12\x1d\n" +
 	"\apurpose\x18\x04 \x01(\tB\x03\xe0A\x02R\apurpose\x12&\n" +
 	"\foperation_no\x18\x05 \x01(\tB\x03\xe0A\x02R\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tB\x03\xe0A\x02R\trequestId\"\x9b\x02\n" +
-	"\x18ListWalletExportsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12;\n" +
+	"request_id\x18\x06 \x01(\tB\x03\xe0A\x02R\trequestId\"\xed\x01\n" +
+	"\x18ListWalletExportsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12@\n" +
 	"\bresource\x18\x03 \x01(\x0e2\x1f.wallet.v1.WalletExportResourceH\x00R\bresource\x88\x01\x01\x12:\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x1d.wallet.v1.WalletExportStatusH\x01R\x06status\x88\x01\x01B\v\n" +
@@ -1789,17 +1741,15 @@ const file_wallet_v1_export_proto_rawDesc = "" +
 	"\a_status\"c\n" +
 	"\x19ListWalletExportsResponse\x120\n" +
 	"\x05items\x18\x01 \x03(\v2\x1a.wallet.v1.WalletExportJobR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xfd\x01\n" +
-	"\x18RetryWalletExportRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12 \n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xcf\x01\n" +
+	"\x18RetryWalletExportRequest\x12 \n" +
 	"\texport_id\x18\x02 \x01(\x04B\x03\xe0A\x02R\bexportId\x12&\n" +
 	"\frequester_id\x18\x03 \x01(\rB\x03\xe0A\x02R\vrequesterId\x12\x1d\n" +
 	"\apurpose\x18\x04 \x01(\tB\x03\xe0A\x02R\apurpose\x12&\n" +
 	"\foperation_no\x18\x05 \x01(\tB\x03\xe0A\x02R\voperationNo\x12\"\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tB\x03\xe0A\x02R\trequestId\"\xbc\x01\n" +
-	"\x1eGetWalletExportDownloadRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12 \n" +
+	"request_id\x18\x06 \x01(\tB\x03\xe0A\x02R\trequestId\"\x8e\x01\n" +
+	"\x1eGetWalletExportDownloadRequest\x12 \n" +
 	"\texport_id\x18\x02 \x01(\x04B\x03\xe0A\x02R\bexportId\x12&\n" +
 	"\frequester_id\x18\x03 \x01(\rB\x03\xe0A\x02R\vrequesterId\x12\"\n" +
 	"\n" +
@@ -1910,8 +1860,7 @@ var file_wallet_v1_export_proto_goTypes = []any{
 	(WalletTransaction_Status)(0),                      // 21: wallet.v1.WalletTransaction.Status
 	(*timestamppb.Timestamp)(nil),                      // 22: google.protobuf.Timestamp
 	(WalletAdjustment_Status)(0),                       // 23: wallet.v1.WalletAdjustment.Status
-	(v11.AppId)(0),                                     // 24: common.v1.AppId
-	(*v1.PagingRequest)(nil),                           // 25: common.pagination.v1.PagingRequest
+	(*v1.PagingRequest)(nil),                           // 24: common.pagination.v1.PagingRequest
 }
 var file_wallet_v1_export_proto_depIdxs = []int32{
 	3,  // 0: wallet.v1.WalletExportSort.field:type_name -> wallet.v1.WalletExportSortField
@@ -1937,30 +1886,25 @@ var file_wallet_v1_export_proto_depIdxs = []int32{
 	9,  // 20: wallet.v1.WalletExportQuery.reconciliation_difference:type_name -> wallet.v1.WalletReconciliationDifferenceExportFilter
 	4,  // 21: wallet.v1.WalletExportQuery.sorting:type_name -> wallet.v1.WalletExportSort
 	2,  // 22: wallet.v1.WalletExportQuery.fields:type_name -> wallet.v1.WalletExportField
-	24, // 23: wallet.v1.WalletExportJob.app_id:type_name -> common.v1.AppId
-	10, // 24: wallet.v1.WalletExportJob.query:type_name -> wallet.v1.WalletExportQuery
-	22, // 25: wallet.v1.WalletExportJob.snapshot_at:type_name -> google.protobuf.Timestamp
-	1,  // 26: wallet.v1.WalletExportJob.status:type_name -> wallet.v1.WalletExportStatus
-	22, // 27: wallet.v1.WalletExportJob.result_expires_at:type_name -> google.protobuf.Timestamp
-	22, // 28: wallet.v1.WalletExportJob.started_at:type_name -> google.protobuf.Timestamp
-	22, // 29: wallet.v1.WalletExportJob.finished_at:type_name -> google.protobuf.Timestamp
-	22, // 30: wallet.v1.WalletExportJob.created_at:type_name -> google.protobuf.Timestamp
-	22, // 31: wallet.v1.WalletExportJob.updated_at:type_name -> google.protobuf.Timestamp
-	24, // 32: wallet.v1.CreateWalletExportRequest.app_id:type_name -> common.v1.AppId
-	10, // 33: wallet.v1.CreateWalletExportRequest.query:type_name -> wallet.v1.WalletExportQuery
-	24, // 34: wallet.v1.ListWalletExportsRequest.app_id:type_name -> common.v1.AppId
-	25, // 35: wallet.v1.ListWalletExportsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	0,  // 36: wallet.v1.ListWalletExportsRequest.resource:type_name -> wallet.v1.WalletExportResource
-	1,  // 37: wallet.v1.ListWalletExportsRequest.status:type_name -> wallet.v1.WalletExportStatus
-	11, // 38: wallet.v1.ListWalletExportsResponse.items:type_name -> wallet.v1.WalletExportJob
-	24, // 39: wallet.v1.RetryWalletExportRequest.app_id:type_name -> common.v1.AppId
-	24, // 40: wallet.v1.GetWalletExportDownloadRequest.app_id:type_name -> common.v1.AppId
-	22, // 41: wallet.v1.WalletExportDownload.expires_at:type_name -> google.protobuf.Timestamp
-	42, // [42:42] is the sub-list for method output_type
-	42, // [42:42] is the sub-list for method input_type
-	42, // [42:42] is the sub-list for extension type_name
-	42, // [42:42] is the sub-list for extension extendee
-	0,  // [0:42] is the sub-list for field type_name
+	10, // 23: wallet.v1.WalletExportJob.query:type_name -> wallet.v1.WalletExportQuery
+	22, // 24: wallet.v1.WalletExportJob.snapshot_at:type_name -> google.protobuf.Timestamp
+	1,  // 25: wallet.v1.WalletExportJob.status:type_name -> wallet.v1.WalletExportStatus
+	22, // 26: wallet.v1.WalletExportJob.result_expires_at:type_name -> google.protobuf.Timestamp
+	22, // 27: wallet.v1.WalletExportJob.started_at:type_name -> google.protobuf.Timestamp
+	22, // 28: wallet.v1.WalletExportJob.finished_at:type_name -> google.protobuf.Timestamp
+	22, // 29: wallet.v1.WalletExportJob.created_at:type_name -> google.protobuf.Timestamp
+	22, // 30: wallet.v1.WalletExportJob.updated_at:type_name -> google.protobuf.Timestamp
+	10, // 31: wallet.v1.CreateWalletExportRequest.query:type_name -> wallet.v1.WalletExportQuery
+	24, // 32: wallet.v1.ListWalletExportsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	0,  // 33: wallet.v1.ListWalletExportsRequest.resource:type_name -> wallet.v1.WalletExportResource
+	1,  // 34: wallet.v1.ListWalletExportsRequest.status:type_name -> wallet.v1.WalletExportStatus
+	11, // 35: wallet.v1.ListWalletExportsResponse.items:type_name -> wallet.v1.WalletExportJob
+	22, // 36: wallet.v1.WalletExportDownload.expires_at:type_name -> google.protobuf.Timestamp
+	37, // [37:37] is the sub-list for method output_type
+	37, // [37:37] is the sub-list for method input_type
+	37, // [37:37] is the sub-list for extension type_name
+	37, // [37:37] is the sub-list for extension extendee
+	0,  // [0:37] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_export_proto_init() }

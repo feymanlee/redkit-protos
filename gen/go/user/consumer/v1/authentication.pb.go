@@ -8,8 +8,7 @@ package userconsumerpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -147,9 +146,7 @@ func (LoginChallengeFactor) EnumDescriptor() ([]byte, []int) {
 
 // GetAuthenticationOptionsRequest 标识待查询的 AuthenticationOptions。
 type GetAuthenticationOptionsRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetAuthenticationOptions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -184,24 +181,17 @@ func (*GetAuthenticationOptionsRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetAuthenticationOptionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 // AuthenticationOptions 承载 GetAuthenticationOptions 调用的返回结果。
 type AuthenticationOptions struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// registration_enabled 显式表示 AuthenticationOptions 是否满足该条件。
 	RegistrationEnabled bool `protobuf:"varint,1,opt,name=registration_enabled,json=registrationEnabled,proto3" json:"registration_enabled,omitempty"`
 	// registration_methods 列出 AuthenticationOptions 关联的 AuthenticationMethod。
-	RegistrationMethods []v11.AuthenticationMethod `protobuf:"varint,2,rep,packed,name=registration_methods,json=registrationMethods,proto3,enum=user.types.v1.AuthenticationMethod" json:"registration_methods,omitempty"`
+	RegistrationMethods []v1.AuthenticationMethod `protobuf:"varint,2,rep,packed,name=registration_methods,json=registrationMethods,proto3,enum=user.types.v1.AuthenticationMethod" json:"registration_methods,omitempty"`
 	// login_methods 列出 AuthenticationOptions 关联的 AuthenticationMethod。
-	LoginMethods []v11.AuthenticationMethod `protobuf:"varint,3,rep,packed,name=login_methods,json=loginMethods,proto3,enum=user.types.v1.AuthenticationMethod" json:"login_methods,omitempty"`
+	LoginMethods []v1.AuthenticationMethod `protobuf:"varint,3,rep,packed,name=login_methods,json=loginMethods,proto3,enum=user.types.v1.AuthenticationMethod" json:"login_methods,omitempty"`
 	// phone_binding_requirement 承载 AuthenticationOptions 关联的 PhoneBindingRequirement。
-	PhoneBindingRequirement v11.PhoneBindingRequirement `protobuf:"varint,4,opt,name=phone_binding_requirement,json=phoneBindingRequirement,proto3,enum=user.types.v1.PhoneBindingRequirement" json:"phone_binding_requirement,omitempty"`
+	PhoneBindingRequirement v1.PhoneBindingRequirement `protobuf:"varint,4,opt,name=phone_binding_requirement,json=phoneBindingRequirement,proto3,enum=user.types.v1.PhoneBindingRequirement" json:"phone_binding_requirement,omitempty"`
 	// totp_required 显式表示 AuthenticationOptions 是否满足该条件。
 	TotpRequired bool `protobuf:"varint,5,opt,name=totp_required,json=totpRequired,proto3" json:"totp_required,omitempty"`
 	// password_min_length 限定可接受密码的最小字符数。
@@ -253,25 +243,25 @@ func (x *AuthenticationOptions) GetRegistrationEnabled() bool {
 	return false
 }
 
-func (x *AuthenticationOptions) GetRegistrationMethods() []v11.AuthenticationMethod {
+func (x *AuthenticationOptions) GetRegistrationMethods() []v1.AuthenticationMethod {
 	if x != nil {
 		return x.RegistrationMethods
 	}
 	return nil
 }
 
-func (x *AuthenticationOptions) GetLoginMethods() []v11.AuthenticationMethod {
+func (x *AuthenticationOptions) GetLoginMethods() []v1.AuthenticationMethod {
 	if x != nil {
 		return x.LoginMethods
 	}
 	return nil
 }
 
-func (x *AuthenticationOptions) GetPhoneBindingRequirement() v11.PhoneBindingRequirement {
+func (x *AuthenticationOptions) GetPhoneBindingRequirement() v1.PhoneBindingRequirement {
 	if x != nil {
 		return x.PhoneBindingRequirement
 	}
-	return v11.PhoneBindingRequirement(0)
+	return v1.PhoneBindingRequirement(0)
 }
 
 func (x *AuthenticationOptions) GetTotpRequired() bool {
@@ -423,7 +413,7 @@ func (x *PhonePasswordProof) GetPassword() string {
 type ExternalIdentityProof struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// provider 标识本次能力使用的外部 Provider。
-	Provider v11.ExternalIdentityProvider `protobuf:"varint,1,opt,name=provider,proto3,enum=user.types.v1.ExternalIdentityProvider" json:"provider,omitempty"`
+	Provider v1.ExternalIdentityProvider `protobuf:"varint,1,opt,name=provider,proto3,enum=user.types.v1.ExternalIdentityProvider" json:"provider,omitempty"`
 	// provider_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ProviderToken string `protobuf:"bytes,2,opt,name=provider_token,json=providerToken,proto3" json:"provider_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -460,11 +450,11 @@ func (*ExternalIdentityProof) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ExternalIdentityProof) GetProvider() v11.ExternalIdentityProvider {
+func (x *ExternalIdentityProof) GetProvider() v1.ExternalIdentityProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v11.ExternalIdentityProvider(0)
+	return v1.ExternalIdentityProvider(0)
 }
 
 func (x *ExternalIdentityProof) GetProviderToken() string {
@@ -477,8 +467,6 @@ func (x *ExternalIdentityProof) GetProviderToken() string {
 // RegisterRequest 定义执行 Register 的幂等管理命令参数。
 type RegisterRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 Register 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// RegisterRequest 在以下身份或安全证明中选择一种。
 	//
 	// Types that are valid to be assigned to Proof:
@@ -487,7 +475,7 @@ type RegisterRequest struct {
 	//	*RegisterRequest_ExternalIdentity
 	Proof isRegisterRequest_Proof `protobuf_oneof:"proof"`
 	// client 承载 Register 关联的 ConsumerClientContext。
-	Client *v11.ConsumerClientContext `protobuf:"bytes,4,opt,name=client,proto3" json:"client,omitempty"`
+	Client *v1.ConsumerClientContext `protobuf:"bytes,4,opt,name=client,proto3" json:"client,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,5,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -524,13 +512,6 @@ func (*RegisterRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *RegisterRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RegisterRequest) GetProof() isRegisterRequest_Proof {
 	if x != nil {
 		return x.Proof
@@ -556,7 +537,7 @@ func (x *RegisterRequest) GetExternalIdentity() *ExternalIdentityProof {
 	return nil
 }
 
-func (x *RegisterRequest) GetClient() *v11.ConsumerClientContext {
+func (x *RegisterRequest) GetClient() *v1.ConsumerClientContext {
 	if x != nil {
 		return x.Client
 	}
@@ -592,11 +573,11 @@ func (*RegisterRequest_ExternalIdentity) isRegisterRequest_Proof() {}
 type AuthenticationResult struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// user 承载 AuthenticationResult 关联的 User。
-	User *v11.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User *v1.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// session 承载 AuthenticationResult 关联的 Session。
-	Session *v11.Session `protobuf:"bytes,2,opt,name=session,proto3" json:"session,omitempty"`
+	Session *v1.Session `protobuf:"bytes,2,opt,name=session,proto3" json:"session,omitempty"`
 	// tokens 承载 AuthenticationResult 关联的 TokenPair。
-	Tokens        *v11.TokenPair `protobuf:"bytes,3,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens        *v1.TokenPair `protobuf:"bytes,3,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -631,21 +612,21 @@ func (*AuthenticationResult) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *AuthenticationResult) GetUser() *v11.User {
+func (x *AuthenticationResult) GetUser() *v1.User {
 	if x != nil {
 		return x.User
 	}
 	return nil
 }
 
-func (x *AuthenticationResult) GetSession() *v11.Session {
+func (x *AuthenticationResult) GetSession() *v1.Session {
 	if x != nil {
 		return x.Session
 	}
 	return nil
 }
 
-func (x *AuthenticationResult) GetTokens() *v11.TokenPair {
+func (x *AuthenticationResult) GetTokens() *v1.TokenPair {
 	if x != nil {
 		return x.Tokens
 	}
@@ -660,7 +641,7 @@ type UserAction struct {
 	// action_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ActionToken string `protobuf:"bytes,2,opt,name=action_token,json=actionToken,proto3" json:"action_token,omitempty"`
 	// user 承载 UserAction 关联的 User。
-	User *v11.User `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
+	User *v1.User `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
 	// expires_at 指定 UserAction 失效的时间点。
 	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -711,7 +692,7 @@ func (x *UserAction) GetActionToken() string {
 	return ""
 }
 
-func (x *UserAction) GetUser() *v11.User {
+func (x *UserAction) GetUser() *v1.User {
 	if x != nil {
 		return x.User
 	}
@@ -815,8 +796,6 @@ func (*RegisterResponse_ActionRequired) isRegisterResponse_Outcome() {}
 // LoginRequest 定义执行 Login 的幂等管理命令参数。
 type LoginRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 Login 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// LoginRequest 在以下身份或安全证明中选择一种。
 	//
 	// Types that are valid to be assigned to Proof:
@@ -826,7 +805,7 @@ type LoginRequest struct {
 	//	*LoginRequest_ExternalIdentity
 	Proof isLoginRequest_Proof `protobuf_oneof:"proof"`
 	// client 承载 Login 关联的 ConsumerClientContext。
-	Client *v11.ConsumerClientContext `protobuf:"bytes,5,opt,name=client,proto3" json:"client,omitempty"`
+	Client *v1.ConsumerClientContext `protobuf:"bytes,5,opt,name=client,proto3" json:"client,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,6,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -863,13 +842,6 @@ func (*LoginRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *LoginRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *LoginRequest) GetProof() isLoginRequest_Proof {
 	if x != nil {
 		return x.Proof
@@ -904,7 +876,7 @@ func (x *LoginRequest) GetExternalIdentity() *ExternalIdentityProof {
 	return nil
 }
 
-func (x *LoginRequest) GetClient() *v11.ConsumerClientContext {
+func (x *LoginRequest) GetClient() *v1.ConsumerClientContext {
 	if x != nil {
 		return x.Client
 	}
@@ -1132,14 +1104,12 @@ func (*LoginResponse_ActionRequired) isLoginResponse_Outcome() {}
 // ResendLoginChallengeRequest 定义执行 ResendLoginChallenge 的幂等管理命令参数。
 type ResendLoginChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResendLoginChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ChallengeToken string `protobuf:"bytes,2,opt,name=challenge_token,json=challengeToken,proto3" json:"challenge_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,3,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	// client 承载 ResendLoginChallenge 关联的 ConsumerClientContext。
-	Client        *v11.ConsumerClientContext `protobuf:"bytes,4,opt,name=client,proto3" json:"client,omitempty"`
+	Client        *v1.ConsumerClientContext `protobuf:"bytes,4,opt,name=client,proto3" json:"client,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1174,13 +1144,6 @@ func (*ResendLoginChallengeRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ResendLoginChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ResendLoginChallengeRequest) GetChallengeToken() string {
 	if x != nil {
 		return x.ChallengeToken
@@ -1195,7 +1158,7 @@ func (x *ResendLoginChallengeRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-func (x *ResendLoginChallengeRequest) GetClient() *v11.ConsumerClientContext {
+func (x *ResendLoginChallengeRequest) GetClient() *v1.ConsumerClientContext {
 	if x != nil {
 		return x.Client
 	}
@@ -1205,8 +1168,6 @@ func (x *ResendLoginChallengeRequest) GetClient() *v11.ConsumerClientContext {
 // CompleteLoginChallengeRequest 定义完成 LoginChallenge 的幂等管理命令参数。
 type CompleteLoginChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompleteLoginChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ChallengeToken string `protobuf:"bytes,2,opt,name=challenge_token,json=challengeToken,proto3" json:"challenge_token,omitempty"`
 	// CompleteLoginChallengeRequest 在以下身份或安全证明中选择一种。
@@ -1220,7 +1181,7 @@ type CompleteLoginChallengeRequest struct {
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,6,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	// client 承载 CompleteLoginChallenge 关联的 ConsumerClientContext。
-	Client        *v11.ConsumerClientContext `protobuf:"bytes,7,opt,name=client,proto3" json:"client,omitempty"`
+	Client        *v1.ConsumerClientContext `protobuf:"bytes,7,opt,name=client,proto3" json:"client,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1253,13 +1214,6 @@ func (x *CompleteLoginChallengeRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CompleteLoginChallengeRequest.ProtoReflect.Descriptor instead.
 func (*CompleteLoginChallengeRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *CompleteLoginChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CompleteLoginChallengeRequest) GetChallengeToken() string {
@@ -1310,7 +1264,7 @@ func (x *CompleteLoginChallengeRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-func (x *CompleteLoginChallengeRequest) GetClient() *v11.ConsumerClientContext {
+func (x *CompleteLoginChallengeRequest) GetClient() *v1.ConsumerClientContext {
 	if x != nil {
 		return x.Client
 	}
@@ -1345,8 +1299,6 @@ func (*CompleteLoginChallengeRequest_RecoveryCode) isCompleteLoginChallengeReque
 // RefreshTokenRequest 定义执行 RefreshToken 的幂等管理命令参数。
 type RefreshTokenRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RefreshToken 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// refresh_token 承载敏感凭据或校验材料，不得写入普通日志。
 	RefreshToken string `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
 	// installation_id 标识关联的 Installation。
@@ -1387,13 +1339,6 @@ func (*RefreshTokenRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *RefreshTokenRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RefreshTokenRequest) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
@@ -1418,8 +1363,6 @@ func (x *RefreshTokenRequest) GetIdempotencyKey() string {
 // LogoutRequest 定义执行 Logout 的幂等管理命令参数。
 type LogoutRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 Logout 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,2,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -1456,13 +1399,6 @@ func (*LogoutRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *LogoutRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *LogoutRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
@@ -1473,8 +1409,6 @@ func (x *LogoutRequest) GetIdempotencyKey() string {
 // StartPasswordResetRequest 定义启动 PasswordReset 的幂等管理命令参数。
 type StartPasswordResetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 StartPasswordReset 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// phone 承载按约定地区规则规范化的手机号码。
 	Phone string `protobuf:"bytes,2,opt,name=phone,proto3" json:"phone,omitempty"`
 	// verification_ticket 承载流程继续所需的短期校验凭据，不得写入普通日志。
@@ -1513,13 +1447,6 @@ func (x *StartPasswordResetRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use StartPasswordResetRequest.ProtoReflect.Descriptor instead.
 func (*StartPasswordResetRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *StartPasswordResetRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *StartPasswordResetRequest) GetPhone() string {
@@ -1601,8 +1528,6 @@ func (x *StartPasswordResetResponse) GetExpiresAt() *timestamppb.Timestamp {
 // CompletePasswordResetChallengeRequest 定义完成 PasswordResetChallenge 的幂等管理命令参数。
 type CompletePasswordResetChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompletePasswordResetChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// continuation_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ContinuationToken string `protobuf:"bytes,2,opt,name=continuation_token,json=continuationToken,proto3" json:"continuation_token,omitempty"`
 	// CompletePasswordResetChallengeRequest 在以下身份或安全证明中选择一种。
@@ -1646,13 +1571,6 @@ func (x *CompletePasswordResetChallengeRequest) ProtoReflect() protoreflect.Mess
 // Deprecated: Use CompletePasswordResetChallengeRequest.ProtoReflect.Descriptor instead.
 func (*CompletePasswordResetChallengeRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *CompletePasswordResetChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CompletePasswordResetChallengeRequest) GetContinuationToken() string {
@@ -1772,8 +1690,6 @@ func (x *PasswordResetAuthorization) GetExpiresAt() *timestamppb.Timestamp {
 // CompletePasswordResetRequest 定义完成 PasswordReset 的幂等管理命令参数。
 type CompletePasswordResetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompletePasswordReset 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// password_reset_token 承载敏感凭据或校验材料，不得写入普通日志。
 	PasswordResetToken string `protobuf:"bytes,2,opt,name=password_reset_token,json=passwordResetToken,proto3" json:"password_reset_token,omitempty"`
 	// new_password 承载敏感凭据或校验材料，不得写入普通日志。
@@ -1814,13 +1730,6 @@ func (*CompletePasswordResetRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *CompletePasswordResetRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CompletePasswordResetRequest) GetPasswordResetToken() string {
 	if x != nil {
 		return x.PasswordResetToken
@@ -1845,8 +1754,6 @@ func (x *CompletePasswordResetRequest) GetIdempotencyKey() string {
 // CompleteRequiredPasswordResetRequest 定义完成 RequiredPasswordReset 的幂等管理命令参数。
 type CompleteRequiredPasswordResetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompleteRequiredPasswordReset 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// action_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ActionToken string `protobuf:"bytes,2,opt,name=action_token,json=actionToken,proto3" json:"action_token,omitempty"`
 	// new_password 承载敏感凭据或校验材料，不得写入普通日志。
@@ -1887,13 +1794,6 @@ func (*CompleteRequiredPasswordResetRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_authentication_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *CompleteRequiredPasswordResetRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CompleteRequiredPasswordResetRequest) GetActionToken() string {
 	if x != nil {
 		return x.ActionToken
@@ -1919,9 +1819,8 @@ var File_user_consumer_v1_authentication_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\n" +
-	"%user/consumer/v1/authentication.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"Y\n" +
-	"\x1fGetAuthenticationOptionsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\"\xc9\x04\n" +
+	"%user/consumer/v1/authentication.proto\x12\x10user.consumer.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a\x19user/types/v1/types.proto\"!\n" +
+	"\x1fGetAuthenticationOptionsRequest\"\xc9\x04\n" +
 	"\x15AuthenticationOptions\x121\n" +
 	"\x14registration_enabled\x18\x01 \x01(\bR\x13registrationEnabled\x12V\n" +
 	"\x14registration_methods\x18\x02 \x03(\x0e2#.user.types.v1.AuthenticationMethodR\x13registrationMethods\x12H\n" +
@@ -1940,9 +1839,8 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\bpassword\"\xa1\x01\n" +
 	"\x15ExternalIdentityProof\x12R\n" +
 	"\bprovider\x18\x01 \x01(\x0e2'.user.types.v1.ExternalIdentityProviderB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\bprovider\x124\n" +
-	"\x0eprovider_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80@R\rproviderToken\"\xf2\x02\n" +
-	"\x0fRegisterRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12>\n" +
+	"\x0eprovider_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80@R\rproviderToken\"\xba\x02\n" +
+	"\x0fRegisterRequest\x12>\n" +
 	"\tphone_otp\x18\x02 \x01(\v2\x1f.user.consumer.v1.PhoneOtpProofH\x00R\bphoneOtp\x12V\n" +
 	"\x11external_identity\x18\x03 \x01(\v2'.user.consumer.v1.ExternalIdentityProofH\x00R\x10externalIdentity\x12I\n" +
 	"\x06client\x18\x04 \x01(\v2$.user.types.v1.ConsumerClientContextB\v\xe0A\x02\xfaB\x05\x8a\x01\x02\x10\x01R\x06client\x126\n" +
@@ -1962,9 +1860,8 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\x10RegisterResponse\x12N\n" +
 	"\rauthenticated\x18\x01 \x01(\v2&.user.consumer.v1.AuthenticationResultH\x00R\rauthenticated\x12G\n" +
 	"\x0faction_required\x18\x02 \x01(\v2\x1c.user.consumer.v1.UserActionH\x00R\x0eactionRequiredB\t\n" +
-	"\aoutcome\"\xbe\x03\n" +
-	"\fLoginRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12>\n" +
+	"\aoutcome\"\x86\x03\n" +
+	"\fLoginRequest\x12>\n" +
 	"\tphone_otp\x18\x02 \x01(\v2\x1f.user.consumer.v1.PhoneOtpProofH\x00R\bphoneOtp\x12M\n" +
 	"\x0ephone_password\x18\x03 \x01(\v2$.user.consumer.v1.PhonePasswordProofH\x00R\rphonePassword\x12V\n" +
 	"\x11external_identity\x18\x04 \x01(\v2'.user.consumer.v1.ExternalIdentityProofH\x00R\x10externalIdentity\x12I\n" +
@@ -1982,14 +1879,12 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\rauthenticated\x18\x01 \x01(\v2&.user.consumer.v1.AuthenticationResultH\x00R\rauthenticated\x12@\n" +
 	"\tchallenge\x18\x02 \x01(\v2 .user.consumer.v1.LoginChallengeH\x00R\tchallenge\x12G\n" +
 	"\x0faction_required\x18\x03 \x01(\v2\x1c.user.consumer.v1.UserActionH\x00R\x0eactionRequiredB\t\n" +
-	"\aoutcome\"\x90\x02\n" +
+	"\aoutcome\"\xd8\x01\n" +
 	"\x1bResendLoginChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x126\n" +
 	"\x0fchallenge_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x0echallengeToken\x126\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\x12I\n" +
-	"\x06client\x18\x04 \x01(\v2$.user.types.v1.ConsumerClientContextB\v\xe0A\x02\xfaB\x05\x8a\x01\x02\x10\x01R\x06client\"\x87\x03\n" +
+	"\x06client\x18\x04 \x01(\v2$.user.types.v1.ConsumerClientContextB\v\xe0A\x02\xfaB\x05\x8a\x01\x02\x10\x01R\x06client\"\xcf\x02\n" +
 	"\x1dCompleteLoginChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x126\n" +
 	"\x0fchallenge_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x0echallengeToken\x12\x1f\n" +
 	"\n" +
 	"phone_code\x18\x03 \x01(\tH\x00R\tphoneCode\x12\x1d\n" +
@@ -1997,26 +1892,22 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\rrecovery_code\x18\x05 \x01(\tH\x00R\frecoveryCode\x126\n" +
 	"\x0fidempotency_key\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\x12I\n" +
 	"\x06client\x18\a \x01(\v2$.user.types.v1.ConsumerClientContextB\v\xe0A\x02\xfaB\x05\x8a\x01\x02\x10\x01R\x06clientB\f\n" +
-	"\x05proof\x12\x03\xf8B\x01\"\xf1\x01\n" +
-	"\x13RefreshTokenRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x122\n" +
+	"\x05proof\x12\x03\xf8B\x01\"\xb9\x01\n" +
+	"\x13RefreshTokenRequest\x122\n" +
 	"\rrefresh_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\frefreshToken\x126\n" +
 	"\x0finstallation_id\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x02R\x0einstallationId\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x7f\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"G\n" +
 	"\rLogoutRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x126\n" +
-	"\x0fidempotency_key\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x81\x02\n" +
-	"\x19StartPasswordResetRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x124\n" +
+	"\x0fidempotency_key\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xc9\x01\n" +
+	"\x19StartPasswordResetRequest\x124\n" +
 	"\x05phone\x18\x02 \x01(\tB\x1e\xe0A\x02\xfaB\x18r\x162\x14^\\+[1-9][0-9]{7,14}$R\x05phone\x12>\n" +
 	"\x13verification_ticket\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x10\x18\x80\x10R\x12verificationTicket\x126\n" +
 	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x86\x01\n" +
 	"\x1aStartPasswordResetResponse\x12-\n" +
 	"\x12continuation_token\x18\x01 \x01(\tR\x11continuationToken\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xa9\x02\n" +
-	"%CompletePasswordResetChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12<\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xf1\x01\n" +
+	"%CompletePasswordResetChallengeRequest\x12<\n" +
 	"\x12continuation_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x11continuationToken\x12\x1d\n" +
 	"\ttotp_code\x18\x03 \x01(\tH\x00R\btotpCode\x12%\n" +
 	"\rrecovery_code\x18\x04 \x01(\tH\x00R\frecoveryCode\x126\n" +
@@ -2025,14 +1916,12 @@ const file_user_consumer_v1_authentication_proto_rawDesc = "" +
 	"\x1aPasswordResetAuthorization\x120\n" +
 	"\x14password_reset_token\x18\x01 \x01(\tR\x12passwordResetToken\x129\n" +
 	"\n" +
-	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x81\x02\n" +
-	"\x1cCompletePasswordResetRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12?\n" +
+	"expires_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xc9\x01\n" +
+	"\x1cCompletePasswordResetRequest\x12?\n" +
 	"\x14password_reset_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x12passwordResetToken\x120\n" +
 	"\fnew_password\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\vnewPassword\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xfa\x01\n" +
-	"$CompleteRequiredPasswordResetRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x120\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xc2\x01\n" +
+	"$CompleteRequiredPasswordResetRequest\x120\n" +
 	"\faction_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vactionToken\x120\n" +
 	"\fnew_password\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x02R\vnewPassword\x126\n" +
 	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey*\x9b\x02\n" +
@@ -2100,85 +1989,73 @@ var file_user_consumer_v1_authentication_proto_goTypes = []any{
 	(*PasswordResetAuthorization)(nil),            // 21: user.consumer.v1.PasswordResetAuthorization
 	(*CompletePasswordResetRequest)(nil),          // 22: user.consumer.v1.CompletePasswordResetRequest
 	(*CompleteRequiredPasswordResetRequest)(nil),  // 23: user.consumer.v1.CompleteRequiredPasswordResetRequest
-	(v1.AppId)(0),                                 // 24: common.v1.AppId
-	(v11.AuthenticationMethod)(0),                 // 25: user.types.v1.AuthenticationMethod
-	(v11.PhoneBindingRequirement)(0),              // 26: user.types.v1.PhoneBindingRequirement
-	(v11.ExternalIdentityProvider)(0),             // 27: user.types.v1.ExternalIdentityProvider
-	(*v11.ConsumerClientContext)(nil),             // 28: user.types.v1.ConsumerClientContext
-	(*v11.User)(nil),                              // 29: user.types.v1.User
-	(*v11.Session)(nil),                           // 30: user.types.v1.Session
-	(*v11.TokenPair)(nil),                         // 31: user.types.v1.TokenPair
-	(*timestamppb.Timestamp)(nil),                 // 32: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                         // 33: google.protobuf.Empty
+	(v1.AuthenticationMethod)(0),                  // 24: user.types.v1.AuthenticationMethod
+	(v1.PhoneBindingRequirement)(0),               // 25: user.types.v1.PhoneBindingRequirement
+	(v1.ExternalIdentityProvider)(0),              // 26: user.types.v1.ExternalIdentityProvider
+	(*v1.ConsumerClientContext)(nil),              // 27: user.types.v1.ConsumerClientContext
+	(*v1.User)(nil),                               // 28: user.types.v1.User
+	(*v1.Session)(nil),                            // 29: user.types.v1.Session
+	(*v1.TokenPair)(nil),                          // 30: user.types.v1.TokenPair
+	(*timestamppb.Timestamp)(nil),                 // 31: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                         // 32: google.protobuf.Empty
 }
 var file_user_consumer_v1_authentication_proto_depIdxs = []int32{
-	24, // 0: user.consumer.v1.GetAuthenticationOptionsRequest.app_id:type_name -> common.v1.AppId
-	25, // 1: user.consumer.v1.AuthenticationOptions.registration_methods:type_name -> user.types.v1.AuthenticationMethod
-	25, // 2: user.consumer.v1.AuthenticationOptions.login_methods:type_name -> user.types.v1.AuthenticationMethod
-	26, // 3: user.consumer.v1.AuthenticationOptions.phone_binding_requirement:type_name -> user.types.v1.PhoneBindingRequirement
-	27, // 4: user.consumer.v1.ExternalIdentityProof.provider:type_name -> user.types.v1.ExternalIdentityProvider
-	24, // 5: user.consumer.v1.RegisterRequest.app_id:type_name -> common.v1.AppId
-	4,  // 6: user.consumer.v1.RegisterRequest.phone_otp:type_name -> user.consumer.v1.PhoneOtpProof
-	6,  // 7: user.consumer.v1.RegisterRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
-	28, // 8: user.consumer.v1.RegisterRequest.client:type_name -> user.types.v1.ConsumerClientContext
-	29, // 9: user.consumer.v1.AuthenticationResult.user:type_name -> user.types.v1.User
-	30, // 10: user.consumer.v1.AuthenticationResult.session:type_name -> user.types.v1.Session
-	31, // 11: user.consumer.v1.AuthenticationResult.tokens:type_name -> user.types.v1.TokenPair
-	0,  // 12: user.consumer.v1.UserAction.type:type_name -> user.consumer.v1.UserActionType
-	29, // 13: user.consumer.v1.UserAction.user:type_name -> user.types.v1.User
-	32, // 14: user.consumer.v1.UserAction.expires_at:type_name -> google.protobuf.Timestamp
-	8,  // 15: user.consumer.v1.RegisterResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
-	9,  // 16: user.consumer.v1.RegisterResponse.action_required:type_name -> user.consumer.v1.UserAction
-	24, // 17: user.consumer.v1.LoginRequest.app_id:type_name -> common.v1.AppId
-	4,  // 18: user.consumer.v1.LoginRequest.phone_otp:type_name -> user.consumer.v1.PhoneOtpProof
-	5,  // 19: user.consumer.v1.LoginRequest.phone_password:type_name -> user.consumer.v1.PhonePasswordProof
-	6,  // 20: user.consumer.v1.LoginRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
-	28, // 21: user.consumer.v1.LoginRequest.client:type_name -> user.types.v1.ConsumerClientContext
-	1,  // 22: user.consumer.v1.LoginChallenge.allowed_factors:type_name -> user.consumer.v1.LoginChallengeFactor
-	32, // 23: user.consumer.v1.LoginChallenge.expires_at:type_name -> google.protobuf.Timestamp
-	32, // 24: user.consumer.v1.LoginChallenge.resend_at:type_name -> google.protobuf.Timestamp
-	8,  // 25: user.consumer.v1.LoginResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
-	12, // 26: user.consumer.v1.LoginResponse.challenge:type_name -> user.consumer.v1.LoginChallenge
-	9,  // 27: user.consumer.v1.LoginResponse.action_required:type_name -> user.consumer.v1.UserAction
-	24, // 28: user.consumer.v1.ResendLoginChallengeRequest.app_id:type_name -> common.v1.AppId
-	28, // 29: user.consumer.v1.ResendLoginChallengeRequest.client:type_name -> user.types.v1.ConsumerClientContext
-	24, // 30: user.consumer.v1.CompleteLoginChallengeRequest.app_id:type_name -> common.v1.AppId
-	28, // 31: user.consumer.v1.CompleteLoginChallengeRequest.client:type_name -> user.types.v1.ConsumerClientContext
-	24, // 32: user.consumer.v1.RefreshTokenRequest.app_id:type_name -> common.v1.AppId
-	24, // 33: user.consumer.v1.LogoutRequest.app_id:type_name -> common.v1.AppId
-	24, // 34: user.consumer.v1.StartPasswordResetRequest.app_id:type_name -> common.v1.AppId
-	32, // 35: user.consumer.v1.StartPasswordResetResponse.expires_at:type_name -> google.protobuf.Timestamp
-	24, // 36: user.consumer.v1.CompletePasswordResetChallengeRequest.app_id:type_name -> common.v1.AppId
-	32, // 37: user.consumer.v1.PasswordResetAuthorization.expires_at:type_name -> google.protobuf.Timestamp
-	24, // 38: user.consumer.v1.CompletePasswordResetRequest.app_id:type_name -> common.v1.AppId
-	24, // 39: user.consumer.v1.CompleteRequiredPasswordResetRequest.app_id:type_name -> common.v1.AppId
-	2,  // 40: user.consumer.v1.ConsumerAuthenticationService.GetAuthenticationOptions:input_type -> user.consumer.v1.GetAuthenticationOptionsRequest
-	7,  // 41: user.consumer.v1.ConsumerAuthenticationService.Register:input_type -> user.consumer.v1.RegisterRequest
-	11, // 42: user.consumer.v1.ConsumerAuthenticationService.Login:input_type -> user.consumer.v1.LoginRequest
-	14, // 43: user.consumer.v1.ConsumerAuthenticationService.ResendLoginChallenge:input_type -> user.consumer.v1.ResendLoginChallengeRequest
-	15, // 44: user.consumer.v1.ConsumerAuthenticationService.CompleteLoginChallenge:input_type -> user.consumer.v1.CompleteLoginChallengeRequest
-	16, // 45: user.consumer.v1.ConsumerAuthenticationService.RefreshToken:input_type -> user.consumer.v1.RefreshTokenRequest
-	17, // 46: user.consumer.v1.ConsumerAuthenticationService.Logout:input_type -> user.consumer.v1.LogoutRequest
-	18, // 47: user.consumer.v1.ConsumerAuthenticationService.StartPasswordReset:input_type -> user.consumer.v1.StartPasswordResetRequest
-	20, // 48: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordResetChallenge:input_type -> user.consumer.v1.CompletePasswordResetChallengeRequest
-	22, // 49: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordReset:input_type -> user.consumer.v1.CompletePasswordResetRequest
-	23, // 50: user.consumer.v1.ConsumerAuthenticationService.CompleteRequiredPasswordReset:input_type -> user.consumer.v1.CompleteRequiredPasswordResetRequest
-	3,  // 51: user.consumer.v1.ConsumerAuthenticationService.GetAuthenticationOptions:output_type -> user.consumer.v1.AuthenticationOptions
-	10, // 52: user.consumer.v1.ConsumerAuthenticationService.Register:output_type -> user.consumer.v1.RegisterResponse
-	13, // 53: user.consumer.v1.ConsumerAuthenticationService.Login:output_type -> user.consumer.v1.LoginResponse
-	12, // 54: user.consumer.v1.ConsumerAuthenticationService.ResendLoginChallenge:output_type -> user.consumer.v1.LoginChallenge
-	13, // 55: user.consumer.v1.ConsumerAuthenticationService.CompleteLoginChallenge:output_type -> user.consumer.v1.LoginResponse
-	31, // 56: user.consumer.v1.ConsumerAuthenticationService.RefreshToken:output_type -> user.types.v1.TokenPair
-	33, // 57: user.consumer.v1.ConsumerAuthenticationService.Logout:output_type -> google.protobuf.Empty
-	19, // 58: user.consumer.v1.ConsumerAuthenticationService.StartPasswordReset:output_type -> user.consumer.v1.StartPasswordResetResponse
-	21, // 59: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordResetChallenge:output_type -> user.consumer.v1.PasswordResetAuthorization
-	33, // 60: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordReset:output_type -> google.protobuf.Empty
-	8,  // 61: user.consumer.v1.ConsumerAuthenticationService.CompleteRequiredPasswordReset:output_type -> user.consumer.v1.AuthenticationResult
-	51, // [51:62] is the sub-list for method output_type
-	40, // [40:51] is the sub-list for method input_type
-	40, // [40:40] is the sub-list for extension type_name
-	40, // [40:40] is the sub-list for extension extendee
-	0,  // [0:40] is the sub-list for field type_name
+	24, // 0: user.consumer.v1.AuthenticationOptions.registration_methods:type_name -> user.types.v1.AuthenticationMethod
+	24, // 1: user.consumer.v1.AuthenticationOptions.login_methods:type_name -> user.types.v1.AuthenticationMethod
+	25, // 2: user.consumer.v1.AuthenticationOptions.phone_binding_requirement:type_name -> user.types.v1.PhoneBindingRequirement
+	26, // 3: user.consumer.v1.ExternalIdentityProof.provider:type_name -> user.types.v1.ExternalIdentityProvider
+	4,  // 4: user.consumer.v1.RegisterRequest.phone_otp:type_name -> user.consumer.v1.PhoneOtpProof
+	6,  // 5: user.consumer.v1.RegisterRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
+	27, // 6: user.consumer.v1.RegisterRequest.client:type_name -> user.types.v1.ConsumerClientContext
+	28, // 7: user.consumer.v1.AuthenticationResult.user:type_name -> user.types.v1.User
+	29, // 8: user.consumer.v1.AuthenticationResult.session:type_name -> user.types.v1.Session
+	30, // 9: user.consumer.v1.AuthenticationResult.tokens:type_name -> user.types.v1.TokenPair
+	0,  // 10: user.consumer.v1.UserAction.type:type_name -> user.consumer.v1.UserActionType
+	28, // 11: user.consumer.v1.UserAction.user:type_name -> user.types.v1.User
+	31, // 12: user.consumer.v1.UserAction.expires_at:type_name -> google.protobuf.Timestamp
+	8,  // 13: user.consumer.v1.RegisterResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
+	9,  // 14: user.consumer.v1.RegisterResponse.action_required:type_name -> user.consumer.v1.UserAction
+	4,  // 15: user.consumer.v1.LoginRequest.phone_otp:type_name -> user.consumer.v1.PhoneOtpProof
+	5,  // 16: user.consumer.v1.LoginRequest.phone_password:type_name -> user.consumer.v1.PhonePasswordProof
+	6,  // 17: user.consumer.v1.LoginRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
+	27, // 18: user.consumer.v1.LoginRequest.client:type_name -> user.types.v1.ConsumerClientContext
+	1,  // 19: user.consumer.v1.LoginChallenge.allowed_factors:type_name -> user.consumer.v1.LoginChallengeFactor
+	31, // 20: user.consumer.v1.LoginChallenge.expires_at:type_name -> google.protobuf.Timestamp
+	31, // 21: user.consumer.v1.LoginChallenge.resend_at:type_name -> google.protobuf.Timestamp
+	8,  // 22: user.consumer.v1.LoginResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
+	12, // 23: user.consumer.v1.LoginResponse.challenge:type_name -> user.consumer.v1.LoginChallenge
+	9,  // 24: user.consumer.v1.LoginResponse.action_required:type_name -> user.consumer.v1.UserAction
+	27, // 25: user.consumer.v1.ResendLoginChallengeRequest.client:type_name -> user.types.v1.ConsumerClientContext
+	27, // 26: user.consumer.v1.CompleteLoginChallengeRequest.client:type_name -> user.types.v1.ConsumerClientContext
+	31, // 27: user.consumer.v1.StartPasswordResetResponse.expires_at:type_name -> google.protobuf.Timestamp
+	31, // 28: user.consumer.v1.PasswordResetAuthorization.expires_at:type_name -> google.protobuf.Timestamp
+	2,  // 29: user.consumer.v1.ConsumerAuthenticationService.GetAuthenticationOptions:input_type -> user.consumer.v1.GetAuthenticationOptionsRequest
+	7,  // 30: user.consumer.v1.ConsumerAuthenticationService.Register:input_type -> user.consumer.v1.RegisterRequest
+	11, // 31: user.consumer.v1.ConsumerAuthenticationService.Login:input_type -> user.consumer.v1.LoginRequest
+	14, // 32: user.consumer.v1.ConsumerAuthenticationService.ResendLoginChallenge:input_type -> user.consumer.v1.ResendLoginChallengeRequest
+	15, // 33: user.consumer.v1.ConsumerAuthenticationService.CompleteLoginChallenge:input_type -> user.consumer.v1.CompleteLoginChallengeRequest
+	16, // 34: user.consumer.v1.ConsumerAuthenticationService.RefreshToken:input_type -> user.consumer.v1.RefreshTokenRequest
+	17, // 35: user.consumer.v1.ConsumerAuthenticationService.Logout:input_type -> user.consumer.v1.LogoutRequest
+	18, // 36: user.consumer.v1.ConsumerAuthenticationService.StartPasswordReset:input_type -> user.consumer.v1.StartPasswordResetRequest
+	20, // 37: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordResetChallenge:input_type -> user.consumer.v1.CompletePasswordResetChallengeRequest
+	22, // 38: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordReset:input_type -> user.consumer.v1.CompletePasswordResetRequest
+	23, // 39: user.consumer.v1.ConsumerAuthenticationService.CompleteRequiredPasswordReset:input_type -> user.consumer.v1.CompleteRequiredPasswordResetRequest
+	3,  // 40: user.consumer.v1.ConsumerAuthenticationService.GetAuthenticationOptions:output_type -> user.consumer.v1.AuthenticationOptions
+	10, // 41: user.consumer.v1.ConsumerAuthenticationService.Register:output_type -> user.consumer.v1.RegisterResponse
+	13, // 42: user.consumer.v1.ConsumerAuthenticationService.Login:output_type -> user.consumer.v1.LoginResponse
+	12, // 43: user.consumer.v1.ConsumerAuthenticationService.ResendLoginChallenge:output_type -> user.consumer.v1.LoginChallenge
+	13, // 44: user.consumer.v1.ConsumerAuthenticationService.CompleteLoginChallenge:output_type -> user.consumer.v1.LoginResponse
+	30, // 45: user.consumer.v1.ConsumerAuthenticationService.RefreshToken:output_type -> user.types.v1.TokenPair
+	32, // 46: user.consumer.v1.ConsumerAuthenticationService.Logout:output_type -> google.protobuf.Empty
+	19, // 47: user.consumer.v1.ConsumerAuthenticationService.StartPasswordReset:output_type -> user.consumer.v1.StartPasswordResetResponse
+	21, // 48: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordResetChallenge:output_type -> user.consumer.v1.PasswordResetAuthorization
+	32, // 49: user.consumer.v1.ConsumerAuthenticationService.CompletePasswordReset:output_type -> google.protobuf.Empty
+	8,  // 50: user.consumer.v1.ConsumerAuthenticationService.CompleteRequiredPasswordReset:output_type -> user.consumer.v1.AuthenticationResult
+	40, // [40:51] is the sub-list for method output_type
+	29, // [29:40] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_user_consumer_v1_authentication_proto_init() }

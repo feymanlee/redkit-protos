@@ -26,8 +26,6 @@ message SettlementStatement {
   }
   // id 标识关联的 SettlementStatement。
   uint64 id = 1;
-  // app_id 限定 SettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 3;
   // provider_bill_id 标识关联的 ProviderBill。
@@ -127,8 +125,6 @@ message SettlementDiscrepancy {
   }
   // id 标识关联的 SettlementDiscrepancy。
   uint64 id = 1;
-  // app_id 限定 SettlementDiscrepancy 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // statement_id 标识关联的 Statement。
   uint64 statement_id = 3;
   // discrepancy_type 区分 SettlementDiscrepancy 的业务类型。
@@ -205,8 +201,6 @@ message SettlementReference {
 
 // ImportSettlementStatementRequest 定义导入 SettlementStatement 的幂等管理命令参数。
 message ImportSettlementStatementRequest {
-  // app_id 限定 ImportSettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 2;
   // provider_bill_id 标识关联的 ProviderBill。
@@ -249,8 +243,6 @@ message ImportSettlementStatementRequest {
 
 // ListSettlementStatementsRequest 定义 SettlementStatements 的筛选与分页参数。
 message ListSettlementStatementsRequest {
-  // app_id 限定 ListSettlementStatements 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   optional PaymentProvider provider = 2;
   // currency 指定相关金额使用的币种或计量单位。
@@ -271,8 +263,6 @@ message ListSettlementStatementsResponse {
 
 // GetSettlementStatementRequest 标识待查询的 SettlementStatement。
 message GetSettlementStatementRequest {
-  // app_id 限定 GetSettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // statement_id 标识关联的 Statement。
   uint64 statement_id = 2;
 }
@@ -294,8 +284,6 @@ message MutateSettlementDiscrepancyRequest {
     // SETTLEMENT_DISCREPANCY_ACTION_REOPEN 执行 REOPEN 业务动作。
     SETTLEMENT_DISCREPANCY_ACTION_REOPEN = 5;
   }
-  // app_id 限定 MutateSettlementDiscrepancy 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // discrepancy_id 标识关联的 Discrepancy。
   uint64 discrepancy_id = 2;
   // action 指定本次状态推进采用的业务动作。
@@ -354,8 +342,6 @@ message Dispute {
   }
   // id 标识关联的 Dispute。
   uint64 id = 1;
-  // app_id 限定 Dispute 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 2;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 3;
   // provider_case_id 标识关联的 ProviderCase。
@@ -498,8 +484,6 @@ message DisputeDetail {
 
 // RecordProviderDisputeRequest 定义执行 RecordProviderDispute 的命令参数。
 message RecordProviderDisputeRequest {
-  // app_id 限定 RecordProviderDispute 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   PaymentProvider provider = 2;
   // provider_case_id 标识关联的 ProviderCase。
@@ -536,8 +520,6 @@ message RecordProviderDisputeRequest {
 
 // ListDisputesRequest 定义 Disputes 的筛选与分页参数。
 message ListDisputesRequest {
-  // app_id 限定 ListDisputes 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // provider 标识本次能力使用的外部 Provider。
   optional PaymentProvider provider = 2;
   // status 表示 ListDisputes 当前可观察的生命周期状态。
@@ -560,16 +542,12 @@ message ListDisputesResponse {
 
 // GetDisputeRequest 标识待查询的 Dispute。
 message GetDisputeRequest {
-  // app_id 限定 GetDispute 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // dispute_id 标识关联的 Dispute。
   uint64 dispute_id = 2;
 }
 
 // RefreshDisputeRequest 定义执行 RefreshDispute 的幂等管理命令参数。
 message RefreshDisputeRequest {
-  // app_id 限定 RefreshDispute 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // dispute_id 标识关联的 Dispute。
   uint64 dispute_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -582,8 +560,6 @@ message RefreshDisputeRequest {
 
 // AddDisputeEvidenceRequest 定义执行 AddDisputeEvidence 的幂等管理命令参数。
 message AddDisputeEvidenceRequest {
-  // app_id 限定 AddDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // dispute_id 标识关联的 Dispute。
   uint64 dispute_id = 2;
   // file_id 标识关联的 File。
@@ -602,8 +578,6 @@ message AddDisputeEvidenceRequest {
 
 // RemoveDisputeEvidenceRequest 定义删除 DisputeEvidence 的命令参数。
 message RemoveDisputeEvidenceRequest {
-  // app_id 限定 RemoveDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // dispute_id 标识关联的 Dispute。
   uint64 dispute_id = 2;
   // evidence_id 标识关联的 Evidence。
@@ -620,8 +594,6 @@ message RemoveDisputeEvidenceRequest {
 
 // SubmitDisputeEvidenceRequest 定义提交 DisputeEvidence 的幂等管理命令参数。
 message SubmitDisputeEvidenceRequest {
-  // app_id 限定 SubmitDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // dispute_id 标识关联的 Dispute。
   uint64 dispute_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -634,8 +606,6 @@ message SubmitDisputeEvidenceRequest {
 
 // ApplyChargebackRequest 定义应用 Chargeback 的幂等管理命令参数。
 message ApplyChargebackRequest {
-  // app_id 限定 ApplyChargeback 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // dispute_id 标识关联的 Dispute。
   uint64 dispute_id = 2;
   // operator_id 标识关联的后台 Operator。

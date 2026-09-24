@@ -49,7 +49,7 @@ service WalletService {
 
 // AdminGetWalletRequest 标识待查询的 Wallet。
 message AdminGetWalletRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).uint64.gt = 0
@@ -59,7 +59,7 @@ message AdminGetWalletRequest {
 }
 // AdminFreezeWalletRequest 定义执行 FreezeWallet 的幂等管理命令参数。
 message AdminFreezeWalletRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).uint64.gt = 0
@@ -119,7 +119,7 @@ message AdminListWalletUserDebtsRequest {
 
 // AdminWalletUserDebtFilter 定义可组合的查询筛选条件。
 message AdminWalletUserDebtFilter {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1 [(validate.rules).uint64.gt = 0];
   // status 表示 WalletUserDebtFilter 当前可观察的生命周期状态。
   optional string status = 2 [(validate.rules).string = {

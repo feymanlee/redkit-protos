@@ -18,8 +18,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-
 	filepb "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
 )
 
@@ -37,8 +35,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 
 	_ = filepb.FilePurpose(0)
 )
@@ -64,8 +60,6 @@ func (m *GetFileRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for Id
 
@@ -337,8 +331,6 @@ func (m *ListFilesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
@@ -810,8 +802,6 @@ func (m *ListUploadSessionsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1110,8 +1100,6 @@ func (m *PublishStandaloneFileRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for FileId
 
 	// no validation rules for OperatorId
@@ -1224,8 +1212,6 @@ func (m *RevokeFileRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for FileId
 
@@ -1648,8 +1634,6 @@ func (m *ListFileReferencesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
@@ -2117,8 +2101,6 @@ func (m *ListFileEventsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -2445,8 +2427,6 @@ func (m *ListFileReviewAttemptsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -2747,8 +2727,6 @@ func (m *CreateFilePolicyDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for Purpose
 
 	// no validation rules for Enabled
@@ -2868,8 +2846,6 @@ func (m *PreflightFilePolicyDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionId
 
 	// no validation rules for OperatorId
@@ -2982,8 +2958,6 @@ func (m *ActivateFilePolicyDraftRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for RevisionId
 
@@ -3098,8 +3072,6 @@ func (m *DiscardFilePolicyDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionId
 
 	// no validation rules for OperatorId
@@ -3212,8 +3184,6 @@ func (m *ListFilePolicyRevisionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for Purpose
 
@@ -3489,8 +3459,6 @@ func (m *CreateStorageProviderDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for SourceRevisionId
 
 	// no validation rules for Provider
@@ -3628,8 +3596,6 @@ func (m *PreflightStorageProviderDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionId
 
 	// no validation rules for OperatorId
@@ -3744,8 +3710,6 @@ func (m *ActivateStorageProviderDraftRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for RevisionId
 
@@ -3862,8 +3826,6 @@ func (m *DiscardStorageProviderDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for RevisionId
 
 	// no validation rules for OperatorId
@@ -3978,8 +3940,6 @@ func (m *ListStorageProviderRevisionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for Provider
 
@@ -4257,8 +4217,6 @@ func (m *CreateReconciliationBatchRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for Provider
 
@@ -4681,8 +4639,6 @@ func (m *ListReconciliationBatchesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
@@ -5151,8 +5107,6 @@ func (m *ListReconciliationItemsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -5618,8 +5572,6 @@ func (m *ListFileTasksRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -5779,8 +5731,6 @@ func (m *RetryFileTaskRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for TaskId
 

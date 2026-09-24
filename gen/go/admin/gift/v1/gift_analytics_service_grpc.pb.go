@@ -31,11 +31,11 @@ const (
 //
 // 礼物分析管理服务。
 type GiftAnalyticsServiceClient interface {
-	// 查询当前 App 的礼物运营概览。
+	// 查询礼物运营概览。
 	GetGiftOverview(ctx context.Context, in *AdminGetGiftOverviewRequest, opts ...grpc.CallOption) (*v1.GiftOverviewResponse, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+	// 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
 	ListGiftStats(ctx context.Context, in *AdminListGiftStatsRequest, opts ...grpc.CallOption) (*v1.ListGiftStatResponse, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+	// 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
 	ListGiftEvents(ctx context.Context, in *AdminListGiftEventsRequest, opts ...grpc.CallOption) (*v1.ListGiftEventResponse, error)
 }
 
@@ -83,11 +83,11 @@ func (c *giftAnalyticsServiceClient) ListGiftEvents(ctx context.Context, in *Adm
 //
 // 礼物分析管理服务。
 type GiftAnalyticsServiceServer interface {
-	// 查询当前 App 的礼物运营概览。
+	// 查询礼物运营概览。
 	GetGiftOverview(context.Context, *AdminGetGiftOverviewRequest) (*v1.GiftOverviewResponse, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Stat 读模型；不是账务事实。
+	// 按 typed filter 分页查询 Gift Stat 读模型；不是账务事实。
 	ListGiftStats(context.Context, *AdminListGiftStatsRequest) (*v1.ListGiftStatResponse, error)
-	// 按 typed filter 分页查询当前 App 的 Gift Event；只读，用于事故与目录变更调查。
+	// 按 typed filter 分页查询 Gift Event；只读，用于事故与目录变更调查。
 	ListGiftEvents(context.Context, *AdminListGiftEventsRequest) (*v1.ListGiftEventResponse, error)
 	mustEmbedUnimplementedGiftAnalyticsServiceServer()
 }

@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on GetSecurityOverviewRequest with the
@@ -60,28 +56,6 @@ func (m *GetSecurityOverviewRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _GetSecurityOverviewRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetSecurityOverviewRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetSecurityOverviewRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if len(errors) > 0 {
 		return GetSecurityOverviewRequestMultiError(errors)
@@ -162,10 +136,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetSecurityOverviewRequestValidationError{}
-
-var _GetSecurityOverviewRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on StepUpBinding with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -399,28 +369,6 @@ func (m *StartStepUpAuthorizationRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _StartStepUpAuthorizationRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := StartStepUpAuthorizationRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := StartStepUpAuthorizationRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if _, ok := _StartStepUpAuthorizationRequest_Purpose_NotInLookup[m.GetPurpose()]; ok {
 		err := StartStepUpAuthorizationRequestValidationError{
 			field:  "Purpose",
@@ -574,10 +522,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = StartStepUpAuthorizationRequestValidationError{}
-
-var _StartStepUpAuthorizationRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _StartStepUpAuthorizationRequest_Purpose_NotInLookup = map[StepUpPurpose]struct{}{
 	0: {},
@@ -769,28 +713,6 @@ func (m *ResendStepUpChallengeRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ResendStepUpChallengeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ResendStepUpChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ResendStepUpChallengeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetChallengeToken()); l < 32 || l > 512 {
 		err := ResendStepUpChallengeRequestValidationError{
 			field:  "ChallengeToken",
@@ -894,10 +816,6 @@ var _ interface {
 	ErrorName() string
 } = ResendStepUpChallengeRequestValidationError{}
 
-var _ResendStepUpChallengeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on CompleteStepUpAuthorizationRequest with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the first error encountered is returned, or nil if there are
@@ -920,28 +838,6 @@ func (m *CompleteStepUpAuthorizationRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _CompleteStepUpAuthorizationRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CompleteStepUpAuthorizationRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CompleteStepUpAuthorizationRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetChallengeToken()); l < 32 || l > 512 {
 		err := CompleteStepUpAuthorizationRequestValidationError{
@@ -1211,10 +1107,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CompleteStepUpAuthorizationRequestValidationError{}
-
-var _CompleteStepUpAuthorizationRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _CompleteStepUpAuthorizationRequest_PhoneCode_Pattern = regexp.MustCompile("^[0-9]{4,8}$")
 
@@ -1512,28 +1404,6 @@ func (m *BeginTotpEnrollmentRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _BeginTotpEnrollmentRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BeginTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BeginTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := BeginTotpEnrollmentRequestValidationError{
 			field:  "StepUpToken",
@@ -1636,10 +1506,6 @@ var _ interface {
 	ErrorName() string
 } = BeginTotpEnrollmentRequestValidationError{}
 
-var _BeginTotpEnrollmentRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ConfirmTotpEnrollmentRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1661,28 +1527,6 @@ func (m *ConfirmTotpEnrollmentRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ConfirmTotpEnrollmentRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ConfirmTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ConfirmTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetFactorId()); l < 1 || l > 128 {
 		err := ConfirmTotpEnrollmentRequestValidationError{
@@ -1797,10 +1641,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ConfirmTotpEnrollmentRequestValidationError{}
-
-var _ConfirmTotpEnrollmentRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _ConfirmTotpEnrollmentRequest_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
 
@@ -1959,28 +1799,6 @@ func (m *BeginRequiredTotpEnrollmentRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _BeginRequiredTotpEnrollmentRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BeginRequiredTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BeginRequiredTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetActionToken()); l < 32 || l > 512 {
 		err := BeginRequiredTotpEnrollmentRequestValidationError{
 			field:  "ActionToken",
@@ -2085,10 +1903,6 @@ var _ interface {
 	ErrorName() string
 } = BeginRequiredTotpEnrollmentRequestValidationError{}
 
-var _BeginRequiredTotpEnrollmentRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ConfirmRequiredTotpEnrollmentRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
@@ -2111,28 +1925,6 @@ func (m *ConfirmRequiredTotpEnrollmentRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ConfirmRequiredTotpEnrollmentRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ConfirmRequiredTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ConfirmRequiredTotpEnrollmentRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetActionToken()); l < 32 || l > 512 {
 		err := ConfirmRequiredTotpEnrollmentRequestValidationError{
@@ -2259,10 +2051,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ConfirmRequiredTotpEnrollmentRequestValidationError{}
-
-var _ConfirmRequiredTotpEnrollmentRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _ConfirmRequiredTotpEnrollmentRequest_Code_Pattern = regexp.MustCompile("^[0-9]{6}$")
 
@@ -2422,28 +2210,6 @@ func (m *RegenerateRecoveryCodesRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _RegenerateRecoveryCodesRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RegenerateRecoveryCodesRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RegenerateRecoveryCodesRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := RegenerateRecoveryCodesRequestValidationError{
 			field:  "StepUpToken",
@@ -2546,10 +2312,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RegenerateRecoveryCodesRequestValidationError{}
-
-var _RegenerateRecoveryCodesRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on RegenerateRecoveryCodesResponse with the
 // rules defined in the proto definition for this message. If any rules are
@@ -2705,28 +2467,6 @@ func (m *DisableTotpRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _DisableTotpRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := DisableTotpRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := DisableTotpRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetStepUpToken()); l < 32 || l > 512 {
 		err := DisableTotpRequestValidationError{
 			field:  "StepUpToken",
@@ -2828,10 +2568,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DisableTotpRequestValidationError{}
-
-var _DisableTotpRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on SecurityMutationResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -3015,28 +2751,6 @@ func (m *ListSecurityActivitiesRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _ListSecurityActivitiesRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ListSecurityActivitiesRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListSecurityActivitiesRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if all {
 		switch v := interface{}(m.GetPage()).(type) {
 		case interface{ ValidateAll() error }:
@@ -3146,10 +2860,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListSecurityActivitiesRequestValidationError{}
-
-var _ListSecurityActivitiesRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on ListSecurityActivitiesResponse with the
 // rules defined in the proto definition for this message. If any rules are

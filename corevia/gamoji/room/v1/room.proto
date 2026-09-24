@@ -8,7 +8,7 @@ import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
 // RoomService 是 Gamoji C 端语聊房入口 REST 契约（路径以本 proto 的 google.api.http 为唯一事实源）。
-// App 由 gamoji-bff 部署配置固定注入；客户端不自报 app_id。送礼仍调用既有 Gift 接口（scene_type=ROOM）。
+// 客户端不携带 App 身份；送礼仍调用既有 Gift 接口（scene_type=ROOM）。
 service RoomService {
   // CreateRoom 创建房间。
   rpc CreateRoom (CreateRoomRequest) returns (RoomView) {
@@ -322,9 +322,9 @@ message CreateRoomRequest {
   string description = 4;
   // cover_file_id 为封面 File ID 字符串。
   string cover_file_id = 5;
-  // seat_count 可空，空则用 App 默认。
+  // seat_count 可空，空则用平台默认。
   optional uint32 seat_count = 6;
-  // audience_limit 可空，空则用 App 默认。
+  // audience_limit 可空，空则用平台默认。
   optional uint32 audience_limit = 7;
   // idempotency_key 幂等键。
   string idempotency_key = 8 [(google.api.field_behavior) = REQUIRED];

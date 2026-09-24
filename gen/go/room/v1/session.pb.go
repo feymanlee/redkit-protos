@@ -8,8 +8,8 @@ package roompb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -96,8 +96,6 @@ type RoomSession struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识场次稳定身份；Gift Scene Type=ROOM 时 Scene ID 即该值的字符串形式。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识所属房间。
 	RoomId uint64 `protobuf:"varint,3,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// status 是场次生命周期阶段。
@@ -155,13 +153,6 @@ func (x *RoomSession) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *RoomSession) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RoomSession) GetRoomId() uint64 {
@@ -321,12 +312,10 @@ func (x *SessionSnapshot) GetRtcToken() string {
 // ListSessionMembersRequest 查询在场成员。
 type ListSessionMembersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// paging 指定分页。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,13 +350,6 @@ func (*ListSessionMembersRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ListSessionMembersRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSessionMembersRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -375,7 +357,7 @@ func (x *ListSessionMembersRequest) GetSessionId() uint64 {
 	return 0
 }
 
-func (x *ListSessionMembersRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSessionMembersRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -440,8 +422,6 @@ func (x *ListSessionMembersResponse) GetTotal() uint64 {
 // OpenSessionRequest 开场。
 type OpenSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// owner_user_id 必须是房主；同一 User 同时仅允许一个进行中场次。
@@ -482,13 +462,6 @@ func (*OpenSessionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *OpenSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *OpenSessionRequest) GetRoomId() uint64 {
 	if x != nil {
 		return x.RoomId
@@ -513,8 +486,6 @@ func (x *OpenSessionRequest) GetIdempotencyKey() string {
 // JoinSessionRequest 进入场次（含房主/房管/听众）。
 type JoinSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// user_id 是进入者；同一 User 同场次仅一个在场会话，后进踢前会话。
@@ -555,13 +526,6 @@ func (*JoinSessionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *JoinSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *JoinSessionRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -586,8 +550,6 @@ func (x *JoinSessionRequest) GetIdempotencyKey() string {
 // LeaveSessionRequest 离场。
 type LeaveSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// user_id 是离场者；若占麦则释放麦位并取消排麦。
@@ -626,13 +588,6 @@ func (*LeaveSessionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *LeaveSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *LeaveSessionRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -650,8 +605,6 @@ func (x *LeaveSessionRequest) GetUserId() uint64 {
 // EndSessionRequest 结束场次。
 type EndSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// actor_user_id 是房主；Operator 强制关房走 Admin 契约。
@@ -692,13 +645,6 @@ func (*EndSessionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *EndSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *EndSessionRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -723,8 +669,6 @@ func (x *EndSessionRequest) GetReason() string {
 // GetSessionRequest 查询场次快照。
 type GetSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// viewer_user_id 是视角 User，用于填充 me。
@@ -763,13 +707,6 @@ func (*GetSessionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetSessionRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -787,8 +724,6 @@ func (x *GetSessionRequest) GetViewerUserId() uint64 {
 // RequestMicRequest 进入排麦队列。
 type RequestMicRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// user_id 是申请人。
@@ -827,13 +762,6 @@ func (*RequestMicRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *RequestMicRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RequestMicRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -851,8 +779,6 @@ func (x *RequestMicRequest) GetUserId() uint64 {
 // CancelMicRequestRequest 取消本人排麦。
 type CancelMicRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// user_id 是取消人。
@@ -891,13 +817,6 @@ func (*CancelMicRequestRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *CancelMicRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CancelMicRequestRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -915,8 +834,6 @@ func (x *CancelMicRequestRequest) GetUserId() uint64 {
 // ApproveMicRequestRequest 批准上麦并占用空位。
 type ApproveMicRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// actor_user_id 是房主或房管。
@@ -959,13 +876,6 @@ func (*ApproveMicRequestRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ApproveMicRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ApproveMicRequestRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -997,8 +907,6 @@ func (x *ApproveMicRequestRequest) GetSeatIndex() uint32 {
 // RejectMicRequestRequest 拒绝排麦。
 type RejectMicRequestRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// actor_user_id 是房主或房管。
@@ -1039,13 +947,6 @@ func (*RejectMicRequestRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *RejectMicRequestRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RejectMicRequestRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -1070,8 +971,6 @@ func (x *RejectMicRequestRequest) GetTargetUserId() uint64 {
 // SeatActionRequest 是对麦位的操作（占位/下麦/静音/解除静音/抱下麦）。
 type SeatActionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// seat_index 标识麦位。
@@ -1114,13 +1013,6 @@ func (*SeatActionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *SeatActionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *SeatActionRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -1152,8 +1044,6 @@ func (x *SeatActionRequest) GetActorUserId() uint64 {
 // KickMemberRequest 将成员移出本场次（必下麦、同步直播群与 RTC）。
 type KickMemberRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// actor_user_id 是房主/房管/Operator。
@@ -1198,13 +1088,6 @@ func (*KickMemberRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *KickMemberRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *KickMemberRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -1243,8 +1126,6 @@ func (x *KickMemberRequest) GetActorType() RestrictionActorType {
 // ForceEndSessionRequest 是 Operator 强制关场命令。
 type ForceEndSessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// operator_id 是平台 Operator。
@@ -1287,13 +1168,6 @@ func (*ForceEndSessionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *ForceEndSessionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ForceEndSessionRequest) GetSessionId() uint64 {
 	if x != nil {
 		return x.SessionId
@@ -1325,8 +1199,6 @@ func (x *ForceEndSessionRequest) GetOperationNo() string {
 // ListSessionsRequest 按房间/状态查询场次。
 type ListSessionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 可选限定房间。
 	RoomId *uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3,oneof" json:"room_id,omitempty"`
 	// owner_user_id 可选限定房主。
@@ -1334,7 +1206,7 @@ type ListSessionsRequest struct {
 	// statuses 限定场次状态。
 	Statuses []SessionStatus `protobuf:"varint,4,rep,packed,name=statuses,proto3,enum=room.v1.SessionStatus" json:"statuses,omitempty"`
 	// paging 指定分页。
-	Paging        *v11.PagingRequest `protobuf:"bytes,5,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,5,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1369,13 +1241,6 @@ func (*ListSessionsRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_session_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *ListSessionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSessionsRequest) GetRoomId() uint64 {
 	if x != nil && x.RoomId != nil {
 		return *x.RoomId
@@ -1397,7 +1262,7 @@ func (x *ListSessionsRequest) GetStatuses() []SessionStatus {
 	return nil
 }
 
-func (x *ListSessionsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSessionsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1463,10 +1328,9 @@ var File_room_v1_session_proto protoreflect.FileDescriptor
 
 const file_room_v1_session_proto_rawDesc = "" +
 	"\n" +
-	"\x15room/v1/session.proto\x12\aroom.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13room/v1/types.proto\x1a\x17validate/validate.proto\"\xe3\x03\n" +
+	"\x15room/v1/session.proto\x12\aroom.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13room/v1/types.proto\x1a\x17validate/validate.proto\"\xba\x03\n" +
 	"\vRoomSession\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x17\n" +
 	"\aroom_id\x18\x03 \x01(\x04R\x06roomId\x12.\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x16.room.v1.SessionStatusR\x06status\x12\"\n" +
 	"\rowner_user_id\x18\x05 \x01(\x04R\vownerUserId\x128\n" +
@@ -1488,69 +1352,60 @@ const file_room_v1_session_proto_rawDesc = "" +
 	"\trtc_token\x18\x06 \x01(\tH\x01R\brtcToken\x88\x01\x01B\x05\n" +
 	"\x03_meB\f\n" +
 	"\n" +
-	"_rtc_token\"\xbb\x01\n" +
-	"\x19ListSessionMembersRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"_rtc_token\"\x83\x01\n" +
+	"\x19ListSessionMembersRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"`\n" +
 	"\x1aListSessionMembersResponse\x12,\n" +
 	"\x05items\x18\x01 \x03(\v2\x16.room.v1.SessionMemberR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xd9\x01\n" +
-	"\x12OpenSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa1\x01\n" +
+	"\x12OpenSessionRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12.\n" +
 	"\rowner_user_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\vownerUserId\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xd4\x01\n" +
-	"\x12JoinSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x9c\x01\n" +
+	"\x12JoinSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12#\n" +
 	"\auser_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x9d\x01\n" +
-	"\x13LeaveSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"e\n" +
+	"\x13LeaveSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12#\n" +
 	"\auser_id\x18\x03 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\xcd\x01\n" +
-	"\x11EndSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\x95\x01\n" +
+	"\x11EndSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12.\n" +
 	"\ractor_user_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\vactorUserId\x12%\n" +
-	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\xe8\aR\x06reason\"\xbd\x01\n" +
-	"\x11GetSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\xe8\aR\x06reason\"\x85\x01\n" +
+	"\x11GetSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x122\n" +
 	"\x0eviewer_user_id\x18\x03 \x01(\x04B\a\xfaB\x042\x02 \x00H\x00R\fviewerUserId\x88\x01\x01B\x11\n" +
-	"\x0f_viewer_user_id\"\x9b\x01\n" +
-	"\x11RequestMicRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\x0f_viewer_user_id\"c\n" +
+	"\x11RequestMicRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12#\n" +
 	"\auser_id\x18\x03 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\xa1\x01\n" +
-	"\x17CancelMicRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"i\n" +
+	"\x17CancelMicRequestRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12#\n" +
 	"\auser_id\x18\x03 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\x92\x02\n" +
-	"\x18ApproveMicRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\xda\x01\n" +
+	"\x18ApproveMicRequestRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12.\n" +
@@ -1560,18 +1415,16 @@ const file_room_v1_session_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\ftargetUserId\x12\"\n" +
 	"\n" +
 	"seat_index\x18\x05 \x01(\rH\x00R\tseatIndex\x88\x01\x01B\r\n" +
-	"\v_seat_index\"\xde\x01\n" +
-	"\x17RejectMicRequestRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\v_seat_index\"\xa6\x01\n" +
+	"\x17RejectMicRequestRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12.\n" +
 	"\ractor_user_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\vactorUserId\x120\n" +
 	"\x0etarget_user_id\x18\x04 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\ftargetUserId\"\xb9\x03\n" +
-	"\x11SeatActionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\ftargetUserId\"\x81\x03\n" +
+	"\x11SeatActionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12\x1d\n" +
@@ -1587,9 +1440,8 @@ const file_room_v1_session_proto_rawDesc = "" +
 	"\x12SEAT_ACTION_VACATE\x10\x02\x12\x14\n" +
 	"\x10SEAT_ACTION_MUTE\x10\x03\x12\x16\n" +
 	"\x12SEAT_ACTION_UNMUTE\x10\x04\x12\x1c\n" +
-	"\x18SEAT_ACTION_FORCE_VACATE\x10\x05\"\xd1\x02\n" +
-	"\x11KickMemberRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\x18SEAT_ACTION_FORCE_VACATE\x10\x05\"\x99\x02\n" +
+	"\x11KickMemberRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12.\n" +
@@ -1600,9 +1452,8 @@ const file_room_v1_session_proto_rawDesc = "" +
 	"\x06reason\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\xe8\aR\x06reason\x12A\n" +
 	"\n" +
 	"actor_type\x18\x06 \x01(\x0e2\x1d.room.v1.RestrictionActorTypeH\x00R\tactorType\x88\x01\x01B\r\n" +
-	"\v_actor_type\"\x81\x02\n" +
-	"\x16ForceEndSessionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\v_actor_type\"\xc9\x01\n" +
+	"\x16ForceEndSessionRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12+\n" +
@@ -1610,9 +1461,8 @@ const file_room_v1_session_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\n" +
 	"operatorId\x12%\n" +
 	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\xe8\aR\x06reason\x120\n" +
-	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xb5\x02\n" +
-	"\x13ListSessionsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12%\n" +
+	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xfd\x01\n" +
+	"\x13ListSessionsRequest\x12%\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\a\xfaB\x042\x02 \x00H\x00R\x06roomId\x88\x01\x01\x120\n" +
 	"\rowner_user_id\x18\x03 \x01(\x04B\a\xfaB\x042\x02 \x00H\x01R\vownerUserId\x88\x01\x01\x122\n" +
 	"\bstatuses\x18\x04 \x03(\x0e2\x16.room.v1.SessionStatusR\bstatuses\x12;\n" +
@@ -1679,83 +1529,67 @@ var file_room_v1_session_proto_goTypes = []any{
 	(*ForceEndSessionRequest)(nil),     // 16: room.v1.ForceEndSessionRequest
 	(*ListSessionsRequest)(nil),        // 17: room.v1.ListSessionsRequest
 	(*ListSessionsResponse)(nil),       // 18: room.v1.ListSessionsResponse
-	(v1.AppId)(0),                      // 19: common.v1.AppId
-	(SessionStatus)(0),                 // 20: room.v1.SessionStatus
-	(*LiveGroupBinding)(nil),           // 21: room.v1.LiveGroupBinding
-	(*RtcChannelBinding)(nil),          // 22: room.v1.RtcChannelBinding
-	(*timestamppb.Timestamp)(nil),      // 23: google.protobuf.Timestamp
-	(*Seat)(nil),                       // 24: room.v1.Seat
-	(*SessionMember)(nil),              // 25: room.v1.SessionMember
-	(*MicRequest)(nil),                 // 26: room.v1.MicRequest
-	(*v11.PagingRequest)(nil),          // 27: common.pagination.v1.PagingRequest
-	(RestrictionActorType)(0),          // 28: room.v1.RestrictionActorType
+	(SessionStatus)(0),                 // 19: room.v1.SessionStatus
+	(*LiveGroupBinding)(nil),           // 20: room.v1.LiveGroupBinding
+	(*RtcChannelBinding)(nil),          // 21: room.v1.RtcChannelBinding
+	(*timestamppb.Timestamp)(nil),      // 22: google.protobuf.Timestamp
+	(*Seat)(nil),                       // 23: room.v1.Seat
+	(*SessionMember)(nil),              // 24: room.v1.SessionMember
+	(*MicRequest)(nil),                 // 25: room.v1.MicRequest
+	(*v1.PagingRequest)(nil),           // 26: common.pagination.v1.PagingRequest
+	(RestrictionActorType)(0),          // 27: room.v1.RestrictionActorType
 }
 var file_room_v1_session_proto_depIdxs = []int32{
-	19, // 0: room.v1.RoomSession.app_id:type_name -> common.v1.AppId
-	20, // 1: room.v1.RoomSession.status:type_name -> room.v1.SessionStatus
-	21, // 2: room.v1.RoomSession.live_group:type_name -> room.v1.LiveGroupBinding
-	22, // 3: room.v1.RoomSession.rtc:type_name -> room.v1.RtcChannelBinding
-	23, // 4: room.v1.RoomSession.opened_at:type_name -> google.protobuf.Timestamp
-	23, // 5: room.v1.RoomSession.ended_at:type_name -> google.protobuf.Timestamp
-	1,  // 6: room.v1.SessionSnapshot.session:type_name -> room.v1.RoomSession
-	24, // 7: room.v1.SessionSnapshot.seats:type_name -> room.v1.Seat
-	25, // 8: room.v1.SessionSnapshot.members:type_name -> room.v1.SessionMember
-	26, // 9: room.v1.SessionSnapshot.mic_requests:type_name -> room.v1.MicRequest
-	25, // 10: room.v1.SessionSnapshot.me:type_name -> room.v1.SessionMember
-	19, // 11: room.v1.ListSessionMembersRequest.app_id:type_name -> common.v1.AppId
-	27, // 12: room.v1.ListSessionMembersRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	25, // 13: room.v1.ListSessionMembersResponse.items:type_name -> room.v1.SessionMember
-	19, // 14: room.v1.OpenSessionRequest.app_id:type_name -> common.v1.AppId
-	19, // 15: room.v1.JoinSessionRequest.app_id:type_name -> common.v1.AppId
-	19, // 16: room.v1.LeaveSessionRequest.app_id:type_name -> common.v1.AppId
-	19, // 17: room.v1.EndSessionRequest.app_id:type_name -> common.v1.AppId
-	19, // 18: room.v1.GetSessionRequest.app_id:type_name -> common.v1.AppId
-	19, // 19: room.v1.RequestMicRequest.app_id:type_name -> common.v1.AppId
-	19, // 20: room.v1.CancelMicRequestRequest.app_id:type_name -> common.v1.AppId
-	19, // 21: room.v1.ApproveMicRequestRequest.app_id:type_name -> common.v1.AppId
-	19, // 22: room.v1.RejectMicRequestRequest.app_id:type_name -> common.v1.AppId
-	19, // 23: room.v1.SeatActionRequest.app_id:type_name -> common.v1.AppId
-	0,  // 24: room.v1.SeatActionRequest.action:type_name -> room.v1.SeatActionRequest.SeatAction
-	19, // 25: room.v1.KickMemberRequest.app_id:type_name -> common.v1.AppId
-	28, // 26: room.v1.KickMemberRequest.actor_type:type_name -> room.v1.RestrictionActorType
-	19, // 27: room.v1.ForceEndSessionRequest.app_id:type_name -> common.v1.AppId
-	19, // 28: room.v1.ListSessionsRequest.app_id:type_name -> common.v1.AppId
-	20, // 29: room.v1.ListSessionsRequest.statuses:type_name -> room.v1.SessionStatus
-	27, // 30: room.v1.ListSessionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	1,  // 31: room.v1.ListSessionsResponse.items:type_name -> room.v1.RoomSession
-	5,  // 32: room.v1.RoomSessionService.OpenSession:input_type -> room.v1.OpenSessionRequest
-	6,  // 33: room.v1.RoomSessionService.JoinSession:input_type -> room.v1.JoinSessionRequest
-	7,  // 34: room.v1.RoomSessionService.LeaveSession:input_type -> room.v1.LeaveSessionRequest
-	8,  // 35: room.v1.RoomSessionService.EndSession:input_type -> room.v1.EndSessionRequest
-	16, // 36: room.v1.RoomSessionService.ForceEndSession:input_type -> room.v1.ForceEndSessionRequest
-	9,  // 37: room.v1.RoomSessionService.GetSession:input_type -> room.v1.GetSessionRequest
-	17, // 38: room.v1.RoomSessionService.ListSessions:input_type -> room.v1.ListSessionsRequest
-	3,  // 39: room.v1.RoomSessionService.ListSessionMembers:input_type -> room.v1.ListSessionMembersRequest
-	10, // 40: room.v1.RoomSessionService.RequestMic:input_type -> room.v1.RequestMicRequest
-	11, // 41: room.v1.RoomSessionService.CancelMicRequest:input_type -> room.v1.CancelMicRequestRequest
-	12, // 42: room.v1.RoomSessionService.ApproveMicRequest:input_type -> room.v1.ApproveMicRequestRequest
-	13, // 43: room.v1.RoomSessionService.RejectMicRequest:input_type -> room.v1.RejectMicRequestRequest
-	14, // 44: room.v1.RoomSessionService.SeatAction:input_type -> room.v1.SeatActionRequest
-	15, // 45: room.v1.RoomSessionService.KickMember:input_type -> room.v1.KickMemberRequest
-	2,  // 46: room.v1.RoomSessionService.OpenSession:output_type -> room.v1.SessionSnapshot
-	2,  // 47: room.v1.RoomSessionService.JoinSession:output_type -> room.v1.SessionSnapshot
-	1,  // 48: room.v1.RoomSessionService.LeaveSession:output_type -> room.v1.RoomSession
-	1,  // 49: room.v1.RoomSessionService.EndSession:output_type -> room.v1.RoomSession
-	1,  // 50: room.v1.RoomSessionService.ForceEndSession:output_type -> room.v1.RoomSession
-	2,  // 51: room.v1.RoomSessionService.GetSession:output_type -> room.v1.SessionSnapshot
-	18, // 52: room.v1.RoomSessionService.ListSessions:output_type -> room.v1.ListSessionsResponse
-	4,  // 53: room.v1.RoomSessionService.ListSessionMembers:output_type -> room.v1.ListSessionMembersResponse
-	2,  // 54: room.v1.RoomSessionService.RequestMic:output_type -> room.v1.SessionSnapshot
-	2,  // 55: room.v1.RoomSessionService.CancelMicRequest:output_type -> room.v1.SessionSnapshot
-	2,  // 56: room.v1.RoomSessionService.ApproveMicRequest:output_type -> room.v1.SessionSnapshot
-	2,  // 57: room.v1.RoomSessionService.RejectMicRequest:output_type -> room.v1.SessionSnapshot
-	2,  // 58: room.v1.RoomSessionService.SeatAction:output_type -> room.v1.SessionSnapshot
-	2,  // 59: room.v1.RoomSessionService.KickMember:output_type -> room.v1.SessionSnapshot
-	46, // [46:60] is the sub-list for method output_type
-	32, // [32:46] is the sub-list for method input_type
-	32, // [32:32] is the sub-list for extension type_name
-	32, // [32:32] is the sub-list for extension extendee
-	0,  // [0:32] is the sub-list for field type_name
+	19, // 0: room.v1.RoomSession.status:type_name -> room.v1.SessionStatus
+	20, // 1: room.v1.RoomSession.live_group:type_name -> room.v1.LiveGroupBinding
+	21, // 2: room.v1.RoomSession.rtc:type_name -> room.v1.RtcChannelBinding
+	22, // 3: room.v1.RoomSession.opened_at:type_name -> google.protobuf.Timestamp
+	22, // 4: room.v1.RoomSession.ended_at:type_name -> google.protobuf.Timestamp
+	1,  // 5: room.v1.SessionSnapshot.session:type_name -> room.v1.RoomSession
+	23, // 6: room.v1.SessionSnapshot.seats:type_name -> room.v1.Seat
+	24, // 7: room.v1.SessionSnapshot.members:type_name -> room.v1.SessionMember
+	25, // 8: room.v1.SessionSnapshot.mic_requests:type_name -> room.v1.MicRequest
+	24, // 9: room.v1.SessionSnapshot.me:type_name -> room.v1.SessionMember
+	26, // 10: room.v1.ListSessionMembersRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	24, // 11: room.v1.ListSessionMembersResponse.items:type_name -> room.v1.SessionMember
+	0,  // 12: room.v1.SeatActionRequest.action:type_name -> room.v1.SeatActionRequest.SeatAction
+	27, // 13: room.v1.KickMemberRequest.actor_type:type_name -> room.v1.RestrictionActorType
+	19, // 14: room.v1.ListSessionsRequest.statuses:type_name -> room.v1.SessionStatus
+	26, // 15: room.v1.ListSessionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	1,  // 16: room.v1.ListSessionsResponse.items:type_name -> room.v1.RoomSession
+	5,  // 17: room.v1.RoomSessionService.OpenSession:input_type -> room.v1.OpenSessionRequest
+	6,  // 18: room.v1.RoomSessionService.JoinSession:input_type -> room.v1.JoinSessionRequest
+	7,  // 19: room.v1.RoomSessionService.LeaveSession:input_type -> room.v1.LeaveSessionRequest
+	8,  // 20: room.v1.RoomSessionService.EndSession:input_type -> room.v1.EndSessionRequest
+	16, // 21: room.v1.RoomSessionService.ForceEndSession:input_type -> room.v1.ForceEndSessionRequest
+	9,  // 22: room.v1.RoomSessionService.GetSession:input_type -> room.v1.GetSessionRequest
+	17, // 23: room.v1.RoomSessionService.ListSessions:input_type -> room.v1.ListSessionsRequest
+	3,  // 24: room.v1.RoomSessionService.ListSessionMembers:input_type -> room.v1.ListSessionMembersRequest
+	10, // 25: room.v1.RoomSessionService.RequestMic:input_type -> room.v1.RequestMicRequest
+	11, // 26: room.v1.RoomSessionService.CancelMicRequest:input_type -> room.v1.CancelMicRequestRequest
+	12, // 27: room.v1.RoomSessionService.ApproveMicRequest:input_type -> room.v1.ApproveMicRequestRequest
+	13, // 28: room.v1.RoomSessionService.RejectMicRequest:input_type -> room.v1.RejectMicRequestRequest
+	14, // 29: room.v1.RoomSessionService.SeatAction:input_type -> room.v1.SeatActionRequest
+	15, // 30: room.v1.RoomSessionService.KickMember:input_type -> room.v1.KickMemberRequest
+	2,  // 31: room.v1.RoomSessionService.OpenSession:output_type -> room.v1.SessionSnapshot
+	2,  // 32: room.v1.RoomSessionService.JoinSession:output_type -> room.v1.SessionSnapshot
+	1,  // 33: room.v1.RoomSessionService.LeaveSession:output_type -> room.v1.RoomSession
+	1,  // 34: room.v1.RoomSessionService.EndSession:output_type -> room.v1.RoomSession
+	1,  // 35: room.v1.RoomSessionService.ForceEndSession:output_type -> room.v1.RoomSession
+	2,  // 36: room.v1.RoomSessionService.GetSession:output_type -> room.v1.SessionSnapshot
+	18, // 37: room.v1.RoomSessionService.ListSessions:output_type -> room.v1.ListSessionsResponse
+	4,  // 38: room.v1.RoomSessionService.ListSessionMembers:output_type -> room.v1.ListSessionMembersResponse
+	2,  // 39: room.v1.RoomSessionService.RequestMic:output_type -> room.v1.SessionSnapshot
+	2,  // 40: room.v1.RoomSessionService.CancelMicRequest:output_type -> room.v1.SessionSnapshot
+	2,  // 41: room.v1.RoomSessionService.ApproveMicRequest:output_type -> room.v1.SessionSnapshot
+	2,  // 42: room.v1.RoomSessionService.RejectMicRequest:output_type -> room.v1.SessionSnapshot
+	2,  // 43: room.v1.RoomSessionService.SeatAction:output_type -> room.v1.SessionSnapshot
+	2,  // 44: room.v1.RoomSessionService.KickMember:output_type -> room.v1.SessionSnapshot
+	31, // [31:45] is the sub-list for method output_type
+	17, // [17:31] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_room_v1_session_proto_init() }

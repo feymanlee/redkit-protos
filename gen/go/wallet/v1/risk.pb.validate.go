@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on WalletRiskRule with the rules defined in
@@ -63,10 +59,6 @@ func (m *WalletRiskRule) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Currency != nil {
@@ -278,10 +270,6 @@ func (m *WalletRiskRuleRevision) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.RuleId != nil {
@@ -742,10 +730,6 @@ func (m *CreateWalletRiskRuleRevisionRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Governance != nil {
 
 		if all {
@@ -913,10 +897,6 @@ func (m *ApproveWalletRiskRuleRevisionRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Governance != nil {
@@ -1224,10 +1204,6 @@ func (m *ListWalletRiskRuleRevisionRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.RuleId != nil {
 		// no validation rules for RuleId
 	}
@@ -1479,10 +1455,6 @@ func (m *EmergencyWalletBlock) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.Currency != nil {
@@ -1818,10 +1790,6 @@ func (m *CreateEmergencyWalletBlockRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.UserId != nil {
 		// no validation rules for UserId
 	}
@@ -1964,10 +1932,6 @@ func (m *EndEmergencyWalletBlockRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for BlockId
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if m.Governance != nil {
 

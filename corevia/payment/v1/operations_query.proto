@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package payment.v1;
 
-import "common/v1/common.proto";
-import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 // PaymentOperationsQueryService exposes bounded operational read models owned by Payment.
@@ -14,8 +12,6 @@ service PaymentOperationsQueryService {
 
 // GetRechargeDeadLetterSummaryRequest 标识待查询的 RechargeDeadLetterSummary。
 message GetRechargeDeadLetterSummaryRequest {
-  // app_id 限定 GetRechargeDeadLetterSummary 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // PaymentOperationsAmount 表示运营指标中的金额及其币种。

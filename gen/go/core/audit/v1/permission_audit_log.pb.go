@@ -138,8 +138,6 @@ type PermissionAuditLog struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 权限变更审计日志ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 权限变更审计日志ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
 	// 操作者用户ID。
 	OperatorId *uint32 `protobuf:"varint,3,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"` // 操作者用户ID
 	// 操作者用户名。
@@ -205,13 +203,6 @@ func (*PermissionAuditLog) Descriptor() ([]byte, []int) {
 func (x *PermissionAuditLog) GetId() uint32 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *PermissionAuditLog) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -498,32 +489,31 @@ var File_core_audit_v1_permission_audit_log_proto protoreflect.FileDescriptor
 
 const file_core_audit_v1_permission_audit_log_proto_rawDesc = "" +
 	"\n" +
-	"(core/audit/v1/permission_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1egoogle/protobuf/duration.proto\x1a%common/pagination/v1/pagination.proto\"\x85\f\n" +
+	"(core/audit/v1/permission_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1egoogle/protobuf/duration.proto\x1a%common/pagination/v1/pagination.proto\"\xca\v\n" +
 	"\x12PermissionAuditLog\x125\n" +
-	"\x02id\x18\x01 \x01(\rB \xbaG\x1d\x92\x02\x1a权限变更审计日志IDH\x00R\x02id\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x01R\x05appId\x88\x01\x01\x12=\n" +
-	"\voperator_id\x18\x03 \x01(\rB\x17\xbaG\x14\x92\x02\x11操作者用户IDH\x02R\n" +
+	"\x02id\x18\x01 \x01(\rB \xbaG\x1d\x92\x02\x1a权限变更审计日志IDH\x00R\x02id\x88\x01\x01\x12=\n" +
+	"\voperator_id\x18\x03 \x01(\rB\x17\xbaG\x14\x92\x02\x11操作者用户IDH\x01R\n" +
 	"operatorId\x88\x01\x01\x12B\n" +
-	"\roperator_name\x18\x04 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作者用户名H\x03R\foperatorName\x88\x01\x01\x128\n" +
+	"\roperator_name\x18\x04 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作者用户名H\x02R\foperatorName\x88\x01\x01\x128\n" +
 	"\vtarget_type\x18\n" +
-	" \x01(\tB\x12\xbaG\x0f\x92\x02\f目标类型H\x04R\n" +
+	" \x01(\tB\x12\xbaG\x0f\x92\x02\f目标类型H\x03R\n" +
 	"targetType\x88\x01\x01\x120\n" +
-	"\ttarget_id\x18\v \x01(\tB\x0e\xbaG\v\x92\x02\b目标IDH\x05R\btargetId\x88\x01\x01\x128\n" +
-	"\vtarget_name\x18\f \x01(\tB\x12\xbaG\x0f\x92\x02\f目标名称H\x06R\n" +
+	"\ttarget_id\x18\v \x01(\tB\x0e\xbaG\v\x92\x02\b目标IDH\x04R\btargetId\x88\x01\x01\x128\n" +
+	"\vtarget_name\x18\f \x01(\tB\x12\xbaG\x0f\x92\x02\f目标名称H\x05R\n" +
 	"targetName\x88\x01\x01\x12]\n" +
-	"\x06action\x18\x14 \x01(\x0e2,.core.audit.v1.PermissionAuditLog.ActionTypeB\x12\xbaG\x0f\x92\x02\f变更动作H\aR\x06action\x88\x01\x01\x12.\n" +
-	"\told_value\x18\x1e \x01(\tB\f\xbaG\t\x92\x02\x06旧值H\bR\boldValue\x88\x01\x01\x12.\n" +
-	"\tnew_value\x18\x1f \x01(\tB\f\xbaG\t\x92\x02\x06新值H\tR\bnewValue\x88\x01\x01\x12;\n" +
+	"\x06action\x18\x14 \x01(\x0e2,.core.audit.v1.PermissionAuditLog.ActionTypeB\x12\xbaG\x0f\x92\x02\f变更动作H\x06R\x06action\x88\x01\x01\x12.\n" +
+	"\told_value\x18\x1e \x01(\tB\f\xbaG\t\x92\x02\x06旧值H\aR\boldValue\x88\x01\x01\x12.\n" +
+	"\tnew_value\x18\x1f \x01(\tB\f\xbaG\t\x92\x02\x06新值H\bR\bnewValue\x88\x01\x01\x12;\n" +
 	"\n" +
-	"ip_address\x18( \x01(\tB\x17\xbaG\x14\x92\x02\x11操作者IP地址H\n" +
-	"R\tipAddress\x88\x01\x01\x12>\n" +
+	"ip_address\x18( \x01(\tB\x17\xbaG\x14\x92\x02\x11操作者IP地址H\tR\tipAddress\x88\x01\x01\x12>\n" +
 	"\n" +
-	"request_id\x18) \x01(\tB\x1a\xbaG\x17\x92\x02\x14关联全局请求IDH\vR\trequestId\x88\x01\x01\x12/\n" +
-	"\x06reason\x18* \x01(\tB\x12\xbaG\x0f\x92\x02\f变更原因H\fR\x06reason\x88\x01\x01\x12\\\n" +
-	"\blog_hash\x182 \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\rR\alogHash\x88\x01\x01\x12z\n" +
-	"\tsignature\x183 \x01(\fBW\xbaGT\x92\x02Q日志数字签名（ECDSA，签名内容：app_id+user_id+created_at+log_hash）H\x0eR\tsignature\x88\x01\x01\x12X\n" +
+	"request_id\x18) \x01(\tB\x1a\xbaG\x17\x92\x02\x14关联全局请求IDH\n" +
+	"R\trequestId\x88\x01\x01\x12/\n" +
+	"\x06reason\x18* \x01(\tB\x12\xbaG\x0f\x92\x02\f变更原因H\vR\x06reason\x88\x01\x01\x12\\\n" +
+	"\blog_hash\x182 \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\fR\alogHash\x88\x01\x01\x12s\n" +
+	"\tsignature\x183 \x01(\fBP\xbaGM\x92\x02J日志数字签名（ECDSA，签名内容：user_id+created_at+log_hash）H\rR\tsignature\x88\x01\x01\x12X\n" +
 	"\n" +
-	"created_at\x18< \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x0fR\tcreatedAt\x88\x01\x01\"\xe8\x01\n" +
+	"created_at\x18< \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x0eR\tcreatedAt\x88\x01\x01\"\xe8\x01\n" +
 	"\n" +
 	"ActionType\x12\x1b\n" +
 	"\x17ACTION_TYPE_UNSPECIFIED\x10\x00\x12\t\n" +
@@ -551,8 +541,7 @@ const file_core_audit_v1_permission_audit_log_proto_rawDesc = "" +
 	"\x06RESUME\x10\r\x12\f\n" +
 	"\bROLLBACK\x10\x0e\x12\t\n" +
 	"\x05OTHER\x10dB\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\x0e\n" +
+	"\x03_idB\x0e\n" +
 	"\f_operator_idB\x10\n" +
 	"\x0e_operator_nameB\x0e\n" +
 	"\f_target_typeB\f\n" +

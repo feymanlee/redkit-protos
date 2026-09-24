@@ -981,7 +981,7 @@ func (x *AdminPaymentDetail) GetActions() []*AdminPaymentAction {
 // AdminGetUserPaymentSummaryRequest 标识待查询的 UserPaymentSummary。
 type AdminGetUserPaymentSummaryRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache

@@ -8,8 +8,8 @@ package opsrewardv1
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -401,15 +401,13 @@ func (x *RewardBusinessIdentity) GetRewardBusinessReference() string {
 // GrantRewardRequest 定义执行 GrantReward 的命令参数。
 type GrantRewardRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GrantReward 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// source 标识业务事实或请求的稳定来源。
 	Source string `protobuf:"bytes,2,opt,name=source,proto3" json:"source,omitempty"`
 	// reward_business_reference 记录外部系统或关联流程提供的引用标识。
 	RewardBusinessReference string `protobuf:"bytes,3,opt,name=reward_business_reference,json=rewardBusinessReference,proto3" json:"reward_business_reference,omitempty"`
 	// package_code 提供 GrantReward 对外稳定使用的业务编码。
 	PackageCode string `protobuf:"bytes,4,opt,name=package_code,json=packageCode,proto3" json:"package_code,omitempty"`
-	// requested_user_id 标识当前 App 内关联的 User。
+	// requested_user_id 标识关联的 User。
 	RequestedUserId uint64 `protobuf:"varint,5,opt,name=requested_user_id,json=requestedUserId,proto3" json:"requested_user_id,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -443,13 +441,6 @@ func (x *GrantRewardRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GrantRewardRequest.ProtoReflect.Descriptor instead.
 func (*GrantRewardRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *GrantRewardRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GrantRewardRequest) GetSource() string {
@@ -538,8 +529,6 @@ func (x *GrantRewardResponse) GetNewlyAccepted() bool {
 // GetRewardGrantRequest 标识待查询的 RewardGrant。
 type GetRewardGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// GetRewardGrantRequest 使用以下一种查询表达式。
 	//
 	// Types that are valid to be assigned to Query:
@@ -579,13 +568,6 @@ func (x *GetRewardGrantRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetRewardGrantRequest.ProtoReflect.Descriptor instead.
 func (*GetRewardGrantRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *GetRewardGrantRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetRewardGrantRequest) GetQuery() isGetRewardGrantRequest_Query {
@@ -634,7 +616,7 @@ func (*GetRewardGrantRequest_BusinessIdentity) isGetRewardGrantRequest_Query() {
 // RewardGrantFilter 定义可组合的查询筛选条件。
 type RewardGrantFilter struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// package_code 提供 RewardGrantFilter 对外稳定使用的业务编码。
 	PackageCode *string `protobuf:"bytes,2,opt,name=package_code,json=packageCode,proto3,oneof" json:"package_code,omitempty"`
@@ -734,12 +716,10 @@ func (x *RewardGrantFilter) GetAcceptedTo() *timestamppb.Timestamp {
 // ListRewardGrantsRequest 定义 RewardGrants 的筛选与分页参数。
 type ListRewardGrantsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListRewardGrants 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter *RewardGrantFilter `protobuf:"bytes,2,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -774,13 +754,6 @@ func (*ListRewardGrantsRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListRewardGrantsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListRewardGrantsRequest) GetFilter() *RewardGrantFilter {
 	if x != nil {
 		return x.Filter
@@ -788,7 +761,7 @@ func (x *ListRewardGrantsRequest) GetFilter() *RewardGrantFilter {
 	return nil
 }
 
-func (x *ListRewardGrantsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListRewardGrantsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -801,7 +774,7 @@ type ListRewardGrantsResponse struct {
 	// items 包含本次返回或处理的业务条目。
 	Items []*RewardGrant `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	// meta 承载 ListRewardGrants 关联的 PaginationResponseMeta。
-	Meta          *v11.PaginationResponseMeta `protobuf:"bytes,2,opt,name=meta,proto3" json:"meta,omitempty"`
+	Meta          *v1.PaginationResponseMeta `protobuf:"bytes,2,opt,name=meta,proto3" json:"meta,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -843,7 +816,7 @@ func (x *ListRewardGrantsResponse) GetItems() []*RewardGrant {
 	return nil
 }
 
-func (x *ListRewardGrantsResponse) GetMeta() *v11.PaginationResponseMeta {
+func (x *ListRewardGrantsResponse) GetMeta() *v1.PaginationResponseMeta {
 	if x != nil {
 		return x.Meta
 	}
@@ -853,8 +826,6 @@ func (x *ListRewardGrantsResponse) GetMeta() *v11.PaginationResponseMeta {
 // GetRewardGrantObservationRequest 标识待查询的 RewardGrantObservation。
 type GetRewardGrantObservationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetRewardGrantObservation 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// grant_id 标识关联的 Grant。
 	GrantId       uint64 `protobuf:"varint,2,opt,name=grant_id,json=grantId,proto3" json:"grant_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -889,13 +860,6 @@ func (x *GetRewardGrantObservationRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetRewardGrantObservationRequest.ProtoReflect.Descriptor instead.
 func (*GetRewardGrantObservationRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *GetRewardGrantObservationRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetRewardGrantObservationRequest) GetGrantId() uint64 {
@@ -1208,10 +1172,8 @@ func (x *RewardGrantObservation) GetGovernanceEvents() []*RewardGovernanceEvent 
 // ListActionRequiredRewardItemsRequest 定义 ActionRequiredRewardItems 的筛选与分页参数。
 type ListActionRequiredRewardItemsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListActionRequiredRewardItems 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1246,14 +1208,7 @@ func (*ListActionRequiredRewardItemsRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ListActionRequiredRewardItemsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListActionRequiredRewardItemsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListActionRequiredRewardItemsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1266,7 +1221,7 @@ type ListActionRequiredRewardItemsResponse struct {
 	// items 包含本次返回或处理的业务条目。
 	Items []*ActionRequiredRewardItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	// meta 承载 ListActionRequiredRewardItems 关联的 PaginationResponseMeta。
-	Meta          *v11.PaginationResponseMeta `protobuf:"bytes,2,opt,name=meta,proto3" json:"meta,omitempty"`
+	Meta          *v1.PaginationResponseMeta `protobuf:"bytes,2,opt,name=meta,proto3" json:"meta,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1308,7 +1263,7 @@ func (x *ListActionRequiredRewardItemsResponse) GetItems() []*ActionRequiredRewa
 	return nil
 }
 
-func (x *ListActionRequiredRewardItemsResponse) GetMeta() *v11.PaginationResponseMeta {
+func (x *ListActionRequiredRewardItemsResponse) GetMeta() *v1.PaginationResponseMeta {
 	if x != nil {
 		return x.Meta
 	}
@@ -1481,8 +1436,6 @@ func (x *ActionRequiredRewardItem) GetGiftBackpackTransactionId() uint64 {
 // ReplayRewardItemRequest 定义重放 RewardItem 的幂等管理命令参数。
 type ReplayRewardItemRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ReplayRewardItem 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// item_id 标识关联的 Item。
 	ItemId uint64 `protobuf:"varint,2,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -1523,13 +1476,6 @@ func (x *ReplayRewardItemRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ReplayRewardItemRequest.ProtoReflect.Descriptor instead.
 func (*ReplayRewardItemRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *ReplayRewardItemRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReplayRewardItemRequest) GetItemId() uint64 {
@@ -1974,13 +1920,11 @@ type RewardGrant struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 RewardGrant。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 RewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// business_identity 记录外部或上游系统用于稳定关联 RewardGrant 的身份。
 	BusinessIdentity *RewardBusinessIdentity `protobuf:"bytes,3,opt,name=business_identity,json=businessIdentity,proto3" json:"business_identity,omitempty"`
 	// package_code 提供 RewardGrant 对外稳定使用的业务编码。
 	PackageCode string `protobuf:"bytes,4,opt,name=package_code,json=packageCode,proto3" json:"package_code,omitempty"`
-	// requested_user_id 标识当前 App 内关联的 User。
+	// requested_user_id 标识关联的 User。
 	RequestedUserId uint64 `protobuf:"varint,5,opt,name=requested_user_id,json=requestedUserId,proto3" json:"requested_user_id,omitempty"`
 	// business_date 记录 RewardGrant 对应业务阶段的时间点。
 	BusinessDate string `protobuf:"bytes,7,opt,name=business_date,json=businessDate,proto3" json:"business_date,omitempty"`
@@ -2033,13 +1977,6 @@ func (x *RewardGrant) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *RewardGrant) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RewardGrant) GetBusinessIdentity() *RewardBusinessIdentity {
@@ -2108,11 +2045,9 @@ func (x *RewardGrant) GetFulfilledAt() *timestamppb.Timestamp {
 // CreateManualRewardGrantRequest 定义创建 ManualRewardGrant 的幂等命令参数。
 type CreateManualRewardGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,2,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
-	// requested_user_id 标识当前 App 内关联的 User。
+	// requested_user_id 标识关联的 User。
 	RequestedUserId uint64 `protobuf:"varint,3,opt,name=requested_user_id,json=requestedUserId,proto3" json:"requested_user_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
 	OperatorId uint32 `protobuf:"varint,4,opt,name=operator_id,json=operatorId,proto3" json:"operator_id,omitempty"`
@@ -2152,13 +2087,6 @@ func (x *CreateManualRewardGrantRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateManualRewardGrantRequest.ProtoReflect.Descriptor instead.
 func (*CreateManualRewardGrantRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *CreateManualRewardGrantRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateManualRewardGrantRequest) GetPackageId() uint64 {
@@ -2253,9 +2181,7 @@ func (x *CreateManualRewardGrantResponse) GetNewlyCreated() bool {
 
 // ListPendingManualRewardGrantsRequest 定义 PendingManualRewardGrants 的筛选与分页参数。
 type ListPendingManualRewardGrantsRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListPendingManualRewardGrants 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2288,13 +2214,6 @@ func (x *ListPendingManualRewardGrantsRequest) ProtoReflect() protoreflect.Messa
 // Deprecated: Use ListPendingManualRewardGrantsRequest.ProtoReflect.Descriptor instead.
 func (*ListPendingManualRewardGrantsRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *ListPendingManualRewardGrantsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // ListPendingManualRewardGrantsResponse 返回 PendingManualRewardGrants 结果集合及分页信息。
@@ -2346,8 +2265,6 @@ func (x *ListPendingManualRewardGrantsResponse) GetItems() []*ManualRewardGrant 
 // ApproveManualRewardGrantRequest 定义批准 ManualRewardGrant 的命令参数。
 type ApproveManualRewardGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApproveManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// manual_grant_id 标识关联的 ManualGrant。
 	ManualGrantId uint64 `protobuf:"varint,2,opt,name=manual_grant_id,json=manualGrantId,proto3" json:"manual_grant_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -2388,13 +2305,6 @@ func (*ApproveManualRewardGrantRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{24}
 }
 
-func (x *ApproveManualRewardGrantRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ApproveManualRewardGrantRequest) GetManualGrantId() uint64 {
 	if x != nil {
 		return x.ManualGrantId
@@ -2419,8 +2329,6 @@ func (x *ApproveManualRewardGrantRequest) GetReason() string {
 // RejectManualRewardGrantRequest 定义拒绝 ManualRewardGrant 的命令参数。
 type RejectManualRewardGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RejectManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// manual_grant_id 标识关联的 ManualGrant。
 	ManualGrantId uint64 `protobuf:"varint,2,opt,name=manual_grant_id,json=manualGrantId,proto3" json:"manual_grant_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -2461,13 +2369,6 @@ func (*RejectManualRewardGrantRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{25}
 }
 
-func (x *RejectManualRewardGrantRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RejectManualRewardGrantRequest) GetManualGrantId() uint64 {
 	if x != nil {
 		return x.ManualGrantId
@@ -2492,8 +2393,6 @@ func (x *RejectManualRewardGrantRequest) GetReason() string {
 // WithdrawManualRewardGrantRequest 定义撤回 ManualRewardGrant 的命令参数。
 type WithdrawManualRewardGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 WithdrawManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// manual_grant_id 标识关联的 ManualGrant。
 	ManualGrantId uint64 `protobuf:"varint,2,opt,name=manual_grant_id,json=manualGrantId,proto3" json:"manual_grant_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -2534,13 +2433,6 @@ func (*WithdrawManualRewardGrantRequest) Descriptor() ([]byte, []int) {
 	return file_ops_reward_v1_reward_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *WithdrawManualRewardGrantRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *WithdrawManualRewardGrantRequest) GetManualGrantId() uint64 {
 	if x != nil {
 		return x.ManualGrantId
@@ -2567,15 +2459,13 @@ type ManualRewardGrant struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 ManualRewardGrant。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 ManualRewardGrant 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,3,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
 	// revision_id 标识关联的 Revision。
 	RevisionId uint64 `protobuf:"varint,4,opt,name=revision_id,json=revisionId,proto3" json:"revision_id,omitempty"`
 	// package_code 提供 ManualRewardGrant 对外稳定使用的业务编码。
 	PackageCode string `protobuf:"bytes,5,opt,name=package_code,json=packageCode,proto3" json:"package_code,omitempty"`
-	// requested_user_id 标识当前 App 内关联的 User。
+	// requested_user_id 标识关联的 User。
 	RequestedUserId uint64 `protobuf:"varint,6,opt,name=requested_user_id,json=requestedUserId,proto3" json:"requested_user_id,omitempty"`
 	// requester_operator_id 标识关联的后台 Operator。
 	RequesterOperatorId uint32 `protobuf:"varint,7,opt,name=requester_operator_id,json=requesterOperatorId,proto3" json:"requester_operator_id,omitempty"`
@@ -2638,13 +2528,6 @@ func (x *ManualRewardGrant) GetId() uint64 {
 		return x.Id
 	}
 	return 0
-}
-
-func (x *ManualRewardGrant) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ManualRewardGrant) GetPackageId() uint64 {
@@ -2759,9 +2642,8 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\x1aops/reward/v1/reward.proto\x12\rops.reward.v1\x1a\x16common/v1/common.proto\x1a%common/pagination/v1/pagination.proto\x1a\"ops/reward/v1/reward_package.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\"\x89\x01\n" +
 	"\x16RewardBusinessIdentity\x12$\n" +
 	"\x06source\x18\x01 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x03\x18@R\x06source\x12I\n" +
-	"\x19reward_business_reference\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x17rewardBusinessReference\"\xa4\x02\n" +
-	"\x12GrantRewardRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12$\n" +
+	"\x19reward_business_reference\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x17rewardBusinessReference\"\xee\x01\n" +
+	"\x12GrantRewardRequest\x12$\n" +
 	"\x06source\x18\x02 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x03\x18@R\x06source\x12I\n" +
 	"\x19reward_business_reference\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x17rewardBusinessReference\x12/\n" +
 	"\fpackage_code\x18\x04 \x01(\tB\f\xe0A\x02\xfaB\x06r\x04\x10\x03\x18@R\vpackageCode\x126\n" +
@@ -2769,9 +2651,8 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x0frequestedUserId\"n\n" +
 	"\x13GrantRewardResponse\x120\n" +
 	"\x05grant\x18\x01 \x01(\v2\x1a.ops.reward.v1.RewardGrantR\x05grant\x12%\n" +
-	"\x0enewly_accepted\x18\x02 \x01(\bR\rnewlyAccepted\"\xd7\x01\n" +
-	"\x15GetRewardGrantRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12$\n" +
+	"\x0enewly_accepted\x18\x02 \x01(\bR\rnewlyAccepted\"\xa1\x01\n" +
+	"\x15GetRewardGrantRequest\x12$\n" +
 	"\bgrant_id\x18\x02 \x01(\x04B\a\xfaB\x042\x02 \x00H\x00R\agrantId\x12T\n" +
 	"\x11business_identity\x18\x03 \x01(\v2%.ops.reward.v1.RewardBusinessIdentityH\x00R\x10businessIdentityB\f\n" +
 	"\x05query\x12\x03\xf8B\x01\"\x9f\x04\n" +
@@ -2792,16 +2673,14 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\x1a_reward_business_referenceB\t\n" +
 	"\a_sourceB\x10\n" +
 	"\x0e_accepted_fromB\x0e\n" +
-	"\f_accepted_to\"\xc6\x01\n" +
-	"\x17ListRewardGrantsRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x128\n" +
+	"\f_accepted_to\"\x90\x01\n" +
+	"\x17ListRewardGrantsRequest\x128\n" +
 	"\x06filter\x18\x02 \x01(\v2 .ops.reward.v1.RewardGrantFilterR\x06filter\x12;\n" +
 	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\x8e\x01\n" +
 	"\x18ListRewardGrantsResponse\x120\n" +
 	"\x05items\x18\x01 \x03(\v2\x1a.ops.reward.v1.RewardGrantR\x05items\x12@\n" +
-	"\x04meta\x18\x02 \x01(\v2,.common.pagination.v1.PaginationResponseMetaR\x04meta\"\x7f\n" +
-	" GetRewardGrantObservationRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12%\n" +
+	"\x04meta\x18\x02 \x01(\v2,.common.pagination.v1.PaginationResponseMetaR\x04meta\"I\n" +
+	" GetRewardGrantObservationRequest\x12%\n" +
 	"\bgrant_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\agrantId\"\xc4\x05\n" +
 	"\x12RewardGrantAttempt\x12\x0e\n" +
@@ -2837,9 +2716,8 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"occurredAt\"\x9d\x01\n" +
 	"\x16RewardGrantObservation\x120\n" +
 	"\x05grant\x18\x01 \x01(\v2\x1a.ops.reward.v1.RewardGrantR\x05grant\x12Q\n" +
-	"\x11governance_events\x18\x02 \x03(\v2$.ops.reward.v1.RewardGovernanceEventR\x10governanceEvents\"\x99\x01\n" +
-	"$ListActionRequiredRewardItemsRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12;\n" +
+	"\x11governance_events\x18\x02 \x03(\v2$.ops.reward.v1.RewardGovernanceEventR\x10governanceEvents\"c\n" +
+	"$ListActionRequiredRewardItemsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xa8\x01\n" +
 	"%ListActionRequiredRewardItemsResponse\x12=\n" +
 	"\x05items\x18\x01 \x03(\v2'.ops.reward.v1.ActionRequiredRewardItemR\x05items\x12@\n" +
@@ -2862,9 +2740,8 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\x1cgift_backpack_transaction_id\x18\x0f \x01(\x04H\x02R\x19giftBackpackTransactionId\x88\x01\x01B\x18\n" +
 	"\x16_wallet_transaction_idB\x19\n" +
 	"\x17_gift_backpack_batch_idB\x1f\n" +
-	"\x1d_gift_backpack_transaction_idJ\x04\b\a\x10\bR\x11canonical_user_id\"\xfa\x01\n" +
-	"\x17ReplayRewardItemRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12#\n" +
+	"\x1d_gift_backpack_transaction_idJ\x04\b\a\x10\bR\x11canonical_user_id\"\xc4\x01\n" +
+	"\x17ReplayRewardItemRequest\x12#\n" +
 	"\aitem_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06itemId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\rB\n" +
@@ -2918,10 +2795,9 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\x11daily_grant_limit\x18\a \x01(\rR\x0fdailyGrantLimit\x124\n" +
 	"\x05items\x18\b \x03(\v2\x1e.ops.reward.v1.RewardGrantItemR\x05items\x129\n" +
 	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xee\x04\n" +
+	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xc5\x04\n" +
 	"\vRewardGrant\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12R\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12R\n" +
 	"\x11business_identity\x18\x03 \x01(\v2%.ops.reward.v1.RewardBusinessIdentityR\x10businessIdentity\x12!\n" +
 	"\fpackage_code\x18\x04 \x01(\tR\vpackageCode\x12*\n" +
 	"\x11requested_user_id\x18\x05 \x01(\x04R\x0frequestedUserId\x12#\n" +
@@ -2934,9 +2810,8 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12B\n" +
 	"\ffulfilled_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampH\x00R\vfulfilledAt\x88\x01\x01B\x0f\n" +
-	"\r_fulfilled_atJ\x04\b\x06\x10\aR\x11canonical_user_id\"\xbf\x02\n" +
-	"\x1eCreateManualRewardGrantRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x12)\n" +
+	"\r_fulfilled_atJ\x04\b\x06\x10\aR\x11canonical_user_id\"\x89\x02\n" +
+	"\x1eCreateManualRewardGrantRequest\x12)\n" +
 	"\n" +
 	"package_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tpackageId\x126\n" +
@@ -2949,38 +2824,33 @@ const file_ops_reward_v1_reward_proto_rawDesc = "" +
 	"\foperation_no\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\x8b\x01\n" +
 	"\x1fCreateManualRewardGrantResponse\x12C\n" +
 	"\fmanual_grant\x18\x01 \x01(\v2 .ops.reward.v1.ManualRewardGrantR\vmanualGrant\x12#\n" +
-	"\rnewly_created\x18\x02 \x01(\bR\fnewlyCreated\"\\\n" +
-	"$ListPendingManualRewardGrantsRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\"_\n" +
+	"\rnewly_created\x18\x02 \x01(\bR\fnewlyCreated\"&\n" +
+	"$ListPendingManualRewardGrantsRequest\"_\n" +
 	"%ListPendingManualRewardGrantsResponse\x126\n" +
-	"\x05items\x18\x01 \x03(\v2 .ops.reward.v1.ManualRewardGrantR\x05items\"\xdf\x01\n" +
-	"\x1fApproveManualRewardGrantRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x122\n" +
+	"\x05items\x18\x01 \x03(\v2 .ops.reward.v1.ManualRewardGrantR\x05items\"\xa9\x01\n" +
+	"\x1fApproveManualRewardGrantRequest\x122\n" +
 	"\x0fmanual_grant_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\rmanualGrantId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\rB\n" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
 	"operatorId\x12%\n" +
-	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\"\xde\x01\n" +
-	"\x1eRejectManualRewardGrantRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x122\n" +
+	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\"\xa8\x01\n" +
+	"\x1eRejectManualRewardGrantRequest\x122\n" +
 	"\x0fmanual_grant_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\rmanualGrantId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\rB\n" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
 	"operatorId\x12%\n" +
-	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\"\xe0\x01\n" +
-	" WithdrawManualRewardGrantRequest\x124\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\v\xe0A\x02\xfaB\x05\x82\x01\x02\x10\x01R\x05appId\x122\n" +
+	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\"\xaa\x01\n" +
+	" WithdrawManualRewardGrantRequest\x122\n" +
 	"\x0fmanual_grant_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\rmanualGrantId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\rB\n" +
 	"\xe0A\x02\xfaB\x04*\x02 \x00R\n" +
 	"operatorId\x12%\n" +
-	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\"\x8c\a\n" +
+	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\"\xe3\x06\n" +
 	"\x11ManualRewardGrant\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x1d\n" +
 	"\n" +
 	"package_id\x18\x03 \x01(\x04R\tpackageId\x12\x1f\n" +
 	"\vrevision_id\x18\x04 \x01(\x04R\n" +
@@ -3100,101 +2970,87 @@ var file_ops_reward_v1_reward_proto_goTypes = []any{
 	(*RejectManualRewardGrantRequest)(nil),        // 30: ops.reward.v1.RejectManualRewardGrantRequest
 	(*WithdrawManualRewardGrantRequest)(nil),      // 31: ops.reward.v1.WithdrawManualRewardGrantRequest
 	(*ManualRewardGrant)(nil),                     // 32: ops.reward.v1.ManualRewardGrant
-	(v1.AppId)(0),                                 // 33: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),                 // 34: google.protobuf.Timestamp
-	(*v11.PagingRequest)(nil),                     // 35: common.pagination.v1.PagingRequest
-	(*v11.PaginationResponseMeta)(nil),            // 36: common.pagination.v1.PaginationResponseMeta
-	(*CoinRewardItem)(nil),                        // 37: ops.reward.v1.CoinRewardItem
-	(*RewardPackageRevision)(nil),                 // 38: ops.reward.v1.RewardPackageRevision
+	(*timestamppb.Timestamp)(nil),                 // 33: google.protobuf.Timestamp
+	(*v1.PagingRequest)(nil),                      // 34: common.pagination.v1.PagingRequest
+	(*v1.PaginationResponseMeta)(nil),             // 35: common.pagination.v1.PaginationResponseMeta
+	(*CoinRewardItem)(nil),                        // 36: ops.reward.v1.CoinRewardItem
+	(*RewardPackageRevision)(nil),                 // 37: ops.reward.v1.RewardPackageRevision
 }
 var file_ops_reward_v1_reward_proto_depIdxs = []int32{
-	33, // 0: ops.reward.v1.GrantRewardRequest.app_id:type_name -> common.v1.AppId
-	24, // 1: ops.reward.v1.GrantRewardResponse.grant:type_name -> ops.reward.v1.RewardGrant
-	33, // 2: ops.reward.v1.GetRewardGrantRequest.app_id:type_name -> common.v1.AppId
-	5,  // 3: ops.reward.v1.GetRewardGrantRequest.business_identity:type_name -> ops.reward.v1.RewardBusinessIdentity
-	0,  // 4: ops.reward.v1.RewardGrantFilter.statuses:type_name -> ops.reward.v1.RewardGrantStatus
-	34, // 5: ops.reward.v1.RewardGrantFilter.accepted_from:type_name -> google.protobuf.Timestamp
-	34, // 6: ops.reward.v1.RewardGrantFilter.accepted_to:type_name -> google.protobuf.Timestamp
-	33, // 7: ops.reward.v1.ListRewardGrantsRequest.app_id:type_name -> common.v1.AppId
-	9,  // 8: ops.reward.v1.ListRewardGrantsRequest.filter:type_name -> ops.reward.v1.RewardGrantFilter
-	35, // 9: ops.reward.v1.ListRewardGrantsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	24, // 10: ops.reward.v1.ListRewardGrantsResponse.items:type_name -> ops.reward.v1.RewardGrant
-	36, // 11: ops.reward.v1.ListRewardGrantsResponse.meta:type_name -> common.pagination.v1.PaginationResponseMeta
-	33, // 12: ops.reward.v1.GetRewardGrantObservationRequest.app_id:type_name -> common.v1.AppId
-	2,  // 13: ops.reward.v1.RewardGrantAttempt.status:type_name -> ops.reward.v1.RewardGrantAttemptStatus
-	3,  // 14: ops.reward.v1.RewardGrantAttempt.failure_classification:type_name -> ops.reward.v1.RewardGrantFailureClassification
-	34, // 15: ops.reward.v1.RewardGrantAttempt.started_at:type_name -> google.protobuf.Timestamp
-	34, // 16: ops.reward.v1.RewardGrantAttempt.completed_at:type_name -> google.protobuf.Timestamp
-	34, // 17: ops.reward.v1.RewardGovernanceEvent.occurred_at:type_name -> google.protobuf.Timestamp
-	24, // 18: ops.reward.v1.RewardGrantObservation.grant:type_name -> ops.reward.v1.RewardGrant
-	14, // 19: ops.reward.v1.RewardGrantObservation.governance_events:type_name -> ops.reward.v1.RewardGovernanceEvent
-	33, // 20: ops.reward.v1.ListActionRequiredRewardItemsRequest.app_id:type_name -> common.v1.AppId
-	35, // 21: ops.reward.v1.ListActionRequiredRewardItemsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	18, // 22: ops.reward.v1.ListActionRequiredRewardItemsResponse.items:type_name -> ops.reward.v1.ActionRequiredRewardItem
-	36, // 23: ops.reward.v1.ListActionRequiredRewardItemsResponse.meta:type_name -> common.pagination.v1.PaginationResponseMeta
-	5,  // 24: ops.reward.v1.ActionRequiredRewardItem.business_identity:type_name -> ops.reward.v1.RewardBusinessIdentity
-	3,  // 25: ops.reward.v1.ActionRequiredRewardItem.failure_classification:type_name -> ops.reward.v1.RewardGrantFailureClassification
-	34, // 26: ops.reward.v1.ActionRequiredRewardItem.last_error_at:type_name -> google.protobuf.Timestamp
-	33, // 27: ops.reward.v1.ReplayRewardItemRequest.app_id:type_name -> common.v1.AppId
-	1,  // 28: ops.reward.v1.ReplayRewardItemResponse.status:type_name -> ops.reward.v1.RewardGrantItemStatus
-	1,  // 29: ops.reward.v1.RewardGrantItem.status:type_name -> ops.reward.v1.RewardGrantItemStatus
-	37, // 30: ops.reward.v1.RewardGrantItem.coin:type_name -> ops.reward.v1.CoinRewardItem
-	34, // 31: ops.reward.v1.RewardGrantItem.created_at:type_name -> google.protobuf.Timestamp
-	34, // 32: ops.reward.v1.RewardGrantItem.updated_at:type_name -> google.protobuf.Timestamp
-	34, // 33: ops.reward.v1.RewardGrantItem.fulfilled_at:type_name -> google.protobuf.Timestamp
-	22, // 34: ops.reward.v1.RewardGrantItem.gift:type_name -> ops.reward.v1.GiftRewardSnapshotItem
-	13, // 35: ops.reward.v1.RewardGrantItem.attempts:type_name -> ops.reward.v1.RewardGrantAttempt
-	34, // 36: ops.reward.v1.GiftRewardSnapshotItem.expire_at:type_name -> google.protobuf.Timestamp
-	21, // 37: ops.reward.v1.RewardGrantSnapshot.items:type_name -> ops.reward.v1.RewardGrantItem
-	34, // 38: ops.reward.v1.RewardGrantSnapshot.created_at:type_name -> google.protobuf.Timestamp
-	33, // 39: ops.reward.v1.RewardGrant.app_id:type_name -> common.v1.AppId
-	5,  // 40: ops.reward.v1.RewardGrant.business_identity:type_name -> ops.reward.v1.RewardBusinessIdentity
-	0,  // 41: ops.reward.v1.RewardGrant.status:type_name -> ops.reward.v1.RewardGrantStatus
-	23, // 42: ops.reward.v1.RewardGrant.snapshot:type_name -> ops.reward.v1.RewardGrantSnapshot
-	34, // 43: ops.reward.v1.RewardGrant.accepted_at:type_name -> google.protobuf.Timestamp
-	34, // 44: ops.reward.v1.RewardGrant.updated_at:type_name -> google.protobuf.Timestamp
-	34, // 45: ops.reward.v1.RewardGrant.fulfilled_at:type_name -> google.protobuf.Timestamp
-	33, // 46: ops.reward.v1.CreateManualRewardGrantRequest.app_id:type_name -> common.v1.AppId
-	32, // 47: ops.reward.v1.CreateManualRewardGrantResponse.manual_grant:type_name -> ops.reward.v1.ManualRewardGrant
-	33, // 48: ops.reward.v1.ListPendingManualRewardGrantsRequest.app_id:type_name -> common.v1.AppId
-	32, // 49: ops.reward.v1.ListPendingManualRewardGrantsResponse.items:type_name -> ops.reward.v1.ManualRewardGrant
-	33, // 50: ops.reward.v1.ApproveManualRewardGrantRequest.app_id:type_name -> common.v1.AppId
-	33, // 51: ops.reward.v1.RejectManualRewardGrantRequest.app_id:type_name -> common.v1.AppId
-	33, // 52: ops.reward.v1.WithdrawManualRewardGrantRequest.app_id:type_name -> common.v1.AppId
-	33, // 53: ops.reward.v1.ManualRewardGrant.app_id:type_name -> common.v1.AppId
-	4,  // 54: ops.reward.v1.ManualRewardGrant.status:type_name -> ops.reward.v1.ManualRewardGrantStatus
-	38, // 55: ops.reward.v1.ManualRewardGrant.bound_revision:type_name -> ops.reward.v1.RewardPackageRevision
-	34, // 56: ops.reward.v1.ManualRewardGrant.created_at:type_name -> google.protobuf.Timestamp
-	34, // 57: ops.reward.v1.ManualRewardGrant.updated_at:type_name -> google.protobuf.Timestamp
-	34, // 58: ops.reward.v1.ManualRewardGrant.reviewed_at:type_name -> google.protobuf.Timestamp
-	24, // 59: ops.reward.v1.ManualRewardGrant.accepted_grant:type_name -> ops.reward.v1.RewardGrant
-	6,  // 60: ops.reward.v1.RewardService.GrantReward:input_type -> ops.reward.v1.GrantRewardRequest
-	8,  // 61: ops.reward.v1.RewardService.GetRewardGrant:input_type -> ops.reward.v1.GetRewardGrantRequest
-	10, // 62: ops.reward.v1.RewardService.ListRewardGrants:input_type -> ops.reward.v1.ListRewardGrantsRequest
-	12, // 63: ops.reward.v1.RewardService.GetRewardGrantObservation:input_type -> ops.reward.v1.GetRewardGrantObservationRequest
-	16, // 64: ops.reward.v1.RewardService.ListActionRequiredRewardItems:input_type -> ops.reward.v1.ListActionRequiredRewardItemsRequest
-	19, // 65: ops.reward.v1.RewardService.ReplayRewardItem:input_type -> ops.reward.v1.ReplayRewardItemRequest
-	25, // 66: ops.reward.v1.RewardService.CreateManualRewardGrant:input_type -> ops.reward.v1.CreateManualRewardGrantRequest
-	27, // 67: ops.reward.v1.RewardService.ListPendingManualRewardGrants:input_type -> ops.reward.v1.ListPendingManualRewardGrantsRequest
-	29, // 68: ops.reward.v1.RewardService.ApproveManualRewardGrant:input_type -> ops.reward.v1.ApproveManualRewardGrantRequest
-	30, // 69: ops.reward.v1.RewardService.RejectManualRewardGrant:input_type -> ops.reward.v1.RejectManualRewardGrantRequest
-	31, // 70: ops.reward.v1.RewardService.WithdrawManualRewardGrant:input_type -> ops.reward.v1.WithdrawManualRewardGrantRequest
-	7,  // 71: ops.reward.v1.RewardService.GrantReward:output_type -> ops.reward.v1.GrantRewardResponse
-	24, // 72: ops.reward.v1.RewardService.GetRewardGrant:output_type -> ops.reward.v1.RewardGrant
-	11, // 73: ops.reward.v1.RewardService.ListRewardGrants:output_type -> ops.reward.v1.ListRewardGrantsResponse
-	15, // 74: ops.reward.v1.RewardService.GetRewardGrantObservation:output_type -> ops.reward.v1.RewardGrantObservation
-	17, // 75: ops.reward.v1.RewardService.ListActionRequiredRewardItems:output_type -> ops.reward.v1.ListActionRequiredRewardItemsResponse
-	20, // 76: ops.reward.v1.RewardService.ReplayRewardItem:output_type -> ops.reward.v1.ReplayRewardItemResponse
-	26, // 77: ops.reward.v1.RewardService.CreateManualRewardGrant:output_type -> ops.reward.v1.CreateManualRewardGrantResponse
-	28, // 78: ops.reward.v1.RewardService.ListPendingManualRewardGrants:output_type -> ops.reward.v1.ListPendingManualRewardGrantsResponse
-	32, // 79: ops.reward.v1.RewardService.ApproveManualRewardGrant:output_type -> ops.reward.v1.ManualRewardGrant
-	32, // 80: ops.reward.v1.RewardService.RejectManualRewardGrant:output_type -> ops.reward.v1.ManualRewardGrant
-	32, // 81: ops.reward.v1.RewardService.WithdrawManualRewardGrant:output_type -> ops.reward.v1.ManualRewardGrant
-	71, // [71:82] is the sub-list for method output_type
-	60, // [60:71] is the sub-list for method input_type
-	60, // [60:60] is the sub-list for extension type_name
-	60, // [60:60] is the sub-list for extension extendee
-	0,  // [0:60] is the sub-list for field type_name
+	24, // 0: ops.reward.v1.GrantRewardResponse.grant:type_name -> ops.reward.v1.RewardGrant
+	5,  // 1: ops.reward.v1.GetRewardGrantRequest.business_identity:type_name -> ops.reward.v1.RewardBusinessIdentity
+	0,  // 2: ops.reward.v1.RewardGrantFilter.statuses:type_name -> ops.reward.v1.RewardGrantStatus
+	33, // 3: ops.reward.v1.RewardGrantFilter.accepted_from:type_name -> google.protobuf.Timestamp
+	33, // 4: ops.reward.v1.RewardGrantFilter.accepted_to:type_name -> google.protobuf.Timestamp
+	9,  // 5: ops.reward.v1.ListRewardGrantsRequest.filter:type_name -> ops.reward.v1.RewardGrantFilter
+	34, // 6: ops.reward.v1.ListRewardGrantsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	24, // 7: ops.reward.v1.ListRewardGrantsResponse.items:type_name -> ops.reward.v1.RewardGrant
+	35, // 8: ops.reward.v1.ListRewardGrantsResponse.meta:type_name -> common.pagination.v1.PaginationResponseMeta
+	2,  // 9: ops.reward.v1.RewardGrantAttempt.status:type_name -> ops.reward.v1.RewardGrantAttemptStatus
+	3,  // 10: ops.reward.v1.RewardGrantAttempt.failure_classification:type_name -> ops.reward.v1.RewardGrantFailureClassification
+	33, // 11: ops.reward.v1.RewardGrantAttempt.started_at:type_name -> google.protobuf.Timestamp
+	33, // 12: ops.reward.v1.RewardGrantAttempt.completed_at:type_name -> google.protobuf.Timestamp
+	33, // 13: ops.reward.v1.RewardGovernanceEvent.occurred_at:type_name -> google.protobuf.Timestamp
+	24, // 14: ops.reward.v1.RewardGrantObservation.grant:type_name -> ops.reward.v1.RewardGrant
+	14, // 15: ops.reward.v1.RewardGrantObservation.governance_events:type_name -> ops.reward.v1.RewardGovernanceEvent
+	34, // 16: ops.reward.v1.ListActionRequiredRewardItemsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	18, // 17: ops.reward.v1.ListActionRequiredRewardItemsResponse.items:type_name -> ops.reward.v1.ActionRequiredRewardItem
+	35, // 18: ops.reward.v1.ListActionRequiredRewardItemsResponse.meta:type_name -> common.pagination.v1.PaginationResponseMeta
+	5,  // 19: ops.reward.v1.ActionRequiredRewardItem.business_identity:type_name -> ops.reward.v1.RewardBusinessIdentity
+	3,  // 20: ops.reward.v1.ActionRequiredRewardItem.failure_classification:type_name -> ops.reward.v1.RewardGrantFailureClassification
+	33, // 21: ops.reward.v1.ActionRequiredRewardItem.last_error_at:type_name -> google.protobuf.Timestamp
+	1,  // 22: ops.reward.v1.ReplayRewardItemResponse.status:type_name -> ops.reward.v1.RewardGrantItemStatus
+	1,  // 23: ops.reward.v1.RewardGrantItem.status:type_name -> ops.reward.v1.RewardGrantItemStatus
+	36, // 24: ops.reward.v1.RewardGrantItem.coin:type_name -> ops.reward.v1.CoinRewardItem
+	33, // 25: ops.reward.v1.RewardGrantItem.created_at:type_name -> google.protobuf.Timestamp
+	33, // 26: ops.reward.v1.RewardGrantItem.updated_at:type_name -> google.protobuf.Timestamp
+	33, // 27: ops.reward.v1.RewardGrantItem.fulfilled_at:type_name -> google.protobuf.Timestamp
+	22, // 28: ops.reward.v1.RewardGrantItem.gift:type_name -> ops.reward.v1.GiftRewardSnapshotItem
+	13, // 29: ops.reward.v1.RewardGrantItem.attempts:type_name -> ops.reward.v1.RewardGrantAttempt
+	33, // 30: ops.reward.v1.GiftRewardSnapshotItem.expire_at:type_name -> google.protobuf.Timestamp
+	21, // 31: ops.reward.v1.RewardGrantSnapshot.items:type_name -> ops.reward.v1.RewardGrantItem
+	33, // 32: ops.reward.v1.RewardGrantSnapshot.created_at:type_name -> google.protobuf.Timestamp
+	5,  // 33: ops.reward.v1.RewardGrant.business_identity:type_name -> ops.reward.v1.RewardBusinessIdentity
+	0,  // 34: ops.reward.v1.RewardGrant.status:type_name -> ops.reward.v1.RewardGrantStatus
+	23, // 35: ops.reward.v1.RewardGrant.snapshot:type_name -> ops.reward.v1.RewardGrantSnapshot
+	33, // 36: ops.reward.v1.RewardGrant.accepted_at:type_name -> google.protobuf.Timestamp
+	33, // 37: ops.reward.v1.RewardGrant.updated_at:type_name -> google.protobuf.Timestamp
+	33, // 38: ops.reward.v1.RewardGrant.fulfilled_at:type_name -> google.protobuf.Timestamp
+	32, // 39: ops.reward.v1.CreateManualRewardGrantResponse.manual_grant:type_name -> ops.reward.v1.ManualRewardGrant
+	32, // 40: ops.reward.v1.ListPendingManualRewardGrantsResponse.items:type_name -> ops.reward.v1.ManualRewardGrant
+	4,  // 41: ops.reward.v1.ManualRewardGrant.status:type_name -> ops.reward.v1.ManualRewardGrantStatus
+	37, // 42: ops.reward.v1.ManualRewardGrant.bound_revision:type_name -> ops.reward.v1.RewardPackageRevision
+	33, // 43: ops.reward.v1.ManualRewardGrant.created_at:type_name -> google.protobuf.Timestamp
+	33, // 44: ops.reward.v1.ManualRewardGrant.updated_at:type_name -> google.protobuf.Timestamp
+	33, // 45: ops.reward.v1.ManualRewardGrant.reviewed_at:type_name -> google.protobuf.Timestamp
+	24, // 46: ops.reward.v1.ManualRewardGrant.accepted_grant:type_name -> ops.reward.v1.RewardGrant
+	6,  // 47: ops.reward.v1.RewardService.GrantReward:input_type -> ops.reward.v1.GrantRewardRequest
+	8,  // 48: ops.reward.v1.RewardService.GetRewardGrant:input_type -> ops.reward.v1.GetRewardGrantRequest
+	10, // 49: ops.reward.v1.RewardService.ListRewardGrants:input_type -> ops.reward.v1.ListRewardGrantsRequest
+	12, // 50: ops.reward.v1.RewardService.GetRewardGrantObservation:input_type -> ops.reward.v1.GetRewardGrantObservationRequest
+	16, // 51: ops.reward.v1.RewardService.ListActionRequiredRewardItems:input_type -> ops.reward.v1.ListActionRequiredRewardItemsRequest
+	19, // 52: ops.reward.v1.RewardService.ReplayRewardItem:input_type -> ops.reward.v1.ReplayRewardItemRequest
+	25, // 53: ops.reward.v1.RewardService.CreateManualRewardGrant:input_type -> ops.reward.v1.CreateManualRewardGrantRequest
+	27, // 54: ops.reward.v1.RewardService.ListPendingManualRewardGrants:input_type -> ops.reward.v1.ListPendingManualRewardGrantsRequest
+	29, // 55: ops.reward.v1.RewardService.ApproveManualRewardGrant:input_type -> ops.reward.v1.ApproveManualRewardGrantRequest
+	30, // 56: ops.reward.v1.RewardService.RejectManualRewardGrant:input_type -> ops.reward.v1.RejectManualRewardGrantRequest
+	31, // 57: ops.reward.v1.RewardService.WithdrawManualRewardGrant:input_type -> ops.reward.v1.WithdrawManualRewardGrantRequest
+	7,  // 58: ops.reward.v1.RewardService.GrantReward:output_type -> ops.reward.v1.GrantRewardResponse
+	24, // 59: ops.reward.v1.RewardService.GetRewardGrant:output_type -> ops.reward.v1.RewardGrant
+	11, // 60: ops.reward.v1.RewardService.ListRewardGrants:output_type -> ops.reward.v1.ListRewardGrantsResponse
+	15, // 61: ops.reward.v1.RewardService.GetRewardGrantObservation:output_type -> ops.reward.v1.RewardGrantObservation
+	17, // 62: ops.reward.v1.RewardService.ListActionRequiredRewardItems:output_type -> ops.reward.v1.ListActionRequiredRewardItemsResponse
+	20, // 63: ops.reward.v1.RewardService.ReplayRewardItem:output_type -> ops.reward.v1.ReplayRewardItemResponse
+	26, // 64: ops.reward.v1.RewardService.CreateManualRewardGrant:output_type -> ops.reward.v1.CreateManualRewardGrantResponse
+	28, // 65: ops.reward.v1.RewardService.ListPendingManualRewardGrants:output_type -> ops.reward.v1.ListPendingManualRewardGrantsResponse
+	32, // 66: ops.reward.v1.RewardService.ApproveManualRewardGrant:output_type -> ops.reward.v1.ManualRewardGrant
+	32, // 67: ops.reward.v1.RewardService.RejectManualRewardGrant:output_type -> ops.reward.v1.ManualRewardGrant
+	32, // 68: ops.reward.v1.RewardService.WithdrawManualRewardGrant:output_type -> ops.reward.v1.ManualRewardGrant
+	58, // [58:69] is the sub-list for method output_type
+	47, // [47:58] is the sub-list for method input_type
+	47, // [47:47] is the sub-list for extension type_name
+	47, // [47:47] is the sub-list for extension extendee
+	0,  // [0:47] is the sub-list for field type_name
 }
 
 func init() { file_ops_reward_v1_reward_proto_init() }

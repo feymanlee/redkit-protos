@@ -46,8 +46,6 @@ message RechargeStoreProduct {
 message RechargeStoreProductMapping {
   // id 标识关联的 RechargeStoreProductMapping。
   optional uint64 id = 1;
-  // app_id 限定 RechargeStoreProductMapping 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // product_revision_id 标识关联的 ProductRevision。
   optional uint64 product_revision_id = 3;
   // provider 标识本次能力使用的外部 Provider。
@@ -78,8 +76,6 @@ message RechargeStoreProductInput {
 message RechargeProduct {
   // 商品 ID。
   optional uint32 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 商品名称。
   optional string name = 3;
   // 商品编码。
@@ -112,8 +108,6 @@ message RechargeProductRevision {
 
   // id 标识关联的 RechargeProductRevision。
   optional uint64 id = 1;
-  // app_id 限定 RechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
   // product_id 标识关联的 Product。
   optional uint32 product_id = 3;
   // revision_no 是 RechargeProductRevision 对外关联与审计使用的业务编号。
@@ -174,8 +168,6 @@ message RechargeOrder {
 
   // 订单 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 商品 ID。
@@ -230,7 +222,7 @@ message ConsumerRechargeOffer {
   optional RechargeStoreProduct store_product = 7;
 }
 
-// 面向 BFF 的安全 Recharge Order，不暴露 App、User、Payment 或内部 Revision 身份。
+// 面向 BFF 的安全 Recharge Order，不暴露 User、Payment 或内部 Revision 身份。
 message ConsumerRechargeOrder {
   // purchase_request_id 标识关联的 PurchaseRequest。
   string purchase_request_id = 1;
@@ -256,7 +248,7 @@ message ConsumerRechargeOrder {
   google.protobuf.Timestamp updated_at = 11;
 }
 
-// 查询当前 App 可购买 Recharge Offer；App 和 User 只来自可信 metadata。
+// 查询可购买 Recharge Offer；User 只来自可信 metadata。
 message ListConsumerRechargeOffersRequest {
   // client_platform 承载 ListConsumerRechargeOffers 关联的 RechargeClientPlatform。
   RechargeClientPlatform client_platform = 1 [(validate.rules).enum = {defined_only: true, not_in: [0]}];
@@ -300,7 +292,7 @@ message StoreRechargePurchaseAction {
   RechargeStoreProduct store_product = 4;
 }
 
-// Payment 重新校验充值订单时使用的窄化请求；App 与 User 只来自可信 metadata。
+// Payment 重新校验充值订单时使用的窄化请求；User 只来自可信 metadata。
 message GetRechargeOrderForPaymentRequest {
   // purchase_request_id 标识关联的 PurchaseRequest。
   string purchase_request_id = 1 [(validate.rules).string = {min_len: 1, max_len: 128}];
@@ -326,9 +318,7 @@ enum RechargeOrderPaymentStatus {
 
 // Wallet 返回给 Payment 的权威充值订单事实，不作为 Consumer 响应。
 message RechargeOrderPaymentFact {
-  // app_id 限定 RechargeOrderPaymentFact 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // purchase_request_id 标识关联的 PurchaseRequest。
   string purchase_request_id = 3;
@@ -366,8 +356,6 @@ message ListRechargeProductResponse {
 
 // ListRechargeProductRevisionRequest 定义 RechargeProductRevision 的筛选与分页参数。
 message ListRechargeProductRevisionRequest {
-  // app_id 限定 ListRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // product_id 标识关联的 Product。
   optional uint32 product_id = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -394,14 +382,10 @@ message ListRechargeOrderResponse {
 message GetRechargeOrderRequest {
   // order_no 是 GetRechargeOrder 对外关联与审计使用的业务编号。
   string order_no = 1 [(google.api.field_behavior) = REQUIRED];
-  // app_id 限定 GetRechargeOrder 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
 // 创建充值商品 Revision 草稿；product_id 为空时同时创建稳定商品身份。
 message CreateRechargeProductRevisionRequest {
-  // app_id 限定 CreateRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // product_id 标识关联的 Product。
   optional uint32 product_id = 2;
   // name 提供 CreateRechargeProductRevision 面向展示或识别的名称。
@@ -428,8 +412,6 @@ message CreateRechargeProductRevisionRequest {
 
 // 审批 Revision 并安排生效时间。
 message ApproveRechargeProductRevisionRequest {
-  // app_id 限定 ApproveRechargeProductRevision 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // revision_id 标识关联的 Revision。
   uint64 revision_id = 2;
   // effective_at 记录 ApproveRechargeProductRevision 对应业务阶段的时间点。
@@ -440,8 +422,6 @@ message ApproveRechargeProductRevisionRequest {
 
 // 创建充值订单请求。
 message CreateRechargeOrderRequest {
-  // 应用 ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID。
   uint64 user_id = 2;
   // 商品 ID。
@@ -452,8 +432,6 @@ message CreateRechargeOrderRequest {
 message CloseRechargeOrderRequest {
   // 订单号。
   string order_no = 1;
-  // 应用 ID。
-  optional common.v1.AppId app_id = 2;
   // Trusted governance identity for Admin closure.
   optional WalletGovernanceIdentity governance = 3;
 }
@@ -462,8 +440,6 @@ message CloseRechargeOrderRequest {
 message CreditRechargeRequest {
   // 稳定事件 ID。
   string event_id = 1;
-  // 应用 ID。
-  common.v1.AppId app_id = 2;
   // 充值订单号。
   string order_no = 3;
   // 支付单号。

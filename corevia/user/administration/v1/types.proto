@@ -80,12 +80,10 @@ enum RecoveryDeviceKeyAlgorithm {
   RECOVERY_DEVICE_KEY_ALGORITHM_ED25519 = 1;
 }
 
-// User 是 App 内 C 端用户账号的聚合根。
+// User 是 C 端用户账号的聚合根。
 message User {
   // id 标识关联的 User。
   uint64 id = 1;
-  // app_id 限定 User 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // user_code 提供 User 对外稳定使用的业务编码。
   string user_code = 3;
   // status 表示 User 当前可观察的生命周期状态。
@@ -106,9 +104,7 @@ message User {
 
 // UserReference 是内部服务解析用户时使用的最小投影。
 message UserReference {
-  // app_id 限定 UserReference 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // 3 曾是 canonical_user_id；账号合并别名已下线，编号与名称保持保留，不得复用。
   reserved 3;
@@ -125,9 +121,7 @@ message UserReference {
 
 // Profile 保存跨 App 通用的 C 端公开资料。
 message Profile {
-  // app_id 限定 Profile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2;
   // nickname 承载用户资料或其脱敏展示值，按个人信息保护。
   string nickname = 3;
@@ -161,9 +155,7 @@ message CurrentUser {
 message Credential {
   // id 标识关联的 Credential。
   uint64 id = 1;
-  // app_id 限定 Credential 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // type 区分 Credential 的业务类型。
   CredentialType type = 4;
@@ -201,9 +193,7 @@ message CredentialPII {
 message Session {
   // session_id 标识关联的 Session。
   string session_id = 1;
-  // app_id 限定 Session 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // device_id 标识关联的 Device。
   uint64 device_id = 4;
@@ -225,9 +215,7 @@ message Session {
 message Device {
   // id 标识关联的 Device。
   uint64 id = 1;
-  // app_id 限定 Device 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // platform 标识发起请求的客户端平台。
   string platform = 4;
@@ -251,7 +239,7 @@ message Device {
 
 // SecurityState 保存用户当前安全状态，不与 User 生命周期混用。
 message SecurityState {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1;
   // failed_login_count 记录 SecurityState 中符合对应条件的数量。
   uint32 failed_login_count = 2;
@@ -271,9 +259,7 @@ message SecurityState {
 message SecurityEvent {
   // id 标识关联的 SecurityEvent。
   uint64 id = 1;
-  // app_id 限定 SecurityEvent 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // event_type 区分 SecurityEvent 的业务类型。
   string event_type = 4;
@@ -291,9 +277,7 @@ message SecurityEvent {
 message AdminAction {
   // id 标识关联的 Action。
   uint64 id = 1;
-  // app_id 限定 Action 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 3;
   // operator_id 标识关联的后台 Operator。
   uint64 operator_id = 4;
@@ -315,10 +299,8 @@ message AdminAction {
   string operation_no = 12;
 }
 
-// UserAppPolicy 定义每个 App 的用户和认证策略。
+// UserAppPolicy 定义平台的用户和认证策略。
 message UserAppPolicy {
-  // app_id 限定 UserAppPolicy 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // enabled_credentials 列出 UserAppPolicy 关联的 CredentialType。
   repeated CredentialType enabled_credentials = 2;
   // registration_enabled 显式表示 UserAppPolicy 是否满足该条件。

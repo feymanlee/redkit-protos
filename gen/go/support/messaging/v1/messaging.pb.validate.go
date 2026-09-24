@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on SmsMessage with the rules defined in the
@@ -62,8 +58,6 @@ func (m *SmsMessage) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -248,8 +242,6 @@ func (m *SmsDeliveryAttempt) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for MessageNo
 
 	// no validation rules for Provider
@@ -404,8 +396,6 @@ func (m *SendTemplateSmsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -652,8 +642,6 @@ func (m *GetSmsMessageByIdempotencyRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for IdempotencyKey
 
@@ -1073,8 +1061,6 @@ func (m *ListSmsMessagesRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1374,8 +1360,6 @@ func (m *ListSmsDeliveryAttemptsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for MessageNo
 
 	if all {
@@ -1509,8 +1493,6 @@ func (m *RevealSmsRecipientPhoneRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for MessageNo
 

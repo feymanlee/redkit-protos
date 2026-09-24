@@ -7,7 +7,6 @@
 package useradministrationpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
@@ -23,8 +22,8 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// ExternalIdentityOptionsWrapper exposes App-specific OIDC provider settings
-// through the bootstrap custom-config loader.
+// ExternalIdentityOptionsWrapper exposes trusted OIDC provider settings through
+// the bootstrap custom-config loader.
 type ExternalIdentityOptionsWrapper struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// external_identity 记录外部或上游系统用于稳定关联 ExternalIdentityOptionsWrapper 的身份。
@@ -70,11 +69,13 @@ func (x *ExternalIdentityOptionsWrapper) GetExternalIdentity() *ExternalIdentity
 	return nil
 }
 
-// ExternalIdentityOptions contains trusted deployment configuration for all Apps.
+// ExternalIdentityOptions contains trusted deployment configuration for OIDC providers.
 type ExternalIdentityOptions struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// apps 列出 ExternalIdentityOptions 关联的 AppExternalIdentityOptions。
-	Apps          []*AppExternalIdentityOptions `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+	// apple 承载 ExternalIdentityOptions 关联的 OIDCProviderOptions。
+	Apple *OIDCProviderOptions `protobuf:"bytes,1,opt,name=apple,proto3" json:"apple,omitempty"`
+	// google 承载 ExternalIdentityOptions 关联的 OIDCProviderOptions。
+	Google        *OIDCProviderOptions `protobuf:"bytes,2,opt,name=google,proto3" json:"google,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -109,71 +110,14 @@ func (*ExternalIdentityOptions) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_provider_config_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ExternalIdentityOptions) GetApps() []*AppExternalIdentityOptions {
-	if x != nil {
-		return x.Apps
-	}
-	return nil
-}
-
-// AppExternalIdentityOptions binds provider audiences to one concrete App.
-type AppExternalIdentityOptions struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AppExternalIdentityOptions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// apple 承载 AppExternalIdentityOptions 关联的 OIDCProviderOptions。
-	Apple *OIDCProviderOptions `protobuf:"bytes,2,opt,name=apple,proto3" json:"apple,omitempty"`
-	// google 承载 AppExternalIdentityOptions 关联的 OIDCProviderOptions。
-	Google        *OIDCProviderOptions `protobuf:"bytes,3,opt,name=google,proto3" json:"google,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AppExternalIdentityOptions) Reset() {
-	*x = AppExternalIdentityOptions{}
-	mi := &file_user_administration_v1_provider_config_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AppExternalIdentityOptions) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AppExternalIdentityOptions) ProtoMessage() {}
-
-func (x *AppExternalIdentityOptions) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_provider_config_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AppExternalIdentityOptions.ProtoReflect.Descriptor instead.
-func (*AppExternalIdentityOptions) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_provider_config_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *AppExternalIdentityOptions) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *AppExternalIdentityOptions) GetApple() *OIDCProviderOptions {
+func (x *ExternalIdentityOptions) GetApple() *OIDCProviderOptions {
 	if x != nil {
 		return x.Apple
 	}
 	return nil
 }
 
-func (x *AppExternalIdentityOptions) GetGoogle() *OIDCProviderOptions {
+func (x *ExternalIdentityOptions) GetGoogle() *OIDCProviderOptions {
 	if x != nil {
 		return x.Google
 	}
@@ -200,7 +144,7 @@ type OIDCProviderOptions struct {
 
 func (x *OIDCProviderOptions) Reset() {
 	*x = OIDCProviderOptions{}
-	mi := &file_user_administration_v1_provider_config_proto_msgTypes[3]
+	mi := &file_user_administration_v1_provider_config_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -212,7 +156,7 @@ func (x *OIDCProviderOptions) String() string {
 func (*OIDCProviderOptions) ProtoMessage() {}
 
 func (x *OIDCProviderOptions) ProtoReflect() protoreflect.Message {
-	mi := &file_user_administration_v1_provider_config_proto_msgTypes[3]
+	mi := &file_user_administration_v1_provider_config_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -225,7 +169,7 @@ func (x *OIDCProviderOptions) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OIDCProviderOptions.ProtoReflect.Descriptor instead.
 func (*OIDCProviderOptions) Descriptor() ([]byte, []int) {
-	return file_user_administration_v1_provider_config_proto_rawDescGZIP(), []int{3}
+	return file_user_administration_v1_provider_config_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *OIDCProviderOptions) GetEnabled() bool {
@@ -267,15 +211,12 @@ var File_user_administration_v1_provider_config_proto protoreflect.FileDescripto
 
 const file_user_administration_v1_provider_config_proto_rawDesc = "" +
 	"\n" +
-	",user/administration/v1/provider_config.proto\x12\x16user.administration.v1\x1a\x16common/v1/common.proto\x1a\x1egoogle/protobuf/duration.proto\"~\n" +
+	",user/administration/v1/provider_config.proto\x12\x16user.administration.v1\x1a\x1egoogle/protobuf/duration.proto\"~\n" +
 	"\x1eExternalIdentityOptionsWrapper\x12\\\n" +
-	"\x11external_identity\x18\x01 \x01(\v2/.user.administration.v1.ExternalIdentityOptionsR\x10externalIdentity\"a\n" +
-	"\x17ExternalIdentityOptions\x12F\n" +
-	"\x04apps\x18\x01 \x03(\v22.user.administration.v1.AppExternalIdentityOptionsR\x04apps\"\xcd\x01\n" +
-	"\x1aAppExternalIdentityOptions\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12A\n" +
-	"\x05apple\x18\x02 \x01(\v2+.user.administration.v1.OIDCProviderOptionsR\x05apple\x12C\n" +
-	"\x06google\x18\x03 \x01(\v2+.user.administration.v1.OIDCProviderOptionsR\x06google\"\xbf\x01\n" +
+	"\x11external_identity\x18\x01 \x01(\v2/.user.administration.v1.ExternalIdentityOptionsR\x10externalIdentity\"\xa1\x01\n" +
+	"\x17ExternalIdentityOptions\x12A\n" +
+	"\x05apple\x18\x01 \x01(\v2+.user.administration.v1.OIDCProviderOptionsR\x05apple\x12C\n" +
+	"\x06google\x18\x02 \x01(\v2+.user.administration.v1.OIDCProviderOptionsR\x06google\"\xbf\x01\n" +
 	"\x13OIDCProviderOptions\x12\x18\n" +
 	"\aenabled\x18\x01 \x01(\bR\aenabled\x12\x16\n" +
 	"\x06issuer\x18\x02 \x01(\tR\x06issuer\x12\x1a\n" +
@@ -296,27 +237,23 @@ func file_user_administration_v1_provider_config_proto_rawDescGZIP() []byte {
 	return file_user_administration_v1_provider_config_proto_rawDescData
 }
 
-var file_user_administration_v1_provider_config_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_user_administration_v1_provider_config_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_user_administration_v1_provider_config_proto_goTypes = []any{
 	(*ExternalIdentityOptionsWrapper)(nil), // 0: user.administration.v1.ExternalIdentityOptionsWrapper
 	(*ExternalIdentityOptions)(nil),        // 1: user.administration.v1.ExternalIdentityOptions
-	(*AppExternalIdentityOptions)(nil),     // 2: user.administration.v1.AppExternalIdentityOptions
-	(*OIDCProviderOptions)(nil),            // 3: user.administration.v1.OIDCProviderOptions
-	(v1.AppId)(0),                          // 4: common.v1.AppId
-	(*durationpb.Duration)(nil),            // 5: google.protobuf.Duration
+	(*OIDCProviderOptions)(nil),            // 2: user.administration.v1.OIDCProviderOptions
+	(*durationpb.Duration)(nil),            // 3: google.protobuf.Duration
 }
 var file_user_administration_v1_provider_config_proto_depIdxs = []int32{
 	1, // 0: user.administration.v1.ExternalIdentityOptionsWrapper.external_identity:type_name -> user.administration.v1.ExternalIdentityOptions
-	2, // 1: user.administration.v1.ExternalIdentityOptions.apps:type_name -> user.administration.v1.AppExternalIdentityOptions
-	4, // 2: user.administration.v1.AppExternalIdentityOptions.app_id:type_name -> common.v1.AppId
-	3, // 3: user.administration.v1.AppExternalIdentityOptions.apple:type_name -> user.administration.v1.OIDCProviderOptions
-	3, // 4: user.administration.v1.AppExternalIdentityOptions.google:type_name -> user.administration.v1.OIDCProviderOptions
-	5, // 5: user.administration.v1.OIDCProviderOptions.jwks_cache_ttl:type_name -> google.protobuf.Duration
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	2, // 1: user.administration.v1.ExternalIdentityOptions.apple:type_name -> user.administration.v1.OIDCProviderOptions
+	2, // 2: user.administration.v1.ExternalIdentityOptions.google:type_name -> user.administration.v1.OIDCProviderOptions
+	3, // 3: user.administration.v1.OIDCProviderOptions.jwks_cache_ttl:type_name -> google.protobuf.Duration
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_provider_config_proto_init() }
@@ -330,7 +267,7 @@ func file_user_administration_v1_provider_config_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_administration_v1_provider_config_proto_rawDesc), len(file_user_administration_v1_provider_config_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

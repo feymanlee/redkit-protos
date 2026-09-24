@@ -8,7 +8,6 @@ package roominternalpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "github.com/feymanlee/redkit-protos/gen/go/room/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -28,8 +27,6 @@ const (
 // ValidateSessionGiftTargetRequest 校验某 User 能否作为本场 Gift Recipient。
 type ValidateSessionGiftTargetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 是 Gift Scene ID 对应的 Room Session 稳定身份。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// sender_user_id 是送礼 User。
@@ -68,13 +65,6 @@ func (x *ValidateSessionGiftTargetRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ValidateSessionGiftTargetRequest.ProtoReflect.Descriptor instead.
 func (*ValidateSessionGiftTargetRequest) Descriptor() ([]byte, []int) {
 	return file_room_internal_v1_gift_gate_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *ValidateSessionGiftTargetRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ValidateSessionGiftTargetRequest) GetSessionId() uint64 {
@@ -165,8 +155,6 @@ func (x *ValidateSessionGiftTargetResponse) GetTargetSeatIndex() uint32 {
 // PublishSessionSystemNoticeRequest 请求向直播群发送系统提示。
 type PublishSessionSystemNoticeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// session_id 标识场次。
 	SessionId uint64 `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
 	// notice_type 是稳定提示类型，例如 MEMBER_JOINED、SEAT_CHANGED、GIFT_SENT。
@@ -207,13 +195,6 @@ func (x *PublishSessionSystemNoticeRequest) ProtoReflect() protoreflect.Message 
 // Deprecated: Use PublishSessionSystemNoticeRequest.ProtoReflect.Descriptor instead.
 func (*PublishSessionSystemNoticeRequest) Descriptor() ([]byte, []int) {
 	return file_room_internal_v1_gift_gate_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *PublishSessionSystemNoticeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *PublishSessionSystemNoticeRequest) GetSessionId() uint64 {
@@ -312,9 +293,8 @@ var File_room_internal_v1_gift_gate_proto protoreflect.FileDescriptor
 
 const file_room_internal_v1_gift_gate_proto_rawDesc = "" +
 	"\n" +
-	" room/internal/v1/gift_gate.proto\x12\x10room.internal.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x13room/v1/types.proto\x1a\x17validate/validate.proto\"\xe9\x01\n" +
-	" ValidateSessionGiftTargetRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	" room/internal/v1/gift_gate.proto\x12\x10room.internal.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x13room/v1/types.proto\x1a\x17validate/validate.proto\"\xb1\x01\n" +
+	" ValidateSessionGiftTargetRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x120\n" +
@@ -326,9 +306,8 @@ const file_room_internal_v1_gift_gate_proto_rawDesc = "" +
 	"\beligible\x18\x01 \x01(\bR\beligible\x12\x16\n" +
 	"\x06reason\x18\x02 \x01(\tR\x06reason\x12/\n" +
 	"\x11target_seat_index\x18\x03 \x01(\rH\x00R\x0ftargetSeatIndex\x88\x01\x01B\x14\n" +
-	"\x12_target_seat_index\"\x99\x02\n" +
-	"!PublishSessionSystemNoticeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12)\n" +
+	"\x12_target_seat_index\"\xe1\x01\n" +
+	"!PublishSessionSystemNoticeRequest\x12)\n" +
 	"\n" +
 	"session_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\tsessionId\x12-\n" +
@@ -364,20 +343,17 @@ var file_room_internal_v1_gift_gate_proto_goTypes = []any{
 	(*ValidateSessionGiftTargetResponse)(nil),  // 1: room.internal.v1.ValidateSessionGiftTargetResponse
 	(*PublishSessionSystemNoticeRequest)(nil),  // 2: room.internal.v1.PublishSessionSystemNoticeRequest
 	(*PublishSessionSystemNoticeResponse)(nil), // 3: room.internal.v1.PublishSessionSystemNoticeResponse
-	(v1.AppId)(0), // 4: common.v1.AppId
 }
 var file_room_internal_v1_gift_gate_proto_depIdxs = []int32{
-	4, // 0: room.internal.v1.ValidateSessionGiftTargetRequest.app_id:type_name -> common.v1.AppId
-	4, // 1: room.internal.v1.PublishSessionSystemNoticeRequest.app_id:type_name -> common.v1.AppId
-	0, // 2: room.internal.v1.RoomGiftGateService.ValidateSessionGiftTarget:input_type -> room.internal.v1.ValidateSessionGiftTargetRequest
-	2, // 3: room.internal.v1.RoomGiftGateService.PublishSessionSystemNotice:input_type -> room.internal.v1.PublishSessionSystemNoticeRequest
-	1, // 4: room.internal.v1.RoomGiftGateService.ValidateSessionGiftTarget:output_type -> room.internal.v1.ValidateSessionGiftTargetResponse
-	3, // 5: room.internal.v1.RoomGiftGateService.PublishSessionSystemNotice:output_type -> room.internal.v1.PublishSessionSystemNoticeResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 0: room.internal.v1.RoomGiftGateService.ValidateSessionGiftTarget:input_type -> room.internal.v1.ValidateSessionGiftTargetRequest
+	2, // 1: room.internal.v1.RoomGiftGateService.PublishSessionSystemNotice:input_type -> room.internal.v1.PublishSessionSystemNoticeRequest
+	1, // 2: room.internal.v1.RoomGiftGateService.ValidateSessionGiftTarget:output_type -> room.internal.v1.ValidateSessionGiftTargetResponse
+	3, // 3: room.internal.v1.RoomGiftGateService.PublishSessionSystemNotice:output_type -> room.internal.v1.PublishSessionSystemNoticeResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_room_internal_v1_gift_gate_proto_init() }

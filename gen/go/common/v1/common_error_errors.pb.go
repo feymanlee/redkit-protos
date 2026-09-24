@@ -95,34 +95,6 @@ func ErrorCommonConflict(format string, args ...interface{}) *errors.Error {
 	return errors.New(409, ErrorReason_COMMON_CONFLICT.String(), fmt.Sprintf(format, args...))
 }
 
-// 缺少具体 App Scope。
-func IsAppScopeRequired(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_APP_SCOPE_REQUIRED.String() && e.Code == 400
-}
-
-// 缺少具体 App Scope。
-func ErrorAppScopeRequired(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_APP_SCOPE_REQUIRED.String(), fmt.Sprintf(format, args...))
-}
-
-// App Scope 不是受支持的 App。
-func IsAppScopeInvalid(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_APP_SCOPE_INVALID.String() && e.Code == 400
-}
-
-// App Scope 不是受支持的 App。
-func ErrorAppScopeInvalid(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_APP_SCOPE_INVALID.String(), fmt.Sprintf(format, args...))
-}
-
 // 通用 站内 server 错误。
 func IsCommonInternalServerError(err error) bool {
 	if err == nil {

@@ -7,8 +7,8 @@
 package paymentpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -598,8 +598,6 @@ type SettlementStatement struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 SettlementStatement。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 SettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// provider_bill_id 标识关联的 ProviderBill。
@@ -677,13 +675,6 @@ func (*SettlementStatement) Descriptor() ([]byte, []int) {
 func (x *SettlementStatement) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *SettlementStatement) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -933,8 +924,6 @@ type SettlementDiscrepancy struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 SettlementDiscrepancy。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 SettlementDiscrepancy 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// statement_id 标识关联的 Statement。
 	StatementId uint64 `protobuf:"varint,3,opt,name=statement_id,json=statementId,proto3" json:"statement_id,omitempty"`
 	// discrepancy_type 区分 SettlementDiscrepancy 的业务类型。
@@ -994,13 +983,6 @@ func (*SettlementDiscrepancy) Descriptor() ([]byte, []int) {
 func (x *SettlementDiscrepancy) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *SettlementDiscrepancy) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -1367,8 +1349,6 @@ func (x *SettlementReference) GetCurrency() string {
 // ImportSettlementStatementRequest 定义导入 SettlementStatement 的幂等管理命令参数。
 type ImportSettlementStatementRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ImportSettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// provider_bill_id 标识关联的 ProviderBill。
@@ -1439,13 +1419,6 @@ func (x *ImportSettlementStatementRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ImportSettlementStatementRequest.ProtoReflect.Descriptor instead.
 func (*ImportSettlementStatementRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *ImportSettlementStatementRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ImportSettlementStatementRequest) GetProvider() PaymentProvider {
@@ -1584,8 +1557,6 @@ func (x *ImportSettlementStatementRequest) GetRequestId() string {
 // ListSettlementStatementsRequest 定义 SettlementStatements 的筛选与分页参数。
 type ListSettlementStatementsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListSettlementStatements 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider *PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider,oneof" json:"provider,omitempty"`
 	// currency 指定相关金额使用的币种或计量单位。
@@ -1593,7 +1564,7 @@ type ListSettlementStatementsRequest struct {
 	// status 表示 ListSettlementStatements 当前可观察的生命周期状态。
 	Status *SettlementStatement_Status `protobuf:"varint,4,opt,name=status,proto3,enum=payment.v1.SettlementStatement_Status,oneof" json:"status,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,5,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,5,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1628,13 +1599,6 @@ func (*ListSettlementStatementsRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ListSettlementStatementsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListSettlementStatementsRequest) GetProvider() PaymentProvider {
 	if x != nil && x.Provider != nil {
 		return *x.Provider
@@ -1656,7 +1620,7 @@ func (x *ListSettlementStatementsRequest) GetStatus() SettlementStatement_Status
 	return SettlementStatement_SETTLEMENT_STATUS_UNSPECIFIED
 }
 
-func (x *ListSettlementStatementsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListSettlementStatementsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1721,8 +1685,6 @@ func (x *ListSettlementStatementsResponse) GetTotal() uint64 {
 // GetSettlementStatementRequest 标识待查询的 SettlementStatement。
 type GetSettlementStatementRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetSettlementStatement 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// statement_id 标识关联的 Statement。
 	StatementId   uint64 `protobuf:"varint,2,opt,name=statement_id,json=statementId,proto3" json:"statement_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -1759,13 +1721,6 @@ func (*GetSettlementStatementRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetSettlementStatementRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetSettlementStatementRequest) GetStatementId() uint64 {
 	if x != nil {
 		return x.StatementId
@@ -1776,8 +1731,6 @@ func (x *GetSettlementStatementRequest) GetStatementId() uint64 {
 // MutateSettlementDiscrepancyRequest 定义变更 SettlementDiscrepancy 的幂等管理命令参数。
 type MutateSettlementDiscrepancyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 MutateSettlementDiscrepancy 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// discrepancy_id 标识关联的 Discrepancy。
 	DiscrepancyId uint64 `protobuf:"varint,2,opt,name=discrepancy_id,json=discrepancyId,proto3" json:"discrepancy_id,omitempty"`
 	// action 指定本次状态推进采用的业务动作。
@@ -1826,13 +1779,6 @@ func (x *MutateSettlementDiscrepancyRequest) ProtoReflect() protoreflect.Message
 // Deprecated: Use MutateSettlementDiscrepancyRequest.ProtoReflect.Descriptor instead.
 func (*MutateSettlementDiscrepancyRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *MutateSettlementDiscrepancyRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *MutateSettlementDiscrepancyRequest) GetDiscrepancyId() uint64 {
@@ -1896,8 +1842,6 @@ type Dispute struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识关联的 Dispute。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定 Dispute 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// provider_case_id 标识关联的 ProviderCase。
@@ -1977,13 +1921,6 @@ func (*Dispute) Descriptor() ([]byte, []int) {
 func (x *Dispute) GetId() uint64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *Dispute) GetAppId() uint32 {
-	if x != nil {
-		return x.AppId
 	}
 	return 0
 }
@@ -2510,8 +2447,6 @@ func (x *DisputeDetail) GetAttempts() []*DisputeAttempt {
 // RecordProviderDisputeRequest 定义执行 RecordProviderDispute 的命令参数。
 type RecordProviderDisputeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RecordProviderDispute 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider" json:"provider,omitempty"`
 	// provider_case_id 标识关联的 ProviderCase。
@@ -2576,13 +2511,6 @@ func (x *RecordProviderDisputeRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RecordProviderDisputeRequest.ProtoReflect.Descriptor instead.
 func (*RecordProviderDisputeRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *RecordProviderDisputeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RecordProviderDisputeRequest) GetProvider() PaymentProvider {
@@ -2700,8 +2628,6 @@ func (x *RecordProviderDisputeRequest) GetRequestId() string {
 // ListDisputesRequest 定义 Disputes 的筛选与分页参数。
 type ListDisputesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListDisputes 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
 	Provider *PaymentProvider `protobuf:"varint,2,opt,name=provider,proto3,enum=payment.v1.PaymentProvider,oneof" json:"provider,omitempty"`
 	// status 表示 ListDisputes 当前可观察的生命周期状态。
@@ -2711,7 +2637,7 @@ type ListDisputesRequest struct {
 	// evidence_due 显式表示 ListDisputes 是否满足该条件。
 	EvidenceDue *bool `protobuf:"varint,5,opt,name=evidence_due,json=evidenceDue,proto3,oneof" json:"evidence_due,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,6,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,6,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2746,13 +2672,6 @@ func (*ListDisputesRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *ListDisputesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListDisputesRequest) GetProvider() PaymentProvider {
 	if x != nil && x.Provider != nil {
 		return *x.Provider
@@ -2781,7 +2700,7 @@ func (x *ListDisputesRequest) GetEvidenceDue() bool {
 	return false
 }
 
-func (x *ListDisputesRequest) GetPaging() *v11.PagingRequest {
+func (x *ListDisputesRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -2846,8 +2765,6 @@ func (x *ListDisputesResponse) GetTotal() uint64 {
 // GetDisputeRequest 标识待查询的 Dispute。
 type GetDisputeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetDispute 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// dispute_id 标识关联的 Dispute。
 	DisputeId     uint64 `protobuf:"varint,2,opt,name=dispute_id,json=disputeId,proto3" json:"dispute_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2884,13 +2801,6 @@ func (*GetDisputeRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *GetDisputeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetDisputeRequest) GetDisputeId() uint64 {
 	if x != nil {
 		return x.DisputeId
@@ -2901,8 +2811,6 @@ func (x *GetDisputeRequest) GetDisputeId() uint64 {
 // RefreshDisputeRequest 定义执行 RefreshDispute 的幂等管理命令参数。
 type RefreshDisputeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RefreshDispute 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// dispute_id 标识关联的 Dispute。
 	DisputeId uint64 `protobuf:"varint,2,opt,name=dispute_id,json=disputeId,proto3" json:"dispute_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -2945,13 +2853,6 @@ func (*RefreshDisputeRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *RefreshDisputeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RefreshDisputeRequest) GetDisputeId() uint64 {
 	if x != nil {
 		return x.DisputeId
@@ -2983,8 +2884,6 @@ func (x *RefreshDisputeRequest) GetRequestId() string {
 // AddDisputeEvidenceRequest 定义执行 AddDisputeEvidence 的幂等管理命令参数。
 type AddDisputeEvidenceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AddDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// dispute_id 标识关联的 Dispute。
 	DisputeId uint64 `protobuf:"varint,2,opt,name=dispute_id,json=disputeId,proto3" json:"dispute_id,omitempty"`
 	// file_id 标识关联的 File。
@@ -3031,13 +2930,6 @@ func (x *AddDisputeEvidenceRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use AddDisputeEvidenceRequest.ProtoReflect.Descriptor instead.
 func (*AddDisputeEvidenceRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *AddDisputeEvidenceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *AddDisputeEvidenceRequest) GetDisputeId() uint64 {
@@ -3092,8 +2984,6 @@ func (x *AddDisputeEvidenceRequest) GetRequestId() string {
 // RemoveDisputeEvidenceRequest 定义删除 DisputeEvidence 的命令参数。
 type RemoveDisputeEvidenceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RemoveDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// dispute_id 标识关联的 Dispute。
 	DisputeId uint64 `protobuf:"varint,2,opt,name=dispute_id,json=disputeId,proto3" json:"dispute_id,omitempty"`
 	// evidence_id 标识关联的 Evidence。
@@ -3138,13 +3028,6 @@ func (x *RemoveDisputeEvidenceRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RemoveDisputeEvidenceRequest.ProtoReflect.Descriptor instead.
 func (*RemoveDisputeEvidenceRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *RemoveDisputeEvidenceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *RemoveDisputeEvidenceRequest) GetDisputeId() uint64 {
@@ -3192,8 +3075,6 @@ func (x *RemoveDisputeEvidenceRequest) GetRequestId() string {
 // SubmitDisputeEvidenceRequest 定义提交 DisputeEvidence 的幂等管理命令参数。
 type SubmitDisputeEvidenceRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 SubmitDisputeEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// dispute_id 标识关联的 Dispute。
 	DisputeId uint64 `protobuf:"varint,2,opt,name=dispute_id,json=disputeId,proto3" json:"dispute_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3236,13 +3117,6 @@ func (*SubmitDisputeEvidenceRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *SubmitDisputeEvidenceRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *SubmitDisputeEvidenceRequest) GetDisputeId() uint64 {
 	if x != nil {
 		return x.DisputeId
@@ -3274,8 +3148,6 @@ func (x *SubmitDisputeEvidenceRequest) GetRequestId() string {
 // ApplyChargebackRequest 定义应用 Chargeback 的幂等管理命令参数。
 type ApplyChargebackRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ApplyChargeback 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// dispute_id 标识关联的 Dispute。
 	DisputeId uint64 `protobuf:"varint,2,opt,name=dispute_id,json=disputeId,proto3" json:"dispute_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3320,13 +3192,6 @@ func (*ApplyChargebackRequest) Descriptor() ([]byte, []int) {
 	return file_payment_v1_financial_operations_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *ApplyChargebackRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ApplyChargebackRequest) GetDisputeId() uint64 {
 	if x != nil {
 		return x.DisputeId
@@ -3367,10 +3232,9 @@ var File_payment_v1_financial_operations_proto protoreflect.FileDescriptor
 const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\n" +
 	"%payment/v1/financial_operations.proto\x12\n" +
-	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\xb0\t\n" +
+	"payment.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epayment/v1/payment_types.proto\"\x99\t\n" +
 	"\x13SettlementStatement\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x127\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x127\n" +
 	"\bprovider\x18\x03 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12-\n" +
 	"\x10provider_bill_id\x18\x04 \x01(\x04H\x00R\x0eproviderBillId\x88\x01\x01\x12!\n" +
 	"\fperiod_start\x18\x05 \x01(\tR\vperiodStart\x12\x1d\n" +
@@ -3423,10 +3287,9 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\tEntryType\x12%\n" +
 	"!SETTLEMENT_ENTRY_TYPE_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dSETTLEMENT_ENTRY_TYPE_PAYMENT\x10\x01\x12 \n" +
-	"\x1cSETTLEMENT_ENTRY_TYPE_REFUND\x10\x02\"\xaf\t\n" +
+	"\x1cSETTLEMENT_ENTRY_TYPE_REFUND\x10\x02\"\x98\t\n" +
 	"\x15SettlementDiscrepancy\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x12!\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12!\n" +
 	"\fstatement_id\x18\x03 \x01(\x04R\vstatementId\x12\\\n" +
 	"\x10discrepancy_type\x18\x04 \x01(\x0e21.payment.v1.SettlementDiscrepancy.DiscrepancyTypeR\x0fdiscrepancyType\x12'\n" +
 	"\x0fexpected_amount\x18\x05 \x01(\x03R\x0eexpectedAmount\x12#\n" +
@@ -3489,9 +3352,8 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"entry_type\x18\x01 \x01(\x0e2%.payment.v1.SettlementEntry.EntryTypeR\tentryType\x12!\n" +
 	"\freference_no\x18\x02 \x01(\tR\vreferenceNo\x12\x16\n" +
 	"\x06amount\x18\x03 \x01(\x03R\x06amount\x12\x1a\n" +
-	"\bcurrency\x18\x04 \x01(\tR\bcurrency\"\xf8\x06\n" +
-	" ImportSettlementStatementRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x127\n" +
+	"\bcurrency\x18\x04 \x01(\tR\bcurrency\"\xcf\x06\n" +
+	" ImportSettlementStatementRequest\x127\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12-\n" +
 	"\x10provider_bill_id\x18\x03 \x01(\x04H\x00R\x0eproviderBillId\x88\x01\x01\x12!\n" +
 	"\fperiod_start\x18\x04 \x01(\tR\vperiodStart\x12\x1d\n" +
@@ -3522,9 +3384,8 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\x11_provider_bill_idB\x13\n" +
 	"\x11_payout_referenceB\f\n" +
 	"\n" +
-	"_payout_at\"\xd0\x02\n" +
-	"\x1fListSettlementStatementsRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12<\n" +
+	"_payout_at\"\xa7\x02\n" +
+	"\x1fListSettlementStatementsRequest\x12<\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x00R\bprovider\x88\x01\x01\x12\x1f\n" +
 	"\bcurrency\x18\x03 \x01(\tH\x01R\bcurrency\x88\x01\x01\x12C\n" +
 	"\x06status\x18\x04 \x01(\x0e2&.payment.v1.SettlementStatement.StatusH\x02R\x06status\x88\x01\x01\x12;\n" +
@@ -3534,12 +3395,10 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\a_status\"o\n" +
 	" ListSettlementStatementsResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.payment.v1.SettlementStatementR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"k\n" +
-	"\x1dGetSettlementStatementRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12!\n" +
-	"\fstatement_id\x18\x02 \x01(\x04R\vstatementId\"\xe6\x05\n" +
-	"\"MutateSettlementDiscrepancyRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12%\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"B\n" +
+	"\x1dGetSettlementStatementRequest\x12!\n" +
+	"\fstatement_id\x18\x02 \x01(\x04R\vstatementId\"\xbd\x05\n" +
+	"\"MutateSettlementDiscrepancyRequest\x12%\n" +
 	"\x0ediscrepancy_id\x18\x02 \x01(\x04R\rdiscrepancyId\x12M\n" +
 	"\x06action\x18\x03 \x01(\x0e25.payment.v1.MutateSettlementDiscrepancyRequest.ActionR\x06action\x125\n" +
 	"\x14assignee_operator_id\x18\x04 \x01(\rH\x00R\x12assigneeOperatorId\x88\x01\x01\x12\x1f\n" +
@@ -3559,10 +3418,9 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"$SETTLEMENT_DISCREPANCY_ACTION_REOPEN\x10\x05B\x17\n" +
 	"\x15_assignee_operator_idB\v\n" +
 	"\t_evidenceB\t\n" +
-	"\a_reason\"\xa1\x0e\n" +
+	"\a_reason\"\x8a\x0e\n" +
 	"\aDispute\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12\x15\n" +
-	"\x06app_id\x18\x02 \x01(\rR\x05appId\x127\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x127\n" +
 	"\bprovider\x18\x03 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12(\n" +
 	"\x10provider_case_id\x18\x04 \x01(\tR\x0eproviderCaseId\x12\x1d\n" +
 	"\n" +
@@ -3678,9 +3536,8 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\rDisputeDetail\x12-\n" +
 	"\adispute\x18\x01 \x01(\v2\x13.payment.v1.DisputeR\adispute\x129\n" +
 	"\tevidences\x18\x02 \x03(\v2\x1b.payment.v1.DisputeEvidenceR\tevidences\x126\n" +
-	"\battempts\x18\x03 \x03(\v2\x1a.payment.v1.DisputeAttemptR\battempts\"\x8d\a\n" +
-	"\x1cRecordProviderDisputeRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x127\n" +
+	"\battempts\x18\x03 \x03(\v2\x1a.payment.v1.DisputeAttemptR\battempts\"\xe4\x06\n" +
+	"\x1cRecordProviderDisputeRequest\x127\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderR\bprovider\x12(\n" +
 	"\x10provider_case_id\x18\x03 \x01(\tR\x0eproviderCaseId\x12\x1b\n" +
 	"\tevent_key\x18\x04 \x01(\tR\beventKey\x12\x1d\n" +
@@ -3706,9 +3563,8 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\x12_evidence_deadlineB\x12\n" +
 	"\x10_provider_statusB\x17\n" +
 	"\x15_chargeback_referenceB\x10\n" +
-	"\x0e_chargeback_at\"\xf6\x02\n" +
-	"\x13ListDisputesRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12<\n" +
+	"\x0e_chargeback_at\"\xcd\x02\n" +
+	"\x13ListDisputesRequest\x12<\n" +
 	"\bprovider\x18\x02 \x01(\x0e2\x1b.payment.v1.PaymentProviderH\x00R\bprovider\x88\x01\x01\x127\n" +
 	"\x06status\x18\x03 \x01(\x0e2\x1a.payment.v1.Dispute.StatusH\x01R\x06status\x88\x01\x01\x12\"\n" +
 	"\n" +
@@ -3721,22 +3577,19 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\r_evidence_due\"W\n" +
 	"\x14ListDisputesResponse\x12)\n" +
 	"\x05items\x18\x01 \x03(\v2\x13.payment.v1.DisputeR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"[\n" +
-	"\x11GetDisputeRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"2\n" +
+	"\x11GetDisputeRequest\x12\x1d\n" +
 	"\n" +
-	"dispute_id\x18\x02 \x01(\x04R\tdisputeId\"\xc2\x01\n" +
-	"\x15RefreshDisputeRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"dispute_id\x18\x02 \x01(\x04R\tdisputeId\"\x99\x01\n" +
+	"\x15RefreshDisputeRequest\x12\x1d\n" +
 	"\n" +
 	"dispute_id\x18\x02 \x01(\x04R\tdisputeId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tR\trequestId\"\xbb\x02\n" +
-	"\x19AddDisputeEvidenceRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"request_id\x18\x05 \x01(\tR\trequestId\"\x92\x02\n" +
+	"\x19AddDisputeEvidenceRequest\x12\x1d\n" +
 	"\n" +
 	"dispute_id\x18\x02 \x01(\x04R\tdisputeId\x12\x17\n" +
 	"\afile_id\x18\x03 \x01(\x04R\x06fileId\x12#\n" +
@@ -3747,9 +3600,8 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\foperation_no\x18\a \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\b \x01(\tR\trequestIdB\x0e\n" +
-	"\f_description\"\x82\x02\n" +
-	"\x1cRemoveDisputeEvidenceRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"\f_description\"\xd9\x01\n" +
+	"\x1cRemoveDisputeEvidenceRequest\x12\x1d\n" +
 	"\n" +
 	"dispute_id\x18\x02 \x01(\x04R\tdisputeId\x12\x1f\n" +
 	"\vevidence_id\x18\x03 \x01(\x04R\n" +
@@ -3759,18 +3611,16 @@ const file_payment_v1_financial_operations_proto_rawDesc = "" +
 	"\x06reason\x18\x05 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x06 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\a \x01(\tR\trequestId\"\xc9\x01\n" +
-	"\x1cSubmitDisputeEvidenceRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"request_id\x18\a \x01(\tR\trequestId\"\xa0\x01\n" +
+	"\x1cSubmitDisputeEvidenceRequest\x12\x1d\n" +
 	"\n" +
 	"dispute_id\x18\x02 \x01(\x04R\tdisputeId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
 	"operatorId\x12!\n" +
 	"\foperation_no\x18\x04 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x05 \x01(\tR\trequestId\"\xdb\x01\n" +
-	"\x16ApplyChargebackRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"request_id\x18\x05 \x01(\tR\trequestId\"\xb2\x01\n" +
+	"\x16ApplyChargebackRequest\x12\x1d\n" +
 	"\n" +
 	"dispute_id\x18\x02 \x01(\x04R\tdisputeId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\rR\n" +
@@ -3833,8 +3683,7 @@ var file_payment_v1_financial_operations_proto_goTypes = []any{
 	(*ApplyChargebackRequest)(nil),                 // 32: payment.v1.ApplyChargebackRequest
 	(PaymentProvider)(0),                           // 33: payment.v1.PaymentProvider
 	(*timestamppb.Timestamp)(nil),                  // 34: google.protobuf.Timestamp
-	(v1.AppId)(0),                                  // 35: common.v1.AppId
-	(*v11.PagingRequest)(nil),                      // 36: common.pagination.v1.PagingRequest
+	(*v1.PagingRequest)(nil),                       // 35: common.pagination.v1.PagingRequest
 }
 var file_payment_v1_financial_operations_proto_depIdxs = []int32{
 	33, // 0: payment.v1.SettlementStatement.provider:type_name -> payment.v1.PaymentProvider
@@ -3857,59 +3706,47 @@ var file_payment_v1_financial_operations_proto_depIdxs = []int32{
 	11, // 17: payment.v1.SettlementStatementDetail.discrepancies:type_name -> payment.v1.SettlementDiscrepancy
 	12, // 18: payment.v1.SettlementStatementDetail.actions:type_name -> payment.v1.SettlementDiscrepancyAction
 	1,  // 19: payment.v1.SettlementReference.entry_type:type_name -> payment.v1.SettlementEntry.EntryType
-	35, // 20: payment.v1.ImportSettlementStatementRequest.app_id:type_name -> common.v1.AppId
-	33, // 21: payment.v1.ImportSettlementStatementRequest.provider:type_name -> payment.v1.PaymentProvider
-	34, // 22: payment.v1.ImportSettlementStatementRequest.payout_at:type_name -> google.protobuf.Timestamp
-	14, // 23: payment.v1.ImportSettlementStatementRequest.references:type_name -> payment.v1.SettlementReference
-	35, // 24: payment.v1.ListSettlementStatementsRequest.app_id:type_name -> common.v1.AppId
-	33, // 25: payment.v1.ListSettlementStatementsRequest.provider:type_name -> payment.v1.PaymentProvider
-	0,  // 26: payment.v1.ListSettlementStatementsRequest.status:type_name -> payment.v1.SettlementStatement.Status
-	36, // 27: payment.v1.ListSettlementStatementsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	9,  // 28: payment.v1.ListSettlementStatementsResponse.items:type_name -> payment.v1.SettlementStatement
-	35, // 29: payment.v1.GetSettlementStatementRequest.app_id:type_name -> common.v1.AppId
-	35, // 30: payment.v1.MutateSettlementDiscrepancyRequest.app_id:type_name -> common.v1.AppId
-	4,  // 31: payment.v1.MutateSettlementDiscrepancyRequest.action:type_name -> payment.v1.MutateSettlementDiscrepancyRequest.Action
-	33, // 32: payment.v1.Dispute.provider:type_name -> payment.v1.PaymentProvider
-	34, // 33: payment.v1.Dispute.evidence_deadline:type_name -> google.protobuf.Timestamp
-	5,  // 34: payment.v1.Dispute.status:type_name -> payment.v1.Dispute.Status
-	34, // 35: payment.v1.Dispute.chargeback_at:type_name -> google.protobuf.Timestamp
-	6,  // 36: payment.v1.Dispute.compensation_status:type_name -> payment.v1.Dispute.CompensationStatus
-	34, // 37: payment.v1.Dispute.opened_at:type_name -> google.protobuf.Timestamp
-	34, // 38: payment.v1.Dispute.closed_at:type_name -> google.protobuf.Timestamp
-	34, // 39: payment.v1.Dispute.created_at:type_name -> google.protobuf.Timestamp
-	34, // 40: payment.v1.Dispute.updated_at:type_name -> google.protobuf.Timestamp
-	7,  // 41: payment.v1.DisputeEvidence.status:type_name -> payment.v1.DisputeEvidence.Status
-	34, // 42: payment.v1.DisputeEvidence.created_at:type_name -> google.protobuf.Timestamp
-	34, // 43: payment.v1.DisputeEvidence.attached_at:type_name -> google.protobuf.Timestamp
-	34, // 44: payment.v1.DisputeEvidence.removed_at:type_name -> google.protobuf.Timestamp
-	8,  // 45: payment.v1.DisputeAttempt.attempt_type:type_name -> payment.v1.DisputeAttempt.AttemptType
-	5,  // 46: payment.v1.DisputeAttempt.from_status:type_name -> payment.v1.Dispute.Status
-	5,  // 47: payment.v1.DisputeAttempt.to_status:type_name -> payment.v1.Dispute.Status
-	34, // 48: payment.v1.DisputeAttempt.created_at:type_name -> google.protobuf.Timestamp
-	20, // 49: payment.v1.DisputeDetail.dispute:type_name -> payment.v1.Dispute
-	21, // 50: payment.v1.DisputeDetail.evidences:type_name -> payment.v1.DisputeEvidence
-	22, // 51: payment.v1.DisputeDetail.attempts:type_name -> payment.v1.DisputeAttempt
-	35, // 52: payment.v1.RecordProviderDisputeRequest.app_id:type_name -> common.v1.AppId
-	33, // 53: payment.v1.RecordProviderDisputeRequest.provider:type_name -> payment.v1.PaymentProvider
-	34, // 54: payment.v1.RecordProviderDisputeRequest.evidence_deadline:type_name -> google.protobuf.Timestamp
-	5,  // 55: payment.v1.RecordProviderDisputeRequest.status:type_name -> payment.v1.Dispute.Status
-	34, // 56: payment.v1.RecordProviderDisputeRequest.chargeback_at:type_name -> google.protobuf.Timestamp
-	35, // 57: payment.v1.ListDisputesRequest.app_id:type_name -> common.v1.AppId
-	33, // 58: payment.v1.ListDisputesRequest.provider:type_name -> payment.v1.PaymentProvider
-	5,  // 59: payment.v1.ListDisputesRequest.status:type_name -> payment.v1.Dispute.Status
-	36, // 60: payment.v1.ListDisputesRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	20, // 61: payment.v1.ListDisputesResponse.items:type_name -> payment.v1.Dispute
-	35, // 62: payment.v1.GetDisputeRequest.app_id:type_name -> common.v1.AppId
-	35, // 63: payment.v1.RefreshDisputeRequest.app_id:type_name -> common.v1.AppId
-	35, // 64: payment.v1.AddDisputeEvidenceRequest.app_id:type_name -> common.v1.AppId
-	35, // 65: payment.v1.RemoveDisputeEvidenceRequest.app_id:type_name -> common.v1.AppId
-	35, // 66: payment.v1.SubmitDisputeEvidenceRequest.app_id:type_name -> common.v1.AppId
-	35, // 67: payment.v1.ApplyChargebackRequest.app_id:type_name -> common.v1.AppId
-	68, // [68:68] is the sub-list for method output_type
-	68, // [68:68] is the sub-list for method input_type
-	68, // [68:68] is the sub-list for extension type_name
-	68, // [68:68] is the sub-list for extension extendee
-	0,  // [0:68] is the sub-list for field type_name
+	33, // 20: payment.v1.ImportSettlementStatementRequest.provider:type_name -> payment.v1.PaymentProvider
+	34, // 21: payment.v1.ImportSettlementStatementRequest.payout_at:type_name -> google.protobuf.Timestamp
+	14, // 22: payment.v1.ImportSettlementStatementRequest.references:type_name -> payment.v1.SettlementReference
+	33, // 23: payment.v1.ListSettlementStatementsRequest.provider:type_name -> payment.v1.PaymentProvider
+	0,  // 24: payment.v1.ListSettlementStatementsRequest.status:type_name -> payment.v1.SettlementStatement.Status
+	35, // 25: payment.v1.ListSettlementStatementsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	9,  // 26: payment.v1.ListSettlementStatementsResponse.items:type_name -> payment.v1.SettlementStatement
+	4,  // 27: payment.v1.MutateSettlementDiscrepancyRequest.action:type_name -> payment.v1.MutateSettlementDiscrepancyRequest.Action
+	33, // 28: payment.v1.Dispute.provider:type_name -> payment.v1.PaymentProvider
+	34, // 29: payment.v1.Dispute.evidence_deadline:type_name -> google.protobuf.Timestamp
+	5,  // 30: payment.v1.Dispute.status:type_name -> payment.v1.Dispute.Status
+	34, // 31: payment.v1.Dispute.chargeback_at:type_name -> google.protobuf.Timestamp
+	6,  // 32: payment.v1.Dispute.compensation_status:type_name -> payment.v1.Dispute.CompensationStatus
+	34, // 33: payment.v1.Dispute.opened_at:type_name -> google.protobuf.Timestamp
+	34, // 34: payment.v1.Dispute.closed_at:type_name -> google.protobuf.Timestamp
+	34, // 35: payment.v1.Dispute.created_at:type_name -> google.protobuf.Timestamp
+	34, // 36: payment.v1.Dispute.updated_at:type_name -> google.protobuf.Timestamp
+	7,  // 37: payment.v1.DisputeEvidence.status:type_name -> payment.v1.DisputeEvidence.Status
+	34, // 38: payment.v1.DisputeEvidence.created_at:type_name -> google.protobuf.Timestamp
+	34, // 39: payment.v1.DisputeEvidence.attached_at:type_name -> google.protobuf.Timestamp
+	34, // 40: payment.v1.DisputeEvidence.removed_at:type_name -> google.protobuf.Timestamp
+	8,  // 41: payment.v1.DisputeAttempt.attempt_type:type_name -> payment.v1.DisputeAttempt.AttemptType
+	5,  // 42: payment.v1.DisputeAttempt.from_status:type_name -> payment.v1.Dispute.Status
+	5,  // 43: payment.v1.DisputeAttempt.to_status:type_name -> payment.v1.Dispute.Status
+	34, // 44: payment.v1.DisputeAttempt.created_at:type_name -> google.protobuf.Timestamp
+	20, // 45: payment.v1.DisputeDetail.dispute:type_name -> payment.v1.Dispute
+	21, // 46: payment.v1.DisputeDetail.evidences:type_name -> payment.v1.DisputeEvidence
+	22, // 47: payment.v1.DisputeDetail.attempts:type_name -> payment.v1.DisputeAttempt
+	33, // 48: payment.v1.RecordProviderDisputeRequest.provider:type_name -> payment.v1.PaymentProvider
+	34, // 49: payment.v1.RecordProviderDisputeRequest.evidence_deadline:type_name -> google.protobuf.Timestamp
+	5,  // 50: payment.v1.RecordProviderDisputeRequest.status:type_name -> payment.v1.Dispute.Status
+	34, // 51: payment.v1.RecordProviderDisputeRequest.chargeback_at:type_name -> google.protobuf.Timestamp
+	33, // 52: payment.v1.ListDisputesRequest.provider:type_name -> payment.v1.PaymentProvider
+	5,  // 53: payment.v1.ListDisputesRequest.status:type_name -> payment.v1.Dispute.Status
+	35, // 54: payment.v1.ListDisputesRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	20, // 55: payment.v1.ListDisputesResponse.items:type_name -> payment.v1.Dispute
+	56, // [56:56] is the sub-list for method output_type
+	56, // [56:56] is the sub-list for method input_type
+	56, // [56:56] is the sub-list for extension type_name
+	56, // [56:56] is the sub-list for extension extendee
+	0,  // [0:56] is the sub-list for field type_name
 }
 
 func init() { file_payment_v1_financial_operations_proto_init() }

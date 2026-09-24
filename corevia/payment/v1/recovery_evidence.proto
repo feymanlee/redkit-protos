@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package payment.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "payment/v1/payment_types.proto";
@@ -28,9 +27,7 @@ enum RecoveryPaymentEvidenceResult {
 
 // VerifyRecoveryPaymentEvidenceRequest 定义校验 RecoveryPaymentEvidence 的命令参数。
 message VerifyRecoveryPaymentEvidenceRequest {
-  // app_id 限定 VerifyRecoveryPaymentEvidence 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // recovery_request_no 是 VerifyRecoveryPaymentEvidence 对外关联与审计使用的业务编号。
   string recovery_request_no = 3 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];

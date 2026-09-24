@@ -4,7 +4,6 @@ package admin.platform.v1;
 
 import "gnostic/openapi/v3/annotations.proto";
 
-import "admin/platform/v1/app_selection.proto";
 import "admin/gift/v1/gift_analytics_service.proto";
 import "admin/gift/v1/gift_backpack_service.proto";
 import "admin/gift/v1/gift_catalog_service.proto";
@@ -43,9 +42,6 @@ option (gnostic.openapi.v3.document) = {
       additional_properties: [
         {
           name: "BearerAuth"; value: {}
-        },
-        {
-          name: "AppScope"; value: {}
         }
       ]
     }
@@ -62,17 +58,6 @@ option (gnostic.openapi.v3.document) = {
               scheme: "bearer";
               bearer_format: "JWT";
               description: "使用登录接口返回的 access token，格式为 Bearer <token>。";
-            }
-          }
-        },
-        {
-          name: "AppScope";
-          value: {
-            security_scheme: {
-              type: "apiKey";
-              in: "header";
-              name: "x-md-app-id";
-              description: "当前业务 App 的具体 ID；未选择 App 时不得调用 App-scoped operation。";
             }
           }
         }

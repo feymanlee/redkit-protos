@@ -8,8 +8,8 @@ package useradministrationpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -416,8 +416,6 @@ func (BooleanFilter) EnumDescriptor() ([]byte, []int) {
 // CreateUserRequest 定义创建 User 的幂等命令参数。
 type CreateUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateUser 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,2,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -454,13 +452,6 @@ func (*CreateUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateUserRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CreateUserRequest) GetIdempotencyKey() string {
 	if x != nil {
 		return x.IdempotencyKey
@@ -471,8 +462,6 @@ func (x *CreateUserRequest) GetIdempotencyKey() string {
 // GetUserRequest 标识待查询的 User。
 type GetUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetUser 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// GetUserRequest 使用以下一种查询表达式。
 	//
 	// Types that are valid to be assigned to Query:
@@ -514,13 +503,6 @@ func (*GetUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetUserRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetUserRequest) GetQuery() isGetUserRequest_Query {
 	if x != nil {
 		return x.Query
@@ -551,7 +533,7 @@ type isGetUserRequest_Query interface {
 }
 
 type GetUserRequest_UserId struct {
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3,oneof"`
 }
 
@@ -567,10 +549,8 @@ func (*GetUserRequest_UserCode) isGetUserRequest_Query() {}
 // ListUsersRequest 定义 Users 的筛选与分页参数。
 type ListUsersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListUsers 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -605,14 +585,7 @@ func (*ListUsersRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ListUsersRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListUsersRequest) GetPaging() *v11.PagingRequest {
+func (x *ListUsersRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -677,9 +650,7 @@ func (x *ListUsersResponse) GetTotal() uint64 {
 // ChangeUserCodeRequest 定义执行 ChangeUserCode 的幂等管理命令参数。
 type ChangeUserCodeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ChangeUserCode 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// user_code 提供 ChangeUserCode 对外稳定使用的业务编码。
 	UserCode string `protobuf:"bytes,3,opt,name=user_code,json=userCode,proto3" json:"user_code,omitempty"`
@@ -721,13 +692,6 @@ func (*ChangeUserCodeRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ChangeUserCodeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ChangeUserCodeRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -759,9 +723,7 @@ func (x *ChangeUserCodeRequest) GetIdempotencyKey() string {
 // GetUserDeletionRequest 标识待查询的 UserDeletion。
 type GetUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId        uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -795,13 +757,6 @@ func (x *GetUserDeletionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetUserDeletionRequest.ProtoReflect.Descriptor instead.
 func (*GetUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *GetUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *GetUserDeletionRequest) GetUserId() uint64 {
@@ -1025,9 +980,7 @@ type UserDeletion struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// deletion_no 是 UserDeletion 对外关联与审计使用的业务编号。
 	DeletionNo string `protobuf:"bytes,1,opt,name=deletion_no,json=deletionNo,proto3" json:"deletion_no,omitempty"`
-	// app_id 限定 UserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// status 表示 UserDeletion 当前可观察的生命周期状态。
 	Status UserDeletionStatus `protobuf:"varint,4,opt,name=status,proto3,enum=user.administration.v1.UserDeletionStatus" json:"status,omitempty"`
@@ -1094,13 +1047,6 @@ func (x *UserDeletion) GetDeletionNo() string {
 		return x.DeletionNo
 	}
 	return ""
-}
-
-func (x *UserDeletion) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *UserDeletion) GetUserId() uint64 {
@@ -1204,9 +1150,7 @@ func (x *UserDeletion) GetDeletedAt() *timestamppb.Timestamp {
 // CancelAdministrativeUserDeletionRequest 定义取消 AdministrativeUserDeletion 的幂等管理命令参数。
 type CancelAdministrativeUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CancelAdministrativeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -1246,13 +1190,6 @@ func (*CancelAdministrativeUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *CancelAdministrativeUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *CancelAdministrativeUserDeletionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1277,8 +1214,6 @@ func (x *CancelAdministrativeUserDeletionRequest) GetIdempotencyKey() string {
 // RetryAdministrativeUserDeletionRequest 定义重试 AdministrativeUserDeletion 的幂等管理命令参数。
 type RetryAdministrativeUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RetryAdministrativeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// deletion_no 是 RetryAdministrativeUserDeletion 对外关联与审计使用的业务编号。
 	DeletionNo string `protobuf:"bytes,2,opt,name=deletion_no,json=deletionNo,proto3" json:"deletion_no,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
@@ -1319,13 +1254,6 @@ func (*RetryAdministrativeUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *RetryAdministrativeUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RetryAdministrativeUserDeletionRequest) GetDeletionNo() string {
 	if x != nil {
 		return x.DeletionNo
@@ -1350,9 +1278,7 @@ func (x *RetryAdministrativeUserDeletionRequest) GetIdempotencyKey() string {
 // ModerateUserProfileRequest 区分直接清空和恢复系统默认值的字段。
 type ModerateUserProfileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ModerateUserProfile 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// clear_fields 列出 ModerateUserProfile 关联的 ProfileModerationField。
 	ClearFields []ProfileModerationField `protobuf:"varint,3,rep,packed,name=clear_fields,json=clearFields,proto3,enum=user.administration.v1.ProfileModerationField" json:"clear_fields,omitempty"`
@@ -1396,13 +1322,6 @@ func (*ModerateUserProfileRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ModerateUserProfileRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ModerateUserProfileRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1441,9 +1360,7 @@ func (x *ModerateUserProfileRequest) GetIdempotencyKey() string {
 // ResetUserCodeRequest 不包含替代 Code；新值只能由 User 服务生成。
 type ResetUserCodeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResetUserCode 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -1483,13 +1400,6 @@ func (*ResetUserCodeRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ResetUserCodeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ResetUserCodeRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1514,9 +1424,7 @@ func (x *ResetUserCodeRequest) GetIdempotencyKey() string {
 // BeginAdministrativeUserDeletionRequest 不接受 User 验证票据，也不能绕过冷静期。
 type BeginAdministrativeUserDeletionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BeginAdministrativeUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -1556,13 +1464,6 @@ func (*BeginAdministrativeUserDeletionRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *BeginAdministrativeUserDeletionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *BeginAdministrativeUserDeletionRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1587,9 +1488,7 @@ func (x *BeginAdministrativeUserDeletionRequest) GetIdempotencyKey() string {
 // RequirePasswordResetRequest 不携带新密码；Operator 只能要求 User 自行重设。
 type RequirePasswordResetRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RequirePasswordReset 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -1629,13 +1528,6 @@ func (*RequirePasswordResetRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *RequirePasswordResetRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RequirePasswordResetRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1660,9 +1552,7 @@ func (x *RequirePasswordResetRequest) GetIdempotencyKey() string {
 // RevokeCredentialRequest 是后台专用的 Credential 安全处置，不接受 User 验证票据。
 type RevokeCredentialRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeCredential 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// credential_id 标识关联的 Credential。
 	CredentialId uint64 `protobuf:"varint,3,opt,name=credential_id,json=credentialId,proto3" json:"credential_id,omitempty"`
@@ -1704,13 +1594,6 @@ func (*RevokeCredentialRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *RevokeCredentialRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeCredentialRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1742,9 +1625,7 @@ func (x *RevokeCredentialRequest) GetIdempotencyKey() string {
 // ResetMFARequest 是后台专用的 MFA 安全处置，不接受或返回 MFA Secret。
 type ResetMFARequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResetMFA 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
@@ -1784,13 +1665,6 @@ func (*ResetMFARequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *ResetMFARequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ResetMFARequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1815,9 +1689,7 @@ func (x *ResetMFARequest) GetIdempotencyKey() string {
 // RevokeDeviceTrustRequest 是后台专用的设备处置，同时撤销该设备的 Session。
 type RevokeDeviceTrustRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RevokeDeviceTrust 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// device_id 标识关联的 Device。
 	DeviceId uint64 `protobuf:"varint,3,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
@@ -1859,13 +1731,6 @@ func (*RevokeDeviceTrustRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *RevokeDeviceTrustRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeDeviceTrustRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1894,12 +1759,10 @@ func (x *RevokeDeviceTrustRequest) GetIdempotencyKey() string {
 	return ""
 }
 
-// SuspendUserRequest 携带可信 App scope、标准原因、可选说明和幂等键。
+// SuspendUserRequest 携带标准原因、可选说明和幂等键。
 type SuspendUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 SuspendUser 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason_code 提供机器可判断的业务原因分类。
 	ReasonCode UserSuspensionReason `protobuf:"varint,3,opt,name=reason_code,json=reasonCode,proto3,enum=user.administration.v1.UserSuspensionReason" json:"reason_code,omitempty"`
@@ -1943,13 +1806,6 @@ func (*SuspendUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *SuspendUserRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *SuspendUserRequest) GetUserId() uint64 {
 	if x != nil {
 		return x.UserId
@@ -1988,9 +1844,7 @@ func (x *SuspendUserRequest) GetIdempotencyKey() string {
 // ReactivateUserRequest 携带人工复核原因、可选说明和幂等键。
 type ReactivateUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ReactivateUser 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// reason_code 提供机器可判断的业务原因分类。
 	ReasonCode UserReactivationReason `protobuf:"varint,3,opt,name=reason_code,json=reasonCode,proto3,enum=user.administration.v1.UserReactivationReason" json:"reason_code,omitempty"`
@@ -2030,13 +1884,6 @@ func (x *ReactivateUserRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ReactivateUserRequest.ProtoReflect.Descriptor instead.
 func (*ReactivateUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *ReactivateUserRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ReactivateUserRequest) GetUserId() uint64 {
@@ -2326,14 +2173,12 @@ func (x *UserSearchFilter) GetLastLoginTo() *timestamppb.Timestamp {
 // SearchUsersRequest 携带待与可信 metadata 匹配的领域 App 身份、结构化查询和分页参数。
 type SearchUsersRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 是 User Search Projection 的具体 App 资源定位身份。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// search 为空时列出当前筛选范围内的 User。
 	Search *UserSearchQuery `protobuf:"bytes,2,opt,name=search,proto3" json:"search,omitempty"`
 	// filter 为空时不增加 User 或安全筛选。
 	Filter *UserSearchFilter `protobuf:"bytes,3,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 控制有界页码和页大小。
-	Paging        *v11.PagingRequest `protobuf:"bytes,4,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v1.PagingRequest `protobuf:"bytes,4,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2368,13 +2213,6 @@ func (*SearchUsersRequest) Descriptor() ([]byte, []int) {
 	return file_user_administration_v1_administration_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *SearchUsersRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *SearchUsersRequest) GetSearch() *UserSearchQuery {
 	if x != nil {
 		return x.Search
@@ -2389,7 +2227,7 @@ func (x *SearchUsersRequest) GetFilter() *UserSearchFilter {
 	return nil
 }
 
-func (x *SearchUsersRequest) GetPaging() *v11.PagingRequest {
+func (x *SearchUsersRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -2591,29 +2429,24 @@ var File_user_administration_v1_administration_proto protoreflect.FileDescriptor
 
 const file_user_administration_v1_administration_proto_rawDesc = "" +
 	"\n" +
-	"+user/administration/v1/administration.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"e\n" +
+	"+user/administration/v1/administration.proto\x12\x16user.administration.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"user/administration/v1/types.proto\x1a\x17validate/validate.proto\"<\n" +
 	"\x11CreateUserRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12'\n" +
-	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\"|\n" +
-	"\x0eGetUserRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\x0fidempotency_key\x18\x02 \x01(\tR\x0eidempotencyKey\"S\n" +
+	"\x0eGetUserRequest\x12\x19\n" +
 	"\auser_id\x18\x02 \x01(\x04H\x00R\x06userId\x12\x1d\n" +
 	"\tuser_code\x18\x03 \x01(\tH\x00R\buserCodeB\a\n" +
-	"\x05query\"x\n" +
-	"\x10ListUsersRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12;\n" +
+	"\x05query\"O\n" +
+	"\x10ListUsersRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"]\n" +
 	"\x11ListUsersResponse\x122\n" +
 	"\x05items\x18\x01 \x03(\v2\x1c.user.administration.v1.UserR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xd0\x01\n" +
-	"\x15ChangeUserCodeRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa7\x01\n" +
+	"\x15ChangeUserCodeRequest\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1b\n" +
 	"\tuser_code\x18\x03 \x01(\tR\buserCode\x12/\n" +
 	"\x13verification_ticket\x18\x04 \x01(\tR\x12verificationTicket\x12'\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"u\n" +
-	"\x16GetUserDeletionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tR\x0eidempotencyKey\"=\n" +
+	"\x16GetUserDeletionRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\"\xdf\x04\n" +
 	"\x17UserDeletionParticipant\x12 \n" +
@@ -2636,11 +2469,10 @@ const file_user_administration_v1_administration_proto_rawDesc = "" +
 	"\x1eUserDeletionParticipantBlocker\x12\x1a\n" +
 	"\bcategory\x18\x01 \x01(\tR\bcategory\x12\x14\n" +
 	"\x05count\x18\x02 \x01(\rR\x05count\x12)\n" +
-	"\x10owning_reference\x18\x03 \x01(\tR\x0fowningReference\"\xcf\x06\n" +
+	"\x10owning_reference\x18\x03 \x01(\tR\x0fowningReference\"\xa6\x06\n" +
 	"\fUserDeletion\x12\x1f\n" +
 	"\vdeletion_no\x18\x01 \x01(\tR\n" +
-	"deletionNo\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x17\n" +
+	"deletionNo\x12\x17\n" +
 	"\auser_id\x18\x03 \x01(\x04R\x06userId\x12B\n" +
 	"\x06status\x18\x04 \x01(\x0e2*.user.administration.v1.UserDeletionStatusR\x06status\x12\x18\n" +
 	"\aattempt\x18\x05 \x01(\rR\aattempt\x12)\n" +
@@ -2660,69 +2492,59 @@ const file_user_administration_v1_administration_proto_rawDesc = "" +
 	"canceledAt\x12+\n" +
 	"\x11participant_order\x18\x0f \x03(\tR\x10participantOrder\x129\n" +
 	"\n" +
-	"deleted_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"\xe5\x01\n" +
-	"'CancelAdministrativeUserDeletionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"deleted_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"\xad\x01\n" +
+	"'CancelAdministrativeUserDeletionRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xef\x01\n" +
-	"&RetryAdministrativeUserDeletionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12.\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xb7\x01\n" +
+	"&RetryAdministrativeUserDeletionRequest\x12.\n" +
 	"\vdeletion_no\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\n" +
 	"deletionNo\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa8\x03\n" +
-	"\x1aModerateUserProfileRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xf0\x02\n" +
+	"\x1aModerateUserProfileRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12f\n" +
 	"\fclear_fields\x18\x03 \x03(\x0e2..user.administration.v1.ProfileModerationFieldB\x13\xfaB\x10\x92\x01\r\x10\x05\x18\x01\"\a\x82\x01\x04\x10\x01 \x00R\vclearFields\x12f\n" +
 	"\freset_fields\x18\x04 \x03(\x0e2..user.administration.v1.ProfileModerationFieldB\x13\xfaB\x10\x92\x01\r\x10\x03\x18\x01\"\a\x82\x01\x04\x10\x01 \x00R\vresetFields\x12%\n" +
 	"\x06reason\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xd2\x01\n" +
-	"\x14ResetUserCodeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x9a\x01\n" +
+	"\x14ResetUserCodeRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xe4\x01\n" +
-	"&BeginAdministrativeUserDeletionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xac\x01\n" +
+	"&BeginAdministrativeUserDeletionRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xd9\x01\n" +
-	"\x1bRequirePasswordResetRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xa1\x01\n" +
+	"\x1bRequirePasswordResetRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x86\x02\n" +
-	"\x17RevokeCredentialRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xce\x01\n" +
+	"\x17RevokeCredentialRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12/\n" +
 	"\rcredential_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\fcredentialId\x12%\n" +
 	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xcd\x01\n" +
-	"\x0fResetMFARequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x95\x01\n" +
+	"\x0fResetMFARequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12%\n" +
 	"\x06reason\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xff\x01\n" +
-	"\x18RevokeDeviceTrustRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xc7\x01\n" +
+	"\x18RevokeDeviceTrustRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12'\n" +
 	"\tdevice_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\bdeviceId\x12%\n" +
 	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x04R\x06reason\x126\n" +
-	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x92\x03\n" +
-	"\x12SuspendUserRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xda\x02\n" +
+	"\x12SuspendUserRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12\\\n" +
 	"\vreason_code\x18\x03 \x01(\x0e2,.user.administration.v1.UserSuspensionReasonB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\n" +
@@ -2730,9 +2552,8 @@ const file_user_administration_v1_administration_proto_rawDesc = "" +
 	"\rinternal_note\x18\x04 \x01(\tB\b\xfaB\x05r\x03\x18\x80\x04H\x00R\finternalNote\x88\x01\x01\x12C\n" +
 	"\x0fsuspended_until\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x0esuspendedUntil\x126\n" +
 	"\x0fidempotency_key\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKeyB\x10\n" +
-	"\x0e_internal_note\"\xd2\x02\n" +
-	"\x15ReactivateUserRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0e_internal_note\"\x9a\x02\n" +
+	"\x15ReactivateUserRequest\x12#\n" +
 	"\auser_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06userId\x12^\n" +
 	"\vreason_code\x18\x03 \x01(\x0e2..user.administration.v1.UserReactivationReasonB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\n" +
@@ -2761,9 +2582,8 @@ const file_user_administration_v1_administration_proto_rawDesc = "" +
 	"\x0flast_login_from\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\rlastLoginFrom\x12>\n" +
 	"\rlast_login_to\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\vlastLoginToB\x0e\n" +
 	"\f_user_statusB\x14\n" +
-	"\x12_registration_type\"\xfd\x01\n" +
-	"\x12SearchUsersRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12?\n" +
+	"\x12_registration_type\"\xd4\x01\n" +
+	"\x12SearchUsersRequest\x12?\n" +
 	"\x06search\x18\x02 \x01(\v2'.user.administration.v1.UserSearchQueryR\x06search\x12@\n" +
 	"\x06filter\x18\x03 \x01(\v2(.user.administration.v1.UserSearchFilterR\x06filter\x12;\n" +
 	"\x06paging\x18\x04 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xa9\x04\n" +
@@ -2892,111 +2712,92 @@ var file_user_administration_v1_administration_proto_goTypes = []any{
 	(*SearchUsersRequest)(nil),                      // 28: user.administration.v1.SearchUsersRequest
 	(*UserSearchProjection)(nil),                    // 29: user.administration.v1.UserSearchProjection
 	(*SearchUsersResponse)(nil),                     // 30: user.administration.v1.SearchUsersResponse
-	(v1.AppId)(0),                                   // 31: common.v1.AppId
-	(*v11.PagingRequest)(nil),                       // 32: common.pagination.v1.PagingRequest
-	(*User)(nil),                                    // 33: user.administration.v1.User
-	(*timestamppb.Timestamp)(nil),                   // 34: google.protobuf.Timestamp
-	(UserStatus)(0),                                 // 35: user.administration.v1.UserStatus
-	(CredentialType)(0),                             // 36: user.administration.v1.CredentialType
-	(*Profile)(nil),                                 // 37: user.administration.v1.Profile
-	(*emptypb.Empty)(nil),                           // 38: google.protobuf.Empty
+	(*v1.PagingRequest)(nil),                        // 31: common.pagination.v1.PagingRequest
+	(*User)(nil),                                    // 32: user.administration.v1.User
+	(*timestamppb.Timestamp)(nil),                   // 33: google.protobuf.Timestamp
+	(UserStatus)(0),                                 // 34: user.administration.v1.UserStatus
+	(CredentialType)(0),                             // 35: user.administration.v1.CredentialType
+	(*Profile)(nil),                                 // 36: user.administration.v1.Profile
+	(*emptypb.Empty)(nil),                           // 37: google.protobuf.Empty
 }
 var file_user_administration_v1_administration_proto_depIdxs = []int32{
-	31, // 0: user.administration.v1.CreateUserRequest.app_id:type_name -> common.v1.AppId
-	31, // 1: user.administration.v1.GetUserRequest.app_id:type_name -> common.v1.AppId
-	31, // 2: user.administration.v1.ListUsersRequest.app_id:type_name -> common.v1.AppId
-	32, // 3: user.administration.v1.ListUsersRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	33, // 4: user.administration.v1.ListUsersResponse.items:type_name -> user.administration.v1.User
-	31, // 5: user.administration.v1.ChangeUserCodeRequest.app_id:type_name -> common.v1.AppId
-	31, // 6: user.administration.v1.GetUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	1,  // 7: user.administration.v1.UserDeletionParticipant.status:type_name -> user.administration.v1.UserDeletionParticipantStatus
-	34, // 8: user.administration.v1.UserDeletionParticipant.lease_until:type_name -> google.protobuf.Timestamp
-	34, // 9: user.administration.v1.UserDeletionParticipant.completed_at:type_name -> google.protobuf.Timestamp
-	34, // 10: user.administration.v1.UserDeletionParticipant.updated_at:type_name -> google.protobuf.Timestamp
-	13, // 11: user.administration.v1.UserDeletionParticipant.blockers:type_name -> user.administration.v1.UserDeletionParticipantBlocker
-	31, // 12: user.administration.v1.UserDeletion.app_id:type_name -> common.v1.AppId
-	0,  // 13: user.administration.v1.UserDeletion.status:type_name -> user.administration.v1.UserDeletionStatus
-	12, // 14: user.administration.v1.UserDeletion.participants:type_name -> user.administration.v1.UserDeletionParticipant
-	34, // 15: user.administration.v1.UserDeletion.completed_at:type_name -> google.protobuf.Timestamp
-	34, // 16: user.administration.v1.UserDeletion.created_at:type_name -> google.protobuf.Timestamp
-	34, // 17: user.administration.v1.UserDeletion.updated_at:type_name -> google.protobuf.Timestamp
-	34, // 18: user.administration.v1.UserDeletion.irreversible_started_at:type_name -> google.protobuf.Timestamp
-	34, // 19: user.administration.v1.UserDeletion.canceled_at:type_name -> google.protobuf.Timestamp
-	34, // 20: user.administration.v1.UserDeletion.deleted_at:type_name -> google.protobuf.Timestamp
-	31, // 21: user.administration.v1.CancelAdministrativeUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	31, // 22: user.administration.v1.RetryAdministrativeUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	31, // 23: user.administration.v1.ModerateUserProfileRequest.app_id:type_name -> common.v1.AppId
-	2,  // 24: user.administration.v1.ModerateUserProfileRequest.clear_fields:type_name -> user.administration.v1.ProfileModerationField
-	2,  // 25: user.administration.v1.ModerateUserProfileRequest.reset_fields:type_name -> user.administration.v1.ProfileModerationField
-	31, // 26: user.administration.v1.ResetUserCodeRequest.app_id:type_name -> common.v1.AppId
-	31, // 27: user.administration.v1.BeginAdministrativeUserDeletionRequest.app_id:type_name -> common.v1.AppId
-	31, // 28: user.administration.v1.RequirePasswordResetRequest.app_id:type_name -> common.v1.AppId
-	31, // 29: user.administration.v1.RevokeCredentialRequest.app_id:type_name -> common.v1.AppId
-	31, // 30: user.administration.v1.ResetMFARequest.app_id:type_name -> common.v1.AppId
-	31, // 31: user.administration.v1.RevokeDeviceTrustRequest.app_id:type_name -> common.v1.AppId
-	31, // 32: user.administration.v1.SuspendUserRequest.app_id:type_name -> common.v1.AppId
-	3,  // 33: user.administration.v1.SuspendUserRequest.reason_code:type_name -> user.administration.v1.UserSuspensionReason
-	34, // 34: user.administration.v1.SuspendUserRequest.suspended_until:type_name -> google.protobuf.Timestamp
-	31, // 35: user.administration.v1.ReactivateUserRequest.app_id:type_name -> common.v1.AppId
-	4,  // 36: user.administration.v1.ReactivateUserRequest.reason_code:type_name -> user.administration.v1.UserReactivationReason
-	35, // 37: user.administration.v1.UserSearchFilter.user_status:type_name -> user.administration.v1.UserStatus
-	5,  // 38: user.administration.v1.UserSearchFilter.locked:type_name -> user.administration.v1.BooleanFilter
-	5,  // 39: user.administration.v1.UserSearchFilter.suspended:type_name -> user.administration.v1.BooleanFilter
-	5,  // 40: user.administration.v1.UserSearchFilter.mfa_enabled:type_name -> user.administration.v1.BooleanFilter
-	36, // 41: user.administration.v1.UserSearchFilter.registration_type:type_name -> user.administration.v1.CredentialType
-	34, // 42: user.administration.v1.UserSearchFilter.created_from:type_name -> google.protobuf.Timestamp
-	34, // 43: user.administration.v1.UserSearchFilter.created_to:type_name -> google.protobuf.Timestamp
-	34, // 44: user.administration.v1.UserSearchFilter.last_login_from:type_name -> google.protobuf.Timestamp
-	34, // 45: user.administration.v1.UserSearchFilter.last_login_to:type_name -> google.protobuf.Timestamp
-	31, // 46: user.administration.v1.SearchUsersRequest.app_id:type_name -> common.v1.AppId
-	26, // 47: user.administration.v1.SearchUsersRequest.search:type_name -> user.administration.v1.UserSearchQuery
-	27, // 48: user.administration.v1.SearchUsersRequest.filter:type_name -> user.administration.v1.UserSearchFilter
-	32, // 49: user.administration.v1.SearchUsersRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	33, // 50: user.administration.v1.UserSearchProjection.user:type_name -> user.administration.v1.User
-	37, // 51: user.administration.v1.UserSearchProjection.profile:type_name -> user.administration.v1.Profile
-	34, // 52: user.administration.v1.UserSearchProjection.locked_until:type_name -> google.protobuf.Timestamp
-	36, // 53: user.administration.v1.UserSearchProjection.registration_type:type_name -> user.administration.v1.CredentialType
-	34, // 54: user.administration.v1.UserSearchProjection.last_login_at:type_name -> google.protobuf.Timestamp
-	29, // 55: user.administration.v1.SearchUsersResponse.items:type_name -> user.administration.v1.UserSearchProjection
-	28, // 56: user.administration.v1.UserAdministrationService.SearchUsers:input_type -> user.administration.v1.SearchUsersRequest
-	6,  // 57: user.administration.v1.UserAdministrationService.CreateUser:input_type -> user.administration.v1.CreateUserRequest
-	7,  // 58: user.administration.v1.UserAdministrationService.GetUser:input_type -> user.administration.v1.GetUserRequest
-	8,  // 59: user.administration.v1.UserAdministrationService.ListUsers:input_type -> user.administration.v1.ListUsersRequest
-	10, // 60: user.administration.v1.UserAdministrationService.ChangeUserCode:input_type -> user.administration.v1.ChangeUserCodeRequest
-	24, // 61: user.administration.v1.UserAdministrationService.SuspendUser:input_type -> user.administration.v1.SuspendUserRequest
-	25, // 62: user.administration.v1.UserAdministrationService.ReactivateUser:input_type -> user.administration.v1.ReactivateUserRequest
-	17, // 63: user.administration.v1.UserAdministrationService.ModerateUserProfile:input_type -> user.administration.v1.ModerateUserProfileRequest
-	18, // 64: user.administration.v1.UserAdministrationService.ResetUserCode:input_type -> user.administration.v1.ResetUserCodeRequest
-	19, // 65: user.administration.v1.UserAdministrationService.BeginAdministrativeUserDeletion:input_type -> user.administration.v1.BeginAdministrativeUserDeletionRequest
-	11, // 66: user.administration.v1.UserAdministrationService.GetUserDeletion:input_type -> user.administration.v1.GetUserDeletionRequest
-	15, // 67: user.administration.v1.UserAdministrationService.CancelAdministrativeUserDeletion:input_type -> user.administration.v1.CancelAdministrativeUserDeletionRequest
-	16, // 68: user.administration.v1.UserAdministrationService.RetryAdministrativeUserDeletion:input_type -> user.administration.v1.RetryAdministrativeUserDeletionRequest
-	20, // 69: user.administration.v1.UserAdministrationService.RequirePasswordReset:input_type -> user.administration.v1.RequirePasswordResetRequest
-	21, // 70: user.administration.v1.UserAdministrationService.RevokeCredential:input_type -> user.administration.v1.RevokeCredentialRequest
-	22, // 71: user.administration.v1.UserAdministrationService.ResetMFA:input_type -> user.administration.v1.ResetMFARequest
-	23, // 72: user.administration.v1.UserAdministrationService.RevokeDeviceTrust:input_type -> user.administration.v1.RevokeDeviceTrustRequest
-	30, // 73: user.administration.v1.UserAdministrationService.SearchUsers:output_type -> user.administration.v1.SearchUsersResponse
-	33, // 74: user.administration.v1.UserAdministrationService.CreateUser:output_type -> user.administration.v1.User
-	33, // 75: user.administration.v1.UserAdministrationService.GetUser:output_type -> user.administration.v1.User
-	9,  // 76: user.administration.v1.UserAdministrationService.ListUsers:output_type -> user.administration.v1.ListUsersResponse
-	33, // 77: user.administration.v1.UserAdministrationService.ChangeUserCode:output_type -> user.administration.v1.User
-	33, // 78: user.administration.v1.UserAdministrationService.SuspendUser:output_type -> user.administration.v1.User
-	33, // 79: user.administration.v1.UserAdministrationService.ReactivateUser:output_type -> user.administration.v1.User
-	37, // 80: user.administration.v1.UserAdministrationService.ModerateUserProfile:output_type -> user.administration.v1.Profile
-	33, // 81: user.administration.v1.UserAdministrationService.ResetUserCode:output_type -> user.administration.v1.User
-	33, // 82: user.administration.v1.UserAdministrationService.BeginAdministrativeUserDeletion:output_type -> user.administration.v1.User
-	14, // 83: user.administration.v1.UserAdministrationService.GetUserDeletion:output_type -> user.administration.v1.UserDeletion
-	14, // 84: user.administration.v1.UserAdministrationService.CancelAdministrativeUserDeletion:output_type -> user.administration.v1.UserDeletion
-	14, // 85: user.administration.v1.UserAdministrationService.RetryAdministrativeUserDeletion:output_type -> user.administration.v1.UserDeletion
-	38, // 86: user.administration.v1.UserAdministrationService.RequirePasswordReset:output_type -> google.protobuf.Empty
-	38, // 87: user.administration.v1.UserAdministrationService.RevokeCredential:output_type -> google.protobuf.Empty
-	38, // 88: user.administration.v1.UserAdministrationService.ResetMFA:output_type -> google.protobuf.Empty
-	38, // 89: user.administration.v1.UserAdministrationService.RevokeDeviceTrust:output_type -> google.protobuf.Empty
-	73, // [73:90] is the sub-list for method output_type
-	56, // [56:73] is the sub-list for method input_type
-	56, // [56:56] is the sub-list for extension type_name
-	56, // [56:56] is the sub-list for extension extendee
-	0,  // [0:56] is the sub-list for field type_name
+	31, // 0: user.administration.v1.ListUsersRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	32, // 1: user.administration.v1.ListUsersResponse.items:type_name -> user.administration.v1.User
+	1,  // 2: user.administration.v1.UserDeletionParticipant.status:type_name -> user.administration.v1.UserDeletionParticipantStatus
+	33, // 3: user.administration.v1.UserDeletionParticipant.lease_until:type_name -> google.protobuf.Timestamp
+	33, // 4: user.administration.v1.UserDeletionParticipant.completed_at:type_name -> google.protobuf.Timestamp
+	33, // 5: user.administration.v1.UserDeletionParticipant.updated_at:type_name -> google.protobuf.Timestamp
+	13, // 6: user.administration.v1.UserDeletionParticipant.blockers:type_name -> user.administration.v1.UserDeletionParticipantBlocker
+	0,  // 7: user.administration.v1.UserDeletion.status:type_name -> user.administration.v1.UserDeletionStatus
+	12, // 8: user.administration.v1.UserDeletion.participants:type_name -> user.administration.v1.UserDeletionParticipant
+	33, // 9: user.administration.v1.UserDeletion.completed_at:type_name -> google.protobuf.Timestamp
+	33, // 10: user.administration.v1.UserDeletion.created_at:type_name -> google.protobuf.Timestamp
+	33, // 11: user.administration.v1.UserDeletion.updated_at:type_name -> google.protobuf.Timestamp
+	33, // 12: user.administration.v1.UserDeletion.irreversible_started_at:type_name -> google.protobuf.Timestamp
+	33, // 13: user.administration.v1.UserDeletion.canceled_at:type_name -> google.protobuf.Timestamp
+	33, // 14: user.administration.v1.UserDeletion.deleted_at:type_name -> google.protobuf.Timestamp
+	2,  // 15: user.administration.v1.ModerateUserProfileRequest.clear_fields:type_name -> user.administration.v1.ProfileModerationField
+	2,  // 16: user.administration.v1.ModerateUserProfileRequest.reset_fields:type_name -> user.administration.v1.ProfileModerationField
+	3,  // 17: user.administration.v1.SuspendUserRequest.reason_code:type_name -> user.administration.v1.UserSuspensionReason
+	33, // 18: user.administration.v1.SuspendUserRequest.suspended_until:type_name -> google.protobuf.Timestamp
+	4,  // 19: user.administration.v1.ReactivateUserRequest.reason_code:type_name -> user.administration.v1.UserReactivationReason
+	34, // 20: user.administration.v1.UserSearchFilter.user_status:type_name -> user.administration.v1.UserStatus
+	5,  // 21: user.administration.v1.UserSearchFilter.locked:type_name -> user.administration.v1.BooleanFilter
+	5,  // 22: user.administration.v1.UserSearchFilter.suspended:type_name -> user.administration.v1.BooleanFilter
+	5,  // 23: user.administration.v1.UserSearchFilter.mfa_enabled:type_name -> user.administration.v1.BooleanFilter
+	35, // 24: user.administration.v1.UserSearchFilter.registration_type:type_name -> user.administration.v1.CredentialType
+	33, // 25: user.administration.v1.UserSearchFilter.created_from:type_name -> google.protobuf.Timestamp
+	33, // 26: user.administration.v1.UserSearchFilter.created_to:type_name -> google.protobuf.Timestamp
+	33, // 27: user.administration.v1.UserSearchFilter.last_login_from:type_name -> google.protobuf.Timestamp
+	33, // 28: user.administration.v1.UserSearchFilter.last_login_to:type_name -> google.protobuf.Timestamp
+	26, // 29: user.administration.v1.SearchUsersRequest.search:type_name -> user.administration.v1.UserSearchQuery
+	27, // 30: user.administration.v1.SearchUsersRequest.filter:type_name -> user.administration.v1.UserSearchFilter
+	31, // 31: user.administration.v1.SearchUsersRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	32, // 32: user.administration.v1.UserSearchProjection.user:type_name -> user.administration.v1.User
+	36, // 33: user.administration.v1.UserSearchProjection.profile:type_name -> user.administration.v1.Profile
+	33, // 34: user.administration.v1.UserSearchProjection.locked_until:type_name -> google.protobuf.Timestamp
+	35, // 35: user.administration.v1.UserSearchProjection.registration_type:type_name -> user.administration.v1.CredentialType
+	33, // 36: user.administration.v1.UserSearchProjection.last_login_at:type_name -> google.protobuf.Timestamp
+	29, // 37: user.administration.v1.SearchUsersResponse.items:type_name -> user.administration.v1.UserSearchProjection
+	28, // 38: user.administration.v1.UserAdministrationService.SearchUsers:input_type -> user.administration.v1.SearchUsersRequest
+	6,  // 39: user.administration.v1.UserAdministrationService.CreateUser:input_type -> user.administration.v1.CreateUserRequest
+	7,  // 40: user.administration.v1.UserAdministrationService.GetUser:input_type -> user.administration.v1.GetUserRequest
+	8,  // 41: user.administration.v1.UserAdministrationService.ListUsers:input_type -> user.administration.v1.ListUsersRequest
+	10, // 42: user.administration.v1.UserAdministrationService.ChangeUserCode:input_type -> user.administration.v1.ChangeUserCodeRequest
+	24, // 43: user.administration.v1.UserAdministrationService.SuspendUser:input_type -> user.administration.v1.SuspendUserRequest
+	25, // 44: user.administration.v1.UserAdministrationService.ReactivateUser:input_type -> user.administration.v1.ReactivateUserRequest
+	17, // 45: user.administration.v1.UserAdministrationService.ModerateUserProfile:input_type -> user.administration.v1.ModerateUserProfileRequest
+	18, // 46: user.administration.v1.UserAdministrationService.ResetUserCode:input_type -> user.administration.v1.ResetUserCodeRequest
+	19, // 47: user.administration.v1.UserAdministrationService.BeginAdministrativeUserDeletion:input_type -> user.administration.v1.BeginAdministrativeUserDeletionRequest
+	11, // 48: user.administration.v1.UserAdministrationService.GetUserDeletion:input_type -> user.administration.v1.GetUserDeletionRequest
+	15, // 49: user.administration.v1.UserAdministrationService.CancelAdministrativeUserDeletion:input_type -> user.administration.v1.CancelAdministrativeUserDeletionRequest
+	16, // 50: user.administration.v1.UserAdministrationService.RetryAdministrativeUserDeletion:input_type -> user.administration.v1.RetryAdministrativeUserDeletionRequest
+	20, // 51: user.administration.v1.UserAdministrationService.RequirePasswordReset:input_type -> user.administration.v1.RequirePasswordResetRequest
+	21, // 52: user.administration.v1.UserAdministrationService.RevokeCredential:input_type -> user.administration.v1.RevokeCredentialRequest
+	22, // 53: user.administration.v1.UserAdministrationService.ResetMFA:input_type -> user.administration.v1.ResetMFARequest
+	23, // 54: user.administration.v1.UserAdministrationService.RevokeDeviceTrust:input_type -> user.administration.v1.RevokeDeviceTrustRequest
+	30, // 55: user.administration.v1.UserAdministrationService.SearchUsers:output_type -> user.administration.v1.SearchUsersResponse
+	32, // 56: user.administration.v1.UserAdministrationService.CreateUser:output_type -> user.administration.v1.User
+	32, // 57: user.administration.v1.UserAdministrationService.GetUser:output_type -> user.administration.v1.User
+	9,  // 58: user.administration.v1.UserAdministrationService.ListUsers:output_type -> user.administration.v1.ListUsersResponse
+	32, // 59: user.administration.v1.UserAdministrationService.ChangeUserCode:output_type -> user.administration.v1.User
+	32, // 60: user.administration.v1.UserAdministrationService.SuspendUser:output_type -> user.administration.v1.User
+	32, // 61: user.administration.v1.UserAdministrationService.ReactivateUser:output_type -> user.administration.v1.User
+	36, // 62: user.administration.v1.UserAdministrationService.ModerateUserProfile:output_type -> user.administration.v1.Profile
+	32, // 63: user.administration.v1.UserAdministrationService.ResetUserCode:output_type -> user.administration.v1.User
+	32, // 64: user.administration.v1.UserAdministrationService.BeginAdministrativeUserDeletion:output_type -> user.administration.v1.User
+	14, // 65: user.administration.v1.UserAdministrationService.GetUserDeletion:output_type -> user.administration.v1.UserDeletion
+	14, // 66: user.administration.v1.UserAdministrationService.CancelAdministrativeUserDeletion:output_type -> user.administration.v1.UserDeletion
+	14, // 67: user.administration.v1.UserAdministrationService.RetryAdministrativeUserDeletion:output_type -> user.administration.v1.UserDeletion
+	37, // 68: user.administration.v1.UserAdministrationService.RequirePasswordReset:output_type -> google.protobuf.Empty
+	37, // 69: user.administration.v1.UserAdministrationService.RevokeCredential:output_type -> google.protobuf.Empty
+	37, // 70: user.administration.v1.UserAdministrationService.ResetMFA:output_type -> google.protobuf.Empty
+	37, // 71: user.administration.v1.UserAdministrationService.RevokeDeviceTrust:output_type -> google.protobuf.Empty
+	55, // [55:72] is the sub-list for method output_type
+	38, // [38:55] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_user_administration_v1_administration_proto_init() }

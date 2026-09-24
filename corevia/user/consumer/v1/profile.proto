@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package user.consumer.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/field_mask.proto";
 import "validate/validate.proto";
@@ -22,8 +21,6 @@ service ConsumerProfileService {
 
 // ChangeUserCodeRequest 定义执行 ChangeUserCode 的幂等管理命令参数。
 message ChangeUserCodeRequest {
-  // app_id 限定 ChangeUserCode 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // user_code 提供 ChangeUserCode 对外稳定使用的业务编码。
   string user_code = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 3, max_len: 20}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -42,8 +39,6 @@ message ChangeUserCodeResponse {
 
 // GetCurrentUserRequest 标识待查询的 CurrentUser。
 message GetCurrentUserRequest {
-  // app_id 限定 GetCurrentUser 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
 }
 
 // CurrentUser 承载 GetCurrentUser 调用的返回结果。
@@ -74,8 +69,6 @@ message ProfilePatch {
 
 // UpdateProfileRequest 定义更新 Profile 的命令参数。
 message UpdateProfileRequest {
-  // app_id 限定 UpdateProfile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // data 承载 UpdateProfile 对应阶段的结构化业务内容。
   ProfilePatch data = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).message.required = true];
   // update_mask 指定本次请求允许局部更新的字段路径。
@@ -86,12 +79,10 @@ message UpdateProfileRequest {
 
 // GetPublicProfileRequest 标识待查询的 PublicProfile。
 message GetPublicProfileRequest {
-  // app_id 限定 GetPublicProfile 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // GetPublicProfileRequest 使用以下一种查询表达式。
   oneof query {
     option (validate.required) = true;
-    // user_id 标识当前 App 内关联的 User。
+    // user_id 标识关联的 User。
     uint64 user_id = 2 [(validate.rules).uint64.gt = 0];
     // user_code 提供 GetPublicProfile 对外稳定使用的业务编码。
     string user_code = 3 [(validate.rules).string = {min_len: 1, max_len: 20}];

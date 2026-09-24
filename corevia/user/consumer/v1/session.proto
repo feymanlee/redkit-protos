@@ -2,23 +2,22 @@ syntax = "proto3";
 
 package user.consumer.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/empty.proto";
 import "validate/validate.proto";
 import "user/types/v1/types.proto";
 
-// C 端会话服务，管理当前 App 内已认证用户的会话、设备和设备恢复公钥。
+// C 端会话服务，管理已认证用户的会话、设备和设备恢复公钥。
 service ConsumerSessionService {
-  // 分页查询当前用户在当前 App 内的 Session 列表。
+  // 分页查询当前用户的 Session 列表。
   rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
   // 按 session_id 幂等撤销当前用户的一条 Session。
   rpc RevokeSession(RevokeSessionRequest) returns (google.protobuf.Empty);
   // 使用 step_up_token 撤销当前会话之外的全部 Session，并返回当前会话的新 TokenPair。
   rpc RevokeOtherSessions(RevokeOtherSessionsRequest) returns (user.types.v1.TokenPair);
-  // 使用 step_up_token 幂等撤销当前用户在当前 App 内的全部 Session，包括当前会话。
+  // 使用 step_up_token 幂等撤销当前用户的全部 Session，包括当前会话。
   rpc RevokeAllSessions(RevokeAllSessionsRequest) returns (google.protobuf.Empty);
-  // 分页查询当前用户在当前 App 内登记的 Device 列表。
+  // 分页查询当前用户登记的 Device 列表。
   rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse);
   // 使用 step_up_token 幂等撤销指定 Device 及其会话，并说明当前会话是否同时失效。
   rpc RevokeDevice(RevokeDeviceRequest) returns (RevokeDeviceResponse);
@@ -30,8 +29,6 @@ service ConsumerSessionService {
 
 // ListSessionsRequest 定义 Sessions 的筛选与分页参数。
 message ListSessionsRequest {
-  // app_id 限定 ListSessions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // page 返回继续分页所需的游标和结果规模信息。
   user.types.v1.CursorPageRequest page = 2;
 }
@@ -46,8 +43,6 @@ message ListSessionsResponse {
 
 // RevokeSessionRequest 定义撤销 Session 的幂等管理命令参数。
 message RevokeSessionRequest {
-  // app_id 限定 RevokeSession 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // session_id 标识关联的 Session。
   string session_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -56,8 +51,6 @@ message RevokeSessionRequest {
 
 // RevokeOtherSessionsRequest 定义撤销 OtherSessions 的幂等管理命令参数。
 message RevokeOtherSessionsRequest {
-  // app_id 限定 RevokeOtherSessions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
   string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -66,8 +59,6 @@ message RevokeOtherSessionsRequest {
 
 // RevokeAllSessionsRequest 定义撤销 AllSessions 的幂等管理命令参数。
 message RevokeAllSessionsRequest {
-  // app_id 限定 RevokeAllSessions 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
   string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -76,8 +67,6 @@ message RevokeAllSessionsRequest {
 
 // ListDevicesRequest 定义 Devices 的筛选与分页参数。
 message ListDevicesRequest {
-  // app_id 限定 ListDevices 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // page 返回继续分页所需的游标和结果规模信息。
   user.types.v1.CursorPageRequest page = 2;
 }
@@ -92,8 +81,6 @@ message ListDevicesResponse {
 
 // RevokeDeviceRequest 定义撤销 Device 的幂等管理命令参数。
 message RevokeDeviceRequest {
-  // app_id 限定 RevokeDevice 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // device_id 标识关联的 Device。
   uint64 device_id = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -112,8 +99,6 @@ message RevokeDeviceResponse {
 
 // RegisterCurrentDeviceRecoveryKeyRequest 定义执行 RegisterCurrentDeviceRecoveryKey 的幂等管理命令参数。
 message RegisterCurrentDeviceRecoveryKeyRequest {
-  // app_id 限定 RegisterCurrentDeviceRecoveryKey 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // public_key 在约定作用域内稳定定位 RegisterCurrentDeviceRecoveryKey。
   bytes public_key = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).bytes = {min_len: 32, max_len: 32}];
   // proof_signature 承载敏感凭据或校验材料，不得写入普通日志。
@@ -126,8 +111,6 @@ message RegisterCurrentDeviceRecoveryKeyRequest {
 
 // RemoveCurrentDeviceRecoveryKeyRequest 定义删除 CurrentDeviceRecoveryKey 的命令参数。
 message RemoveCurrentDeviceRecoveryKeyRequest {
-  // app_id 限定 RemoveCurrentDeviceRecoveryKey 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
   string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。

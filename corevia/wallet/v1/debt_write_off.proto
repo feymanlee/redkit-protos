@@ -26,9 +26,7 @@ message WalletDebtWriteOff {
 
   // id 标识关联的 WalletDebtWriteOff。
   optional uint64 id = 1;
-  // app_id 限定 WalletDebtWriteOff 所属 App；UNSPECIFIED 不表示跨 App。
-  optional uint32 app_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3;
   // debt_id 标识关联的 Debt。
   optional uint64 debt_id = 4;
@@ -62,8 +60,6 @@ message WalletDebtWriteOff {
 
 // CreateWalletDebtWriteOffRequest 定义创建 WalletDebtWriteOff 的幂等命令参数。
 message CreateWalletDebtWriteOffRequest {
-  // app_id 限定 CreateWalletDebtWriteOff 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED];
   // debt_id 标识关联的 Debt。
   uint64 debt_id = 2 [(google.api.field_behavior) = REQUIRED];
   // amount 以对应 WalletCurrency 的最小计量单位表示，不使用浮点数。
@@ -86,8 +82,6 @@ message ReviewWalletDebtWriteOffRequest {
   uint32 reviewer_id = 2 [(google.api.field_behavior) = REQUIRED];
   // review_note 记录人工判断的补充说明，供审计与复核。
   optional string review_note = 3;
-  // app_id 限定 ReviewWalletDebtWriteOff 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 4;
   // governance 承载 ReviewWalletDebtWriteOff 关联的 WalletGovernanceIdentity。
   optional WalletGovernanceIdentity governance = 5;
 }
@@ -98,7 +92,7 @@ message WalletDebtWriteOffFilter {
   optional WalletDebtWriteOff.Status status = 1;
   // requester_id 标识关联的 Requester。
   optional uint32 requester_id = 2;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 3;
   // debt_id 标识关联的 Debt。
   optional uint64 debt_id = 4;
@@ -108,8 +102,6 @@ message WalletDebtWriteOffFilter {
 
 // ListWalletDebtWriteOffsRequest 定义 WalletDebtWriteOffs 的筛选与分页参数。
 message ListWalletDebtWriteOffsRequest {
-  // app_id 限定 ListWalletDebtWriteOffs 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 2;
   // filter 限定本次查询采用的筛选条件。

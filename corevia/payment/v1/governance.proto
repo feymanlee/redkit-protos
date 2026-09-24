@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package payment.v1;
 
-import "common/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 
 // 诊断资源类型。Raw 数据只能按一个具体资源读取。
@@ -49,8 +48,6 @@ message RawDiagnosticData {
 message PaymentGovernanceEvent {
   // id 标识关联的 PaymentGovernanceEvent。
   uint64 id = 1;
-  // app_id 限定 PaymentGovernanceEvent 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 2;
   // operator_id 标识关联的后台 Operator。
   uint32 operator_id = 3;
   // action 指定本次状态推进采用的业务动作。
@@ -87,8 +84,6 @@ message ListPaymentGovernanceEventResponse {
 
 // GetRawDiagnosticDataRequest 标识待查询的 RawDiagnosticData。
 message GetRawDiagnosticDataRequest {
-  // app_id 限定 GetRawDiagnosticData 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // resource_type 区分 GetRawDiagnosticData 的业务类型。
   DiagnosticResourceType resource_type = 2;
   // resource_id 标识关联的 Resource。
@@ -103,8 +98,6 @@ message GetRawDiagnosticDataRequest {
 
 // EraseDiagnosticDataRequest 定义执行 EraseDiagnosticData 的幂等管理命令参数。
 message EraseDiagnosticDataRequest {
-  // app_id 限定 EraseDiagnosticData 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // resource_type 区分 EraseDiagnosticData 的业务类型。
   DiagnosticResourceType resource_type = 2;
   // resource_id 标识关联的 Resource。

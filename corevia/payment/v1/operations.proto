@@ -142,8 +142,6 @@ message PaymentOperationsSummary {
 
 // GetPaymentOperationsSummaryRequest 标识待查询的 PaymentOperationsSummary。
 message GetPaymentOperationsSummaryRequest {
-  // app_id 限定 GetPaymentOperationsSummary 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // window_from 指定 GetPaymentOperationsSummary 查询或生效区间的起始边界。
   optional google.protobuf.Timestamp window_from = 2;
   // window_to 指定 GetPaymentOperationsSummary 查询或生效区间的结束边界。
@@ -170,8 +168,6 @@ message ListPaymentWorkQueueRequest {
   common.pagination.v1.PagingRequest paging = 1;
   // filter 限定本次查询采用的筛选条件。
   WorkQueueFilter filter = 2;
-  // app_id 限定 ListPaymentWorkQueue 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 3;
 }
 
 // WorkQueueResourceLink 提供 Work Queue 条目关联资源的稳定定位信息。
@@ -230,8 +226,6 @@ message ListPaymentWorkQueueResponse {
 
 // MutatePaymentWorkQueueItemRequest 定义变更 PaymentWorkQueueItem 的幂等管理命令参数。
 message MutatePaymentWorkQueueItemRequest {
-  // app_id 限定 MutatePaymentWorkQueueItem 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // source_type 区分 MutatePaymentWorkQueueItem 的业务类型。
   WorkQueueSourceType source_type = 2;
   // resource_id 标识关联的 Resource。

@@ -173,7 +173,7 @@ message WalletOperationsOverview {
 
 // GetWalletUserWorkbenchRequest 标识待查询的 WalletUserWorkbench。
 message GetWalletUserWorkbenchRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
 }
 
@@ -209,7 +209,7 @@ message WalletRechargeOrderDetail {
 
 // ListWalletUserFactsRequest 定义 WalletUserFacts 的筛选与分页参数。
 message ListWalletUserFactsRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // paging 指定分页大小和游标等查询参数。
   .common.pagination.v1.PagingRequest paging = 2;
@@ -315,7 +315,7 @@ enum WalletUserGiftRelation {
 
 // ListWalletUserGiftFactsRequest 定义 WalletUserGiftFacts 的筛选与分页参数。
 message ListWalletUserGiftFactsRequest {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).uint64.gt = 0];
   // paging 指定分页大小和游标等查询参数。
   .common.pagination.v1.PagingRequest paging = 2;

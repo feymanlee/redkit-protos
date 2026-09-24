@@ -10,7 +10,7 @@ import "support/verification/v1/verification.proto";
 
 // SupportConfigurationService exposes Support Configuration Draft governance.
 service SupportConfigurationService {
-  // GetConfigurationReadiness returns readiness for the authenticated App.
+  // GetConfigurationReadiness returns readiness for the platform.
   rpc GetConfigurationReadiness(AdminGetConfigurationReadinessRequest) returns (.support.configuration.v1.ConfigurationReadiness) {
     option (google.api.http) = {get: "/admin/v1/support/configuration/readiness"};
   }
@@ -60,10 +60,10 @@ service SupportConfigurationService {
   }
 }
 
-// AdminGetConfigurationReadinessRequest selects the authenticated App's readiness view.
+// AdminGetConfigurationReadinessRequest selects the readiness view.
 message AdminGetConfigurationReadinessRequest {}
 
-// AdminCreateConfigurationDraftRequest creates an editable Draft for the authenticated App.
+// AdminCreateConfigurationDraftRequest creates an editable Draft.
 message AdminCreateConfigurationDraftRequest {
   // default_locale 指定内容展示或消息投递采用的语言区域。
   string default_locale = 1;
@@ -207,7 +207,7 @@ message AdminExecuteDeliveryProbeRequest {
   optional string request_id = 8;
 }
 
-// AdminListConfigurationReleasesRequest selects the authenticated App's Release history.
+// AdminListConfigurationReleasesRequest selects the Release history.
 message AdminListConfigurationReleasesRequest {}
 
 // AdminActivateConfigurationDraftRequest publishes one fully validated Draft.

@@ -2,13 +2,12 @@ syntax = "proto3";
 
 package user.consumer.v1;
 
-import "common/v1/common.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 import "user/consumer/v1/authentication.proto";
 
-// C 端用户注销服务，负责当前 App 内需要 step-up 证明的带冷静期注销流程。
+// C 端用户注销服务，负责需要 step-up 证明的带冷静期注销流程。
 service ConsumerUserDeletionService {
   // 使用 step_up_token 幂等发起带冷静期的 UserDeletion。
   rpc BeginUserDeletion(BeginUserDeletionRequest) returns (UserDeletionAccess);
@@ -124,8 +123,6 @@ message UserDeletion {
 
 // BeginUserDeletionRequest 定义开始 UserDeletion 的幂等管理命令参数。
 message BeginUserDeletionRequest {
-  // app_id 限定 BeginUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
   string step_up_token = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 32, max_len: 512}];
   // idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -144,8 +141,6 @@ message UserDeletionAccess {
 
 // GetUserDeletionRequest 标识待查询的 UserDeletion。
 message GetUserDeletionRequest {
-  // app_id 限定 GetUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // deletion_no 是 GetUserDeletion 对外关联与审计使用的业务编号。
   string deletion_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
   // deletion_access_token 承载敏感凭据或校验材料，不得写入普通日志。
@@ -154,8 +149,6 @@ message GetUserDeletionRequest {
 
 // CancelUserDeletionRequest 定义取消 UserDeletion 的幂等管理命令参数。
 message CancelUserDeletionRequest {
-  // app_id 限定 CancelUserDeletion 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1 [(google.api.field_behavior) = REQUIRED, (validate.rules).enum = {defined_only: true, not_in: [0]}];
   // deletion_no 是 CancelUserDeletion 对外关联与审计使用的业务编号。
   string deletion_no = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 128}];
   // deletion_access_token 承载敏感凭据或校验材料，不得写入普通日志。

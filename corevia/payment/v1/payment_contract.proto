@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package payment.v1;
 
-import "common/v1/common.proto";
 import "gnostic/openapi/v3/annotations.proto";
 import "google/protobuf/timestamp.proto";
 import "payment/v1/payment_types.proto";
@@ -49,8 +48,6 @@ message Payment {
 
   // 支付单 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 用户 ID。
   optional uint64 user_id = 3;
   // 支付单号。
@@ -118,8 +115,6 @@ message Payment {
 message PaymentEvent {
   // 事件 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 支付单号。
   optional string payment_no = 3;
   // 事件类型。
@@ -176,13 +171,11 @@ message PaymentOutboxEvent {
 
 // 充值履约事件身份由原始事件与 Payment 权威事实共同组成。
 message RechargeFulfillmentIdentity {
-  // app_id 限定 RechargeFulfillmentIdentity 所属 App；UNSPECIFIED 不表示跨 App。
-  uint32 app_id = 1;
   // order_no 是 RechargeFulfillmentIdentity 对外关联与审计使用的业务编号。
   string order_no = 2;
   // payment_no 是 RechargeFulfillmentIdentity 对外关联与审计使用的业务编号。
   string payment_no = 3;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   uint64 user_id = 4;
   // amount 以对应 currency 的最小货币单位表示，不使用浮点数。
   int64 amount = 5;
@@ -313,8 +306,6 @@ message ReplayDeliveryFailureRequest {
   uint32 operator_id = 2;
   // reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
   string reason = 3;
-  // app_id 限定 ReplayDeliveryFailure 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 4;
   // request_id 用于关联同一次请求或异步处理链路。
   optional string request_id = 5;
   // operation_no 为审计与幂等重放稳定标识本次管理操作。
@@ -322,7 +313,7 @@ message ReplayDeliveryFailureRequest {
 }
 // 支付单创建字段，不携带资源身份或服务端状态。
 message PaymentPatch {
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 1;
   // payment_no 是 PaymentPatch 对外关联与审计使用的业务编号。
   optional string payment_no = 2;
@@ -364,16 +355,12 @@ message PaymentPatch {
 message CreatePaymentRequest {
   // 数据。
   PaymentPatch data = 1;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 2;
 }
 
 // 查询支付单请求。
 message GetPaymentRequest {
   // 支付单号。
   string payment_no = 1;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 2;
 }
 
 // 关闭支付单请求。
@@ -382,8 +369,6 @@ message ClosePaymentRequest {
   string payment_no = 1;
   // 标准关闭原因码。
   PaymentClosureReasonCode reason_code = 2;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 3;
   // 可信管理网关注入的操作人。
   uint32 operator_id = 4;
   // 跨服务请求 ID。
@@ -416,8 +401,6 @@ enum PaymentClosureReasonCode {
 message SimulatePaymentSuccessRequest {
   // 支付单号。
   string payment_no = 1;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 2;
 }
 
 // 支付列表响应。
@@ -452,8 +435,6 @@ message ReplayPaymentOutboxEventRequest {
   uint32 operator_id = 2;
   // 重放原因。
   string reason = 3;
-  // 应用 ID；省略时使用可信 metadata，显式提供时必须与 metadata 一致。
-  optional common.v1.AppId app_id = 4;
   // 跨服务请求 ID。
   string request_id = 5;
   // 幂等治理操作号。

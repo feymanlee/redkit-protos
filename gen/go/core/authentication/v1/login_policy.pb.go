@@ -160,10 +160,6 @@ type LoginPolicy struct {
 	Value *string `protobuf:"bytes,5,opt,name=value,proto3,oneof" json:"value,omitempty"` // 限制值（如IP地址、MAC地址或地区代码）
 	// 限制原因。
 	Reason *string `protobuf:"bytes,6,opt,name=reason,proto3,oneof" json:"reason,omitempty"` // 限制原因
-	// AppID，0代表系统全局角色。
-	AppId *uint32 `protobuf:"varint,40,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID，0代表系统全局角色
-	// App名称。
-	AppName *string `protobuf:"bytes,41,opt,name=app_name,json=appName,proto3,oneof" json:"app_name,omitempty"` // App名称
 	// 创建者用户ID。
 	CreatedBy *uint32 `protobuf:"varint,100,opt,name=created_by,json=createdBy,proto3,oneof" json:"created_by,omitempty"` // 创建者用户ID
 	// 更新者用户ID。
@@ -248,20 +244,6 @@ func (x *LoginPolicy) GetValue() string {
 func (x *LoginPolicy) GetReason() string {
 	if x != nil && x.Reason != nil {
 		return *x.Reason
-	}
-	return ""
-}
-
-func (x *LoginPolicy) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *LoginPolicy) GetAppName() string {
-	if x != nil && x.AppName != nil {
-		return *x.AppName
 	}
 	return ""
 }
@@ -672,30 +654,27 @@ var File_core_authentication_v1_login_policy_proto protoreflect.FileDescriptor
 
 const file_core_authentication_v1_login_policy_proto_rawDesc = "" +
 	"\n" +
-	")core/authentication/v1/login_policy.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\"\xc1\n" +
-	"\n" +
+	")core/authentication/v1/login_policy.proto\x12\x16core.authentication.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a%common/pagination/v1/pagination.proto\"\xb3\t\n" +
 	"\vLoginPolicy\x12,\n" +
 	"\x02id\x18\x01 \x01(\rB\x17\xe0A\x01\xbaG\x11\x92\x02\x0e登录策略IDH\x00R\x02id\x88\x01\x01\x126\n" +
 	"\ttarget_id\x18\x02 \x01(\rB\x14\xbaG\x11\x92\x02\x0e目标用户IDH\x01R\btargetId\x88\x01\x01\x12U\n" +
 	"\x04type\x18\x03 \x01(\x0e2(.core.authentication.v1.LoginPolicy.TypeB\x12\xbaG\x0f\x92\x02\f限制类型H\x02R\x04type\x88\x01\x01\x12[\n" +
 	"\x06method\x18\x04 \x01(\x0e2*.core.authentication.v1.LoginPolicy.MethodB\x12\xbaG\x0f\x92\x02\f限制方式H\x03R\x06method\x88\x01\x01\x12V\n" +
 	"\x05value\x18\x05 \x01(\tB;\xbaG8\x92\x025限制值（如IP地址、MAC地址或地区代码）H\x04R\x05value\x88\x01\x01\x12/\n" +
-	"\x06reason\x18\x06 \x01(\tB\x12\xbaG\x0f\x92\x02\f限制原因H\x05R\x06reason\x88\x01\x01\x12C\n" +
-	"\x06app_id\x18( \x01(\rB'\xbaG$\x92\x02!AppID，0代表系统全局角色H\x06R\x05appId\x88\x01\x01\x12/\n" +
-	"\bapp_name\x18) \x01(\tB\x0f\xbaG\f\x92\x02\tApp名称H\aR\aappName\x88\x01\x01\x12;\n" +
+	"\x06reason\x18\x06 \x01(\tB\x12\xbaG\x0f\x92\x02\f限制原因H\x05R\x06reason\x88\x01\x01\x12;\n" +
 	"\n" +
-	"created_by\x18d \x01(\rB\x17\xbaG\x14\x92\x02\x11创建者用户IDH\bR\tcreatedBy\x88\x01\x01\x12;\n" +
+	"created_by\x18d \x01(\rB\x17\xbaG\x14\x92\x02\x11创建者用户IDH\x06R\tcreatedBy\x88\x01\x01\x12;\n" +
 	"\n" +
-	"updated_by\x18e \x01(\rB\x17\xbaG\x14\x92\x02\x11更新者用户IDH\tR\tupdatedBy\x88\x01\x01\x12;\n" +
+	"updated_by\x18e \x01(\rB\x17\xbaG\x14\x92\x02\x11更新者用户IDH\aR\tupdatedBy\x88\x01\x01\x12;\n" +
 	"\n" +
-	"deleted_by\x18f \x01(\rB\x17\xbaG\x14\x92\x02\x11删除者用户IDH\n" +
-	"R\tdeletedBy\x88\x01\x01\x12S\n" +
+	"deleted_by\x18f \x01(\rB\x17\xbaG\x14\x92\x02\x11删除者用户IDH\bR\tdeletedBy\x88\x01\x01\x12S\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\vR\tcreatedAt\x88\x01\x01\x12S\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\tR\tcreatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\fR\tupdatedAt\x88\x01\x01\x12S\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\n" +
+	"R\tupdatedAt\x88\x01\x01\x12S\n" +
 	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\rR\tdeletedAt\x88\x01\x01\"L\n" +
+	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\vR\tdeletedAt\x88\x01\x01\"L\n" +
 	"\x04Type\x12&\n" +
 	"\"LOGIN_RESTRICTION_TYPE_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tBLACKLIST\x10\x01\x12\r\n" +
@@ -715,9 +694,7 @@ const file_core_authentication_v1_login_policy_proto_rawDesc = "" +
 	"\x05_typeB\t\n" +
 	"\a_methodB\b\n" +
 	"\x06_valueB\t\n" +
-	"\a_reasonB\t\n" +
-	"\a_app_idB\v\n" +
-	"\t_app_nameB\r\n" +
+	"\a_reasonB\r\n" +
 	"\v_created_byB\r\n" +
 	"\v_updated_byB\r\n" +
 	"\v_deleted_byB\r\n" +

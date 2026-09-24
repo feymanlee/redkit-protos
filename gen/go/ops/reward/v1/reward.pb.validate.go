@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on RewardBusinessIdentity with the rules
@@ -184,17 +180,6 @@ func (m *GrantRewardRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GrantRewardRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetSource()); l < 3 || l > 64 {
 		err := GrantRewardRequestValidationError{
@@ -474,17 +459,6 @@ func (m *GetRewardGrantRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetRewardGrantRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	oneofQueryPresent := false
 	switch v := m.Query.(type) {
@@ -914,17 +888,6 @@ func (m *ListRewardGrantsRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListRewardGrantsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if all {
 		switch v := interface{}(m.GetFilter()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1250,17 +1213,6 @@ func (m *GetRewardGrantObservationRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetRewardGrantObservationRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetGrantId() <= 0 {
 		err := GetRewardGrantObservationRequestValidationError{
@@ -1878,17 +1830,6 @@ func (m *ListActionRequiredRewardItemsRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListActionRequiredRewardItemsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
 		case interface{ ValidateAll() error }:
@@ -2379,17 +2320,6 @@ func (m *ReplayRewardItemRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ReplayRewardItemRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetItemId() <= 0 {
 		err := ReplayRewardItemRequestValidationError{
@@ -3272,8 +3202,6 @@ func (m *RewardGrant) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetBusinessIdentity()).(type) {
 		case interface{ ValidateAll() error }:
@@ -3529,17 +3457,6 @@ func (m *CreateManualRewardGrantRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CreateManualRewardGrantRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetPackageId() <= 0 {
 		err := CreateManualRewardGrantRequestValidationError{
@@ -3834,17 +3751,6 @@ func (m *ListPendingManualRewardGrantsRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListPendingManualRewardGrantsRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if len(errors) > 0 {
 		return ListPendingManualRewardGrantsRequestMultiError(errors)
 	}
@@ -4088,17 +3994,6 @@ func (m *ApproveManualRewardGrantRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ApproveManualRewardGrantRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetManualGrantId() <= 0 {
 		err := ApproveManualRewardGrantRequestValidationError{
 			field:  "ManualGrantId",
@@ -4234,17 +4129,6 @@ func (m *RejectManualRewardGrantRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RejectManualRewardGrantRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetManualGrantId() <= 0 {
 		err := RejectManualRewardGrantRequestValidationError{
@@ -4382,17 +4266,6 @@ func (m *WithdrawManualRewardGrantRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := WithdrawManualRewardGrantRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetManualGrantId() <= 0 {
 		err := WithdrawManualRewardGrantRequestValidationError{
@@ -4532,8 +4405,6 @@ func (m *ManualRewardGrant) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for PackageId
 

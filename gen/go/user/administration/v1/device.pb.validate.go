@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on ListDevicesRequest with the rules
@@ -60,8 +56,6 @@ func (m *ListDevicesRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 
@@ -334,8 +328,6 @@ func (m *TrustDeviceRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for DeviceId
@@ -446,28 +438,6 @@ func (m *RegisterRecoveryDeviceKeyRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RegisterRecoveryDeviceKeyRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RegisterRecoveryDeviceKeyRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RegisterRecoveryDeviceKeyRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := RegisterRecoveryDeviceKeyRequestValidationError{
@@ -617,10 +587,6 @@ var _ interface {
 	ErrorName() string
 } = RegisterRecoveryDeviceKeyRequestValidationError{}
 
-var _RegisterRecoveryDeviceKeyRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RevokeDeviceSessionsRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -642,8 +608,6 @@ func (m *RevokeDeviceSessionsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for UserId
 

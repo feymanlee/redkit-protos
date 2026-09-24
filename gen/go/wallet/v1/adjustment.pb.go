@@ -7,8 +7,8 @@
 package walletpb
 
 import (
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -95,8 +95,6 @@ type WalletAdjustment struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 调账 ID。
 	Id *uint64 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// 应用 ID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 调账币种。
@@ -166,13 +164,6 @@ func (*WalletAdjustment) Descriptor() ([]byte, []int) {
 func (x *WalletAdjustment) GetId() uint64 {
 	if x != nil && x.Id != nil {
 		return *x.Id
-	}
-	return 0
-}
-
-func (x *WalletAdjustment) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
 	}
 	return 0
 }
@@ -292,8 +283,6 @@ func (x *WalletAdjustment) GetUpdatedAt() *timestamppb.Timestamp {
 // 创建人工调账请求。
 type CreateWalletAdjustmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 应用 ID。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// 用户 ID。
 	UserId uint64 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	// 调账币种。
@@ -340,13 +329,6 @@ func (x *CreateWalletAdjustmentRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateWalletAdjustmentRequest.ProtoReflect.Descriptor instead.
 func (*CreateWalletAdjustmentRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_adjustment_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *CreateWalletAdjustmentRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateWalletAdjustmentRequest) GetUserId() uint64 {
@@ -407,8 +389,6 @@ type ReviewWalletAdjustmentRequest struct {
 	ReviewerId uint32 `protobuf:"varint,2,opt,name=reviewer_id,json=reviewerId,proto3" json:"reviewer_id,omitempty"`
 	// 审批备注。
 	ReviewNote *string `protobuf:"bytes,3,opt,name=review_note,json=reviewNote,proto3,oneof" json:"review_note,omitempty"`
-	// 应用 ID。
-	AppId *v1.AppId `protobuf:"varint,4,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// Trusted governance identity for the review.
 	Governance    *WalletGovernanceIdentity `protobuf:"bytes,5,opt,name=governance,proto3,oneof" json:"governance,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -466,13 +446,6 @@ func (x *ReviewWalletAdjustmentRequest) GetReviewNote() string {
 	return ""
 }
 
-func (x *ReviewWalletAdjustmentRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ReviewWalletAdjustmentRequest) GetGovernance() *WalletGovernanceIdentity {
 	if x != nil {
 		return x.Governance
@@ -487,8 +460,6 @@ type WithdrawWalletAdjustmentRequest struct {
 	AdjustmentId uint64 `protobuf:"varint,1,opt,name=adjustment_id,json=adjustmentId,proto3" json:"adjustment_id,omitempty"`
 	// requester_id 标识关联的 Requester。
 	RequesterId uint32 `protobuf:"varint,2,opt,name=requester_id,json=requesterId,proto3" json:"requester_id,omitempty"`
-	// app_id 限定 WithdrawWalletAdjustment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,3,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// governance 承载 WithdrawWalletAdjustment 关联的 WalletGovernanceIdentity。
 	Governance    *WalletGovernanceIdentity `protobuf:"bytes,4,opt,name=governance,proto3,oneof" json:"governance,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -539,13 +510,6 @@ func (x *WithdrawWalletAdjustmentRequest) GetRequesterId() uint32 {
 	return 0
 }
 
-func (x *WithdrawWalletAdjustmentRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *WithdrawWalletAdjustmentRequest) GetGovernance() *WalletGovernanceIdentity {
 	if x != nil {
 		return x.Governance
@@ -560,7 +524,7 @@ type WalletAdjustmentFilter struct {
 	Status *WalletAdjustment_Status `protobuf:"varint,1,opt,name=status,proto3,enum=wallet.v1.WalletAdjustment_Status,oneof" json:"status,omitempty"`
 	// requester_id 标识关联的 Requester。
 	RequesterId *uint32 `protobuf:"varint,2,opt,name=requester_id,json=requesterId,proto3,oneof" json:"requester_id,omitempty"`
-	// user_id 标识当前 App 内关联的 User。
+	// user_id 标识关联的 User。
 	UserId *uint64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// 仅返回创建时间早于当前时间减去该秒数的申请。
 	MinimumAgeSeconds *uint64 `protobuf:"varint,4,opt,name=minimum_age_seconds,json=minimumAgeSeconds,proto3,oneof" json:"minimum_age_seconds,omitempty"`
@@ -629,10 +593,8 @@ func (x *WalletAdjustmentFilter) GetMinimumAgeSeconds() uint64 {
 // 查询人工调账申请。
 type ListWalletAdjustmentsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListWalletAdjustments 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId *v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId,oneof" json:"app_id,omitempty"`
 	// paging 指定分页大小和游标等查询参数。
-	Paging *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging *v1.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	// filter 限定本次查询采用的筛选条件。
 	Filter        *WalletAdjustmentFilter `protobuf:"bytes,3,opt,name=filter,proto3,oneof" json:"filter,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -669,14 +631,7 @@ func (*ListWalletAdjustmentsRequest) Descriptor() ([]byte, []int) {
 	return file_wallet_v1_adjustment_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListWalletAdjustmentsRequest) GetAppId() v1.AppId {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListWalletAdjustmentsRequest) GetPaging() *v11.PagingRequest {
+func (x *ListWalletAdjustmentsRequest) GetPaging() *v1.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -694,35 +649,34 @@ var File_wallet_v1_adjustment_proto protoreflect.FileDescriptor
 
 const file_wallet_v1_adjustment_proto_rawDesc = "" +
 	"\n" +
-	"\x1awallet/v1/adjustment.proto\x12\twallet.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xd5\t\n" +
+	"\x1awallet/v1/adjustment.proto\x12\twallet.v1\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cwallet/v1/wallet_types.proto\"\xae\t\n" +
 	"\x10WalletAdjustment\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\rH\x01R\x05appId\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x03 \x01(\x04H\x02R\x06userId\x88\x01\x01\x12:\n" +
-	"\bcurrency\x18\x04 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x03R\bcurrency\x88\x01\x01\x12\x1b\n" +
-	"\x06amount\x18\x05 \x01(\x03H\x04R\x06amount\x88\x01\x01\x12\x1b\n" +
-	"\x06reason\x18\x06 \x01(\tH\x05R\x06reason\x88\x01\x01\x12?\n" +
-	"\x06status\x18\a \x01(\x0e2\".wallet.v1.WalletAdjustment.StatusH\x06R\x06status\x88\x01\x01\x12&\n" +
-	"\frequester_id\x18\b \x01(\rH\aR\vrequesterId\x88\x01\x01\x12$\n" +
-	"\vreviewer_id\x18\t \x01(\rH\bR\n" +
+	"\x02id\x18\x01 \x01(\x04H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x03 \x01(\x04H\x01R\x06userId\x88\x01\x01\x12:\n" +
+	"\bcurrency\x18\x04 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x02R\bcurrency\x88\x01\x01\x12\x1b\n" +
+	"\x06amount\x18\x05 \x01(\x03H\x03R\x06amount\x88\x01\x01\x12\x1b\n" +
+	"\x06reason\x18\x06 \x01(\tH\x04R\x06reason\x88\x01\x01\x12?\n" +
+	"\x06status\x18\a \x01(\x0e2\".wallet.v1.WalletAdjustment.StatusH\x05R\x06status\x88\x01\x01\x12&\n" +
+	"\frequester_id\x18\b \x01(\rH\x06R\vrequesterId\x88\x01\x01\x12$\n" +
+	"\vreviewer_id\x18\t \x01(\rH\aR\n" +
 	"reviewerId\x88\x01\x01\x12$\n" +
 	"\vreview_note\x18\n" +
-	" \x01(\tH\tR\n" +
+	" \x01(\tH\bR\n" +
 	"reviewNote\x88\x01\x01\x12,\n" +
-	"\x0fidempotency_key\x18\v \x01(\tH\n" +
-	"R\x0eidempotencyKey\x88\x01\x01\x12*\n" +
-	"\x0etransaction_id\x18\f \x01(\x04H\vR\rtransactionId\x88\x01\x01\x12>\n" +
+	"\x0fidempotency_key\x18\v \x01(\tH\tR\x0eidempotencyKey\x88\x01\x01\x12*\n" +
+	"\x0etransaction_id\x18\f \x01(\x04H\n" +
+	"R\rtransactionId\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expires_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\fR\texpiresAt\x88\x01\x01\x12@\n" +
-	"\vreviewed_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\rR\n" +
+	"expires_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampH\vR\texpiresAt\x88\x01\x01\x12@\n" +
+	"\vreviewed_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampH\fR\n" +
 	"reviewedAt\x88\x01\x01\x12B\n" +
-	"\fwithdrawn_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\vwithdrawnAt\x88\x01\x01\x12>\n" +
+	"\fwithdrawn_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampH\rR\vwithdrawnAt\x88\x01\x01\x12>\n" +
 	"\n" +
-	"expired_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\texpiredAt\x88\x01\x01\x12?\n" +
+	"expired_at\x18\x10 \x01(\v2\x1a.google.protobuf.TimestampH\x0eR\texpiredAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tcreatedAt\x88\x01\x01\x12?\n" +
+	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x0fR\tcreatedAt\x88\x01\x01\x12?\n" +
 	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x11R\tupdatedAt\x88\x01\x01\"d\n" +
+	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampH\x10R\tupdatedAt\x88\x01\x01\"d\n" +
 	"\x06Status\x12\x16\n" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\v\n" +
@@ -730,8 +684,7 @@ const file_wallet_v1_adjustment_proto_rawDesc = "" +
 	"\bREJECTED\x10\x03\x12\r\n" +
 	"\tWITHDRAWN\x10\x04\x12\v\n" +
 	"\aEXPIRED\x10\x05B\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\n" +
+	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\v\n" +
 	"\t_currencyB\t\n" +
@@ -748,9 +701,8 @@ const file_wallet_v1_adjustment_proto_rawDesc = "" +
 	"\r_withdrawn_atB\r\n" +
 	"\v_expired_atB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\x9d\x03\n" +
-	"\x1dCreateWalletAdjustmentRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\x03\xe0A\x02R\x05appId\x12\x1c\n" +
+	"\v_updated_at\"\xef\x02\n" +
+	"\x1dCreateWalletAdjustmentRequest\x12\x1c\n" +
 	"\auser_id\x18\x02 \x01(\x04B\x03\xe0A\x02R\x06userId\x12:\n" +
 	"\bcurrency\x18\x03 \x01(\x0e2\x19.wallet.v1.WalletCurrencyH\x00R\bcurrency\x88\x01\x01\x12\x1b\n" +
 	"\x06amount\x18\x04 \x01(\x03B\x03\xe0A\x02R\x06amount\x12\x1b\n" +
@@ -761,28 +713,24 @@ const file_wallet_v1_adjustment_proto_rawDesc = "" +
 	"governance\x18\b \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
 	"governance\x88\x01\x01B\v\n" +
 	"\t_currencyB\r\n" +
-	"\v_governance\"\xb7\x02\n" +
+	"\v_governance\"\xfe\x01\n" +
 	"\x1dReviewWalletAdjustmentRequest\x12(\n" +
 	"\radjustment_id\x18\x01 \x01(\x04B\x03\xe0A\x02R\fadjustmentId\x12$\n" +
 	"\vreviewer_id\x18\x02 \x01(\rB\x03\xe0A\x02R\n" +
 	"reviewerId\x12$\n" +
 	"\vreview_note\x18\x03 \x01(\tH\x00R\n" +
-	"reviewNote\x88\x01\x01\x12,\n" +
-	"\x06app_id\x18\x04 \x01(\x0e2\x10.common.v1.AppIdH\x01R\x05appId\x88\x01\x01\x12H\n" +
+	"reviewNote\x88\x01\x01\x12H\n" +
 	"\n" +
-	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x02R\n" +
+	"governance\x18\x05 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
 	"governance\x88\x01\x01B\x0e\n" +
-	"\f_review_noteB\t\n" +
-	"\a_app_idB\r\n" +
-	"\v_governance\"\x85\x02\n" +
+	"\f_review_noteB\r\n" +
+	"\v_governance\"\xcc\x01\n" +
 	"\x1fWithdrawWalletAdjustmentRequest\x12(\n" +
 	"\radjustment_id\x18\x01 \x01(\x04B\x03\xe0A\x02R\fadjustmentId\x12&\n" +
-	"\frequester_id\x18\x02 \x01(\rB\x03\xe0A\x02R\vrequesterId\x12,\n" +
-	"\x06app_id\x18\x03 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12H\n" +
+	"\frequester_id\x18\x02 \x01(\rB\x03\xe0A\x02R\vrequesterId\x12H\n" +
 	"\n" +
-	"governance\x18\x04 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x01R\n" +
-	"governance\x88\x01\x01B\t\n" +
-	"\a_app_idB\r\n" +
+	"governance\x18\x04 \x01(\v2#.wallet.v1.WalletGovernanceIdentityH\x00R\n" +
+	"governance\x88\x01\x01B\r\n" +
 	"\v_governance\"\x94\x02\n" +
 	"\x16WalletAdjustmentFilter\x12?\n" +
 	"\x06status\x18\x01 \x01(\x0e2\".wallet.v1.WalletAdjustment.StatusH\x00R\x06status\x88\x01\x01\x12&\n" +
@@ -793,12 +741,10 @@ const file_wallet_v1_adjustment_proto_rawDesc = "" +
 	"\r_requester_idB\n" +
 	"\n" +
 	"\b_user_idB\x16\n" +
-	"\x14_minimum_age_seconds\"\xdf\x01\n" +
-	"\x1cListWalletAdjustmentsRequest\x12,\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdH\x00R\x05appId\x88\x01\x01\x12;\n" +
+	"\x14_minimum_age_seconds\"\xa6\x01\n" +
+	"\x1cListWalletAdjustmentsRequest\x12;\n" +
 	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\x12>\n" +
-	"\x06filter\x18\x03 \x01(\v2!.wallet.v1.WalletAdjustmentFilterH\x01R\x06filter\x88\x01\x01B\t\n" +
-	"\a_app_idB\t\n" +
+	"\x06filter\x18\x03 \x01(\v2!.wallet.v1.WalletAdjustmentFilterH\x00R\x06filter\x88\x01\x01B\t\n" +
 	"\a_filterB\xa3\x01\n" +
 	"\rcom.wallet.v1B\x0fAdjustmentProtoP\x01Z<github.com/feymanlee/redkit-protos/gen/go/wallet/v1;walletpb\xa2\x02\x03WXX\xaa\x02\tWallet.V1\xca\x02\tWallet\\V1\xe2\x02\x15Wallet\\V1\\GPBMetadata\xea\x02\n" +
 	"Wallet::V1b\x06proto3"
@@ -827,9 +773,8 @@ var file_wallet_v1_adjustment_proto_goTypes = []any{
 	(*ListWalletAdjustmentsRequest)(nil),    // 6: wallet.v1.ListWalletAdjustmentsRequest
 	(WalletCurrency)(0),                     // 7: wallet.v1.WalletCurrency
 	(*timestamppb.Timestamp)(nil),           // 8: google.protobuf.Timestamp
-	(v1.AppId)(0),                           // 9: common.v1.AppId
-	(*WalletGovernanceIdentity)(nil),        // 10: wallet.v1.WalletGovernanceIdentity
-	(*v11.PagingRequest)(nil),               // 11: common.pagination.v1.PagingRequest
+	(*WalletGovernanceIdentity)(nil),        // 9: wallet.v1.WalletGovernanceIdentity
+	(*v1.PagingRequest)(nil),                // 10: common.pagination.v1.PagingRequest
 }
 var file_wallet_v1_adjustment_proto_depIdxs = []int32{
 	7,  // 0: wallet.v1.WalletAdjustment.currency:type_name -> wallet.v1.WalletCurrency
@@ -840,22 +785,18 @@ var file_wallet_v1_adjustment_proto_depIdxs = []int32{
 	8,  // 5: wallet.v1.WalletAdjustment.expired_at:type_name -> google.protobuf.Timestamp
 	8,  // 6: wallet.v1.WalletAdjustment.created_at:type_name -> google.protobuf.Timestamp
 	8,  // 7: wallet.v1.WalletAdjustment.updated_at:type_name -> google.protobuf.Timestamp
-	9,  // 8: wallet.v1.CreateWalletAdjustmentRequest.app_id:type_name -> common.v1.AppId
-	7,  // 9: wallet.v1.CreateWalletAdjustmentRequest.currency:type_name -> wallet.v1.WalletCurrency
-	10, // 10: wallet.v1.CreateWalletAdjustmentRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	9,  // 11: wallet.v1.ReviewWalletAdjustmentRequest.app_id:type_name -> common.v1.AppId
-	10, // 12: wallet.v1.ReviewWalletAdjustmentRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	9,  // 13: wallet.v1.WithdrawWalletAdjustmentRequest.app_id:type_name -> common.v1.AppId
-	10, // 14: wallet.v1.WithdrawWalletAdjustmentRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
-	0,  // 15: wallet.v1.WalletAdjustmentFilter.status:type_name -> wallet.v1.WalletAdjustment.Status
-	9,  // 16: wallet.v1.ListWalletAdjustmentsRequest.app_id:type_name -> common.v1.AppId
-	11, // 17: wallet.v1.ListWalletAdjustmentsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	5,  // 18: wallet.v1.ListWalletAdjustmentsRequest.filter:type_name -> wallet.v1.WalletAdjustmentFilter
-	19, // [19:19] is the sub-list for method output_type
-	19, // [19:19] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	7,  // 8: wallet.v1.CreateWalletAdjustmentRequest.currency:type_name -> wallet.v1.WalletCurrency
+	9,  // 9: wallet.v1.CreateWalletAdjustmentRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	9,  // 10: wallet.v1.ReviewWalletAdjustmentRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	9,  // 11: wallet.v1.WithdrawWalletAdjustmentRequest.governance:type_name -> wallet.v1.WalletGovernanceIdentity
+	0,  // 12: wallet.v1.WalletAdjustmentFilter.status:type_name -> wallet.v1.WalletAdjustment.Status
+	10, // 13: wallet.v1.ListWalletAdjustmentsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	5,  // 14: wallet.v1.ListWalletAdjustmentsRequest.filter:type_name -> wallet.v1.WalletAdjustmentFilter
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_wallet_v1_adjustment_proto_init() }

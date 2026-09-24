@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on Refund with the rules defined in the
@@ -62,10 +58,6 @@ func (m *Refund) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.UserId != nil {
@@ -310,10 +302,6 @@ func (m *CreateRefundRequest) validate(all bool) error {
 		// no validation rules for IdempotencyKey
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return CreateRefundRequestMultiError(errors)
 	}
@@ -555,8 +543,6 @@ func (m *RefundRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for AppId
 
 	// no validation rules for OperationNo
 
@@ -911,8 +897,6 @@ func (m *RefundRiskRule) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
-
 	// no validation rules for Currency
 
 	// no validation rules for AutoApproveMaxAmount
@@ -1095,10 +1079,6 @@ func (m *SubmitRefundRequestRequest) validate(all bool) error {
 		// no validation rules for Remark
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return SubmitRefundRequestRequestMultiError(errors)
 	}
@@ -1209,10 +1189,6 @@ func (m *ReviewRefundRequestRequest) validate(all bool) error {
 
 	if m.ReviewNote != nil {
 		// no validation rules for ReviewNote
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -1481,10 +1457,6 @@ func (m *ListRefundRequestsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListRefundRequestsRequestMultiError(errors)
 	}
@@ -1737,10 +1709,6 @@ func (m *UpsertRefundRiskRuleRequest) validate(all bool) error {
 
 	// no validation rules for RequestId
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return UpsertRefundRiskRuleRequestMultiError(errors)
 	}
@@ -1871,10 +1839,6 @@ func (m *ListRefundRiskRulesRequest) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {

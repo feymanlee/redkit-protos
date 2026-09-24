@@ -41,11 +41,11 @@ type UserServiceHTTPServer interface {
 	BeginUserDeletion(context.Context, *AdminBeginUserDeletionRequest) (*v1.User, error)
 	// CancelUserDeletion 在首个不可逆 Apply 前请求取消 User Deletion。
 	CancelUserDeletion(context.Context, *AdminCancelUserDeletionRequest) (*v1.UserDeletion, error)
-	// GetUser 获取当前 App 的一个 C 端用户。
+	// GetUser 获取一个 C 端用户。
 	GetUser(context.Context, *GetAdminUserRequest) (*v1.User, error)
 	// GetUserDeletion 获取 User-owned User Deletion Saga 及 participant 进度。
 	GetUserDeletion(context.Context, *GetAdminUserRequest) (*v1.UserDeletion, error)
-	// GetUserProfile 获取当前 App 的一个 C 端用户公开资料。
+	// GetUserProfile 获取一个 C 端用户公开资料。
 	GetUserProfile(context.Context, *GetAdminUserRequest) (*v1.Profile, error)
 	// ListUserAdminActions 查询后台对该用户执行的高风险操作审计。
 	ListUserAdminActions(context.Context, *AdminListUserAdminActionsRequest) (*v1.ListAdminActionsResponse, error)
@@ -53,7 +53,7 @@ type UserServiceHTTPServer interface {
 	ListUserCredentials(context.Context, *AdminListUserCredentialsRequest) (*v1.ListCredentialsResponse, error)
 	// ListUserSecurityNotices 查询安全通知意图和 Support Message 引用；独立路由允许配置通知观察权限。
 	ListUserSecurityNotices(context.Context, *AdminListUserSecurityNoticesRequest) (*v1.ListSecurityNoticesResponse, error)
-	// ListUsers 获取当前 App 的 C 端用户列表。
+	// ListUsers 获取 C 端用户列表。
 	ListUsers(context.Context, *AdminListUsersRequest) (*v1.SearchUsersResponse, error)
 	// ModerateUserProfile 清理或重置允许处置的公开资料字段。
 	ModerateUserProfile(context.Context, *AdminModerateUserProfileRequest) (*v1.Profile, error)
@@ -444,11 +444,11 @@ type UserServiceHTTPClient interface {
 	BeginUserDeletion(ctx context.Context, req *AdminBeginUserDeletionRequest, opts ...http.CallOption) (rsp *v1.User, err error)
 	// CancelUserDeletion 在首个不可逆 Apply 前请求取消 User Deletion。
 	CancelUserDeletion(ctx context.Context, req *AdminCancelUserDeletionRequest, opts ...http.CallOption) (rsp *v1.UserDeletion, err error)
-	// GetUser 获取当前 App 的一个 C 端用户。
+	// GetUser 获取一个 C 端用户。
 	GetUser(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.User, err error)
 	// GetUserDeletion 获取 User-owned User Deletion Saga 及 participant 进度。
 	GetUserDeletion(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.UserDeletion, err error)
-	// GetUserProfile 获取当前 App 的一个 C 端用户公开资料。
+	// GetUserProfile 获取一个 C 端用户公开资料。
 	GetUserProfile(ctx context.Context, req *GetAdminUserRequest, opts ...http.CallOption) (rsp *v1.Profile, err error)
 	// ListUserAdminActions 查询后台对该用户执行的高风险操作审计。
 	ListUserAdminActions(ctx context.Context, req *AdminListUserAdminActionsRequest, opts ...http.CallOption) (rsp *v1.ListAdminActionsResponse, err error)
@@ -456,7 +456,7 @@ type UserServiceHTTPClient interface {
 	ListUserCredentials(ctx context.Context, req *AdminListUserCredentialsRequest, opts ...http.CallOption) (rsp *v1.ListCredentialsResponse, err error)
 	// ListUserSecurityNotices 查询安全通知意图和 Support Message 引用；独立路由允许配置通知观察权限。
 	ListUserSecurityNotices(ctx context.Context, req *AdminListUserSecurityNoticesRequest, opts ...http.CallOption) (rsp *v1.ListSecurityNoticesResponse, err error)
-	// ListUsers 获取当前 App 的 C 端用户列表。
+	// ListUsers 获取 C 端用户列表。
 	ListUsers(ctx context.Context, req *AdminListUsersRequest, opts ...http.CallOption) (rsp *v1.SearchUsersResponse, err error)
 	// ModerateUserProfile 清理或重置允许处置的公开资料字段。
 	ModerateUserProfile(ctx context.Context, req *AdminModerateUserProfileRequest, opts ...http.CallOption) (rsp *v1.Profile, err error)
@@ -508,7 +508,7 @@ func (c *UserServiceHTTPClientImpl) CancelUserDeletion(ctx context.Context, in *
 	return &out, nil
 }
 
-// GetUser 获取当前 App 的一个 C 端用户。
+// GetUser 获取一个 C 端用户。
 func (c *UserServiceHTTPClientImpl) GetUser(ctx context.Context, in *GetAdminUserRequest, opts ...http.CallOption) (*v1.User, error) {
 	var out v1.User
 	pattern := "/admin/v1/users/{user_id}"
@@ -536,7 +536,7 @@ func (c *UserServiceHTTPClientImpl) GetUserDeletion(ctx context.Context, in *Get
 	return &out, nil
 }
 
-// GetUserProfile 获取当前 App 的一个 C 端用户公开资料。
+// GetUserProfile 获取一个 C 端用户公开资料。
 func (c *UserServiceHTTPClientImpl) GetUserProfile(ctx context.Context, in *GetAdminUserRequest, opts ...http.CallOption) (*v1.Profile, error) {
 	var out v1.Profile
 	pattern := "/admin/v1/users/{user_id}/profile"
@@ -592,7 +592,7 @@ func (c *UserServiceHTTPClientImpl) ListUserSecurityNotices(ctx context.Context,
 	return &out, nil
 }
 
-// ListUsers 获取当前 App 的 C 端用户列表。
+// ListUsers 获取 C 端用户列表。
 func (c *UserServiceHTTPClientImpl) ListUsers(ctx context.Context, in *AdminListUsersRequest, opts ...http.CallOption) (*v1.SearchUsersResponse, error) {
 	var out v1.SearchUsersResponse
 	pattern := "/admin/v1/users"

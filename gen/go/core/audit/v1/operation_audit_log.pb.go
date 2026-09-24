@@ -112,10 +112,6 @@ type OperationAuditLog struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 用户操作审计日志ID。
 	Id *uint32 `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"` // 用户操作审计日志ID
-	// AppID。
-	AppId *uint32 `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"` // AppID
-	// App名称。
-	AppName *string `protobuf:"bytes,3,opt,name=app_name,json=appName,proto3,oneof" json:"app_name,omitempty"` // App名称
 	// 后台人员 ID。
 	OperatorId *uint32 `protobuf:"varint,4,opt,name=operator_id,json=operatorId,proto3,oneof" json:"operator_id,omitempty"`
 	// 账号名。
@@ -189,20 +185,6 @@ func (x *OperationAuditLog) GetId() uint32 {
 		return *x.Id
 	}
 	return 0
-}
-
-func (x *OperationAuditLog) GetAppId() uint32 {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return 0
-}
-
-func (x *OperationAuditLog) GetAppName() string {
-	if x != nil && x.AppName != nil {
-		return *x.AppName
-	}
-	return ""
 }
 
 func (x *OperationAuditLog) GetOperatorId() uint32 {
@@ -508,37 +490,35 @@ var File_core_audit_v1_operation_audit_log_proto protoreflect.FileDescriptor
 
 const file_core_audit_v1_operation_audit_log_proto_rawDesc = "" +
 	"\n" +
-	"'core/audit/v1/operation_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1acore/audit/v1/common.proto\x1a core/audit/v1/geo_location.proto\"\xe1\x0e\n" +
+	"'core/audit/v1/operation_audit_log.proto\x12\rcore.audit.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a%common/pagination/v1/pagination.proto\x1a\x1acore/audit/v1/common.proto\x1a core/audit/v1/geo_location.proto\"\xe8\r\n" +
 	"\x11OperationAuditLog\x12,\n" +
-	"\x02id\x18\x01 \x01(\rB\x17\xbaG\x14\x92\x02\x11API审计日志IDH\x00R\x02id\x88\x01\x01\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\rB\v\xbaG\b\x92\x02\x05AppIDH\x01R\x05appId\x88\x01\x01\x12/\n" +
-	"\bapp_name\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\tApp名称H\x02R\aappName\x88\x01\x01\x12;\n" +
-	"\voperator_id\x18\x04 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x03R\n" +
+	"\x02id\x18\x01 \x01(\rB\x17\xbaG\x14\x92\x02\x11API审计日志IDH\x00R\x02id\x88\x01\x01\x12;\n" +
+	"\voperator_id\x18\x04 \x01(\rB\x15\xbaG\x12\x92\x02\x0f后台人员 IDH\x01R\n" +
 	"operatorId\x88\x01\x01\x120\n" +
-	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t账号名H\x04R\busername\x88\x01\x01\x12<\n" +
+	"\busername\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t账号名H\x02R\busername\x88\x01\x01\x12<\n" +
 	"\rresource_type\x18\n" +
-	" \x01(\tB\x12\xbaG\x0f\x92\x02\f资源类型H\x05R\fresourceType\x88\x01\x01\x124\n" +
-	"\vresource_id\x18\v \x01(\tB\x0e\xbaG\v\x92\x02\b资源IDH\x06R\n" +
+	" \x01(\tB\x12\xbaG\x0f\x92\x02\f资源类型H\x03R\fresourceType\x88\x01\x01\x124\n" +
+	"\vresource_id\x18\v \x01(\tB\x0e\xbaG\v\x92\x02\b资源IDH\x04R\n" +
 	"resourceId\x88\x01\x01\x12V\n" +
-	"\x06action\x18\f \x01(\x0e2+.core.audit.v1.OperationAuditLog.ActionTypeB\f\xbaG\t\x92\x02\x06动作H\aR\x06action\x88\x01\x01\x12;\n" +
-	"\vbefore_data\x18\r \x01(\tB\x15\xbaG\x12\x92\x02\x0f操作前数据H\bR\n" +
+	"\x06action\x18\f \x01(\x0e2+.core.audit.v1.OperationAuditLog.ActionTypeB\f\xbaG\t\x92\x02\x06动作H\x05R\x06action\x88\x01\x01\x12;\n" +
+	"\vbefore_data\x18\r \x01(\tB\x15\xbaG\x12\x92\x02\x0f操作前数据H\x06R\n" +
 	"beforeData\x88\x01\x01\x129\n" +
 	"\n" +
-	"after_data\x18\x0e \x01(\tB\x15\xbaG\x12\x92\x02\x0f操作后数据H\tR\tafterData\x88\x01\x01\x12_\n" +
-	"\x0fsensitive_level\x18\x0f \x01(\x0e2\x1d.core.audit.v1.SensitiveLevelB\x12\xbaG\x0f\x92\x02\f敏感等级H\n" +
-	"R\x0esensitiveLevel\x88\x01\x01\x12P\n" +
+	"after_data\x18\x0e \x01(\tB\x15\xbaG\x12\x92\x02\x0f操作后数据H\aR\tafterData\x88\x01\x01\x12_\n" +
+	"\x0fsensitive_level\x18\x0f \x01(\x0e2\x1d.core.audit.v1.SensitiveLevelB\x12\xbaG\x0f\x92\x02\f敏感等级H\bR\x0esensitiveLevel\x88\x01\x01\x12P\n" +
 	"\n" +
-	"request_id\x18\x10 \x01(\tB,\xbaG)\x92\x02&全局请求ID（关联网关日志）H\vR\trequestId\x88\x01\x01\x12\\\n" +
-	"\btrace_id\x18\x11 \x01(\tB<\xbaG9\x92\x026全局链路追踪ID（符合W3C TraceContext标准）H\fR\atraceId\x88\x01\x01\x127\n" +
-	"\asuccess\x18\x12 \x01(\bB\x18\xbaG\x15\x92\x02\x12操作是否成功H\rR\asuccess\x88\x01\x01\x12>\n" +
-	"\x0efailure_reason\x18\x13 \x01(\tB\x12\xbaG\x0f\x92\x02\f失败原因H\x0eR\rfailureReason\x88\x01\x01\x122\n" +
+	"request_id\x18\x10 \x01(\tB,\xbaG)\x92\x02&全局请求ID（关联网关日志）H\tR\trequestId\x88\x01\x01\x12\\\n" +
+	"\btrace_id\x18\x11 \x01(\tB<\xbaG9\x92\x026全局链路追踪ID（符合W3C TraceContext标准）H\n" +
+	"R\atraceId\x88\x01\x01\x127\n" +
+	"\asuccess\x18\x12 \x01(\bB\x18\xbaG\x15\x92\x02\x12操作是否成功H\vR\asuccess\x88\x01\x01\x12>\n" +
+	"\x0efailure_reason\x18\x13 \x01(\tB\x12\xbaG\x0f\x92\x02\f失败原因H\fR\rfailureReason\x88\x01\x01\x122\n" +
 	"\n" +
-	"ip_address\x18\x14 \x01(\tB\x0e\xbaG\v\x92\x02\bIP地址H\x0fR\tipAddress\x88\x01\x01\x12c\n" +
-	"\fgeo_location\x18\x15 \x01(\v2\x1a.core.audit.v1.GeoLocationB\x1f\xbaG\x1c\x92\x02\x19地理位置(来自IP库)H\x10R\vgeoLocation\x88\x01\x01\x12\\\n" +
-	"\blog_hash\x18( \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\x11R\alogHash\x88\x01\x01\x12~\n" +
-	"\tsignature\x18) \x01(\fB[\xbaGX\x92\x02U日志数字签名（ECDSA，签名内容：app_id+operator_id+created_at+log_hash）H\x12R\tsignature\x88\x01\x01\x12X\n" +
+	"ip_address\x18\x14 \x01(\tB\x0e\xbaG\v\x92\x02\bIP地址H\rR\tipAddress\x88\x01\x01\x12c\n" +
+	"\fgeo_location\x18\x15 \x01(\v2\x1a.core.audit.v1.GeoLocationB\x1f\xbaG\x1c\x92\x02\x19地理位置(来自IP库)H\x0eR\vgeoLocation\x88\x01\x01\x12\\\n" +
+	"\blog_hash\x18( \x01(\tB<\xbaG9\x92\x026日志内容哈希（SHA256，十六进制字符串）H\x0fR\alogHash\x88\x01\x01\x12w\n" +
+	"\tsignature\x18) \x01(\fBT\xbaGQ\x92\x02N日志数字签名（ECDSA，签名内容：operator_id+created_at+log_hash）H\x10R\tsignature\x88\x01\x01\x12X\n" +
 	"\n" +
-	"created_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x13R\tcreatedAt\x88\x01\x01\"\x94\x01\n" +
+	"created_at\x182 \x01(\v2\x1a.google.protobuf.TimestampB\x18\xbaG\x15\x92\x02\x12日志创建时间H\x11R\tcreatedAt\x88\x01\x01\"\x94\x01\n" +
 	"\n" +
 	"ActionType\x12\x1b\n" +
 	"\x17ACTION_TYPE_UNSPECIFIED\x10\x00\x12\n" +
@@ -557,9 +537,7 @@ const file_core_audit_v1_operation_audit_log_proto_rawDesc = "" +
 	"\n" +
 	"\x06IMPORT\x10\b\x12\t\n" +
 	"\x05OTHER\x10dB\x05\n" +
-	"\x03_idB\t\n" +
-	"\a_app_idB\v\n" +
-	"\t_app_nameB\x0e\n" +
+	"\x03_idB\x0e\n" +
 	"\f_operator_idB\v\n" +
 	"\t_usernameB\x10\n" +
 	"\x0e_resource_typeB\x0e\n" +

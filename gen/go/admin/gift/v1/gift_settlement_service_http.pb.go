@@ -39,7 +39,7 @@ type GiftSettlementServiceHTTPServer interface {
 	GetGiftReconciliationIssueAuditDetails(context.Context, *AdminGetGiftReconciliationIssueRequest) (*v1.GiftReconciliationIssueAuditDetails, error)
 	// ListGiftReconciliationIssues 查询 Settlement Reconciliation Issue 工作台。
 	ListGiftReconciliationIssues(context.Context, *AdminListGiftReconciliationIssuesRequest) (*v1.ListGiftReconciliationIssuesResponse, error)
-	// ListGiftSettlementRecords 按 typed filter 分页查询当前 App 的 Settlement Record；只读，不提供编辑或覆盖。
+	// ListGiftSettlementRecords 按 typed filter 分页查询 Settlement Record；只读，不提供编辑或覆盖。
 	ListGiftSettlementRecords(context.Context, *AdminListGiftSettlementRecordsRequest) (*v1.ListGiftSettlementRecordResponse, error)
 	// ReconcileGiftSettlement 重新核验 Issue 对应的单笔成功 Send。
 	ReconcileGiftSettlement(context.Context, *AdminReconcileGiftSettlementRequest) (*v1.ReconcileGiftSettlementResponse, error)
@@ -224,7 +224,7 @@ type GiftSettlementServiceHTTPClient interface {
 	GetGiftReconciliationIssueAuditDetails(ctx context.Context, req *AdminGetGiftReconciliationIssueRequest, opts ...http.CallOption) (rsp *v1.GiftReconciliationIssueAuditDetails, err error)
 	// ListGiftReconciliationIssues 查询 Settlement Reconciliation Issue 工作台。
 	ListGiftReconciliationIssues(ctx context.Context, req *AdminListGiftReconciliationIssuesRequest, opts ...http.CallOption) (rsp *v1.ListGiftReconciliationIssuesResponse, err error)
-	// ListGiftSettlementRecords 按 typed filter 分页查询当前 App 的 Settlement Record；只读，不提供编辑或覆盖。
+	// ListGiftSettlementRecords 按 typed filter 分页查询 Settlement Record；只读，不提供编辑或覆盖。
 	ListGiftSettlementRecords(ctx context.Context, req *AdminListGiftSettlementRecordsRequest, opts ...http.CallOption) (rsp *v1.ListGiftSettlementRecordResponse, err error)
 	// ReconcileGiftSettlement 重新核验 Issue 对应的单笔成功 Send。
 	ReconcileGiftSettlement(ctx context.Context, req *AdminReconcileGiftSettlementRequest, opts ...http.CallOption) (rsp *v1.ReconcileGiftSettlementResponse, err error)
@@ -308,7 +308,7 @@ func (c *GiftSettlementServiceHTTPClientImpl) ListGiftReconciliationIssues(ctx c
 	return &out, nil
 }
 
-// ListGiftSettlementRecords 按 typed filter 分页查询当前 App 的 Settlement Record；只读，不提供编辑或覆盖。
+// ListGiftSettlementRecords 按 typed filter 分页查询 Settlement Record；只读，不提供编辑或覆盖。
 func (c *GiftSettlementServiceHTTPClientImpl) ListGiftSettlementRecords(ctx context.Context, in *AdminListGiftSettlementRecordsRequest, opts ...http.CallOption) (*v1.ListGiftSettlementRecordResponse, error) {
 	var out v1.ListGiftSettlementRecordResponse
 	pattern := "/admin/v1/gift-settlement-records"

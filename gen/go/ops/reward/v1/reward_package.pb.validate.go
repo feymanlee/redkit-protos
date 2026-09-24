@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on CoinRewardItem with the rules defined in
@@ -1442,17 +1438,6 @@ func (m *ListRewardPackagesRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ListRewardPackagesRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if len(errors) > 0 {
 		return ListRewardPackagesRequestMultiError(errors)
 	}
@@ -1691,17 +1676,6 @@ func (m *GetRewardPackageRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetRewardPackageRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetPackageId() <= 0 {
 		err := GetRewardPackageRequestValidationError{
 			field:  "PackageId",
@@ -1814,17 +1788,6 @@ func (m *CreateRewardPackageRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CreateRewardPackageRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetPackageCode()); l < 3 || l > 64 {
 		err := CreateRewardPackageRequestValidationError{
@@ -2043,17 +2006,6 @@ func (m *CreateRewardPackageRevisionDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CreateRewardPackageRevisionDraftRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetPackageId() <= 0 {
 		err := CreateRewardPackageRevisionDraftRequestValidationError{
 			field:  "PackageId",
@@ -2201,17 +2153,6 @@ func (m *UpdateRewardPackageDraftRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := UpdateRewardPackageDraftRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetPackageId() <= 0 {
 		err := UpdateRewardPackageDraftRequestValidationError{
@@ -2419,17 +2360,6 @@ func (m *PreflightRewardPackageDraftRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := PreflightRewardPackageDraftRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetPackageId() <= 0 {
 		err := PreflightRewardPackageDraftRequestValidationError{
 			field:  "PackageId",
@@ -2555,17 +2485,6 @@ func (m *PublishRewardPackageRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := PublishRewardPackageRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetPackageId() <= 0 {
 		err := PublishRewardPackageRequestValidationError{
@@ -2714,17 +2633,6 @@ func (m *DisableRewardPackageRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := DisableRewardPackageRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetPackageId() <= 0 {
 		err := DisableRewardPackageRequestValidationError{
 			field:  "PackageId",
@@ -2872,17 +2780,6 @@ func (m *DiscardRewardPackageDraftRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := DiscardRewardPackageDraftRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetPackageId() <= 0 {
 		err := DiscardRewardPackageDraftRequestValidationError{
@@ -3043,17 +2940,6 @@ func (m *ResolvePublishedRewardPackageRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ResolvePublishedRewardPackageRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetPackageCode()); l < 3 || l > 64 {
 		err := ResolvePublishedRewardPackageRequestValidationError{

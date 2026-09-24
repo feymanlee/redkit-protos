@@ -57,8 +57,6 @@ func (m *ListOperatorsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
 		case interface{ ValidateAll() error }:
@@ -189,8 +187,6 @@ func (m *CountOperatorsRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -354,14 +350,6 @@ func (m *Operator) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
-	if m.AppName != nil {
-		// no validation rules for AppName
 	}
 
 	if m.RoleId != nil {
@@ -862,8 +850,6 @@ func (m *UpdateOperatorProfileRequest) validate(all bool) error {
 
 	// no validation rules for OperatorId
 
-	// no validation rules for AppId
-
 	if all {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1223,10 +1209,6 @@ func (m *GetOperatorRequest) validate(all bool) error {
 			}
 		}
 
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -1665,10 +1647,6 @@ func (m *DeleteOperatorRequest) validate(all bool) error {
 		// no validation rules for DeletedBy
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return DeleteOperatorRequestMultiError(errors)
 	}
@@ -1798,10 +1776,6 @@ func (m *OperatorExistsRequest) validate(all bool) error {
 		// no validation rules for Username
 	default:
 		_ = v // ensures v is used
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if len(errors) > 0 {
@@ -2355,10 +2329,6 @@ func (m *EditOperatorPasswordRequest) validate(all bool) error {
 	// no validation rules for OperatorId
 
 	// no validation rules for NewPassword
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return EditOperatorPasswordRequestMultiError(errors)

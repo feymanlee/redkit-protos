@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on GiftSendRecord with the rules defined in
@@ -63,10 +59,6 @@ func (m *GiftSendRecord) validate(all bool) error {
 
 	if m.Id != nil {
 		// no validation rules for Id
-	}
-
-	if m.AppId != nil {
-		// no validation rules for AppId
 	}
 
 	if m.GiftId != nil {
@@ -737,10 +729,6 @@ func (m *ListGiftSendRecordsRequest) validate(all bool) error {
 		}
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if len(errors) > 0 {
 		return ListGiftSendRecordsRequestMultiError(errors)
 	}
@@ -844,10 +832,6 @@ func (m *GetGiftSendRecordRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if len(errors) > 0 {
 		return GetGiftSendRecordRequestMultiError(errors)
@@ -1325,10 +1309,6 @@ func (m *ReconcileGiftSendRequest) validate(all bool) error {
 
 	// no validation rules for OperationNo
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.RequestId != nil {
 		// no validation rules for RequestId
 	}
@@ -1576,10 +1556,6 @@ func (m *SendGiftRequest) validate(all bool) error {
 
 	// no validation rules for RecipientId
 
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
-
 	if m.Quantity != nil {
 		// no validation rules for Quantity
 	}
@@ -1715,10 +1691,6 @@ func (m *SendBackpackGiftRequest) validate(all bool) error {
 	// no validation rules for RecipientType
 
 	// no validation rules for RecipientId
-
-	if m.AppId != nil {
-		// no validation rules for AppId
-	}
 
 	if m.Quantity != nil {
 		// no validation rules for Quantity

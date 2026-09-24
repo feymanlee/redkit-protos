@@ -26,8 +26,6 @@ message GiftSendRecord {
 
   // 记录 ID。
   optional uint64 id = 1;
-  // 应用 ID。
-  optional uint32 app_id = 2;
   // 礼物 ID。
   optional uint32 gift_id = 3;
   // 发送用户 ID。
@@ -123,10 +121,8 @@ message GiftSendFilter {
   optional google.protobuf.Timestamp occurred_to = 10;
 }
 
-// ListGiftSendRecordsRequest carries trusted App scope, typed filters and stable paging.
+// ListGiftSendRecordsRequest carries typed filters and stable paging.
 message ListGiftSendRecordsRequest {
-  // app_id 限定 ListGiftSendRecords 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   GiftSendFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
@@ -135,8 +131,6 @@ message ListGiftSendRecordsRequest {
 
 // 查询送礼记录详情请求。
 message GetGiftSendRecordRequest {
-  // 应用 ID。
-  optional common.v1.AppId app_id = 1;
   // 送礼记录 ID。
   uint64 id = 2;
 }
@@ -189,8 +183,6 @@ message GiftSendReconciliation {
 
 // ReconcileGiftSendRequest checks one existing Send without replaying user intent.
 message ReconcileGiftSendRequest {
-  // app_id 限定 ReconcileGiftSend 所属 App；UNSPECIFIED 不表示跨 App。
-  optional common.v1.AppId app_id = 1;
   // send_id 标识关联的 Send。
   uint64 send_id = 2;
   // operator_id 标识关联的后台 Operator。
@@ -212,8 +204,6 @@ message ReconcileGiftSendResponse {
 }
 // 发送礼物请求。
 message SendGiftRequest {
-  // 应用 ID。
-  optional common.v1.AppId app_id = 1;
   // 礼物 ID。
   uint32 gift_id = 2;
   // 发送用户 ID。
@@ -240,8 +230,6 @@ message SendGiftRequest {
 
 // 使用背包礼物发送礼物请求。
 message SendBackpackGiftRequest {
-  // 应用 ID。
-  optional common.v1.AppId app_id = 1;
   // 礼物 ID。
   uint32 gift_id = 2;
   // 发送用户 ID。

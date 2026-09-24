@@ -8,8 +8,7 @@ package userconsumerpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/user/types/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -202,9 +201,7 @@ func (StepUpFactor) EnumDescriptor() ([]byte, []int) {
 
 // GetSecurityOverviewRequest 标识待查询的 SecurityOverview。
 type GetSecurityOverviewRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetSecurityOverview 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -237,13 +234,6 @@ func (x *GetSecurityOverviewRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetSecurityOverviewRequest.ProtoReflect.Descriptor instead.
 func (*GetSecurityOverviewRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GetSecurityOverviewRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 // StepUpBinding 描述 Step-up Challenge 绑定的敏感操作上下文。
@@ -370,8 +360,6 @@ func (*StepUpBinding_TargetUserCode) isStepUpBinding_Value() {}
 // StartStepUpAuthorizationRequest 定义启动 StepUpAuthorization 的幂等管理命令参数。
 type StartStepUpAuthorizationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 StartStepUpAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// purpose 指定 StartStepUpAuthorization 数据或能力的预期用途。
 	Purpose StepUpPurpose `protobuf:"varint,2,opt,name=purpose,proto3,enum=user.consumer.v1.StepUpPurpose" json:"purpose,omitempty"`
 	// binding 承载 StartStepUpAuthorization 关联的 StepUpBinding。
@@ -412,13 +400,6 @@ func (x *StartStepUpAuthorizationRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use StartStepUpAuthorizationRequest.ProtoReflect.Descriptor instead.
 func (*StartStepUpAuthorizationRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *StartStepUpAuthorizationRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *StartStepUpAuthorizationRequest) GetPurpose() StepUpPurpose {
@@ -543,8 +524,6 @@ func (x *StepUpChallenge) GetResendAt() *timestamppb.Timestamp {
 // ResendStepUpChallengeRequest 定义执行 ResendStepUpChallenge 的幂等管理命令参数。
 type ResendStepUpChallengeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ResendStepUpChallenge 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ChallengeToken string `protobuf:"bytes,2,opt,name=challenge_token,json=challengeToken,proto3" json:"challenge_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -583,13 +562,6 @@ func (*ResendStepUpChallengeRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ResendStepUpChallengeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ResendStepUpChallengeRequest) GetChallengeToken() string {
 	if x != nil {
 		return x.ChallengeToken
@@ -607,8 +579,6 @@ func (x *ResendStepUpChallengeRequest) GetIdempotencyKey() string {
 // CompleteStepUpAuthorizationRequest 定义完成 StepUpAuthorization 的幂等管理命令参数。
 type CompleteStepUpAuthorizationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CompleteStepUpAuthorization 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// challenge_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ChallengeToken string `protobuf:"bytes,2,opt,name=challenge_token,json=challengeToken,proto3" json:"challenge_token,omitempty"`
 	// CompleteStepUpAuthorizationRequest 在以下身份或安全证明中选择一种。
@@ -655,13 +625,6 @@ func (x *CompleteStepUpAuthorizationRequest) ProtoReflect() protoreflect.Message
 // Deprecated: Use CompleteStepUpAuthorizationRequest.ProtoReflect.Descriptor instead.
 func (*CompleteStepUpAuthorizationRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *CompleteStepUpAuthorizationRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CompleteStepUpAuthorizationRequest) GetChallengeToken() string {
@@ -911,8 +874,6 @@ func (x *TotpEnrollment) GetExpiresAt() *timestamppb.Timestamp {
 // BeginTotpEnrollmentRequest 定义开始 TotpEnrollment 的幂等管理命令参数。
 type BeginTotpEnrollmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BeginTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -951,13 +912,6 @@ func (*BeginTotpEnrollmentRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *BeginTotpEnrollmentRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *BeginTotpEnrollmentRequest) GetStepUpToken() string {
 	if x != nil {
 		return x.StepUpToken
@@ -975,8 +929,6 @@ func (x *BeginTotpEnrollmentRequest) GetIdempotencyKey() string {
 // ConfirmTotpEnrollmentRequest 定义执行 ConfirmTotpEnrollment 的幂等管理命令参数。
 type ConfirmTotpEnrollmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ConfirmTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// factor_id 标识关联的 Factor。
 	FactorId string `protobuf:"bytes,2,opt,name=factor_id,json=factorId,proto3" json:"factor_id,omitempty"`
 	// code 承载调用方输入的一次性验证码，不得写入普通日志。
@@ -1017,13 +969,6 @@ func (*ConfirmTotpEnrollmentRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *ConfirmTotpEnrollmentRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ConfirmTotpEnrollmentRequest) GetFactorId() string {
 	if x != nil {
 		return x.FactorId
@@ -1051,7 +996,7 @@ type ConfirmTotpEnrollmentResponse struct {
 	// recovery_codes 返回一次性 Recovery Code；调用方仅可在本次响应中展示。
 	RecoveryCodes []string `protobuf:"bytes,1,rep,name=recovery_codes,json=recoveryCodes,proto3" json:"recovery_codes,omitempty"`
 	// tokens 承载 ConfirmTotpEnrollment 关联的 TokenPair。
-	Tokens        *v11.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens        *v1.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1093,7 +1038,7 @@ func (x *ConfirmTotpEnrollmentResponse) GetRecoveryCodes() []string {
 	return nil
 }
 
-func (x *ConfirmTotpEnrollmentResponse) GetTokens() *v11.TokenPair {
+func (x *ConfirmTotpEnrollmentResponse) GetTokens() *v1.TokenPair {
 	if x != nil {
 		return x.Tokens
 	}
@@ -1103,8 +1048,6 @@ func (x *ConfirmTotpEnrollmentResponse) GetTokens() *v11.TokenPair {
 // BeginRequiredTotpEnrollmentRequest 定义开始 RequiredTotpEnrollment 的幂等管理命令参数。
 type BeginRequiredTotpEnrollmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 BeginRequiredTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// action_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ActionToken string `protobuf:"bytes,2,opt,name=action_token,json=actionToken,proto3" json:"action_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -1143,13 +1086,6 @@ func (*BeginRequiredTotpEnrollmentRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *BeginRequiredTotpEnrollmentRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *BeginRequiredTotpEnrollmentRequest) GetActionToken() string {
 	if x != nil {
 		return x.ActionToken
@@ -1167,8 +1103,6 @@ func (x *BeginRequiredTotpEnrollmentRequest) GetIdempotencyKey() string {
 // ConfirmRequiredTotpEnrollmentRequest 定义执行 ConfirmRequiredTotpEnrollment 的幂等管理命令参数。
 type ConfirmRequiredTotpEnrollmentRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ConfirmRequiredTotpEnrollment 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// action_token 承载敏感凭据或校验材料，不得写入普通日志。
 	ActionToken string `protobuf:"bytes,2,opt,name=action_token,json=actionToken,proto3" json:"action_token,omitempty"`
 	// factor_id 标识关联的 Factor。
@@ -1209,13 +1143,6 @@ func (x *ConfirmRequiredTotpEnrollmentRequest) ProtoReflect() protoreflect.Messa
 // Deprecated: Use ConfirmRequiredTotpEnrollmentRequest.ProtoReflect.Descriptor instead.
 func (*ConfirmRequiredTotpEnrollmentRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *ConfirmRequiredTotpEnrollmentRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *ConfirmRequiredTotpEnrollmentRequest) GetActionToken() string {
@@ -1304,8 +1231,6 @@ func (x *ConfirmRequiredTotpEnrollmentResponse) GetAuthenticated() *Authenticati
 // RegenerateRecoveryCodesRequest 定义执行 RegenerateRecoveryCodes 的幂等管理命令参数。
 type RegenerateRecoveryCodesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RegenerateRecoveryCodes 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -1344,13 +1269,6 @@ func (*RegenerateRecoveryCodesRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *RegenerateRecoveryCodesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RegenerateRecoveryCodesRequest) GetStepUpToken() string {
 	if x != nil {
 		return x.StepUpToken
@@ -1371,7 +1289,7 @@ type RegenerateRecoveryCodesResponse struct {
 	// recovery_codes 返回一次性 Recovery Code；调用方仅可在本次响应中展示。
 	RecoveryCodes []string `protobuf:"bytes,1,rep,name=recovery_codes,json=recoveryCodes,proto3" json:"recovery_codes,omitempty"`
 	// tokens 承载 RegenerateRecoveryCodes 关联的 TokenPair。
-	Tokens        *v11.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens        *v1.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1413,7 +1331,7 @@ func (x *RegenerateRecoveryCodesResponse) GetRecoveryCodes() []string {
 	return nil
 }
 
-func (x *RegenerateRecoveryCodesResponse) GetTokens() *v11.TokenPair {
+func (x *RegenerateRecoveryCodesResponse) GetTokens() *v1.TokenPair {
 	if x != nil {
 		return x.Tokens
 	}
@@ -1423,8 +1341,6 @@ func (x *RegenerateRecoveryCodesResponse) GetTokens() *v11.TokenPair {
 // DisableTotpRequest 定义停用 Totp 的幂等管理命令参数。
 type DisableTotpRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 DisableTotp 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// step_up_token 承载敏感凭据或校验材料，不得写入普通日志。
 	StepUpToken string `protobuf:"bytes,2,opt,name=step_up_token,json=stepUpToken,proto3" json:"step_up_token,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
@@ -1463,13 +1379,6 @@ func (*DisableTotpRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *DisableTotpRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *DisableTotpRequest) GetStepUpToken() string {
 	if x != nil {
 		return x.StepUpToken
@@ -1488,9 +1397,9 @@ func (x *DisableTotpRequest) GetIdempotencyKey() string {
 type SecurityMutationResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// security 承载 SecurityMutation 关联的 SecurityOverview。
-	Security *v11.SecurityOverview `protobuf:"bytes,1,opt,name=security,proto3" json:"security,omitempty"`
+	Security *v1.SecurityOverview `protobuf:"bytes,1,opt,name=security,proto3" json:"security,omitempty"`
 	// tokens 承载 SecurityMutation 关联的 TokenPair。
-	Tokens        *v11.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens        *v1.TokenPair `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1525,14 +1434,14 @@ func (*SecurityMutationResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *SecurityMutationResponse) GetSecurity() *v11.SecurityOverview {
+func (x *SecurityMutationResponse) GetSecurity() *v1.SecurityOverview {
 	if x != nil {
 		return x.Security
 	}
 	return nil
 }
 
-func (x *SecurityMutationResponse) GetTokens() *v11.TokenPair {
+func (x *SecurityMutationResponse) GetTokens() *v1.TokenPair {
 	if x != nil {
 		return x.Tokens
 	}
@@ -1542,10 +1451,8 @@ func (x *SecurityMutationResponse) GetTokens() *v11.TokenPair {
 // ListSecurityActivitiesRequest 定义 SecurityActivities 的筛选与分页参数。
 type ListSecurityActivitiesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListSecurityActivities 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// page 返回继续分页所需的游标和结果规模信息。
-	Page          *v11.CursorPageRequest `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page          *v1.CursorPageRequest `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1580,14 +1487,7 @@ func (*ListSecurityActivitiesRequest) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{18}
 }
 
-func (x *ListSecurityActivitiesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *ListSecurityActivitiesRequest) GetPage() *v11.CursorPageRequest {
+func (x *ListSecurityActivitiesRequest) GetPage() *v1.CursorPageRequest {
 	if x != nil {
 		return x.Page
 	}
@@ -1598,9 +1498,9 @@ func (x *ListSecurityActivitiesRequest) GetPage() *v11.CursorPageRequest {
 type ListSecurityActivitiesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// items 包含本次返回或处理的业务条目。
-	Items []*v11.SecurityActivity `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Items []*v1.SecurityActivity `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	// page 返回继续分页所需的游标和结果规模信息。
-	Page          *v11.CursorPageResponse `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
+	Page          *v1.CursorPageResponse `protobuf:"bytes,2,opt,name=page,proto3" json:"page,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1635,14 +1535,14 @@ func (*ListSecurityActivitiesResponse) Descriptor() ([]byte, []int) {
 	return file_user_consumer_v1_security_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *ListSecurityActivitiesResponse) GetItems() []*v11.SecurityActivity {
+func (x *ListSecurityActivitiesResponse) GetItems() []*v1.SecurityActivity {
 	if x != nil {
 		return x.Items
 	}
 	return nil
 }
 
-func (x *ListSecurityActivitiesResponse) GetPage() *v11.CursorPageResponse {
+func (x *ListSecurityActivitiesResponse) GetPage() *v1.CursorPageResponse {
 	if x != nil {
 		return x.Page
 	}
@@ -1653,17 +1553,15 @@ var File_user_consumer_v1_security_proto protoreflect.FileDescriptor
 
 const file_user_consumer_v1_security_proto_rawDesc = "" +
 	"\n" +
-	"\x1fuser/consumer/v1/security.proto\x12\x10user.consumer.v1\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a%user/consumer/v1/authentication.proto\x1a\x19user/types/v1/types.proto\"T\n" +
-	"\x1aGetSecurityOverviewRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\"\xe5\x01\n" +
+	"\x1fuser/consumer/v1/security.proto\x12\x10user.consumer.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17validate/validate.proto\x1a%user/consumer/v1/authentication.proto\x1a\x19user/types/v1/types.proto\"\x1c\n" +
+	"\x1aGetSecurityOverviewRequest\"\xe5\x01\n" +
 	"\rStepUpBinding\x12<\n" +
 	"\tnew_phone\x18\x01 \x01(\tB\x1d\xfaB\x1ar\x18\x18\x102\x14^\\+[1-9][0-9]{7,14}$H\x00R\bnewPhone\x12.\n" +
 	"\rcredential_id\x18\x03 \x01(\x04B\a\xfaB\x042\x02 \x00H\x00R\fcredentialId\x12&\n" +
 	"\tdevice_id\x18\x04 \x01(\x04B\a\xfaB\x042\x02 \x00H\x00R\bdeviceId\x125\n" +
 	"\x10target_user_code\x18\x05 \x01(\tB\t\xfaB\x06r\x04\x10\x03\x18\x14H\x00R\x0etargetUserCodeB\a\n" +
-	"\x05value\"\xeb\x02\n" +
-	"\x1fStartStepUpAuthorizationRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12H\n" +
+	"\x05value\"\xb3\x02\n" +
+	"\x1fStartStepUpAuthorizationRequest\x12H\n" +
 	"\apurpose\x18\x02 \x01(\x0e2\x1f.user.consumer.v1.StepUpPurposeB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\apurpose\x129\n" +
 	"\abinding\x18\x03 \x01(\v2\x1f.user.consumer.v1.StepUpBindingR\abinding\x12S\n" +
 	"\x10preferred_factor\x18\x04 \x01(\x0e2\x1e.user.consumer.v1.StepUpFactorB\b\xfaB\x05\x82\x01\x02\x10\x01R\x0fpreferredFactor\x126\n" +
@@ -1675,13 +1573,11 @@ const file_user_consumer_v1_security_proto_rawDesc = "" +
 	"\rmasked_target\x18\x04 \x01(\tR\fmaskedTarget\x129\n" +
 	"\n" +
 	"expires_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\x127\n" +
-	"\tresend_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\bresendAt\"\xc6\x01\n" +
+	"\tresend_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\bresendAt\"\x8e\x01\n" +
 	"\x1cResendStepUpChallengeRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x126\n" +
 	"\x0fchallenge_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x0echallengeToken\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x81\x04\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xc9\x03\n" +
 	"\"CompleteStepUpAuthorizationRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x126\n" +
 	"\x0fchallenge_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\x0echallengeToken\x124\n" +
 	"\n" +
 	"phone_code\x18\x03 \x01(\tB\x13\xfaB\x10r\x0e2\f^[0-9]{4,8}$H\x00R\tphoneCode\x12(\n" +
@@ -1704,26 +1600,22 @@ const file_user_consumer_v1_security_proto_rawDesc = "" +
 	"\x06secret\x18\x02 \x01(\tR\x06secret\x12)\n" +
 	"\x10provisioning_uri\x18\x03 \x01(\tR\x0fprovisioningUri\x129\n" +
 	"\n" +
-	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\xbf\x01\n" +
-	"\x1aBeginTotpEnrollmentRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"expires_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x87\x01\n" +
+	"\x1aBeginTotpEnrollmentRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xe4\x01\n" +
-	"\x1cConfirmTotpEnrollmentRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12*\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xac\x01\n" +
+	"\x1cConfirmTotpEnrollmentRequest\x12*\n" +
 	"\tfactor_id\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\bfactorId\x12(\n" +
 	"\x04code\x18\x03 \x01(\tB\x14\xe0A\x02\xfaB\x0er\f2\n" +
 	"^[0-9]{6}$R\x04code\x126\n" +
 	"\x0fidempotency_key\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"x\n" +
 	"\x1dConfirmTotpEnrollmentResponse\x12%\n" +
 	"\x0erecovery_codes\x18\x01 \x03(\tR\rrecoveryCodes\x120\n" +
-	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\xc6\x01\n" +
-	"\"BeginRequiredTotpEnrollmentRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x120\n" +
+	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\x8e\x01\n" +
+	"\"BeginRequiredTotpEnrollmentRequest\x120\n" +
 	"\faction_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vactionToken\x126\n" +
-	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x9e\x02\n" +
-	"$ConfirmRequiredTotpEnrollmentRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x120\n" +
+	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\xe6\x01\n" +
+	"$ConfirmRequiredTotpEnrollmentRequest\x120\n" +
 	"\faction_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vactionToken\x12*\n" +
 	"\tfactor_id\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\bfactorId\x12(\n" +
 	"\x04code\x18\x04 \x01(\tB\x14\xe0A\x02\xfaB\x0er\f2\n" +
@@ -1731,23 +1623,20 @@ const file_user_consumer_v1_security_proto_rawDesc = "" +
 	"\x0fidempotency_key\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x9c\x01\n" +
 	"%ConfirmRequiredTotpEnrollmentResponse\x12%\n" +
 	"\x0erecovery_codes\x18\x01 \x03(\tR\rrecoveryCodes\x12L\n" +
-	"\rauthenticated\x18\x02 \x01(\v2&.user.consumer.v1.AuthenticationResultR\rauthenticated\"\xc3\x01\n" +
-	"\x1eRegenerateRecoveryCodesRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\rauthenticated\x18\x02 \x01(\v2&.user.consumer.v1.AuthenticationResultR\rauthenticated\"\x8b\x01\n" +
+	"\x1eRegenerateRecoveryCodesRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"z\n" +
 	"\x1fRegenerateRecoveryCodesResponse\x12%\n" +
 	"\x0erecovery_codes\x18\x01 \x03(\tR\rrecoveryCodes\x120\n" +
-	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\xb7\x01\n" +
-	"\x12DisableTotpRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\x7f\n" +
+	"\x12DisableTotpRequest\x121\n" +
 	"\rstep_up_token\x18\x02 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10 \x18\x80\x04R\vstepUpToken\x126\n" +
 	"\x0fidempotency_key\x18\x03 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\x0eidempotencyKey\"\x89\x01\n" +
 	"\x18SecurityMutationResponse\x12;\n" +
 	"\bsecurity\x18\x01 \x01(\v2\x1f.user.types.v1.SecurityOverviewR\bsecurity\x120\n" +
-	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"\x8d\x01\n" +
-	"\x1dListSecurityActivitiesRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x124\n" +
+	"\x06tokens\x18\x02 \x01(\v2\x18.user.types.v1.TokenPairR\x06tokens\"U\n" +
+	"\x1dListSecurityActivitiesRequest\x124\n" +
 	"\x04page\x18\x02 \x01(\v2 .user.types.v1.CursorPageRequestR\x04page\"\x8e\x01\n" +
 	"\x1eListSecurityActivitiesResponse\x125\n" +
 	"\x05items\x18\x01 \x03(\v2\x1f.user.types.v1.SecurityActivityR\x05items\x125\n" +
@@ -1830,74 +1719,62 @@ var file_user_consumer_v1_security_proto_goTypes = []any{
 	(*SecurityMutationResponse)(nil),              // 19: user.consumer.v1.SecurityMutationResponse
 	(*ListSecurityActivitiesRequest)(nil),         // 20: user.consumer.v1.ListSecurityActivitiesRequest
 	(*ListSecurityActivitiesResponse)(nil),        // 21: user.consumer.v1.ListSecurityActivitiesResponse
-	(v1.AppId)(0),                                 // 22: common.v1.AppId
-	(*timestamppb.Timestamp)(nil),                 // 23: google.protobuf.Timestamp
-	(*ExternalIdentityProof)(nil),                 // 24: user.consumer.v1.ExternalIdentityProof
-	(*v11.TokenPair)(nil),                         // 25: user.types.v1.TokenPair
-	(*AuthenticationResult)(nil),                  // 26: user.consumer.v1.AuthenticationResult
-	(*v11.SecurityOverview)(nil),                  // 27: user.types.v1.SecurityOverview
-	(*v11.CursorPageRequest)(nil),                 // 28: user.types.v1.CursorPageRequest
-	(*v11.SecurityActivity)(nil),                  // 29: user.types.v1.SecurityActivity
-	(*v11.CursorPageResponse)(nil),                // 30: user.types.v1.CursorPageResponse
+	(*timestamppb.Timestamp)(nil),                 // 22: google.protobuf.Timestamp
+	(*ExternalIdentityProof)(nil),                 // 23: user.consumer.v1.ExternalIdentityProof
+	(*v1.TokenPair)(nil),                          // 24: user.types.v1.TokenPair
+	(*AuthenticationResult)(nil),                  // 25: user.consumer.v1.AuthenticationResult
+	(*v1.SecurityOverview)(nil),                   // 26: user.types.v1.SecurityOverview
+	(*v1.CursorPageRequest)(nil),                  // 27: user.types.v1.CursorPageRequest
+	(*v1.SecurityActivity)(nil),                   // 28: user.types.v1.SecurityActivity
+	(*v1.CursorPageResponse)(nil),                 // 29: user.types.v1.CursorPageResponse
 }
 var file_user_consumer_v1_security_proto_depIdxs = []int32{
-	22, // 0: user.consumer.v1.GetSecurityOverviewRequest.app_id:type_name -> common.v1.AppId
-	22, // 1: user.consumer.v1.StartStepUpAuthorizationRequest.app_id:type_name -> common.v1.AppId
-	0,  // 2: user.consumer.v1.StartStepUpAuthorizationRequest.purpose:type_name -> user.consumer.v1.StepUpPurpose
-	3,  // 3: user.consumer.v1.StartStepUpAuthorizationRequest.binding:type_name -> user.consumer.v1.StepUpBinding
-	1,  // 4: user.consumer.v1.StartStepUpAuthorizationRequest.preferred_factor:type_name -> user.consumer.v1.StepUpFactor
-	0,  // 5: user.consumer.v1.StepUpChallenge.purpose:type_name -> user.consumer.v1.StepUpPurpose
-	1,  // 6: user.consumer.v1.StepUpChallenge.allowed_factors:type_name -> user.consumer.v1.StepUpFactor
-	23, // 7: user.consumer.v1.StepUpChallenge.expires_at:type_name -> google.protobuf.Timestamp
-	23, // 8: user.consumer.v1.StepUpChallenge.resend_at:type_name -> google.protobuf.Timestamp
-	22, // 9: user.consumer.v1.ResendStepUpChallengeRequest.app_id:type_name -> common.v1.AppId
-	22, // 10: user.consumer.v1.CompleteStepUpAuthorizationRequest.app_id:type_name -> common.v1.AppId
-	24, // 11: user.consumer.v1.CompleteStepUpAuthorizationRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
-	0,  // 12: user.consumer.v1.StepUpAuthorization.purpose:type_name -> user.consumer.v1.StepUpPurpose
-	23, // 13: user.consumer.v1.StepUpAuthorization.expires_at:type_name -> google.protobuf.Timestamp
-	23, // 14: user.consumer.v1.TotpEnrollment.expires_at:type_name -> google.protobuf.Timestamp
-	22, // 15: user.consumer.v1.BeginTotpEnrollmentRequest.app_id:type_name -> common.v1.AppId
-	22, // 16: user.consumer.v1.ConfirmTotpEnrollmentRequest.app_id:type_name -> common.v1.AppId
-	25, // 17: user.consumer.v1.ConfirmTotpEnrollmentResponse.tokens:type_name -> user.types.v1.TokenPair
-	22, // 18: user.consumer.v1.BeginRequiredTotpEnrollmentRequest.app_id:type_name -> common.v1.AppId
-	22, // 19: user.consumer.v1.ConfirmRequiredTotpEnrollmentRequest.app_id:type_name -> common.v1.AppId
-	26, // 20: user.consumer.v1.ConfirmRequiredTotpEnrollmentResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
-	22, // 21: user.consumer.v1.RegenerateRecoveryCodesRequest.app_id:type_name -> common.v1.AppId
-	25, // 22: user.consumer.v1.RegenerateRecoveryCodesResponse.tokens:type_name -> user.types.v1.TokenPair
-	22, // 23: user.consumer.v1.DisableTotpRequest.app_id:type_name -> common.v1.AppId
-	27, // 24: user.consumer.v1.SecurityMutationResponse.security:type_name -> user.types.v1.SecurityOverview
-	25, // 25: user.consumer.v1.SecurityMutationResponse.tokens:type_name -> user.types.v1.TokenPair
-	22, // 26: user.consumer.v1.ListSecurityActivitiesRequest.app_id:type_name -> common.v1.AppId
-	28, // 27: user.consumer.v1.ListSecurityActivitiesRequest.page:type_name -> user.types.v1.CursorPageRequest
-	29, // 28: user.consumer.v1.ListSecurityActivitiesResponse.items:type_name -> user.types.v1.SecurityActivity
-	30, // 29: user.consumer.v1.ListSecurityActivitiesResponse.page:type_name -> user.types.v1.CursorPageResponse
-	2,  // 30: user.consumer.v1.ConsumerSecurityService.GetSecurityOverview:input_type -> user.consumer.v1.GetSecurityOverviewRequest
-	4,  // 31: user.consumer.v1.ConsumerSecurityService.StartStepUpAuthorization:input_type -> user.consumer.v1.StartStepUpAuthorizationRequest
-	6,  // 32: user.consumer.v1.ConsumerSecurityService.ResendStepUpChallenge:input_type -> user.consumer.v1.ResendStepUpChallengeRequest
-	7,  // 33: user.consumer.v1.ConsumerSecurityService.CompleteStepUpAuthorization:input_type -> user.consumer.v1.CompleteStepUpAuthorizationRequest
-	10, // 34: user.consumer.v1.ConsumerSecurityService.BeginTotpEnrollment:input_type -> user.consumer.v1.BeginTotpEnrollmentRequest
-	11, // 35: user.consumer.v1.ConsumerSecurityService.ConfirmTotpEnrollment:input_type -> user.consumer.v1.ConfirmTotpEnrollmentRequest
-	13, // 36: user.consumer.v1.ConsumerSecurityService.BeginRequiredTotpEnrollment:input_type -> user.consumer.v1.BeginRequiredTotpEnrollmentRequest
-	14, // 37: user.consumer.v1.ConsumerSecurityService.ConfirmRequiredTotpEnrollment:input_type -> user.consumer.v1.ConfirmRequiredTotpEnrollmentRequest
-	16, // 38: user.consumer.v1.ConsumerSecurityService.RegenerateRecoveryCodes:input_type -> user.consumer.v1.RegenerateRecoveryCodesRequest
-	18, // 39: user.consumer.v1.ConsumerSecurityService.DisableTotp:input_type -> user.consumer.v1.DisableTotpRequest
-	20, // 40: user.consumer.v1.ConsumerSecurityService.ListSecurityActivities:input_type -> user.consumer.v1.ListSecurityActivitiesRequest
-	27, // 41: user.consumer.v1.ConsumerSecurityService.GetSecurityOverview:output_type -> user.types.v1.SecurityOverview
-	5,  // 42: user.consumer.v1.ConsumerSecurityService.StartStepUpAuthorization:output_type -> user.consumer.v1.StepUpChallenge
-	5,  // 43: user.consumer.v1.ConsumerSecurityService.ResendStepUpChallenge:output_type -> user.consumer.v1.StepUpChallenge
-	8,  // 44: user.consumer.v1.ConsumerSecurityService.CompleteStepUpAuthorization:output_type -> user.consumer.v1.StepUpAuthorization
-	9,  // 45: user.consumer.v1.ConsumerSecurityService.BeginTotpEnrollment:output_type -> user.consumer.v1.TotpEnrollment
-	12, // 46: user.consumer.v1.ConsumerSecurityService.ConfirmTotpEnrollment:output_type -> user.consumer.v1.ConfirmTotpEnrollmentResponse
-	9,  // 47: user.consumer.v1.ConsumerSecurityService.BeginRequiredTotpEnrollment:output_type -> user.consumer.v1.TotpEnrollment
-	15, // 48: user.consumer.v1.ConsumerSecurityService.ConfirmRequiredTotpEnrollment:output_type -> user.consumer.v1.ConfirmRequiredTotpEnrollmentResponse
-	17, // 49: user.consumer.v1.ConsumerSecurityService.RegenerateRecoveryCodes:output_type -> user.consumer.v1.RegenerateRecoveryCodesResponse
-	19, // 50: user.consumer.v1.ConsumerSecurityService.DisableTotp:output_type -> user.consumer.v1.SecurityMutationResponse
-	21, // 51: user.consumer.v1.ConsumerSecurityService.ListSecurityActivities:output_type -> user.consumer.v1.ListSecurityActivitiesResponse
-	41, // [41:52] is the sub-list for method output_type
-	30, // [30:41] is the sub-list for method input_type
-	30, // [30:30] is the sub-list for extension type_name
-	30, // [30:30] is the sub-list for extension extendee
-	0,  // [0:30] is the sub-list for field type_name
+	0,  // 0: user.consumer.v1.StartStepUpAuthorizationRequest.purpose:type_name -> user.consumer.v1.StepUpPurpose
+	3,  // 1: user.consumer.v1.StartStepUpAuthorizationRequest.binding:type_name -> user.consumer.v1.StepUpBinding
+	1,  // 2: user.consumer.v1.StartStepUpAuthorizationRequest.preferred_factor:type_name -> user.consumer.v1.StepUpFactor
+	0,  // 3: user.consumer.v1.StepUpChallenge.purpose:type_name -> user.consumer.v1.StepUpPurpose
+	1,  // 4: user.consumer.v1.StepUpChallenge.allowed_factors:type_name -> user.consumer.v1.StepUpFactor
+	22, // 5: user.consumer.v1.StepUpChallenge.expires_at:type_name -> google.protobuf.Timestamp
+	22, // 6: user.consumer.v1.StepUpChallenge.resend_at:type_name -> google.protobuf.Timestamp
+	23, // 7: user.consumer.v1.CompleteStepUpAuthorizationRequest.external_identity:type_name -> user.consumer.v1.ExternalIdentityProof
+	0,  // 8: user.consumer.v1.StepUpAuthorization.purpose:type_name -> user.consumer.v1.StepUpPurpose
+	22, // 9: user.consumer.v1.StepUpAuthorization.expires_at:type_name -> google.protobuf.Timestamp
+	22, // 10: user.consumer.v1.TotpEnrollment.expires_at:type_name -> google.protobuf.Timestamp
+	24, // 11: user.consumer.v1.ConfirmTotpEnrollmentResponse.tokens:type_name -> user.types.v1.TokenPair
+	25, // 12: user.consumer.v1.ConfirmRequiredTotpEnrollmentResponse.authenticated:type_name -> user.consumer.v1.AuthenticationResult
+	24, // 13: user.consumer.v1.RegenerateRecoveryCodesResponse.tokens:type_name -> user.types.v1.TokenPair
+	26, // 14: user.consumer.v1.SecurityMutationResponse.security:type_name -> user.types.v1.SecurityOverview
+	24, // 15: user.consumer.v1.SecurityMutationResponse.tokens:type_name -> user.types.v1.TokenPair
+	27, // 16: user.consumer.v1.ListSecurityActivitiesRequest.page:type_name -> user.types.v1.CursorPageRequest
+	28, // 17: user.consumer.v1.ListSecurityActivitiesResponse.items:type_name -> user.types.v1.SecurityActivity
+	29, // 18: user.consumer.v1.ListSecurityActivitiesResponse.page:type_name -> user.types.v1.CursorPageResponse
+	2,  // 19: user.consumer.v1.ConsumerSecurityService.GetSecurityOverview:input_type -> user.consumer.v1.GetSecurityOverviewRequest
+	4,  // 20: user.consumer.v1.ConsumerSecurityService.StartStepUpAuthorization:input_type -> user.consumer.v1.StartStepUpAuthorizationRequest
+	6,  // 21: user.consumer.v1.ConsumerSecurityService.ResendStepUpChallenge:input_type -> user.consumer.v1.ResendStepUpChallengeRequest
+	7,  // 22: user.consumer.v1.ConsumerSecurityService.CompleteStepUpAuthorization:input_type -> user.consumer.v1.CompleteStepUpAuthorizationRequest
+	10, // 23: user.consumer.v1.ConsumerSecurityService.BeginTotpEnrollment:input_type -> user.consumer.v1.BeginTotpEnrollmentRequest
+	11, // 24: user.consumer.v1.ConsumerSecurityService.ConfirmTotpEnrollment:input_type -> user.consumer.v1.ConfirmTotpEnrollmentRequest
+	13, // 25: user.consumer.v1.ConsumerSecurityService.BeginRequiredTotpEnrollment:input_type -> user.consumer.v1.BeginRequiredTotpEnrollmentRequest
+	14, // 26: user.consumer.v1.ConsumerSecurityService.ConfirmRequiredTotpEnrollment:input_type -> user.consumer.v1.ConfirmRequiredTotpEnrollmentRequest
+	16, // 27: user.consumer.v1.ConsumerSecurityService.RegenerateRecoveryCodes:input_type -> user.consumer.v1.RegenerateRecoveryCodesRequest
+	18, // 28: user.consumer.v1.ConsumerSecurityService.DisableTotp:input_type -> user.consumer.v1.DisableTotpRequest
+	20, // 29: user.consumer.v1.ConsumerSecurityService.ListSecurityActivities:input_type -> user.consumer.v1.ListSecurityActivitiesRequest
+	26, // 30: user.consumer.v1.ConsumerSecurityService.GetSecurityOverview:output_type -> user.types.v1.SecurityOverview
+	5,  // 31: user.consumer.v1.ConsumerSecurityService.StartStepUpAuthorization:output_type -> user.consumer.v1.StepUpChallenge
+	5,  // 32: user.consumer.v1.ConsumerSecurityService.ResendStepUpChallenge:output_type -> user.consumer.v1.StepUpChallenge
+	8,  // 33: user.consumer.v1.ConsumerSecurityService.CompleteStepUpAuthorization:output_type -> user.consumer.v1.StepUpAuthorization
+	9,  // 34: user.consumer.v1.ConsumerSecurityService.BeginTotpEnrollment:output_type -> user.consumer.v1.TotpEnrollment
+	12, // 35: user.consumer.v1.ConsumerSecurityService.ConfirmTotpEnrollment:output_type -> user.consumer.v1.ConfirmTotpEnrollmentResponse
+	9,  // 36: user.consumer.v1.ConsumerSecurityService.BeginRequiredTotpEnrollment:output_type -> user.consumer.v1.TotpEnrollment
+	15, // 37: user.consumer.v1.ConsumerSecurityService.ConfirmRequiredTotpEnrollment:output_type -> user.consumer.v1.ConfirmRequiredTotpEnrollmentResponse
+	17, // 38: user.consumer.v1.ConsumerSecurityService.RegenerateRecoveryCodes:output_type -> user.consumer.v1.RegenerateRecoveryCodesResponse
+	19, // 39: user.consumer.v1.ConsumerSecurityService.DisableTotp:output_type -> user.consumer.v1.SecurityMutationResponse
+	21, // 40: user.consumer.v1.ConsumerSecurityService.ListSecurityActivities:output_type -> user.consumer.v1.ListSecurityActivitiesResponse
+	30, // [30:41] is the sub-list for method output_type
+	19, // [19:30] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_user_consumer_v1_security_proto_init() }

@@ -64,8 +64,6 @@ enum VerificationAuditResult {
 message VerificationAudit {
   // 审计记录 ID。
   uint64 id = 1;
-  // App ID。
-  common.v1.AppId app_id = 2;
   // 用户 ID，匿名流程为 0。
   uint64 user_id = 3;
   // 验证目标脱敏展示值。
@@ -112,8 +110,6 @@ message VerificationAudit {
 
 // SendCodeRequest 请求发送短信验证码。
 message SendCodeRequest {
-  // App ID。
-  common.v1.AppId app_id = 1;
   // 用户 ID，匿名流程为 0。
   uint64 user_id = 2;
   // E.164 格式手机号。
@@ -142,8 +138,6 @@ message SendCodeResponse {
 
 // VerifyCodeRequest 请求校验验证码。
 message VerifyCodeRequest {
-  // App ID。
-  common.v1.AppId app_id = 1;
   // E.164 格式手机号。
   string phone = 2;
   // 验证用途。
@@ -166,8 +160,6 @@ message VerifyCodeResponse {
 
 // ConsumeVerificationTicketRequest 请求消费一次性验证票据。
 message ConsumeVerificationTicketRequest {
-  // App ID。
-  common.v1.AppId app_id = 1;
   // E.164 格式手机号。
   string phone = 2;
   // 验证用途。
@@ -194,7 +186,7 @@ message VerificationAuditFilter {
   optional VerificationAuditEvent event = 2;
   // result 承载 VerificationAuditFilter 关联的 VerificationAuditResult。
   optional VerificationAuditResult result = 3;
-  // user_id 标识当前 App 内关联的 User。
+  // user_id 标识关联的 User。
   optional uint64 user_id = 4;
   // recipient_phone 承载按约定地区规则规范化的手机号码。
   string recipient_phone = 5;
@@ -204,28 +196,22 @@ message VerificationAuditFilter {
   google.protobuf.Timestamp created_to = 7;
 }
 
-// ListVerificationAuditsRequest carries App scope, typed filters, and bounded paging.
+// ListVerificationAuditsRequest carries typed filters and bounded paging.
 message ListVerificationAuditsRequest {
-  // app_id 限定 ListVerificationAudits 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // filter 限定本次查询采用的筛选条件。
   VerificationAuditFilter filter = 2;
   // paging 指定分页大小和游标等查询参数。
   common.pagination.v1.PagingRequest paging = 3;
 }
 
-// GetVerificationAuditRequest selects one App-scoped audit fact.
+// GetVerificationAuditRequest selects one audit fact.
 message GetVerificationAuditRequest {
-  // app_id 限定 GetVerificationAudit 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // audit_id 标识关联的 Audit。
   uint64 audit_id = 2;
 }
 
 // RevealVerificationRecipientPhoneRequest explicitly selects FULL display for one audit fact.
 message RevealVerificationRecipientPhoneRequest {
-  // app_id 限定 RevealVerificationRecipientPhone 所属 App；UNSPECIFIED 不表示跨 App。
-  common.v1.AppId app_id = 1;
   // audit_id 标识关联的 Audit。
   uint64 audit_id = 2;
 }

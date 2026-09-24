@@ -7,9 +7,8 @@
 package configurationpb
 
 import (
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
-	v12 "github.com/feymanlee/redkit-protos/gen/go/support/messaging/v1"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/support/verification/v1"
+	v11 "github.com/feymanlee/redkit-protos/gen/go/support/messaging/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/support/verification/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -692,7 +691,7 @@ func (ConfigurationTargetType) EnumDescriptor() ([]byte, []int) {
 	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{9}
 }
 
-// DeliveryProbeOptionsWrapper exposes App-specific probe targets through the
+// DeliveryProbeOptionsWrapper exposes deployment-owned probe targets through the
 // bootstrap custom-config loader.
 type DeliveryProbeOptionsWrapper struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -739,11 +738,11 @@ func (x *DeliveryProbeOptionsWrapper) GetDeliveryProbe() *DeliveryProbeOptions {
 	return nil
 }
 
-// DeliveryProbeOptions contains deployment-owned targets for all Apps.
+// DeliveryProbeOptions contains deployment-owned probe targets.
 type DeliveryProbeOptions struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// apps 列出 DeliveryProbeOptions 关联的 AppDeliveryProbeOptions。
-	Apps          []*AppDeliveryProbeOptions `protobuf:"bytes,1,rep,name=apps,proto3" json:"apps,omitempty"`
+	// targets 列出 DeliveryProbeOptions 关联的 DeliveryProbeDeploymentTarget。
+	Targets       []*DeliveryProbeDeploymentTarget `protobuf:"bytes,1,rep,name=targets,proto3" json:"targets,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -778,62 +777,7 @@ func (*DeliveryProbeOptions) Descriptor() ([]byte, []int) {
 	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *DeliveryProbeOptions) GetApps() []*AppDeliveryProbeOptions {
-	if x != nil {
-		return x.Apps
-	}
-	return nil
-}
-
-// AppDeliveryProbeOptions binds probe targets to one concrete App.
-type AppDeliveryProbeOptions struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 AppDeliveryProbeOptions 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
-	// targets 列出 AppDeliveryProbeOptions 关联的 DeliveryProbeDeploymentTarget。
-	Targets       []*DeliveryProbeDeploymentTarget `protobuf:"bytes,2,rep,name=targets,proto3" json:"targets,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *AppDeliveryProbeOptions) Reset() {
-	*x = AppDeliveryProbeOptions{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *AppDeliveryProbeOptions) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*AppDeliveryProbeOptions) ProtoMessage() {}
-
-func (x *AppDeliveryProbeOptions) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use AppDeliveryProbeOptions.ProtoReflect.Descriptor instead.
-func (*AppDeliveryProbeOptions) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *AppDeliveryProbeOptions) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
-func (x *AppDeliveryProbeOptions) GetTargets() []*DeliveryProbeDeploymentTarget {
+func (x *DeliveryProbeOptions) GetTargets() []*DeliveryProbeDeploymentTarget {
 	if x != nil {
 		return x.Targets
 	}
@@ -855,7 +799,7 @@ type DeliveryProbeDeploymentTarget struct {
 
 func (x *DeliveryProbeDeploymentTarget) Reset() {
 	*x = DeliveryProbeDeploymentTarget{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[3]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -867,7 +811,7 @@ func (x *DeliveryProbeDeploymentTarget) String() string {
 func (*DeliveryProbeDeploymentTarget) ProtoMessage() {}
 
 func (x *DeliveryProbeDeploymentTarget) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[3]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -880,7 +824,7 @@ func (x *DeliveryProbeDeploymentTarget) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeliveryProbeDeploymentTarget.ProtoReflect.Descriptor instead.
 func (*DeliveryProbeDeploymentTarget) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{3}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *DeliveryProbeDeploymentTarget) GetKey() string {
@@ -921,7 +865,7 @@ type ConfigurationBlocker struct {
 
 func (x *ConfigurationBlocker) Reset() {
 	*x = ConfigurationBlocker{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[4]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -933,7 +877,7 @@ func (x *ConfigurationBlocker) String() string {
 func (*ConfigurationBlocker) ProtoMessage() {}
 
 func (x *ConfigurationBlocker) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[4]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -946,7 +890,7 @@ func (x *ConfigurationBlocker) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigurationBlocker.ProtoReflect.Descriptor instead.
 func (*ConfigurationBlocker) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{4}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ConfigurationBlocker) GetCode() ConfigurationBlockerCode {
@@ -981,7 +925,7 @@ func (x *ConfigurationBlocker) GetTargetKey() string {
 type VerificationDeliveryPolicyEntry struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// purpose 指定 VerificationDeliveryPolicyEntry 数据或能力的预期用途。
-	Purpose v11.VerificationPurpose `protobuf:"varint,1,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
+	Purpose v1.VerificationPurpose `protobuf:"varint,1,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
 	// locale 指定内容展示或消息投递采用的语言区域。
 	Locale string `protobuf:"bytes,2,opt,name=locale,proto3" json:"locale,omitempty"`
 	// template_id 标识关联的 Template。
@@ -992,7 +936,7 @@ type VerificationDeliveryPolicyEntry struct {
 
 func (x *VerificationDeliveryPolicyEntry) Reset() {
 	*x = VerificationDeliveryPolicyEntry{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[5]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1004,7 +948,7 @@ func (x *VerificationDeliveryPolicyEntry) String() string {
 func (*VerificationDeliveryPolicyEntry) ProtoMessage() {}
 
 func (x *VerificationDeliveryPolicyEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[5]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1017,14 +961,14 @@ func (x *VerificationDeliveryPolicyEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerificationDeliveryPolicyEntry.ProtoReflect.Descriptor instead.
 func (*VerificationDeliveryPolicyEntry) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{5}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *VerificationDeliveryPolicyEntry) GetPurpose() v11.VerificationPurpose {
+func (x *VerificationDeliveryPolicyEntry) GetPurpose() v1.VerificationPurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.VerificationPurpose(0)
+	return v1.VerificationPurpose(0)
 }
 
 func (x *VerificationDeliveryPolicyEntry) GetLocale() string {
@@ -1045,7 +989,7 @@ func (x *VerificationDeliveryPolicyEntry) GetTemplateId() uint64 {
 type VerificationPolicy struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// purpose 指定 VerificationPolicy 数据或能力的预期用途。
-	Purpose v11.VerificationPurpose `protobuf:"varint,1,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
+	Purpose v1.VerificationPurpose `protobuf:"varint,1,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
 	// enabled 显式表示 VerificationPolicy 是否满足该条件。
 	Enabled bool `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
 	// code_ttl_seconds 以秒表示对应流程的持续时间或上限。
@@ -1062,7 +1006,7 @@ type VerificationPolicy struct {
 
 func (x *VerificationPolicy) Reset() {
 	*x = VerificationPolicy{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[6]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1074,7 +1018,7 @@ func (x *VerificationPolicy) String() string {
 func (*VerificationPolicy) ProtoMessage() {}
 
 func (x *VerificationPolicy) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[6]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1087,14 +1031,14 @@ func (x *VerificationPolicy) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerificationPolicy.ProtoReflect.Descriptor instead.
 func (*VerificationPolicy) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{6}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *VerificationPolicy) GetPurpose() v11.VerificationPurpose {
+func (x *VerificationPolicy) GetPurpose() v1.VerificationPurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.VerificationPurpose(0)
+	return v1.VerificationPurpose(0)
 }
 
 func (x *VerificationPolicy) GetEnabled() bool {
@@ -1153,7 +1097,7 @@ type VerificationSecurityBaseline struct {
 
 func (x *VerificationSecurityBaseline) Reset() {
 	*x = VerificationSecurityBaseline{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[7]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1165,7 +1109,7 @@ func (x *VerificationSecurityBaseline) String() string {
 func (*VerificationSecurityBaseline) ProtoMessage() {}
 
 func (x *VerificationSecurityBaseline) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[7]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1178,7 +1122,7 @@ func (x *VerificationSecurityBaseline) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerificationSecurityBaseline.ProtoReflect.Descriptor instead.
 func (*VerificationSecurityBaseline) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{7}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *VerificationSecurityBaseline) GetCodeAlgorithm() string {
@@ -1254,7 +1198,7 @@ type ConfigurationDraftSummary struct {
 
 func (x *ConfigurationDraftSummary) Reset() {
 	*x = ConfigurationDraftSummary{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[8]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1266,7 +1210,7 @@ func (x *ConfigurationDraftSummary) String() string {
 func (*ConfigurationDraftSummary) ProtoMessage() {}
 
 func (x *ConfigurationDraftSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[8]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1279,7 +1223,7 @@ func (x *ConfigurationDraftSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigurationDraftSummary.ProtoReflect.Descriptor instead.
 func (*ConfigurationDraftSummary) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{8}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ConfigurationDraftSummary) GetId() uint64 {
@@ -1371,7 +1315,7 @@ type SmsChannelRevisionSummary struct {
 	// Stable Channel code.
 	ChannelCode string `protobuf:"bytes,4,opt,name=channel_code,json=channelCode,proto3" json:"channel_code,omitempty"`
 	// Provider identity.
-	Provider v12.SmsProvider `protobuf:"varint,5,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
+	Provider v11.SmsProvider `protobuf:"varint,5,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
 	// Channel order.
 	Priority uint32 `protobuf:"varint,6,opt,name=priority,proto3" json:"priority,omitempty"`
 	// Whether the Revision is enabled in the Draft.
@@ -1402,7 +1346,7 @@ type SmsChannelRevisionSummary struct {
 
 func (x *SmsChannelRevisionSummary) Reset() {
 	*x = SmsChannelRevisionSummary{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[9]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1414,7 +1358,7 @@ func (x *SmsChannelRevisionSummary) String() string {
 func (*SmsChannelRevisionSummary) ProtoMessage() {}
 
 func (x *SmsChannelRevisionSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[9]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1427,7 +1371,7 @@ func (x *SmsChannelRevisionSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SmsChannelRevisionSummary.ProtoReflect.Descriptor instead.
 func (*SmsChannelRevisionSummary) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{9}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *SmsChannelRevisionSummary) GetChannelId() uint64 {
@@ -1458,11 +1402,11 @@ func (x *SmsChannelRevisionSummary) GetChannelCode() string {
 	return ""
 }
 
-func (x *SmsChannelRevisionSummary) GetProvider() v12.SmsProvider {
+func (x *SmsChannelRevisionSummary) GetProvider() v11.SmsProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v12.SmsProvider(0)
+	return v11.SmsProvider(0)
 }
 
 func (x *SmsChannelRevisionSummary) GetPriority() uint32 {
@@ -1565,7 +1509,7 @@ type SmsTemplateRevisionSummary struct {
 	// Business purpose.
 	Purpose string `protobuf:"bytes,6,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// Provider identity.
-	Provider v12.SmsProvider `protobuf:"varint,7,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
+	Provider v11.SmsProvider `protobuf:"varint,7,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
 	// Provider-side template identity.
 	ProviderTemplateId string `protobuf:"bytes,8,opt,name=provider_template_id,json=providerTemplateId,proto3" json:"provider_template_id,omitempty"`
 	// Whether the Revision is enabled in the Draft.
@@ -1586,7 +1530,7 @@ type SmsTemplateRevisionSummary struct {
 
 func (x *SmsTemplateRevisionSummary) Reset() {
 	*x = SmsTemplateRevisionSummary{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[10]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1598,7 +1542,7 @@ func (x *SmsTemplateRevisionSummary) String() string {
 func (*SmsTemplateRevisionSummary) ProtoMessage() {}
 
 func (x *SmsTemplateRevisionSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[10]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1611,7 +1555,7 @@ func (x *SmsTemplateRevisionSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SmsTemplateRevisionSummary.ProtoReflect.Descriptor instead.
 func (*SmsTemplateRevisionSummary) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{10}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *SmsTemplateRevisionSummary) GetTemplateId() uint64 {
@@ -1656,11 +1600,11 @@ func (x *SmsTemplateRevisionSummary) GetPurpose() string {
 	return ""
 }
 
-func (x *SmsTemplateRevisionSummary) GetProvider() v12.SmsProvider {
+func (x *SmsTemplateRevisionSummary) GetProvider() v11.SmsProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v12.SmsProvider(0)
+	return v11.SmsProvider(0)
 }
 
 func (x *SmsTemplateRevisionSummary) GetProviderTemplateId() string {
@@ -1715,8 +1659,6 @@ func (x *SmsTemplateRevisionSummary) GetChangedFields() []string {
 // CreateConfigurationDraftRequest creates an editable Draft from the current composition.
 type CreateConfigurationDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// default_locale 指定内容展示或消息投递采用的语言区域。
 	DefaultLocale string `protobuf:"bytes,2,opt,name=default_locale,json=defaultLocale,proto3" json:"default_locale,omitempty"`
 	// default_phone_region 指定号码、服务或业务规则采用的地区。
@@ -1735,7 +1677,7 @@ type CreateConfigurationDraftRequest struct {
 
 func (x *CreateConfigurationDraftRequest) Reset() {
 	*x = CreateConfigurationDraftRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[11]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1747,7 +1689,7 @@ func (x *CreateConfigurationDraftRequest) String() string {
 func (*CreateConfigurationDraftRequest) ProtoMessage() {}
 
 func (x *CreateConfigurationDraftRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[11]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1760,14 +1702,7 @@ func (x *CreateConfigurationDraftRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateConfigurationDraftRequest.ProtoReflect.Descriptor instead.
 func (*CreateConfigurationDraftRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *CreateConfigurationDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CreateConfigurationDraftRequest) GetDefaultLocale() string {
@@ -1815,14 +1750,12 @@ func (x *CreateConfigurationDraftRequest) GetRequestId() string {
 // CreateSmsChannelRevisionRequest creates and selects a new immutable Channel Revision.
 type CreateSmsChannelRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateSmsChannelRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	// channel_code 提供 CreateSmsChannelRevision 对外稳定使用的业务编码。
 	ChannelCode string `protobuf:"bytes,3,opt,name=channel_code,json=channelCode,proto3" json:"channel_code,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
-	Provider v12.SmsProvider `protobuf:"varint,4,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
+	Provider v11.SmsProvider `protobuf:"varint,4,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
 	// priority 决定 CreateSmsChannelRevision 在待处理队列中的相对顺序。
 	Priority uint32 `protobuf:"varint,5,opt,name=priority,proto3" json:"priority,omitempty"`
 	// enabled 显式表示 CreateSmsChannelRevision 是否满足该条件。
@@ -1853,7 +1786,7 @@ type CreateSmsChannelRevisionRequest struct {
 
 func (x *CreateSmsChannelRevisionRequest) Reset() {
 	*x = CreateSmsChannelRevisionRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[12]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1865,7 +1798,7 @@ func (x *CreateSmsChannelRevisionRequest) String() string {
 func (*CreateSmsChannelRevisionRequest) ProtoMessage() {}
 
 func (x *CreateSmsChannelRevisionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[12]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1878,14 +1811,7 @@ func (x *CreateSmsChannelRevisionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSmsChannelRevisionRequest.ProtoReflect.Descriptor instead.
 func (*CreateSmsChannelRevisionRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *CreateSmsChannelRevisionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *CreateSmsChannelRevisionRequest) GetDraftId() uint64 {
@@ -1902,11 +1828,11 @@ func (x *CreateSmsChannelRevisionRequest) GetChannelCode() string {
 	return ""
 }
 
-func (x *CreateSmsChannelRevisionRequest) GetProvider() v12.SmsProvider {
+func (x *CreateSmsChannelRevisionRequest) GetProvider() v11.SmsProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v12.SmsProvider(0)
+	return v11.SmsProvider(0)
 }
 
 func (x *CreateSmsChannelRevisionRequest) GetPriority() uint32 {
@@ -1996,8 +1922,6 @@ func (x *CreateSmsChannelRevisionRequest) GetRequestId() string {
 // CreateSmsTemplateRevisionRequest creates and selects a new immutable Template Revision.
 type CreateSmsTemplateRevisionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 CreateSmsTemplateRevision 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	// template_code 提供 CreateSmsTemplateRevision 对外稳定使用的业务编码。
@@ -2007,7 +1931,7 @@ type CreateSmsTemplateRevisionRequest struct {
 	// purpose 指定 CreateSmsTemplateRevision 数据或能力的预期用途。
 	Purpose string `protobuf:"bytes,5,opt,name=purpose,proto3" json:"purpose,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
-	Provider v12.SmsProvider `protobuf:"varint,6,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
+	Provider v11.SmsProvider `protobuf:"varint,6,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
 	// provider_template_id 标识关联的 ProviderTemplate。
 	ProviderTemplateId string `protobuf:"bytes,7,opt,name=provider_template_id,json=providerTemplateId,proto3" json:"provider_template_id,omitempty"`
 	// parameter_schema 描述消息模板允许使用的参数结构与约束。
@@ -2030,7 +1954,7 @@ type CreateSmsTemplateRevisionRequest struct {
 
 func (x *CreateSmsTemplateRevisionRequest) Reset() {
 	*x = CreateSmsTemplateRevisionRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[13]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2042,7 +1966,7 @@ func (x *CreateSmsTemplateRevisionRequest) String() string {
 func (*CreateSmsTemplateRevisionRequest) ProtoMessage() {}
 
 func (x *CreateSmsTemplateRevisionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[13]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2055,14 +1979,7 @@ func (x *CreateSmsTemplateRevisionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateSmsTemplateRevisionRequest.ProtoReflect.Descriptor instead.
 func (*CreateSmsTemplateRevisionRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *CreateSmsTemplateRevisionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CreateSmsTemplateRevisionRequest) GetDraftId() uint64 {
@@ -2093,11 +2010,11 @@ func (x *CreateSmsTemplateRevisionRequest) GetPurpose() string {
 	return ""
 }
 
-func (x *CreateSmsTemplateRevisionRequest) GetProvider() v12.SmsProvider {
+func (x *CreateSmsTemplateRevisionRequest) GetProvider() v11.SmsProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v12.SmsProvider(0)
+	return v11.SmsProvider(0)
 }
 
 func (x *CreateSmsTemplateRevisionRequest) GetProviderTemplateId() string {
@@ -2159,8 +2076,6 @@ func (x *CreateSmsTemplateRevisionRequest) GetRequestId() string {
 // UpdateVerificationPolicyDraftRequest atomically replaces Draft defaults and Verification policies.
 type UpdateVerificationPolicyDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 UpdateVerificationPolicyDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	// default_locale 指定内容展示或消息投递采用的语言区域。
@@ -2185,7 +2100,7 @@ type UpdateVerificationPolicyDraftRequest struct {
 
 func (x *UpdateVerificationPolicyDraftRequest) Reset() {
 	*x = UpdateVerificationPolicyDraftRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[14]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2197,7 +2112,7 @@ func (x *UpdateVerificationPolicyDraftRequest) String() string {
 func (*UpdateVerificationPolicyDraftRequest) ProtoMessage() {}
 
 func (x *UpdateVerificationPolicyDraftRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[14]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2210,14 +2125,7 @@ func (x *UpdateVerificationPolicyDraftRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use UpdateVerificationPolicyDraftRequest.ProtoReflect.Descriptor instead.
 func (*UpdateVerificationPolicyDraftRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *UpdateVerificationPolicyDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *UpdateVerificationPolicyDraftRequest) GetDraftId() uint64 {
@@ -2286,8 +2194,6 @@ func (x *UpdateVerificationPolicyDraftRequest) GetRequestId() string {
 // PreflightConfigurationDraftRequest validates one editable Draft without provider delivery.
 type PreflightConfigurationDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 PreflightConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -2304,7 +2210,7 @@ type PreflightConfigurationDraftRequest struct {
 
 func (x *PreflightConfigurationDraftRequest) Reset() {
 	*x = PreflightConfigurationDraftRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[15]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2316,7 +2222,7 @@ func (x *PreflightConfigurationDraftRequest) String() string {
 func (*PreflightConfigurationDraftRequest) ProtoMessage() {}
 
 func (x *PreflightConfigurationDraftRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[15]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2329,14 +2235,7 @@ func (x *PreflightConfigurationDraftRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use PreflightConfigurationDraftRequest.ProtoReflect.Descriptor instead.
 func (*PreflightConfigurationDraftRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *PreflightConfigurationDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *PreflightConfigurationDraftRequest) GetDraftId() uint64 {
@@ -2387,7 +2286,7 @@ type ConfigurationPreflightResult struct {
 
 func (x *ConfigurationPreflightResult) Reset() {
 	*x = ConfigurationPreflightResult{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[16]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2399,7 +2298,7 @@ func (x *ConfigurationPreflightResult) String() string {
 func (*ConfigurationPreflightResult) ProtoMessage() {}
 
 func (x *ConfigurationPreflightResult) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[16]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2412,7 +2311,7 @@ func (x *ConfigurationPreflightResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigurationPreflightResult.ProtoReflect.Descriptor instead.
 func (*ConfigurationPreflightResult) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{16}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ConfigurationPreflightResult) GetDraft() *ConfigurationDraftSummary {
@@ -2444,7 +2343,7 @@ type DeliveryProbeTarget struct {
 
 func (x *DeliveryProbeTarget) Reset() {
 	*x = DeliveryProbeTarget{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[17]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2456,7 +2355,7 @@ func (x *DeliveryProbeTarget) String() string {
 func (*DeliveryProbeTarget) ProtoMessage() {}
 
 func (x *DeliveryProbeTarget) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[17]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2469,7 +2368,7 @@ func (x *DeliveryProbeTarget) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeliveryProbeTarget.ProtoReflect.Descriptor instead.
 func (*DeliveryProbeTarget) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{17}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *DeliveryProbeTarget) GetKey() string {
@@ -2501,7 +2400,7 @@ type DeliveryProbeAttempt struct {
 	// attempt_no 是 DeliveryProbeAttempt 对外关联与审计使用的业务编号。
 	AttemptNo uint32 `protobuf:"varint,2,opt,name=attempt_no,json=attemptNo,proto3" json:"attempt_no,omitempty"`
 	// provider 标识本次能力使用的外部 Provider。
-	Provider v12.SmsProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
+	Provider v11.SmsProvider `protobuf:"varint,3,opt,name=provider,proto3,enum=support.messaging.v1.SmsProvider" json:"provider,omitempty"`
 	// channel_revision_id 标识关联的 ChannelRevision。
 	ChannelRevisionId uint64 `protobuf:"varint,4,opt,name=channel_revision_id,json=channelRevisionId,proto3" json:"channel_revision_id,omitempty"`
 	// template_revision_id 标识关联的 TemplateRevision。
@@ -2524,7 +2423,7 @@ type DeliveryProbeAttempt struct {
 
 func (x *DeliveryProbeAttempt) Reset() {
 	*x = DeliveryProbeAttempt{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[18]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2536,7 +2435,7 @@ func (x *DeliveryProbeAttempt) String() string {
 func (*DeliveryProbeAttempt) ProtoMessage() {}
 
 func (x *DeliveryProbeAttempt) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[18]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2549,7 +2448,7 @@ func (x *DeliveryProbeAttempt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeliveryProbeAttempt.ProtoReflect.Descriptor instead.
 func (*DeliveryProbeAttempt) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{18}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *DeliveryProbeAttempt) GetId() uint64 {
@@ -2566,11 +2465,11 @@ func (x *DeliveryProbeAttempt) GetAttemptNo() uint32 {
 	return 0
 }
 
-func (x *DeliveryProbeAttempt) GetProvider() v12.SmsProvider {
+func (x *DeliveryProbeAttempt) GetProvider() v11.SmsProvider {
 	if x != nil {
 		return x.Provider
 	}
-	return v12.SmsProvider(0)
+	return v11.SmsProvider(0)
 }
 
 func (x *DeliveryProbeAttempt) GetChannelRevisionId() uint64 {
@@ -2643,7 +2542,7 @@ type DeliveryProbe struct {
 	// masked_phone 承载按约定地区规则规范化的手机号码。
 	MaskedPhone string `protobuf:"bytes,5,opt,name=masked_phone,json=maskedPhone,proto3" json:"masked_phone,omitempty"`
 	// purpose 指定 DeliveryProbe 数据或能力的预期用途。
-	Purpose v11.VerificationPurpose `protobuf:"varint,6,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
+	Purpose v1.VerificationPurpose `protobuf:"varint,6,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
 	// locale 指定内容展示或消息投递采用的语言区域。
 	Locale string `protobuf:"bytes,7,opt,name=locale,proto3" json:"locale,omitempty"`
 	// template_id 标识关联的 Template。
@@ -2668,7 +2567,7 @@ type DeliveryProbe struct {
 
 func (x *DeliveryProbe) Reset() {
 	*x = DeliveryProbe{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[19]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2680,7 +2579,7 @@ func (x *DeliveryProbe) String() string {
 func (*DeliveryProbe) ProtoMessage() {}
 
 func (x *DeliveryProbe) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[19]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2693,7 +2592,7 @@ func (x *DeliveryProbe) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeliveryProbe.ProtoReflect.Descriptor instead.
 func (*DeliveryProbe) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{19}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *DeliveryProbe) GetId() uint64 {
@@ -2731,11 +2630,11 @@ func (x *DeliveryProbe) GetMaskedPhone() string {
 	return ""
 }
 
-func (x *DeliveryProbe) GetPurpose() v11.VerificationPurpose {
+func (x *DeliveryProbe) GetPurpose() v1.VerificationPurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.VerificationPurpose(0)
+	return v1.VerificationPurpose(0)
 }
 
 func (x *DeliveryProbe) GetLocale() string {
@@ -2804,8 +2703,6 @@ func (x *DeliveryProbe) GetCompletedAt() *timestamppb.Timestamp {
 // GetDeliveryProbeReadinessRequest selects the current Draft probe view.
 type GetDeliveryProbeReadinessRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 GetDeliveryProbeReadiness 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId       uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -2814,7 +2711,7 @@ type GetDeliveryProbeReadinessRequest struct {
 
 func (x *GetDeliveryProbeReadinessRequest) Reset() {
 	*x = GetDeliveryProbeReadinessRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[20]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2826,7 +2723,7 @@ func (x *GetDeliveryProbeReadinessRequest) String() string {
 func (*GetDeliveryProbeReadinessRequest) ProtoMessage() {}
 
 func (x *GetDeliveryProbeReadinessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[20]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2839,14 +2736,7 @@ func (x *GetDeliveryProbeReadinessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDeliveryProbeReadinessRequest.ProtoReflect.Descriptor instead.
 func (*GetDeliveryProbeReadinessRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *GetDeliveryProbeReadinessRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetDeliveryProbeReadinessRequest) GetDraftId() uint64 {
@@ -2877,7 +2767,7 @@ type DeliveryProbeReadiness struct {
 
 func (x *DeliveryProbeReadiness) Reset() {
 	*x = DeliveryProbeReadiness{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[21]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2889,7 +2779,7 @@ func (x *DeliveryProbeReadiness) String() string {
 func (*DeliveryProbeReadiness) ProtoMessage() {}
 
 func (x *DeliveryProbeReadiness) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[21]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2902,7 +2792,7 @@ func (x *DeliveryProbeReadiness) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeliveryProbeReadiness.ProtoReflect.Descriptor instead.
 func (*DeliveryProbeReadiness) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{21}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *DeliveryProbeReadiness) GetDraftId() uint64 {
@@ -2950,14 +2840,12 @@ func (x *DeliveryProbeReadiness) GetExecutable() bool {
 // ExecuteDeliveryProbeRequest executes one Draft-only diagnostic delivery.
 type ExecuteDeliveryProbeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ExecuteDeliveryProbe 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	// target_key 在约定作用域内稳定定位 ExecuteDeliveryProbe。
 	TargetKey string `protobuf:"bytes,3,opt,name=target_key,json=targetKey,proto3" json:"target_key,omitempty"`
 	// purpose 指定 ExecuteDeliveryProbe 数据或能力的预期用途。
-	Purpose v11.VerificationPurpose `protobuf:"varint,4,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
+	Purpose v1.VerificationPurpose `protobuf:"varint,4,opt,name=purpose,proto3,enum=support.verification.v1.VerificationPurpose" json:"purpose,omitempty"`
 	// locale 指定内容展示或消息投递采用的语言区域。
 	Locale string `protobuf:"bytes,5,opt,name=locale,proto3" json:"locale,omitempty"`
 	// parameters 承载 ExecuteDeliveryProbe 关联的 map<string, string>。
@@ -2976,7 +2864,7 @@ type ExecuteDeliveryProbeRequest struct {
 
 func (x *ExecuteDeliveryProbeRequest) Reset() {
 	*x = ExecuteDeliveryProbeRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[22]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2988,7 +2876,7 @@ func (x *ExecuteDeliveryProbeRequest) String() string {
 func (*ExecuteDeliveryProbeRequest) ProtoMessage() {}
 
 func (x *ExecuteDeliveryProbeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[22]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3001,14 +2889,7 @@ func (x *ExecuteDeliveryProbeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecuteDeliveryProbeRequest.ProtoReflect.Descriptor instead.
 func (*ExecuteDeliveryProbeRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *ExecuteDeliveryProbeRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *ExecuteDeliveryProbeRequest) GetDraftId() uint64 {
@@ -3025,11 +2906,11 @@ func (x *ExecuteDeliveryProbeRequest) GetTargetKey() string {
 	return ""
 }
 
-func (x *ExecuteDeliveryProbeRequest) GetPurpose() v11.VerificationPurpose {
+func (x *ExecuteDeliveryProbeRequest) GetPurpose() v1.VerificationPurpose {
 	if x != nil {
 		return x.Purpose
 	}
-	return v11.VerificationPurpose(0)
+	return v1.VerificationPurpose(0)
 }
 
 func (x *ExecuteDeliveryProbeRequest) GetLocale() string {
@@ -3077,8 +2958,6 @@ func (x *ExecuteDeliveryProbeRequest) GetRequestId() string {
 // DiscardConfigurationDraftRequest discards an unused operator Draft.
 type DiscardConfigurationDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 DiscardConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3095,7 +2974,7 @@ type DiscardConfigurationDraftRequest struct {
 
 func (x *DiscardConfigurationDraftRequest) Reset() {
 	*x = DiscardConfigurationDraftRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[23]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3107,7 +2986,7 @@ func (x *DiscardConfigurationDraftRequest) String() string {
 func (*DiscardConfigurationDraftRequest) ProtoMessage() {}
 
 func (x *DiscardConfigurationDraftRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[23]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3120,14 +2999,7 @@ func (x *DiscardConfigurationDraftRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DiscardConfigurationDraftRequest.ProtoReflect.Descriptor instead.
 func (*DiscardConfigurationDraftRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *DiscardConfigurationDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *DiscardConfigurationDraftRequest) GetDraftId() uint64 {
@@ -3180,7 +3052,7 @@ type ConfigurationReleaseSummary struct {
 
 func (x *ConfigurationReleaseSummary) Reset() {
 	*x = ConfigurationReleaseSummary{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[24]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3192,7 +3064,7 @@ func (x *ConfigurationReleaseSummary) String() string {
 func (*ConfigurationReleaseSummary) ProtoMessage() {}
 
 func (x *ConfigurationReleaseSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[24]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3205,7 +3077,7 @@ func (x *ConfigurationReleaseSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigurationReleaseSummary.ProtoReflect.Descriptor instead.
 func (*ConfigurationReleaseSummary) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{24}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ConfigurationReleaseSummary) GetId() uint64 {
@@ -3268,7 +3140,7 @@ type ConfigurationRelease struct {
 
 func (x *ConfigurationRelease) Reset() {
 	*x = ConfigurationRelease{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[25]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3280,7 +3152,7 @@ func (x *ConfigurationRelease) String() string {
 func (*ConfigurationRelease) ProtoMessage() {}
 
 func (x *ConfigurationRelease) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[25]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3293,7 +3165,7 @@ func (x *ConfigurationRelease) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigurationRelease.ProtoReflect.Descriptor instead.
 func (*ConfigurationRelease) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{25}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *ConfigurationRelease) GetId() uint64 {
@@ -3401,18 +3273,16 @@ func (x *ConfigurationRelease) GetActivatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// ListConfigurationReleasesRequest selects one App's immutable history.
+// ListConfigurationReleasesRequest selects the immutable history.
 type ListConfigurationReleasesRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ListConfigurationReleases 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ListConfigurationReleasesRequest) Reset() {
 	*x = ListConfigurationReleasesRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[26]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3424,7 +3294,7 @@ func (x *ListConfigurationReleasesRequest) String() string {
 func (*ListConfigurationReleasesRequest) ProtoMessage() {}
 
 func (x *ListConfigurationReleasesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[26]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3437,14 +3307,7 @@ func (x *ListConfigurationReleasesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListConfigurationReleasesRequest.ProtoReflect.Descriptor instead.
 func (*ListConfigurationReleasesRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{26}
-}
-
-func (x *ListConfigurationReleasesRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{25}
 }
 
 // ListConfigurationReleasesResponse returns newest-first Release snapshots.
@@ -3458,7 +3321,7 @@ type ListConfigurationReleasesResponse struct {
 
 func (x *ListConfigurationReleasesResponse) Reset() {
 	*x = ListConfigurationReleasesResponse{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[27]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3470,7 +3333,7 @@ func (x *ListConfigurationReleasesResponse) String() string {
 func (*ListConfigurationReleasesResponse) ProtoMessage() {}
 
 func (x *ListConfigurationReleasesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[27]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3483,7 +3346,7 @@ func (x *ListConfigurationReleasesResponse) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use ListConfigurationReleasesResponse.ProtoReflect.Descriptor instead.
 func (*ListConfigurationReleasesResponse) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{27}
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *ListConfigurationReleasesResponse) GetReleases() []*ConfigurationRelease {
@@ -3496,8 +3359,6 @@ func (x *ListConfigurationReleasesResponse) GetReleases() []*ConfigurationReleas
 // ActivateConfigurationDraftRequest publishes one fully validated Draft.
 type ActivateConfigurationDraftRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 ActivateConfigurationDraft 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// draft_id 标识关联的 Draft。
 	DraftId uint64 `protobuf:"varint,2,opt,name=draft_id,json=draftId,proto3" json:"draft_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3514,7 +3375,7 @@ type ActivateConfigurationDraftRequest struct {
 
 func (x *ActivateConfigurationDraftRequest) Reset() {
 	*x = ActivateConfigurationDraftRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[28]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3526,7 +3387,7 @@ func (x *ActivateConfigurationDraftRequest) String() string {
 func (*ActivateConfigurationDraftRequest) ProtoMessage() {}
 
 func (x *ActivateConfigurationDraftRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[28]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3539,14 +3400,7 @@ func (x *ActivateConfigurationDraftRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use ActivateConfigurationDraftRequest.ProtoReflect.Descriptor instead.
 func (*ActivateConfigurationDraftRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{28}
-}
-
-func (x *ActivateConfigurationDraftRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ActivateConfigurationDraftRequest) GetDraftId() uint64 {
@@ -3587,8 +3441,6 @@ func (x *ActivateConfigurationDraftRequest) GetRequestId() string {
 // RollbackConfigurationReleaseRequest republishes one historical snapshot.
 type RollbackConfigurationReleaseRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定 RollbackConfigurationRelease 所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// release_id 标识关联的 Release。
 	ReleaseId uint64 `protobuf:"varint,2,opt,name=release_id,json=releaseId,proto3" json:"release_id,omitempty"`
 	// operator_id 标识关联的后台 Operator。
@@ -3605,7 +3457,7 @@ type RollbackConfigurationReleaseRequest struct {
 
 func (x *RollbackConfigurationReleaseRequest) Reset() {
 	*x = RollbackConfigurationReleaseRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[29]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3617,7 +3469,7 @@ func (x *RollbackConfigurationReleaseRequest) String() string {
 func (*RollbackConfigurationReleaseRequest) ProtoMessage() {}
 
 func (x *RollbackConfigurationReleaseRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[29]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3630,14 +3482,7 @@ func (x *RollbackConfigurationReleaseRequest) ProtoReflect() protoreflect.Messag
 
 // Deprecated: Use RollbackConfigurationReleaseRequest.ProtoReflect.Descriptor instead.
 func (*RollbackConfigurationReleaseRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{29}
-}
-
-func (x *RollbackConfigurationReleaseRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *RollbackConfigurationReleaseRequest) GetReleaseId() uint64 {
@@ -3675,11 +3520,10 @@ func (x *RollbackConfigurationReleaseRequest) GetRequestId() string {
 	return ""
 }
 
-// ConfigurationReadiness is the App-scoped migration and release-readiness view.
+// ConfigurationReadiness is the migration and release-readiness view.
 type ConfigurationReadiness struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Concrete App identity.
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// Migration state.
 	MigrationStatus ConfigurationMigrationStatus `protobuf:"varint,2,opt,name=migration_status,json=migrationStatus,proto3,enum=support.configuration.v1.ConfigurationMigrationStatus" json:"migration_status,omitempty"`
 	// Current migration Draft, when present.
@@ -3704,8 +3548,8 @@ type ConfigurationReadiness struct {
 	ConfigurationWritesFrozen bool `protobuf:"varint,12,opt,name=configuration_writes_frozen,json=configurationWritesFrozen,proto3" json:"configuration_writes_frozen,omitempty"`
 	// Configuration source expected by the running binary.
 	RuntimeModel ConfigurationRuntimeModel `protobuf:"varint,13,opt,name=runtime_model,json=runtimeModel,proto3,enum=support.configuration.v1.ConfigurationRuntimeModel" json:"runtime_model,omitempty"`
-	// Whether Gamoji and Pincp both have Active Releases.
-	AllAppsReady bool `protobuf:"varint,14,opt,name=all_apps_ready,json=allAppsReady,proto3" json:"all_apps_ready,omitempty"`
+	// Whether the platform has an Active Configuration Release.
+	PlatformReleaseReady bool `protobuf:"varint,14,opt,name=platform_release_ready,json=platformReleaseReady,proto3" json:"platform_release_ready,omitempty"`
 	// Safe failure category without credentials or provider responses.
 	CutoverFailureCategory ConfigurationCutoverFailureCategory `protobuf:"varint,15,opt,name=cutover_failure_category,json=cutoverFailureCategory,proto3,enum=support.configuration.v1.ConfigurationCutoverFailureCategory" json:"cutover_failure_category,omitempty"`
 	// Latest safe recovery outcome.
@@ -3718,7 +3562,7 @@ type ConfigurationReadiness struct {
 
 func (x *ConfigurationReadiness) Reset() {
 	*x = ConfigurationReadiness{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[30]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3730,7 +3574,7 @@ func (x *ConfigurationReadiness) String() string {
 func (*ConfigurationReadiness) ProtoMessage() {}
 
 func (x *ConfigurationReadiness) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[30]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3743,14 +3587,7 @@ func (x *ConfigurationReadiness) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigurationReadiness.ProtoReflect.Descriptor instead.
 func (*ConfigurationReadiness) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{30}
-}
-
-func (x *ConfigurationReadiness) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *ConfigurationReadiness) GetMigrationStatus() ConfigurationMigrationStatus {
@@ -3837,9 +3674,9 @@ func (x *ConfigurationReadiness) GetRuntimeModel() ConfigurationRuntimeModel {
 	return ConfigurationRuntimeModel_CONFIGURATION_RUNTIME_MODEL_UNSPECIFIED
 }
 
-func (x *ConfigurationReadiness) GetAllAppsReady() bool {
+func (x *ConfigurationReadiness) GetPlatformReleaseReady() bool {
 	if x != nil {
-		return x.AllAppsReady
+		return x.PlatformReleaseReady
 	}
 	return false
 }
@@ -3865,18 +3702,16 @@ func (x *ConfigurationReadiness) GetCutoverUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// GetConfigurationReadinessRequest selects one App readiness view.
+// GetConfigurationReadinessRequest selects the readiness view.
 type GetConfigurationReadinessRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Concrete App identity.
-	AppId         v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetConfigurationReadinessRequest) Reset() {
 	*x = GetConfigurationReadinessRequest{}
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[31]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3888,7 +3723,7 @@ func (x *GetConfigurationReadinessRequest) String() string {
 func (*GetConfigurationReadinessRequest) ProtoMessage() {}
 
 func (x *GetConfigurationReadinessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_support_configuration_v1_configuration_proto_msgTypes[31]
+	mi := &file_support_configuration_v1_configuration_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3901,28 +3736,18 @@ func (x *GetConfigurationReadinessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConfigurationReadinessRequest.ProtoReflect.Descriptor instead.
 func (*GetConfigurationReadinessRequest) Descriptor() ([]byte, []int) {
-	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{31}
-}
-
-func (x *GetConfigurationReadinessRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
+	return file_support_configuration_v1_configuration_proto_rawDescGZIP(), []int{30}
 }
 
 var File_support_configuration_v1_configuration_proto protoreflect.FileDescriptor
 
 const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\n" +
-	",support/configuration/v1/configuration.proto\x12\x18support.configuration.v1\x1a\x16common/v1/common.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a$support/messaging/v1/messaging.proto\x1a*support/verification/v1/verification.proto\"t\n" +
+	",support/configuration/v1/configuration.proto\x12\x18support.configuration.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a$support/messaging/v1/messaging.proto\x1a*support/verification/v1/verification.proto\"t\n" +
 	"\x1bDeliveryProbeOptionsWrapper\x12U\n" +
-	"\x0edelivery_probe\x18\x01 \x01(\v2..support.configuration.v1.DeliveryProbeOptionsR\rdeliveryProbe\"]\n" +
-	"\x14DeliveryProbeOptions\x12E\n" +
-	"\x04apps\x18\x01 \x03(\v21.support.configuration.v1.AppDeliveryProbeOptionsR\x04apps\"\x95\x01\n" +
-	"\x17AppDeliveryProbeOptions\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12Q\n" +
-	"\atargets\x18\x02 \x03(\v27.support.configuration.v1.DeliveryProbeDeploymentTargetR\atargets\"]\n" +
+	"\x0edelivery_probe\x18\x01 \x01(\v2..support.configuration.v1.DeliveryProbeOptionsR\rdeliveryProbe\"i\n" +
+	"\x14DeliveryProbeOptions\x12Q\n" +
+	"\atargets\x18\x01 \x03(\v27.support.configuration.v1.DeliveryProbeDeploymentTargetR\atargets\"]\n" +
 	"\x1dDeliveryProbeDeploymentTarget\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05label\x18\x02 \x01(\tR\x05label\x12\x14\n" +
@@ -4011,9 +3836,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"created_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12)\n" +
 	"\x10parameter_schema\x18\f \x01(\tR\x0fparameterSchema\x12\x16\n" +
 	"\x06remark\x18\r \x01(\tR\x06remark\x12%\n" +
-	"\x0echanged_fields\x18\x0e \x03(\tR\rchangedFields\"\x9e\x02\n" +
-	"\x1fCreateConfigurationDraftRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12%\n" +
+	"\x0echanged_fields\x18\x0e \x03(\tR\rchangedFields\"\xf5\x01\n" +
+	"\x1fCreateConfigurationDraftRequest\x12%\n" +
 	"\x0edefault_locale\x18\x02 \x01(\tR\rdefaultLocale\x120\n" +
 	"\x14default_phone_region\x18\x03 \x01(\tR\x12defaultPhoneRegion\x12\x1f\n" +
 	"\voperator_id\x18\x04 \x01(\x04R\n" +
@@ -4021,9 +3845,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\x06reason\x18\x05 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x06 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\a \x01(\tR\trequestId\"\xb7\x04\n" +
-	"\x1fCreateSmsChannelRevisionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"request_id\x18\a \x01(\tR\trequestId\"\x8e\x04\n" +
+	"\x1fCreateSmsChannelRevisionRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\x12!\n" +
 	"\fchannel_code\x18\x03 \x01(\tR\vchannelCode\x12=\n" +
 	"\bprovider\x18\x04 \x01(\x0e2!.support.messaging.v1.SmsProviderR\bprovider\x12\x1a\n" +
@@ -4041,9 +3864,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\x06reason\x18\x0e \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x0f \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x10 \x01(\tR\trequestId\"\x82\x04\n" +
-	" CreateSmsTemplateRevisionRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"request_id\x18\x10 \x01(\tR\trequestId\"\xd9\x03\n" +
+	" CreateSmsTemplateRevisionRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\x12#\n" +
 	"\rtemplate_code\x18\x03 \x01(\tR\ftemplateCode\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
@@ -4059,9 +3881,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\x06reason\x18\f \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\r \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x0e \x01(\tR\trequestId\"\x89\x04\n" +
-	"$UpdateVerificationPolicyDraftRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"request_id\x18\x0e \x01(\tR\trequestId\"\xe0\x03\n" +
+	"$UpdateVerificationPolicyDraftRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\x12%\n" +
 	"\x0edefault_locale\x18\x03 \x01(\tR\rdefaultLocale\x120\n" +
 	"\x14default_phone_region\x18\x04 \x01(\tR\x12defaultPhoneRegion\x12f\n" +
@@ -4073,9 +3894,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\foperation_no\x18\t \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
 	"request_id\x18\n" +
-	" \x01(\tR\trequestId\"\xe3\x01\n" +
-	"\"PreflightConfigurationDraftRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	" \x01(\tR\trequestId\"\xba\x01\n" +
+	"\"PreflightConfigurationDraftRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\x04R\n" +
 	"operatorId\x12\x16\n" +
@@ -4125,9 +3945,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\battempts\x18\r \x03(\v2..support.configuration.v1.DeliveryProbeAttemptR\battempts\x129\n" +
 	"\n" +
 	"created_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12=\n" +
-	"\fcompleted_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"f\n" +
-	" GetDeliveryProbeReadinessRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\fcompleted_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\"=\n" +
+	" GetDeliveryProbeReadinessRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\"\xc1\x02\n" +
 	"\x16DeliveryProbeReadiness\x12\x19\n" +
 	"\bdraft_id\x18\x01 \x01(\x04R\adraftId\x12;\n" +
@@ -4137,9 +3956,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\x0edefault_locale\x18\x05 \x01(\tR\rdefaultLocale\x12\x1e\n" +
 	"\n" +
 	"executable\x18\x06 \x01(\bR\n" +
-	"executable\"\x81\x04\n" +
-	"\x1bExecuteDeliveryProbeRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"executable\"\xd8\x03\n" +
+	"\x1bExecuteDeliveryProbeRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\x12\x1d\n" +
 	"\n" +
 	"target_key\x18\x03 \x01(\tR\ttargetKey\x12F\n" +
@@ -4157,9 +3975,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	" \x01(\tR\trequestId\x1a=\n" +
 	"\x0fParametersEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe1\x01\n" +
-	" DiscardConfigurationDraftRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb8\x01\n" +
+	" DiscardConfigurationDraftRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\x04R\n" +
 	"operatorId\x12\x16\n" +
@@ -4190,22 +4007,19 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\x0echanged_fields\x18\r \x03(\tR\rchangedFields\x129\n" +
 	"\n" +
 	"created_at\x18\x0e \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12=\n" +
-	"\factivated_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\vactivatedAt\"K\n" +
-	" ListConfigurationReleasesRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\"o\n" +
+	"\factivated_at\x18\x0f \x01(\v2\x1a.google.protobuf.TimestampR\vactivatedAt\"\"\n" +
+	" ListConfigurationReleasesRequest\"o\n" +
 	"!ListConfigurationReleasesResponse\x12J\n" +
-	"\breleases\x18\x01 \x03(\v2..support.configuration.v1.ConfigurationReleaseR\breleases\"\xe2\x01\n" +
-	"!ActivateConfigurationDraftRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x19\n" +
+	"\breleases\x18\x01 \x03(\v2..support.configuration.v1.ConfigurationReleaseR\breleases\"\xb9\x01\n" +
+	"!ActivateConfigurationDraftRequest\x12\x19\n" +
 	"\bdraft_id\x18\x02 \x01(\x04R\adraftId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\x04R\n" +
 	"operatorId\x12\x16\n" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tR\trequestId\"\xe8\x01\n" +
-	"#RollbackConfigurationReleaseRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\x1d\n" +
+	"request_id\x18\x06 \x01(\tR\trequestId\"\xbf\x01\n" +
+	"#RollbackConfigurationReleaseRequest\x12\x1d\n" +
 	"\n" +
 	"release_id\x18\x02 \x01(\x04R\treleaseId\x12\x1f\n" +
 	"\voperator_id\x18\x03 \x01(\x04R\n" +
@@ -4213,9 +4027,8 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	"\x06reason\x18\x04 \x01(\tR\x06reason\x12!\n" +
 	"\foperation_no\x18\x05 \x01(\tR\voperationNo\x12\x1d\n" +
 	"\n" +
-	"request_id\x18\x06 \x01(\tR\trequestId\"\x9a\v\n" +
-	"\x16ConfigurationReadiness\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12a\n" +
+	"request_id\x18\x06 \x01(\tR\trequestId\"\x81\v\n" +
+	"\x16ConfigurationReadiness\x12a\n" +
 	"\x10migration_status\x18\x02 \x01(\x0e26.support.configuration.v1.ConfigurationMigrationStatusR\x0fmigrationStatus\x12I\n" +
 	"\x05draft\x18\x03 \x01(\v23.support.configuration.v1.ConfigurationDraftSummaryR\x05draft\x12`\n" +
 	"\x11channel_revisions\x18\x04 \x03(\v23.support.configuration.v1.SmsChannelRevisionSummaryR\x10channelRevisions\x12c\n" +
@@ -4229,13 +4042,12 @@ const file_support_configuration_v1_configuration_proto_rawDesc = "" +
 	" \x01(\v26.support.configuration.v1.VerificationSecurityBaselineR\x1cverificationSecurityBaseline\x12X\n" +
 	"\rcutover_phase\x18\v \x01(\x0e23.support.configuration.v1.ConfigurationCutoverPhaseR\fcutoverPhase\x12>\n" +
 	"\x1bconfiguration_writes_frozen\x18\f \x01(\bR\x19configurationWritesFrozen\x12X\n" +
-	"\rruntime_model\x18\r \x01(\x0e23.support.configuration.v1.ConfigurationRuntimeModelR\fruntimeModel\x12$\n" +
-	"\x0eall_apps_ready\x18\x0e \x01(\bR\fallAppsReady\x12w\n" +
+	"\rruntime_model\x18\r \x01(\x0e23.support.configuration.v1.ConfigurationRuntimeModelR\fruntimeModel\x124\n" +
+	"\x16platform_release_ready\x18\x0e \x01(\bR\x14platformReleaseReady\x12w\n" +
 	"\x18cutover_failure_category\x18\x0f \x01(\x0e2=.support.configuration.v1.ConfigurationCutoverFailureCategoryR\x16cutoverFailureCategory\x12t\n" +
 	"\x17cutover_recovery_result\x18\x10 \x01(\x0e2<.support.configuration.v1.ConfigurationCutoverRecoveryResultR\x15cutoverRecoveryResult\x12H\n" +
-	"\x12cutover_updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\x10cutoverUpdatedAt\"K\n" +
-	" GetConfigurationReadinessRequest\x12'\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdR\x05appId*\xe5\x01\n" +
+	"\x12cutover_updated_at\x18\x11 \x01(\v2\x1a.google.protobuf.TimestampR\x10cutoverUpdatedAt\"\"\n" +
+	" GetConfigurationReadinessRequest*\xe5\x01\n" +
 	"\x1cConfigurationMigrationStatus\x12.\n" +
 	"*CONFIGURATION_MIGRATION_STATUS_UNSPECIFIED\x10\x00\x122\n" +
 	".CONFIGURATION_MIGRATION_STATUS_REQUIRES_REPAIR\x10\x01\x126\n" +
@@ -4339,7 +4151,7 @@ func file_support_configuration_v1_configuration_proto_rawDescGZIP() []byte {
 }
 
 var file_support_configuration_v1_configuration_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
-var file_support_configuration_v1_configuration_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
+var file_support_configuration_v1_configuration_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
 var file_support_configuration_v1_configuration_proto_goTypes = []any{
 	(ConfigurationMigrationStatus)(0),            // 0: support.configuration.v1.ConfigurationMigrationStatus
 	(ConfigurationCutoverPhase)(0),               // 1: support.configuration.v1.ConfigurationCutoverPhase
@@ -4353,144 +4165,127 @@ var file_support_configuration_v1_configuration_proto_goTypes = []any{
 	(ConfigurationTargetType)(0),                 // 9: support.configuration.v1.ConfigurationTargetType
 	(*DeliveryProbeOptionsWrapper)(nil),          // 10: support.configuration.v1.DeliveryProbeOptionsWrapper
 	(*DeliveryProbeOptions)(nil),                 // 11: support.configuration.v1.DeliveryProbeOptions
-	(*AppDeliveryProbeOptions)(nil),              // 12: support.configuration.v1.AppDeliveryProbeOptions
-	(*DeliveryProbeDeploymentTarget)(nil),        // 13: support.configuration.v1.DeliveryProbeDeploymentTarget
-	(*ConfigurationBlocker)(nil),                 // 14: support.configuration.v1.ConfigurationBlocker
-	(*VerificationDeliveryPolicyEntry)(nil),      // 15: support.configuration.v1.VerificationDeliveryPolicyEntry
-	(*VerificationPolicy)(nil),                   // 16: support.configuration.v1.VerificationPolicy
-	(*VerificationSecurityBaseline)(nil),         // 17: support.configuration.v1.VerificationSecurityBaseline
-	(*ConfigurationDraftSummary)(nil),            // 18: support.configuration.v1.ConfigurationDraftSummary
-	(*SmsChannelRevisionSummary)(nil),            // 19: support.configuration.v1.SmsChannelRevisionSummary
-	(*SmsTemplateRevisionSummary)(nil),           // 20: support.configuration.v1.SmsTemplateRevisionSummary
-	(*CreateConfigurationDraftRequest)(nil),      // 21: support.configuration.v1.CreateConfigurationDraftRequest
-	(*CreateSmsChannelRevisionRequest)(nil),      // 22: support.configuration.v1.CreateSmsChannelRevisionRequest
-	(*CreateSmsTemplateRevisionRequest)(nil),     // 23: support.configuration.v1.CreateSmsTemplateRevisionRequest
-	(*UpdateVerificationPolicyDraftRequest)(nil), // 24: support.configuration.v1.UpdateVerificationPolicyDraftRequest
-	(*PreflightConfigurationDraftRequest)(nil),   // 25: support.configuration.v1.PreflightConfigurationDraftRequest
-	(*ConfigurationPreflightResult)(nil),         // 26: support.configuration.v1.ConfigurationPreflightResult
-	(*DeliveryProbeTarget)(nil),                  // 27: support.configuration.v1.DeliveryProbeTarget
-	(*DeliveryProbeAttempt)(nil),                 // 28: support.configuration.v1.DeliveryProbeAttempt
-	(*DeliveryProbe)(nil),                        // 29: support.configuration.v1.DeliveryProbe
-	(*GetDeliveryProbeReadinessRequest)(nil),     // 30: support.configuration.v1.GetDeliveryProbeReadinessRequest
-	(*DeliveryProbeReadiness)(nil),               // 31: support.configuration.v1.DeliveryProbeReadiness
-	(*ExecuteDeliveryProbeRequest)(nil),          // 32: support.configuration.v1.ExecuteDeliveryProbeRequest
-	(*DiscardConfigurationDraftRequest)(nil),     // 33: support.configuration.v1.DiscardConfigurationDraftRequest
-	(*ConfigurationReleaseSummary)(nil),          // 34: support.configuration.v1.ConfigurationReleaseSummary
-	(*ConfigurationRelease)(nil),                 // 35: support.configuration.v1.ConfigurationRelease
-	(*ListConfigurationReleasesRequest)(nil),     // 36: support.configuration.v1.ListConfigurationReleasesRequest
-	(*ListConfigurationReleasesResponse)(nil),    // 37: support.configuration.v1.ListConfigurationReleasesResponse
-	(*ActivateConfigurationDraftRequest)(nil),    // 38: support.configuration.v1.ActivateConfigurationDraftRequest
-	(*RollbackConfigurationReleaseRequest)(nil),  // 39: support.configuration.v1.RollbackConfigurationReleaseRequest
-	(*ConfigurationReadiness)(nil),               // 40: support.configuration.v1.ConfigurationReadiness
-	(*GetConfigurationReadinessRequest)(nil),     // 41: support.configuration.v1.GetConfigurationReadinessRequest
-	nil,                                          // 42: support.configuration.v1.ExecuteDeliveryProbeRequest.ParametersEntry
-	(v1.AppId)(0),                                // 43: common.v1.AppId
-	(v11.VerificationPurpose)(0),                 // 44: support.verification.v1.VerificationPurpose
-	(*timestamppb.Timestamp)(nil),                // 45: google.protobuf.Timestamp
-	(v12.SmsProvider)(0),                         // 46: support.messaging.v1.SmsProvider
-	(*emptypb.Empty)(nil),                        // 47: google.protobuf.Empty
+	(*DeliveryProbeDeploymentTarget)(nil),        // 12: support.configuration.v1.DeliveryProbeDeploymentTarget
+	(*ConfigurationBlocker)(nil),                 // 13: support.configuration.v1.ConfigurationBlocker
+	(*VerificationDeliveryPolicyEntry)(nil),      // 14: support.configuration.v1.VerificationDeliveryPolicyEntry
+	(*VerificationPolicy)(nil),                   // 15: support.configuration.v1.VerificationPolicy
+	(*VerificationSecurityBaseline)(nil),         // 16: support.configuration.v1.VerificationSecurityBaseline
+	(*ConfigurationDraftSummary)(nil),            // 17: support.configuration.v1.ConfigurationDraftSummary
+	(*SmsChannelRevisionSummary)(nil),            // 18: support.configuration.v1.SmsChannelRevisionSummary
+	(*SmsTemplateRevisionSummary)(nil),           // 19: support.configuration.v1.SmsTemplateRevisionSummary
+	(*CreateConfigurationDraftRequest)(nil),      // 20: support.configuration.v1.CreateConfigurationDraftRequest
+	(*CreateSmsChannelRevisionRequest)(nil),      // 21: support.configuration.v1.CreateSmsChannelRevisionRequest
+	(*CreateSmsTemplateRevisionRequest)(nil),     // 22: support.configuration.v1.CreateSmsTemplateRevisionRequest
+	(*UpdateVerificationPolicyDraftRequest)(nil), // 23: support.configuration.v1.UpdateVerificationPolicyDraftRequest
+	(*PreflightConfigurationDraftRequest)(nil),   // 24: support.configuration.v1.PreflightConfigurationDraftRequest
+	(*ConfigurationPreflightResult)(nil),         // 25: support.configuration.v1.ConfigurationPreflightResult
+	(*DeliveryProbeTarget)(nil),                  // 26: support.configuration.v1.DeliveryProbeTarget
+	(*DeliveryProbeAttempt)(nil),                 // 27: support.configuration.v1.DeliveryProbeAttempt
+	(*DeliveryProbe)(nil),                        // 28: support.configuration.v1.DeliveryProbe
+	(*GetDeliveryProbeReadinessRequest)(nil),     // 29: support.configuration.v1.GetDeliveryProbeReadinessRequest
+	(*DeliveryProbeReadiness)(nil),               // 30: support.configuration.v1.DeliveryProbeReadiness
+	(*ExecuteDeliveryProbeRequest)(nil),          // 31: support.configuration.v1.ExecuteDeliveryProbeRequest
+	(*DiscardConfigurationDraftRequest)(nil),     // 32: support.configuration.v1.DiscardConfigurationDraftRequest
+	(*ConfigurationReleaseSummary)(nil),          // 33: support.configuration.v1.ConfigurationReleaseSummary
+	(*ConfigurationRelease)(nil),                 // 34: support.configuration.v1.ConfigurationRelease
+	(*ListConfigurationReleasesRequest)(nil),     // 35: support.configuration.v1.ListConfigurationReleasesRequest
+	(*ListConfigurationReleasesResponse)(nil),    // 36: support.configuration.v1.ListConfigurationReleasesResponse
+	(*ActivateConfigurationDraftRequest)(nil),    // 37: support.configuration.v1.ActivateConfigurationDraftRequest
+	(*RollbackConfigurationReleaseRequest)(nil),  // 38: support.configuration.v1.RollbackConfigurationReleaseRequest
+	(*ConfigurationReadiness)(nil),               // 39: support.configuration.v1.ConfigurationReadiness
+	(*GetConfigurationReadinessRequest)(nil),     // 40: support.configuration.v1.GetConfigurationReadinessRequest
+	nil,                                          // 41: support.configuration.v1.ExecuteDeliveryProbeRequest.ParametersEntry
+	(v1.VerificationPurpose)(0),                  // 42: support.verification.v1.VerificationPurpose
+	(*timestamppb.Timestamp)(nil),                // 43: google.protobuf.Timestamp
+	(v11.SmsProvider)(0),                         // 44: support.messaging.v1.SmsProvider
+	(*emptypb.Empty)(nil),                        // 45: google.protobuf.Empty
 }
 var file_support_configuration_v1_configuration_proto_depIdxs = []int32{
 	11, // 0: support.configuration.v1.DeliveryProbeOptionsWrapper.delivery_probe:type_name -> support.configuration.v1.DeliveryProbeOptions
-	12, // 1: support.configuration.v1.DeliveryProbeOptions.apps:type_name -> support.configuration.v1.AppDeliveryProbeOptions
-	43, // 2: support.configuration.v1.AppDeliveryProbeOptions.app_id:type_name -> common.v1.AppId
-	13, // 3: support.configuration.v1.AppDeliveryProbeOptions.targets:type_name -> support.configuration.v1.DeliveryProbeDeploymentTarget
-	8,  // 4: support.configuration.v1.ConfigurationBlocker.code:type_name -> support.configuration.v1.ConfigurationBlockerCode
-	9,  // 5: support.configuration.v1.ConfigurationBlocker.target_type:type_name -> support.configuration.v1.ConfigurationTargetType
-	44, // 6: support.configuration.v1.VerificationDeliveryPolicyEntry.purpose:type_name -> support.verification.v1.VerificationPurpose
-	44, // 7: support.configuration.v1.VerificationPolicy.purpose:type_name -> support.verification.v1.VerificationPurpose
-	5,  // 8: support.configuration.v1.ConfigurationDraftSummary.status:type_name -> support.configuration.v1.ConfigurationDraftStatus
-	6,  // 9: support.configuration.v1.ConfigurationDraftSummary.preflight_status:type_name -> support.configuration.v1.ConfigurationPreflightStatus
-	45, // 10: support.configuration.v1.ConfigurationDraftSummary.created_at:type_name -> google.protobuf.Timestamp
-	45, // 11: support.configuration.v1.ConfigurationDraftSummary.updated_at:type_name -> google.protobuf.Timestamp
-	15, // 12: support.configuration.v1.ConfigurationDraftSummary.delivery_policies:type_name -> support.configuration.v1.VerificationDeliveryPolicyEntry
-	16, // 13: support.configuration.v1.ConfigurationDraftSummary.verification_policies:type_name -> support.configuration.v1.VerificationPolicy
-	46, // 14: support.configuration.v1.SmsChannelRevisionSummary.provider:type_name -> support.messaging.v1.SmsProvider
-	6,  // 15: support.configuration.v1.SmsChannelRevisionSummary.preflight_status:type_name -> support.configuration.v1.ConfigurationPreflightStatus
-	45, // 16: support.configuration.v1.SmsChannelRevisionSummary.created_at:type_name -> google.protobuf.Timestamp
-	46, // 17: support.configuration.v1.SmsTemplateRevisionSummary.provider:type_name -> support.messaging.v1.SmsProvider
-	6,  // 18: support.configuration.v1.SmsTemplateRevisionSummary.preflight_status:type_name -> support.configuration.v1.ConfigurationPreflightStatus
-	45, // 19: support.configuration.v1.SmsTemplateRevisionSummary.created_at:type_name -> google.protobuf.Timestamp
-	43, // 20: support.configuration.v1.CreateConfigurationDraftRequest.app_id:type_name -> common.v1.AppId
-	43, // 21: support.configuration.v1.CreateSmsChannelRevisionRequest.app_id:type_name -> common.v1.AppId
-	46, // 22: support.configuration.v1.CreateSmsChannelRevisionRequest.provider:type_name -> support.messaging.v1.SmsProvider
-	43, // 23: support.configuration.v1.CreateSmsTemplateRevisionRequest.app_id:type_name -> common.v1.AppId
-	46, // 24: support.configuration.v1.CreateSmsTemplateRevisionRequest.provider:type_name -> support.messaging.v1.SmsProvider
-	43, // 25: support.configuration.v1.UpdateVerificationPolicyDraftRequest.app_id:type_name -> common.v1.AppId
-	15, // 26: support.configuration.v1.UpdateVerificationPolicyDraftRequest.delivery_policies:type_name -> support.configuration.v1.VerificationDeliveryPolicyEntry
-	16, // 27: support.configuration.v1.UpdateVerificationPolicyDraftRequest.verification_policies:type_name -> support.configuration.v1.VerificationPolicy
-	43, // 28: support.configuration.v1.PreflightConfigurationDraftRequest.app_id:type_name -> common.v1.AppId
-	18, // 29: support.configuration.v1.ConfigurationPreflightResult.draft:type_name -> support.configuration.v1.ConfigurationDraftSummary
-	14, // 30: support.configuration.v1.ConfigurationPreflightResult.blockers:type_name -> support.configuration.v1.ConfigurationBlocker
-	46, // 31: support.configuration.v1.DeliveryProbeAttempt.provider:type_name -> support.messaging.v1.SmsProvider
-	45, // 32: support.configuration.v1.DeliveryProbeAttempt.created_at:type_name -> google.protobuf.Timestamp
-	44, // 33: support.configuration.v1.DeliveryProbe.purpose:type_name -> support.verification.v1.VerificationPurpose
-	7,  // 34: support.configuration.v1.DeliveryProbe.status:type_name -> support.configuration.v1.DeliveryProbeStatus
-	28, // 35: support.configuration.v1.DeliveryProbe.attempts:type_name -> support.configuration.v1.DeliveryProbeAttempt
-	45, // 36: support.configuration.v1.DeliveryProbe.created_at:type_name -> google.protobuf.Timestamp
-	45, // 37: support.configuration.v1.DeliveryProbe.completed_at:type_name -> google.protobuf.Timestamp
-	43, // 38: support.configuration.v1.GetDeliveryProbeReadinessRequest.app_id:type_name -> common.v1.AppId
-	27, // 39: support.configuration.v1.DeliveryProbeReadiness.targets:type_name -> support.configuration.v1.DeliveryProbeTarget
-	29, // 40: support.configuration.v1.DeliveryProbeReadiness.probes:type_name -> support.configuration.v1.DeliveryProbe
-	43, // 41: support.configuration.v1.ExecuteDeliveryProbeRequest.app_id:type_name -> common.v1.AppId
-	44, // 42: support.configuration.v1.ExecuteDeliveryProbeRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
-	42, // 43: support.configuration.v1.ExecuteDeliveryProbeRequest.parameters:type_name -> support.configuration.v1.ExecuteDeliveryProbeRequest.ParametersEntry
-	43, // 44: support.configuration.v1.DiscardConfigurationDraftRequest.app_id:type_name -> common.v1.AppId
-	45, // 45: support.configuration.v1.ConfigurationReleaseSummary.activated_at:type_name -> google.protobuf.Timestamp
-	15, // 46: support.configuration.v1.ConfigurationRelease.delivery_policies:type_name -> support.configuration.v1.VerificationDeliveryPolicyEntry
-	16, // 47: support.configuration.v1.ConfigurationRelease.verification_policies:type_name -> support.configuration.v1.VerificationPolicy
-	19, // 48: support.configuration.v1.ConfigurationRelease.channel_revisions:type_name -> support.configuration.v1.SmsChannelRevisionSummary
-	20, // 49: support.configuration.v1.ConfigurationRelease.template_revisions:type_name -> support.configuration.v1.SmsTemplateRevisionSummary
-	45, // 50: support.configuration.v1.ConfigurationRelease.created_at:type_name -> google.protobuf.Timestamp
-	45, // 51: support.configuration.v1.ConfigurationRelease.activated_at:type_name -> google.protobuf.Timestamp
-	43, // 52: support.configuration.v1.ListConfigurationReleasesRequest.app_id:type_name -> common.v1.AppId
-	35, // 53: support.configuration.v1.ListConfigurationReleasesResponse.releases:type_name -> support.configuration.v1.ConfigurationRelease
-	43, // 54: support.configuration.v1.ActivateConfigurationDraftRequest.app_id:type_name -> common.v1.AppId
-	43, // 55: support.configuration.v1.RollbackConfigurationReleaseRequest.app_id:type_name -> common.v1.AppId
-	43, // 56: support.configuration.v1.ConfigurationReadiness.app_id:type_name -> common.v1.AppId
-	0,  // 57: support.configuration.v1.ConfigurationReadiness.migration_status:type_name -> support.configuration.v1.ConfigurationMigrationStatus
-	18, // 58: support.configuration.v1.ConfigurationReadiness.draft:type_name -> support.configuration.v1.ConfigurationDraftSummary
-	19, // 59: support.configuration.v1.ConfigurationReadiness.channel_revisions:type_name -> support.configuration.v1.SmsChannelRevisionSummary
-	20, // 60: support.configuration.v1.ConfigurationReadiness.template_revisions:type_name -> support.configuration.v1.SmsTemplateRevisionSummary
-	34, // 61: support.configuration.v1.ConfigurationReadiness.active_release:type_name -> support.configuration.v1.ConfigurationReleaseSummary
-	14, // 62: support.configuration.v1.ConfigurationReadiness.blockers:type_name -> support.configuration.v1.ConfigurationBlocker
-	45, // 63: support.configuration.v1.ConfigurationReadiness.migrated_at:type_name -> google.protobuf.Timestamp
-	17, // 64: support.configuration.v1.ConfigurationReadiness.verification_security_baseline:type_name -> support.configuration.v1.VerificationSecurityBaseline
-	1,  // 65: support.configuration.v1.ConfigurationReadiness.cutover_phase:type_name -> support.configuration.v1.ConfigurationCutoverPhase
-	2,  // 66: support.configuration.v1.ConfigurationReadiness.runtime_model:type_name -> support.configuration.v1.ConfigurationRuntimeModel
-	3,  // 67: support.configuration.v1.ConfigurationReadiness.cutover_failure_category:type_name -> support.configuration.v1.ConfigurationCutoverFailureCategory
-	4,  // 68: support.configuration.v1.ConfigurationReadiness.cutover_recovery_result:type_name -> support.configuration.v1.ConfigurationCutoverRecoveryResult
-	45, // 69: support.configuration.v1.ConfigurationReadiness.cutover_updated_at:type_name -> google.protobuf.Timestamp
-	43, // 70: support.configuration.v1.GetConfigurationReadinessRequest.app_id:type_name -> common.v1.AppId
-	41, // 71: support.configuration.v1.ConfigurationService.GetConfigurationReadiness:input_type -> support.configuration.v1.GetConfigurationReadinessRequest
-	21, // 72: support.configuration.v1.ConfigurationService.CreateConfigurationDraft:input_type -> support.configuration.v1.CreateConfigurationDraftRequest
-	22, // 73: support.configuration.v1.ConfigurationService.CreateSmsChannelRevision:input_type -> support.configuration.v1.CreateSmsChannelRevisionRequest
-	23, // 74: support.configuration.v1.ConfigurationService.CreateSmsTemplateRevision:input_type -> support.configuration.v1.CreateSmsTemplateRevisionRequest
-	24, // 75: support.configuration.v1.ConfigurationService.UpdateVerificationPolicyDraft:input_type -> support.configuration.v1.UpdateVerificationPolicyDraftRequest
-	25, // 76: support.configuration.v1.ConfigurationService.PreflightConfigurationDraft:input_type -> support.configuration.v1.PreflightConfigurationDraftRequest
-	33, // 77: support.configuration.v1.ConfigurationService.DiscardConfigurationDraft:input_type -> support.configuration.v1.DiscardConfigurationDraftRequest
-	30, // 78: support.configuration.v1.ConfigurationService.GetDeliveryProbeReadiness:input_type -> support.configuration.v1.GetDeliveryProbeReadinessRequest
-	32, // 79: support.configuration.v1.ConfigurationService.ExecuteDeliveryProbe:input_type -> support.configuration.v1.ExecuteDeliveryProbeRequest
-	36, // 80: support.configuration.v1.ConfigurationService.ListConfigurationReleases:input_type -> support.configuration.v1.ListConfigurationReleasesRequest
-	38, // 81: support.configuration.v1.ConfigurationService.ActivateConfigurationDraft:input_type -> support.configuration.v1.ActivateConfigurationDraftRequest
-	39, // 82: support.configuration.v1.ConfigurationService.RollbackConfigurationRelease:input_type -> support.configuration.v1.RollbackConfigurationReleaseRequest
-	40, // 83: support.configuration.v1.ConfigurationService.GetConfigurationReadiness:output_type -> support.configuration.v1.ConfigurationReadiness
-	18, // 84: support.configuration.v1.ConfigurationService.CreateConfigurationDraft:output_type -> support.configuration.v1.ConfigurationDraftSummary
-	19, // 85: support.configuration.v1.ConfigurationService.CreateSmsChannelRevision:output_type -> support.configuration.v1.SmsChannelRevisionSummary
-	20, // 86: support.configuration.v1.ConfigurationService.CreateSmsTemplateRevision:output_type -> support.configuration.v1.SmsTemplateRevisionSummary
-	18, // 87: support.configuration.v1.ConfigurationService.UpdateVerificationPolicyDraft:output_type -> support.configuration.v1.ConfigurationDraftSummary
-	26, // 88: support.configuration.v1.ConfigurationService.PreflightConfigurationDraft:output_type -> support.configuration.v1.ConfigurationPreflightResult
-	47, // 89: support.configuration.v1.ConfigurationService.DiscardConfigurationDraft:output_type -> google.protobuf.Empty
-	31, // 90: support.configuration.v1.ConfigurationService.GetDeliveryProbeReadiness:output_type -> support.configuration.v1.DeliveryProbeReadiness
-	29, // 91: support.configuration.v1.ConfigurationService.ExecuteDeliveryProbe:output_type -> support.configuration.v1.DeliveryProbe
-	37, // 92: support.configuration.v1.ConfigurationService.ListConfigurationReleases:output_type -> support.configuration.v1.ListConfigurationReleasesResponse
-	35, // 93: support.configuration.v1.ConfigurationService.ActivateConfigurationDraft:output_type -> support.configuration.v1.ConfigurationRelease
-	35, // 94: support.configuration.v1.ConfigurationService.RollbackConfigurationRelease:output_type -> support.configuration.v1.ConfigurationRelease
-	83, // [83:95] is the sub-list for method output_type
-	71, // [71:83] is the sub-list for method input_type
-	71, // [71:71] is the sub-list for extension type_name
-	71, // [71:71] is the sub-list for extension extendee
-	0,  // [0:71] is the sub-list for field type_name
+	12, // 1: support.configuration.v1.DeliveryProbeOptions.targets:type_name -> support.configuration.v1.DeliveryProbeDeploymentTarget
+	8,  // 2: support.configuration.v1.ConfigurationBlocker.code:type_name -> support.configuration.v1.ConfigurationBlockerCode
+	9,  // 3: support.configuration.v1.ConfigurationBlocker.target_type:type_name -> support.configuration.v1.ConfigurationTargetType
+	42, // 4: support.configuration.v1.VerificationDeliveryPolicyEntry.purpose:type_name -> support.verification.v1.VerificationPurpose
+	42, // 5: support.configuration.v1.VerificationPolicy.purpose:type_name -> support.verification.v1.VerificationPurpose
+	5,  // 6: support.configuration.v1.ConfigurationDraftSummary.status:type_name -> support.configuration.v1.ConfigurationDraftStatus
+	6,  // 7: support.configuration.v1.ConfigurationDraftSummary.preflight_status:type_name -> support.configuration.v1.ConfigurationPreflightStatus
+	43, // 8: support.configuration.v1.ConfigurationDraftSummary.created_at:type_name -> google.protobuf.Timestamp
+	43, // 9: support.configuration.v1.ConfigurationDraftSummary.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 10: support.configuration.v1.ConfigurationDraftSummary.delivery_policies:type_name -> support.configuration.v1.VerificationDeliveryPolicyEntry
+	15, // 11: support.configuration.v1.ConfigurationDraftSummary.verification_policies:type_name -> support.configuration.v1.VerificationPolicy
+	44, // 12: support.configuration.v1.SmsChannelRevisionSummary.provider:type_name -> support.messaging.v1.SmsProvider
+	6,  // 13: support.configuration.v1.SmsChannelRevisionSummary.preflight_status:type_name -> support.configuration.v1.ConfigurationPreflightStatus
+	43, // 14: support.configuration.v1.SmsChannelRevisionSummary.created_at:type_name -> google.protobuf.Timestamp
+	44, // 15: support.configuration.v1.SmsTemplateRevisionSummary.provider:type_name -> support.messaging.v1.SmsProvider
+	6,  // 16: support.configuration.v1.SmsTemplateRevisionSummary.preflight_status:type_name -> support.configuration.v1.ConfigurationPreflightStatus
+	43, // 17: support.configuration.v1.SmsTemplateRevisionSummary.created_at:type_name -> google.protobuf.Timestamp
+	44, // 18: support.configuration.v1.CreateSmsChannelRevisionRequest.provider:type_name -> support.messaging.v1.SmsProvider
+	44, // 19: support.configuration.v1.CreateSmsTemplateRevisionRequest.provider:type_name -> support.messaging.v1.SmsProvider
+	14, // 20: support.configuration.v1.UpdateVerificationPolicyDraftRequest.delivery_policies:type_name -> support.configuration.v1.VerificationDeliveryPolicyEntry
+	15, // 21: support.configuration.v1.UpdateVerificationPolicyDraftRequest.verification_policies:type_name -> support.configuration.v1.VerificationPolicy
+	17, // 22: support.configuration.v1.ConfigurationPreflightResult.draft:type_name -> support.configuration.v1.ConfigurationDraftSummary
+	13, // 23: support.configuration.v1.ConfigurationPreflightResult.blockers:type_name -> support.configuration.v1.ConfigurationBlocker
+	44, // 24: support.configuration.v1.DeliveryProbeAttempt.provider:type_name -> support.messaging.v1.SmsProvider
+	43, // 25: support.configuration.v1.DeliveryProbeAttempt.created_at:type_name -> google.protobuf.Timestamp
+	42, // 26: support.configuration.v1.DeliveryProbe.purpose:type_name -> support.verification.v1.VerificationPurpose
+	7,  // 27: support.configuration.v1.DeliveryProbe.status:type_name -> support.configuration.v1.DeliveryProbeStatus
+	27, // 28: support.configuration.v1.DeliveryProbe.attempts:type_name -> support.configuration.v1.DeliveryProbeAttempt
+	43, // 29: support.configuration.v1.DeliveryProbe.created_at:type_name -> google.protobuf.Timestamp
+	43, // 30: support.configuration.v1.DeliveryProbe.completed_at:type_name -> google.protobuf.Timestamp
+	26, // 31: support.configuration.v1.DeliveryProbeReadiness.targets:type_name -> support.configuration.v1.DeliveryProbeTarget
+	28, // 32: support.configuration.v1.DeliveryProbeReadiness.probes:type_name -> support.configuration.v1.DeliveryProbe
+	42, // 33: support.configuration.v1.ExecuteDeliveryProbeRequest.purpose:type_name -> support.verification.v1.VerificationPurpose
+	41, // 34: support.configuration.v1.ExecuteDeliveryProbeRequest.parameters:type_name -> support.configuration.v1.ExecuteDeliveryProbeRequest.ParametersEntry
+	43, // 35: support.configuration.v1.ConfigurationReleaseSummary.activated_at:type_name -> google.protobuf.Timestamp
+	14, // 36: support.configuration.v1.ConfigurationRelease.delivery_policies:type_name -> support.configuration.v1.VerificationDeliveryPolicyEntry
+	15, // 37: support.configuration.v1.ConfigurationRelease.verification_policies:type_name -> support.configuration.v1.VerificationPolicy
+	18, // 38: support.configuration.v1.ConfigurationRelease.channel_revisions:type_name -> support.configuration.v1.SmsChannelRevisionSummary
+	19, // 39: support.configuration.v1.ConfigurationRelease.template_revisions:type_name -> support.configuration.v1.SmsTemplateRevisionSummary
+	43, // 40: support.configuration.v1.ConfigurationRelease.created_at:type_name -> google.protobuf.Timestamp
+	43, // 41: support.configuration.v1.ConfigurationRelease.activated_at:type_name -> google.protobuf.Timestamp
+	34, // 42: support.configuration.v1.ListConfigurationReleasesResponse.releases:type_name -> support.configuration.v1.ConfigurationRelease
+	0,  // 43: support.configuration.v1.ConfigurationReadiness.migration_status:type_name -> support.configuration.v1.ConfigurationMigrationStatus
+	17, // 44: support.configuration.v1.ConfigurationReadiness.draft:type_name -> support.configuration.v1.ConfigurationDraftSummary
+	18, // 45: support.configuration.v1.ConfigurationReadiness.channel_revisions:type_name -> support.configuration.v1.SmsChannelRevisionSummary
+	19, // 46: support.configuration.v1.ConfigurationReadiness.template_revisions:type_name -> support.configuration.v1.SmsTemplateRevisionSummary
+	33, // 47: support.configuration.v1.ConfigurationReadiness.active_release:type_name -> support.configuration.v1.ConfigurationReleaseSummary
+	13, // 48: support.configuration.v1.ConfigurationReadiness.blockers:type_name -> support.configuration.v1.ConfigurationBlocker
+	43, // 49: support.configuration.v1.ConfigurationReadiness.migrated_at:type_name -> google.protobuf.Timestamp
+	16, // 50: support.configuration.v1.ConfigurationReadiness.verification_security_baseline:type_name -> support.configuration.v1.VerificationSecurityBaseline
+	1,  // 51: support.configuration.v1.ConfigurationReadiness.cutover_phase:type_name -> support.configuration.v1.ConfigurationCutoverPhase
+	2,  // 52: support.configuration.v1.ConfigurationReadiness.runtime_model:type_name -> support.configuration.v1.ConfigurationRuntimeModel
+	3,  // 53: support.configuration.v1.ConfigurationReadiness.cutover_failure_category:type_name -> support.configuration.v1.ConfigurationCutoverFailureCategory
+	4,  // 54: support.configuration.v1.ConfigurationReadiness.cutover_recovery_result:type_name -> support.configuration.v1.ConfigurationCutoverRecoveryResult
+	43, // 55: support.configuration.v1.ConfigurationReadiness.cutover_updated_at:type_name -> google.protobuf.Timestamp
+	40, // 56: support.configuration.v1.ConfigurationService.GetConfigurationReadiness:input_type -> support.configuration.v1.GetConfigurationReadinessRequest
+	20, // 57: support.configuration.v1.ConfigurationService.CreateConfigurationDraft:input_type -> support.configuration.v1.CreateConfigurationDraftRequest
+	21, // 58: support.configuration.v1.ConfigurationService.CreateSmsChannelRevision:input_type -> support.configuration.v1.CreateSmsChannelRevisionRequest
+	22, // 59: support.configuration.v1.ConfigurationService.CreateSmsTemplateRevision:input_type -> support.configuration.v1.CreateSmsTemplateRevisionRequest
+	23, // 60: support.configuration.v1.ConfigurationService.UpdateVerificationPolicyDraft:input_type -> support.configuration.v1.UpdateVerificationPolicyDraftRequest
+	24, // 61: support.configuration.v1.ConfigurationService.PreflightConfigurationDraft:input_type -> support.configuration.v1.PreflightConfigurationDraftRequest
+	32, // 62: support.configuration.v1.ConfigurationService.DiscardConfigurationDraft:input_type -> support.configuration.v1.DiscardConfigurationDraftRequest
+	29, // 63: support.configuration.v1.ConfigurationService.GetDeliveryProbeReadiness:input_type -> support.configuration.v1.GetDeliveryProbeReadinessRequest
+	31, // 64: support.configuration.v1.ConfigurationService.ExecuteDeliveryProbe:input_type -> support.configuration.v1.ExecuteDeliveryProbeRequest
+	35, // 65: support.configuration.v1.ConfigurationService.ListConfigurationReleases:input_type -> support.configuration.v1.ListConfigurationReleasesRequest
+	37, // 66: support.configuration.v1.ConfigurationService.ActivateConfigurationDraft:input_type -> support.configuration.v1.ActivateConfigurationDraftRequest
+	38, // 67: support.configuration.v1.ConfigurationService.RollbackConfigurationRelease:input_type -> support.configuration.v1.RollbackConfigurationReleaseRequest
+	39, // 68: support.configuration.v1.ConfigurationService.GetConfigurationReadiness:output_type -> support.configuration.v1.ConfigurationReadiness
+	17, // 69: support.configuration.v1.ConfigurationService.CreateConfigurationDraft:output_type -> support.configuration.v1.ConfigurationDraftSummary
+	18, // 70: support.configuration.v1.ConfigurationService.CreateSmsChannelRevision:output_type -> support.configuration.v1.SmsChannelRevisionSummary
+	19, // 71: support.configuration.v1.ConfigurationService.CreateSmsTemplateRevision:output_type -> support.configuration.v1.SmsTemplateRevisionSummary
+	17, // 72: support.configuration.v1.ConfigurationService.UpdateVerificationPolicyDraft:output_type -> support.configuration.v1.ConfigurationDraftSummary
+	25, // 73: support.configuration.v1.ConfigurationService.PreflightConfigurationDraft:output_type -> support.configuration.v1.ConfigurationPreflightResult
+	45, // 74: support.configuration.v1.ConfigurationService.DiscardConfigurationDraft:output_type -> google.protobuf.Empty
+	30, // 75: support.configuration.v1.ConfigurationService.GetDeliveryProbeReadiness:output_type -> support.configuration.v1.DeliveryProbeReadiness
+	28, // 76: support.configuration.v1.ConfigurationService.ExecuteDeliveryProbe:output_type -> support.configuration.v1.DeliveryProbe
+	36, // 77: support.configuration.v1.ConfigurationService.ListConfigurationReleases:output_type -> support.configuration.v1.ListConfigurationReleasesResponse
+	34, // 78: support.configuration.v1.ConfigurationService.ActivateConfigurationDraft:output_type -> support.configuration.v1.ConfigurationRelease
+	34, // 79: support.configuration.v1.ConfigurationService.RollbackConfigurationRelease:output_type -> support.configuration.v1.ConfigurationRelease
+	68, // [68:80] is the sub-list for method output_type
+	56, // [56:68] is the sub-list for method input_type
+	56, // [56:56] is the sub-list for extension type_name
+	56, // [56:56] is the sub-list for extension extendee
+	0,  // [0:56] is the sub-list for field type_name
 }
 
 func init() { file_support_configuration_v1_configuration_proto_init() }
@@ -4504,7 +4299,7 @@ func file_support_configuration_v1_configuration_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_support_configuration_v1_configuration_proto_rawDesc), len(file_support_configuration_v1_configuration_proto_rawDesc)),
 			NumEnums:      10,
-			NumMessages:   33,
+			NumMessages:   32,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

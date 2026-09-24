@@ -8,9 +8,9 @@ package roompb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v11 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
-	v12 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
-	v1 "github.com/feymanlee/redkit-protos/gen/go/common/v1"
+	v1 "github.com/feymanlee/redkit-protos/gen/go/common/file/v1"
+	v11 "github.com/feymanlee/redkit-protos/gen/go/common/pagination/v1"
+	_ "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -27,13 +27,11 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Room 是 App 内可被进入、开场的稳定业务空间身份。
+// Room 是可被进入、开场的稳定业务空间身份。
 type Room struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// id 标识房间稳定身份。
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,2,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// owner_user_id 是房主 User。
 	OwnerUserId uint64 `protobuf:"varint,3,opt,name=owner_user_id,json=ownerUserId,proto3" json:"owner_user_id,omitempty"`
 	// room_type 是房间稳定类型，不随场次变更。
@@ -49,7 +47,7 @@ type Room struct {
 	// cover_file_id 是封面 File 引用；Room 不拥有 File 生命周期。
 	CoverFileId uint64 `protobuf:"varint,9,opt,name=cover_file_id,json=coverFileId,proto3" json:"cover_file_id,omitempty"`
 	// cover 是封面安全展示对象。
-	Cover *v11.FileView `protobuf:"bytes,10,opt,name=cover,proto3" json:"cover,omitempty"`
+	Cover *v1.FileView `protobuf:"bytes,10,opt,name=cover,proto3" json:"cover,omitempty"`
 	// seat_count 是类型能力位：CHAT/GAMING/KTV 麦位池大小；SHOW 期忽略。
 	SeatCount uint32 `protobuf:"varint,11,opt,name=seat_count,json=seatCount,proto3" json:"seat_count,omitempty"`
 	// audience_limit 是本场听众上限。
@@ -101,13 +99,6 @@ func (x *Room) GetId() uint64 {
 	return 0
 }
 
-func (x *Room) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *Room) GetOwnerUserId() uint64 {
 	if x != nil {
 		return x.OwnerUserId
@@ -157,7 +148,7 @@ func (x *Room) GetCoverFileId() uint64 {
 	return 0
 }
 
-func (x *Room) GetCover() *v11.FileView {
+func (x *Room) GetCover() *v1.FileView {
 	if x != nil {
 		return x.Cover
 	}
@@ -348,8 +339,6 @@ func (x *ListRoomsResponse) GetTotal() uint64 {
 // CreateRoomRequest 定义创建房间的命令参数。
 type CreateRoomRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// owner_user_id 是房主 User；一期任意 ACTIVE User 可建房。
 	OwnerUserId uint64 `protobuf:"varint,2,opt,name=owner_user_id,json=ownerUserId,proto3" json:"owner_user_id,omitempty"`
 	// room_type 一期仅接受 ROOM_TYPE_CHAT。
@@ -362,9 +351,9 @@ type CreateRoomRequest struct {
 	Description *string `protobuf:"bytes,6,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// cover_file_id 是封面 File 引用。
 	CoverFileId *uint64 `protobuf:"varint,7,opt,name=cover_file_id,json=coverFileId,proto3,oneof" json:"cover_file_id,omitempty"`
-	// seat_count 为空时使用 App 默认（CHAT 默认 8）。
+	// seat_count 为空时使用平台默认（CHAT 默认 8）。
 	SeatCount *uint32 `protobuf:"varint,8,opt,name=seat_count,json=seatCount,proto3,oneof" json:"seat_count,omitempty"`
-	// audience_limit 为空时使用 App 默认（CHAT 默认 50）。
+	// audience_limit 为空时使用平台默认（CHAT 默认 50）。
 	AudienceLimit *uint32 `protobuf:"varint,9,opt,name=audience_limit,json=audienceLimit,proto3,oneof" json:"audience_limit,omitempty"`
 	// idempotency_key 在约定作用域内稳定标识同一业务意图，重试时必须复用。
 	IdempotencyKey string `protobuf:"bytes,10,opt,name=idempotency_key,json=idempotencyKey,proto3" json:"idempotency_key,omitempty"`
@@ -400,13 +389,6 @@ func (x *CreateRoomRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateRoomRequest.ProtoReflect.Descriptor instead.
 func (*CreateRoomRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *CreateRoomRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateRoomRequest) GetOwnerUserId() uint64 {
@@ -475,8 +457,6 @@ func (x *CreateRoomRequest) GetIdempotencyKey() string {
 // UpdateRoomRequest 定义更新房间资料的命令参数；不改 owner 与 room_type。
 type UpdateRoomRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// operator_user_id 是发起更新的房主。
@@ -525,13 +505,6 @@ func (x *UpdateRoomRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateRoomRequest.ProtoReflect.Descriptor instead.
 func (*UpdateRoomRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *UpdateRoomRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *UpdateRoomRequest) GetRoomId() uint64 {
@@ -593,8 +566,6 @@ func (x *UpdateRoomRequest) GetAudienceLimit() uint32 {
 // GetRoomRequest 标识待查询的房间。
 type GetRoomRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId        uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -631,13 +602,6 @@ func (*GetRoomRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetRoomRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *GetRoomRequest) GetRoomId() uint64 {
 	if x != nil {
 		return x.RoomId
@@ -651,7 +615,7 @@ type ListRoomsRequest struct {
 	// filter 限定本次查询条件。
 	Filter *RoomFilter `protobuf:"bytes,1,opt,name=filter,proto3" json:"filter,omitempty"`
 	// paging 指定分页。
-	Paging        *v12.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v11.PagingRequest `protobuf:"bytes,2,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -693,7 +657,7 @@ func (x *ListRoomsRequest) GetFilter() *RoomFilter {
 	return nil
 }
 
-func (x *ListRoomsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListRoomsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -703,12 +667,10 @@ func (x *ListRoomsRequest) GetPaging() *v12.PagingRequest {
 // ListMyRoomsRequest 查询某 User 拥有的房间。
 type ListMyRoomsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// owner_user_id 是房主。
 	OwnerUserId uint64 `protobuf:"varint,2,opt,name=owner_user_id,json=ownerUserId,proto3" json:"owner_user_id,omitempty"`
 	// paging 指定分页。
-	Paging        *v12.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v11.PagingRequest `protobuf:"bytes,3,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -743,13 +705,6 @@ func (*ListMyRoomsRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *ListMyRoomsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListMyRoomsRequest) GetOwnerUserId() uint64 {
 	if x != nil {
 		return x.OwnerUserId
@@ -757,7 +712,7 @@ func (x *ListMyRoomsRequest) GetOwnerUserId() uint64 {
 	return 0
 }
 
-func (x *ListMyRoomsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListMyRoomsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -767,8 +722,6 @@ func (x *ListMyRoomsRequest) GetPaging() *v12.PagingRequest {
 // AppointModeratorRequest 任命房管。
 type AppointModeratorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// actor_user_id 是房主。
@@ -809,13 +762,6 @@ func (*AppointModeratorRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *AppointModeratorRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *AppointModeratorRequest) GetRoomId() uint64 {
 	if x != nil {
 		return x.RoomId
@@ -840,8 +786,6 @@ func (x *AppointModeratorRequest) GetModeratorUserId() uint64 {
 // RemoveModeratorRequest 撤销房管。
 type RemoveModeratorRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// actor_user_id 是房主。
@@ -882,13 +826,6 @@ func (*RemoveModeratorRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *RemoveModeratorRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RemoveModeratorRequest) GetRoomId() uint64 {
 	if x != nil {
 		return x.RoomId
@@ -913,8 +850,6 @@ func (x *RemoveModeratorRequest) GetModeratorUserId() uint64 {
 // CreateRoomRestrictionRequest 创建房间级或场次级处置。
 type CreateRoomRestrictionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// session_id 在 scope=SESSION 时必填。
@@ -967,13 +902,6 @@ func (x *CreateRoomRestrictionRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateRoomRestrictionRequest.ProtoReflect.Descriptor instead.
 func (*CreateRoomRestrictionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *CreateRoomRestrictionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
 }
 
 func (x *CreateRoomRestrictionRequest) GetRoomId() uint64 {
@@ -1049,8 +977,6 @@ func (x *CreateRoomRestrictionRequest) GetOperationNo() string {
 // RevokeRoomRequest 撤销仍生效的房间处置。
 type RevokeRoomRestrictionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// restriction_id 标识处置。
 	RestrictionId uint64 `protobuf:"varint,2,opt,name=restriction_id,json=restrictionId,proto3" json:"restriction_id,omitempty"`
 	// actor_type 标识发起方类型。
@@ -1095,13 +1021,6 @@ func (*RevokeRoomRestrictionRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *RevokeRoomRestrictionRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RevokeRoomRestrictionRequest) GetRestrictionId() uint64 {
 	if x != nil {
 		return x.RestrictionId
@@ -1140,14 +1059,12 @@ func (x *RevokeRoomRestrictionRequest) GetOperationNo() string {
 // ListRoomRestrictionsRequest 查询房间处置。
 type ListRoomRestrictionsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// only_active 为 true 时仅返回仍生效处置。
 	OnlyActive *bool `protobuf:"varint,3,opt,name=only_active,json=onlyActive,proto3,oneof" json:"only_active,omitempty"`
 	// paging 指定分页。
-	Paging        *v12.PagingRequest `protobuf:"bytes,4,opt,name=paging,proto3" json:"paging,omitempty"`
+	Paging        *v11.PagingRequest `protobuf:"bytes,4,opt,name=paging,proto3" json:"paging,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1182,13 +1099,6 @@ func (*ListRoomRestrictionsRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *ListRoomRestrictionsRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *ListRoomRestrictionsRequest) GetRoomId() uint64 {
 	if x != nil {
 		return x.RoomId
@@ -1203,7 +1113,7 @@ func (x *ListRoomRestrictionsRequest) GetOnlyActive() bool {
 	return false
 }
 
-func (x *ListRoomRestrictionsRequest) GetPaging() *v12.PagingRequest {
+func (x *ListRoomRestrictionsRequest) GetPaging() *v11.PagingRequest {
 	if x != nil {
 		return x.Paging
 	}
@@ -1268,8 +1178,6 @@ func (x *ListRoomRestrictionsResponse) GetTotal() uint64 {
 // TakeDownRoomRequest 是 Operator 下架房间命令。
 type TakeDownRoomRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// operator_id 是平台 Operator。
@@ -1312,13 +1220,6 @@ func (*TakeDownRoomRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *TakeDownRoomRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *TakeDownRoomRequest) GetRoomId() uint64 {
 	if x != nil {
 		return x.RoomId
@@ -1350,8 +1251,6 @@ func (x *TakeDownRoomRequest) GetOperationNo() string {
 // RestoreRoomRequest 是 Operator 恢复房间命令。
 type RestoreRoomRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// app_id 限定所属 App；UNSPECIFIED 不表示跨 App。
-	AppId v1.AppId `protobuf:"varint,1,opt,name=app_id,json=appId,proto3,enum=common.v1.AppId" json:"app_id,omitempty"`
 	// room_id 标识房间。
 	RoomId uint64 `protobuf:"varint,2,opt,name=room_id,json=roomId,proto3" json:"room_id,omitempty"`
 	// operator_id 是平台 Operator。
@@ -1394,13 +1293,6 @@ func (*RestoreRoomRequest) Descriptor() ([]byte, []int) {
 	return file_room_v1_room_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *RestoreRoomRequest) GetAppId() v1.AppId {
-	if x != nil {
-		return x.AppId
-	}
-	return v1.AppId(0)
-}
-
 func (x *RestoreRoomRequest) GetRoomId() uint64 {
 	if x != nil {
 		return x.RoomId
@@ -1433,10 +1325,9 @@ var File_room_v1_room_proto protoreflect.FileDescriptor
 
 const file_room_v1_room_proto_rawDesc = "" +
 	"\n" +
-	"\x12room/v1/room.proto\x12\aroom.v1\x1a\x19common/file/v1/file.proto\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13room/v1/types.proto\x1a\x17validate/validate.proto\"\x88\x05\n" +
+	"\x12room/v1/room.proto\x12\aroom.v1\x1a\x19common/file/v1/file.proto\x1a%common/pagination/v1/pagination.proto\x1a\x16common/v1/common.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13room/v1/types.proto\x1a\x17validate/validate.proto\"\xdf\x04\n" +
 	"\x04Room\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x04R\x02id\x12'\n" +
-	"\x06app_id\x18\x02 \x01(\x0e2\x10.common.v1.AppIdR\x05appId\x12\"\n" +
+	"\x02id\x18\x01 \x01(\x04R\x02id\x12\"\n" +
 	"\rowner_user_id\x18\x03 \x01(\x04R\vownerUserId\x12.\n" +
 	"\troom_type\x18\x04 \x01(\x0e2\x11.room.v1.RoomTypeR\broomType\x127\n" +
 	"\n" +
@@ -1472,9 +1363,8 @@ const file_room_v1_room_proto_rawDesc = "" +
 	"\r_name_keyword\"N\n" +
 	"\x11ListRoomsResponse\x12#\n" +
 	"\x05items\x18\x01 \x03(\v2\r.room.v1.RoomR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xea\x04\n" +
-	"\x11CreateRoomRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12.\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xb2\x04\n" +
+	"\x11CreateRoomRequest\x12.\n" +
 	"\rowner_user_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\vownerUserId\x12=\n" +
 	"\troom_type\x18\x03 \x01(\x0e2\x11.room.v1.RoomTypeB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\broomType\x12F\n" +
@@ -1493,9 +1383,8 @@ const file_room_v1_room_proto_rawDesc = "" +
 	"\f_descriptionB\x10\n" +
 	"\x0e_cover_file_idB\r\n" +
 	"\v_seat_countB\x11\n" +
-	"\x0f_audience_limit\"\xba\x04\n" +
-	"\x11UpdateRoomRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0f_audience_limit\"\x82\x04\n" +
+	"\x11UpdateRoomRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x124\n" +
 	"\x10operator_user_id\x18\x03 \x01(\x04B\n" +
@@ -1516,37 +1405,32 @@ const file_room_v1_room_proto_rawDesc = "" +
 	"\x0e_cover_file_idB\r\n" +
 	"\v_visibilityB\r\n" +
 	"\v_seat_countB\x11\n" +
-	"\x0f_audience_limit\"m\n" +
-	"\x0eGetRoomRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x0f_audience_limit\"5\n" +
+	"\x0eGetRoomRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\"|\n" +
 	"\x10ListRoomsRequest\x12+\n" +
 	"\x06filter\x18\x01 \x01(\v2\x13.room.v1.RoomFilterR\x06filter\x12;\n" +
-	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xb9\x01\n" +
-	"\x12ListMyRoomsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12.\n" +
+	"\x06paging\x18\x02 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\x81\x01\n" +
+	"\x12ListMyRoomsRequest\x12.\n" +
 	"\rowner_user_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\vownerUserId\x12;\n" +
-	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xde\x01\n" +
-	"\x17AppointModeratorRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x06paging\x18\x03 \x01(\v2#.common.pagination.v1.PagingRequestR\x06paging\"\xa6\x01\n" +
+	"\x17AppointModeratorRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12.\n" +
 	"\ractor_user_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\vactorUserId\x126\n" +
 	"\x11moderator_user_id\x18\x04 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x0fmoderatorUserId\"\xdd\x01\n" +
-	"\x16RemoveModeratorRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x0fmoderatorUserId\"\xa5\x01\n" +
+	"\x16RemoveModeratorRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12.\n" +
 	"\ractor_user_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\vactorUserId\x126\n" +
 	"\x11moderator_user_id\x18\x04 \x01(\x04B\n" +
-	"\xe0A\x02\xfaB\x042\x02 \x00R\x0fmoderatorUserId\"\x82\x05\n" +
-	"\x1cCreateRoomRestrictionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\xe0A\x02\xfaB\x042\x02 \x00R\x0fmoderatorUserId\"\xca\x04\n" +
+	"\x1cCreateRoomRestrictionRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12+\n" +
 	"\n" +
@@ -1565,9 +1449,8 @@ const file_room_v1_room_proto_rawDesc = "" +
 	" \x01(\v2\x1a.google.protobuf.TimestampH\x01R\texpiresAt\x88\x01\x01\x120\n" +
 	"\foperation_no\x18\v \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNoB\r\n" +
 	"\v_session_idB\r\n" +
-	"\v_expires_at\"\xd6\x02\n" +
-	"\x1cRevokeRoomRestrictionRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x121\n" +
+	"\v_expires_at\"\x9e\x02\n" +
+	"\x1cRevokeRoomRestrictionRequest\x121\n" +
 	"\x0erestriction_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\rrestrictionId\x12K\n" +
 	"\n" +
@@ -1575,9 +1458,8 @@ const file_room_v1_room_proto_rawDesc = "" +
 	"\bactor_id\x18\x04 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\aactorId\x12%\n" +
 	"\x06reason\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\xe8\aR\x06reason\x120\n" +
-	"\foperation_no\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xed\x01\n" +
-	"\x1bListRoomRestrictionsRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\foperation_no\x18\x06 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xb5\x01\n" +
+	"\x1bListRoomRestrictionsRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12$\n" +
 	"\vonly_active\x18\x03 \x01(\bH\x00R\n" +
@@ -1586,18 +1468,16 @@ const file_room_v1_room_proto_rawDesc = "" +
 	"\f_only_active\"d\n" +
 	"\x1cListRoomRestrictionsResponse\x12.\n" +
 	"\x05items\x18\x01 \x03(\v2\x18.room.v1.RoomRestrictionR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xf8\x01\n" +
-	"\x13TakeDownRoomRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xc0\x01\n" +
+	"\x13TakeDownRoomRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\n" +
 	"operatorId\x12%\n" +
 	"\x06reason\x18\x04 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\xe8\aR\x06reason\x120\n" +
-	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xf7\x01\n" +
-	"\x12RestoreRoomRequest\x126\n" +
-	"\x06app_id\x18\x01 \x01(\x0e2\x10.common.v1.AppIdB\r\xe0A\x02\xfaB\a\x82\x01\x04\x10\x01 \x00R\x05appId\x12#\n" +
+	"\foperation_no\x18\x05 \x01(\tB\r\xe0A\x02\xfaB\ar\x05\x10\x01\x18\x80\x01R\voperationNo\"\xbf\x01\n" +
+	"\x12RestoreRoomRequest\x12#\n" +
 	"\aroom_id\x18\x02 \x01(\x04B\n" +
 	"\xe0A\x02\xfaB\x042\x02 \x00R\x06roomId\x12+\n" +
 	"\voperator_id\x18\x03 \x01(\x04B\n" +
@@ -1652,83 +1532,70 @@ var file_room_v1_room_proto_goTypes = []any{
 	(*ListRoomRestrictionsResponse)(nil), // 13: room.v1.ListRoomRestrictionsResponse
 	(*TakeDownRoomRequest)(nil),          // 14: room.v1.TakeDownRoomRequest
 	(*RestoreRoomRequest)(nil),           // 15: room.v1.RestoreRoomRequest
-	(v1.AppId)(0),                        // 16: common.v1.AppId
-	(RoomType)(0),                        // 17: room.v1.RoomType
-	(RoomVisibility)(0),                  // 18: room.v1.RoomVisibility
-	(RoomStatus)(0),                      // 19: room.v1.RoomStatus
-	(*v11.FileView)(nil),                 // 20: common.file.v1.FileView
-	(*timestamppb.Timestamp)(nil),        // 21: google.protobuf.Timestamp
-	(*v12.PagingRequest)(nil),            // 22: common.pagination.v1.PagingRequest
-	(RestrictionScope)(0),                // 23: room.v1.RestrictionScope
-	(RestrictionKind)(0),                 // 24: room.v1.RestrictionKind
-	(RestrictionActorType)(0),            // 25: room.v1.RestrictionActorType
-	(*RoomRestriction)(nil),              // 26: room.v1.RoomRestriction
+	(RoomType)(0),                        // 16: room.v1.RoomType
+	(RoomVisibility)(0),                  // 17: room.v1.RoomVisibility
+	(RoomStatus)(0),                      // 18: room.v1.RoomStatus
+	(*v1.FileView)(nil),                  // 19: common.file.v1.FileView
+	(*timestamppb.Timestamp)(nil),        // 20: google.protobuf.Timestamp
+	(*v11.PagingRequest)(nil),            // 21: common.pagination.v1.PagingRequest
+	(RestrictionScope)(0),                // 22: room.v1.RestrictionScope
+	(RestrictionKind)(0),                 // 23: room.v1.RestrictionKind
+	(RestrictionActorType)(0),            // 24: room.v1.RestrictionActorType
+	(*RoomRestriction)(nil),              // 25: room.v1.RoomRestriction
 }
 var file_room_v1_room_proto_depIdxs = []int32{
-	16, // 0: room.v1.Room.app_id:type_name -> common.v1.AppId
-	17, // 1: room.v1.Room.room_type:type_name -> room.v1.RoomType
-	18, // 2: room.v1.Room.visibility:type_name -> room.v1.RoomVisibility
-	19, // 3: room.v1.Room.status:type_name -> room.v1.RoomStatus
-	20, // 4: room.v1.Room.cover:type_name -> common.file.v1.FileView
-	21, // 5: room.v1.Room.created_at:type_name -> google.protobuf.Timestamp
-	21, // 6: room.v1.Room.updated_at:type_name -> google.protobuf.Timestamp
-	17, // 7: room.v1.RoomFilter.room_types:type_name -> room.v1.RoomType
-	18, // 8: room.v1.RoomFilter.visibilities:type_name -> room.v1.RoomVisibility
-	19, // 9: room.v1.RoomFilter.statuses:type_name -> room.v1.RoomStatus
-	0,  // 10: room.v1.ListRoomsResponse.items:type_name -> room.v1.Room
-	16, // 11: room.v1.CreateRoomRequest.app_id:type_name -> common.v1.AppId
-	17, // 12: room.v1.CreateRoomRequest.room_type:type_name -> room.v1.RoomType
-	18, // 13: room.v1.CreateRoomRequest.visibility:type_name -> room.v1.RoomVisibility
-	16, // 14: room.v1.UpdateRoomRequest.app_id:type_name -> common.v1.AppId
-	18, // 15: room.v1.UpdateRoomRequest.visibility:type_name -> room.v1.RoomVisibility
-	16, // 16: room.v1.GetRoomRequest.app_id:type_name -> common.v1.AppId
-	1,  // 17: room.v1.ListRoomsRequest.filter:type_name -> room.v1.RoomFilter
-	22, // 18: room.v1.ListRoomsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	16, // 19: room.v1.ListMyRoomsRequest.app_id:type_name -> common.v1.AppId
-	22, // 20: room.v1.ListMyRoomsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	16, // 21: room.v1.AppointModeratorRequest.app_id:type_name -> common.v1.AppId
-	16, // 22: room.v1.RemoveModeratorRequest.app_id:type_name -> common.v1.AppId
-	16, // 23: room.v1.CreateRoomRestrictionRequest.app_id:type_name -> common.v1.AppId
-	23, // 24: room.v1.CreateRoomRestrictionRequest.scope:type_name -> room.v1.RestrictionScope
-	24, // 25: room.v1.CreateRoomRestrictionRequest.kind:type_name -> room.v1.RestrictionKind
-	25, // 26: room.v1.CreateRoomRestrictionRequest.actor_type:type_name -> room.v1.RestrictionActorType
-	21, // 27: room.v1.CreateRoomRestrictionRequest.expires_at:type_name -> google.protobuf.Timestamp
-	16, // 28: room.v1.RevokeRoomRestrictionRequest.app_id:type_name -> common.v1.AppId
-	25, // 29: room.v1.RevokeRoomRestrictionRequest.actor_type:type_name -> room.v1.RestrictionActorType
-	16, // 30: room.v1.ListRoomRestrictionsRequest.app_id:type_name -> common.v1.AppId
-	22, // 31: room.v1.ListRoomRestrictionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
-	26, // 32: room.v1.ListRoomRestrictionsResponse.items:type_name -> room.v1.RoomRestriction
-	16, // 33: room.v1.TakeDownRoomRequest.app_id:type_name -> common.v1.AppId
-	16, // 34: room.v1.RestoreRoomRequest.app_id:type_name -> common.v1.AppId
-	3,  // 35: room.v1.RoomService.CreateRoom:input_type -> room.v1.CreateRoomRequest
-	4,  // 36: room.v1.RoomService.UpdateRoom:input_type -> room.v1.UpdateRoomRequest
-	5,  // 37: room.v1.RoomService.GetRoom:input_type -> room.v1.GetRoomRequest
-	6,  // 38: room.v1.RoomService.ListRooms:input_type -> room.v1.ListRoomsRequest
-	7,  // 39: room.v1.RoomService.ListMyRooms:input_type -> room.v1.ListMyRoomsRequest
-	14, // 40: room.v1.RoomService.TakeDownRoom:input_type -> room.v1.TakeDownRoomRequest
-	15, // 41: room.v1.RoomService.RestoreRoom:input_type -> room.v1.RestoreRoomRequest
-	8,  // 42: room.v1.RoomService.AppointModerator:input_type -> room.v1.AppointModeratorRequest
-	9,  // 43: room.v1.RoomService.RemoveModerator:input_type -> room.v1.RemoveModeratorRequest
-	10, // 44: room.v1.RoomService.CreateRoomRestriction:input_type -> room.v1.CreateRoomRestrictionRequest
-	11, // 45: room.v1.RoomService.RevokeRoomRestriction:input_type -> room.v1.RevokeRoomRestrictionRequest
-	12, // 46: room.v1.RoomService.ListRoomRestrictions:input_type -> room.v1.ListRoomRestrictionsRequest
-	0,  // 47: room.v1.RoomService.CreateRoom:output_type -> room.v1.Room
-	0,  // 48: room.v1.RoomService.UpdateRoom:output_type -> room.v1.Room
-	0,  // 49: room.v1.RoomService.GetRoom:output_type -> room.v1.Room
-	2,  // 50: room.v1.RoomService.ListRooms:output_type -> room.v1.ListRoomsResponse
-	2,  // 51: room.v1.RoomService.ListMyRooms:output_type -> room.v1.ListRoomsResponse
-	0,  // 52: room.v1.RoomService.TakeDownRoom:output_type -> room.v1.Room
-	0,  // 53: room.v1.RoomService.RestoreRoom:output_type -> room.v1.Room
-	0,  // 54: room.v1.RoomService.AppointModerator:output_type -> room.v1.Room
-	0,  // 55: room.v1.RoomService.RemoveModerator:output_type -> room.v1.Room
-	26, // 56: room.v1.RoomService.CreateRoomRestriction:output_type -> room.v1.RoomRestriction
-	26, // 57: room.v1.RoomService.RevokeRoomRestriction:output_type -> room.v1.RoomRestriction
-	13, // 58: room.v1.RoomService.ListRoomRestrictions:output_type -> room.v1.ListRoomRestrictionsResponse
-	47, // [47:59] is the sub-list for method output_type
-	35, // [35:47] is the sub-list for method input_type
-	35, // [35:35] is the sub-list for extension type_name
-	35, // [35:35] is the sub-list for extension extendee
-	0,  // [0:35] is the sub-list for field type_name
+	16, // 0: room.v1.Room.room_type:type_name -> room.v1.RoomType
+	17, // 1: room.v1.Room.visibility:type_name -> room.v1.RoomVisibility
+	18, // 2: room.v1.Room.status:type_name -> room.v1.RoomStatus
+	19, // 3: room.v1.Room.cover:type_name -> common.file.v1.FileView
+	20, // 4: room.v1.Room.created_at:type_name -> google.protobuf.Timestamp
+	20, // 5: room.v1.Room.updated_at:type_name -> google.protobuf.Timestamp
+	16, // 6: room.v1.RoomFilter.room_types:type_name -> room.v1.RoomType
+	17, // 7: room.v1.RoomFilter.visibilities:type_name -> room.v1.RoomVisibility
+	18, // 8: room.v1.RoomFilter.statuses:type_name -> room.v1.RoomStatus
+	0,  // 9: room.v1.ListRoomsResponse.items:type_name -> room.v1.Room
+	16, // 10: room.v1.CreateRoomRequest.room_type:type_name -> room.v1.RoomType
+	17, // 11: room.v1.CreateRoomRequest.visibility:type_name -> room.v1.RoomVisibility
+	17, // 12: room.v1.UpdateRoomRequest.visibility:type_name -> room.v1.RoomVisibility
+	1,  // 13: room.v1.ListRoomsRequest.filter:type_name -> room.v1.RoomFilter
+	21, // 14: room.v1.ListRoomsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	21, // 15: room.v1.ListMyRoomsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	22, // 16: room.v1.CreateRoomRestrictionRequest.scope:type_name -> room.v1.RestrictionScope
+	23, // 17: room.v1.CreateRoomRestrictionRequest.kind:type_name -> room.v1.RestrictionKind
+	24, // 18: room.v1.CreateRoomRestrictionRequest.actor_type:type_name -> room.v1.RestrictionActorType
+	20, // 19: room.v1.CreateRoomRestrictionRequest.expires_at:type_name -> google.protobuf.Timestamp
+	24, // 20: room.v1.RevokeRoomRestrictionRequest.actor_type:type_name -> room.v1.RestrictionActorType
+	21, // 21: room.v1.ListRoomRestrictionsRequest.paging:type_name -> common.pagination.v1.PagingRequest
+	25, // 22: room.v1.ListRoomRestrictionsResponse.items:type_name -> room.v1.RoomRestriction
+	3,  // 23: room.v1.RoomService.CreateRoom:input_type -> room.v1.CreateRoomRequest
+	4,  // 24: room.v1.RoomService.UpdateRoom:input_type -> room.v1.UpdateRoomRequest
+	5,  // 25: room.v1.RoomService.GetRoom:input_type -> room.v1.GetRoomRequest
+	6,  // 26: room.v1.RoomService.ListRooms:input_type -> room.v1.ListRoomsRequest
+	7,  // 27: room.v1.RoomService.ListMyRooms:input_type -> room.v1.ListMyRoomsRequest
+	14, // 28: room.v1.RoomService.TakeDownRoom:input_type -> room.v1.TakeDownRoomRequest
+	15, // 29: room.v1.RoomService.RestoreRoom:input_type -> room.v1.RestoreRoomRequest
+	8,  // 30: room.v1.RoomService.AppointModerator:input_type -> room.v1.AppointModeratorRequest
+	9,  // 31: room.v1.RoomService.RemoveModerator:input_type -> room.v1.RemoveModeratorRequest
+	10, // 32: room.v1.RoomService.CreateRoomRestriction:input_type -> room.v1.CreateRoomRestrictionRequest
+	11, // 33: room.v1.RoomService.RevokeRoomRestriction:input_type -> room.v1.RevokeRoomRestrictionRequest
+	12, // 34: room.v1.RoomService.ListRoomRestrictions:input_type -> room.v1.ListRoomRestrictionsRequest
+	0,  // 35: room.v1.RoomService.CreateRoom:output_type -> room.v1.Room
+	0,  // 36: room.v1.RoomService.UpdateRoom:output_type -> room.v1.Room
+	0,  // 37: room.v1.RoomService.GetRoom:output_type -> room.v1.Room
+	2,  // 38: room.v1.RoomService.ListRooms:output_type -> room.v1.ListRoomsResponse
+	2,  // 39: room.v1.RoomService.ListMyRooms:output_type -> room.v1.ListRoomsResponse
+	0,  // 40: room.v1.RoomService.TakeDownRoom:output_type -> room.v1.Room
+	0,  // 41: room.v1.RoomService.RestoreRoom:output_type -> room.v1.Room
+	0,  // 42: room.v1.RoomService.AppointModerator:output_type -> room.v1.Room
+	0,  // 43: room.v1.RoomService.RemoveModerator:output_type -> room.v1.Room
+	25, // 44: room.v1.RoomService.CreateRoomRestriction:output_type -> room.v1.RoomRestriction
+	25, // 45: room.v1.RoomService.RevokeRoomRestriction:output_type -> room.v1.RoomRestriction
+	13, // 46: room.v1.RoomService.ListRoomRestrictions:output_type -> room.v1.ListRoomRestrictionsResponse
+	35, // [35:47] is the sub-list for method output_type
+	23, // [23:35] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_room_v1_room_proto_init() }

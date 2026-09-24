@@ -278,7 +278,7 @@ type AdminCreateManualRewardGrantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// package_id 标识关联的 Package。
 	PackageId uint64 `protobuf:"varint,1,opt,name=package_id,json=packageId,proto3" json:"package_id,omitempty"`
-	// requested_user_id 标识当前 App 内关联的 User。
+	// requested_user_id 标识关联的 User。
 	RequestedUserId uint64 `protobuf:"varint,2,opt,name=requested_user_id,json=requestedUserId,proto3" json:"requested_user_id,omitempty"`
 	// reason 记录触发本次状态变化或管理操作的原因，供审计与复核。
 	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`

@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonpb "github.com/feymanlee/redkit-protos/gen/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonpb.AppId(0)
 )
 
 // Validate checks the field values on CreateUserRequest with the rules defined
@@ -60,8 +56,6 @@ func (m *CreateUserRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	// no validation rules for IdempotencyKey
 
@@ -166,8 +160,6 @@ func (m *GetUserRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	switch v := m.Query.(type) {
 	case *GetUserRequest_UserId:
@@ -297,8 +289,6 @@ func (m *ListUsersRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetPaging()).(type) {
@@ -567,8 +557,6 @@ func (m *ChangeUserCodeRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for UserCode
@@ -679,28 +667,6 @@ func (m *GetUserDeletionRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _GetUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := GetUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := GetUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetUserId() <= 0 {
 		err := GetUserDeletionRequestValidationError{
 			field:  "UserId",
@@ -791,10 +757,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUserDeletionRequestValidationError{}
-
-var _GetUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 // Validate checks the field values on UserDeletionParticipant with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1168,8 +1130,6 @@ func (m *UserDeletion) validate(all bool) error {
 
 	// no validation rules for DeletionNo
 
-	// no validation rules for AppId
-
 	// no validation rules for UserId
 
 	// no validation rules for Status
@@ -1491,28 +1451,6 @@ func (m *CancelAdministrativeUserDeletionRequest) validate(all bool) error {
 
 	var errors []error
 
-	if _, ok := _CancelAdministrativeUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := CancelAdministrativeUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := CancelAdministrativeUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetUserId() <= 0 {
 		err := CancelAdministrativeUserDeletionRequestValidationError{
 			field:  "UserId",
@@ -1628,10 +1566,6 @@ var _ interface {
 	ErrorName() string
 } = CancelAdministrativeUserDeletionRequestValidationError{}
 
-var _CancelAdministrativeUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RetryAdministrativeUserDeletionRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
@@ -1655,28 +1589,6 @@ func (m *RetryAdministrativeUserDeletionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RetryAdministrativeUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RetryAdministrativeUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RetryAdministrativeUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if l := utf8.RuneCountInString(m.GetDeletionNo()); l < 1 || l > 128 {
 		err := RetryAdministrativeUserDeletionRequestValidationError{
@@ -1793,10 +1705,6 @@ var _ interface {
 	ErrorName() string
 } = RetryAdministrativeUserDeletionRequestValidationError{}
 
-var _RetryAdministrativeUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ModerateUserProfileRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1818,28 +1726,6 @@ func (m *ModerateUserProfileRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ModerateUserProfileRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ModerateUserProfileRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ModerateUserProfileRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := ModerateUserProfileRequestValidationError{
@@ -2060,10 +1946,6 @@ var _ interface {
 	ErrorName() string
 } = ModerateUserProfileRequestValidationError{}
 
-var _ModerateUserProfileRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _ModerateUserProfileRequest_ClearFields_NotInLookup = map[ProfileModerationField]struct{}{
 	0: {},
 }
@@ -2093,28 +1975,6 @@ func (m *ResetUserCodeRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ResetUserCodeRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ResetUserCodeRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ResetUserCodeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := ResetUserCodeRequestValidationError{
@@ -2229,10 +2089,6 @@ var _ interface {
 	ErrorName() string
 } = ResetUserCodeRequestValidationError{}
 
-var _ResetUserCodeRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on BeginAdministrativeUserDeletionRequest
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the first error encountered is returned, or nil if
@@ -2256,28 +2112,6 @@ func (m *BeginAdministrativeUserDeletionRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _BeginAdministrativeUserDeletionRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := BeginAdministrativeUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := BeginAdministrativeUserDeletionRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := BeginAdministrativeUserDeletionRequestValidationError{
@@ -2394,10 +2228,6 @@ var _ interface {
 	ErrorName() string
 } = BeginAdministrativeUserDeletionRequestValidationError{}
 
-var _BeginAdministrativeUserDeletionRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RequirePasswordResetRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2419,28 +2249,6 @@ func (m *RequirePasswordResetRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RequirePasswordResetRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RequirePasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RequirePasswordResetRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := RequirePasswordResetRequestValidationError{
@@ -2556,10 +2364,6 @@ var _ interface {
 	ErrorName() string
 } = RequirePasswordResetRequestValidationError{}
 
-var _RequirePasswordResetRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RevokeCredentialRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2581,28 +2385,6 @@ func (m *RevokeCredentialRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RevokeCredentialRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RevokeCredentialRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RevokeCredentialRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := RevokeCredentialRequestValidationError{
@@ -2728,10 +2510,6 @@ var _ interface {
 	ErrorName() string
 } = RevokeCredentialRequestValidationError{}
 
-var _RevokeCredentialRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on ResetMFARequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -2753,28 +2531,6 @@ func (m *ResetMFARequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ResetMFARequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ResetMFARequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ResetMFARequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := ResetMFARequestValidationError{
@@ -2887,10 +2643,6 @@ var _ interface {
 	ErrorName() string
 } = ResetMFARequestValidationError{}
 
-var _ResetMFARequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on RevokeDeviceTrustRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2912,28 +2664,6 @@ func (m *RevokeDeviceTrustRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _RevokeDeviceTrustRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := RevokeDeviceTrustRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := RevokeDeviceTrustRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := RevokeDeviceTrustRequestValidationError{
@@ -3059,10 +2789,6 @@ var _ interface {
 	ErrorName() string
 } = RevokeDeviceTrustRequestValidationError{}
 
-var _RevokeDeviceTrustRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 // Validate checks the field values on SuspendUserRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -3084,28 +2810,6 @@ func (m *SuspendUserRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _SuspendUserRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := SuspendUserRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := SuspendUserRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := SuspendUserRequestValidationError{
@@ -3275,10 +2979,6 @@ var _ interface {
 	ErrorName() string
 } = SuspendUserRequestValidationError{}
 
-var _SuspendUserRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
-
 var _SuspendUserRequest_ReasonCode_NotInLookup = map[UserSuspensionReason]struct{}{
 	0: {},
 }
@@ -3304,28 +3004,6 @@ func (m *ReactivateUserRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if _, ok := _ReactivateUserRequest_AppId_NotInLookup[m.GetAppId()]; ok {
-		err := ReactivateUserRequestValidationError{
-			field:  "AppId",
-			reason: "value must not be in list [APP_ID_UNSPECIFIED]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := commonpb.AppId_name[int32(m.GetAppId())]; !ok {
-		err := ReactivateUserRequestValidationError{
-			field:  "AppId",
-			reason: "value must be one of the defined enum values",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if m.GetUserId() <= 0 {
 		err := ReactivateUserRequestValidationError{
@@ -3465,10 +3143,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ReactivateUserRequestValidationError{}
-
-var _ReactivateUserRequest_AppId_NotInLookup = map[commonpb.AppId]struct{}{
-	0: {},
-}
 
 var _ReactivateUserRequest_ReasonCode_NotInLookup = map[UserReactivationReason]struct{}{
 	0: {},
@@ -3890,8 +3564,6 @@ func (m *SearchUsersRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for AppId
 
 	if all {
 		switch v := interface{}(m.GetSearch()).(type) {
